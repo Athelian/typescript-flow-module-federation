@@ -16,6 +16,7 @@ type Props = {|
   backgroundColor?: string,
   hoverBackgroundColor?: string,
   onClick?: Function,
+  borderRadius?: string,
   // @deprecated
   buttonRef?: any,
   label: React.Node,
@@ -46,6 +47,7 @@ const LabelledButton = React.forwardRef<Props, HTMLButtonElement>((props: Props,
     onClick,
     buttonRef,
     suffix,
+    borderRadius,
     ...rest
   } = { ...defaultProps, ...props };
 
@@ -59,6 +61,7 @@ const LabelledButton = React.forwardRef<Props, HTMLButtonElement>((props: Props,
       hoverTextColor={hoverTextColor}
       backgroundColor={backgroundColor}
       hoverBackgroundColor={hoverBackgroundColor}
+      borderRadius={borderRadius}
       {...rest}
     >
       <span>{label}</span>

@@ -15,6 +15,7 @@ type Props = OptionalProps & {
   backgroundColor: string,
   hoverBackgroundColor: string,
   children: React.Node,
+  borderRadius?: string,
 };
 
 const Button = React.forwardRef<Props, HTMLButtonElement>(
@@ -28,6 +29,7 @@ const Button = React.forwardRef<Props, HTMLButtonElement>(
       disabled,
       onClick,
       children,
+      borderRadius,
       ...rest
     }: Props,
     ref
@@ -36,7 +38,13 @@ const Button = React.forwardRef<Props, HTMLButtonElement>(
       ref={ref}
       type="button"
       className={cx(
-        ButtonStyle(textColor, hoverTextColor, backgroundColor, hoverBackgroundColor),
+        ButtonStyle({
+          textColor,
+          hoverTextColor,
+          backgroundColor,
+          hoverBackgroundColor,
+          borderRadius,
+        }),
         className
       )}
       disabled={disabled}

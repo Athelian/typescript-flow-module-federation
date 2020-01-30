@@ -29,12 +29,12 @@ const NotificationListModule = ({ activeTab = 'active' }: Props) => {
         <TabItem
           showTooltip={!isActive}
           tooltipMessage={
-            <FormattedMessage id="modules.notifications.active" defaultMessage="ACTIVE" />
+            <FormattedMessage id="modules.notifications.active" defaultMessage="Active" />
           }
           active={isActive}
           label={
             isActive && (
-              <FormattedMessage id="modules.notifications.active" defaultMessage="ACTIVE" />
+              <FormattedMessage id="modules.notifications.active" defaultMessage="Active" />
             )
           }
           icon="ACTIVE"
@@ -46,11 +46,11 @@ const NotificationListModule = ({ activeTab = 'active' }: Props) => {
           active={!isActive}
           showTooltip={isActive}
           tooltipMessage={
-            <FormattedMessage id="modules.notifications.archive" defaultMessage="ARCHIVE" />
+            <FormattedMessage id="modules.notifications.archived" defaultMessage="Archived" />
           }
           label={
             !isActive && (
-              <FormattedMessage id="modules.notifications.archive" defaultMessage="ARCHIVE" />
+              <FormattedMessage id="modules.notifications.archived" defaultMessage="Archived" />
             )
           }
           icon="ARCHIVE"
@@ -81,6 +81,7 @@ const NotificationListModule = ({ activeTab = 'active' }: Props) => {
           backgroundColor="GRAY_SUPER_LIGHT"
           textColor="GRAY_DARK"
           hoverBackgroundColor="GRAY_DARK"
+          borderRadius="5px"
           onClick={() => {
             setIsOpenSetting(!isOpenSetting);
           }}

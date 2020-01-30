@@ -8,9 +8,9 @@ import LoadingIcon from 'components/LoadingIcon';
 import NavigateLink from 'components/NavigateLink';
 import { BaseButton } from 'components/Buttons';
 import { Label } from 'components/Form';
-import NotificationItem from 'modules/notifications/components/NotificationItem';
 import { notificationListQuery } from 'modules/notifications/query';
 import { isNotFound, isForbidden, isBadRequest } from 'utils/data';
+import NotificationsRowMini from './components/NotificationsRowMini';
 import {
   NotificationsDropDownWrapperStyle,
   NotificationsBodyWrapperStyle,
@@ -21,10 +21,13 @@ import {
   ArchiveAllButtonStyle,
 } from './style';
 
-const defaultRenderItem = (item: Object) => <NotificationItem key={item.id} notification={item} />;
+const defaultRenderItem = (item: Object, closeDropdown: () => void) => (
+  <NotificationsRowMini key={item.id} notification={item} closeDropdown={closeDropdown} />
+);
 
 type Props = {|
   isOpen: boolean,
+  closeDropdown: () => void,
   renderItem?: Object => React$Node,
   // TODO: integrate the api for more items
   totalMoreItems?: number,
@@ -33,6 +36,7 @@ type Props = {|
 const NotificationsDropdown = ({
   renderItem = defaultRenderItem,
   isOpen,
+  closeDropdown,
   totalMoreItems = 0,
 }: Props) => {
   const { data, loading, error } = useQuery(notificationListQuery, {
@@ -63,7 +67,7 @@ const NotificationsDropdown = ({
           </div>
         )}
 
-        {loading ? <LoadingIcon /> : items.map(renderItem)}
+        {loading ? <LoadingIcon /> : items.map(item => renderItem(item, closeDropdown))}
 
         <div className={NotificationsFooterStyle}>
           {totalMoreItems > 0 && (
@@ -78,7 +82,7 @@ const NotificationsDropdown = ({
             </Label>
           )}
 
-          <NavigateLink to="/notifications">
+          <NavigateLink to="/notifications" onClick={closeDropdown}>
             <BaseButton
               label={
                 <FormattedMessage
@@ -107,7 +111,7 @@ const NotificationsDropdown = ({
           />
         </Label>
 
-        <NavigateLink to="/notifications">
+        <NavigateLink to="/notifications" onClick={closeDropdown}>
           <BaseButton
             label={
               <FormattedMessage
