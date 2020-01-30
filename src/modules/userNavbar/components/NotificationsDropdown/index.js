@@ -8,9 +8,9 @@ import LoadingIcon from 'components/LoadingIcon';
 import NavigateLink from 'components/NavigateLink';
 import { BaseButton } from 'components/Buttons';
 import { Label } from 'components/Form';
-import NotificationItem from 'modules/notifications/components/NotificationItem';
 import { notificationListQuery } from 'modules/notifications/query';
 import { isNotFound, isForbidden, isBadRequest } from 'utils/data';
+import NotificationsRowMini from './components/NotificationsRowMini';
 import {
   NotificationsDropDownWrapperStyle,
   NotificationsBodyWrapperStyle,
@@ -21,7 +21,9 @@ import {
   ArchiveAllButtonStyle,
 } from './style';
 
-const defaultRenderItem = (item: Object) => <NotificationItem key={item.id} notification={item} />;
+const defaultRenderItem = (item: Object, closeDropdown: () => void) => (
+  <NotificationsRowMini key={item.id} notification={item} closeDropdown={closeDropdown} />
+);
 
 type Props = {|
   isOpen: boolean,
@@ -65,7 +67,7 @@ const NotificationsDropdown = ({
           </div>
         )}
 
-        {loading ? <LoadingIcon /> : items.map(renderItem)}
+        {loading ? <LoadingIcon /> : items.map(item => renderItem(item, closeDropdown))}
 
         <div className={NotificationsFooterStyle}>
           {totalMoreItems > 0 && (
@@ -80,7 +82,7 @@ const NotificationsDropdown = ({
             </Label>
           )}
 
-          <NavigateLink to="/notifications">
+          <NavigateLink to="/notifications" onClick={closeDropdown}>
             <BaseButton
               label={
                 <FormattedMessage
@@ -93,7 +95,6 @@ const NotificationsDropdown = ({
               hoverTextColor="TEAL"
               backgroundColor="GRAY_SUPER_LIGHT"
               hoverBackgroundColor="GRAY_VERY_LIGHT"
-              onClick={closeDropdown}
             />
           </NavigateLink>
         </div>
@@ -110,7 +111,7 @@ const NotificationsDropdown = ({
           />
         </Label>
 
-        <NavigateLink to="/notifications">
+        <NavigateLink to="/notifications" onClick={closeDropdown}>
           <BaseButton
             label={
               <FormattedMessage
@@ -123,7 +124,6 @@ const NotificationsDropdown = ({
             hoverTextColor="TEAL_DARK"
             backgroundColor="GRAY_SUPER_LIGHT"
             hoverBackgroundColor="GRAY_VERY_LIGHT"
-            onClick={closeDropdown}
           />
         </NavigateLink>
 
