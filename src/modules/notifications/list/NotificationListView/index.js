@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
-import NotificationItem from 'modules/notifications/components/NotificationItem';
+import NotificationRow from 'modules/notifications/components/NotificationRow';
 
 type Props = {
   items: Array<Object>,
@@ -12,11 +12,7 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => (
-  <div>
-    <NotificationItem key={item.id} notification={item} showActionButton />
-  </div>
-);
+const defaultRenderItem = (item: Object) => <NotificationRow key={item.id} notification={item} />;
 
 const defaultProps = {
   renderItem: defaultRenderItem,
