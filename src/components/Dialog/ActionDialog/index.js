@@ -21,6 +21,7 @@ import TagLabelIcon from './LabelIcon/TagLabelIcon';
 import TagsLabelIcon from './LabelIcon/TagsLabelIcon';
 import FileLabelIcon from './LabelIcon/FileLabelIcon';
 import MilestoneLabelIcon from './LabelIcon/MilestoneLabelIcon';
+import TableTemplateLabelIcon from './LabelIcon/TableTemplateLabelIcon';
 import {
   ActionDialogWrapperStyle,
   DialogMessageStyle,
@@ -102,4 +103,5 @@ export {
   TagsLabelIcon,
   FileLabelIcon,
   MilestoneLabelIcon,
+  TableTemplateLabelIcon,
 };
