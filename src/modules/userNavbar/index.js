@@ -67,117 +67,108 @@ class UserNavBar extends React.Component<Props, State> {
     const { isNotificationOpen, isUserMenuOpen, unSeen } = this.state;
 
     return (
-      <div className={SettingsWrapperStyle}>
-        <Query
-          query={countNotificationQuery}
-          fetchPolicy="network-only"
-          onCompleted={result => {
-            if (unSeen !== getByPathWithDefault(0, 'viewer.notificationUnseen', result)) {
-              this.setState({
-                unSeen: getByPathWithDefault(0, 'viewer.notificationUnseen', result),
-              });
-            }
-          }}
-        >
-          {({ client, refetch }) => {
-            return (
-              <>
-                <div className={NotificationsWrapperStyle}>
-                  <button
-                    className={NotificationsButtonStyle}
-                    onClick={async () => {
-                      this.toggleNotification();
-                      if (unSeen > 0) {
-                        await client.mutate({
-                          mutation: notificationSeeAllMutation,
-                        });
-                        refetch();
-                      }
+      <Query
+        query={countNotificationQuery}
+        fetchPolicy="network-only"
+        onCompleted={result => {
+          if (unSeen !== getByPathWithDefault(0, 'viewer.notificationUnseen', result)) {
+            this.setState({
+              unSeen: getByPathWithDefault(0, 'viewer.notificationUnseen', result),
+            });
+          }
+        }}
+      >
+        {({ client, refetch }) => {
+          return (
+            <div className={SettingsWrapperStyle}>
+              <div className={NotificationsWrapperStyle}>
+                <button
+                  className={NotificationsButtonStyle}
+                  onClick={async () => {
+                    this.toggleNotification();
+                    if (unSeen > 0) {
+                      await client.mutate({
+                        mutation: notificationSeeAllMutation,
+                      });
+                      refetch();
+                    }
+                  }}
+                  type="button"
+                  ref={this.notificationRef}
+                >
+                  <Subscription
+                    subscription={subscribeNewNotification}
+                    onSubscriptionData={onSubscriptionData => {
+                      logger.warn('onSubscriptionData', onSubscriptionData);
+                      this.setState(prevState => ({
+                        unSeen: prevState.unSeen + 1,
+                      }));
                     }}
-                    type="button"
-                    ref={this.notificationRef}
                   >
-                    <Subscription
-                      subscription={subscribeNewNotification}
-                      onSubscriptionData={onSubscriptionData => {
-                        logger.warn('onSubscriptionData', onSubscriptionData);
-                        this.setState(prevState => ({
-                          unSeen: prevState.unSeen + 1,
-                        }));
-                      }}
-                    >
-                      {({ data: subscriptionData, loading, error }) => {
-                        if (loading) return null;
+                    {({ data: subscriptionData, loading, error }) => {
+                      if (loading) return null;
 
-                        if (error) {
-                          return error.message;
-                        }
+                      if (error) {
+                        return error.message;
+                      }
 
-                        logger.warn('subscriptionData', subscriptionData);
-                        return null;
-                      }}
-                    </Subscription>
-                    {unSeen > 0 && (
-                      <div className={NotificationBadgeStyle}>{unSeen > 99 ? '99+' : unSeen}</div>
-                    )}
-                    <Icon icon="NOTIFICATION" />
-                  </button>
+                      logger.warn('subscriptionData', subscriptionData);
+                      return null;
+                    }}
+                  </Subscription>
+                  {unSeen > 0 && (
+                    <div className={NotificationBadgeStyle}>{unSeen > 99 ? '99+' : unSeen}</div>
+                  )}
+                  <Icon icon="NOTIFICATION" />
+                </button>
 
-                  <OutsideClickHandler
-                    onOutsideClick={this.handleClickOutside}
-                    ignoreClick={!isNotificationOpen}
-                    ignoreElements={
-                      this.notificationRef && this.notificationRef.current
-                        ? [this.notificationRef.current]
-                        : []
-                    }
-                  >
-                    {isNotificationOpen && (
-                      <NotificationsDropdown
-                        isOpen={isNotificationOpen}
-                        toggleNotification={this.toggleNotification}
-                      />
-                    )}
-                  </OutsideClickHandler>
-                </div>
-
-                <div className={UserMenuWrapperStyle}>
-                  <button
-                    className={UserMenuButtonStyle}
-                    onClick={this.toggleUserMenu}
-                    type="button"
-                    data-testid="setting-button"
-                    ref={this.userMenuRef}
-                  >
-                    <UserConsumer>
-                      {({ user }) => (
-                        <UserAvatar
-                          firstName={user.firstName}
-                          lastName={user.lastName}
-                          hideTooltip
-                        />
-                      )}
-                    </UserConsumer>
-                  </button>
-
-                  <OutsideClickHandler
-                    onOutsideClick={this.handleClickOutside}
-                    ignoreClick={!isUserMenuOpen}
-                    ignoreElements={
-                      this.userMenuRef && this.userMenuRef.current ? [this.userMenuRef.current] : []
-                    }
-                  >
-                    <UserMenuDropdown
-                      isOpen={isUserMenuOpen}
-                      toggleUserMenu={this.toggleUserMenu}
+                <OutsideClickHandler
+                  onOutsideClick={this.handleClickOutside}
+                  ignoreClick={!isNotificationOpen}
+                  ignoreElements={
+                    this.notificationRef && this.notificationRef.current
+                      ? [this.notificationRef.current]
+                      : []
+                  }
+                >
+                  {isNotificationOpen && (
+                    <NotificationsDropdown
+                      isOpen={isNotificationOpen}
+                      toggleNotification={this.toggleNotification}
                     />
-                  </OutsideClickHandler>
-                </div>
-              </>
-            );
-          }}
-        </Query>
-      </div>
+                  )}
+                </OutsideClickHandler>
+              </div>
+
+              <div className={UserMenuWrapperStyle}>
+                <button
+                  className={UserMenuButtonStyle}
+                  onClick={this.toggleUserMenu}
+                  type="button"
+                  data-testid="setting-button"
+                  ref={this.userMenuRef}
+                >
+                  <UserConsumer>
+                    {({ user }) => (
+                      <UserAvatar firstName={user.firstName} lastName={user.lastName} hideTooltip />
+                    )}
+                  </UserConsumer>
+                </button>
+
+                <OutsideClickHandler
+                  onOutsideClick={this.handleClickOutside}
+                  ignoreClick={!isUserMenuOpen}
+                  ignoreElements={
+                    this.userMenuRef && this.userMenuRef.current ? [this.userMenuRef.current] : []
+                  }
+                >
+                  <UserMenuDropdown isOpen={isUserMenuOpen} toggleUserMenu={this.toggleUserMenu} />
+                </OutsideClickHandler>
+              </div>
+            </div>
+          );
+        }}
+      </Query>
     );
   }
 }

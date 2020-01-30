@@ -14,12 +14,11 @@ import { isNotFound, isForbidden, isBadRequest } from 'utils/data';
 import {
   NotificationsDropDownWrapperStyle,
   NotificationsBodyWrapperStyle,
-  NotificationsListWrapperStyle,
   NotificationsHeaderStyle,
+  NotificationsIconStyle,
   NotificationsFooterStyle,
   NoNotificationStyle,
   ArchiveAllButtonStyle,
-  ViewMoreStyle,
 } from './style';
 
 const defaultRenderItem = (item: Object) => <NotificationItem key={item.id} notification={item} />;
@@ -55,18 +54,20 @@ const NotificationsDropdown = ({
   return (
     <div className={NotificationsDropDownWrapperStyle(isOpen)}>
       <div className={NotificationsBodyWrapperStyle}>
-        <div className={NotificationsListWrapperStyle}>
-          {!loading && items.length === 0 && (
-            <div className={NoNotificationStyle}>
-              <FormattedMessage
-                id="components.Header.notification.noActiveNotifications"
-                defaultMessage="No active notifications found"
-              />
-            </div>
-          )}
-          {loading ? <LoadingIcon /> : items.map(renderItem)}
-          {totalMoreItems > 0 && (
-            <div className={ViewMoreStyle}>
+        {!loading && items.length === 0 && (
+          <div className={NoNotificationStyle}>
+            <FormattedMessage
+              id="components.Header.notification.noActiveNotifications"
+              defaultMessage="No active notifications found"
+            />
+          </div>
+        )}
+
+        {loading ? <LoadingIcon /> : items.map(renderItem)}
+
+        <div className={NotificationsFooterStyle}>
+          {totalMoreItems === 0 && (
+            <Label align="center">
               <FormattedMessage
                 id="components.Header.notification.viewMoreNotifications"
                 defaultMessage="{totalMoreItems} more..."
@@ -74,35 +75,38 @@ const NotificationsDropdown = ({
                   totalMoreItems,
                 }}
               />
-            </div>
+            </Label>
           )}
-          <div className={NotificationsFooterStyle}>
-            <NavigateLink to="/notifications">
-              <BaseButton
-                label={
-                  <FormattedMessage
-                    id="components.Header.notification.viewAllNotification"
-                    defaultMessage="VIEW ALL NOTIFICATIONS"
-                  />
-                }
-                textColor="TEAL"
-                hoverTextColor="TEAL"
-                backgroundColor="GRAY_SUPER_LIGHT"
-                hoverBackgroundColor="GRAY_VERY_LIGHT"
-                suffix={<Icon icon="NOTIFICATION" />}
-              />
-            </NavigateLink>
-          </div>
+
+          <NavigateLink to="/notifications">
+            <BaseButton
+              label={
+                <FormattedMessage
+                  id="components.Header.notification.viewAllNotification"
+                  defaultMessage="VIEW ALL NOTIFICATIONS"
+                />
+              }
+              icon="NOTIFICATION"
+              textColor="TEAL"
+              hoverTextColor="TEAL"
+              backgroundColor="GRAY_SUPER_LIGHT"
+              hoverBackgroundColor="GRAY_VERY_LIGHT"
+            />
+          </NavigateLink>
         </div>
       </div>
+
       <div className={NotificationsHeaderStyle}>
-        <Label>
+        <div className={NotificationsIconStyle}>
           <Icon icon="ACTIVE" />
+        </div>
+        <Label>
           <FormattedMessage
             id="components.Header.notification.title"
             defaultMessage="NOTIFICATIONS"
           />
         </Label>
+
         <NavigateLink to="/notifications">
           <BaseButton
             label={
@@ -111,13 +115,14 @@ const NotificationsDropdown = ({
                 defaultMessage="VIEW ALL"
               />
             }
+            icon="NOTIFICATION"
             textColor="TEAL"
-            hoverTextColor="TEAL"
+            hoverTextColor="TEAL_DARK"
             backgroundColor="GRAY_SUPER_LIGHT"
             hoverBackgroundColor="GRAY_VERY_LIGHT"
-            suffix={<Icon icon="NOTIFICATION" />}
           />
         </NavigateLink>
+
         <Tooltip
           message={
             <FormattedMessage
@@ -126,15 +131,9 @@ const NotificationsDropdown = ({
             />
           }
         >
-          <div className={ArchiveAllButtonStyle}>
-            <BaseButton
-              label={<Icon icon="ARCHIVE" />}
-              textColor="GRAY_LIGHT"
-              hoverTextColor="GRAY_DARK"
-              backgroundColor="WHITE"
-              hoverBackgroundColor="GRAY_SUPER_LIGHT"
-            />
-          </div>
+          <button className={ArchiveAllButtonStyle} onClick={() => {}} type="button">
+            <Icon icon="ARCHIVE" />
+          </button>
         </Tooltip>
       </div>
     </div>
