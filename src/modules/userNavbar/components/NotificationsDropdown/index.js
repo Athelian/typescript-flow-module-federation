@@ -28,7 +28,7 @@ const defaultRenderItem = (item: Object, closeDropdown: () => void) => (
 type Props = {|
   isOpen: boolean,
   closeDropdown: () => void,
-  renderItem?: Object => React$Node,
+  renderItem?: (Object, () => void) => React$Node,
   // TODO: integrate the api for more items
   totalMoreItems?: number,
 |};
