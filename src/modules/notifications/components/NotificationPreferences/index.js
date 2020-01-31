@@ -36,10 +36,11 @@ const preferencesByType = (
       title: messages[column] ? (
         <FormattedMessage {...messages[column]} />
       ) : (
-        <FormattedMessage
-          id={`modules.Notification.preferences.${String(column)}`}
-          defaultMessage={String(column)}
-        />
+        // <FormattedMessage
+        //   id={`modules.Notification.preferences.${String(column)}`}
+        //   defaultMessage={String(column)}
+        // />
+        <>TODO</>
       ),
       selected: false,
     }));

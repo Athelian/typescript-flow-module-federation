@@ -2,16 +2,13 @@
 import { css } from 'react-emotion';
 import { layout, presets, borderRadiuses, colors, transitions, fontSizes } from 'styles/common';
 
-export const FollowersWrapperStyle = (noHoverStyling: boolean): string => css`
+export const FollowersWrapperStyle = (editable: boolean): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
   height: 30px;
   padding: 0 5px 0 0;
-  ${noHoverStyling
+  ${editable
     ? `
-    cursor: default;
-  `
-    : `
     &:hover {
       background-color: ${colors.GRAY_VERY_LIGHT};
       & > div {
@@ -22,6 +19,9 @@ export const FollowersWrapperStyle = (noHoverStyling: boolean): string => css`
         }
       }
     }
+  `
+    : `
+    cursor: default;
   `}
 `;
 

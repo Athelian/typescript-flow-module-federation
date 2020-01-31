@@ -49,9 +49,9 @@ const Followers = ({
         delay={[1000, 200]}
       >
         <button
-          className={FollowersWrapperStyle(numOfFollowers === 0 && !editable)}
+          className={FollowersWrapperStyle(editable)}
           onClick={() => {
-            if (!(numOfFollowers === 0 && !editable)) {
+            if (editable) {
               setStaffSelectorOpen(true);
             }
           }}
