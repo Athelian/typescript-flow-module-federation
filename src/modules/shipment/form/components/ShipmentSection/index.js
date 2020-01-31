@@ -66,7 +66,6 @@ import {
   FormTooltip,
   TagsInput,
   SectionHeader,
-  LastModified,
   StatusToggle,
   TextInputFactory,
   DateInputFactory,
@@ -85,6 +84,7 @@ import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import SelectPartners from 'components/SelectPartners';
 import SelectPartner from 'components/SelectPartner';
+import Followers from 'components/Followers';
 import ShipmentSummary from '../ShipmentSummary';
 import { renderExporters, renderForwarders } from './helpers';
 import {
@@ -109,7 +109,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
   const { isOwner } = usePartnerPermission();
   const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
-  const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
+  const { id: shipmentId, archived } = shipment;
   const isNewOrClone = isNew || isClone;
   return (
     <MainSectionPlaceholder height={1766} isLoading={isLoading}>
@@ -117,12 +117,20 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
         icon="SHIPMENT"
         title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
       >
+        <Followers
+          followers={[
+            { firstName: 'Kevin', lastName: 'Nguyen' },
+            { firstName: 'Kevin', lastName: 'Nguyen' },
+            { firstName: 'Kevin', lastName: 'Nguyen' },
+            { firstName: 'Kevin', lastName: 'Nguyen' },
+            { firstName: 'Kevin', lastName: 'Nguyen' },
+            { firstName: 'Kevin', lastName: 'Nguyen' },
+          ]}
+          editable
+        />
+
         {!isNew && (
           <>
-            <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
-            {!isClone && hasPermission(SHIPMENT_CREATE) && (
-              <CloneButton onClick={() => navigate(`/shipment/clone/${encodeId(shipmentId)}`)} />
-            )}
             <BooleanValue>
               {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                 <StatusToggle
@@ -146,6 +154,10 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                 />
               )}
             </BooleanValue>
+
+            {!isClone && hasPermission(SHIPMENT_CREATE) && (
+              <CloneButton onClick={() => navigate(`/shipment/clone/${encodeId(shipmentId)}`)} />
+            )}
           </>
         )}
       </SectionHeader>
@@ -589,9 +601,9 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         // Disable to changed importer if there is data send from RM
                         // base on initDataForSlideView
                         isNew &&
-                          Object.keys(initDataForSlideView).length === 0 &&
-                          hasPermission(PARTNER_LIST) &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]) ? (
+                        Object.keys(initDataForSlideView).length === 0 &&
+                        hasPermission(PARTNER_LIST) &&
+                        hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]) ? (
                           <BooleanValue>
                             {({ value: importerSelectorIsOpen, set: importerSelectorToggle }) => (
                               <>
@@ -764,7 +776,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       <>
                         {(isForwarder() || isImporter()) &&
                         hasPermission(PARTNER_LIST) &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_EXPORTER]) ? (
+                        hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_EXPORTER]) ? (
                           <BooleanValue>
                             {({ value: exporterSelectorIsOpen, set: exporterSelectorToggle }) => (
                               <>

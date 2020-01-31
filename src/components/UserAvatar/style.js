@@ -11,7 +11,7 @@ export const AvatarWrapperStyle = ({ width, height }: AvatarWrapper): string => 
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: ${colors.WHITE};
   width: ${width};
   height: ${height};
   flex-shrink: 0;
