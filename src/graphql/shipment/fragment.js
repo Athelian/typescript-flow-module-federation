@@ -9,6 +9,9 @@ export const shipmentFormQueryFragment = gql`
     updatedBy {
       ...userAvatarFragment
     }
+    followers {
+      ...userAvatarFragment
+    }
     memo
     no
     blNo
@@ -86,6 +89,9 @@ export const shipmentFormFragment = gql`
     archived
     updatedAt
     updatedBy {
+      ...userAvatarFragment
+    }
+    followers {
       ...userAvatarFragment
     }
     memo

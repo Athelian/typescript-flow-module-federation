@@ -60,7 +60,7 @@ export const StackedMoreStyle = (maxFollowersShown: number): string => css`
   border: 2px solid ${colors.GRAY_SUPER_LIGHT};
   background-color: ${colors.WHITE};
   color: ${colors.GRAY_DARK};
-  ${fontSizes.MAIN};
+  ${fontSizes.SMALL};
   ${transitions.MAIN};
   position: absolute;
   top: 0;

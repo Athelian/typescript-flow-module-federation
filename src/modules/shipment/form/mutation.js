@@ -245,6 +245,7 @@ export const prepareParsedShipmentInput = ({
   const forceSendBatchIdsForPool = !isEquals(originalBatchIds, newBatchIds);
 
   return {
+    ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
     ...parseParentIdField(
       'importerId',
       getByPathWithDefault(null, 'importer', originalValues),

@@ -16,6 +16,7 @@ import { STAFF_LIST } from 'modules/permission/constants/staff';
 import {
   SHIPMENT_CREATE,
   SHIPMENT_UPDATE,
+  SHIPMENT_SET_FOLLOWERS,
   SHIPMENT_SET_ARCHIVED,
   SHIPMENT_SET_IMPORTER,
   SHIPMENT_SET_EXPORTER,
@@ -111,62 +112,67 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
   const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, archived } = shipment;
   const isNewOrClone = isNew || isClone;
+
   return (
-    <MainSectionPlaceholder height={1766} isLoading={isLoading}>
-      <SectionHeader
-        icon="SHIPMENT"
-        title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
-      >
-        <Followers
-          followers={[
-            { firstName: 'Kevin', lastName: 'Nguyen' },
-            { firstName: 'Kevin', lastName: 'Nguyen' },
-            { firstName: 'Kevin', lastName: 'Nguyen' },
-            { firstName: 'Kevin', lastName: 'Nguyen' },
-            { firstName: 'Kevin', lastName: 'Nguyen' },
-            { firstName: 'Kevin', lastName: 'Nguyen' },
-          ]}
-          editable
-        />
+    <Subscribe to={[ShipmentInfoContainer]}>
+      {({ originalValues: initialValues, state, setFieldValue }) => {
+        const values: Object = { ...initialValues, ...state };
+        const { forwarders = [], importer, exporter } = values;
 
-        {!isNew && (
-          <>
-            <BooleanValue>
-              {({ value: statusDialogIsOpen, set: dialogToggle }) => (
-                <StatusToggle
-                  readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_ARCHIVED])}
-                  archived={archived}
-                  openStatusDialog={() => dialogToggle(true)}
-                  activateDialog={
-                    <ShipmentActivateDialog
-                      shipment={shipment}
-                      isOpen={statusDialogIsOpen && !!archived}
-                      onRequestClose={() => dialogToggle(false)}
+        return (
+          <MainSectionPlaceholder height={1766} isLoading={isLoading}>
+            <SectionHeader
+              icon="SHIPMENT"
+              title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
+            >
+              <Followers
+                followers={values?.followers ?? []}
+                setFollowers={value => setFieldValue('followers', value)}
+                // TODO: May change organization filter specs after meeting
+                // If keep, we need to do clean up when change Importer, Exporter, or Forwarders
+                organizationIds={[
+                  values?.importer?.id,
+                  values?.exporter?.id,
+                  ...(values?.forwarders ?? []).map(forwarder => forwarder?.id),
+                ].filter(Boolean)}
+                editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FOLLOWERS])}
+              />
+
+              {!isNew && (
+                <>
+                  <BooleanValue>
+                    {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+                      <StatusToggle
+                        readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_ARCHIVED])}
+                        archived={archived}
+                        openStatusDialog={() => dialogToggle(true)}
+                        activateDialog={
+                          <ShipmentActivateDialog
+                            shipment={shipment}
+                            isOpen={statusDialogIsOpen && !!archived}
+                            onRequestClose={() => dialogToggle(false)}
+                          />
+                        }
+                        archiveDialog={
+                          <ShipmentArchiveDialog
+                            shipment={shipment}
+                            isOpen={statusDialogIsOpen && !archived}
+                            onRequestClose={() => dialogToggle(false)}
+                          />
+                        }
+                      />
+                    )}
+                  </BooleanValue>
+
+                  {!isClone && hasPermission(SHIPMENT_CREATE) && (
+                    <CloneButton
+                      onClick={() => navigate(`/shipment/clone/${encodeId(shipmentId)}`)}
                     />
-                  }
-                  archiveDialog={
-                    <ShipmentArchiveDialog
-                      shipment={shipment}
-                      isOpen={statusDialogIsOpen && !archived}
-                      onRequestClose={() => dialogToggle(false)}
-                    />
-                  }
-                />
+                  )}
+                </>
               )}
-            </BooleanValue>
+            </SectionHeader>
 
-            {!isClone && hasPermission(SHIPMENT_CREATE) && (
-              <CloneButton onClick={() => navigate(`/shipment/clone/${encodeId(shipmentId)}`)} />
-            )}
-          </>
-        )}
-      </SectionHeader>
-      <Subscribe to={[ShipmentInfoContainer]}>
-        {({ originalValues: initialValues, state, setFieldValue }) => {
-          const values: Object = { ...initialValues, ...state };
-          const { forwarders = [], importer, exporter } = values;
-
-          return (
             <div className={ShipmentSectionWrapperStyle}>
               <div className={MainFieldsWrapperStyle}>
                 <GridColumn>
@@ -1065,10 +1071,10 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                 entityId={!isClone && shipment.id ? shipment.id : ''}
               />
             </div>
-          );
-        }}
-      </Subscribe>
-    </MainSectionPlaceholder>
+          </MainSectionPlaceholder>
+        );
+      }}
+    </Subscribe>
   );
 };
 
