@@ -10,14 +10,11 @@ import Icon from 'components/Icon';
 import PreferenceSetting from '../PreferenceSetting';
 import messages from './messages';
 import {
-  ModalWrapperStyle,
-  ActionsWrapperStyle,
-  ButtonsWrapperStyle,
-  EmailWrapperStyle,
-  HeaderStyle,
-  InfoTooltipStyle,
-  EmailPreferenceStyle,
-  IntervalStyle,
+  NotificationPreferencesModalWrapperStyle,
+  NavbarWrapperStyle,
+  EmailNotificationsWrapperStyle,
+  NavbarRightWrapperStyle,
+  InfoTooltipWrapperStyle,
 } from './style';
 
 type Props = {|
@@ -46,96 +43,110 @@ const preferencesByType = (
 };
 
 function NotificationPreferences({ isOpen, onClose }: Props) {
-  const [toggled, setToggle] = React.useState(false);
+  const [isEmailNotificationsEnabled, setEmailNotificationsEnabled] = React.useState(false);
   const isDirty = false;
   const handleApply = () => {};
   const handleReset = () => {};
-  const onToggle = () => {
-    setToggle(!toggled);
-  };
 
   return (
     <Dialog isOpen={isOpen} onRequestClose={onClose}>
-      <div className={ModalWrapperStyle}>
-        <div className={HeaderStyle}>
-          <div className={ActionsWrapperStyle}>
-            <div className={EmailWrapperStyle}>
+      <div className={NotificationPreferencesModalWrapperStyle}>
+        <div className={NavbarWrapperStyle}>
+          <div className={EmailNotificationsWrapperStyle(isEmailNotificationsEnabled)}>
+            <Icon icon="EMAIL" />
+
+            <FormattedMessage
+              id="modules.Notifications.emailNotification"
+              defaultMessage="Email Notifications"
+            />
+
+            <Tooltip
+              message={
+                isEmailNotificationsEnabled ? (
+                  <FormattedMessage
+                    id="modules.Notifications.emailTooltipEnabled"
+                    defaultMessage="Notifications received will also be sent to your email at the specified interval"
+                  />
+                ) : (
+                  <FormattedMessage
+                    id="modules.Notifications.emailTooltipDisabled"
+                    defaultMessage="Notifications received will not be sent to your email"
+                  />
+                )
+              }
+            >
               <div>
-                <Icon icon="EMAIL" />
-                <FormattedMessage
-                  id="modules.Notifications.emailNotification"
-                  defaultMessage="Email Notifications"
+                <ToggleInput
+                  toggled={isEmailNotificationsEnabled}
+                  onToggle={() => setEmailNotificationsEnabled(!isEmailNotificationsEnabled)}
                 />
               </div>
-              <div className={EmailPreferenceStyle}>
-                <Tooltip
-                  message={
-                    <FormattedMessage
-                      id="modules.Notifications.emailTooltip"
-                      defaultMessage="Notifications received will also be sent to your email at the specified interval"
-                    />
-                  }
-                >
-                  <div>
-                    <ToggleInput toggled={toggled} onToggle={onToggle} />
-                  </div>
-                </Tooltip>
-                {toggled && (
-                  <div className={IntervalStyle}>
-                    <SelectInputFactory
-                      value="10m"
-                      items={[
-                        {
-                          label: '10 Minutes',
-                          value: '10m',
-                        },
-                        {
-                          label: '30 Minutes',
-                          value: '30m',
-                        },
-                        {
-                          label: '1 Hour',
-                          value: '1h',
-                        },
-                        {
-                          label: '12 Hour',
-                          value: '12h',
-                        },
-                      ]}
-                      inputWidth="80px"
-                      inputHeight="20px"
-                      editable
-                      required
-                      hideDropdownArrow
-                      hideTooltip
-                    />
-                  </div>
-                )}
+            </Tooltip>
+
+            {isEmailNotificationsEnabled && (
+              <SelectInputFactory
+                value={{ minutes: 10 }}
+                items={[
+                  {
+                    label: '10 min',
+                    value: { minutes: 10 },
+                  },
+                  {
+                    label: '30 min',
+                    value: { minutes: 30 },
+                  },
+                  {
+                    label: '1 hr',
+                    value: { hours: 1 },
+                  },
+                  {
+                    label: '6 hrs',
+                    value: { hours: 6 },
+                  },
+                  {
+                    label: '12 hrs',
+                    value: { hours: 12 },
+                  },
+                ]}
+                inputWidth="60px"
+                inputHeight="20px"
+                editable
+                required
+                hideDropdownArrow
+                hideTooltip
+              />
+            )}
+          </div>
+
+          <div className={NavbarRightWrapperStyle}>
+            {isDirty && (
+              <>
+                <ResetButton onClick={handleReset} />
+                <ApplyButton onClick={handleApply} />
+              </>
+            )}
+
+            <Tooltip
+              message={
+                <FormattedMessage
+                  id="modules.Notifications.settingTooltip"
+                  defaultMessage="Changing your notification preferences will take effect on all data that you are following"
+                />
+              }
+            >
+              <div className={InfoTooltipWrapperStyle}>
+                <Icon icon="INFO" />
               </div>
-            </div>
-            <div className={ButtonsWrapperStyle}>
-              <ResetButton onClick={handleReset} disabled={!isDirty} />
-              <ApplyButton onClick={handleApply} />
-              <Tooltip
-                message={
-                  <FormattedMessage
-                    id="modules.Notifications.settingTooltip"
-                    defaultMessage="Changing your notification preferences will take effect on all data that you are following"
-                  />
-                }
-              >
-                <div className={InfoTooltipStyle}>
-                  <Icon icon="INFO" />
-                </div>
-              </Tooltip>
-            </div>
+            </Tooltip>
           </div>
         </div>
+
         <PreferenceSetting
           icon="ORDER"
           columns={preferencesByType('order', ['order_create_item', 'order_update_item_quantity'])}
           onChange={console.warn}
         />
+
         <PreferenceSetting
           icon="ORDER_ITEM"
           columns={[
@@ -144,36 +155,43 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
           ]}
           onChange={console.warn}
         />
+
         <PreferenceSetting
           icon="PRODUCT"
           columns={preferencesByType('product', ['product_create_provider'])}
           onChange={console.warn}
         />
+
         <PreferenceSetting
           icon="PRODUCT_PROVIDER"
           columns={preferencesByType('product_create_provider')}
           onChange={console.warn}
         />
+
         <PreferenceSetting
           icon="BATCH"
           columns={preferencesByType('batch')}
           onChange={console.warn}
         />
+
         <PreferenceSetting
           icon="SHIPMENT"
           columns={preferencesByType('shipment')}
           onChange={console.warn}
         />
+
         <PreferenceSetting
           icon="CONTAINER"
           columns={preferencesByType('container')}
           onChange={console.warn}
         />
+
         <PreferenceSetting
           icon="WAREHOUSE"
           columns={preferencesByType('warehouse')}
           onChange={console.warn}
         />
+
         <PreferenceSetting
           icon="LOGS"
           columns={preferencesByType('comment')}
