@@ -66,3 +66,14 @@ export const EmailPreferenceStyle = css`
   text-align: center;
   margin: 0 10px;
 `;
+
+export const IntervalStyle = css`
+  ${layout.HORIZONTAL};
+  & > div > div > div {
+    background: #11d1a6;
+    border-radius: 5px;
+    & > input {
+      color: ${colors.WHITE};
+    }
+  }
+`;

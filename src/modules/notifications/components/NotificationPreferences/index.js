@@ -17,6 +17,7 @@ import {
   HeaderStyle,
   InfoTooltipStyle,
   EmailPreferenceStyle,
+  IntervalStyle,
 } from './style';
 
 type Props = {|
@@ -80,32 +81,35 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
                   </div>
                 </Tooltip>
                 {toggled && (
-                  <SelectInputFactory
-                    value="10m"
-                    items={[
-                      {
-                        label: '10 Minutes',
-                        value: '10m',
-                      },
-                      {
-                        label: '30 Minutes',
-                        value: '30m',
-                      },
-                      {
-                        label: '1 Hour',
-                        value: '1h',
-                      },
-                      {
-                        label: '12 Hour',
-                        value: '12h',
-                      },
-                    ]}
-                    inputWidth="80px"
-                    editable
-                    required
-                    hideDropdownArrow
-                    hideTooltip
-                  />
+                  <div className={IntervalStyle}>
+                    <SelectInputFactory
+                      value="10m"
+                      items={[
+                        {
+                          label: '10 Minutes',
+                          value: '10m',
+                        },
+                        {
+                          label: '30 Minutes',
+                          value: '30m',
+                        },
+                        {
+                          label: '1 Hour',
+                          value: '1h',
+                        },
+                        {
+                          label: '12 Hour',
+                          value: '12h',
+                        },
+                      ]}
+                      inputWidth="80px"
+                      inputHeight="20px"
+                      editable
+                      required
+                      hideDropdownArrow
+                      hideTooltip
+                    />
+                  </div>
                 )}
               </div>
             </div>
@@ -126,59 +130,55 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
               </Tooltip>
             </div>
           </div>
-
-          <PreferenceSetting
-            icon="ORDER"
-            columns={preferencesByType('order', [
-              'order_create_item',
-              'order_update_item_quantity',
-            ])}
-            onChange={console.warn}
-          />
-          <PreferenceSetting
-            icon="ORDER_ITEM"
-            columns={[
-              ...preferencesByType('order_create_item'),
-              ...preferencesByType('order_update_item_quantity'),
-            ]}
-            onChange={console.warn}
-          />
-          <PreferenceSetting
-            icon="PRODUCT"
-            columns={preferencesByType('product', ['product_create_provider'])}
-            onChange={console.warn}
-          />
-          <PreferenceSetting
-            icon="PRODUCT_PROVIDER"
-            columns={preferencesByType('product_create_provider')}
-            onChange={console.warn}
-          />
-          <PreferenceSetting
-            icon="BATCH"
-            columns={preferencesByType('batch')}
-            onChange={console.warn}
-          />
-          <PreferenceSetting
-            icon="SHIPMENT"
-            columns={preferencesByType('shipment')}
-            onChange={console.warn}
-          />
-          <PreferenceSetting
-            icon="CONTAINER"
-            columns={preferencesByType('container')}
-            onChange={console.warn}
-          />
-          <PreferenceSetting
-            icon="WAREHOUSE"
-            columns={preferencesByType('warehouse')}
-            onChange={console.warn}
-          />
-          <PreferenceSetting
-            icon="LOGS"
-            columns={preferencesByType('comment')}
-            onChange={console.warn}
-          />
         </div>
+        <PreferenceSetting
+          icon="ORDER"
+          columns={preferencesByType('order', ['order_create_item', 'order_update_item_quantity'])}
+          onChange={console.warn}
+        />
+        <PreferenceSetting
+          icon="ORDER_ITEM"
+          columns={[
+            ...preferencesByType('order_create_item'),
+            ...preferencesByType('order_update_item_quantity'),
+          ]}
+          onChange={console.warn}
+        />
+        <PreferenceSetting
+          icon="PRODUCT"
+          columns={preferencesByType('product', ['product_create_provider'])}
+          onChange={console.warn}
+        />
+        <PreferenceSetting
+          icon="PRODUCT_PROVIDER"
+          columns={preferencesByType('product_create_provider')}
+          onChange={console.warn}
+        />
+        <PreferenceSetting
+          icon="BATCH"
+          columns={preferencesByType('batch')}
+          onChange={console.warn}
+        />
+        <PreferenceSetting
+          icon="SHIPMENT"
+          columns={preferencesByType('shipment')}
+          onChange={console.warn}
+        />
+        <PreferenceSetting
+          icon="CONTAINER"
+          columns={preferencesByType('container')}
+          onChange={console.warn}
+        />
+        <PreferenceSetting
+          icon="WAREHOUSE"
+          columns={preferencesByType('warehouse')}
+          onChange={console.warn}
+        />
+        <PreferenceSetting
+          icon="LOGS"
+          columns={preferencesByType('comment')}
+          onChange={console.warn}
+        />
       </div>
     </Dialog>
   );
