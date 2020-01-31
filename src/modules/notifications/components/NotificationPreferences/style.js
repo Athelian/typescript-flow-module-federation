@@ -36,17 +36,6 @@ export const ButtonsWrapperStyle: string = css`
   grid-gap: 20px;
 `;
 
-export const PreferenceWrapperStyle: string = css`
-  display: flex;
-  align-items: center;
-  ${shadows.HEADER};
-  background-color: ${colors.GRAY_VERY_LIGHT};
-  position: sticky;
-  height: 50px;
-  padding: 10px 20px;
-  justify-content: space-between;
-`;
-
 export const InfoTooltipStyle = css`
   font-weight: 900;
   font-size: 14px;

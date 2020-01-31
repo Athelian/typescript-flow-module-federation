@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { type NotificationType, NotificationTypeValues } from 'generated/graphql';
 import Dialog from 'components/Dialog';
 import { FormattedMessage } from 'react-intl';
 import { ToggleInput, SelectInputFactory } from 'components/Form';
@@ -7,11 +8,11 @@ import { ApplyButton, ResetButton } from 'components/Buttons';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import PreferenceSetting from '../PreferenceSetting';
+import messages from './messages';
 import {
   ModalWrapperStyle,
   ActionsWrapperStyle,
   ButtonsWrapperStyle,
-  PreferenceWrapperStyle,
   EmailWrapperStyle,
   HeaderStyle,
   InfoTooltipStyle,
@@ -22,6 +23,26 @@ type Props = {|
   isOpen: boolean,
   onClose: () => void,
 |};
+
+const preferencesByType = (
+  type: string,
+  ignoreKeys: Array<string> = []
+): Array<NotificationType> => {
+  return Object.values(NotificationTypeValues)
+    .filter(key => String(key).startsWith(type) && !ignoreKeys.includes(key))
+    .map(column => ({
+      column,
+      title: messages[column] ? (
+        <FormattedMessage {...messages[column]} />
+      ) : (
+        <FormattedMessage
+          id={`modules.Notification.preferences.${String(column)}`}
+          defaultMessage={String(column)}
+        />
+      ),
+      selected: false,
+    }));
+};
 
 function NotificationPreferences({ isOpen, onClose }: Props) {
   const [toggled, setToggle] = React.useState(false);
@@ -42,7 +63,7 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
                 <Icon icon="EMAIL" />
                 <FormattedMessage
                   id="modules.Notifications.emailNotification"
-                  defaultMessage="EMAIL NOTIFICATION"
+                  defaultMessage="Email Notifications"
                 />
               </div>
               <div className={EmailPreferenceStyle}>
@@ -106,14 +127,57 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
             </div>
           </div>
 
-          <div className={PreferenceWrapperStyle}>
-            <PreferenceSetting icon="ORDER" columns={[]} onChange={console.warn} />
-            <PreferenceSetting icon="PRODUCT" columns={[]} onChange={console.warn} />
-            <PreferenceSetting icon="BATCH" columns={[]} onChange={console.warn} />
-            <PreferenceSetting icon="SHIPMENT" columns={[]} onChange={console.warn} />
-            <PreferenceSetting icon="CONTAINER" columns={[]} onChange={console.warn} />
-            <PreferenceSetting icon="COMMENT" columns={[]} onChange={console.warn} />
-          </div>
+          <PreferenceSetting
+            icon="ORDER"
+            columns={preferencesByType('order', [
+              'order_create_item',
+              'order_update_item_quantity',
+            ])}
+            onChange={console.warn}
+          />
+          <PreferenceSetting
+            icon="ORDER_ITEM"
+            columns={[
+              ...preferencesByType('order_create_item'),
+              ...preferencesByType('order_update_item_quantity'),
+            ]}
+            onChange={console.warn}
+          />
+          <PreferenceSetting
+            icon="PRODUCT"
+            columns={preferencesByType('product', ['product_create_provider'])}
+            onChange={console.warn}
+          />
+          <PreferenceSetting
+            icon="PRODUCT_PROVIDER"
+            columns={preferencesByType('product_create_provider')}
+            onChange={console.warn}
+          />
+          <PreferenceSetting
+            icon="BATCH"
+            columns={preferencesByType('batch')}
+            onChange={console.warn}
+          />
+          <PreferenceSetting
+            icon="SHIPMENT"
+            columns={preferencesByType('shipment')}
+            onChange={console.warn}
+          />
+          <PreferenceSetting
+            icon="CONTAINER"
+            columns={preferencesByType('container')}
+            onChange={console.warn}
+          />
+          <PreferenceSetting
+            icon="WAREHOUSE"
+            columns={preferencesByType('warehouse')}
+            onChange={console.warn}
+          />
+          <PreferenceSetting
+            icon="LOGS"
+            columns={preferencesByType('comment')}
+            onChange={console.warn}
+          />
         </div>
       </div>
     </Dialog>
