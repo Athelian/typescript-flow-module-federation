@@ -50,13 +50,6 @@ describe('shipment task container', () => {
       rejectedBy: null,
       approvedAt: null,
       approvedBy: null,
-      assignedTo: [
-        {
-          ...staff,
-          organization,
-        },
-        ...remainUsers,
-      ],
       approvers: [
         {
           ...staff,
@@ -101,7 +94,6 @@ describe('shipment task container', () => {
         inProgressBy: null,
         completedAt: null,
         completedBy: null,
-        assignedTo: remainUsers,
         approvers: remainUsers,
       },
     ]);

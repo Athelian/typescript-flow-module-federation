@@ -675,7 +675,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                         message={
                                                           <FormattedMessage
                                                             id="modules.Shipment.importerDialogMessage"
-                                                            defaultMessage="Changing the Importer will remove all Batches. It will also remove all assigned Staff of the current Importer from all Tasks, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Importer?"
+                                                            defaultMessage="Changing the Importer will remove all Batches. Are you sure you want to change the Importer?"
                                                           />
                                                         }
                                                       />
@@ -782,13 +782,13 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                           changeMessage={
                                             <FormattedMessage
                                               id="modules.Shipment.mainExporterChangeMessage"
-                                              defaultMessage="Changing the Main Exporter will remove all Batches of the current Main Exporter and all assigned Staff of the current Main Exporter from all Tasks, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
+                                              defaultMessage="Changing the Main Exporter will remove all Batches of the current Main Exporter. Are you sure you want to change the Main Exporter?"
                                             />
                                           }
                                           warningMessage={
                                             <FormattedMessage
                                               id="modules.Shipment.mainExporterDeselectMessage"
-                                              defaultMessage="Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
+                                              defaultMessage="Are you sure you want to change the Main Exporter?"
                                             />
                                           }
                                           onSelect={selectedExporter => {

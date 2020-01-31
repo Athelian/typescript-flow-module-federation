@@ -8,7 +8,6 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
   SHIPMENT_UPDATE,
   SHIPMENT_APPROVE_TIMELINE_DATE,
-  SHIPMENT_ASSIGN_TIMELINE_DATE,
   SHIPMENT_SET_REVISE_TIMELINE_DATE,
   SHIPMENT_SET_TIMELINE_DATE,
 } from 'modules/permission/constants/shipment';
@@ -22,17 +21,12 @@ import {
   SectionHeader,
   DefaultAdjustmentStyle,
   DateInputFactory,
-  AssignmentApprovalFactory,
+  ApprovalFactory,
 } from 'components/Form';
 import { TimelineInfoSectionWrapperStyle, AddDateButtonWrapperStyle } from './style';
 
 type OptionalProps = {
   timelineDate: {
-    assignedTo: Array<{
-      id: string,
-      firstName: string,
-      lastName: string,
-    }>,
     approvedAt: ?Date,
     approvedBy: ?{
       id: string,
@@ -76,7 +70,6 @@ const TimelineInfoSection = (props: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
-  const assignedTo = getByPathWithDefault([], 'assignedTo', timelineDate);
   const approvedAt = getByPathWithDefault(null, 'approvedAt', timelineDate);
   const approvedBy = getByPathWithDefault(null, 'approvedBy', timelineDate);
   const timelineDateRevisions = getByPathWithDefault([], 'timelineDateRevisions', timelineDate);
@@ -89,19 +82,16 @@ const TimelineInfoSection = (props: Props) => {
           {renderBelowHeader}
         </SectionHeader>
 
-        <AssignmentApprovalFactory
+        <ApprovalFactory
           cacheKey="ShipmentUserSelect"
           groupIds={groupIds}
           name={sourceName}
-          assignmentsName={`${sourceName}.assignedTo`}
-          assignments={assignedTo}
           approvedAtName={`${sourceName}.approvedAt`}
           approvedAt={approvedAt}
           approvedByName={`${sourceName}.approvedBy`}
           approvedBy={approvedBy}
           setFieldValue={setFieldDeepValue}
           approvable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_APPROVE_TIMELINE_DATE])}
-          assignable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_ASSIGN_TIMELINE_DATE])}
         />
         <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
           <div className={AddDateButtonWrapperStyle}>

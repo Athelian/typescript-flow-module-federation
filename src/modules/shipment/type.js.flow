@@ -2,7 +2,6 @@
 
 export type CargoReady = ?{
   date: ?Date,
-  assignedToIds?: Array<string>,
   approvedById?: string,
   memo?: string,
   timelineDateRevisions?: Array<{
@@ -14,7 +13,6 @@ export type CargoReady = ?{
 
 type ShipmentTimeline = ?{
   date: ?Date,
-  assignedToIds?: Array<string>,
   approvedById?: string,
   memo?: string,
   timelineDateRevisions?: Array<{

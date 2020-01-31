@@ -38,7 +38,7 @@ import {
   TagsInput,
   TextInputFactory,
   TextAreaInputFactory,
-  AssignmentApprovalFactory,
+  ApprovalFactory,
   DateTimeInputFactory,
   DateInputFactory,
   DayInputFactory,
@@ -238,7 +238,7 @@ const ContainerSection = () => {
                           />
                         )}
                       </FormField>
-                      <AssignmentApprovalFactory
+                      <ApprovalFactory
                         cacheKey="ContainerUserSelect"
                         groupIds={[
                           getByPath('shipment.importer.id', values),
@@ -288,7 +288,7 @@ const ContainerSection = () => {
                         )}
                       </FormField>
 
-                      <AssignmentApprovalFactory
+                      <ApprovalFactory
                         cacheKey="ContainerUserSelect"
                         groupIds={[
                           getByPath('shipment.importer.id', values),
@@ -484,7 +484,7 @@ const ContainerSection = () => {
                       )}
                     </FormField>
 
-                    <AssignmentApprovalFactory
+                    <ApprovalFactory
                       cacheKey="ContainerUserSelect"
                       groupIds={[
                         getByPath('shipment.importer.id', values),
@@ -569,7 +569,10 @@ const ContainerSection = () => {
                       setFieldValue('tags', value);
                     }}
                     onClickRemove={value => {
-                      setFieldValue('tags', values.tags.filter(({ id }) => id !== value.id));
+                      setFieldValue(
+                        'tags',
+                        values.tags.filter(({ id }) => id !== value.id)
+                      );
                     }}
                     editable={{
                       set:

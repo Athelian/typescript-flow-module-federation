@@ -135,7 +135,6 @@ type DateRevisionType = {
 
 type TimelineDateType = {
   date: ?(string | Date),
-  assignedTo: Array<{ id: string }>,
   approvedBy: ?{ id: string },
   approvedAt: ?(string | Date),
   memo: ?string,
@@ -154,11 +153,6 @@ const parseTimelineDateField = (
       'date',
       getByPathWithDefault(null, 'date', originalTimelineDate),
       getByPathWithDefault(null, 'date', newTimelineDate)
-    ),
-    ...parseArrayOfIdsField(
-      'assignedToIds',
-      getByPathWithDefault([], 'assignedTo', originalTimelineDate),
-      getByPathWithDefault([], 'assignedTo', newTimelineDate)
     ),
     ...parseApprovalField(
       'approvedById',

@@ -134,17 +134,9 @@ export default defineMessages({
     id: 'modules.Shipments.secondTransitPort',
     defaultMessage: 'SECOND TRANSIT PORT',
   },
-  secondTransitArrivalAssignedTo: {
-    id: 'modules.Shipments.secondTransitArrivalAssignedTo',
-    defaultMessage: 'SECOND TRANSIT ARRIVAL ASSIGNED TO',
-  },
   secondTransitArrivalApproved: {
     id: 'modules.Shipments.secondTransitArrivalApproved',
     defaultMessage: 'SECOND TRANSIT ARRIVAL APPROVED',
-  },
-  secondTransitDepartureAssignedTo: {
-    id: 'modules.Shipments.secondTransitDepartureAssignedTo',
-    defaultMessage: 'SECOND TRANSIT DEPARTURE ASSIGNED TO',
   },
   secondTransitDepartureApproved: {
     id: 'modules.Shipments.secondTransitDepartureApproved',
@@ -153,10 +145,6 @@ export default defineMessages({
   dischargePort: {
     id: 'modules.Shipments.dischargePort',
     defaultMessage: 'DISCHARGE PORT',
-  },
-  dischargePortArrivalAssignedTo: {
-    id: 'modules.Shipments.dischargePortArrivalAssignedTo',
-    defaultMessage: 'DISCHARGE PORT ARRIVAL ASSIGNED TO',
   },
   dischargePortArrivalApproved: {
     id: 'modules.Shipments.dischargePortArrivalApproved',
@@ -406,10 +394,6 @@ export default defineMessages({
     id: 'modules.Shipments.cargoReadyRevisions',
     defaultMessage: 'CARGO READY REVISIONS',
   },
-  cargoReadyAssignedTo: {
-    id: 'modules.Shipments.cargoReadyAssignedTo',
-    defaultMessage: 'CARGO READY ASSIGNED TO',
-  },
   cargoReadyApproved: {
     id: 'modules.Shipments.cargoReadyApproved',
     defaultMessage: 'CARGO READY APPROVED',
@@ -446,10 +430,6 @@ export default defineMessages({
     id: 'modules.Shipments.customClearanceRevisions',
     defaultMessage: 'CUSTOMS CLEARANCE REVISIONS',
   },
-  customClearanceAssignedTo: {
-    id: 'modules.Shipments.customClearanceAssignedTo',
-    defaultMessage: 'CUSTOMS CLEARANCE ASSIGNED TO',
-  },
   customClearanceApproved: {
     id: 'modules.Shipments.customClearanceApproved',
     defaultMessage: 'CUSTOMS CLEARANCE APPROVED',
@@ -470,10 +450,6 @@ export default defineMessages({
     id: 'modules.Shipments.warehouseArrivalRevisions',
     defaultMessage: 'WAREHOUSE ARRIVAL REVISIONS',
   },
-  warehouseArrivalAssignedTo: {
-    id: 'modules.Shipments.warehouseArrivalAssignedTo',
-    defaultMessage: 'WAREHOUSE ARRIVAL ASSIGNED TO',
-  },
   warehouseArrivalApproved: {
     id: 'modules.Shipments.warehouseArrivalApproved',
     defaultMessage: 'WAREHOUSE ARRIVAL APPROVED',
@@ -493,10 +469,6 @@ export default defineMessages({
   deliveryReadyRevisions: {
     id: 'modules.Shipments.deliveryReadyRevisions',
     defaultMessage: 'DELIVERY READY REVISIONS',
-  },
-  deliveryReadyAssignedTo: {
-    id: 'modules.Shipments.deliveryReadyAssignedTo',
-    defaultMessage: 'DELIVERY READY ASSIGNED TO',
   },
   deliveryReadyApproved: {
     id: 'modules.Shipments.deliveryReadyApproved',
@@ -854,25 +826,13 @@ export default defineMessages({
     id: 'modules.Shipments.loadPortDepartureRevisions',
     defaultMessage: 'LOAD PORT DEPARTURE REVISIONS',
   },
-  loadPortDepartureAssignedTo: {
-    id: 'modules.Shipments.loadPortDepartureAssignedTo',
-    defaultMessage: 'LOAD PORT ASSIGNED TO',
-  },
   loadPortDepartureApproved: {
     id: 'modules.Shipments.loadPortDepartureApproved',
     defaultMessage: 'LOAD PORT APPROVED',
   },
-  firstTransitArrivalAssignedTo: {
-    id: 'modules.Shipments.firstTransitArrivalAssignedTo',
-    defaultMessage: 'FIRST TRANSIT ARRIVAL ASSIGNED TO',
-  },
   firstTransitArrivalApproved: {
     id: 'modules.Shipments.firstTransitArrivalApproved',
     defaultMessage: 'FIRST TRANSIT ARRIVAL APPROVED',
-  },
-  firstTransitDepartureAssignedTo: {
-    id: 'modules.Shipments.firstTransitDepartureAssignedTo',
-    defaultMessage: 'FIRST TRANSIT DEPARTURE ASSIGNED TO',
   },
   firstTransitDepartureApproved: {
     id: 'modules.Shipments.firstTransitDepartureApproved',
@@ -925,7 +885,7 @@ export default defineMessages({
   mainExporterChangeMessage: {
     id: 'modules.Shipment.mainExporterChangeMessage',
     defaultMessage:
-      'Changing the Main Exporter will remove all Batches of the current Main Exporter and all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?',
+      'Changing the Main Exporter will remove all Batches of the current Main Exporter. Are you sure you want to change the Main Exporter?',
   },
   mainExporterSelectMessage: {
     id: 'modules.Shipment.mainExporterSelectMessage',
@@ -934,8 +894,7 @@ export default defineMessages({
   },
   mainExporterDeselectMessage: {
     id: 'modules.Shipment.mainExporterDeselectMessage',
-    defaultMessage:
-      'Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?',
+    defaultMessage: 'Are you sure you want to change the Main Exporter?',
   },
 });
 

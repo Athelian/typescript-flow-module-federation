@@ -1,23 +1,18 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import FormattedNumber from 'components/FormattedNumber';
-import { Label, ApprovalInput, FieldItem, UserAssignmentInputFactory } from 'components/Form';
+import { Label, ApprovalInput, FieldItem } from 'components/Form';
 import { type UserAvatarType } from 'types';
-import { AssignedAndApprovalWrapperStyle } from './style';
+import { ApprovalWrapperStyle } from './style';
 
 type OptionalProps = {
-  assignmentsName: string,
-  assignments: Array<UserAvatarType>,
   approvedAtName: string,
   approvedAt: ?(string | Date),
   approvedByName: string,
   approvedBy: ?UserAvatarType,
   setFieldValue: (name: string, value: any) => void,
-  assignable: boolean,
   approvable: boolean,
   name: string,
-  cacheKey: string,
 };
 
 type Props = OptionalProps & {
@@ -25,50 +20,25 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  assignmentsName: '',
-  assignments: [],
   approvedAtName: '',
   approvedAt: null,
   approvedByName: '',
   approvedBy: null,
   setFieldValue: () => {},
-  assignable: false,
   approvable: false,
   name: '',
 };
 
-const AssignmentApprovalFactory = ({
-  cacheKey,
+const ApprovalFactory = ({
   name,
-  assignmentsName,
-  assignments,
   approvedAtName,
   approvedAt,
   approvedByName,
   approvedBy,
   setFieldValue,
-  assignable,
   approvable,
   groupIds,
 }: Props) => {
-  const userAssignmentInputFactoryConfig = {
-    groupIds,
-    name: assignmentsName,
-    values: assignments,
-    onChange: (fieldName: string, assigns: Array<Object>) => {
-      setFieldValue(fieldName, assigns);
-    },
-    label: (
-      <>
-        <FormattedMessage id="components.inputs.assignedTo" defaultMessage="ASSIGNED TO" />
-        {' ('}
-        <FormattedNumber value={assignments.length} />)
-      </>
-    ),
-    cacheKey,
-    editable: assignable,
-  };
-
   const approvalInputConfig = {
     groupIds,
     approvedAt,
@@ -85,9 +55,7 @@ const AssignmentApprovalFactory = ({
   };
 
   return (
-    <div className={AssignedAndApprovalWrapperStyle}>
-      <UserAssignmentInputFactory {...userAssignmentInputFactoryConfig} />
-
+    <div className={ApprovalWrapperStyle}>
       <FieldItem
         vertical
         label={
@@ -101,6 +69,6 @@ const AssignmentApprovalFactory = ({
   );
 };
 
-AssignmentApprovalFactory.defaultProps = defaultProps;
+ApprovalFactory.defaultProps = defaultProps;
 
-export default AssignmentApprovalFactory;
+export default ApprovalFactory;
