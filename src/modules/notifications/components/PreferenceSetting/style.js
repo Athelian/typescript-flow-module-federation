@@ -13,7 +13,7 @@ export const LeftWrapperStyle: string = css`
 
 export const GroupIconStyle = (color: string): string => css`
   position: sticky;
-  top: 0px;
+  top: -50px;
   display: flex;
   align-items: center;
   justify-content: center;

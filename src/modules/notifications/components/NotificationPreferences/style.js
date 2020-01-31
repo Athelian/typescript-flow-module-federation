@@ -1,79 +1,46 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, layout, shadows, colors } from 'styles/common';
+import { layout, colors, fontSizes, shadows, presets, borderRadiuses } from 'styles/common';
 
-export const ButtonStyle = css`
-  ${borderRadiuses.MAIN};
-`;
-
-export const ModalWrapperStyle: string = css`
+export const NotificationPreferencesModalWrapperStyle: string = css`
   ${layout.VERTICAL};
-  width: 600px;
 `;
 
-export const HeaderStyle: string = css`
-  ${layout.VERTICAL};
-  position: sticky;
-  z-index: 1;
-`;
-
-export const ActionsWrapperStyle: string = css`
-  ${layout.HORIZONTAL};
-  ${layout.CENTER};
-  ${shadows.HEADER};
-  ${borderRadiuses.MAIN};
-  background-color: ${colors.WHITE};
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  justify-content: space-between;
-  height: 50px;
-  padding: 0 20px;
-  z-index: 2;
-`;
-
-export const ButtonsWrapperStyle: string = css`
-  ${layout.GRID_HORIZONTAL};
-  grid-gap: 20px;
-`;
-
-export const InfoTooltipStyle = css`
-  font-weight: 900;
-  font-size: 14px;
-  line-height: 14px;
+export const NavbarWrapperStyle: string = css`
   display: flex;
   align-items: center;
-  text-align: center;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  justify-content: space-between;
+  position: sticky;
+  top: -100px;
+  z-index: 1;
+  height: 50px;
+  ${shadows.HEADER};
+  padding: 0 10px 0 20px;
+  background-color: ${colors.WHITE};
+  ${borderRadiuses.MAIN};
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+`;
+
+export const EmailNotificationsWrapperStyle = (isEmailNotificationsEnabled: boolean): string => css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 10px;
+  align-items: center;
+  color: ${isEmailNotificationsEnabled ? colors.TEAL : colors.GRAY_LIGHT};
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  white-space: nowrap;
+`;
+
+export const NavbarRightWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 10px;
+`;
+
+export const InfoTooltipWrapperStyle: string = css`
+  ${presets.BUTTON};
   color: ${colors.GRAY_LIGHT};
-`;
-
-export const EmailWrapperStyle = css`
-  ${layout.HORIZONTAL};
-  width: 100%;
-  font-weight: 900;
-  font-size: 14px;
-  font-size: 14px;
-  line-height: 14px;
-  align-items: center;
-  text-align: center;
-  color: #11d1a6;
-`;
-
-export const EmailPreferenceStyle = css`
-  ${layout.HORIZONTAL};
-  align-items: center;
-  text-align: center;
-  margin: 0 10px;
-`;
-
-export const IntervalStyle = css`
-  ${layout.HORIZONTAL};
-  & > div > div > div {
-    background: #11d1a6;
-    border-radius: 5px;
-    & > input {
-      color: ${colors.WHITE};
-    }
-  }
+  ${fontSizes.MAIN};
+  width: 30px;
+  height: 30px;
 `;

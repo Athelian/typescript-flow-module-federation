@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, colors, shadows } from 'styles/common';
+import { borderRadiuses, colors } from 'styles/common';
 
 export const PreferenceWrapperStyle = css`
   display: flex;
@@ -9,12 +9,7 @@ export const PreferenceWrapperStyle = css`
   background-color: ${colors.WHITE};
   margin-bottom: 10px;
   user-select: none;
-  &:hover {
-    ${shadows.INPUT};
-    & > i {
-      opacity: 1;
-    }
-  }
+  padding: 0 0 0 30px;
 `;
 
 export const CheckboxWrapperStyle: string = css`
