@@ -9,9 +9,9 @@ import NavigateLink from 'components/NavigateLink';
 import { BaseButton } from 'components/Buttons';
 import { Label } from 'components/Form';
 import { notificationListQuery } from 'modules/notifications/query';
+import { archiveAllMutation } from 'modules/notifications/mutation';
 import { isNotFound, isForbidden, isBadRequest } from 'utils/data';
 import NotificationsRowMini from './components/NotificationsRowMini';
-import { archiveAllMutation } from './mutation';
 import {
   NotificationsDropDownWrapperStyle,
   NotificationsBodyWrapperStyle,

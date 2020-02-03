@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { useMutation } from '@apollo/react-hooks';
 import { navigate } from '@reach/router';
 import { NavBar, EntityIcon, Filter, NotificationFilterConfig } from 'components/NavBar';
 import { Content } from 'components/Layout';
@@ -8,6 +9,7 @@ import { BaseButton } from 'components/Buttons';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import useFilterSort from 'hooks/useFilterSort';
 import NotificationList from './list';
+import { archiveAllMutation } from './mutation';
 import NotificationPreferences from './components/NotificationPreferences';
 
 type Props = {
@@ -16,11 +18,23 @@ type Props = {
 
 const NotificationListModule = ({ activeTab = 'active' }: Props) => {
   const isActive = activeTab === 'active';
+  const [archiveAll] = useMutation(archiveAllMutation);
   const { filterBy, setFilterBy } = useFilterSort(
     { archived: !isActive },
     { updatedAt: 'DESCENDING' },
-    isActive ? 'activeNotification' : 'archiveNotification'
+    `${activeTab}Notification`
   );
+
+  React.useEffect(() => {
+    return () => {
+      if (isActive !== filterBy.archived) {
+        setFilterBy({
+          ...filterBy,
+          archived: isActive,
+        });
+      }
+    };
+  }, [filterBy, isActive, setFilterBy]);
 
   const [isOpenSetting, setIsOpenSetting] = React.useState(false);
   return (
@@ -40,7 +54,9 @@ const NotificationListModule = ({ activeTab = 'active' }: Props) => {
           }
           icon="ACTIVE"
           onClick={() => {
-            if (!isActive) navigate('/notifications/active');
+            if (!isActive) {
+              navigate('/notifications/active');
+            }
           }}
         />
         <TabItem
@@ -56,7 +72,9 @@ const NotificationListModule = ({ activeTab = 'active' }: Props) => {
           }
           icon="ARCHIVE"
           onClick={() => {
-            if (isActive) navigate('/notifications/archive');
+            if (isActive) {
+              navigate('/notifications/archive');
+            }
           }}
         />
         <Filter config={NotificationFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
@@ -70,7 +88,10 @@ const NotificationListModule = ({ activeTab = 'active' }: Props) => {
             textColor="GRAY_DARK"
             backgroundColor="GRAY_SUPER_LIGHT"
             hoverBackgroundColor="GRAY_DARK"
-            onClick={() => {}}
+            onClick={() => {
+              archiveAll();
+              navigate('/notifications/active');
+            }}
           />
         )}
 

@@ -15,7 +15,6 @@ const NotificationList = ({ filterBy }: Props) => (
     variables={{
       page: 1,
       perPage: 10,
-      // TODO: need API, send notification to API
       filterBy,
     }}
     fetchPolicy="network-only"
