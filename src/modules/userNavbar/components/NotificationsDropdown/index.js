@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -147,6 +148,14 @@ const NotificationsDropdown = ({
             onClick={() => {
               archiveAll();
               refetch();
+              // NOTE: fix for the edge case, open the view all from dropdown on notification page
+              if (window.location.href.includes('/notifications')) {
+                if (window.location.href.includes('/notifications/active')) {
+                  navigate('/notifications');
+                } else {
+                  navigate('/notifications/active');
+                }
+              }
             }}
             type="button"
           >
