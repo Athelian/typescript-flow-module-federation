@@ -1255,13 +1255,6 @@ export const MaskEditFilterConfig: Array<FilterConfig> = [
 
 export const NotificationFilterConfig: Array<FilterConfig> = [
   {
-    entity: 'NOTIFICATION',
-    field: 'archived',
-    type: 'archived',
-    message: productMessages.status,
-    defaultValue: false,
-  },
-  {
     entity: 'USER',
     field: 'userIds',
     type: 'users',
