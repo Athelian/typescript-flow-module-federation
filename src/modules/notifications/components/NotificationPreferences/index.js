@@ -5,7 +5,7 @@ import {
   NotificationTypeValues,
   NotificationPreference,
 } from 'generated/graphql';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import { isEquals } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
 import Dialog from 'components/Dialog';
@@ -16,6 +16,7 @@ import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { notificationPreferencesQuery } from 'modules/notifications/query';
 import PreferenceSetting from '../PreferenceSetting';
+import { notificationPreferencesUpdateMutation } from './mutation';
 import messages from './messages';
 import {
   NotificationPreferencesModalWrapperStyle,
@@ -60,11 +61,26 @@ const defaultTimer = {
   minutes: 10,
 };
 
+function convertTimer(timer: string) {
+  if (timer.includes('h')) {
+    const [hours] = timer.split('h');
+    return {
+      hours: Number(hours),
+    };
+  }
+
+  const [minutes] = timer.split('m');
+  return {
+    minutes: Number(minutes),
+  };
+}
+
 function NotificationPreferences({ isOpen, onClose }: Props) {
+  const [notificationPreferencesUpdate] = useMutation(notificationPreferencesUpdateMutation);
   const [isEmailNotificationsEnabled, setEmailNotificationsEnabled] = React.useState(false);
   const [preferences, setPreferences] = React.useState([]);
   const [timer, setTimer] = React.useState({});
-  const { data, loading, error } = useQuery(notificationPreferencesQuery, {
+  const { data, loading, error, refetch } = useQuery(notificationPreferencesQuery, {
     onCompleted: result => {
       setEmailNotificationsEnabled(result?.viewer?.notificationPreferences?.allowedEmail ?? false);
       setPreferences(result?.viewer?.notificationPreferences?.notifications ?? []);
@@ -81,8 +97,29 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
     setPreferences(preferences.map(item => (item.type === type ? { ...item, enabled } : item)));
   };
 
-  // TODO: handle mutation
-  const handleApply = () => {};
+  const handleApply = () => {
+    notificationPreferencesUpdate({
+      variables: {
+        input: {
+          allowedEmail: isEmailNotificationsEnabled,
+          emailInterval: {
+            years: 0,
+            months: 0,
+            weeks: 0,
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+            nanos: 0,
+            ...timer,
+          },
+          notifications: preferences.map(({ type, enabled }) => ({ type, enabled })),
+        },
+      },
+    }).then(() => {
+      refetch();
+    });
+  };
 
   const handleReset = React.useCallback(() => {
     setEmailNotificationsEnabled(data?.viewer?.notificationPreferences?.allowedEmail ?? false);
@@ -101,7 +138,7 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
     return error.message;
   }
 
-  const interval = timer.hours ? { hours: timer.hours } : { minutes: timer.minutes };
+  const interval = timer.hours ? `${timer.hours}h` : `${timer.minutes}m`;
 
   return (
     <Dialog isOpen={isOpen} onRequestClose={onClose}>
@@ -144,23 +181,23 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
                 items={[
                   {
                     label: '10 min',
-                    value: { minutes: 10 },
+                    value: '10m',
                   },
                   {
                     label: '30 min',
-                    value: { minutes: 30 },
+                    value: '30m',
                   },
                   {
                     label: '1 hr',
-                    value: { hours: 1 },
+                    value: '1h',
                   },
                   {
                     label: '6 hrs',
-                    value: { hours: 6 },
+                    value: '6h',
                   },
                   {
                     label: '12 hrs',
-                    value: { hours: 12 },
+                    value: '12h',
                   },
                 ]}
                 inputWidth="60px"
@@ -169,6 +206,7 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
                 required
                 hideDropdownArrow
                 hideTooltip
+                onChange={evt => setTimer(convertTimer(evt.target.value))}
               />
             )}
           </div>
@@ -196,7 +234,7 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
           </div>
         </div>
 
-        {loading ? (
+        {loading && !data ? (
           <LoadingIcon />
         ) : (
           <>
