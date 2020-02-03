@@ -66,12 +66,14 @@ function convertTimer(timer: string) {
     const [hours] = timer.split('h');
     return {
       hours: Number(hours),
+      minutes: 0,
     };
   }
 
   const [minutes] = timer.split('m');
   return {
     minutes: Number(minutes),
+    hours: 0,
   };
 }
 
@@ -79,7 +81,7 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
   const [notificationPreferencesUpdate] = useMutation(notificationPreferencesUpdateMutation);
   const [isEmailNotificationsEnabled, setEmailNotificationsEnabled] = React.useState(false);
   const [preferences, setPreferences] = React.useState([]);
-  const [timer, setTimer] = React.useState({});
+  const [timer, setTimer] = React.useState(defaultTimer);
   const { data, loading, error, refetch } = useQuery(notificationPreferencesQuery, {
     onCompleted: result => {
       setEmailNotificationsEnabled(result?.viewer?.notificationPreferences?.allowedEmail ?? false);
