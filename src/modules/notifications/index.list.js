@@ -80,7 +80,11 @@ const NotificationListModule = ({ activeTab = 'active' }: Props) => {
             hoverBackgroundColor="GRAY_DARK"
             onClick={() => {
               archiveAll();
-              navigate('/notifications/active');
+              if (window.location.href.includes('/notifications/active')) {
+                navigate('/notifications');
+              } else {
+                navigate('/notifications/active');
+              }
             }}
           />
         )}

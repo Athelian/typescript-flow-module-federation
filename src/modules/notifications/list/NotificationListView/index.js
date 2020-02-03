@@ -9,11 +9,11 @@ type Props = {
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
-  onRefetch: () => void,
 };
 
 const NotificationListView = (props: Props) => {
-  const { items, onLoadMore, hasMore, isLoading, onRefetch } = props;
+  const { items, onLoadMore, hasMore, isLoading } = props;
+  const [ignoreList, setIgnoreList] = React.useState([]);
 
   return (
     <GridView
@@ -31,9 +31,17 @@ const NotificationListView = (props: Props) => {
         />
       }
     >
-      {items.map(item => (
-        <NotificationRow key={item.id} notification={item} onRefetch={onRefetch} />
-      ))}
+      {items.map(item =>
+        ignoreList.includes(item.id) ? null : (
+          <NotificationRow
+            key={item.id}
+            notification={item}
+            onRemove={id => {
+              setIgnoreList([...ignoreList, id]);
+            }}
+          />
+        )
+      )}
     </GridView>
   );
 };

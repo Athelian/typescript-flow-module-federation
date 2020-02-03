@@ -24,19 +24,19 @@ import {
 
 type Props = {|
   notification: Notification,
-  onRefetch: () => void,
+  onRemove: (id: string) => void,
 |};
 
-const NotificationRow = ({ notification, onRefetch }: Props) => {
+const NotificationRow = ({ notification, onRemove }: Props) => {
   const icon = parseIcon(notification?.entity?.__typename);
   const [activeNotification] = useMutation(activeNotificationMutation, {
     onCompleted: () => {
-      onRefetch();
+      onRemove(notification.id);
     },
   });
   const [archiveNotification] = useMutation(archiveNotificationMutation, {
     onCompleted: () => {
-      onRefetch();
+      onRemove(notification.id);
     },
   });
 
