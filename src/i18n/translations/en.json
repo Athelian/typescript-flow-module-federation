@@ -1107,6 +1107,7 @@
   "modules.RelationMap.deleteContainer.message1": "Are you sure you want to delete this {containerLabel}",
   "modules.RelationMap.deleteContainer.message2": "All of their {batchesLabel} will be moved to the Shipment's Batch Pool",
   "modules.RelationMap.deleteItem.deleting": "Deleting {itemLabel} ...",
+  "modules.RelationMap.deleteItem.loading": "Loading {itemLabel} ...",
   "modules.RelationMap.deleteItem.message1": "Are you sure you want to delete this {itemLabel}",
   "modules.RelationMap.deleteItem.message2": "All of their {batchesLabel} will be deleted as well",
   "components.button.expandTooltip": "Expand all Orders. Loaded data will also be expanded.",

@@ -1107,6 +1107,7 @@
   "modules.RelationMap.deleteContainer.message1": "この{containerLabel}を削除しますがよろしいですか？",
   "modules.RelationMap.deleteContainer.message2": "すべての{batchesLabel}はシップメントの未載バッチに移動されます",
   "modules.RelationMap.deleteItem.deleting": "{itemLabel}を削除しています",
+  "modules.RelationMap.deleteItem.loading": "Loading {itemLabel} ...",
   "modules.RelationMap.deleteItem.message1": "本当にこの{itemLabel}を削除しますか？",
   "modules.RelationMap.deleteItem.message2": "そこに含まれる全ての{batchesLabel}も削除されます",
   "components.button.expandTooltip": "全ての発注を展開する",

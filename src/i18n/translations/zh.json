@@ -1107,6 +1107,7 @@
   "modules.RelationMap.deleteContainer.message1": "确认删除集装箱: {containerLabel}",
   "modules.RelationMap.deleteContainer.message2": "{batchesLabel} 将全部移至待载批次",
   "modules.RelationMap.deleteItem.deleting": "正在删除{itemLabel}...",
+  "modules.RelationMap.deleteItem.loading": "正在加载 {itemLabel} ...",
   "modules.RelationMap.deleteItem.message1": "确定要删除此{itemLabel}",
   "modules.RelationMap.deleteItem.message2": "他们的所有{batchesLabel}也将被删除",
   "components.button.expandTooltip": "展开所有订货",
