@@ -48,4 +48,24 @@ export const notificationListQuery = gql`
   }
 `;
 
-export default notificationListQuery;
+export const notificationPreferencesQuery = gql`
+  query notificationPreferencesQuery {
+    viewer {
+      notificationPreferences {
+        ... on NotificationPreferences {
+          allowedEmail
+          emailInterval {
+            hours
+            minutes
+          }
+          notifications {
+            ... on NotificationPreference {
+              type
+              enabled
+            }
+          }
+        }
+      }
+    }
+  }
+`;

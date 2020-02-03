@@ -11,25 +11,15 @@ import {
 
 type Props = {|
   icon: string,
-  columns: Array<{
-    column: string,
+  preferences: Array<{
+    type: string,
     title: React$Node,
-    selected: boolean,
+    enabled: boolean,
   }>,
-  onChange: (Array<string>) => void,
+  onChange: (type: string, enabled: boolean) => void,
 |};
 
-const PreferenceSetting = ({ icon, columns, onChange }: Props) => {
-  const handleToggle = (hiddenKey: string) => {
-    console.warn({
-      hiddenKey,
-    });
-  };
-
-  console.warn({
-    onChange,
-  });
-
+const PreferenceSetting = ({ icon, preferences, onChange }: Props) => {
   return (
     <div className={GroupSettingWrapperStyle}>
       <div className={LeftWrapperStyle}>
@@ -39,12 +29,13 @@ const PreferenceSetting = ({ icon, columns, onChange }: Props) => {
       </div>
 
       <div className={PreferencesWrapperStyle}>
-        {columns.map(({ column, title, selected }) => (
+        {preferences.map(({ type, title, enabled }) => (
           <PreferenceItem
-            onToggle={handleToggle}
-            column={column}
+            key={type}
+            onToggle={onChange}
+            type={type}
             title={title}
-            selected={selected}
+            enabled={enabled}
           />
         ))}
       </div>

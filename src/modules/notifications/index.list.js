@@ -17,29 +17,16 @@ type Props = {
 };
 
 const NotificationListModule = ({ activeTab = 'active' }: Props) => {
-  const isActive = activeTab === 'active';
+  const [isOpenSetting, setIsOpenSetting] = React.useState(false);
   const [archiveAll] = useMutation(archiveAllMutation);
   const { filterBy, setFilterBy } = useFilterSort(
-    { archived: !isActive },
+    {},
     { updatedAt: 'DESCENDING' },
     `${activeTab}Notification`
   );
 
-  const { archived, ...otherFilterBy } = filterBy;
-
-  React.useEffect(() => {
-    // make sure the cache is correct when switch tab
-    return () => {
-      if (isActive !== archived) {
-        setFilterBy({
-          ...otherFilterBy,
-          archived: isActive,
-        });
-      }
-    };
-  }, [archived, isActive, otherFilterBy, setFilterBy]);
-
-  const [isOpenSetting, setIsOpenSetting] = React.useState(false);
+  const isActive = activeTab === 'active';
+  const archived = !isActive;
   return (
     <Content>
       <NavBar>
@@ -80,7 +67,7 @@ const NotificationListModule = ({ activeTab = 'active' }: Props) => {
             }
           }}
         />
-        <Filter config={NotificationFilterConfig} filterBy={otherFilterBy} onChange={setFilterBy} />
+        <Filter config={NotificationFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
 
         {isActive && (
           <BaseButton
@@ -115,8 +102,8 @@ const NotificationListModule = ({ activeTab = 'active' }: Props) => {
       <NotificationList
         key={activeTab}
         filterBy={{
-          ...otherFilterBy,
-          archived: !isActive,
+          ...filterBy,
+          archived,
         }}
       />
       <NotificationPreferences isOpen={isOpenSetting} onClose={() => setIsOpenSetting(false)} />

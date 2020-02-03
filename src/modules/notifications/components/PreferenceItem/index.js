@@ -4,20 +4,20 @@ import { CheckboxInput, Label } from 'components/Form';
 import { PreferenceWrapperStyle, CheckboxWrapperStyle } from './style';
 
 type Props = {|
-  column: string,
+  type: string,
+  enabled: boolean,
   title: React$Node,
-  selected: boolean,
-  onToggle: (selectedKey: string) => void,
+  onToggle: (type: string, enabled: boolean) => void,
 |};
 
-const PreferenceItem = ({ column, onToggle, selected, title }: Props) => (
+const PreferenceItem = ({ type, onToggle, enabled, title }: Props) => (
   <div className={PreferenceWrapperStyle}>
     <div className={CheckboxWrapperStyle}>
       <CheckboxInput
-        checked={selected}
+        checked={enabled}
         onToggle={(e: SyntheticEvent<HTMLButtonElement>) => {
           e.stopPropagation();
-          onToggle(column);
+          onToggle(type, !enabled);
         }}
       />
     </div>

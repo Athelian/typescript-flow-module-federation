@@ -1,12 +1,19 @@
 // @flow
 import * as React from 'react';
-import { type NotificationType, NotificationTypeValues } from 'generated/graphql';
+import {
+  type NotificationType,
+  NotificationTypeValues,
+  NotificationPreference,
+} from 'generated/graphql';
+import { useQuery } from '@apollo/react-hooks';
+import LoadingIcon from 'components/LoadingIcon';
 import Dialog from 'components/Dialog';
 import { FormattedMessage } from 'react-intl';
 import { ToggleInput, SelectInputFactory } from 'components/Form';
 import { ApplyButton, ResetButton } from 'components/Buttons';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
+import { notificationPreferencesQuery } from 'modules/notifications/query';
 import PreferenceSetting from '../PreferenceSetting';
 import messages from './messages';
 import {
@@ -22,31 +29,81 @@ type Props = {|
   onClose: () => void,
 |};
 
-const preferencesByType = (
-  type: string,
-  ignoreKeys: Array<string> = []
-): Array<NotificationType> => {
+const preferencesByType = ({
+  entity,
+  ignoreKeys = [],
+  preferences = [],
+}: {
+  entity: string,
+  preferences: Array<NotificationPreference>,
+  ignoreKeys?: Array<string>,
+}): Array<NotificationType> => {
   return Object.values(NotificationTypeValues)
-    .filter(key => String(key).startsWith(type) && !ignoreKeys.includes(key))
-    .map(column => ({
-      column,
+    .filter(key => String(key).startsWith(entity) && !ignoreKeys.includes(entity))
+    .map(type => ({
+      type,
       title: (
         <FormattedMessage
-          {...(messages?.[column] ?? {
-            id: `modules.Notification.preferences.${String(column)}`,
-            defaultMessage: column,
+          {...(messages?.[type] ?? {
+            id: `modules.Notification.preferences.${String(type)}`,
+            defaultMessage: type,
           })}
         />
       ),
-      selected: false,
+      enabled: preferences.find(item => item?.type === type)?.enabled ?? false,
     }));
 };
 
 function NotificationPreferences({ isOpen, onClose }: Props) {
   const [isEmailNotificationsEnabled, setEmailNotificationsEnabled] = React.useState(false);
-  const isDirty = false;
+  const [preferences, setPreferences] = React.useState([]);
+  const [timer, setTimer] = React.useState({});
+  const { data, loading, error } = useQuery(notificationPreferencesQuery, {
+    onCompleted: result => {
+      setEmailNotificationsEnabled(result?.viewer?.notificationPreferences?.allowedEmail ?? false);
+      setPreferences(result?.viewer?.notificationPreferences?.notifications ?? []);
+      setTimer(
+        result?.viewer?.notificationPreferences?.emailInterval ?? {
+          hours: 0,
+          minutes: 10,
+        }
+      );
+    },
+  });
+
+  // TODO: check dirty
+  const isDirty =
+    data?.viewer?.notificationPreferences?.allowedEmail !== isEmailNotificationsEnabled;
+
+  const togglePreference = (type: string, enabled: boolean) => {
+    setPreferences([...preferences.filter(item => item.type !== type), { type, enabled }]);
+  };
+
+  // TODO: handle mutation
   const handleApply = () => {};
-  const handleReset = () => {};
+
+  const handleReset = React.useCallback(() => {
+    setEmailNotificationsEnabled(data?.viewer?.notificationPreferences?.allowedEmail ?? false);
+    setPreferences(data?.viewer?.notificationPreferences?.notifications ?? []);
+    setTimer(
+      data?.viewer?.notificationPreferences?.emailInterval ?? {
+        minutes: 10,
+      }
+    );
+  }, [data]);
+
+  // Clear state after closing setting
+  React.useEffect(() => {
+    if (!isOpen) {
+      handleReset();
+    }
+  }, [handleReset, isOpen]);
+
+  if (error) {
+    return error.message;
+  }
+
+  const interval = timer.hours ? { hours: timer.hours } : { minutes: timer.minutes };
 
   return (
     <Dialog isOpen={isOpen} onRequestClose={onClose}>
@@ -85,7 +142,7 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
 
             {isEmailNotificationsEnabled && (
               <SelectInputFactory
-                value={{ minutes: 10 }}
+                value={interval}
                 items={[
                   {
                     label: '10 min',
@@ -141,62 +198,100 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
           </div>
         </div>
 
-        <PreferenceSetting
-          icon="ORDER"
-          columns={preferencesByType('order', ['order_create_item', 'order_update_item_quantity'])}
-          onChange={console.warn}
-        />
+        {loading ? (
+          <LoadingIcon />
+        ) : (
+          <>
+            <PreferenceSetting
+              icon="ORDER"
+              preferences={preferencesByType({
+                preferences,
+                entity: 'order',
+                ignoreKeys: ['order_create_item', 'order_update_item_quantity'],
+              })}
+              onChange={togglePreference}
+            />
 
-        <PreferenceSetting
-          icon="ORDER_ITEM"
-          columns={[
-            ...preferencesByType('order_create_item'),
-            ...preferencesByType('order_update_item_quantity'),
-          ]}
-          onChange={console.warn}
-        />
+            <PreferenceSetting
+              icon="ORDER_ITEM"
+              preferences={[
+                ...preferencesByType({
+                  preferences,
+                  entity: 'order_create_item',
+                }),
+                ...preferencesByType({
+                  preferences,
+                  entity: 'order_update_item_quantity',
+                }),
+              ]}
+              onChange={togglePreference}
+            />
 
-        <PreferenceSetting
-          icon="PRODUCT"
-          columns={preferencesByType('product', ['product_create_provider'])}
-          onChange={console.warn}
-        />
+            <PreferenceSetting
+              icon="PRODUCT"
+              preferences={preferencesByType({
+                preferences,
+                entity: 'product',
+                ignoreKeys: ['product_create_provider'],
+              })}
+              onChange={togglePreference}
+            />
 
-        <PreferenceSetting
-          icon="PRODUCT_PROVIDER"
-          columns={preferencesByType('product_create_provider')}
-          onChange={console.warn}
-        />
+            <PreferenceSetting
+              icon="PRODUCT_PROVIDER"
+              preferences={preferencesByType({
+                preferences,
+                entity: 'product_create_provider',
+              })}
+              onChange={togglePreference}
+            />
 
-        <PreferenceSetting
-          icon="BATCH"
-          columns={preferencesByType('batch')}
-          onChange={console.warn}
-        />
+            <PreferenceSetting
+              icon="BATCH"
+              preferences={preferencesByType({
+                preferences,
+                entity: 'batch',
+              })}
+              onChange={togglePreference}
+            />
 
-        <PreferenceSetting
-          icon="SHIPMENT"
-          columns={preferencesByType('shipment')}
-          onChange={console.warn}
-        />
+            <PreferenceSetting
+              icon="SHIPMENT"
+              preferences={preferencesByType({
+                preferences,
+                entity: 'shipment',
+              })}
+              onChange={togglePreference}
+            />
 
-        <PreferenceSetting
-          icon="CONTAINER"
-          columns={preferencesByType('container')}
-          onChange={console.warn}
-        />
+            <PreferenceSetting
+              icon="CONTAINER"
+              preferences={preferencesByType({
+                preferences,
+                entity: 'container',
+              })}
+              onChange={togglePreference}
+            />
 
-        <PreferenceSetting
-          icon="WAREHOUSE"
-          columns={preferencesByType('warehouse')}
-          onChange={console.warn}
-        />
+            <PreferenceSetting
+              icon="WAREHOUSE"
+              preferences={preferencesByType({
+                preferences,
+                entity: 'warehouse',
+              })}
+              onChange={togglePreference}
+            />
 
-        <PreferenceSetting
-          icon="LOGS"
-          columns={preferencesByType('comment')}
-          onChange={console.warn}
-        />
+            <PreferenceSetting
+              icon="LOGS"
+              preferences={preferencesByType({
+                preferences,
+                entity: 'comment',
+              })}
+              onChange={togglePreference}
+            />
+          </>
+        )}
       </div>
     </Dialog>
   );
