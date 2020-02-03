@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { usersQuery } from 'graphql/staff/query';
+import type { User } from 'generated/graphql';
 import useFilterSort from 'hooks/useFilterSort';
 import useQueryList from 'hooks/useQueryList';
 import Selector from 'components/Selector';
@@ -18,11 +19,9 @@ import {
   UserSortConfig,
 } from 'components/NavBar';
 
-type UserAvatarType = {};
-
 type Props = {|
-  selected: Array<UserAvatarType>,
-  onSelect: (values: Array<UserAvatarType>) => void,
+  selected: Array<User>,
+  onSelect: (values: Array<User>) => void,
   onCancel: () => void,
   organizationIds: Array<string>,
 |};
