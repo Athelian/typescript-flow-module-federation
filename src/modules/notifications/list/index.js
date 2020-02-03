@@ -19,7 +19,7 @@ const NotificationList = ({ filterBy }: Props) => (
     }}
     fetchPolicy="network-only"
   >
-    {({ loading, data, fetchMore, error }) => {
+    {({ loading, data, fetchMore, refetch, error }) => {
       if (error) {
         return error.message;
       }
@@ -41,6 +41,15 @@ const NotificationList = ({ filterBy }: Props) => (
               'viewer.notifications'
             )
           }
+          onRefetch={() => {
+            refetch({
+              variables: {
+                page: 1,
+                perPage: 10,
+                filterBy,
+              },
+            });
+          }}
           hasMore={hasMore}
           isLoading={loading}
         />

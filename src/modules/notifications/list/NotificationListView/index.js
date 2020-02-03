@@ -9,17 +9,11 @@ type Props = {
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
-  renderItem?: (item: Object) => React.Node,
-};
-
-const defaultRenderItem = (item: Object) => <NotificationRow key={item.id} notification={item} />;
-
-const defaultProps = {
-  renderItem: defaultRenderItem,
+  onRefetch: () => void,
 };
 
 const NotificationListView = (props: Props) => {
-  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
+  const { items, onLoadMore, hasMore, isLoading, onRefetch } = props;
 
   return (
     <GridView
@@ -37,11 +31,11 @@ const NotificationListView = (props: Props) => {
         />
       }
     >
-      {items.map(item => renderItem(item))}
+      {items.map(item => (
+        <NotificationRow key={item.id} notification={item} onRefetch={onRefetch} />
+      ))}
     </GridView>
   );
 };
-
-NotificationListView.defaultProps = defaultProps;
 
 export default NotificationListView;

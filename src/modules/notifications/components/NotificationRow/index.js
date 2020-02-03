@@ -24,12 +24,21 @@ import {
 
 type Props = {|
   notification: Notification,
+  onRefetch: () => void,
 |};
 
-const NotificationRow = ({ notification }: Props) => {
+const NotificationRow = ({ notification, onRefetch }: Props) => {
   const icon = parseIcon(notification?.entity?.__typename);
-  const [activeNotification] = useMutation(activeNotificationMutation);
-  const [archiveNotification] = useMutation(archiveNotificationMutation);
+  const [activeNotification] = useMutation(activeNotificationMutation, {
+    onCompleted: () => {
+      onRefetch();
+    },
+  });
+  const [archiveNotification] = useMutation(archiveNotificationMutation, {
+    onCompleted: () => {
+      onRefetch();
+    },
+  });
 
   return (
     <div
