@@ -60,7 +60,7 @@ const NotificationsDropdown = ({
         !isNotFound(notification) && !isForbidden(notification) && !isBadRequest(notification)
     )
     .splice(0, 10);
-  const totalMoreItems = (data?.viewer?.notificationCount ?? 10) - perPage;
+  const totalMoreItems = (data?.viewer?.notificationCount ?? perPage) - perPage;
 
   return (
     <div className={NotificationsDropDownWrapperStyle(isOpen)}>
