@@ -11124,6 +11124,7 @@ export type Mutation = {|
   commentUpdate: CommentPayload,
   commentDelete?: ?EmptyPayload,
   timelineRead?: ?EmptyPayload,
+  notificationActive: $ElementType<Scalars, 'Boolean'>,
   notificationArchive: $ElementType<Scalars, 'Boolean'>,
   notificationArchiveAll: $ElementType<Scalars, 'Boolean'>,
   notificationSeeAll: $ElementType<Scalars, 'Boolean'>,
@@ -11553,6 +11554,11 @@ export type MutationCommentDeleteArgs = {|
 
 export type MutationTimelineReadArgs = {|
   entity: EntityInput
+|};
+
+
+export type MutationNotificationActiveArgs = {|
+  id: $ElementType<Scalars, 'ID'>
 |};
 
 
@@ -35569,7 +35575,10 @@ export type ShipmentFormQueryFragmentFragment = ({
   ...{| updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalVolumeOverride: ?({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, followers: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, totalVolumeOverride: ?({
       ...{ __typename?: 'MetricValue' },
     ...MetricFragmentFragment
   }), totalWeightOverride: ?({
@@ -35620,7 +35629,10 @@ export type ShipmentFormFragmentFragment = ({
   ...{| updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, followers: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, todo: ({
