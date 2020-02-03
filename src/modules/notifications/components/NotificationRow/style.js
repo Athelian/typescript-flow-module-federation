@@ -6,6 +6,7 @@ export const NotificationRowWrapperStyle: string = css`
   display: flex;
   width: 100%;
   padding: 0 20px;
+  cursor: pointer;
   ${transitions.MAIN};
   background-color: ${colors.GRAY_SUPER_LIGHT};
   min-height: 60px;

@@ -1,12 +1,14 @@
 // @flow
 import * as React from 'react';
 import type { Notification } from 'generated/graphql';
+import { navigate } from '@reach/router';
+import { useMutation } from '@apollo/react-hooks';
 import FormattedDate from 'components/FormattedDate';
 import { parseIcon } from 'utils/entity';
 import { parseUrl } from 'utils/notifications';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
-import NavigateLink from 'components/NavigateLink';
+import { archiveNotificationMutation, activeNotificationMutation } from './mutation';
 import {
   NotificationRowWrapperStyle,
   NotificationRowBodyStyle,
@@ -26,12 +28,16 @@ type Props = {|
 
 const NotificationRow = ({ notification }: Props) => {
   const icon = parseIcon(notification?.entity?.__typename);
+  const [activeNotification] = useMutation(activeNotificationMutation);
+  const [archiveNotification] = useMutation(archiveNotificationMutation);
 
   return (
-    <NavigateLink
+    <div
       className={NotificationRowWrapperStyle}
-      to={parseUrl(notification)}
-      href={parseUrl(notification)}
+      role="presentation"
+      onClick={() => {
+        navigate(parseUrl(notification));
+      }}
     >
       <div className={NotificationRowBodyStyle}>
         <div className={AvatarIconWrapperStyle}>
@@ -64,14 +70,19 @@ const NotificationRow = ({ notification }: Props) => {
             className={ArchiveButtonStyle}
             onClick={e => {
               e.stopPropagation();
+              if (notification.archived) {
+                activeNotification({ variables: { id: notification.id } });
+              } else {
+                archiveNotification({ variables: { id: notification.id } });
+              }
             }}
             type="button"
           >
-            <Icon icon="ARCHIVE" />
+            <Icon icon={notification.archived ? 'ACTIVE' : 'ARCHIVE'} />
           </button>
         </div>
       </div>
-    </NavigateLink>
+    </div>
   );
 };
 
