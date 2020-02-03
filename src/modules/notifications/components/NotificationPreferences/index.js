@@ -6,6 +6,7 @@ import {
   NotificationPreference,
 } from 'generated/graphql';
 import { useQuery } from '@apollo/react-hooks';
+import { isEquals } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
 import Dialog from 'components/Dialog';
 import { FormattedMessage } from 'react-intl';
@@ -54,6 +55,11 @@ const preferencesByType = ({
     }));
 };
 
+const defaultTimer = {
+  hours: 0,
+  minutes: 10,
+};
+
 function NotificationPreferences({ isOpen, onClose }: Props) {
   const [isEmailNotificationsEnabled, setEmailNotificationsEnabled] = React.useState(false);
   const [preferences, setPreferences] = React.useState([]);
@@ -62,21 +68,17 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
     onCompleted: result => {
       setEmailNotificationsEnabled(result?.viewer?.notificationPreferences?.allowedEmail ?? false);
       setPreferences(result?.viewer?.notificationPreferences?.notifications ?? []);
-      setTimer(
-        result?.viewer?.notificationPreferences?.emailInterval ?? {
-          hours: 0,
-          minutes: 10,
-        }
-      );
+      setTimer(result?.viewer?.notificationPreferences?.emailInterval ?? defaultTimer);
     },
   });
 
-  // TODO: check dirty
   const isDirty =
-    data?.viewer?.notificationPreferences?.allowedEmail !== isEmailNotificationsEnabled;
+    data?.viewer?.notificationPreferences?.allowedEmail !== isEmailNotificationsEnabled ||
+    !isEquals(data?.viewer?.notificationPreferences?.emailInterval ?? defaultTimer, timer) ||
+    !isEquals(data?.viewer?.notificationPreferences?.notifications ?? [], preferences);
 
   const togglePreference = (type: string, enabled: boolean) => {
-    setPreferences([...preferences.filter(item => item.type !== type), { type, enabled }]);
+    setPreferences(preferences.map(item => (item.type === type ? { ...item, enabled } : item)));
   };
 
   // TODO: handle mutation
@@ -85,11 +87,7 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
   const handleReset = React.useCallback(() => {
     setEmailNotificationsEnabled(data?.viewer?.notificationPreferences?.allowedEmail ?? false);
     setPreferences(data?.viewer?.notificationPreferences?.notifications ?? []);
-    setTimer(
-      data?.viewer?.notificationPreferences?.emailInterval ?? {
-        minutes: 10,
-      }
-    );
+    setTimer(data?.viewer?.notificationPreferences?.emailInterval ?? defaultTimer);
   }, [data]);
 
   // Clear state after closing setting
