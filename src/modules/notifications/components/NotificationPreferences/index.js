@@ -30,12 +30,12 @@ const preferencesByType = (
     .filter(key => String(key).startsWith(type) && !ignoreKeys.includes(key))
     .map(column => ({
       column,
-      title: messages[column] ? (
-        <FormattedMessage {...messages[column]} />
-      ) : (
+      title: (
         <FormattedMessage
-          id={`modules.Notification.preferences.${String(column)}`}
-          defaultMessage={String(column)}
+          {...(messages?.[column] ?? {
+            id: `modules.Notification.preferences.${String(column)}`,
+            defaultMessage: column,
+          })}
         />
       ),
       selected: false,

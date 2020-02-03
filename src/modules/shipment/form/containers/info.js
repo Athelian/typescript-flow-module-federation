@@ -5,6 +5,7 @@ import { isEquals } from 'utils/fp';
 import { defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
 type ShipmentInfoType = {
+  followers: Array<{ id: string, firstName: string, lastName: string }>,
   no: ?string,
   blNo: ?string,
   blDate: ?Date,
@@ -31,6 +32,7 @@ type ShipmentInfoType = {
 };
 
 const initValues = {
+  followers: [],
   no: null,
   blNo: null,
   blDate: null,

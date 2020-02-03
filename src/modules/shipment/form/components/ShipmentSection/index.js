@@ -16,6 +16,7 @@ import { STAFF_LIST } from 'modules/permission/constants/staff';
 import {
   SHIPMENT_CREATE,
   SHIPMENT_UPDATE,
+  SHIPMENT_SET_FOLLOWERS,
   SHIPMENT_SET_ARCHIVED,
   SHIPMENT_SET_IMPORTER,
   SHIPMENT_SET_EXPORTER,
@@ -66,7 +67,6 @@ import {
   FormTooltip,
   TagsInput,
   SectionHeader,
-  LastModified,
   StatusToggle,
   TextInputFactory,
   DateInputFactory,
@@ -85,6 +85,7 @@ import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import SelectPartners from 'components/SelectPartners';
 import SelectPartner from 'components/SelectPartner';
+import Followers from 'components/Followers';
 import ShipmentSummary from '../ShipmentSummary';
 import { renderExporters, renderForwarders } from './helpers';
 import {
@@ -109,52 +110,67 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
   const { isOwner } = usePartnerPermission();
   const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
-  const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
+  const { id: shipmentId, archived } = shipment;
   const isNewOrClone = isNew || isClone;
-  return (
-    <MainSectionPlaceholder height={1766} isLoading={isLoading}>
-      <SectionHeader
-        icon="SHIPMENT"
-        title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
-      >
-        {!isNew && (
-          <>
-            <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
-            {!isClone && hasPermission(SHIPMENT_CREATE) && (
-              <CloneButton onClick={() => navigate(`/shipment/clone/${encodeId(shipmentId)}`)} />
-            )}
-            <BooleanValue>
-              {({ value: statusDialogIsOpen, set: dialogToggle }) => (
-                <StatusToggle
-                  readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_ARCHIVED])}
-                  archived={archived}
-                  openStatusDialog={() => dialogToggle(true)}
-                  activateDialog={
-                    <ShipmentActivateDialog
-                      shipment={shipment}
-                      isOpen={statusDialogIsOpen && !!archived}
-                      onRequestClose={() => dialogToggle(false)}
-                    />
-                  }
-                  archiveDialog={
-                    <ShipmentArchiveDialog
-                      shipment={shipment}
-                      isOpen={statusDialogIsOpen && !archived}
-                      onRequestClose={() => dialogToggle(false)}
-                    />
-                  }
-                />
-              )}
-            </BooleanValue>
-          </>
-        )}
-      </SectionHeader>
-      <Subscribe to={[ShipmentInfoContainer]}>
-        {({ originalValues: initialValues, state, setFieldValue }) => {
-          const values: Object = { ...initialValues, ...state };
-          const { forwarders = [], importer, exporter } = values;
 
-          return (
+  return (
+    <Subscribe to={[ShipmentInfoContainer]}>
+      {({ originalValues: initialValues, state, setFieldValue }) => {
+        const values: Object = { ...initialValues, ...state };
+        const { forwarders = [], importer, exporter } = values;
+
+        return (
+          <MainSectionPlaceholder height={1766} isLoading={isLoading}>
+            <SectionHeader
+              icon="SHIPMENT"
+              title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
+            >
+              <Followers
+                followers={values?.followers ?? []}
+                setFollowers={value => setFieldValue('followers', value)}
+                organizationIds={[
+                  values?.importer?.id,
+                  values?.exporter?.id,
+                  ...(values?.forwarders ?? []).map(forwarder => forwarder?.id),
+                ].filter(Boolean)}
+                editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FOLLOWERS])}
+              />
+
+              {!isNew && (
+                <>
+                  <BooleanValue>
+                    {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+                      <StatusToggle
+                        readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_ARCHIVED])}
+                        archived={archived}
+                        openStatusDialog={() => dialogToggle(true)}
+                        activateDialog={
+                          <ShipmentActivateDialog
+                            shipment={shipment}
+                            isOpen={statusDialogIsOpen && !!archived}
+                            onRequestClose={() => dialogToggle(false)}
+                          />
+                        }
+                        archiveDialog={
+                          <ShipmentArchiveDialog
+                            shipment={shipment}
+                            isOpen={statusDialogIsOpen && !archived}
+                            onRequestClose={() => dialogToggle(false)}
+                          />
+                        }
+                      />
+                    )}
+                  </BooleanValue>
+
+                  {!isClone && hasPermission(SHIPMENT_CREATE) && (
+                    <CloneButton
+                      onClick={() => navigate(`/shipment/clone/${encodeId(shipmentId)}`)}
+                    />
+                  )}
+                </>
+              )}
+            </SectionHeader>
+
             <div className={ShipmentSectionWrapperStyle}>
               <div className={MainFieldsWrapperStyle}>
                 <GridColumn>
@@ -589,9 +605,9 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         // Disable to changed importer if there is data send from RM
                         // base on initDataForSlideView
                         isNew &&
-                          Object.keys(initDataForSlideView).length === 0 &&
-                          hasPermission(PARTNER_LIST) &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]) ? (
+                        Object.keys(initDataForSlideView).length === 0 &&
+                        hasPermission(PARTNER_LIST) &&
+                        hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]) ? (
                           <BooleanValue>
                             {({ value: importerSelectorIsOpen, set: importerSelectorToggle }) => (
                               <>
@@ -764,7 +780,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       <>
                         {(isForwarder() || isImporter()) &&
                         hasPermission(PARTNER_LIST) &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_EXPORTER]) ? (
+                        hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_EXPORTER]) ? (
                           <BooleanValue>
                             {({ value: exporterSelectorIsOpen, set: exporterSelectorToggle }) => (
                               <>
@@ -1053,10 +1069,10 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                 entityId={!isClone && shipment.id ? shipment.id : ''}
               />
             </div>
-          );
-        }}
-      </Subscribe>
-    </MainSectionPlaceholder>
+          </MainSectionPlaceholder>
+        );
+      }}
+    </Subscribe>
   );
 };
 
