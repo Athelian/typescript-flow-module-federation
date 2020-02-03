@@ -39,7 +39,7 @@ const preferencesByType = ({
   ignoreKeys?: Array<string>,
 }): Array<NotificationType> => {
   return Object.values(NotificationTypeValues)
-    .filter(key => String(key).startsWith(entity) && !ignoreKeys.includes(entity))
+    .filter(key => String(key).startsWith(entity) && !ignoreKeys.includes(key))
     .map(type => ({
       type,
       title: (
