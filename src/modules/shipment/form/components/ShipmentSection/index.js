@@ -128,8 +128,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
               <Followers
                 followers={values?.followers ?? []}
                 setFollowers={value => setFieldValue('followers', value)}
-                // TODO: May change organization filter specs after meeting
-                // If keep, we need to do clean up when change Importer, Exporter, or Forwarders
                 organizationIds={[
                   values?.importer?.id,
                   values?.exporter?.id,
