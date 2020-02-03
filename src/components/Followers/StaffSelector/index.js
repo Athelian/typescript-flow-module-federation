@@ -18,6 +18,8 @@ import {
   UserSortConfig,
 } from 'components/NavBar';
 
+type UserAvatarType = {};
+
 type Props = {|
   selected: Array<UserAvatarType>,
   onSelect: (values: Array<UserAvatarType>) => void,

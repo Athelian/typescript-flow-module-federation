@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import { FormattedMessage } from 'react-intl';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -11,6 +11,7 @@ import { Label } from 'components/Form';
 import { notificationListQuery } from 'modules/notifications/query';
 import { isNotFound, isForbidden, isBadRequest } from 'utils/data';
 import NotificationsRowMini from './components/NotificationsRowMini';
+import { archiveAllMutation } from './mutation';
 import {
   NotificationsDropDownWrapperStyle,
   NotificationsBodyWrapperStyle,
@@ -29,18 +30,23 @@ type Props = {|
   isOpen: boolean,
   closeDropdown: () => void,
   renderItem?: (Object, () => void) => React$Node,
-  // TODO: integrate the api for more items
-  totalMoreItems?: number,
 |};
 
 const NotificationsDropdown = ({
   renderItem = defaultRenderItem,
   isOpen,
   closeDropdown,
-  totalMoreItems = 0,
 }: Props) => {
-  const { data, loading, error } = useQuery(notificationListQuery, {
-    variables: { page: 1, perPage: 10 },
+  const perPage = 10;
+  const [archiveAll] = useMutation(archiveAllMutation);
+  const { data, loading, error, refetch } = useQuery(notificationListQuery, {
+    variables: {
+      perPage,
+      page: 1,
+      filterBy: {
+        archived: false,
+      },
+    },
     fetchPolicy: 'no-cache',
   });
 
@@ -54,6 +60,7 @@ const NotificationsDropdown = ({
         !isNotFound(notification) && !isForbidden(notification) && !isBadRequest(notification)
     )
     .splice(0, 10);
+  const totalMoreItems = (data?.viewer?.notificationCount ?? 10) - perPage;
 
   return (
     <div className={NotificationsDropDownWrapperStyle(isOpen)}>
@@ -135,7 +142,14 @@ const NotificationsDropdown = ({
             />
           }
         >
-          <button className={ArchiveAllButtonStyle} onClick={() => {}} type="button">
+          <button
+            className={ArchiveAllButtonStyle}
+            onClick={() => {
+              archiveAll();
+              refetch();
+            }}
+            type="button"
+          >
             <Icon icon="ARCHIVE" />
           </button>
         </Tooltip>
