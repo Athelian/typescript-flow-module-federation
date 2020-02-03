@@ -1253,5 +1253,26 @@ export const MaskEditFilterConfig: Array<FilterConfig> = [
   },
 ];
 
-// TODO: filter for notification
-export const NotificationFilterConfig: Array<FilterConfig> = [];
+export const NotificationFilterConfig: Array<FilterConfig> = [
+  {
+    entity: 'NOTIFICATION',
+    field: 'archived',
+    type: 'archived',
+    message: productMessages.status,
+    defaultValue: false,
+  },
+  {
+    entity: 'USER',
+    field: 'userIds',
+    type: 'users',
+    message: userMessages.users,
+    defaultValue: [],
+  },
+  {
+    entity: 'USER',
+    field: 'organizationIds',
+    type: 'organization_ids',
+    message: userMessages.organizations,
+    defaultValue: [],
+  },
+];
