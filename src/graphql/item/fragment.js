@@ -86,6 +86,9 @@ export const itemFormFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    followers {
+      ...userAvatarFragment
+    }
     no
     quantity
     price {
@@ -208,6 +211,9 @@ export const itemInOrderFormFragment = gql`
     tags {
       ...tagFragment
     }
+    followers {
+      ...userAvatarFragment
+    }
     memo
     todo {
       taskCount {
@@ -272,6 +278,9 @@ export const itemInBatchFormFragment = gql`
     archived
     no
     quantity
+    followers {
+      ...userAvatarFragment
+    }
     price {
       ...priceFragment
     }

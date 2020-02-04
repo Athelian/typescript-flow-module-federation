@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, layout, colors, borderRadiuses } from 'styles/common';
+import { presets, fontSizes, layout, colors, borderRadiuses } from 'styles/common';
 
 export const ItemSectionWrapperStyle: string = css`
   ${presets.BOX};
@@ -39,4 +39,18 @@ export const SummaryStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 100px;
   grid-template-columns: repeat(2, 1fr);
+`;
+
+export const StatusStyle = (archived: boolean): string => css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 5px;
+  color: ${archived ? colors.GRAY : colors.TEAL};
+  align-items: center;
+  ${fontSizes.SMALL};
+`;
+
+export const StatusLabelStyle: string = css`
+  ${presets.ELLIPSIS};
+  ${fontSizes.MAIN};
+  font-weight: bold;
 `;

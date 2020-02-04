@@ -1,40 +1,11 @@
 // @flow
 import { Container } from 'unstated';
+import type { OrderItem } from 'generated/graphql';
 import { set, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import type { MetricValue } from 'types';
 
-type Price = {
-  amount: number,
-  currency: string,
-};
-
-export type ProductProvider = {
-  packageName: string,
-  packageCapacity: number,
-  packageGrossWeight: MetricValue,
-  packageVolume: MetricValue,
-  packageSize: {
-    width: MetricValue,
-    height: MetricValue,
-    length: MetricValue,
-  },
-};
-
-export type State = {
-  no?: ?string,
-  quantity: number,
-  price: Price,
-  deliveryDate: string,
-  customFields: ?Object,
-  tags?: Array<Object>,
-  memo?: string,
-  productProvider?: Object,
-  order?: Object,
-};
-
-export const initValues = {
+export const initValues: OrderItem = {
   no: null,
   quantity: 0,
   price: {
@@ -47,13 +18,13 @@ export const initValues = {
     fieldValues: [],
   },
   tags: [],
+  followers: [],
   memo: null,
-
   productProvider: null,
   order: null,
 };
 
-export default class OrderItemInfoContainer extends Container<State> {
+export default class OrderItemInfoContainer extends Container<OrderItem> {
   state = initValues;
 
   originalValues = initValues;

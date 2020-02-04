@@ -1,15 +1,13 @@
 // @flow
 import React, { Suspense, lazy } from 'react';
 import { Subscribe } from 'unstated';
-import { FormattedMessage } from 'react-intl';
 import { getByPath, isEquals } from 'utils/fp';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
-import { SectionWrapper, SectionHeader, LastModified, FormTooltip } from 'components/Form';
+import { SectionWrapper } from 'components/Form';
 import { OrderItemInfoContainer, OrderItemTasksContainer } from 'modules/orderItem/form/containers';
-import Icon from 'components/Icon';
 import LoadingIcon from 'components/LoadingIcon';
 import ItemSection from './components/ItemSection';
-import { FormWrapperStyle, StatusStyle, StatusLabelStyle } from './style';
+import { FormWrapperStyle } from './style';
 
 type OptionalProps = {
   onFormReady: () => void,
@@ -51,39 +49,7 @@ export default class ItemForm extends React.Component<Props> {
       <Suspense fallback={<LoadingIcon />}>
         <div className={FormWrapperStyle}>
           <SectionWrapper id="orderItem_itemSection">
-            <SectionHeader
-              icon="ORDER_ITEM"
-              title={<FormattedMessage id="modules.OrderItems.orderItem" defaultMessage="ITEM" />}
-            >
-              {orderItem.updatedAt && (
-                <>
-                  <LastModified updatedAt={orderItem.updatedAt} updatedBy={orderItem.updatedBy} />
-                  <div className={StatusStyle(orderItem.archived)}>
-                    <Icon icon={orderItem.archived ? 'ARCHIVED' : 'ACTIVE'} />
-                    <div className={StatusLabelStyle}>
-                      {orderItem.order.archived ? (
-                        <FormattedMessage
-                          id="modules.OrderItems.archived"
-                          defaultMessage="Archived"
-                        />
-                      ) : (
-                        <FormattedMessage id="modules.OrderItems.active" defaultMessage="Active" />
-                      )}
-                    </div>
-                    <FormTooltip
-                      infoMessage={
-                        <FormattedMessage
-                          id="modules.OrderItems.order.archived.tooltip.infoMessage"
-                          defaultMessage="The status is the same as the Order's status"
-                        />
-                      }
-                      position="bottom"
-                    />
-                  </div>
-                </>
-              )}
-            </SectionHeader>
-            <ItemSection isSlideView={isSlideView} />
+            <ItemSection isSlideView={isSlideView} orderItem={orderItem} />
           </SectionWrapper>
 
           <Subscribe to={[OrderItemInfoContainer]}>
