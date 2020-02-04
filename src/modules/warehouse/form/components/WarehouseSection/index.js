@@ -11,6 +11,7 @@ import {
   WAREHOUSE_UPDATE,
   WAREHOUSE_SET_CUSTOM_FIELDS,
   WAREHOUSE_SET_CUSTOM_FIELDS_MASK,
+  WAREHOUSE_SET_FOLLOWERS,
   WAREHOUSE_CREATE,
 } from 'modules/permission/constants/warehouse';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
@@ -21,6 +22,7 @@ import validator from 'modules/warehouse/form/validator';
 import SlideView from 'components/SlideView';
 import { FormField } from 'modules/form';
 import GridColumn from 'components/GridColumn';
+import Followers from 'components/Followers';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
 import SelectPartners from 'components/SelectPartners';
@@ -30,7 +32,6 @@ import {
   FormTooltip,
   Label,
   SectionHeader,
-  LastModified,
   TextInputFactory,
   EnumSearchSelectInputFactory,
   CustomFieldsFactory,
@@ -56,8 +57,6 @@ const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {
     <Subscribe to={[WarehouseInfoContainer]}>
       {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
         const values = { ...originalValues, ...state };
-        const { updatedAt, updatedBy } = originalValues;
-
         return (
           <MainSectionPlaceholder height={665} isLoading={isLoading}>
             <SectionHeader
@@ -66,9 +65,15 @@ const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {
                 <FormattedMessage id="modules.WareHouses.warehouse" defaultMessage="WAREHOUSE" />
               }
             >
+              <Followers
+                followers={values?.followers ?? []}
+                setFollowers={value => setFieldValue('followers', value)}
+                // TODO: confirm with Fumi about the logic
+                organizationIds={values?.organizations?.map(({ id }) => id).filter(Boolean)}
+                editable={hasPermission([WAREHOUSE_UPDATE, WAREHOUSE_SET_FOLLOWERS])}
+              />
               {!isNew && !isClone && (
                 <>
-                  <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
                   {hasPermission([WAREHOUSE_CREATE]) && (
                     <CloneButton
                       onClick={() => navigate(`/warehouse/clone/${encodeId(originalValues.id)}`)}

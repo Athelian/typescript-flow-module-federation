@@ -20,6 +20,9 @@ export const warehouseFormFragment = gql`
         }
       }
     }
+    followers {
+      ...userAvatarFragment
+    }
     inCharges {
       ...userAvatarFragment
     }

@@ -60,6 +60,7 @@ export const prepareParsedWarehouseInput = (
   originalValues: ?Object,
   newValues: Object
 ): Object => ({
+  ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
   ...parseGenericField(
     'street',

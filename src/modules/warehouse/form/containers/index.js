@@ -1,24 +1,12 @@
 // @flow
+import type { Warehouse } from 'generated/graphql';
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 import { defaultAreaMetric } from 'utils/metric';
-import type { MetricValue } from 'types';
 
-export type FormState = {
-  name?: string,
-  street?: string,
-  locality?: string,
-  region?: string,
-  postalCode?: string,
-  country?: string,
-  surface: MetricValue,
-  customFields: Object,
-  organizations: Array<Object>,
-};
-
-export const warehouseInfoInitValues = {
+export const warehouseInfoInitValues: Warehouse = {
   name: '',
   street: '',
   locality: '',
@@ -33,10 +21,12 @@ export const warehouseInfoInitValues = {
     mask: null,
     fieldValues: [],
   },
+  inCharges: [],
+  followers: [],
   organizations: [],
 };
 
-export default class WarehouseInfoContainer extends Container<FormState> {
+export default class WarehouseInfoContainer extends Container<Warehouse> {
   state = warehouseInfoInitValues;
 
   originalValues = warehouseInfoInitValues;
