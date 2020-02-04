@@ -27,21 +27,24 @@ export default function useFieldDefinitions(
             })
             .then(({ data }) => {
               return data?.fieldDefinitions ?? [];
-            }),
+            })
+            .catch(console.warn),
         {}
       )
-    ).then(result => {
-      setFieldDefinitions(
-        result.reduce(
-          (o, fds, idx) => ({
-            ...o,
-            [entityTypes[idx]]: fds,
-          }),
-          {}
-        )
-      );
-      setLoading(false);
-    });
+    )
+      .then(result => {
+        setFieldDefinitions(
+          result.reduce(
+            (o, fds, idx) => ({
+              ...o,
+              [entityTypes[idx]]: fds,
+            }),
+            {}
+          )
+        );
+        setLoading(false);
+      })
+      .catch(console.warn);
   }, [client, entityTypes]);
 
   return {

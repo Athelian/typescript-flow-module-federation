@@ -5,8 +5,6 @@ import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
-import { getByPath } from 'utils/fp';
-import FormattedNumber from 'components/FormattedNumber';
 import { CloneButton } from 'components/Buttons';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
 import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
@@ -36,7 +34,6 @@ import {
   DateInputFactory,
   CustomFieldsFactory,
   EnumSearchSelectInputFactory,
-  UserAssignmentInputFactory,
 } from 'components/Form';
 import { getQuantityForOrderSummary } from 'modules/order/helpers';
 import {
@@ -50,7 +47,6 @@ import {
   ORDER_SET_CUSTOM_FIELDS,
   ORDER_SET_CUSTOM_FIELDS_MASK,
   ORDER_SET_MEMO,
-  ORDER_SET_IN_CHARGES,
   ORDER_SET_IMPORTER,
   ORDER_SET_ARCHIVED,
   ORDER_CREATE,
@@ -374,36 +370,6 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                   </GridColumn>
 
                   <GridColumn>
-                    <UserAssignmentInputFactory
-                      cacheKey="OrderUserSelect"
-                      groupIds={[
-                        getByPath('id', values.importer),
-                        getByPath('id', values.exporter),
-                      ].filter(Boolean)}
-                      name="inCharges"
-                      values={values.inCharges}
-                      onChange={(name: string, assignments: Array<Object>) =>
-                        setFieldValue(name, assignments)
-                      }
-                      label={
-                        <>
-                          <FormattedMessage
-                            id="components.inputs.inCharge"
-                            defaultMessage="IN CHARGE"
-                          />
-                          {' ('}
-                          <FormattedNumber value={values.inCharges.length} />)
-                        </>
-                      }
-                      infoMessage={
-                        <FormattedMessage
-                          id="modules.Orders.inChargeExplanation"
-                          defaultMessage="You can choose up to 5 people in charge."
-                        />
-                      }
-                      editable={hasPermission([ORDER_UPDATE, ORDER_SET_IN_CHARGES])}
-                    />
-
                     <FieldItem
                       vertical
                       label={
@@ -453,8 +419,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                     >
                                       {(
                                         { changeExporter: updateOrderItems },
-                                        { changeExporter: updateTasks },
-                                        { changeExporter: updateOrderInfo }
+                                        { changeExporter: updateTasks }
                                       ) => (
                                         <SelectExporter
                                           cacheKey="OrderSelectExporter"
@@ -465,13 +430,12 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                             slideToggle(false);
                                             setFieldValue('exporter', newValue);
                                             updateTasks(values.exporter);
-                                            updateOrderInfo(values.exporter);
                                             updateOrderItems();
                                           }}
                                           warningMessage={
                                             <FormattedMessage
                                               id="modules.Orders.changeExporterWarning"
-                                              defaultMessage="Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Exporter from all Tasks and In Charge. Are you sure you want to change the Exporter?"
+                                              defaultMessage="Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Exporter from all Tasks. Are you sure you want to change the Exporter?"
                                             />
                                           }
                                         />

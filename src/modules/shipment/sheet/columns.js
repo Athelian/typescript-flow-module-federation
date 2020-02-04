@@ -67,7 +67,6 @@ export default function({
         'shipment.carrier': 'carrier',
         'shipment.tags': 'tags',
         'shipment.memo': 'memo',
-        'shipment.inCharges': 'inCharges',
         'shipment.totalBatchQuantity': 'totalBatchQuantity',
         'shipment.totalPrice': ['totalPrice.amount', 'totalPrice.currency'],
         'shipment.totalProducts': 'productCount',
@@ -81,13 +80,11 @@ export default function({
         'shipment.cargoReady.date': 'cargoReady.date',
         'shipment.cargoReady.latestDate': 'cargoReady.latestDate',
         'shipment.cargoReady.dateDifference': 'cargoReady.dateDifference',
-        'shipment.cargoReady.assignedTo': 'cargoReady.assignedTo',
         'shipment.cargoReady.approved': ['cargoReady.approvedAt', 'cargoReady.approvedBy'],
         'shipment.voyage.0.departurePort': 'voyage_1.departurePort',
         'shipment.voyage.0.departure.date': 'voyage_1.departure.date',
         'shipment.voyage.0.departure.latestDate': 'voyage_1.departure.latestDate',
         'shipment.voyage.0.departure.dateDifference': 'voyage_1.departure.dateDifference',
-        'shipment.voyage.0.departure.assignedTo': 'voyage_1.departure.assignedTo',
         'shipment.voyage.0.departure.approved': [
           'voyage_1.departure.approvedAt',
           'voyage_1.departure.approvedBy',
@@ -98,7 +95,6 @@ export default function({
         'shipment.voyage.0.firstTransitArrival.date': 'voyage_1.arrival.date',
         'shipment.voyage.0.firstTransitArrival.latestDate': 'voyage_1.arrival.latestDate',
         'shipment.voyage.0.firstTransitArrival.dateDifference': 'voyage_1.arrival.dateDifference',
-        'shipment.voyage.0.firstTransitArrival.assignedTo': 'voyage_1.arrival.assignedTo',
         'shipment.voyage.0.firstTransitArrival.approved': [
           'voyage_1.arrival.approvedAt',
           'voyage_1.arrival.approvedBy',
@@ -107,7 +103,6 @@ export default function({
         'shipment.voyage.1.firstTransitDeparture.latestDate': 'voyage_2.departure.latestDate',
         'shipment.voyage.1.firstTransitDeparture.dateDifference':
           'voyage_2.departure.dateDifference',
-        'shipment.voyage.1.firstTransitDeparture.assignedTo': 'voyage_2.departure.assignedTo',
         'shipment.voyage.1.firstTransitDeparture.approved': [
           'voyage_2.departure.approvedAt',
           'voyage_2.departure.approvedBy',
@@ -118,7 +113,6 @@ export default function({
         'shipment.voyage.1.secondTransitArrival.date': 'voyage_2.arrival.date',
         'shipment.voyage.1.secondTransitArrival.latestDate': 'voyage_2.arrival.latestDate',
         'shipment.voyage.1.secondTransitArrival.dateDifference': 'voyage_2.arrival.dateDifference',
-        'shipment.voyage.1.secondTransitArrival.assignedTo': 'voyage_2.arrival.assignedTo',
         'shipment.voyage.1.secondTransitArrival.approved': [
           'voyage_2.arrival.approvedAt',
           'voyage_2.arrival.approvedBy',
@@ -127,7 +121,6 @@ export default function({
         'shipment.voyage.2.secondTransitDeparture.latestDate': 'voyage_3.departure.latestDate',
         'shipment.voyage.2.secondTransitDeparture.dateDifference':
           'voyage_3.departure.dateDifference',
-        'shipment.voyage.2.secondTransitDeparture.assignedTo': 'voyage_3.departure.assignedTo',
         'shipment.voyage.2.secondTransitDeparture.approved': [
           'voyage_3.departure.approvedAt',
           'voyage_3.departure.approvedBy',
@@ -138,7 +131,6 @@ export default function({
         'shipment.voyage.2.arrival.date': 'voyage_3.arrival.date',
         'shipment.voyage.2.arrival.latestDate': 'voyage_3.arrival.latestDate',
         'shipment.voyage.2.arrival.dateDifference': 'voyage_3.arrival.dateDifference',
-        'shipment.voyage.2.arrival.assignedTo': 'voyage_3.arrival.assignedTo',
         'shipment.voyage.2.arrival.approved': [
           'voyage_3.arrival.approvedAt',
           'voyage_3.arrival.approvedBy',
@@ -148,8 +140,6 @@ export default function({
           'containerGroup.customClearance.latestDate',
         'shipment.containerGroup.customClearance.dateDifference':
           'containerGroup.customClearance.dateDifference',
-        'shipment.containerGroup.customClearance.assignedTo':
-          'containerGroup.customClearance.assignedTo',
         'shipment.containerGroup.customClearance.approved': [
           'containerGroup.customClearance.approvedAt',
           'containerGroup.customClearance.approvedBy',
@@ -160,8 +150,6 @@ export default function({
           'containerGroup.warehouseArrival.latestDate',
         'shipment.containerGroup.warehouseArrival.dateDifference':
           'containerGroup.warehouseArrival.dateDifference',
-        'shipment.containerGroup.warehouseArrival.assignedTo':
-          'containerGroup.warehouseArrival.assignedTo',
         'shipment.containerGroup.warehouseArrival.approved': [
           'containerGroup.warehouseArrival.approvedAt',
           'containerGroup.warehouseArrival.approvedBy',
@@ -171,8 +159,6 @@ export default function({
           'containerGroup.deliveryReady.latestDate',
         'shipment.containerGroup.deliveryReady.dateDifference':
           'containerGroup.deliveryReady.dateDifference',
-        'shipment.containerGroup.deliveryReady.assignedTo':
-          'containerGroup.deliveryReady.assignedTo',
         'shipment.containerGroup.deliveryReady.approved': [
           'containerGroup.deliveryReady.approvedAt',
           'containerGroup.deliveryReady.approvedBy',
@@ -259,15 +245,11 @@ export default function({
         'container.containerType': 'containers.containerType',
         'container.containerOption': 'containers.containerOption',
         'container.warehouseArrivalAgreedDate': 'containers.warehouseArrivalAgreedDate',
-        'container.warehouseArrivalAgreedDateAssignedTo':
-          'containers.warehouseArrivalAgreedDateAssignedTo',
         'container.warehouseArrivalAgreedDateApproved': [
           'containers.warehouseArrivalAgreedDateApprovedAt',
           'containers.warehouseArrivalAgreedDateApprovedBy',
         ],
         'container.warehouseArrivalActualDate': 'containers.warehouseArrivalActualDate',
-        'container.warehouseArrivalActualDateAssignedTo':
-          'containers.warehouseArrivalActualDateAssignedTo',
         'container.warehouseArrivalActualDateApproved': [
           'containers.warehouseArrivalActualDateApprovedAt',
           'containers.warehouseArrivalActualDateApprovedBy',
@@ -279,7 +261,6 @@ export default function({
         'container.dueDate': 'containers.dueDate',
         'container.yardName': 'containers.yardName',
         'container.departureDate': 'containers.departureDate',
-        'container.departureDateAssignedTo': 'containers.departureDateAssignedTo',
         'container.departureDateApproved': [
           'containers.departureDateApprovedAt',
           'containers.departureDateApprovedBy',
@@ -540,7 +521,6 @@ export default function({
         'order.deliveryPlace': 'containers.batches.orderItem.order.deliveryPlace',
         'order.tags': 'containers.batches.orderItem.order.tags',
         'order.memo': 'containers.batches.orderItem.order.memo',
-        'order.inCharges': 'containers.batches.orderItem.order.inCharges',
         'order.files': 'containers.batches.orderItem.order.files', // TODO
         'order.todo': [
           'containers.batches.orderItem.order.todo.taskCount.count',

@@ -146,11 +146,6 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
     newValues.tags
   ),
   ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
-  ...parseArrayOfIdsField(
-    'inChargeIds',
-    getByPathWithDefault([], 'inCharges', originalValues),
-    newValues.inCharges
-  ),
   ...parseParentIdField(
     'exporterId',
     getByPathWithDefault(null, 'exporter', originalValues),

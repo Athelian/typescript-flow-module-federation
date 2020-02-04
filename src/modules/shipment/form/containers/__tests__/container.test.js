@@ -21,27 +21,6 @@ describe('shipment task container', () => {
       organization,
     };
 
-    const remainUsers = [
-      {
-        id: faker.random.uuid(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        organization: {
-          id: faker.random.uuid(),
-          name: faker.name.findName(),
-        },
-      },
-      {
-        id: faker.random.uuid(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        organization: {
-          id: faker.random.uuid(),
-          name: faker.name.findName(),
-        },
-      },
-    ];
-
     const entity = {
       warehouse: null,
       freeTimeStartDate: null,
@@ -63,9 +42,6 @@ describe('shipment task container', () => {
         warehouseArrivalActualDateApprovedAt: faker.date.future(),
         warehouseArrivalAgreedDateApprovedBy: staff,
         warehouseArrivalActualDateApprovedBy: staff,
-        warehouseArrivalAgreedDateAssignedTo: [staff, ...remainUsers],
-        warehouseArrivalActualDateAssignedTo: [],
-        departureDateAssignedTo: remainUsers,
         departureDateApprovedAt: faker.date.future(),
         departureDateApprovedBy: staff,
       },
@@ -85,9 +61,6 @@ describe('shipment task container', () => {
         warehouseArrivalActualDateApprovedAt: null,
         warehouseArrivalAgreedDateApprovedBy: null,
         warehouseArrivalActualDateApprovedBy: null,
-        warehouseArrivalAgreedDateAssignedTo: remainUsers,
-        warehouseArrivalActualDateAssignedTo: [],
-        departureDateAssignedTo: remainUsers,
         departureDateApprovedAt: null,
         departureDateApprovedBy: null,
       },

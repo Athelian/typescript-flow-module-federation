@@ -55,7 +55,6 @@ class NewOrderForm extends React.PureComponent<Props> {
     this.isMountedOnDOM = true;
     const order = {
       id: uuid(),
-      inCharges: [],
       currency: 'USD',
       customFields: {
         mask: null,

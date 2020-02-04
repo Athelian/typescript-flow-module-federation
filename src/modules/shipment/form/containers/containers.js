@@ -109,15 +109,6 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     this.setState(prevState => ({
       containers: prevState.containers.map(container => ({
         ...container,
-        warehouseArrivalActualDateAssignedTo: container.warehouseArrivalActualDateAssignedTo.filter(
-          user => getByPath('organization.id', user) !== getByPath('id', partner)
-        ),
-        warehouseArrivalAgreedDateAssignedTo: container.warehouseArrivalAgreedDateAssignedTo.filter(
-          user => getByPath('organization.id', user) !== getByPath('id', partner)
-        ),
-        departureDateAssignedTo: container.warehouseArrivalAgreedDateAssignedTo.filter(
-          user => getByPath('organization.id', user) !== getByPath('id', partner)
-        ),
         warehouseArrivalActualDateApprovedAt:
           getByPath('warehouseArrivalActualDateApprovedBy.organization.id', container) ===
           getByPath('id', partner)
