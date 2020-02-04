@@ -5,11 +5,10 @@ import { Subscribe } from 'unstated';
 import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 import { ContainerBatchesContainer } from 'modules/container/form/containers';
 import LoadingIcon from 'components/LoadingIcon';
-import Icon from 'components/Icon';
-import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
+import { SectionHeader, SectionWrapper } from 'components/Form';
 import { uniqueOrders } from 'modules/container/utils';
 import { ContainerSection, ShipmentSection } from './components';
-import { FormWrapperStyle, StatusStyle, StatusLabelStyle } from './style';
+import { FormWrapperStyle } from './style';
 
 const AsyncBatchesSection = lazy(() => import('./components/BatchesSection'));
 const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
@@ -40,42 +39,7 @@ export default class ContainerForm extends React.Component<Props> {
       <Suspense fallback={<LoadingIcon />}>
         <div className={FormWrapperStyle}>
           <SectionWrapper id="container_containerSection">
-            <SectionHeader
-              icon="CONTAINER"
-              title={
-                <FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />
-              }
-            >
-              {container.updatedAt && (
-                <>
-                  <LastModified updatedAt={container.updatedAt} updatedBy={container.updatedBy} />
-
-                  <div className={StatusStyle(container.archived)}>
-                    <Icon icon={container.archived ? 'ARCHIVED' : 'ACTIVE'} />
-                    <div className={StatusLabelStyle}>
-                      {container.archived ? (
-                        <FormattedMessage
-                          id="modules.container.archived"
-                          defaultMessage="Archived"
-                        />
-                      ) : (
-                        <FormattedMessage id="modules.container.active" defaultMessage="Active" />
-                      )}
-                    </div>
-                    <FormTooltip
-                      infoMessage={
-                        <FormattedMessage
-                          id="modules.container.archived.tooltip.infoMessage"
-                          defaultMessage="The status is the same as the Shipment's status"
-                        />
-                      }
-                      position="bottom"
-                    />
-                  </div>
-                </>
-              )}
-            </SectionHeader>
-            <ContainerSection />
+            <ContainerSection container={container} />
           </SectionWrapper>
 
           {!isSlideView && (

@@ -113,6 +113,7 @@ export const prepareParsedContainerInput = ({
 
   return {
     ...(!inContainerForm && originalValues ? { id: originalValues.id } : {}),
+    ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
     ...parseGenericField(
       'containerType',

@@ -1,41 +1,12 @@
 // @flow
+import type { ContainerPayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { formatToDateTimeInput } from 'utils/date';
 import { isEquals, isNullOrUndefined } from 'utils/fp';
 import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
 
-export type ContainerInfoState = {
-  archived: boolean,
-  autoCalculatedFreeTimeStartDate: boolean,
-  departureDate: ?string,
-  departureDateApprovedBy: ?Object,
-  departureDateApprovedAt: ?string,
-  departureDateAssignedTo: Array<Object>,
-  freeTimeDuration: number,
-  freeTimeStartDate: ?string,
-  memo: ?string,
-  no: ?string,
-  containerType: ?string,
-  containerOption: ?string,
-  ownedBy: ?Object,
-  shipment: ?Object,
-  tags: Array<Object>,
-  updatedAt: ?string,
-  updatedBy: ?string,
-  warehouse: ?Object,
-  warehouseArrivalAgreedDate: ?string,
-  warehouseArrivalAgreedDateApprovedAt: ?string,
-  warehouseArrivalAgreedDateApprovedBy: ?Object,
-  warehouseArrivalAgreedDateAssignedTo: Array<Object>,
-  warehouseArrivalActualDate: ?string,
-  warehouseArrivalActualDateApprovedAt: ?string,
-  warehouseArrivalActualDateApprovedBy: ?Object,
-  warehouseArrivalActualDateAssignedTo: Array<Object>,
-  yardName: ?string,
-};
-
-const initValues: ContainerInfoState = {
+const initValues: ContainerPayload = {
   autoCalculatedFreeTimeStartDate: false,
   departureDate: null,
   departureDateApprovedAt: null,
@@ -49,6 +20,7 @@ const initValues: ContainerInfoState = {
   containerOption: null,
   shipment: null,
   tags: [],
+  followers: [],
   warehouse: null,
   warehouseArrivalAgreedDate: null,
   warehouseArrivalAgreedDateApprovedAt: null,
@@ -69,7 +41,7 @@ const initValues: ContainerInfoState = {
   isNew: false,
 };
 
-export default class ContainerInfoContainer extends Container<ContainerInfoState> {
+export default class ContainerInfoContainer extends Container<ContainerPayload> {
   state = initValues;
 
   originalValues = initValues;

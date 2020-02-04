@@ -9,6 +9,9 @@ export const containerFormFragment = gql`
     containerType
     containerOption
     memo
+    followers {
+      ...userAvatarFragment
+    }
     ownedBy {
       ...ownedByFragment
     }
