@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Feb 03 2020 15:51:26 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Feb 04 2020 18:01:09 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26951,6 +26951,7 @@ input ContainerCreateInput {
   batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
+  followerIds: [ID!]
   todo: TodoInput
   shipmentId: ID!
 }
@@ -27048,6 +27049,7 @@ input ContainerUpdateInput {
   batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
+  followerIds: [ID!]
   todo: TodoInput
   shipmentId: ID
 }
@@ -28406,6 +28408,7 @@ input EntityFileInput {
   status: FileStatus
   memo: String
   orphan: Boolean
+  tagIds: [ID!]
 }
 
 type EntityHit {
@@ -28591,7 +28594,7 @@ input FieldValueInput {
 
 union FieldValuePayload = FieldValue | BadRequest | Forbidden | NotFound
 
-type File implements Model & Owned & Memorizable {
+type File implements Model & Tagged & Owned & Memorizable {
   name: String!
   type: FileType!
   status: FileStatus!
@@ -28609,6 +28612,7 @@ type File implements Model & Owned & Memorizable {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
+  tags: [TagPayload!]!
   ownedBy: OrganizationPayload!
   memo: String
 }
@@ -28624,6 +28628,7 @@ input FileFilterInput {
   mimetype: String
   hasEntity: Boolean
   hasEntityExcludeId: ID
+  tagIds: [ID!]
 }
 
 input FileInput {
@@ -28632,6 +28637,7 @@ input FileInput {
   status: FileStatus
   memo: String
   orphan: Boolean
+  tagIds: [ID!]
 }
 
 union FilePayload = File | BadRequest | Forbidden | NotFound
@@ -86959,6 +86965,7 @@ type Shipment implements Model & Owned & Tagged & Followed & Supervised & Docume
   totalPackageQuantity: Float!
   totalPackageQuantityOverride: Float
   totalPackageQuantityOverriding: Boolean!
+  earliestWarehouseArrival: DateTime
   orderCount: Int!
   orderItemCount: Int!
   batchCount: Int!
@@ -87039,6 +87046,7 @@ input ShipmentContainerCreateInput {
   batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
+  followerIds: [ID!]
   todo: TodoInput
 }
 
@@ -87065,6 +87073,7 @@ input ShipmentContainerUpdateInput {
   batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
+  followerIds: [ID!]
   todo: TodoInput
   id: ID
 }
@@ -87334,6 +87343,9 @@ enum TagEntityType {
 
   """Project"""
   Project
+
+  """File"""
+  File
 }
 
 input TagFilterInput {

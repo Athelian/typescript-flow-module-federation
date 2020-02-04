@@ -9254,6 +9254,7 @@ export type ContainerCreateInput = {|
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
   shipmentId: $ElementType<Scalars, 'ID'>,
 |};
@@ -9364,6 +9365,7 @@ export type ContainerUpdateInput = {|
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
 |};
@@ -9898,6 +9900,7 @@ export type EntityFileInput = {|
   status?: ?FileStatus,
   memo?: ?$ElementType<Scalars, 'String'>,
   orphan?: ?$ElementType<Scalars, 'Boolean'>,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type EntityHit = {|
@@ -10082,6 +10085,7 @@ export type FieldValuePayload = FieldValue | BadRequest | Forbidden | NotFound;
 
 export type File = {|
   ...Model,
+  ...Tagged,
   ...Owned,
   ...Memorizable,
   ...{|
@@ -10103,6 +10107,7 @@ export type File = {|
     createdBy?: ?UserPayload,
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
+    tags: Array<TagPayload>,
     ownedBy: OrganizationPayload,
     memo?: ?$ElementType<Scalars, 'String'>,
   |}
@@ -10126,6 +10131,7 @@ export type FileFilterInput = {|
   mimetype?: ?$ElementType<Scalars, 'String'>,
   hasEntity?: ?$ElementType<Scalars, 'Boolean'>,
   hasEntityExcludeId?: ?$ElementType<Scalars, 'ID'>,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type FileInput = {|
@@ -10134,6 +10140,7 @@ export type FileInput = {|
   status?: ?FileStatus,
   memo?: ?$ElementType<Scalars, 'String'>,
   orphan?: ?$ElementType<Scalars, 'Boolean'>,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type FilePayload = File | BadRequest | Forbidden | NotFound;
@@ -32424,6 +32431,7 @@ export type Shipment = {|
     totalPackageQuantity: $ElementType<Scalars, 'Float'>,
     totalPackageQuantityOverride?: ?$ElementType<Scalars, 'Float'>,
     totalPackageQuantityOverriding: $ElementType<Scalars, 'Boolean'>,
+    earliestWarehouseArrival?: ?$ElementType<Scalars, 'DateTime'>,
     orderCount: $ElementType<Scalars, 'Int'>,
     orderItemCount: $ElementType<Scalars, 'Int'>,
     batchCount: $ElementType<Scalars, 'Int'>,
@@ -32505,6 +32513,7 @@ export type ShipmentContainerCreateInput = {|
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
 |};
 
@@ -32531,6 +32540,7 @@ export type ShipmentContainerUpdateInput = {|
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
 |};
@@ -32818,7 +32828,8 @@ export const TagEntityTypeValues = Object.freeze({
   Container: 'Container', 
   User: 'User', 
   Task: 'Task', 
-  Project: 'Project'
+  Project: 'Project', 
+  File: 'File'
 });
 
 
@@ -33629,7 +33640,10 @@ export type BatchFormFragmentFragment = ({
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalVolume: ({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, followers: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, totalVolume: ({
       ...{ __typename?: 'MetricValue' },
     ...MetricFragmentFragment
   }), todo: ({
@@ -34116,7 +34130,10 @@ export type OwnedByFragmentFragment = ({
 export type ContainerFormFragmentFragment = ({
     ...{ __typename?: 'Container' },
   ...$Pick<Container, {| id: *, archived: *, updatedAt: *, no: *, containerType: *, containerOption: *, memo: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: *, warehouseArrivalAgreedDateApprovedAt: *, warehouseArrivalActualDateApprovedAt: *, freeTimeStartDate: *, freeTimeDuration: *, autoCalculatedFreeTimeStartDate: *, yardName: *, departureDate: *, departureDateApprovedAt: * |}>,
-  ...{| ownedBy: ({
+  ...{| followers: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, updatedBy: ?({
@@ -34843,7 +34860,10 @@ export type ItemFormFragmentFragment = ({
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, price: ({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, followers: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, price: ({
       ...{ __typename?: 'Price' },
     ...PriceFragmentFragment
   }), customFields: ({
@@ -34945,6 +34965,9 @@ export type ItemInOrderFormFragmentFragment = ({
   }), tags: Array<({
       ...{ __typename?: 'Tag' },
     ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, followers: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
       ...{ __typename?: 'Todo' },
     ...{| taskCount: ({
@@ -35001,7 +35024,10 @@ export type ItemInOrderFormFragmentFragment = ({
 export type ItemInBatchFormFragmentFragment = ({
     ...{ __typename?: 'OrderItem' },
   ...$Pick<OrderItem, {| id: *, archived: *, no: *, quantity: *, totalBatched: *, totalShipped: *, batchCount: *, batchShippedCount: * |}>,
-  ...{| price: ({
+  ...{| followers: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, price: ({
       ...{ __typename?: 'Price' },
     ...PriceFragmentFragment
   }), tags: Array<({
@@ -35244,7 +35270,10 @@ export type ProductFormFragmentFragment = ({
         ...{ __typename?: 'Partner' },
       ...PartnerCardFragmentFragment
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, updatedBy: ?({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, followers: Array<({
+      ...{ __typename?: 'User' },
+    ...UserAvatarFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
@@ -36938,6 +36967,9 @@ export type WarehouseCardFragmentFragment = ({
         "possibleTypes": [
           {
             "name": "User"
+          },
+          {
+            "name": "File"
           },
           {
             "name": "Product"

@@ -138,6 +138,9 @@
             "name": "User"
           },
           {
+            "name": "File"
+          },
+          {
             "name": "Product"
           },
           {
