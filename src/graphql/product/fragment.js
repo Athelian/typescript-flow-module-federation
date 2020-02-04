@@ -16,6 +16,9 @@ export const productFormFragment = gql`
         }
       }
     }
+    followers {
+      ...userAvatarFragment
+    }
     updatedBy {
       ...userAvatarFragment
     }

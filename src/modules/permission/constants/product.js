@@ -26,6 +26,7 @@ export const PRODUCT_SET_CUSTOM_FIELDS = 'product.products.setCustomFields';
 export const PRODUCT_SET_CUSTOM_FIELDS_MASK = 'product.products.setCustomFieldsMask';
 export const PRODUCT_SET_TAGS = 'product.products.setTags';
 export const PRODUCT_SET_MEMO = 'product.products.setMemo';
+export const PRODUCT_SET_FOLLOWERS = 'product.products.setFollowers';
 export const PRODUCT_PROVIDER_FORM = 'product.productProviders.form';
 export const PRODUCT_PROVIDER_LIST = 'product.productProviders.list';
 export const PRODUCT_PROVIDER_GET = 'product.productProviders.get';
