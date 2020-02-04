@@ -12,9 +12,7 @@ import {
   CONTAINER_SET_WAREHOUSE,
   CONTAINER_SET_TAGS,
   CONTAINER_SET_MEMO,
-  CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
   CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
-  CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
   CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
@@ -26,7 +24,6 @@ import {
   CONTAINER_SET_YARD_NAME,
   CONTAINER_SET_DEPARTURE_DATE,
   CONTAINER_SET_FOLLOWERS,
-  CONTAINER_ASSIGN_DEPARTURE_DATE,
   CONTAINER_APPROVE_DEPARTURE_DATE,
 } from 'modules/permission/constants/container';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -299,17 +296,11 @@ const ContainerSection = ({ container }: Props) => {
                             getByPath('shipment.importer.id', values),
                             getByPath('shipment.exporter.id', values),
                           ].filter(Boolean)}
-                          assignmentsName="warehouseArrivalAgreedDateAssignedTo"
-                          assignments={values.warehouseArrivalAgreedDateAssignedTo}
                           approvedAtName="warehouseArrivalAgreedDateApprovedAt"
                           approvedAt={values.warehouseArrivalAgreedDateApprovedAt}
                           approvedByName="warehouseArrivalAgreedDateApprovedBy"
                           approvedBy={values.warehouseArrivalAgreedDateApprovedBy}
                           setFieldValue={setFieldValue}
-                          assignable={hasPermission([
-                            CONTAINER_UPDATE,
-                            CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
-                          ])}
                           approvable={hasPermission([
                             CONTAINER_UPDATE,
                             CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
@@ -349,17 +340,11 @@ const ContainerSection = ({ container }: Props) => {
                             getByPath('shipment.importer.id', values),
                             getByPath('shipment.exporter.id', values),
                           ].filter(Boolean)}
-                          assignmentsName="warehouseArrivalActualDateAssignedTo"
-                          assignments={values.warehouseArrivalActualDateAssignedTo}
                           approvedAtName="warehouseArrivalActualDateApprovedAt"
                           approvedAt={values.warehouseArrivalActualDateApprovedAt}
                           approvedByName="warehouseArrivalActualDateApprovedBy"
                           approvedBy={values.warehouseArrivalActualDateApprovedBy}
                           setFieldValue={setFieldValue}
-                          assignable={hasPermission([
-                            CONTAINER_UPDATE,
-                            CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
-                          ])}
                           approvable={hasPermission([
                             CONTAINER_UPDATE,
                             CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
@@ -551,14 +536,11 @@ const ContainerSection = ({ container }: Props) => {
                           getByPath('shipment.importer.id', values),
                           getByPath('shipment.exporter.id', values),
                         ].filter(Boolean)}
-                        assignmentsName="departureDateAssignedTo"
-                        assignments={values.departureDateAssignedTo}
                         approvedAtName="departureDateApprovedAt"
                         approvedAt={values.departureDateApprovedAt}
                         approvedByName="departureDateApprovedBy"
                         approvedBy={values.departureDateApprovedBy}
                         setFieldValue={setFieldValue}
-                        assignable={allowUpdate || hasPermission(CONTAINER_ASSIGN_DEPARTURE_DATE)}
                         approvable={allowUpdate || hasPermission(CONTAINER_APPROVE_DEPARTURE_DATE)}
                       />
                     </GridColumn>
