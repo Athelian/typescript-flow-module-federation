@@ -114,16 +114,13 @@
   "lint-staged": {
     "src/**/*.{js,jsx,json}": [
       "eslint",
-      "prettier-eslint --write",
-      "git add"
+      "prettier-eslint --write"
     ],
     "*.md": [
-      "prettier-eslint --write",
-      "git add"
+      "prettier-eslint --write"
     ],
     "src/**/*.{css}": [
-      "stylelint --fix",
-      "git add"
+      "stylelint --fix"
     ]
   },
   "jest": {
