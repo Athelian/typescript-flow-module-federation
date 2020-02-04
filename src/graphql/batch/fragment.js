@@ -16,6 +16,9 @@ export const batchFormFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    followers {
+      ...userAvatarFragment
+    }
     memo
     no
     quantity
