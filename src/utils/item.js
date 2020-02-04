@@ -130,6 +130,7 @@ export const generateItemForMovedBatch = (
       tasks: [],
     },
     tags: [],
+    followers: [],
     files: [],
     memo: '',
     no: `[auto] ${orderItem.no}`,
