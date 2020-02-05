@@ -97,11 +97,6 @@ export const prepareParsedWarehouseInput = (
     newValues.customFields
   ),
   ...parseArrayOfIdsField(
-    'inChargeIds',
-    getByPathWithDefault([], 'inCharges', originalValues),
-    newValues.inCharges
-  ),
-  ...parseArrayOfIdsField(
     'organizationIds',
     getByPathWithDefault([], 'organizations', originalValues),
     newValues.organizations

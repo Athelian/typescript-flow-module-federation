@@ -15,7 +15,6 @@ export type FormState = {
   country?: string,
   surface: MetricValue,
   customFields: Object,
-  inCharges: Array<{ id: string, firstName: string, lastName: string }>,
   organizations: Array<Object>,
 };
 
@@ -34,7 +33,6 @@ export const warehouseInfoInitValues = {
     mask: null,
     fieldValues: [],
   },
-  inCharges: [],
   organizations: [],
 };
 
