@@ -37,13 +37,15 @@ const ItemFormInSlide = ({ orderItem, onSave, isNew }: Props) => {
   useEffect(() => {
     if (!isNew && orderItem?.id) {
       const notificationUnseenCount = orderItem?.notificationUnseenCount ?? 0;
-      if (notificationUnseenCount > 0) {
+      if (notificationUnseenCount === 0) {
         notificationSeeByEntities({
-          variables: [
-            {
-              orderItemId: orderItem?.id,
-            },
-          ],
+          variables: {
+            entities: [
+              {
+                orderItemId: orderItem?.id,
+              },
+            ],
+          },
         });
       }
     }

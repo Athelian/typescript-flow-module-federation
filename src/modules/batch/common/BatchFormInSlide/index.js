@@ -51,13 +51,15 @@ const BatchFormInSlide = ({ batch, isNew, onSave, ...rest }: Props) => {
   useEffect(() => {
     if (!isNew && batch?.id) {
       const notificationUnseenCount = batch?.notificationUnseenCount ?? 0;
-      if (notificationUnseenCount > 0) {
+      if (notificationUnseenCount === 0) {
         notificationSeeByEntities({
-          variables: [
-            {
-              batchId: batch?.id,
-            },
-          ],
+          variables: {
+            entities: [
+              {
+                batchId: batch?.id,
+              },
+            ],
+          },
         });
       }
     }

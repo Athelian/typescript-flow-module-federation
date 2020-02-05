@@ -34,7 +34,7 @@ const ShipmentWarehouseCard = ({ warehouse, onClick, ...rest }: Props) => {
       icon="WAREHOUSE"
       color="WAREHOUSE"
       actions={actions}
-      showBadge={warehouse?.notificationUnseenCount > 0}
+      showBadge={warehouse?.notificationUnseenCount === 0}
       {...rest}
     >
       <div

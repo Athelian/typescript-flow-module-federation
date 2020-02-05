@@ -46,13 +46,15 @@ export default function QueryFormV2({ query, entityId, entityType, render, onCom
 
   React.useEffect(() => {
     const notificationUnseenCount = data?.[entityType]?.notificationUnseenCount ?? 0;
-    if (notificationUnseenCount > 0) {
+    if (notificationUnseenCount === 0) {
       notificationSeeByEntities({
-        variables: [
-          {
-            [`${entityType}Id`]: decodeId(entityId),
-          },
-        ],
+        variables: {
+          entities: [
+            {
+              [`${entityType}Id`]: decodeId(entityId),
+            },
+          ],
+        },
       });
     }
   }, [data, entityId, entityType, notificationSeeByEntities]);

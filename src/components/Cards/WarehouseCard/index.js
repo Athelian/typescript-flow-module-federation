@@ -40,7 +40,7 @@ const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, actions, ...r
       actions={selectable || readOnly ? [] : actions}
       selectable={selectable}
       readOnly={readOnly}
-      showBadge={warehouse?.notificationUnseenCount > 0}
+      showBadge={warehouse?.notificationUnseenCount === 0}
       {...rest}
     >
       <div role="presentation" className={WarehouseCardWrapperStyle} onClick={onClick}>

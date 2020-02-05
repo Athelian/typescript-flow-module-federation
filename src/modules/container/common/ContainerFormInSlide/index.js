@@ -165,13 +165,15 @@ const ContainerFormInSlideHoC = (props: Props) => {
   React.useEffect(() => {
     if (!isNew && container?.id) {
       const notificationUnseenCount = container?.notificationUnseenCount ?? 0;
-      if (notificationUnseenCount > 0) {
+      if (notificationUnseenCount === 0) {
         notificationSeeByEntities({
-          variables: [
-            {
-              containerId: container?.id,
-            },
-          ],
+          variables: {
+            entities: [
+              {
+                containerId: container?.id,
+              },
+            ],
+          },
         });
       }
     }

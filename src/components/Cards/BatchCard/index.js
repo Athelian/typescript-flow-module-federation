@@ -95,7 +95,7 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
       icon="BATCH"
       color="BATCH"
       isArchived={archived}
-      showBadge={batch?.notificationUnseenCount > 0}
+      showBadge={batch?.notificationUnseenCount === 0}
       {...rest}
     >
       <div className={BatchCardWrapperStyle} onClick={onClick} role="presentation">
