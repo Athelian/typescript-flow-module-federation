@@ -188,6 +188,7 @@ function OrderCell({ data, beforeConnector }: CellProps) {
             onClick={handleClick}
             flattenCornerIcon
             id={`${ORDER}-${orderId}`}
+            showBadge={data?.notificationUnseenCount > 0}
           >
             <OrderCard
               organizationId={order?.ownedBy?.id}
@@ -364,6 +365,7 @@ function OrderItemCell({
             onClick={handleClick}
             flattenCornerIcon
             id={`${ORDER_ITEM}-${itemId}`}
+            showBadge={data?.orderItem?.notificationUnseenCount > 0}
           >
             <OrderItemCard
               organizationId={data?.orderItem?.ownedBy?.id}
@@ -609,6 +611,7 @@ function BatchCell({
             onClick={handleClick}
             flattenCornerIcon
             id={`${BATCH}-${batchId}`}
+            showBadge={data?.notificationUnseenCount > 0}
           >
             <BatchCard
               organizationId={data?.ownedBy?.id}
@@ -905,6 +908,7 @@ function ContainerCell({
             onClick={handleClick}
             flattenCornerIcon
             id={`${CONTAINER}-${containerId}`}
+            showBadge={data?.notificationUnseenCount > 0}
           >
             <ContainerCard
               organizationId={data?.ownedBy?.id}
@@ -1165,6 +1169,7 @@ function ShipmentCell({
             onClick={handleClick}
             flattenCornerIcon
             id={`${SHIPMENT}-${shipmentId}`}
+            showBadge={shipment?.notificationUnseenCount > 0}
           >
             <ShipmentCard
               organizationId={shipment?.ownedBy?.id}
