@@ -423,7 +423,6 @@ export default function entityEventHandler(
                       }));
                   }
                   break;
-                case 'assignedTo':
                 case 'approvers':
                   return client
                     .query({

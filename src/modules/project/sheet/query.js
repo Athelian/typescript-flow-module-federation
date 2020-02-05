@@ -200,9 +200,6 @@ const taskSheetFragment = gql`
     skippedBy {
       ...userAvatarFragment
     }
-    assignedTo {
-      ...userAvatarFragment
-    }
     approvable
     approvedAt
     approvedBy {
