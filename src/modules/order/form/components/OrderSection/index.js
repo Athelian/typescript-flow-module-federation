@@ -432,7 +432,8 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                     >
                                       {(
                                         { changeExporter: updateOrderItems },
-                                        { changeExporter: updateTasks }
+                                        { changeExporter: updateTasks },
+                                        { changeExporter: cleanUpFollowers }
                                       ) => (
                                         <SelectExporter
                                           cacheKey="OrderSelectExporter"
@@ -442,6 +443,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                           onSelect={newValue => {
                                             slideToggle(false);
                                             setFieldValue('exporter', newValue);
+                                            cleanUpFollowers(values.exporter);
                                             updateTasks(values.exporter);
                                             updateOrderItems();
                                           }}

@@ -1,34 +1,10 @@
 // @flow
+import type { Order } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
-type FormState = {
-  archived?: boolean,
-  piNo: ?string,
-  poNo: ?string,
-  currency: ?string,
-  deliveryPlace: ?string,
-  importer?: Object,
-  exporter?: { id: string, name: string },
-  incoterm: ?string,
-  issuedAt: ?Date,
-  deliveryDate: ?Date,
-  memo: ?string,
-  shipments: Array<Object>,
-  containers: Array<Object>,
-  customFields: Object,
-  totalPrice: ?Object,
-  totalOrdered: number,
-  totalBatched: number,
-  totalShipped: number,
-  orderItemCount: number,
-  batchCount: number,
-  batchShippedCount: number,
-  shipmentCount: number,
-};
-
-const initValues: FormState = {
+const initValues: Order = {
   piNo: null,
   poNo: null,
   currency: 'USD',
@@ -37,6 +13,7 @@ const initValues: FormState = {
   issuedAt: null,
   deliveryDate: null,
   memo: null,
+  followers: [],
   shipments: [],
   containers: [],
   customFields: {
@@ -53,7 +30,7 @@ const initValues: FormState = {
   shipmentCount: 0,
 };
 
-export default class OrderInfoContainer extends Container<FormState> {
+export default class OrderInfoContainer extends Container<Order> {
   state = initValues;
 
   originalValues = initValues;
@@ -76,5 +53,14 @@ export default class OrderInfoContainer extends Container<FormState> {
     const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };
+  };
+
+  changeExporter = (previousExporter: Object) => {
+    this.setState(prevState => ({
+      ...prevState,
+      followers: prevState.followers?.filter(
+        follower => follower?.organization?.id !== previousExporter?.organization?.id
+      ),
+    }));
   };
 }
