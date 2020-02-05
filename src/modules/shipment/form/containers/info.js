@@ -82,6 +82,43 @@ export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
     this.setState(values);
   };
 
+  // On change Importer or Exporter, set new partner and clean up Followers
+  onChangePartner = (fieldName: string, newPartner: Object) => {
+    this.setState(({ followers = [], [fieldName]: prevPartner }) => {
+      if (prevPartner) {
+        const cleanedFollowers = followers.filter(
+          follower => follower?.organization?.id !== prevPartner?.id
+        );
+
+        return { [fieldName]: newPartner, followers: cleanedFollowers };
+      }
+
+      return { [fieldName]: newPartner };
+    });
+  };
+
+  // On change Forwarders, set new Forwarders clean up Followers
+  onChangeForwarders = (newForwarders: Array<Object>) => {
+    this.setState(({ followers = [], forwarders: prevForwarders = [] }) => {
+      const removedForwarders = prevForwarders.filter(
+        prevForwarder => !newForwarders.some(newForwarder => newForwarder.id === prevForwarder.id)
+      );
+
+      if (prevForwarders.length > 0 && removedForwarders.length > 0) {
+        const cleanedFollowers = followers.filter(
+          follower =>
+            !removedForwarders.some(
+              removedForwarder => removedForwarder.id === follower?.organization?.id
+            )
+        );
+
+        return { forwarders: newForwarders, followers: cleanedFollowers };
+      }
+
+      return { forwarders: newForwarders };
+    });
+  };
+
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);

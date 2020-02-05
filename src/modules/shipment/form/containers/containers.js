@@ -1,9 +1,9 @@
 // @flow
-import type { ContainerPayload, OrganizationPayload, PartnerPayload } from 'generated/graphql';
+import type { ContainerPayload, OrganizationPayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cloneDeep, set } from 'lodash';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import { getByPath, getByPathWithDefault, isEquals } from 'utils/fp';
+import { isEquals } from 'utils/fp';
 
 type ContainersState = {|
   containers: Array<ContainerPayload>,
@@ -46,39 +46,170 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     this.originalValues = { containers, hasCalledContainerApiYet };
   };
 
-  changeMainExporter = (exporter: ?OrganizationPayload) => {
-    if (exporter) {
-      this.setState(prevState => {
-        return {
-          containers: prevState.containers.map(container => {
-            const { batches, representativeBatch, ...rest } = container;
-            const newBatches = batches.filter(
-              batch => getByPath('orderItem.order.exporter.id', batch) === getByPath('id', exporter)
-            );
-            const newRepresentativeBatch = newBatches
-              .map(batch => batch.id)
-              .includes(getByPathWithDefault('', 'id', representativeBatch))
-              ? representativeBatch
-              : newBatches[0];
-            return {
-              batches: newBatches,
-              representativeBatch: newRepresentativeBatch,
-              ...rest,
-            };
-          }),
-        };
+  // On change Importer, clean up followers and batches
+  onChangeImporter = (prevImporter: ?OrganizationPayload) => {
+    if (prevImporter) {
+      this.setState(({ containers = [] }) => {
+        const cleanedContainers = containers.map(container => {
+          const { followers } = container;
+          const cleanedFollowers = followers.filter(
+            follower => follower?.organization?.id !== prevImporter?.id
+          );
+
+          return {
+            ...container,
+            batches: [],
+            followers: cleanedFollowers,
+          };
+        });
+
+        return { containers: cleanedContainers };
       });
     }
   };
 
-  waitForContainerSectionReadyThenChangePartner = (partner: PartnerPayload) => {
+  // On change Exporter, clean up followers and batches
+  onChangeExporter = (prevExporter: ?OrganizationPayload, newExporter: ?OrganizationPayload) => {
+    this.setState(({ containers = [] }) => {
+      const cleanedContainers = containers.map(container => {
+        const { followers = [], batches = [], representativeBatch } = container;
+
+        if (prevExporter) {
+          const cleanedFollowers = followers.filter(
+            follower => follower?.organization?.id !== prevExporter?.id
+          );
+
+          // When Exporter is removed
+          if (!newExporter) {
+            const cleanedBatches = batches.map(batch => {
+              const { followers: batchFollowers = [] } = batch;
+
+              const cleanedBatchFollowers = batchFollowers.filter(
+                follower => follower?.organization?.id !== prevExporter?.id
+              );
+
+              return {
+                ...batch,
+                followers: cleanedBatchFollowers,
+              };
+            });
+
+            return {
+              ...container,
+              batches: cleanedBatches,
+              followers: cleanedFollowers,
+            };
+          }
+
+          // When Exporter is changed to different Exporter
+          return {
+            ...container,
+            batches: [],
+            representativeBatch: null,
+            followers: cleanedFollowers,
+          };
+        }
+
+        // When there is no Exporter and Exporter is added
+        const filteredBatches = batches.filter(
+          batch => batch?.orderItem?.order?.exporter?.id === prevExporter?.id
+        );
+        const newRepresentativeBatch = filteredBatches.some(
+          batch => batch?.id === representativeBatch?.id
+        )
+          ? representativeBatch
+          : filteredBatches?.[0] ?? null;
+
+        return {
+          ...container,
+          batches: filteredBatches,
+          representativeBatch: newRepresentativeBatch,
+        };
+      });
+
+      return { containers: cleanedContainers };
+    });
+  };
+
+  // On change Forwarders, clean up followers and followers in batches
+  onChangeForwarders = (
+    prevForwarders: Array<OrganizationPayload> = [],
+    newForwarders: Array<OrganizationPayload> = []
+  ) => {
+    const removedForwarders = prevForwarders.filter(
+      prevForwarder => !newForwarders.some(newForwarder => newForwarder.id === prevForwarder.id)
+    );
+
+    if (prevForwarders.length > 0 && removedForwarders.length > 0) {
+      this.setState(({ containers = [] }) => {
+        const cleanedContainers = containers.map(container => {
+          const { followers = [], batches = [] } = container;
+
+          const cleanedFollowers = followers.filter(
+            follower =>
+              !removedForwarders.some(
+                removedForwarder => removedForwarder.id === follower?.organization?.id
+              )
+          );
+
+          const cleanedBatches = batches.map(batch => {
+            const { followers: batchFollowers = [] } = batch;
+
+            const cleanedBatchFollowers = batchFollowers.filter(
+              follower =>
+                !removedForwarders.some(
+                  removedForwarder => removedForwarder.id === follower?.organization?.id
+                )
+            );
+
+            return {
+              ...batch,
+              followers: cleanedBatchFollowers,
+            };
+          });
+
+          return { ...container, batches: cleanedBatches, followers: cleanedFollowers };
+        });
+
+        return { containers: cleanedContainers };
+      });
+    }
+  };
+
+  waitForContainerSectionReadyThenChangeImporter = (prevImporter: ?OrganizationPayload) => {
+    if (prevImporter) {
+      const { hasCalledContainerApiYet } = this.state;
+      let retry;
+
+      if (hasCalledContainerApiYet) {
+        this.onChangeImporter(prevImporter);
+      } else {
+        const waitForApiReady = () => {
+          if (hasCalledContainerApiYet) {
+            this.onChangeImporter(prevImporter);
+            cancelAnimationFrame(retry);
+          } else {
+            retry = requestAnimationFrame(waitForApiReady);
+          }
+        };
+        retry = requestAnimationFrame(waitForApiReady);
+      }
+    }
+  };
+
+  waitForContainerSectionReadyThenChangeExporter = (
+    prevExporter: ?OrganizationPayload,
+    newExporter: ?OrganizationPayload
+  ) => {
+    const { hasCalledContainerApiYet } = this.state;
     let retry;
-    if (this.state.hasCalledContainerApiYet) {
-      this.onChangePartner(partner);
+
+    if (hasCalledContainerApiYet) {
+      this.onChangeExporter(prevExporter, newExporter);
     } else {
       const waitForApiReady = () => {
-        if (this.state.hasCalledContainerApiYet) {
-          this.onChangePartner(partner);
+        if (hasCalledContainerApiYet) {
+          this.onChangeExporter(prevExporter, newExporter);
           cancelAnimationFrame(retry);
         } else {
           retry = requestAnimationFrame(waitForApiReady);
@@ -88,58 +219,27 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     }
   };
 
-  waitForContainerSectionReadyThenChangeMainExporter = (exporter: ?OrganizationPayload) => {
-    let retry;
-    if (this.state.hasCalledContainerApiYet) {
-      this.changeMainExporter(exporter);
-    } else {
-      const waitForApiReady = () => {
-        if (this.state.hasCalledContainerApiYet) {
-          this.changeMainExporter(exporter);
-          cancelAnimationFrame(retry);
-        } else {
-          retry = requestAnimationFrame(waitForApiReady);
-        }
-      };
-      retry = requestAnimationFrame(waitForApiReady);
-    }
-  };
+  waitForContainerSectionReadyThenChangeForwarders = (
+    prevForwarders: Array<OrganizationPayload> = [],
+    newForwarders: Array<OrganizationPayload> = []
+  ) => {
+    if (prevForwarders.length > 0) {
+      const { hasCalledContainerApiYet } = this.state;
+      let retry;
 
-  onChangePartner = (partner: PartnerPayload) => {
-    this.setState(prevState => ({
-      containers: prevState.containers.map(container => ({
-        ...container,
-        warehouseArrivalActualDateApprovedAt:
-          getByPath('warehouseArrivalActualDateApprovedBy.organization.id', container) ===
-          getByPath('id', partner)
-            ? null
-            : container.warehouseArrivalActualDateApprovedAt,
-        warehouseArrivalActualDateApprovedBy:
-          getByPath('warehouseArrivalActualDateApprovedBy.organization.id', container) ===
-          getByPath('id', partner)
-            ? null
-            : container.warehouseArrivalActualDateApprovedBy,
-        warehouseArrivalAgreedDateApprovedAt:
-          getByPath('warehouseArrivalAgreedDateApprovedBy.organization.id', container) ===
-          getByPath('id', partner)
-            ? null
-            : container.warehouseArrivalAgreedDateApprovedAt,
-        warehouseArrivalAgreedDateApprovedBy:
-          getByPath('warehouseArrivalAgreedDateApprovedBy.organization.id', container) ===
-          getByPath('id', partner)
-            ? null
-            : container.warehouseArrivalAgreedDateApprovedBy,
-        departureDateApprovedAt:
-          getByPath('departureDateApprovedBy.organization.id', container) ===
-          getByPath('id', partner)
-            ? null
-            : container.departureDateApprovedAt,
-        departureDateApprovedBy:
-          getByPath('departureDateApprovedBy.organization.id', container) ===
-          getByPath('id', partner)
-            ? null
-            : container.departureDateApprovedBy,
-      })),
-    }));
+      if (hasCalledContainerApiYet) {
+        this.onChangeForwarders(prevForwarders, newForwarders);
+      } else {
+        const waitForApiReady = () => {
+          if (hasCalledContainerApiYet) {
+            this.onChangeForwarders(prevForwarders, newForwarders);
+            cancelAnimationFrame(retry);
+          } else {
+            retry = requestAnimationFrame(waitForApiReady);
+          }
+        };
+        retry = requestAnimationFrame(waitForApiReady);
+      }
+    }
   };
 }
