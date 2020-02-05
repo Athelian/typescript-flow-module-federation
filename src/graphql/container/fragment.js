@@ -12,6 +12,9 @@ export const containerFormFragment = gql`
     followers {
       ...userAvatarFragment
     }
+    ... on Followed {
+      notificationUnseenCount
+    }
     ownedBy {
       ...ownedByFragment
     }

@@ -1,11 +1,13 @@
 // @flow
 import React, { useEffect } from 'react';
+import { useMutation } from '@apollo/react-hooks';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import BatchForm from 'modules/batch/form';
+import { notificationSeeByEntitiesMutation } from 'components/common/QueryFormV2/mutation';
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon, LogsButton } from 'components/NavBar';
@@ -44,6 +46,22 @@ const defaultProps = {
 const formContainer = new FormContainer();
 
 const BatchFormInSlide = ({ batch, isNew, onSave, ...rest }: Props) => {
+  const [notificationSeeByEntities] = useMutation(notificationSeeByEntitiesMutation);
+
+  useEffect(() => {
+    if (!isNew && batch?.id) {
+      const notificationUnseenCount = batch?.notificationUnseenCount ?? 0;
+      if (notificationUnseenCount > 0) {
+        notificationSeeByEntities({
+          variables: [
+            {
+              batchId: batch?.id,
+            },
+          ],
+        });
+      }
+    }
+  }, [isNew, notificationSeeByEntities, batch]);
   useEffect(() => {
     return () => formContainer.onReset();
   });
