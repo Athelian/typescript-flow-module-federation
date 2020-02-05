@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { navigate } from '@reach/router';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import type { DocumentNode } from 'graphql';
 import useUser from 'hooks/useUser';
 import LoadingIcon from 'components/LoadingIcon';
@@ -11,6 +11,7 @@ import logger from 'utils/logger';
 import { parseRoute } from 'utils/entity';
 import { cleanTagsData } from 'utils/tags';
 import QueryFormPermissionContext from './context';
+import { notificationSeeByEntitiesMutation } from '../QueryFormV2/mutation';
 
 type OptionalProps = {
   onCompleted: ?Function,
@@ -32,10 +33,25 @@ export default function QueryForm({ query, entityId, entityType, render, onCompl
     onError: logger.error,
   });
 
+  const [notificationSeeByEntities] = useMutation(notificationSeeByEntitiesMutation);
+
   const organizationId = data?.[entityType]?.ownedBy?.id;
   const permissions = usePermissions(organizationId);
   const { isOwnerBy } = useUser();
   const isOwner = isOwnerBy(organizationId);
+
+  React.useEffect(() => {
+    const notificationUnseenCount = data?.[entityType]?.notificationUnseenCount ?? 0;
+    if (notificationUnseenCount > 0) {
+      notificationSeeByEntities({
+        variables: [
+          {
+            [`${entityType}Id`]: decodeId(entityId),
+          },
+        ],
+      });
+    }
+  }, [data, entityId, entityType, notificationSeeByEntities]);
 
   if (error) {
     if (error.message && error.message.includes('403')) {
