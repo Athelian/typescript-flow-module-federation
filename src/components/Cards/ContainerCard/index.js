@@ -97,7 +97,13 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
   );
 
   return (
-    <BaseCard icon="CONTAINER" color="CONTAINER" isArchived={archived} {...rest}>
+    <BaseCard
+      icon="CONTAINER"
+      color="CONTAINER"
+      isArchived={archived}
+      showBadge={container?.notificationUnseenCount > 0}
+      {...rest}
+    >
       <div className={CardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ImagePartWrapperStyle}>
           <div className={ImageWrapperStyle}>

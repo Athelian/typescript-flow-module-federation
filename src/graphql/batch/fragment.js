@@ -19,6 +19,9 @@ export const batchFormFragment = gql`
     followers {
       ...userAvatarFragment
     }
+    ... on Followed {
+      notificationUnseenCount
+    }
     memo
     no
     quantity

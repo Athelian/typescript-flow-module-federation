@@ -71,6 +71,9 @@ export const containerCardFragment = gql`
     no
     containerType
     containerOption
+    ... on Followed {
+      notificationUnseenCount
+    }
     representativeBatch {
       ... on Batch {
         id

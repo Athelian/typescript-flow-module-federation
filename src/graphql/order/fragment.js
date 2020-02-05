@@ -15,6 +15,9 @@ export const orderFormQueryFragment = gql`
     followers {
       ...userAvatarFragment
     }
+    ... on Followed {
+      notificationUnseenCount
+    }
     memo
     poNo
     currency
@@ -78,6 +81,9 @@ export const orderFormFragment = gql`
     }
     followers {
       ...userAvatarFragment
+    }
+    ... on Followed {
+      notificationUnseenCount
     }
     memo
     poNo
@@ -186,6 +192,11 @@ export const orderCardFragment = gql`
       ...userAvatarFragment
     }
     currency
+    batchCount
+    batchShippedCount
+    ... on Followed {
+      notificationUnseenCount
+    }
   }
 `;
 

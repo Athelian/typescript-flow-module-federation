@@ -102,7 +102,7 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
 
   return (
     <BaseCard
-      showBadge={shipment.timeline?.unreadCount > 0}
+      showBadge={shipment?.notificationUnseenCount > 0}
       icon="SHIPMENT"
       color="SHIPMENT"
       actions={actions}

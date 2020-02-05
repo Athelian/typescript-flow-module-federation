@@ -12,6 +12,9 @@ export const shipmentFormQueryFragment = gql`
     followers {
       ...userAvatarFragment
     }
+    ... on Followed {
+      notificationUnseenCount
+    }
     memo
     no
     blNo
@@ -93,6 +96,9 @@ export const shipmentFormFragment = gql`
     }
     followers {
       ...userAvatarFragment
+    }
+    ... on Followed {
+      notificationUnseenCount
     }
     memo
     no
@@ -241,6 +247,9 @@ export const shipmentCardFragment = gql`
     batchCount
     totalPackageQuantity
     orderItemCount
+    ... on Followed {
+      notificationUnseenCount
+    }
     totalVolume {
       ...metricFragment
     }

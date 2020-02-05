@@ -25,13 +25,9 @@ export const shipmentListQuery = gql`
   ) {
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ... on Shipment {
-          ...shipmentCardWithOwnedFragment
-          timeline {
-            ... on Timeline {
-              unreadCount
-            }
-          }
+        ...shipmentCardWithOwnedFragment
+        ... on Followed {
+          notificationUnseenCount
         }
         ...badRequestFragment
         ...forbiddenFragment

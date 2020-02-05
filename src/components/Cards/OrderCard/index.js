@@ -58,7 +58,7 @@ const OrderCard = ({ order, actions, onClick, ...rest }: Props) => {
 
   return (
     <BaseCard
-      showBadge={order.timeline?.unreadCount > 0}
+      showBadge={order?.notificationUnseenCount > 0}
       icon="ORDER"
       color="ORDER"
       actions={actions}

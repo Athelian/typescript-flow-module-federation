@@ -23,6 +23,9 @@ export const warehouseFormFragment = gql`
     followers {
       ...userAvatarFragment
     }
+    ... on Followed {
+      notificationUnseenCount
+    }
     inCharges {
       ...userAvatarFragment
     }

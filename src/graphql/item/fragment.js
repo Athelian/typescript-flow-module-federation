@@ -89,6 +89,9 @@ export const itemFormFragment = gql`
     followers {
       ...userAvatarFragment
     }
+    ... on Followed {
+      notificationUnseenCount
+    }
     no
     quantity
     price {
@@ -214,6 +217,9 @@ export const itemInOrderFormFragment = gql`
     followers {
       ...userAvatarFragment
     }
+    ... on Followed {
+      notificationUnseenCount
+    }
     memo
     todo {
       taskCount {
@@ -280,6 +286,9 @@ export const itemInBatchFormFragment = gql`
     quantity
     followers {
       ...userAvatarFragment
+    }
+    ... on Followed {
+      notificationUnseenCount
     }
     price {
       ...priceFragment
