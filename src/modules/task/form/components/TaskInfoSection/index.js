@@ -33,7 +33,6 @@ import {
   ToggleInput,
   MetricInputFactory,
   SelectInputFactory,
-  UserAssignmentInputFactory,
   FormTooltip,
 } from 'components/Form';
 import Icon from 'components/Icon';
@@ -90,7 +89,7 @@ function defaultBindingOptions(intl: IntlShape, isStartDate: boolean) {
   ];
 }
 
-const TaskInfoSection = ({ intl, groupIds, task, isInTemplate, parentEntity }: Props) => {
+const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
@@ -952,21 +951,6 @@ const TaskInfoSection = ({ intl, groupIds, task, isInTemplate, parentEntity }: P
                       )}
                     </div>
 
-                    <UserAssignmentInputFactory
-                      cacheKey="TaskUserSelect"
-                      name="assignedTo"
-                      label={
-                        <FormattedMessage
-                          id="modules.Tasks.assignedToComplete"
-                          defaultMessage="ASSIGNED TO COMPLETE"
-                        />
-                      }
-                      groupIds={groupIds}
-                      values={values.assignedTo}
-                      onChange={setFieldValue}
-                      editable={editable.assignedTo}
-                    />
-
                     {inProgressAt && (
                       <FormField
                         name="inProgressAt"
@@ -1184,21 +1168,6 @@ const TaskInfoSection = ({ intl, groupIds, task, isInTemplate, parentEntity }: P
                             </>
                           )}
                         </div>
-
-                        <UserAssignmentInputFactory
-                          cacheKey="TaskUserSelect"
-                          name="approvers"
-                          label={
-                            <FormattedMessage
-                              id="modules.Tasks.assignedToApprove"
-                              defaultMessage="ASSIGNED TO APPROVE"
-                            />
-                          }
-                          groupIds={groupIds}
-                          values={values.approvers}
-                          onChange={setFieldValue}
-                          editable={editable.approvers}
-                        />
 
                         {approvedAt && (
                           <FormField
