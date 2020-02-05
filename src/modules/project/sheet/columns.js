@@ -217,13 +217,6 @@ export const taskColumns = (
     width: ColumnWidths.Default,
   },
   {
-    key: `milestones.${milestoneIdx}.tasks.${taskIdx}.assignedTo`,
-    title: <FormattedMessage {...taskMessages.assignedTo} />,
-    icon: 'MILESTONE_TASK',
-    color: colors.TASK,
-    width: ColumnWidths.Users,
-  },
-  {
     key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvable`,
     title: <FormattedMessage {...taskMessages.approvable} />,
     icon: 'MILESTONE_TASK',
