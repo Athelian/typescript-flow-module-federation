@@ -5,7 +5,6 @@ import { newCustomValue } from 'components/Sheet/SheetLive/helper';
 import type { EntityEventChange } from 'components/Sheet/SheetLive/types';
 import {
   tagsByIDsQuery,
-  usersByIDsQuery,
   organizationByIDQuery,
   filesByIDsQuery,
   maskByIDQuery,
@@ -28,16 +27,6 @@ export function handleOrderChanges(
           .then(({ data }) => ({
             field: change.field,
             new: newCustomValue(data.organization),
-          }));
-      case 'inCharges':
-        return client
-          .query({
-            query: usersByIDsQuery,
-            variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-          })
-          .then(({ data }) => ({
-            field: change.field,
-            new: newCustomValue(data.usersByIDs),
           }));
       case 'tags':
         return client
