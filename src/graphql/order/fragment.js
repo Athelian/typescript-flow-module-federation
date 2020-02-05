@@ -12,6 +12,9 @@ export const orderFormQueryFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    followers {
+      ...userAvatarFragment
+    }
     memo
     poNo
     currency
@@ -72,6 +75,9 @@ export const orderFormFragment = gql`
     }
     ownedBy {
       ...ownedByFragment
+    }
+    followers {
+      ...userAvatarFragment
     }
     memo
     poNo

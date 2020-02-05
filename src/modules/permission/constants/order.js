@@ -31,6 +31,7 @@ export const ORDER_SET_PO_NO = 'order.orders.setPoNo';
 export const ORDER_SET_TASKS = 'order.orders.setTasks';
 export const ORDER_SET_TASK_TEMPLATE = 'order.orders.setTaskTemplate';
 export const ORDER_SET_MILESTONE = 'order.orders.setMilestone';
+export const ORDER_SET_FOLLOWERS = 'order.orders.setFollowers';
 export const ORDER_TASK_CREATE = 'order.tasks.create';
 export const ORDER_TASK_DELETE = 'order.tasks.delete';
 export const ORDER_TASK_UPDATE = 'order.tasks.update';

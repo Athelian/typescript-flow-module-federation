@@ -21,9 +21,9 @@ import validator from 'modules/order/form/validator';
 import { FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
+import Followers from 'components/Followers';
 import {
   SectionHeader,
-  LastModified,
   StatusToggle,
   FieldItem,
   Label,
@@ -49,6 +49,7 @@ import {
   ORDER_SET_MEMO,
   ORDER_SET_IMPORTER,
   ORDER_SET_ARCHIVED,
+  ORDER_SET_FOLLOWERS,
   ORDER_CREATE,
 } from 'modules/permission/constants/order';
 import messages from 'modules/order/messages';
@@ -73,16 +74,28 @@ type Props = {
 const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { updatedAt, updatedBy, archived } = order;
+  const { archived } = order;
   return (
     <MainSectionPlaceholder height={961} isLoading={isLoading}>
       <SectionHeader
         icon="ORDER"
         title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
       >
+        <Subscribe to={[OrderInfoContainer]}>
+          {({ originalValues: initialValues, state, setFieldValue }) => {
+            const values = { ...initialValues, ...state };
+            return (
+              <Followers
+                followers={values?.followers ?? []}
+                setFollowers={value => setFieldValue('followers', value)}
+                organizationIds={[values?.importer?.id, values?.exporter?.id].filter(Boolean)}
+                editable={hasPermission([ORDER_UPDATE, ORDER_SET_FOLLOWERS])}
+              />
+            );
+          }}
+        </Subscribe>
         {!isNew && (
           <>
-            <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
             {!isClone && hasPermission([ORDER_CREATE]) && (
               <CloneButton onClick={() => navigate(`/order/clone/${encodeId(order.id)}`)} />
             )}
