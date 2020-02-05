@@ -7,6 +7,7 @@ import {
 } from 'generated/graphql';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { isEquals } from 'utils/fp';
+import { removeTypename } from 'utils/data';
 import LoadingIcon from 'components/LoadingIcon';
 import Dialog from 'components/Dialog';
 import { FormattedMessage } from 'react-intl';
@@ -113,7 +114,7 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
             minutes: 0,
             seconds: 0,
             nanos: 0,
-            ...timer,
+            ...removeTypename(timer),
           },
           notifications: preferences.map(({ type, enabled }) => ({ type, enabled })),
         },
