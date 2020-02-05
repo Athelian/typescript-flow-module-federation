@@ -220,10 +220,6 @@ export default defineMessages({
     id: 'components.BatchItem.sectionPackage',
     defaultMessage: 'PACKAGING',
   },
-  sectionAssignments: {
-    id: 'components.BatchItem.sectionAssignments',
-    defaultMessage: 'ASSIGNMENTS',
-  },
   // tooltips
   tooltipDetails: {
     id: 'components.BatchItem.tooltip.details',
@@ -282,10 +278,6 @@ export default defineMessages({
     defaultMessage:
       '{title} approved by {approvedByFirstName} {approvedByLastName} on {approvedAt}',
   },
-  tooltipAssignments: {
-    id: 'components.BatchItem.tooltip.assignments',
-    defaultMessage: 'View Assignments',
-  },
   tooltipExporter: {
     id: 'components.BatchItem.tooltip.exporter',
     defaultMessage: '[Exporter] {exporter}',
@@ -308,14 +300,6 @@ export default defineMessages({
     defaultMessage: 'Duplicate batch item',
   },
   // actions
-  assignMe: {
-    id: 'components.BatchItem.assignMe',
-    defaultMessage: 'Assign someone',
-  },
-  addAssign: {
-    id: 'components.BatchItem.addAssign',
-    defaultMessage: 'ADD ASSIGNMENT',
-  },
   addAdjustment: {
     id: 'components.BatchItem.addAdjustment',
     defaultMessage: 'ADD ADJUSTMENT',
