@@ -30,9 +30,6 @@ export const sheetShipmentFragment = gql`
     totalVolumeDisplayMetric
     totalPackageQuantityOverride
     totalPackageQuantityOverriding
-    inCharges {
-      ...userAvatarFragment
-    }
     importer {
       ...partnerNameFragment
     }
@@ -115,9 +112,6 @@ export const sheetTimelineDateFragment = gql`
   fragment sheetTimelineDateFragment on TimelineDate {
     id
     date
-    assignedTo {
-      ...userAvatarFragment
-    }
     approvedBy {
       ...userAvatarFragment
     }
