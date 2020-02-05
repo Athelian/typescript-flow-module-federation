@@ -13,7 +13,6 @@ import {
   WAREHOUSE_SET_CUSTOM_FIELDS_MASK,
   WAREHOUSE_CREATE,
 } from 'modules/permission/constants/warehouse';
-import { STAFF_LIST } from 'modules/permission/constants/staff';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -35,7 +34,6 @@ import {
   TextInputFactory,
   EnumSearchSelectInputFactory,
   CustomFieldsFactory,
-  UserAssignmentInputFactory,
   MetricInputFactory,
 } from 'components/Form';
 import { getByPath } from 'utils/fp';
@@ -240,32 +238,6 @@ const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {
                   />
                 </GridColumn>
                 <GridColumn>
-                  <UserAssignmentInputFactory
-                    cacheKey="WarehouseUserSelect"
-                    name="inCharges"
-                    values={values.inCharges}
-                    onChange={(name: string, assignments: Array<Object>) =>
-                      setFieldValue(name, assignments)
-                    }
-                    label={
-                      <>
-                        <FormattedMessage
-                          id="modules.Warehouses.inCharge"
-                          defaultMessage="IN CHARGE"
-                        />
-                        {' ('}
-                        <FormattedNumber value={values.inCharges.length} />)
-                      </>
-                    }
-                    infoMessage={
-                      <FormattedMessage
-                        id="modules.Warehouses.tooltipInCharge"
-                        defaultMessage="You can choose up to 5 people in charge."
-                      />
-                    }
-                    editable={hasPermission(STAFF_LIST) && allowUpdate}
-                  />
-
                   <FieldItem
                     vertical
                     label={
