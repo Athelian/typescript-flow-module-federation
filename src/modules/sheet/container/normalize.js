@@ -36,21 +36,9 @@ export default function normalizeSheetContainerInput(
         freeTimeStartDate: date ? new Date(date) : null,
       };
     }
-    case 'warehouseArrivalAgreedDateAssignedTo':
-      return {
-        warehouseArrivalAgreedDateAssignedToIds: value.map(user => user.id),
-      };
-    case 'warehouseArrivalActualDateAssignedTo':
-      return {
-        warehouseArrivalActualDateAssignedToIds: value.map(user => user.id),
-      };
     case 'warehouse':
       return {
         warehouseId: value?.id ?? null,
-      };
-    case 'departureDateAssignedTo':
-      return {
-        departureDateAssignedToIds: value.map(user => user.id),
       };
     default:
       return normalizeSheetInput(order, field, value);
