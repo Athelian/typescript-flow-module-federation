@@ -8904,6 +8904,7 @@ export type Batch = {|
   ...Owned,
   ...Package,
   ...Tagged,
+  ...Followed,
   ...Customizable,
   ...Memorizable,
   ...Sortable,
@@ -8947,6 +8948,8 @@ export type Batch = {|
     packageSize?: ?Size,
     packageCapacity?: ?$ElementType<Scalars, 'Float'>,
     tags: Array<TagPayload>,
+    followers: Array<UserPayload>,
+    notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
     sort: $ElementType<Scalars, 'Int'>,
@@ -8975,6 +8978,7 @@ export type BatchCreateInput = {|
   packageCapacity?: ?$ElementType<Scalars, 'Float'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   orderItemId: $ElementType<Scalars, 'ID'>,
@@ -9075,6 +9079,7 @@ export type BatchUpdateInput = {|
   packageCapacity?: ?$ElementType<Scalars, 'Float'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   orderItemId?: ?$ElementType<Scalars, 'ID'>,
@@ -9143,6 +9148,7 @@ export type Container = {|
   ...Model,
   ...Owned,
   ...Tagged,
+  ...Followed,
   ...Sortable,
   ...Memorizable,
   ...{|
@@ -9189,6 +9195,8 @@ export type Container = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     tags: Array<TagPayload>,
+    followers: Array<UserPayload>,
+    notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     sort: $ElementType<Scalars, 'Int'>,
     memo?: ?$ElementType<Scalars, 'String'>,
   |}
@@ -9216,6 +9224,7 @@ export type ContainerBatchInput = {|
   packageCapacity?: ?$ElementType<Scalars, 'Float'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
@@ -9245,6 +9254,7 @@ export type ContainerCreateInput = {|
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
   shipmentId: $ElementType<Scalars, 'ID'>,
 |};
@@ -9355,6 +9365,7 @@ export type ContainerUpdateInput = {|
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
 |};
@@ -9889,6 +9900,7 @@ export type EntityFileInput = {|
   status?: ?FileStatus,
   memo?: ?$ElementType<Scalars, 'String'>,
   orphan?: ?$ElementType<Scalars, 'Boolean'>,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type EntityHit = {|
@@ -10073,6 +10085,7 @@ export type FieldValuePayload = FieldValue | BadRequest | Forbidden | NotFound;
 
 export type File = {|
   ...Model,
+  ...Tagged,
   ...Owned,
   ...Memorizable,
   ...{|
@@ -10094,6 +10107,7 @@ export type File = {|
     createdBy?: ?UserPayload,
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
+    tags: Array<TagPayload>,
     ownedBy: OrganizationPayload,
     memo?: ?$ElementType<Scalars, 'String'>,
   |}
@@ -10117,6 +10131,7 @@ export type FileFilterInput = {|
   mimetype?: ?$ElementType<Scalars, 'String'>,
   hasEntity?: ?$ElementType<Scalars, 'Boolean'>,
   hasEntityExcludeId?: ?$ElementType<Scalars, 'ID'>,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type FileInput = {|
@@ -10125,6 +10140,7 @@ export type FileInput = {|
   status?: ?FileStatus,
   memo?: ?$ElementType<Scalars, 'String'>,
   orphan?: ?$ElementType<Scalars, 'Boolean'>,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type FilePayload = File | BadRequest | Forbidden | NotFound;
@@ -10205,6 +10221,11 @@ export type FocusingInput = {|
 
 export type FocusPayload = Focus | BadRequest | Forbidden | NotFound;
 
+export type Followed = {|
+  followers: Array<UserPayload>,
+  notificationUnseenCount: $ElementType<Scalars, 'Int'>,
+|};
+
 export type Forbidden = {|
    __typename?: 'Forbidden',
   reference?: ?Reference,
@@ -10268,6 +10289,10 @@ export const IncotermValues = Object.freeze({
 
 
 export type Incoterm = $Values<typeof IncotermValues>;
+
+export type Integrated = {|
+  integrationLinks: Array<IntegrationLinkPayload>,
+|};
 
 export type Integration = {|
   ...Model,
@@ -11106,9 +11131,12 @@ export type Mutation = {|
   commentUpdate: CommentPayload,
   commentDelete?: ?EmptyPayload,
   timelineRead?: ?EmptyPayload,
-  notificationRead: $ElementType<Scalars, 'Boolean'>,
-  notificationReadAll: $ElementType<Scalars, 'Boolean'>,
+  notificationActive: $ElementType<Scalars, 'Boolean'>,
+  notificationArchive: $ElementType<Scalars, 'Boolean'>,
+  notificationArchiveAll: $ElementType<Scalars, 'Boolean'>,
   notificationSeeAll: $ElementType<Scalars, 'Boolean'>,
+  notificationSeeByEntities: $ElementType<Scalars, 'Boolean'>,
+  notificationPreferencesUpdate: NotificationPreferencesPayload,
   roleCreate: RolePayload,
   roleUpdate: RolePayload,
   roleDelete?: ?EmptyPayload,
@@ -11536,8 +11564,23 @@ export type MutationTimelineReadArgs = {|
 |};
 
 
-export type MutationNotificationReadArgs = {|
+export type MutationNotificationActiveArgs = {|
   id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type MutationNotificationArchiveArgs = {|
+  id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type MutationNotificationSeeByEntitiesArgs = {|
+  entities: Array<EntityInput>
+|};
+
+
+export type MutationNotificationPreferencesUpdateArgs = {|
+  input: NotificationPreferencesInput
 |};
 
 
@@ -11761,9 +11804,15 @@ export type Notification = {|
   type: NotificationType,
   body: $ElementType<Scalars, 'String'>,
   entity: EntityPayload,
-  read: $ElementType<Scalars, 'Boolean'>,
+  archived: $ElementType<Scalars, 'Boolean'>,
   seen: $ElementType<Scalars, 'Boolean'>,
   createdAt: $ElementType<Scalars, 'DateTime'>,
+|};
+
+export type NotificationFilterInput = {|
+  archived?: ?$ElementType<Scalars, 'Boolean'>,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  userIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type NotificationPayload = Notification | BadRequest | Forbidden | NotFound;
@@ -11781,61 +11830,87 @@ export type NotificationPayloadPaginatedList = {|
   |}
 |};
 
+export type NotificationPreference = {|
+   __typename?: 'NotificationPreference',
+  type: NotificationType,
+  enabled: $ElementType<Scalars, 'Boolean'>,
+|};
+
+export type NotificationPreferenceInput = {|
+  type: NotificationType,
+  enabled: $ElementType<Scalars, 'Boolean'>,
+|};
+
+export type NotificationPreferences = {|
+   __typename?: 'NotificationPreferences',
+  allowedEmail: $ElementType<Scalars, 'Boolean'>,
+  emailInterval?: ?Interval,
+  notifications: Array<NotificationPreference>,
+|};
+
+export type NotificationPreferencesInput = {|
+  allowedEmail?: ?$ElementType<Scalars, 'Boolean'>,
+  emailInterval?: ?IntervalInput,
+  notifications?: ?Array<NotificationPreferenceInput>,
+|};
+
+export type NotificationPreferencesPayload = NotificationPreferences | BadRequest | Forbidden | NotFound;
+
 export const NotificationTypeValues = Object.freeze({
-  ShipmentCreate: 'ShipmentCreate', 
-  ShipmentUpdate: 'ShipmentUpdate', 
-  ShipmentArchived: 'ShipmentArchived', 
-  ShipmentUnarchived: 'ShipmentUnarchived', 
-  ShipmentSetDate: 'ShipmentSetDate', 
-  ShipmentUpdateDate: 'ShipmentUpdateDate', 
-  ShipmentAddBatch: 'ShipmentAddBatch', 
-  ShipmentRemoveBatch: 'ShipmentRemoveBatch', 
-  ShipmentSetDateRevision: 'ShipmentSetDateRevision', 
-  ShipmentUpdateDateRevision: 'ShipmentUpdateDateRevision', 
-  ShipmentApprovedDate: 'ShipmentApprovedDate', 
-  ShipmentUpdateDateForForwarderWarehouser: 'ShipmentUpdateDateForForwarderWarehouser', 
-  ShipmentUpdateDateForImporterInCharge: 'ShipmentUpdateDateForImporterInCharge', 
-  ShipmentAddPartnerWarehouse: 'ShipmentAddPartnerWarehouse', 
-  ShipmentAddForwarder: 'ShipmentAddForwarder', 
-  ShipmentUpdateBookingNo: 'ShipmentUpdateBookingNo', 
-  ShipmentUpdateImporterBookingNo: 'ShipmentUpdateImporterBookingNo', 
-  ShipmentUnapprovedDate: 'ShipmentUnapprovedDate', 
-  ProductCreate: 'ProductCreate', 
-  ProductUpdate: 'ProductUpdate', 
-  ProductArchived: 'ProductArchived', 
-  ProductUnarchived: 'ProductUnarchived', 
-  ProductCreateProvider: 'ProductCreateProvider', 
-  OrderCreate: 'OrderCreate', 
-  OrderUpdate: 'OrderUpdate', 
-  OrderArchived: 'OrderArchived', 
-  OrderUnarchived: 'OrderUnarchived', 
-  OrderCreateItem: 'OrderCreateItem', 
-  OrderUpdateItemQuantity: 'OrderUpdateItemQuantity', 
-  BatchCreate: 'BatchCreate', 
-  BatchUpdate: 'BatchUpdate', 
-  BatchArchived: 'BatchArchived', 
-  BatchUnarchived: 'BatchUnarchived', 
-  BatchCreateAssignment: 'BatchCreateAssignment', 
-  BatchUpdateAssignmentQuantity: 'BatchUpdateAssignmentQuantity', 
-  BatchDeleteAssignment: 'BatchDeleteAssignment', 
-  BatchUpdateQuantity: 'BatchUpdateQuantity', 
-  BatchUpdateQuantityInShipment: 'BatchUpdateQuantityInShipment', 
-  BatchCreateAdjustment: 'BatchCreateAdjustment', 
-  BatchCreateAdjustmentInShipment: 'BatchCreateAdjustmentInShipment', 
-  BatchUpdateAdjustment: 'BatchUpdateAdjustment', 
-  BatchUpdateAdjustmentInShipment: 'BatchUpdateAdjustmentInShipment', 
-  BatchDeleteAdjustment: 'BatchDeleteAdjustment', 
-  BatchDeleteAdjustmentInShipment: 'BatchDeleteAdjustmentInShipment', 
-  WarehouseCreate: 'WarehouseCreate', 
-  WarehouseUpdate: 'WarehouseUpdate', 
-  WarehouseArchived: 'WarehouseArchived', 
-  WarehouseUnarchived: 'WarehouseUnarchived', 
-  CommentCreate: 'CommentCreate', 
-  ContainerCreate: 'ContainerCreate', 
-  ContainerUpdateAgreedDate: 'ContainerUpdateAgreedDate', 
-  ContainerApproveAgreedDate: 'ContainerApproveAgreedDate', 
-  ContainerUpdateActualDate: 'ContainerUpdateActualDate', 
-  ContainerApproveActualDate: 'ContainerApproveActualDate'
+  ShipmentCreate: 'shipment_create', 
+  ShipmentUpdate: 'shipment_update', 
+  ShipmentArchived: 'shipment_archived', 
+  ShipmentUnarchived: 'shipment_unarchived', 
+  ShipmentSetDate: 'shipment_set_date', 
+  ShipmentUpdateDate: 'shipment_update_date', 
+  ShipmentAddBatch: 'shipment_add_batch', 
+  ShipmentRemoveBatch: 'shipment_remove_batch', 
+  ShipmentSetDateRevision: 'shipment_set_date_revision', 
+  ShipmentUpdateDateRevision: 'shipment_update_date_revision', 
+  ShipmentApprovedDate: 'shipment_approved_date', 
+  ShipmentUpdateDateForForwarderWarehouser: 'shipment_update_date_for_forwarder_warehouser', 
+  ShipmentUpdateDateForImporterInCharge: 'shipment_update_date_for_importer_in_charge', 
+  ShipmentAddPartnerWarehouse: 'shipment_add_partner_warehouse', 
+  ShipmentAddForwarder: 'shipment_add_forwarder', 
+  ShipmentUpdateBookingNo: 'shipment_update_booking_no', 
+  ShipmentUpdateImporterBookingNo: 'shipment_update_importer_booking_no', 
+  ShipmentUnapprovedDate: 'shipment_unapproved_date', 
+  ProductCreate: 'product_create', 
+  ProductUpdate: 'product_update', 
+  ProductArchived: 'product_archived', 
+  ProductUnarchived: 'product_unarchived', 
+  ProductCreateProvider: 'product_create_provider', 
+  OrderCreate: 'order_create', 
+  OrderUpdate: 'order_update', 
+  OrderArchived: 'order_archived', 
+  OrderUnarchived: 'order_unarchived', 
+  OrderCreateItem: 'order_create_item', 
+  OrderUpdateItemQuantity: 'order_update_item_quantity', 
+  BatchCreate: 'batch_create', 
+  BatchUpdate: 'batch_update', 
+  BatchArchived: 'batch_archived', 
+  BatchUnarchived: 'batch_unarchived', 
+  BatchCreateAssignment: 'batch_create_assignment', 
+  BatchUpdateAssignmentQuantity: 'batch_update_assignment_quantity', 
+  BatchDeleteAssignment: 'batch_delete_assignment', 
+  BatchUpdateQuantity: 'batch_update_quantity', 
+  BatchUpdateQuantityInShipment: 'batch_update_quantity_in_shipment', 
+  BatchCreateAdjustment: 'batch_create_adjustment', 
+  BatchCreateAdjustmentInShipment: 'batch_create_adjustment_in_shipment', 
+  BatchUpdateAdjustment: 'batch_update_adjustment', 
+  BatchUpdateAdjustmentInShipment: 'batch_update_adjustment_in_shipment', 
+  BatchDeleteAdjustment: 'batch_delete_adjustment', 
+  BatchDeleteAdjustmentInShipment: 'batch_delete_adjustment_in_shipment', 
+  WarehouseCreate: 'warehouse_create', 
+  WarehouseUpdate: 'warehouse_update', 
+  WarehouseArchived: 'warehouse_archived', 
+  WarehouseUnarchived: 'warehouse_unarchived', 
+  CommentCreate: 'comment_create', 
+  ContainerCreate: 'container_create', 
+  ContainerUpdateAgreedDate: 'container_update_agreed_date', 
+  ContainerApproveAgreedDate: 'container_approve_agreed_date', 
+  ContainerUpdateActualDate: 'container_update_actual_date', 
+  ContainerApproveActualDate: 'container_approve_actual_date'
 });
 
 
@@ -11845,6 +11920,7 @@ export type Order = {|
   ...Model,
   ...Owned,
   ...Tagged,
+  ...Followed,
   ...Supervised,
   ...Documented,
   ...Customizable,
@@ -11885,6 +11961,8 @@ export type Order = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     tags: Array<TagPayload>,
+    followers: Array<UserPayload>,
+    notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     inCharges: Array<UserPayload>,
     files: Array<FilePayload>,
     customFields: CustomFields,
@@ -11904,7 +11982,7 @@ export type OrderCreateInput = {|
   deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   orderItems?: ?Array<OrderOrderItemInput>,
   files?: ?Array<EntityFileInput>,
   customFields?: ?CustomFieldsInput,
@@ -11920,7 +11998,7 @@ export type OrderFilterInput = {|
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   ids?: ?Array<$ElementType<Scalars, 'ID'>>,
   poNos?: ?Array<$ElementType<Scalars, 'String'>>,
-  inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   exporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   supplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -11938,7 +12016,7 @@ export type OrderFilterInput = {|
   productProviderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   productProviderSupplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   shipmentForwarderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  shipmentInChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  shipmentFollowerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   shipmentTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   shipmentLoadPorts?: ?Array<PortInput>,
   shipmentFirstTransitPorts?: ?Array<PortInput>,
@@ -11975,6 +12053,7 @@ export type OrderItem = {|
   ...Owned,
   ...Sortable,
   ...Tagged,
+  ...Followed,
   ...Documented,
   ...Customizable,
   ...Memorizable,
@@ -12007,6 +12086,8 @@ export type OrderItem = {|
     ownedBy: OrganizationPayload,
     sort: $ElementType<Scalars, 'Int'>,
     tags: Array<TagPayload>,
+    followers: Array<UserPayload>,
+    notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     files: Array<FilePayload>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
@@ -12035,6 +12116,7 @@ export type OrderItemBatchInput = {|
   packageCapacity?: ?$ElementType<Scalars, 'Float'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
@@ -12052,6 +12134,7 @@ export type OrderItemCreateInput = {|
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batches?: ?Array<OrderItemBatchInput>,
   files?: ?Array<EntityFileInput>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   orderId: $ElementType<Scalars, 'ID'>,
@@ -12109,6 +12192,7 @@ export type OrderItemUpdateInput = {|
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batches?: ?Array<OrderItemBatchInput>,
   files?: ?Array<EntityFileInput>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   orderId?: ?$ElementType<Scalars, 'ID'>,
@@ -12129,6 +12213,7 @@ export type OrderOrderItemInput = {|
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batches?: ?Array<OrderItemBatchInput>,
   files?: ?Array<EntityFileInput>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
@@ -12175,7 +12260,7 @@ export type OrderUpdateInput = {|
   deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   orderItems?: ?Array<OrderOrderItemInput>,
   files?: ?Array<EntityFileInput>,
   customFields?: ?CustomFieldsInput,
@@ -12404,6 +12489,7 @@ export type Product = {|
   ...Model,
   ...Owned,
   ...Tagged,
+  ...Followed,
   ...Documented,
   ...Memorizable,
   ...Customizable,
@@ -12433,6 +12519,8 @@ export type Product = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     tags: Array<TagPayload>,
+    followers: Array<UserPayload>,
+    notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     files: Array<FilePayload>,
     memo?: ?$ElementType<Scalars, 'String'>,
     customFields: CustomFields,
@@ -12487,6 +12575,7 @@ export type ProductCreateInput = {|
   hsCode?: ?$ElementType<Scalars, 'String'>,
   material?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   productProviders: Array<ProductProductProviderCreateInput>,
@@ -12777,6 +12866,7 @@ export type ProductUpdateInput = {|
   hsCode?: ?$ElementType<Scalars, 'String'>,
   material?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   productProviders?: ?Array<ProductProductProviderUpdateInput>,
@@ -13078,7 +13168,6 @@ export type Query = {|
   role: RolePayload,
   roles: RolePayloadPaginatedList,
   permissions: Array<$ElementType<Scalars, 'String'>>,
-  orderShipmentTable: Array<EntityPayload>,
   focuses: Array<FocusPayload>,
 |};
 
@@ -13698,11 +13787,6 @@ export type QueryRoleArgs = {|
 export type QueryRolesArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>
-|};
-
-
-export type QueryOrderShipmentTableArgs = {|
-  entities: Array<EntityInput>
 |};
 
 
@@ -32309,10 +32393,12 @@ export type Shipment = {|
   ...Model,
   ...Owned,
   ...Tagged,
+  ...Followed,
   ...Supervised,
   ...Documented,
   ...Customizable,
   ...Memorizable,
+  ...Integrated,
   ...{|
      __typename?: 'Shipment',
     archived: $ElementType<Scalars, 'Boolean'>,
@@ -32345,6 +32431,7 @@ export type Shipment = {|
     totalPackageQuantity: $ElementType<Scalars, 'Float'>,
     totalPackageQuantityOverride?: ?$ElementType<Scalars, 'Float'>,
     totalPackageQuantityOverriding: $ElementType<Scalars, 'Boolean'>,
+    earliestWarehouseArrival?: ?$ElementType<Scalars, 'DateTime'>,
     orderCount: $ElementType<Scalars, 'Int'>,
     orderItemCount: $ElementType<Scalars, 'Int'>,
     batchCount: $ElementType<Scalars, 'Int'>,
@@ -32352,7 +32439,6 @@ export type Shipment = {|
     containerTypeCounts: Array<ContainerTypeCount>,
     batches: Array<BatchPayload>,
     batchesWithoutContainer: Array<BatchPayload>,
-    integrationLinks: Array<IntegrationLinkPayload>,
     containers: Array<ContainerPayload>,
     timeline: Timeline,
     todo: Todo,
@@ -32365,10 +32451,13 @@ export type Shipment = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     tags: Array<TagPayload>,
+    followers: Array<UserPayload>,
+    notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     inCharges: Array<UserPayload>,
     files: Array<FilePayload>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
+    integrationLinks: Array<IntegrationLinkPayload>,
   |}
 |};
 
@@ -32394,6 +32483,7 @@ export type ShipmentBatchInput = {|
   packageCapacity?: ?$ElementType<Scalars, 'Float'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
@@ -32423,6 +32513,7 @@ export type ShipmentContainerCreateInput = {|
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
 |};
 
@@ -32449,6 +32540,7 @@ export type ShipmentContainerUpdateInput = {|
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   todo?: ?TodoInput,
   id?: ?$ElementType<Scalars, 'ID'>,
 |};
@@ -32470,7 +32562,7 @@ export type ShipmentCreateInput = {|
   carrier?: ?$ElementType<Scalars, 'String'>,
   cargoReady?: ?TimelineDateNestedInput,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   forwarderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batches?: ?Array<ShipmentBatchInput>,
   voyages?: ?Array<VoyageNestedInput>,
@@ -32502,7 +32594,7 @@ export type ShipmentFilterInput = {|
   importerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   forwarderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   booked?: ?$ElementType<Scalars, 'Boolean'>,
   loadPorts?: ?Array<PortInput>,
   firstTransitPorts?: ?Array<PortInput>,
@@ -32533,7 +32625,7 @@ export type ShipmentFilterInput = {|
   orderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   orderArchived?: ?$ElementType<Scalars, 'Boolean'>,
   orderExporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  orderInChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  orderFollowerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   orderTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   orderCompletelyBatched?: ?$ElementType<Scalars, 'Boolean'>,
   orderCompletelyShipped?: ?$ElementType<Scalars, 'Boolean'>,
@@ -32603,7 +32695,7 @@ export type ShipmentUpdateInput = {|
   carrier?: ?$ElementType<Scalars, 'String'>,
   cargoReady?: ?TimelineDateNestedInput,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   forwarderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batches?: ?Array<ShipmentBatchInput>,
   voyages?: ?Array<VoyageNestedInput>,
@@ -32736,7 +32828,8 @@ export const TagEntityTypeValues = Object.freeze({
   Container: 'Container', 
   User: 'User', 
   Task: 'Task', 
-  Project: 'Project'
+  Project: 'Project', 
+  File: 'File'
 });
 
 
@@ -33369,9 +33462,9 @@ export type Viewer = {|
   permissions: Array<$ElementType<Scalars, 'String'>>,
   permissionsForOrganization: Array<$ElementType<Scalars, 'String'>>,
   notifications: NotificationPayloadPaginatedList,
-  notificationUnread: $ElementType<Scalars, 'Int'>,
-  notificationUnseen: $ElementType<Scalars, 'Int'>,
-  token?: ?$ElementType<Scalars, 'String'>,
+  notificationCount: $ElementType<Scalars, 'Int'>,
+  notificationUnseenCount: $ElementType<Scalars, 'Int'>,
+  notificationPreferences: NotificationPreferences,
 |};
 
 
@@ -33382,7 +33475,8 @@ export type ViewerPermissionsForOrganizationArgs = {|
 
 export type ViewerNotificationsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>
+  perPage: $ElementType<Scalars, 'Int'>,
+  filterBy?: ?NotificationFilterInput
 |};
 
 export type Violation = {|
@@ -33442,6 +33536,7 @@ export type Warehouse = {|
   ...Model,
   ...Owned,
   ...Supervised,
+  ...Followed,
   ...Customizable,
   ...{|
      __typename?: 'Warehouse',
@@ -33464,6 +33559,8 @@ export type Warehouse = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     inCharges: Array<UserPayload>,
+    followers: Array<UserPayload>,
+    notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     customFields: CustomFields,
   |}
 |};
@@ -33478,7 +33575,7 @@ export type WarehouseCreateInput = {|
   postalCode?: ?$ElementType<Scalars, 'String'>,
   country?: ?Country,
   customFields?: ?CustomFieldsInput,
-  inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
@@ -33523,7 +33620,7 @@ export type WarehouseUpdateInput = {|
   postalCode?: ?$ElementType<Scalars, 'String'>,
   country?: ?Country,
   customFields?: ?CustomFieldsInput,
-  inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
@@ -36791,6 +36888,15 @@ export type WarehouseCardFragmentFragment = ({
             "name": "Shipment"
           },
           {
+            "name": "IntegrationLink"
+          },
+          {
+            "name": "IntegrationConfiguration"
+          },
+          {
+            "name": "Integration"
+          },
+          {
             "name": "TimelineDate"
           },
           {
@@ -36804,15 +36910,6 @@ export type WarehouseCardFragmentFragment = ({
           },
           {
             "name": "Warehouse"
-          },
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "Integration"
           },
           {
             "name": "Container"
@@ -36846,6 +36943,9 @@ export type WarehouseCardFragmentFragment = ({
         "possibleTypes": [
           {
             "name": "User"
+          },
+          {
+            "name": "File"
           },
           {
             "name": "Product"
@@ -36950,6 +37050,15 @@ export type WarehouseCardFragmentFragment = ({
             "name": "Shipment"
           },
           {
+            "name": "IntegrationLink"
+          },
+          {
+            "name": "IntegrationConfiguration"
+          },
+          {
+            "name": "Integration"
+          },
+          {
             "name": "TimelineDate"
           },
           {
@@ -36963,15 +37072,6 @@ export type WarehouseCardFragmentFragment = ({
           },
           {
             "name": "Warehouse"
-          },
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "Integration"
           },
           {
             "name": "Container"
@@ -37173,6 +37273,33 @@ export type WarehouseCardFragmentFragment = ({
           },
           {
             "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Followed",
+        "possibleTypes": [
+          {
+            "name": "Product"
+          },
+          {
+            "name": "Batch"
+          },
+          {
+            "name": "OrderItem"
+          },
+          {
+            "name": "Order"
+          },
+          {
+            "name": "Shipment"
+          },
+          {
+            "name": "Warehouse"
+          },
+          {
+            "name": "Container"
           }
         ]
       },
@@ -37687,6 +37814,69 @@ export type WarehouseCardFragmentFragment = ({
         ]
       },
       {
+        "kind": "INTERFACE",
+        "name": "Integrated",
+        "possibleTypes": [
+          {
+            "name": "Shipment"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationLinkPayload",
+        "possibleTypes": [
+          {
+            "name": "IntegrationLink"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationConfigurationPayload",
+        "possibleTypes": [
+          {
+            "name": "IntegrationConfiguration"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationPayload",
+        "possibleTypes": [
+          {
+            "name": "Integration"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
         "kind": "UNION",
         "name": "TimelineDatePayload",
         "possibleTypes": [
@@ -37764,60 +37954,6 @@ export type WarehouseCardFragmentFragment = ({
         "possibleTypes": [
           {
             "name": "Warehouse"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationLinkPayload",
-        "possibleTypes": [
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationConfigurationPayload",
-        "possibleTypes": [
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationPayload",
-        "possibleTypes": [
-          {
-            "name": "Integration"
           },
           {
             "name": "BadRequest"
@@ -38139,6 +38275,24 @@ export type WarehouseCardFragmentFragment = ({
         "possibleTypes": [
           {
             "name": "Comment"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "NotificationPreferencesPayload",
+        "possibleTypes": [
+          {
+            "name": "NotificationPreferences"
           },
           {
             "name": "BadRequest"
