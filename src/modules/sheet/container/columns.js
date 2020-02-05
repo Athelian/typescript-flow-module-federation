@@ -58,13 +58,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Date,
   },
   {
-    key: 'container.warehouseArrivalAgreedDateAssignedTo',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateAssignedTo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: ColumnWidths.Users,
-  },
-  {
     key: 'container.warehouseArrivalAgreedDateApproved',
     title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateApproved} />,
     icon: 'CONTAINER',
@@ -78,13 +71,6 @@ const columns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: ColumnWidths.Date,
-  },
-  {
-    key: 'container.warehouseArrivalActualDateAssignedTo',
-    title: <FormattedMessage {...containerMessages.warehouseArrivalActualDateAssignedTo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: ColumnWidths.Users,
   },
   {
     key: 'container.warehouseArrivalActualDateApproved',
@@ -141,13 +127,6 @@ const columns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: ColumnWidths.Date,
-  },
-  {
-    key: 'container.departureDateAssignedTo',
-    title: <FormattedMessage {...containerMessages.departureDateAssignedTo} />,
-    icon: 'CONTAINER',
-    color: colors.CONTAINER,
-    width: ColumnWidths.Users,
   },
   {
     key: 'container.departureDateApproved',
