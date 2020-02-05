@@ -77,6 +77,9 @@ export const batchFormFragment = gql`
       ... on Container {
         id
         no
+        ... on Followed {
+          notificationUnseenCount
+        }
         representativeBatch {
           ... on Batch {
             id

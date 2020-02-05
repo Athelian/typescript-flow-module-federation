@@ -35,20 +35,23 @@ const formContainer = new FormContainer();
 const ItemFormInSlide = ({ orderItem, onSave, isNew }: Props) => {
   const [notificationSeeByEntities] = useMutation(notificationSeeByEntitiesMutation);
   useEffect(() => {
-    if (!isNew && orderItem?.id) {
-      const notificationUnseenCount = orderItem?.notificationUnseenCount ?? 0;
-      if (notificationUnseenCount === 0) {
-        notificationSeeByEntities({
-          variables: {
-            entities: [
-              {
-                orderItemId: orderItem?.id,
-              },
-            ],
-          },
-        });
+    return () => {
+      // mark to read notification on close
+      if (!isNew && orderItem?.id) {
+        const notificationUnseenCount = orderItem?.notificationUnseenCount ?? 0;
+        if (notificationUnseenCount === 0) {
+          notificationSeeByEntities({
+            variables: {
+              entities: [
+                {
+                  orderItemId: orderItem?.id,
+                },
+              ],
+            },
+          });
+        }
       }
-    }
+    };
   }, [isNew, notificationSeeByEntities, orderItem]);
 
   useEffect(() => {

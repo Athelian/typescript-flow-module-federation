@@ -558,6 +558,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                     fieldValues: [],
                                   },
                                   tags: [],
+                                  followers: [],
                                   importer: isImporter ? organization : {},
                                   todo: {
                                     tasks: [],

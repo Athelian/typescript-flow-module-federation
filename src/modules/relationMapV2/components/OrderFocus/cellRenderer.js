@@ -1071,7 +1071,7 @@ function ContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
             onClick={handleClick}
             flattenCornerIcon
             id={`${CONTAINER}-${containerId}`}
-            showBadge={data?.notificationUnseenCount === 0}
+            showBadge={container?.notificationUnseenCount === 0}
           >
             <ContainerCard
               organizationId={container?.ownedBy}
@@ -1301,7 +1301,7 @@ function ShipmentCell({ data, beforeConnector }: CellProps) {
             onClick={handleClick}
             flattenCornerIcon
             id={`${SHIPMENT}-${shipmentId}`}
-            showBadge={data?.notificationUnseenCount === 0}
+            showBadge={shipment?.notificationUnseenCount === 0}
           >
             <ShipmentCard
               organizationId={shipment?.ownedBy}

@@ -47,6 +47,7 @@ export const getItemQuantityChartData = ({
   };
 };
 
+// TODO: clean up this way
 export const spreadOrderItem = (item: Object): Object => {
   if (!item) {
     return {
@@ -72,6 +73,7 @@ export const spreadOrderItem = (item: Object): Object => {
     productProvider,
     order,
     timeline,
+    notificationUnseenCount,
   } = item;
   const compiledOrderItem = {
     id,
@@ -86,6 +88,7 @@ export const spreadOrderItem = (item: Object): Object => {
     batchCount,
     batchShippedCount,
     timeline,
+    notificationUnseenCount,
   };
 
   const { name: productProviderName, product } = productProvider || {};

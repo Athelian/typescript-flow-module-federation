@@ -49,20 +49,23 @@ const BatchFormInSlide = ({ batch, isNew, onSave, ...rest }: Props) => {
   const [notificationSeeByEntities] = useMutation(notificationSeeByEntitiesMutation);
 
   useEffect(() => {
-    if (!isNew && batch?.id) {
-      const notificationUnseenCount = batch?.notificationUnseenCount ?? 0;
-      if (notificationUnseenCount === 0) {
-        notificationSeeByEntities({
-          variables: {
-            entities: [
-              {
-                batchId: batch?.id,
-              },
-            ],
-          },
-        });
+    // mark as read notification on close
+    return () => {
+      if (!isNew && batch?.id) {
+        const notificationUnseenCount = batch?.notificationUnseenCount ?? 0;
+        if (notificationUnseenCount === 0) {
+          notificationSeeByEntities({
+            variables: {
+              entities: [
+                {
+                  batchId: batch?.id,
+                },
+              ],
+            },
+          });
+        }
       }
-    }
+    };
   }, [isNew, notificationSeeByEntities, batch]);
   useEffect(() => {
     return () => formContainer.onReset();

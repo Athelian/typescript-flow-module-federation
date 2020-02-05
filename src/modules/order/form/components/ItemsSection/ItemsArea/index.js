@@ -155,7 +155,9 @@ function ItemsArea({
                 batches,
                 todo,
                 files,
+                notificationUnseenCount,
               } = item;
+              /* TODO: clean up this way too */
               const compiledOrderItem = {
                 id,
                 archived,
@@ -168,6 +170,7 @@ function ItemsArea({
                 batchCount,
                 batchShippedCount,
                 todo,
+                notificationUnseenCount,
               };
 
               // TODO: check the data for move a batch to new order
@@ -522,6 +525,7 @@ function ItemsArea({
                                 taskTemplate: null,
                               },
                               tags,
+                              followers: [],
                               archived: orderIsArchived,
                             });
                           }),

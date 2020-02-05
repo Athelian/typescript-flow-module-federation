@@ -66,6 +66,7 @@ class NewShipmentForm extends React.PureComponent<Props> {
       containerGroups: [{}],
       voyages: [{}],
       tags: [],
+      followers: [],
       todo: {
         tasks: [],
         taskTemplate: null,

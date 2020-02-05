@@ -163,20 +163,23 @@ const ContainerFormInSlideHoC = (props: Props) => {
   const [notificationSeeByEntities] = useMutation(notificationSeeByEntitiesMutation);
 
   React.useEffect(() => {
-    if (!isNew && container?.id) {
-      const notificationUnseenCount = container?.notificationUnseenCount ?? 0;
-      if (notificationUnseenCount === 0) {
-        notificationSeeByEntities({
-          variables: {
-            entities: [
-              {
-                containerId: container?.id,
-              },
-            ],
-          },
-        });
+    // mark as read notification on close
+    return () => {
+      if (!isNew && container?.id) {
+        const notificationUnseenCount = container?.notificationUnseenCount ?? 0;
+        if (notificationUnseenCount === 0) {
+          notificationSeeByEntities({
+            variables: {
+              entities: [
+                {
+                  containerId: container?.id,
+                },
+              ],
+            },
+          });
+        }
       }
-    }
+    };
   }, [isNew, notificationSeeByEntities, container]);
   return <ContainerFormInSlide {...props} />;
 };

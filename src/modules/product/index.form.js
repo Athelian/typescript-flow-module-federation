@@ -476,6 +476,7 @@ class ProductFormModule extends React.Component<Props> {
                                 id: uuid(),
                                 importer: isImporter ? organization : {},
                                 tags: [],
+                                followers: [],
                                 todo: {
                                   tasks: [],
                                 },
