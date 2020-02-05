@@ -212,6 +212,7 @@ const ShipmentBatchCard = ({
       actions={actions}
       selectable={selectable}
       isArchived={archived}
+      showBadge={batch?.notificationUnseenCount > 0}
       {...rest}
     >
       <div
