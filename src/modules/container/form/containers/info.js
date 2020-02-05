@@ -19,6 +19,7 @@ const initValues: ContainerPayload = {
   containerOption: null,
   shipment: null,
   tags: [],
+  followers: [],
   warehouse: null,
   warehouseArrivalAgreedDate: null,
   warehouseArrivalAgreedDateApprovedAt: null,

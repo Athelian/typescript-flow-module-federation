@@ -105,7 +105,6 @@ function normalizeInput(
             todo: {
               tasks: (item?.todo?.tasks ?? []).map(
                 ({
-                  assignedTo,
                   approvers,
                   inProgressAt,
                   inProgressBy,
@@ -118,9 +117,6 @@ function normalizeInput(
                   approvedAt,
                   approvedBy,
                 }) => ({
-                  assignedToIds: (assignedTo ?? [])
-                    .filter(user => user?.organization?.id !== item?.exporter?.id)
-                    .map(user => user.id),
                   approverIds: (approvers ?? [])
                     .filter(user => user?.organization?.id !== item?.exporter?.id)
                     .map(user => user.id),
