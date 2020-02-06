@@ -126,13 +126,6 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'ORDER',
-    field: 'inChargeIds',
-    type: 'users',
-    message: orderMessages.inCharge,
-    defaultValue: [],
-  },
-  {
-    entity: 'ORDER',
     field: 'exporterIds',
     type: 'exporter_ids',
     message: orderMessages.exporter,
@@ -246,13 +239,6 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     field: 'shipmentForwarderIds',
     type: 'forwarder_ids',
     message: shipmentMessages.forwarder,
-    defaultValue: [],
-  },
-  {
-    entity: 'SHIPMENT',
-    field: 'shipmentInChargeIds',
-    type: 'users',
-    message: shipmentMessages.inCharge,
     defaultValue: [],
   },
   {
@@ -631,13 +617,6 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'SHIPMENT',
-    field: 'inChargeIds',
-    type: 'users',
-    message: shipmentMessages.inCharge,
-    defaultValue: [],
-  },
-  {
-    entity: 'SHIPMENT',
     field: 'booked',
     type: 'booked',
     message: shipmentMessages.booked,
@@ -859,13 +838,6 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
     type: 'archived',
     message: orderMessages.status,
     defaultValue: false,
-  },
-  {
-    entity: 'ORDER',
-    field: 'orderInChargeIds',
-    type: 'users',
-    message: orderMessages.inCharge,
-    defaultValue: [],
   },
   {
     entity: 'ORDER',
