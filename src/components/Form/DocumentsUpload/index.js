@@ -14,15 +14,16 @@ import logger from 'utils/logger';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import DocumentFormSideView from 'modules/document/index.formSlideView';
-import SectionNavBar from 'components/NavBar/SectionNavBar';
 import UploadPlaceholder from 'components/UploadPlaceholder';
 import { CardAction } from 'components/Cards';
 import DocumentCard, { getFileTypesByEntity } from 'components/Cards/DocumentCard';
 import { Tooltip } from 'components/Tooltip';
+import { SectionHeader } from 'components/Form';
+import FormattedNumber from 'components/FormattedNumber';
+import { StickyScrollingSection } from 'components/Sections';
 import DocumentsSelector from './DocumentsSelector';
 import fileUploadMutation from './mutation';
 import {
-  DocumentsSectionWrapperStyle,
   DocumentsDragAndDropBodyWrapperStyle,
   DocumentsSectionBodyStyle,
   DocumentsDragAndDropTooltipWrapperStyle,
@@ -207,63 +208,76 @@ const DocumentsUpload = ({
 
   return (
     <>
-      <div className={DocumentsSectionWrapperStyle}>
-        <SectionNavBar>
-          {uploadable && (
-            <label className={AddDocumentButtonWrapperStyle}>
-              <div className={AddDocumentButtonLabelStyle}>
-                <FormattedMessage {...messages.newDocument} />
-              </div>
-              <div className={AddDocumentButtonIconStyle}>
-                <Icon icon="UPLOAD" />
-              </div>
-              <input type="file" accept="*" hidden multiple value="" onChange={handleChange} />
-            </label>
-          )}
+      <StickyScrollingSection
+        sectionHeader={
+          <SectionHeader
+            icon="DOCUMENT"
+            title={
+              <>
+                <FormattedMessage id="components.section.documents" defaultMessage="Documents" /> (
+                <FormattedNumber value={files.length} />)
+              </>
+            }
+          />
+        }
+        navbarContent={
+          <>
+            {uploadable && (
+              <label className={AddDocumentButtonWrapperStyle}>
+                <div className={AddDocumentButtonLabelStyle}>
+                  <FormattedMessage {...messages.newDocument} />
+                </div>
+                <div className={AddDocumentButtonIconStyle}>
+                  <Icon icon="UPLOAD" />
+                </div>
+                <input type="file" accept="*" hidden multiple value="" onChange={handleChange} />
+              </label>
+            )}
 
-          {addable && (
-            <BooleanValue>
-              {({ value: documentsSelectorIsOpen, set: setDocumentsSelectorIsOpen }) => (
-                <>
-                  <NewButton
-                    label={
-                      <FormattedMessage
-                        id="modules.Documents.selectDocument"
-                        defaultMessage="Select Documents"
-                      />
-                    }
-                    onClick={() => setDocumentsSelectorIsOpen(true)}
-                  />
-
-                  <SlideView
-                    isOpen={documentsSelectorIsOpen}
-                    onRequestClose={() => setDocumentsSelectorIsOpen(false)}
-                    shouldConfirm={() => {
-                      const button = document.getElementById('saveButtonOnSelectDocuments');
-                      return button;
-                    }}
-                  >
-                    <DocumentsSelector
-                      onCancel={() => setDocumentsSelectorIsOpen(false)}
-                      onSelect={selectedFiles => {
-                        onSave([
-                          ...files,
-                          ...selectedFiles.map(file => ({
-                            ...file,
-                            entity: { __typename: entity },
-                          })),
-                        ]);
-                        setDocumentsSelectorIsOpen(false);
-                      }}
-                      alreadyAddedDocuments={files}
+            {addable && (
+              <BooleanValue>
+                {({ value: documentsSelectorIsOpen, set: setDocumentsSelectorIsOpen }) => (
+                  <>
+                    <NewButton
+                      label={
+                        <FormattedMessage
+                          id="modules.Documents.selectDocument"
+                          defaultMessage="Select Documents"
+                        />
+                      }
+                      onClick={() => setDocumentsSelectorIsOpen(true)}
                     />
-                  </SlideView>
-                </>
-              )}
-            </BooleanValue>
-          )}
-        </SectionNavBar>
 
+                    <SlideView
+                      isOpen={documentsSelectorIsOpen}
+                      onRequestClose={() => setDocumentsSelectorIsOpen(false)}
+                      shouldConfirm={() => {
+                        const button = document.getElementById('saveButtonOnSelectDocuments');
+                        return button;
+                      }}
+                    >
+                      <DocumentsSelector
+                        onCancel={() => setDocumentsSelectorIsOpen(false)}
+                        onSelect={selectedFiles => {
+                          onSave([
+                            ...files,
+                            ...selectedFiles.map(file => ({
+                              ...file,
+                              entity: { __typename: entity },
+                            })),
+                          ]);
+                          setDocumentsSelectorIsOpen(false);
+                        }}
+                        alreadyAddedDocuments={files}
+                      />
+                    </SlideView>
+                  </>
+                )}
+              </BooleanValue>
+            )}
+          </>
+        }
+      >
         {isEditable ? (
           <Dropzone onDrop={handleChange}>
             {({ getRootProps, isDragActive }) => (
@@ -365,7 +379,8 @@ const DocumentsUpload = ({
             )}
           </div>
         )}
-      </div>
+      </StickyScrollingSection>
+
       <SlideView
         isOpen={!!selectedFile}
         onRequestClose={() => setSelectedFile(null)}

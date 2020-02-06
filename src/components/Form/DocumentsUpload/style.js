@@ -10,14 +10,6 @@ import {
   shadows,
 } from 'styles/common';
 
-export const DocumentsSectionWrapperStyle: string = css`
-  position: relative;
-  ${presets.BOX};
-  width: 880px;
-  height: min-content;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-`;
-
 export const DocumentsDragAndDropBodyWrapperStyle: string = css`
   position: relative;
   width: 100%;

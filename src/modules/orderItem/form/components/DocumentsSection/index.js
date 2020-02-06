@@ -1,9 +1,7 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { DocumentsUpload, SectionWrapper, SectionHeader } from 'components/Form';
-import FormattedNumber from 'components/FormattedNumber';
+import { DocumentsUpload, SectionWrapper } from 'components/Form';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import {
@@ -62,18 +60,6 @@ function ItemDocumentsSection() {
         return (
           <div>
             <SectionWrapper id="orderItem_documentsSection">
-              <SectionHeader
-                icon="DOCUMENT"
-                title={
-                  <>
-                    <FormattedMessage
-                      id="modules.OrderItems.documents"
-                      defaultMessage="Documents"
-                    />{' '}
-                    (<FormattedNumber value={files.length} />)
-                  </>
-                }
-              />
               <DocumentsUpload
                 entity="OrderItem"
                 files={files}
