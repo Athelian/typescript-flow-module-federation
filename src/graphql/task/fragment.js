@@ -43,9 +43,6 @@ const taskInfoFragment = gql`
     completedBy {
       ...userAvatarFragment
     }
-    assignedTo {
-      ...userAvatarFragment
-    }
     approvable
     rejectedAt
     rejectedBy {
@@ -156,9 +153,6 @@ export const taskCardFragment = gql`
         }
       }
     }
-    assignedTo {
-      ...userAvatarFragment
-    }
     approvers {
       ...userAvatarFragment
     }
@@ -246,9 +240,6 @@ export const taskFormInTemplateFragment = gql`
     description
     tags {
       ...tagFragment
-    }
-    assignedTo {
-      ...userAvatarFragment
     }
     approvers {
       ...userAvatarFragment

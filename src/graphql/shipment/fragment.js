@@ -74,9 +74,6 @@ export const shipmentFormQueryFragment = gql`
         }
       }
     }
-    inCharges {
-      ...userAvatarFragment
-    }
     tags {
       ...tagFragment
     }
@@ -156,9 +153,6 @@ export const shipmentFormFragment = gql`
           ...partnerCardFragment
         }
       }
-    }
-    inCharges {
-      ...userAvatarFragment
     }
     totalPackageQuantityOverride
     totalPackageQuantityOverriding

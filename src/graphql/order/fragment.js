@@ -59,9 +59,6 @@ export const orderFormQueryFragment = gql`
         }
       }
     }
-    inCharges {
-      ...userAvatarFragment
-    }
     tags {
       ...tagFragment
     }
@@ -122,9 +119,6 @@ export const orderFormFragment = gql`
           ...partnerCardFragment
         }
       }
-    }
-    inCharges {
-      ...userAvatarFragment
     }
     tags {
       ...tagFragment
@@ -187,9 +181,6 @@ export const orderCardFragment = gql`
       taskCount {
         ...taskCountFragment
       }
-    }
-    inCharges {
-      ...userAvatarFragment
     }
     currency
     batchCount
