@@ -42,7 +42,7 @@ export default function QueryForm({ query, entityId, entityType, render, onCompl
 
   React.useEffect(() => {
     const notificationUnseenCount = data?.[entityType]?.notificationUnseenCount ?? 0;
-    if (notificationUnseenCount === 0) {
+    if (notificationUnseenCount > 0) {
       notificationSeeByEntities({
         variables: {
           entities: [

@@ -39,7 +39,7 @@ const ItemFormInSlide = ({ orderItem, onSave, isNew }: Props) => {
       // mark to read notification on close
       if (!isNew && orderItem?.id) {
         const notificationUnseenCount = orderItem?.notificationUnseenCount ?? 0;
-        if (notificationUnseenCount === 0) {
+        if (notificationUnseenCount > 0) {
           notificationSeeByEntities({
             variables: {
               entities: [

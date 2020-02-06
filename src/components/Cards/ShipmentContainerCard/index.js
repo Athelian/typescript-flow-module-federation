@@ -146,7 +146,7 @@ const ShipmentContainerCard = ({
           showActionsOnHover
           selectable={selectable}
           isArchived={archived}
-          showBadge={container?.notificationUnseenCount === 0}
+          showBadge={container?.notificationUnseenCount > 0}
           {...rest}
         >
           <div className={CardWrapperStyle} role="presentation">

@@ -101,7 +101,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
       icon="CONTAINER"
       color="CONTAINER"
       isArchived={archived}
-      showBadge={container?.notificationUnseenCount === 0}
+      showBadge={container?.notificationUnseenCount > 0}
       {...rest}
     >
       <div className={CardWrapperStyle} onClick={onClick} role="presentation">

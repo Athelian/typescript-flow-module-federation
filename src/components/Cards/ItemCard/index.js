@@ -179,7 +179,7 @@ const ItemCard = ({
 
   return (
     <BaseCard
-      showBadge={orderItem?.notificationUnseenCount === 0}
+      showBadge={orderItem?.notificationUnseenCount > 0}
       icon="ORDER_ITEM"
       color="ORDER_ITEM"
       showActionsOnHover

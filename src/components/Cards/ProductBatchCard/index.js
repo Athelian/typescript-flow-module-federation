@@ -44,7 +44,7 @@ const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
   const hasContainers = shipment && shipment.containers && shipment.containers.length > 0;
 
   return (
-    <BaseCard icon="BATCH" color="BATCH" showBadge={batch?.notificationUnseenCount === 0} {...rest}>
+    <BaseCard icon="BATCH" color="BATCH" showBadge={batch?.notificationUnseenCount > 0} {...rest}>
       <div className={ProductBatchCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={BatchInfoWrapperStyle}>
           <div className={BatchNoWrapperStyle}>

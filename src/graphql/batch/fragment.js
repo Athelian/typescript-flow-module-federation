@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-// @TODO change container field to use containerCardFragment
+
 export const batchFormFragment = gql`
   fragment batchFormFragment on Batch {
     id

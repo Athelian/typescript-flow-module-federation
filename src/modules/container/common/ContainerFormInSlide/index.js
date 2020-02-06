@@ -167,7 +167,7 @@ const ContainerFormInSlideHoC = (props: Props) => {
     return () => {
       if (!isNew && container?.id) {
         const notificationUnseenCount = container?.notificationUnseenCount ?? 0;
-        if (notificationUnseenCount === 0) {
+        if (notificationUnseenCount > 0) {
           notificationSeeByEntities({
             variables: {
               entities: [

@@ -73,7 +73,7 @@ class ProductCard extends React.PureComponent<Props, State> {
         color="PRODUCT"
         actions={actions}
         isArchived={archived}
-        showBadge={product?.notificationUnseenCount === 0}
+        showBadge={product?.notificationUnseenCount > 0}
         {...rest}
       >
         <div className={ProductCardWrapperStyle} onClick={onClick} role="presentation">
