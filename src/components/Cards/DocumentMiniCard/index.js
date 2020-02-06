@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react';
-import type { FileType, FileStatus, EntityPayload } from 'generated/graphql';
+import type { File } from 'generated/graphql';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import { isForbidden } from 'utils/data';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import {
@@ -11,6 +12,7 @@ import {
   getFileExtension,
   getFileName,
 } from 'components/Form/DocumentsUpload/helpers';
+import Tag from 'components/Tag';
 import orderMessages from 'modules/order/messages';
 import shipmentMessages from 'modules/shipment/messages';
 import BaseCard from '../BaseCard';
@@ -19,21 +21,14 @@ import {
   FileExtensionIconStyle,
   FileNameWrapperStyle,
   FileNameStyle,
-  StatusAndButtonsWrapperStyle,
+  TagsAndButtonsWrapperStyle,
   DownloadButtonStyle,
+  TagsWrapperStyle,
 } from './style';
 
 type Props = {|
   intl: IntlShape,
-  file: {
-    id: string,
-    name: string,
-    type: FileType,
-    status: FileStatus,
-    entity: EntityPayload,
-    memo: string,
-    path: string,
-  },
+  file: File,
   editable: {
     status: boolean,
     type: boolean,
@@ -186,12 +181,19 @@ const DocumentMiniCard = ({
         </Tooltip>
 
         <div
-          className={StatusAndButtonsWrapperStyle}
+          className={TagsAndButtonsWrapperStyle}
           onClick={evt => {
             evt.stopPropagation();
           }}
           role="presentation"
         >
+          <div className={TagsWrapperStyle}>
+            {(file?.tags ?? [])
+              .filter(item => !isForbidden(item))
+              .map(tag => (
+                <Tag key={tag.id} tag={tag} />
+              ))}
+          </div>
           {downloadable ? (
             <button
               className={DownloadButtonStyle(false)}

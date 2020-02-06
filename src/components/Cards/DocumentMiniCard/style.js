@@ -9,14 +9,13 @@ export const DocumentMiniCardWrapperStyle = css`
   grid-gap: 5px;
   width: 195px;
   height: 109px;
-  padding: 10px 0;
+  padding: 10px 0 0 0;
 `;
 
 export const FileExtensionIconStyle = (color: string): string => css`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 50px;
   font-size: 36px;
   color: ${colors[color]};
 `;
@@ -38,7 +37,7 @@ export const FileNameStyle: string = css`
   ${presets.ELLIPSIS};
 `;
 
-export const StatusAndButtonsWrapperStyle: string = css`
+export const TagsAndButtonsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
   justify-content: center;
@@ -46,8 +45,8 @@ export const StatusAndButtonsWrapperStyle: string = css`
 
 export const DownloadButtonStyle = (isDisabled: boolean): string => css`
   ${presets.BUTTON};
-  width: 30px;
-  height: 30px;
+  width: 18px;
+  height: 18px;
   ${fontSizes.MAIN};
   ${borderRadiuses.CIRCLE};
   ${isDisabled
@@ -62,4 +61,13 @@ export const DownloadButtonStyle = (isDisabled: boolean): string => css`
       background-color: ${colors.GRAY_SUPER_LIGHT};
     }
   `};
+`;
+
+export const TagsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 5px;
+  overflow: hidden;
+  width: 155px;
+  padding: 0 0 0 5px;
+  ${borderRadiuses.MAIN};
 `;

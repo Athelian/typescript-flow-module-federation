@@ -38,6 +38,18 @@ storiesOf('Card/DocumentMiniCard', module)
         memo: faker.lorem.sentence(),
         createdAt: faker.date.future(),
         updatedAt: faker.date.future(),
+        tags: [
+          {
+            id: 1,
+            name: 'Tag A',
+            color: '#AAAAAA',
+          },
+          {
+            id: 2,
+            name: 'Tag B',
+            color: '#EF4848',
+          },
+        ],
         __typename: 'File',
       }}
     />
@@ -63,6 +75,18 @@ storiesOf('Card/DocumentMiniCard', module)
         memo: faker.lorem.sentence(),
         createdAt: faker.date.future(),
         updatedAt: faker.date.future(),
+        tags: [
+          {
+            id: 1,
+            name: 'Tag A',
+            color: '#AAAAAA',
+          },
+          {
+            id: 2,
+            name: 'Tag B',
+            color: '#EF4848',
+          },
+        ],
         __typename: 'File',
       }}
     />
@@ -89,6 +113,18 @@ storiesOf('Card/DocumentMiniCard', module)
         memo: faker.lorem.sentence(),
         createdAt: faker.date.future(),
         updatedAt: faker.date.future(),
+        tags: [
+          {
+            id: 1,
+            name: 'Tag A',
+            color: '#AAAAAA',
+          },
+          {
+            id: 2,
+            name: 'Tag B',
+            color: '#EF4848',
+          },
+        ],
         __typename: 'File',
       }}
     />
@@ -116,6 +152,18 @@ storiesOf('Card/DocumentMiniCard', module)
         memo: '',
         createdAt: faker.date.future(),
         updatedAt: faker.date.future(),
+        tags: [
+          {
+            id: 1,
+            name: 'Tag A',
+            color: '#AAAAAA',
+          },
+          {
+            id: 2,
+            name: 'Tag B',
+            color: '#EF4848',
+          },
+        ],
         __typename: 'File',
       }}
     />
