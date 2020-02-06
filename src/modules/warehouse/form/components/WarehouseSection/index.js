@@ -68,8 +68,7 @@ const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {
               <Followers
                 followers={values?.followers ?? []}
                 setFollowers={value => setFieldValue('followers', value)}
-                // TODO: confirm with Fumi about the logic
-                organizationIds={values?.organizations?.map(({ id }) => id).filter(Boolean)}
+                organizationIds={[]}
                 editable={hasPermission([WAREHOUSE_UPDATE, WAREHOUSE_SET_FOLLOWERS])}
               />
               {!isNew && !isClone && (
