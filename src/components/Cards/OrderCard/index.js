@@ -159,7 +159,7 @@ OrderCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(OrderCard, 'order', {
   width: '195px',
-  height: '303px',
+  height: '268px',
   entityIcon: 'ORDER',
   entityColor: 'ORDER',
 });

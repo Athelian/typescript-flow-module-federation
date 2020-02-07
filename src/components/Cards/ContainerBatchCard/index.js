@@ -464,7 +464,7 @@ ContainerBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ContainerBatchCard, 'batch', {
   width: '195px',
-  height: '391px',
+  height: '331px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });
