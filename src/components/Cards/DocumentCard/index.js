@@ -96,7 +96,7 @@ export const getFileTypesByEntity = (
           value: 'Document',
           label: intl.formatMessage({
             id: 'modules.provider.fileType.document',
-            defaultMessage: 'Document',
+            defaultMessage: 'Miscellaneous',
           }),
         },
       ];
@@ -133,7 +133,7 @@ export const getFileTypesByEntity = (
         },
         {
           value: 'Document',
-          label: intl.formatMessage(shipmentMessages.document),
+          label: intl.formatMessage(orderMessages.fileTypeDocument),
         },
       ];
 
@@ -141,7 +141,7 @@ export const getFileTypesByEntity = (
       return [
         {
           value: 'Document',
-          label: intl.formatMessage(shipmentMessages.document),
+          label: intl.formatMessage(orderMessages.fileTypeDocument),
         },
       ];
   }

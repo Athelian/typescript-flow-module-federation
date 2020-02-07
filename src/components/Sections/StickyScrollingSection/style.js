@@ -1,15 +1,15 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, colors, scrollbars } from 'styles/common';
+import { borderRadiuses, colors } from 'styles/common';
 
 export const StickyScrollingSectionWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
   width: 880px;
 `;
 
-export const StickyStyle = (top: number): string => css`
+export const StickyStyle: string = css`
   position: sticky;
-  top: ${top}px;
+  top: 0px;
   width: 100%;
   z-index: 2;
   background-color: ${colors.GRAY_SUPER_LIGHT};
@@ -20,16 +20,4 @@ export const StickySectionBodyStyle: string = css`
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   background-color: ${colors.GRAY_VERY_LIGHT};
-`;
-
-export const GridBodyStyle: string = css`
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(4, 195px);
-  grid-auto-rows: min-content;
-  grid-gap: 20px;
-  padding: 30px 20px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  ${scrollbars.SMALL};
 `;

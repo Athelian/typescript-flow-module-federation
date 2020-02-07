@@ -58,25 +58,23 @@ function ItemDocumentsSection() {
     <Subscribe to={[OrderItemFilesContainer]}>
       {({ state: { files = [] }, setFieldValue }) => {
         return (
-          <div>
-            <SectionWrapper id="orderItem_documentsSection">
-              <DocumentsUpload
-                entity="OrderItem"
-                files={files}
-                removable={canRemove}
-                uploadable={canUpload}
-                addable={canAdd}
-                editable={{
-                  status: canUpdateStatus,
-                  type: canUpdateType,
-                  memo: canUpdateMemo,
-                }}
-                downloadable={canDownload}
-                viewForm={canViewForm}
-                onSave={updateFiles => setFieldValue('files', updateFiles)}
-              />
-            </SectionWrapper>
-          </div>
+          <SectionWrapper id="orderItem_documentsSection">
+            <DocumentsUpload
+              entity="OrderItem"
+              files={files}
+              removable={canRemove}
+              uploadable={canUpload}
+              addable={canAdd}
+              editable={{
+                status: canUpdateStatus,
+                type: canUpdateType,
+                memo: canUpdateMemo,
+              }}
+              downloadable={canDownload}
+              viewForm={canViewForm}
+              onSave={updateFiles => setFieldValue('files', updateFiles)}
+            />
+          </SectionWrapper>
         );
       }}
     </Subscribe>

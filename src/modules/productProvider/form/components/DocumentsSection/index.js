@@ -1,12 +1,10 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { DocumentsUpload, SectionWrapper, SectionHeader } from 'components/Form';
+import { DocumentsUpload, SectionWrapper } from 'components/Form';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import { ProductProviderInfoContainer } from 'modules/productProvider/form/containers';
 import usePermission from 'hooks/usePermission';
-import FormattedNumber from 'components/FormattedNumber';
 import {
   PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_SET_DOCUMENTS,
@@ -60,37 +58,23 @@ export default function EndProductDocumentsSection() {
     <Subscribe to={[ProductProviderInfoContainer]}>
       {({ state: { files = [] }, setFieldValue }) => {
         return (
-          <div>
-            <SectionWrapper id="productProvider_documentsSection">
-              <SectionHeader
-                icon="DOCUMENT"
-                title={
-                  <>
-                    <FormattedMessage
-                      id="modules.ProductProviders.documents"
-                      defaultMessage="Documents"
-                    />{' '}
-                    (<FormattedNumber value={files.length} />)
-                  </>
-                }
-              />
-              <DocumentsUpload
-                entity="ProductProvider"
-                files={files}
-                removable={canRemove}
-                uploadable={canUpload}
-                addable={canAdd}
-                editable={{
-                  status: canUpdateStatus,
-                  type: canUpdateType,
-                  memo: canUpdateMemo,
-                }}
-                downloadable={canDownload}
-                viewForm={canViewForm}
-                onSave={updateFiles => setFieldValue('files', updateFiles)}
-              />
-            </SectionWrapper>
-          </div>
+          <SectionWrapper id="productProvider_documentsSection">
+            <DocumentsUpload
+              entity="ProductProvider"
+              files={files}
+              removable={canRemove}
+              uploadable={canUpload}
+              addable={canAdd}
+              editable={{
+                status: canUpdateStatus,
+                type: canUpdateType,
+                memo: canUpdateMemo,
+              }}
+              downloadable={canDownload}
+              viewForm={canViewForm}
+              onSave={updateFiles => setFieldValue('files', updateFiles)}
+            />
+          </SectionWrapper>
         );
       }}
     </Subscribe>

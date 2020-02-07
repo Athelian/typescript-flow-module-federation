@@ -23,17 +23,18 @@ import FormattedNumber from 'components/FormattedNumber';
 import { StickyScrollingSection } from 'components/Sections';
 import DocumentsSelector from './DocumentsSelector';
 import fileUploadMutation from './mutation';
+import { DocumentTypeArea } from './components';
 import {
+  DocumentsDragAndDropTooltipWrapperStyle,
+  DocumentsUploadWrapperStyle,
   DocumentsDragAndDropBodyWrapperStyle,
   DocumentsSectionBodyStyle,
-  DocumentsDragAndDropTooltipWrapperStyle,
   DocumentsDragAndDropWrapperStyle,
   DocumentsDragAndDropLabelStyle,
   DocumentsListStyle,
   AddDocumentButtonWrapperStyle,
   AddDocumentButtonLabelStyle,
   AddDocumentButtonIconStyle,
-  NoDocumentsStyle,
 } from './style';
 import messages from './messages';
 
@@ -119,6 +120,8 @@ const DocumentsUpload = ({
     );
   }
 
+  const types = getFileTypesByEntity(entity, intl);
+
   const handleUpload = (newFiles: Array<Object>) => {
     onSave([...files, ...newFiles]);
   };
@@ -132,7 +135,6 @@ const DocumentsUpload = ({
       newFiles = Array.from(event.target.files);
     }
 
-    const types = getFileTypesByEntity(entity, intl);
     const currentNumberOfFiles = filesState.length;
 
     setFileState([
@@ -275,15 +277,32 @@ const DocumentsUpload = ({
                 )}
               </BooleanValue>
             )}
+
+            <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
+              <div className={DocumentsDragAndDropTooltipWrapperStyle}>
+                <Icon icon="INFO" />
+              </div>
+            </Tooltip>
           </>
         }
       >
+        <div className={DocumentsUploadWrapperStyle}>
+          {types.map(type => {
+            return (
+              <DocumentTypeArea
+                type={type}
+                files={files.filter(file => file.type === type.value)}
+              />
+            );
+          })}
+        </div>
+
         {isEditable ? (
           <Dropzone onDrop={handleChange}>
             {({ getRootProps, isDragActive }) => (
               <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
                 <div className={DocumentsSectionBodyStyle}>
-                  {filesState && filesState.length > 0 ? (
+                  {filesState && filesState.length > 0 && (
                     <div className={DocumentsListStyle}>
                       {filesState.map((file, index) => {
                         if (filesState.length > 0 && filesState[index].uploading) {
@@ -332,18 +351,8 @@ const DocumentsUpload = ({
                         );
                       })}
                     </div>
-                  ) : (
-                    <div className={NoDocumentsStyle}>
-                      <FormattedMessage {...messages.noDocuments} />
-                    </div>
                   )}
                 </div>
-
-                <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
-                  <div className={DocumentsDragAndDropTooltipWrapperStyle}>
-                    <Icon icon="INFO" />
-                  </div>
-                </Tooltip>
 
                 <div className={DocumentsDragAndDropWrapperStyle(isDragActive)}>
                   <div className={DocumentsDragAndDropLabelStyle}>
@@ -356,7 +365,7 @@ const DocumentsUpload = ({
           </Dropzone>
         ) : (
           <div className={DocumentsSectionBodyStyle}>
-            {files && files.length > 0 ? (
+            {files && files.length > 0 && (
               <div className={DocumentsListStyle}>
                 {files.map(file => (
                   <DocumentCard
@@ -371,10 +380,6 @@ const DocumentsUpload = ({
                     downloadable={downloadable}
                   />
                 ))}
-              </div>
-            ) : (
-              <div className={NoDocumentsStyle}>
-                <FormattedMessage {...messages.noDocuments} />
               </div>
             )}
           </div>

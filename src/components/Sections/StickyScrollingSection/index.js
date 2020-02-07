@@ -1,12 +1,7 @@
 // @flow
 import * as React from 'react';
 import { SectionNavBar } from 'components/NavBar';
-import {
-  StickyScrollingSectionWrapperStyle,
-  StickyStyle,
-  StickySectionBodyStyle,
-  GridBodyStyle,
-} from './style';
+import { StickyScrollingSectionWrapperStyle, StickyStyle, StickySectionBodyStyle } from './style';
 
 type Props = {
   sectionHeader: React$Node,
@@ -16,17 +11,14 @@ type Props = {
 
 const StickyScrollingSection = ({ sectionHeader, navbarContent = null, children }: Props) => (
   <>
-    <div className={StickyStyle(0)}>{sectionHeader}</div>
+    <div className={StickyStyle}>{sectionHeader}</div>
 
     <div className={StickyScrollingSectionWrapperStyle}>
-      <div className={StickyStyle(0)}>
+      <div className={StickyStyle}>
         <SectionNavBar>{navbarContent}</SectionNavBar>
       </div>
 
-      <div className={StickySectionBodyStyle}>
-        {/* TODO: Extract as component */}
-        <div className={GridBodyStyle}>{children}</div>
-      </div>
+      <div className={StickySectionBodyStyle}>{children}</div>
     </div>
   </>
 );

@@ -8,7 +8,29 @@ import {
   scrollbars,
   transitions,
   shadows,
+  layout,
 } from 'styles/common';
+
+export const DocumentsDragAndDropTooltipWrapperStyle: string = css`
+  ${presets.BUTTON};
+  position: absolute;
+  right: 0;
+  top: 0;
+  ${fontSizes.LARGE};
+  color: ${colors.GRAY};
+  width: 50px;
+  height: 50px;
+  cursor: default;
+  &:hover {
+    color: ${colors.GRAY_DARK};
+  }
+`;
+
+export const DocumentsUploadWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
+  grid-gap: 10px;
+  padding: 10px;
+`;
 
 export const DocumentsDragAndDropBodyWrapperStyle: string = css`
   position: relative;
@@ -25,22 +47,6 @@ export const DocumentsSectionBodyStyle: string = css`
   overflow-y: overlay;
   ${scrollbars.SMALL};
   padding: 30px 20px;
-`;
-
-export const DocumentsDragAndDropTooltipWrapperStyle: string = css`
-  ${presets.BUTTON};
-  position: absolute;
-  right: 0;
-  top: 0;
-  ${fontSizes.LARGE};
-  color: ${colors.GRAY};
-  width: 30px;
-  height: 30px;
-  cursor: default;
-  &:hover {
-    color: ${colors.GRAY_DARK};
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  }
 `;
 
 export const DocumentsDragAndDropWrapperStyle = (isDragActive: boolean): string => css`
@@ -115,17 +121,4 @@ export const AddDocumentButtonLabelStyle: string = css`
 export const AddDocumentButtonIconStyle: string = css`
   margin: 0 0 0 5px;
   ${fontSizes.SMALL};
-`;
-
-export const NoDocumentsStyle: string = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  height: 100%;
-  width: 100%;
-  ${fontSizes.MAIN};
-  color: ${colors.BLACK};
-  font-weight: bold;
-  text-align: center;
 `;
