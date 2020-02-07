@@ -643,7 +643,7 @@
   "modules.Orders.totalItems": "TOTAL ITEMS",
   "modules.Orders.totalBatches": "TOTAL BATCHES",
   "modules.Orders.currencyTooltipMsg": "Changing the currency will change the currency of all the Items in this Order. The actual price values of all the Items will stay the same, so please revise them.",
-  "modules.Orders.changeExporterWarning": "Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Exporter from all Tasks. Are you sure you want to change the Exporter?",
+  "modules.Orders.changeExporterWarning": "Changing the Exporter will remove all Items and Batches. Are you sure you want to change the Exporter?",
   "modules.Orders.noShipmentFound": "No shipments found",
   "modules.Orders.noOrderFound": "No orders found",
   "modules.Orders.save": "SAVE",
