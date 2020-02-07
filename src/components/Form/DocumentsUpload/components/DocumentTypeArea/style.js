@@ -1,17 +1,18 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, borderRadiuses, presets, fontSizes } from 'styles/common';
+import { colors, borderRadiuses, presets, fontSizes, transitions } from 'styles/common';
 
-export const DocumentTypeAreaWrapperStyle: string = css`
+export const DocumentTypeAreaWrapperStyle = (isDraggedOver: boolean): string => css`
   background-color: ${colors.GRAY_SUPER_LIGHT};
   ${borderRadiuses.MAIN};
+  border: 5px dashed ${isDraggedOver ? colors.TEAL_HALF : colors.TRANSPARENT};
+  ${transitions.MAIN};
 `;
 
 export const DocumentTypeAreaHeaderStyle: string = css`
-  height: 40px;
+  height: 30px;
   display: flex;
   align-items: center;
-  padding: 0 5px;
 `;
 
 export const AddDocumentButtonWrapperStyle: string = css`
@@ -43,7 +44,7 @@ export const AddDocumentButtonIconStyle: string = css`
 `;
 
 export const DocumentTypeAreaBodyStyle: string = css`
-  padding: 20px 10px 10px 10px;
+  padding: 20px 5px 5px 5px;
   display: grid;
   grid-template-columns: repeat(4, 195px);
   grid-auto-rows: min-content;

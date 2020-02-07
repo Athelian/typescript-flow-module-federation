@@ -35,6 +35,7 @@ type Props = {|
   canAddOrphan: boolean,
   canViewForm: boolean,
   canDownload: boolean,
+  canChangeType: boolean,
 |};
 
 const DocumentTypeArea = ({
@@ -48,17 +49,28 @@ const DocumentTypeArea = ({
   canAddOrphan,
   canViewForm,
   canDownload,
+  canChangeType,
 }: Props) => {
   const otherTypes = types.filter(t => t !== type);
 
-  const [, dropRef] = useDrop({
+  const [{ isDraggedOver, canDrop, draggingType }, dropRef] = useDrop({
     accept: otherTypes,
+    collect: monitor => ({
+      isDraggedOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+      draggingType: monitor.getItemType(),
+    }),
   });
 
   console.warn(canDownload);
 
   return (
-    <div className={DocumentTypeAreaWrapperStyle} ref={dropRef}>
+    <div
+      className={DocumentTypeAreaWrapperStyle(
+        isDraggedOver && canDrop && draggingType !== type.value
+      )}
+      ref={dropRef}
+    >
       <div className={DocumentTypeAreaHeaderStyle}>
         <Label>
           {type.label}
@@ -142,6 +154,7 @@ const DocumentTypeArea = ({
                       id: file.id,
                       type: type.value,
                     }}
+                    canChangeType={canChangeType}
                   >
                     <BaseCard
                       key={file.id}

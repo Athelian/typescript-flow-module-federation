@@ -41,6 +41,7 @@ type Props = {|
   uploadable: boolean,
   addable: boolean,
   removable: boolean,
+  editable: { type: boolean },
 |};
 
 type UploadFileState = {
@@ -77,6 +78,7 @@ const DocumentsUpload = ({
   downloadable,
   viewForm,
   onSave,
+  editable,
 }: Props) => {
   const intl = useIntl();
   const [upload] = useMutation(fileUploadMutation);
@@ -232,6 +234,7 @@ const DocumentsUpload = ({
                 canAddOrphan={addable}
                 canViewForm={viewForm}
                 canDownload={downloadable}
+                canChangeType={editable.type}
               />
             );
           })}
