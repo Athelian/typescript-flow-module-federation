@@ -52,7 +52,6 @@ export const DocumentTypeAreaBodyStyle: string = css`
 `;
 
 export const DummyDocumentCard: string = css`
-  ${presets.BOX};
   width: 195px;
   height: 100px;
 `;

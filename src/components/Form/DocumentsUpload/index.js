@@ -3,6 +3,8 @@ import * as React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import type { FilePayload } from 'generated/graphql';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { DndProvider } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import { pick } from 'lodash/fp';
 import Dropzone from 'react-dropzone';
 import update from 'immutability-helper';
@@ -34,11 +36,6 @@ type Props = {|
   files: Array<FilePayload>,
   onSave: (Array<FilePayload>) => void,
   entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider' | 'Milestone',
-  editable: {
-    status: boolean,
-    type: boolean,
-    memo: boolean,
-  },
   downloadable: boolean,
   viewForm: boolean,
   uploadable: boolean,
@@ -74,7 +71,6 @@ const SELECTED_FIELDS = [
 const DocumentsUpload = ({
   files,
   entity,
-  editable,
   uploadable,
   addable,
   removable,
@@ -199,8 +195,6 @@ const DocumentsUpload = ({
       });
   };
 
-  const isEditable = Object.keys(editable).some(key => editable[key]);
-
   return (
     <StickyScrollingSection
       sectionHeader={
@@ -222,109 +216,91 @@ const DocumentsUpload = ({
         </Tooltip>
       }
     >
-      <div className={DocumentsUploadWrapperStyle}>
-        {types.map(type => {
-          return (
-            <DocumentTypeArea
-              key={type.value}
-              entityType={entity}
-              type={type}
-              files={files.filter(file => file.type === type.value)}
-              onSave={onSave}
-              onUpload={evt => handleUpload(evt, type.value)}
-              canUpload={uploadable}
-              canAddOrphans={addable}
-              canViewForm={viewForm}
-            />
-          );
-        })}
-      </div>
+      <DndProvider backend={HTML5Backend}>
+        <div className={DocumentsUploadWrapperStyle}>
+          {types.map(type => {
+            return (
+              <DocumentTypeArea
+                key={type.value}
+                entityType={entity}
+                type={type}
+                types={types.map(t => t.value)}
+                files={files.filter(file => file.type === type.value)}
+                onSave={onSave}
+                onUpload={evt => handleUpload(evt, type.value)}
+                canUpload={uploadable}
+                canAddOrphan={addable}
+                canViewForm={viewForm}
+                canDownload={downloadable}
+              />
+            );
+          })}
+        </div>
+      </DndProvider>
 
-      {isEditable ? (
-        <Dropzone onDrop={handleUpload}>
-          {({ getRootProps, isDragActive }) => (
-            <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
-              <div className={DocumentsSectionBodyStyle}>
-                {filesState && filesState.length > 0 && (
-                  <div className={DocumentsListStyle}>
-                    {filesState.map((file, index) => {
-                      if (filesState.length > 0 && filesState[index].uploading) {
-                        return (
-                          <UploadPlaceholder
-                            progress={filesState.length > 0 ? filesState[index].progress : 0}
-                            key={file?.id}
-                          />
-                        );
-                      }
+      <Dropzone onDrop={handleUpload}>
+        {({ getRootProps, isDragActive }) => (
+          <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
+            <div className={DocumentsSectionBodyStyle}>
+              {filesState && filesState.length > 0 && (
+                <div className={DocumentsListStyle}>
+                  {filesState.map((file, index) => {
+                    if (filesState.length > 0 && filesState[index].uploading) {
                       return (
-                        <DocumentCard
-                          hideParentInfo
-                          file={pick(SELECTED_FIELDS, file)}
-                          onClick={evt => {
-                            evt.stopPropagation();
-                          }}
-                          onChange={(field, value) => {
-                            onSave(
-                              update(files, {
-                                [index]: {
-                                  [field]: {
-                                    $set: value,
-                                  },
-                                },
-                              })
-                            );
-                          }}
-                          actions={[
-                            removable && (
-                              <CardAction
-                                icon="REMOVE"
-                                hoverColor="RED"
-                                onClick={evt => {
-                                  evt.stopPropagation();
-                                  onSave(files.filter(item => item?.id !== file?.id));
-                                }}
-                              />
-                            ),
-                          ].filter(Boolean)}
-                          editable={editable}
-                          downloadable={downloadable}
+                        <UploadPlaceholder
+                          progress={filesState.length > 0 ? filesState[index].progress : 0}
                           key={file?.id}
                         />
                       );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              <div className={DocumentsDragAndDropWrapperStyle(isDragActive)}>
-                <div className={DocumentsDragAndDropLabelStyle}>
-                  <FormattedMessage {...messages.newDocument} />
-                  <Icon icon="ADD" />
+                    }
+                    return (
+                      <DocumentCard
+                        hideParentInfo
+                        file={pick(SELECTED_FIELDS, file)}
+                        onClick={evt => {
+                          evt.stopPropagation();
+                        }}
+                        onChange={(field, value) => {
+                          onSave(
+                            update(files, {
+                              [index]: {
+                                [field]: {
+                                  $set: value,
+                                },
+                              },
+                            })
+                          );
+                        }}
+                        actions={[
+                          removable && (
+                            <CardAction
+                              icon="REMOVE"
+                              hoverColor="RED"
+                              onClick={evt => {
+                                evt.stopPropagation();
+                                onSave(files.filter(item => item?.id !== file?.id));
+                              }}
+                            />
+                          ),
+                        ].filter(Boolean)}
+                        downloadable={downloadable}
+                        key={file?.id}
+                      />
+                    );
+                  })}
                 </div>
+              )}
+            </div>
+
+            <div className={DocumentsDragAndDropWrapperStyle(isDragActive)}>
+              <div className={DocumentsDragAndDropLabelStyle}>
+                <FormattedMessage {...messages.newDocument} />
+                <Icon icon="ADD" />
               </div>
             </div>
-          )}
-        </Dropzone>
-      ) : (
-        <div className={DocumentsSectionBodyStyle}>
-          {files && files.length > 0 && (
-            <div className={DocumentsListStyle}>
-              {files.map(file => (
-                <DocumentCard
-                  hideParentInfo
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                  key={file?.id}
-                  file={pick(SELECTED_FIELDS, file)}
-                  editable={editable}
-                  downloadable={downloadable}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </Dropzone>
     </StickyScrollingSection>
   );
 };

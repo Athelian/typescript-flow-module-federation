@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
+import { useDrop } from 'react-dnd';
 import type { FilePayload } from 'generated/graphql';
 import BaseCard from 'components/Cards';
 import FormattedNumber from 'components/FormattedNumber';
@@ -11,6 +12,7 @@ import { Label } from 'components/Form';
 import { BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import DocumentFormSlideView from 'modules/document/index.formSlideView';
+import DocumentDragWrapper from './DocumentDragWrapper';
 import DocumentsSelector from './DocumentsSelector';
 import {
   DocumentTypeAreaWrapperStyle,
@@ -25,26 +27,38 @@ import {
 type Props = {|
   entityType: string,
   type: { value: string, label: React$Node },
+  types: Array<string>,
   files: Array<FilePayload>,
   onSave: Function,
   onUpload: Function,
   canUpload: boolean,
   canAddOrphan: boolean,
   canViewForm: boolean,
+  canDownload: boolean,
 |};
 
 const DocumentTypeArea = ({
   entityType,
   type,
+  types,
   files,
   onSave,
   onUpload,
   canUpload,
   canAddOrphan,
   canViewForm,
+  canDownload,
 }: Props) => {
+  const otherTypes = types.filter(t => t !== type);
+
+  const [, dropRef] = useDrop({
+    accept: otherTypes,
+  });
+
+  console.warn(canDownload);
+
   return (
-    <div className={DocumentTypeAreaWrapperStyle}>
+    <div className={DocumentTypeAreaWrapperStyle} ref={dropRef}>
       <div className={DocumentTypeAreaHeaderStyle}>
         <Label>
           {type.label}
@@ -123,19 +137,26 @@ const DocumentTypeArea = ({
             <BooleanValue>
               {({ value: documentFormIsOpen, set: setDocumentFormIsOpen }) => (
                 <>
-                  <BaseCard
-                    key={file.id}
-                    icon="DOCUMENT"
-                    color="DOCUMENT"
-                    onClick={evt => {
-                      evt.stopPropagation();
-                      if (canViewForm) {
-                        setDocumentFormIsOpen(true);
-                      }
+                  <DocumentDragWrapper
+                    item={{
+                      id: file.id,
+                      type: type.value,
                     }}
                   >
-                    <div className={DummyDocumentCard}>{file.id}</div>
-                  </BaseCard>
+                    <BaseCard
+                      key={file.id}
+                      icon="DOCUMENT"
+                      color="DOCUMENT"
+                      onClick={evt => {
+                        evt.stopPropagation();
+                        if (canViewForm) {
+                          setDocumentFormIsOpen(true);
+                        }
+                      }}
+                    >
+                      <div className={DummyDocumentCard}>{file.id}</div>
+                    </BaseCard>
+                  </DocumentDragWrapper>
 
                   <SlideView
                     isOpen={documentFormIsOpen}
