@@ -26,9 +26,6 @@ export const warehouseFormFragment = gql`
     ... on Followed {
       notificationUnseenCount
     }
-    inCharges {
-      ...userAvatarFragment
-    }
     organizations {
       ... on Organization {
         id

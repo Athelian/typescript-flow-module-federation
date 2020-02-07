@@ -34,20 +34,11 @@ export const containerFormFragment = gql`
     warehouseArrivalActualDateApprovedBy {
       ...userAvatarFragment
     }
-    warehouseArrivalAgreedDateAssignedTo {
-      ...userAvatarFragment
-    }
-    warehouseArrivalActualDateAssignedTo {
-      ...userAvatarFragment
-    }
     freeTimeStartDate
     freeTimeDuration
     autoCalculatedFreeTimeStartDate
     yardName
     departureDate
-    departureDateAssignedTo {
-      ...userAvatarFragment
-    }
     departureDateApprovedAt
     departureDateApprovedBy {
       ...userAvatarFragment
