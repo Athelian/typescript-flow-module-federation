@@ -423,18 +423,8 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                   onRequestClose={() => slideToggle(false)}
                                 >
                                   {opened && (
-                                    <Subscribe
-                                      to={[
-                                        OrderItemsContainer,
-                                        OrderTasksContainer,
-                                        OrderInfoContainer,
-                                      ]}
-                                    >
-                                      {(
-                                        { changeExporter: updateOrderItems },
-                                        { changeExporter: updateTasks },
-                                        { changeExporter: cleanUpFollowers }
-                                      ) => (
+                                    <Subscribe to={[OrderInfoContainer]}>
+                                      {({ changeExporter: cleanUpFollowers }) => (
                                         <SelectExporter
                                           cacheKey="OrderSelectExporter"
                                           isRequired
@@ -444,13 +434,14 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                             slideToggle(false);
                                             setFieldValue('exporter', newValue);
                                             cleanUpFollowers(values.exporter);
-                                            updateTasks(values.exporter);
-                                            updateOrderItems();
+                                            emitter.emit('CLEAN_ORDERS', {
+                                              action: 'CHANGE_EXPORTER',
+                                            });
                                           }}
                                           warningMessage={
                                             <FormattedMessage
                                               id="modules.Orders.changeExporterWarning"
-                                              defaultMessage="Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Exporter from all Tasks. Are you sure you want to change the Exporter?"
+                                              defaultMessage="Changing the Exporter will remove all Items and Batches. Are you sure you want to change the Exporter?"
                                             />
                                           }
                                         />
