@@ -228,7 +228,7 @@ export default function BatchCard({
             {canViewDesired ? (
               <>
                 <Display width="80px">
-                  <FormattedDate value={deliveredAt} />
+                  <FormattedDate value={desiredAt} />
                 </Display>
                 {desiredAtDiff !== 0 && desiredAt && (
                   <Tooltip message={desiredAtDiffMsg}>
