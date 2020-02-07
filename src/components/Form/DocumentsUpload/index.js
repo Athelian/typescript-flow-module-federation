@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import type { FilePayload } from 'generated/graphql';
-import { BooleanValue } from 'react-values';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { pick } from 'lodash/fp';
 import Dropzone from 'react-dropzone';
@@ -12,7 +11,6 @@ import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
 import SlideView from 'components/SlideView';
-import { NewButton } from 'components/Buttons';
 import DocumentFormSideView from 'modules/document/index.formSlideView';
 import UploadPlaceholder from 'components/UploadPlaceholder';
 import { CardAction } from 'components/Cards';
@@ -21,7 +19,6 @@ import { Tooltip } from 'components/Tooltip';
 import { SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import { StickyScrollingSection } from 'components/Sections';
-import DocumentsSelector from './DocumentsSelector';
 import fileUploadMutation from './mutation';
 import { DocumentTypeArea } from './components';
 import {
@@ -32,9 +29,6 @@ import {
   DocumentsDragAndDropWrapperStyle,
   DocumentsDragAndDropLabelStyle,
   DocumentsListStyle,
-  AddDocumentButtonWrapperStyle,
-  AddDocumentButtonLabelStyle,
-  AddDocumentButtonIconStyle,
 } from './style';
 import messages from './messages';
 
@@ -122,11 +116,10 @@ const DocumentsUpload = ({
 
   const types = getFileTypesByEntity(entity, intl);
 
-  const handleUpload = (newFiles: Array<Object>) => {
-    onSave([...files, ...newFiles]);
-  };
-
-  const handleChange = (event: SyntheticInputEvent<HTMLInputElement> | Array<File>) => {
+  const handleUpload = (
+    event: SyntheticInputEvent<HTMLInputElement> | Array<File>,
+    type: string
+  ) => {
     let newFiles = [];
     if (Array.isArray(event)) {
       newFiles = event;
@@ -141,7 +134,7 @@ const DocumentsUpload = ({
       ...filesState,
       ...newFiles.map(({ name }) => ({
         name,
-        type: types[0].value,
+        type,
         id: uuid(),
         path: '',
         status: 'Draft',
@@ -183,16 +176,17 @@ const DocumentsUpload = ({
       )
     )
       .then(uploadResults => {
-        handleUpload(
-          uploadResults.map(({ data }) => ({
+        onSave([
+          ...files,
+          ...uploadResults.map(({ data }) => ({
             ...data.fileUpload,
             uploading: false,
             progress: 100,
             entity: {
               __typename: entity,
             },
-          }))
-        );
+          })),
+        ]);
       })
       .catch(error => {
         logger.error(error);
@@ -223,82 +217,32 @@ const DocumentsUpload = ({
           />
         }
         navbarContent={
-          <>
-            {uploadable && (
-              <label className={AddDocumentButtonWrapperStyle}>
-                <div className={AddDocumentButtonLabelStyle}>
-                  <FormattedMessage {...messages.newDocument} />
-                </div>
-                <div className={AddDocumentButtonIconStyle}>
-                  <Icon icon="UPLOAD" />
-                </div>
-                <input type="file" accept="*" hidden multiple value="" onChange={handleChange} />
-              </label>
-            )}
-
-            {addable && (
-              <BooleanValue>
-                {({ value: documentsSelectorIsOpen, set: setDocumentsSelectorIsOpen }) => (
-                  <>
-                    <NewButton
-                      label={
-                        <FormattedMessage
-                          id="modules.Documents.selectDocument"
-                          defaultMessage="Select Documents"
-                        />
-                      }
-                      onClick={() => setDocumentsSelectorIsOpen(true)}
-                    />
-
-                    <SlideView
-                      isOpen={documentsSelectorIsOpen}
-                      onRequestClose={() => setDocumentsSelectorIsOpen(false)}
-                      shouldConfirm={() => {
-                        const button = document.getElementById('saveButtonOnSelectDocuments');
-                        return button;
-                      }}
-                    >
-                      <DocumentsSelector
-                        onCancel={() => setDocumentsSelectorIsOpen(false)}
-                        onSelect={selectedFiles => {
-                          onSave([
-                            ...files,
-                            ...selectedFiles.map(file => ({
-                              ...file,
-                              entity: { __typename: entity },
-                            })),
-                          ]);
-                          setDocumentsSelectorIsOpen(false);
-                        }}
-                        alreadyAddedDocuments={files}
-                      />
-                    </SlideView>
-                  </>
-                )}
-              </BooleanValue>
-            )}
-
-            <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
-              <div className={DocumentsDragAndDropTooltipWrapperStyle}>
-                <Icon icon="INFO" />
-              </div>
-            </Tooltip>
-          </>
+          <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
+            <div className={DocumentsDragAndDropTooltipWrapperStyle}>
+              <Icon icon="INFO" />
+            </div>
+          </Tooltip>
         }
       >
         <div className={DocumentsUploadWrapperStyle}>
           {types.map(type => {
             return (
               <DocumentTypeArea
+                key={type.value}
+                entityType={entity}
                 type={type}
                 files={files.filter(file => file.type === type.value)}
+                onUpload={evt => handleUpload(evt, type.value)}
+                uploadable={uploadable}
+                onAdd={onSave}
+                addable={addable}
               />
             );
           })}
         </div>
 
         {isEditable ? (
-          <Dropzone onDrop={handleChange}>
+          <Dropzone onDrop={handleUpload}>
             {({ getRootProps, isDragActive }) => (
               <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
                 <div className={DocumentsSectionBodyStyle}>
