@@ -131,7 +131,6 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     });
   };
 
-  // On change Forwarders, clean up followers and followers in batches
   onChangeForwarders = (
     prevForwarders: Array<OrganizationPayload> = [],
     newForwarders: Array<OrganizationPayload> = []
@@ -173,73 +172,6 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
 
         return { containers: cleanedContainers };
       });
-    }
-  };
-
-  waitForContainerSectionReadyThenChangeImporter = (prevImporter: ?OrganizationPayload) => {
-    if (prevImporter) {
-      const { hasCalledContainerApiYet } = this.state;
-      let retry;
-
-      if (hasCalledContainerApiYet) {
-        this.onChangeImporter(prevImporter);
-      } else {
-        const waitForApiReady = () => {
-          if (hasCalledContainerApiYet) {
-            this.onChangeImporter(prevImporter);
-            cancelAnimationFrame(retry);
-          } else {
-            retry = requestAnimationFrame(waitForApiReady);
-          }
-        };
-        retry = requestAnimationFrame(waitForApiReady);
-      }
-    }
-  };
-
-  waitForContainerSectionReadyThenChangeExporter = (
-    prevExporter: ?OrganizationPayload,
-    newExporter: ?OrganizationPayload
-  ) => {
-    const { hasCalledContainerApiYet } = this.state;
-    let retry;
-
-    if (hasCalledContainerApiYet) {
-      this.onChangeExporter(prevExporter, newExporter);
-    } else {
-      const waitForApiReady = () => {
-        if (hasCalledContainerApiYet) {
-          this.onChangeExporter(prevExporter, newExporter);
-          cancelAnimationFrame(retry);
-        } else {
-          retry = requestAnimationFrame(waitForApiReady);
-        }
-      };
-      retry = requestAnimationFrame(waitForApiReady);
-    }
-  };
-
-  waitForContainerSectionReadyThenChangeForwarders = (
-    prevForwarders: Array<OrganizationPayload> = [],
-    newForwarders: Array<OrganizationPayload> = []
-  ) => {
-    if (prevForwarders.length > 0) {
-      const { hasCalledContainerApiYet } = this.state;
-      let retry;
-
-      if (hasCalledContainerApiYet) {
-        this.onChangeForwarders(prevForwarders, newForwarders);
-      } else {
-        const waitForApiReady = () => {
-          if (hasCalledContainerApiYet) {
-            this.onChangeForwarders(prevForwarders, newForwarders);
-            cancelAnimationFrame(retry);
-          } else {
-            retry = requestAnimationFrame(waitForApiReady);
-          }
-        };
-        retry = requestAnimationFrame(waitForApiReady);
-      }
     }
   };
 }
