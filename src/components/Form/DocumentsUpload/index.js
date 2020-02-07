@@ -6,12 +6,10 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { pick } from 'lodash/fp';
-import Dropzone from 'react-dropzone';
 import Icon from 'components/Icon';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
-import UploadPlaceholder from 'components/UploadPlaceholder';
 import { getFileTypesByEntity } from 'components/Cards/DocumentCard';
 import { Tooltip } from 'components/Tooltip';
 import { SectionHeader } from 'components/Form';
@@ -19,15 +17,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { StickyScrollingSection } from 'components/Sections';
 import fileUploadMutation from './mutation';
 import { DocumentTypeArea } from './components';
-import {
-  DocumentsDragAndDropTooltipWrapperStyle,
-  DocumentsUploadWrapperStyle,
-  DocumentsDragAndDropBodyWrapperStyle,
-  DocumentsSectionBodyStyle,
-  DocumentsDragAndDropWrapperStyle,
-  DocumentsDragAndDropLabelStyle,
-  DocumentsListStyle,
-} from './style';
+import { DocumentsDragAndDropTooltipWrapperStyle, DocumentsUploadWrapperStyle } from './style';
 import messages from './messages';
 
 type Props = {|
@@ -52,15 +42,15 @@ type UploadFileState = {
   entity?: Object,
 };
 
-const editableFields = ['id', 'type', 'name', 'path', 'status', 'memo'];
+const editableFields = ['id', 'type', 'name', 'path', 'memo', 'tags'];
 const SELECTED_FIELDS = [
   'id',
   'type',
   'name',
   'path',
   'size',
-  'status',
   'memo',
+  'tags',
   'entity',
   'ownedBy',
   'orphan',
@@ -130,8 +120,8 @@ const DocumentsUpload = ({
         type,
         id: uuid(),
         path: '',
-        status: 'Draft',
         memo: '',
+        tags: [],
         uploading: true,
         progress: 0,
         isNew: true,
@@ -225,7 +215,7 @@ const DocumentsUpload = ({
                 entityType={entity}
                 type={type}
                 types={types.map(t => t.value)}
-                files={files.filter(file => file.type === type.value)}
+                files={filesState.filter(file => file.type === type.value)}
                 onSave={updatedValues =>
                   onSave([...files.filter(file => file.type !== type.value), ...updatedValues])
                 }
@@ -241,37 +231,6 @@ const DocumentsUpload = ({
           })}
         </div>
       </DndProvider>
-
-      <Dropzone onDrop={handleUpload}>
-        {({ getRootProps, isDragActive }) => (
-          <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
-            <div className={DocumentsSectionBodyStyle}>
-              {filesState && filesState.length > 0 && (
-                <div className={DocumentsListStyle}>
-                  {filesState.map((file, index) => {
-                    if (filesState.length > 0 && filesState[index].uploading) {
-                      return (
-                        <UploadPlaceholder
-                          progress={filesState.length > 0 ? filesState[index].progress : 0}
-                          key={file?.id}
-                        />
-                      );
-                    }
-                    return <div>hi</div>;
-                  })}
-                </div>
-              )}
-            </div>
-
-            <div className={DocumentsDragAndDropWrapperStyle(isDragActive)}>
-              <div className={DocumentsDragAndDropLabelStyle}>
-                <FormattedMessage {...messages.newDocument} />
-                <Icon icon="ADD" />
-              </div>
-            </div>
-          </div>
-        )}
-      </Dropzone>
     </StickyScrollingSection>
   );
 };
