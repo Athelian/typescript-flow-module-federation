@@ -1326,6 +1326,7 @@
   "modules.Shipment.mainExporterDeselectMessage": "主要輸出者を変更すると、全てのタスク、シップメント担当者、タイムライン上の担当者、コンテナ上の日付担当者から現在選択されている主要輸出者のスタッフが削除されます。本当に主要輸出者を変更しますか？",
   "modules.Shipments.forwarder": "フォワーダー",
   "modules.Shipments.tooltipForwarder": "4つまでフォーワーダーを選択することが可能です。",
+  "modules.Shipment.forwardersDialogMessage": "Changing the Forwarders will remove all Followers of the removed Forwarders from the Shipment and all Containers. Are you sure you want to change the Forwarders?",
   "modules.Shipments.relatedExporters": "関連輸出者",
   "modules.Shipments.tooltipExporter": "関連輸出者は、シップメントの貨物として選択されたバッチに基づいて表示されます。",
   "modules.Shipments.loadPort": "積港",

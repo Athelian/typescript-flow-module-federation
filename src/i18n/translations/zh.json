@@ -1326,6 +1326,7 @@
   "modules.Shipment.mainExporterDeselectMessage": "更改主出口商将从所有任务，负责，时间表分配和集装箱日期分配中删除当前主出口商的所有已分配人员。 您确定要更改主出口商吗？",
   "modules.Shipments.forwarder": "货代",
   "modules.Shipments.tooltipForwarder": "你最多可以选择四个转发器。",
+  "modules.Shipment.forwardersDialogMessage": "Changing the Forwarders will remove all Followers of the removed Forwarders from the Shipment and all Containers. Are you sure you want to change the Forwarders?",
   "modules.Shipments.relatedExporters": "有关的出口商",
   "modules.Shipments.tooltipExporter": "出口商会根据为此装运选择的批次自动显示。",
   "modules.Shipments.loadPort": "装货港",
