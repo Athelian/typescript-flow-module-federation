@@ -17,7 +17,7 @@ describe('Order items section', () => {
 
     cy.url().should('include', '/order/emV');
 
-    cy.get('#navbar-root > div > button:nth-child(3)').click();
+    cy.get('#navbar-root > div > div:nth-child(3) > button').click();
 
     cy.findByTestId('btnNewItems')
       .click()
