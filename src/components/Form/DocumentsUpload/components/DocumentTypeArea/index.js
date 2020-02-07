@@ -67,6 +67,7 @@ const DocumentTypeArea = ({
     }),
   });
 
+  // TODO: Apply when integrate real card
   console.warn(canDownload);
 
   return (
@@ -172,6 +173,7 @@ const DocumentTypeArea = ({
                               );
                             }}
                           >
+                            {/* TODO: Replace with real card */}
                             <BaseCard
                               icon="DOCUMENT"
                               color="DOCUMENT"

@@ -44,7 +44,7 @@ export const AddDocumentButtonIconStyle: string = css`
 `;
 
 export const DocumentTypeAreaBodyStyle: string = css`
-  padding: 20px 5px 5px 5px;
+  padding: 10px 5px 5px 5px;
   display: grid;
   grid-template-columns: repeat(4, 195px);
   grid-auto-rows: min-content;
