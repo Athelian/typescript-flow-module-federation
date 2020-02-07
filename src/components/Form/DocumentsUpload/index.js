@@ -37,7 +37,7 @@ type UploadFileState = {
   name: string,
   path: string,
   type: string,
-  status: string,
+  tags: Array<Object>,
   memo: string,
   entity?: Object,
 };
@@ -134,7 +134,6 @@ const DocumentsUpload = ({
           variables: {
             file,
             input: {
-              status: 'Draft',
               type,
             },
           },
