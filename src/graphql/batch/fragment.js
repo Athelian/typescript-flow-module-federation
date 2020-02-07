@@ -72,6 +72,18 @@ export const batchFormFragment = gql`
     }
     shipment {
       ...shipmentCardFragment
+      ... on Shipment {
+        forwarders {
+          ... on Organization {
+            id
+            name
+            types
+            partner {
+              ...partnerCardFragment
+            }
+          }
+        }
+      }
     }
     container {
       ... on Container {
