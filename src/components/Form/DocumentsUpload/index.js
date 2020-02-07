@@ -10,8 +10,6 @@ import Icon from 'components/Icon';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
-import SlideView from 'components/SlideView';
-import DocumentFormSideView from 'modules/document/index.formSlideView';
 import UploadPlaceholder from 'components/UploadPlaceholder';
 import { CardAction } from 'components/Cards';
 import DocumentCard, { getFileTypesByEntity } from 'components/Cards/DocumentCard';
@@ -85,7 +83,6 @@ const DocumentsUpload = ({
   onSave,
 }: Props) => {
   const intl = useIntl();
-  const [selectedFile, setSelectedFile] = React.useState(null);
   const [upload] = useMutation(fileUploadMutation);
   const [filesState, setFileState] = React.useState<
     Array<{
@@ -141,6 +138,7 @@ const DocumentsUpload = ({
         memo: '',
         uploading: true,
         progress: 0,
+        isNew: true,
       })),
     ]);
 
@@ -151,7 +149,7 @@ const DocumentsUpload = ({
             file,
             input: {
               status: 'Draft',
-              type: types[0].value,
+              type,
             },
           },
           context: ({
@@ -185,6 +183,7 @@ const DocumentsUpload = ({
             entity: {
               __typename: entity,
             },
+            isNew: true,
           })),
         ]);
       })
@@ -203,158 +202,130 @@ const DocumentsUpload = ({
   const isEditable = Object.keys(editable).some(key => editable[key]);
 
   return (
-    <>
-      <StickyScrollingSection
-        sectionHeader={
-          <SectionHeader
-            icon="DOCUMENT"
-            title={
-              <>
-                <FormattedMessage id="components.section.documents" defaultMessage="Documents" /> (
-                <FormattedNumber value={files.length} />)
-              </>
-            }
-          />
-        }
-        navbarContent={
-          <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
-            <div className={DocumentsDragAndDropTooltipWrapperStyle}>
-              <Icon icon="INFO" />
-            </div>
-          </Tooltip>
-        }
-      >
-        <div className={DocumentsUploadWrapperStyle}>
-          {types.map(type => {
-            return (
-              <DocumentTypeArea
-                key={type.value}
-                entityType={entity}
-                type={type}
-                files={files.filter(file => file.type === type.value)}
-                onUpload={evt => handleUpload(evt, type.value)}
-                uploadable={uploadable}
-                onAdd={onSave}
-                addable={addable}
-              />
-            );
-          })}
-        </div>
+    <StickyScrollingSection
+      sectionHeader={
+        <SectionHeader
+          icon="DOCUMENT"
+          title={
+            <>
+              <FormattedMessage id="components.section.documents" defaultMessage="Documents" /> (
+              <FormattedNumber value={files.length} />)
+            </>
+          }
+        />
+      }
+      navbarContent={
+        <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
+          <div className={DocumentsDragAndDropTooltipWrapperStyle}>
+            <Icon icon="INFO" />
+          </div>
+        </Tooltip>
+      }
+    >
+      <div className={DocumentsUploadWrapperStyle}>
+        {types.map(type => {
+          return (
+            <DocumentTypeArea
+              key={type.value}
+              entityType={entity}
+              type={type}
+              files={files.filter(file => file.type === type.value)}
+              onSave={onSave}
+              onUpload={evt => handleUpload(evt, type.value)}
+              canUpload={uploadable}
+              canAddOrphans={addable}
+              canViewForm={viewForm}
+            />
+          );
+        })}
+      </div>
 
-        {isEditable ? (
-          <Dropzone onDrop={handleUpload}>
-            {({ getRootProps, isDragActive }) => (
-              <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
-                <div className={DocumentsSectionBodyStyle}>
-                  {filesState && filesState.length > 0 && (
-                    <div className={DocumentsListStyle}>
-                      {filesState.map((file, index) => {
-                        if (filesState.length > 0 && filesState[index].uploading) {
-                          return (
-                            <UploadPlaceholder
-                              progress={filesState.length > 0 ? filesState[index].progress : 0}
-                              key={file?.id}
-                            />
-                          );
-                        }
+      {isEditable ? (
+        <Dropzone onDrop={handleUpload}>
+          {({ getRootProps, isDragActive }) => (
+            <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
+              <div className={DocumentsSectionBodyStyle}>
+                {filesState && filesState.length > 0 && (
+                  <div className={DocumentsListStyle}>
+                    {filesState.map((file, index) => {
+                      if (filesState.length > 0 && filesState[index].uploading) {
                         return (
-                          <DocumentCard
-                            hideParentInfo
-                            file={pick(SELECTED_FIELDS, file)}
-                            onClick={evt => {
-                              evt.stopPropagation();
-                              if (viewForm) setSelectedFile(file);
-                            }}
-                            onChange={(field, value) => {
-                              onSave(
-                                update(files, {
-                                  [index]: {
-                                    [field]: {
-                                      $set: value,
-                                    },
-                                  },
-                                })
-                              );
-                            }}
-                            actions={[
-                              removable && (
-                                <CardAction
-                                  icon="REMOVE"
-                                  hoverColor="RED"
-                                  onClick={evt => {
-                                    evt.stopPropagation();
-                                    onSave(files.filter(item => item?.id !== file?.id));
-                                  }}
-                                />
-                              ),
-                            ].filter(Boolean)}
-                            editable={editable}
-                            downloadable={downloadable}
+                          <UploadPlaceholder
+                            progress={filesState.length > 0 ? filesState[index].progress : 0}
                             key={file?.id}
                           />
                         );
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                <div className={DocumentsDragAndDropWrapperStyle(isDragActive)}>
-                  <div className={DocumentsDragAndDropLabelStyle}>
-                    <FormattedMessage {...messages.newDocument} />
-                    <Icon icon="ADD" />
+                      }
+                      return (
+                        <DocumentCard
+                          hideParentInfo
+                          file={pick(SELECTED_FIELDS, file)}
+                          onClick={evt => {
+                            evt.stopPropagation();
+                          }}
+                          onChange={(field, value) => {
+                            onSave(
+                              update(files, {
+                                [index]: {
+                                  [field]: {
+                                    $set: value,
+                                  },
+                                },
+                              })
+                            );
+                          }}
+                          actions={[
+                            removable && (
+                              <CardAction
+                                icon="REMOVE"
+                                hoverColor="RED"
+                                onClick={evt => {
+                                  evt.stopPropagation();
+                                  onSave(files.filter(item => item?.id !== file?.id));
+                                }}
+                              />
+                            ),
+                          ].filter(Boolean)}
+                          editable={editable}
+                          downloadable={downloadable}
+                          key={file?.id}
+                        />
+                      );
+                    })}
                   </div>
+                )}
+              </div>
+
+              <div className={DocumentsDragAndDropWrapperStyle(isDragActive)}>
+                <div className={DocumentsDragAndDropLabelStyle}>
+                  <FormattedMessage {...messages.newDocument} />
+                  <Icon icon="ADD" />
                 </div>
               </div>
-            )}
-          </Dropzone>
-        ) : (
-          <div className={DocumentsSectionBodyStyle}>
-            {files && files.length > 0 && (
-              <div className={DocumentsListStyle}>
-                {files.map(file => (
-                  <DocumentCard
-                    hideParentInfo
-                    onClick={evt => {
-                      evt.stopPropagation();
-                      if (viewForm) setSelectedFile(file);
-                    }}
-                    key={file?.id}
-                    file={pick(SELECTED_FIELDS, file)}
-                    editable={editable}
-                    downloadable={downloadable}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </StickyScrollingSection>
-
-      <SlideView
-        isOpen={!!selectedFile}
-        onRequestClose={() => setSelectedFile(null)}
-        shouldConfirm={() => {
-          const button = document.getElementById('document_form_save_button');
-          return button;
-        }}
-      >
-        {selectedFile && (
-          <DocumentFormSideView
-            // NOTE: orphan is only queried from selector
-            // that is using for checking the exist file from selector, consider refactor if that finds a simpler way
-            isNew={
-              !selectedFile.entity?.id &&
-              !Object.prototype.hasOwnProperty.call(selectedFile, 'orphan')
-            }
-            file={selectedFile}
-            onSave={updatedFile => {
-              onSave(files.map(file => (file.id === updatedFile.id ? updatedFile : file)));
-              setSelectedFile(null);
-            }}
-          />
-        )}
-      </SlideView>
-    </>
+            </div>
+          )}
+        </Dropzone>
+      ) : (
+        <div className={DocumentsSectionBodyStyle}>
+          {files && files.length > 0 && (
+            <div className={DocumentsListStyle}>
+              {files.map(file => (
+                <DocumentCard
+                  hideParentInfo
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                  key={file?.id}
+                  file={pick(SELECTED_FIELDS, file)}
+                  editable={editable}
+                  downloadable={downloadable}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </StickyScrollingSection>
   );
 };
 

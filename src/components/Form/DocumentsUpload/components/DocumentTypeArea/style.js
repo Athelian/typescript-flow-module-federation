@@ -9,9 +9,7 @@ export const DocumentTypeAreaWrapperStyle: string = css`
 
 export const DocumentTypeAreaHeaderStyle: string = css`
   height: 40px;
-  display: grid;
-  grid-template-columns: 1fr min-content min-content;
-  grid-gap: 5px;
+  display: flex;
   align-items: center;
   padding: 0 5px;
 `;
