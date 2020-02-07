@@ -13,7 +13,6 @@ import {
 import messages from 'modules/batch/messages';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
-import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import ProductImage from 'components/ProductImage';
 import FormattedNumber from 'components/FormattedNumber';
@@ -59,8 +58,6 @@ import {
   VolumeWrapperStyle,
   OrderWrapperStyle,
   ContainerWrapperStyle,
-  OrderInChargeWrapperStyle,
-  InChargeWrapperStyle,
   TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
   ImporterWrapperStyle,
@@ -483,25 +480,6 @@ const ShipmentBatchCard = ({
             />
           </div>
 
-          <div className={OrderInChargeWrapperStyle}>
-            <Label>
-              <FormattedMessage
-                id="components.cards.orderInCharge"
-                defaultMessage="ORDER IN CHARGE"
-              />
-            </Label>
-            <div className={InChargeWrapperStyle}>
-              {order.inCharges &&
-                order.inCharges.map(inCharge => (
-                  <UserAvatar
-                    firstName={inCharge.firstName}
-                    lastName={inCharge.lastName}
-                    key={inCharge.id}
-                  />
-                ))}
-            </div>
-          </div>
-
           <div className={TagsAndTaskWrapperStyle}>
             <div className={BatchTagsWrapperStyle}>
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
@@ -518,7 +496,7 @@ ShipmentBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ShipmentBatchCard, 'batch', {
   width: '195px',
-  height: '437px',
+  height: '377px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });
