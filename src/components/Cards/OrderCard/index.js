@@ -5,7 +5,6 @@ import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import Icon from 'components/Icon';
-import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import TaskRing from 'components/TaskRing';
 import { Label, Display, FieldItem } from 'components/Form';
@@ -19,7 +18,6 @@ import {
   ImporterWrapperStyle,
   DividerStyle,
   ChartWrapperStyle,
-  InChargeWrapperStyle,
   TagsAndTaskWrapperStyle,
   TagsWrapperStyle,
 } from './style';
@@ -52,7 +50,6 @@ const OrderCard = ({ order, actions, onClick, ...rest }: Props) => {
     orderItemCount,
     importer,
     exporter,
-    inCharges,
     todo,
   } = order;
 
@@ -141,16 +138,6 @@ const OrderCard = ({ order, actions, onClick, ...rest }: Props) => {
               batched={batchCount}
               shipped={batchShippedCount}
             />
-          </div>
-          <div className={InChargeWrapperStyle}>
-            {inCharges &&
-              inCharges.map(inCharge => (
-                <UserAvatar
-                  firstName={inCharge.firstName}
-                  lastName={inCharge.lastName}
-                  key={inCharge.id}
-                />
-              ))}
           </div>
           <div className={TagsAndTaskWrapperStyle}>
             <div className={TagsWrapperStyle}>

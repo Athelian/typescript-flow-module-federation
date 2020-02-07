@@ -13,7 +13,6 @@ import {
 import { FormField } from 'modules/form';
 import messages from 'modules/batch/messages';
 import Icon from 'components/Icon';
-import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import TaskRing from 'components/TaskRing';
 import ProductImage from 'components/ProductImage';
@@ -58,8 +57,6 @@ import {
   VolumeWrapperStyle,
   OrderWrapperStyle,
   ShipmentWrapperStyle,
-  OrderInChargeWrapperStyle,
-  InChargeWrapperStyle,
   TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
   RepresentIconStyle,
@@ -449,25 +446,6 @@ const ContainerBatchCard = ({
               entity="SHIPMENT"
               value={getByPathWithDefault(null, 'no', shipment)}
             />
-          </div>
-
-          <div className={OrderInChargeWrapperStyle}>
-            <Label>
-              <FormattedMessage
-                id="components.cards.orderInCharge"
-                defaultMessage="ORDER IN CHARGE"
-              />
-            </Label>
-            <div className={InChargeWrapperStyle}>
-              {order.inCharges &&
-                order.inCharges.map(inCharge => (
-                  <UserAvatar
-                    firstName={inCharge.firstName}
-                    lastName={inCharge.lastName}
-                    key={inCharge.id}
-                  />
-                ))}
-            </div>
           </div>
 
           <div className={TagsAndTaskWrapperStyle}>
