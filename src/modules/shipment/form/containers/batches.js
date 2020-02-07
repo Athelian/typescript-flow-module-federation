@@ -83,7 +83,7 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
     this.existingBatches = batches;
   };
 
-  changeMainExporter = (exporter: PartnerPayload) => {
+  changeMainExporter = (prevExporter: ?PartnerPayload, exporter: ?PartnerPayload) => {
     if (exporter) {
       this.setState(prevState => {
         return {
@@ -92,13 +92,21 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
           ),
         };
       });
-    } else {
-      this.setState(({ followers = [] }) => {
-        const cleanedFollowers = followers.filter(
-          follower => follower?.organization?.id !== exporter?.id
-        );
+    } else if (prevExporter) {
+      this.setState(prevState => {
+        const cleanedBatches = prevState.batches.map(batch => {
+          const { followers: batchFollowers = [] } = batch;
 
-        return { followers: cleanedFollowers };
+          const cleanedBatchFollowers = batchFollowers.filter(
+            follower => prevExporter.id !== follower?.organization?.id
+          );
+
+          return {
+            ...batch,
+            followers: cleanedBatchFollowers,
+          };
+        });
+        return { batches: cleanedBatches };
       });
     }
   };
@@ -106,12 +114,8 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
   // On change Importer, clean up followers and batches
   onChangeImporter = (prevImporter: ?OrganizationPayload) => {
     if (prevImporter) {
-      this.setState(({ followers = [] }) => {
-        const cleanedFollowers = followers.filter(
-          follower => follower?.organization?.id !== prevImporter?.id
-        );
-
-        return { batches: [], followers: cleanedFollowers };
+      this.setState({
+        batches: [],
       });
     }
   };

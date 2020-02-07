@@ -52,7 +52,7 @@ export default function CleanUpShipment({
 
       switch (action) {
         case 'CHANGE_EXPORTER':
-          batchesContainer.changeMainExporter(payload.selectedExporter);
+          batchesContainer.changeMainExporter(payload.exporter, payload.selectedExporter);
           containersContainer.onChangeExporter(payload.exporter, payload.selectedExporter);
           break;
         case 'CHANGE_IMPORTER':
@@ -87,7 +87,7 @@ export default function CleanUpShipment({
       } else {
         switch (action) {
           case 'CHANGE_EXPORTER':
-            batchesContainer.changeMainExporter(payload.selectedExporter);
+            batchesContainer.changeMainExporter(payload.exporter, payload.selectedExporter);
             containersContainer.onChangeExporter(payload.exporter, payload.selectedExporter);
             break;
           case 'CHANGE_IMPORTER':
