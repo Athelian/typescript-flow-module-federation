@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { useDrop } from 'react-dnd';
 import type { FilePayload } from 'generated/graphql';
-import BaseCard from 'components/Cards';
+import BaseCard, { CardAction } from 'components/Cards';
 import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';
 import GridRow from 'components/GridRow';
@@ -36,6 +36,7 @@ type Props = {|
   canViewForm: boolean,
   canDownload: boolean,
   canChangeType: boolean,
+  canDelete: boolean,
 |};
 
 const DocumentTypeArea = ({
@@ -50,27 +51,24 @@ const DocumentTypeArea = ({
   canViewForm,
   canDownload,
   canChangeType,
+  canDelete,
 }: Props) => {
   const otherTypes = types.filter(t => t !== type);
 
-  const [{ isDraggedOver, canDrop, draggingType }, dropRef] = useDrop({
+  const [{ isDraggedOver, canDrop }, dropRef] = useDrop({
     accept: otherTypes,
+    canDrop: item => item.type !== type.value,
+    drop: item => ({ ...item, type: type.value }),
     collect: monitor => ({
       isDraggedOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
-      draggingType: monitor.getItemType(),
     }),
   });
 
   console.warn(canDownload);
 
   return (
-    <div
-      className={DocumentTypeAreaWrapperStyle(
-        isDraggedOver && canDrop && draggingType !== type.value
-      )}
-      ref={dropRef}
-    >
+    <div className={DocumentTypeAreaWrapperStyle(isDraggedOver && canDrop)} ref={dropRef}>
       <div className={DocumentTypeAreaHeaderStyle}>
         <Label>
           {type.label}
@@ -146,7 +144,7 @@ const DocumentTypeArea = ({
       {files.length > 0 && (
         <div className={DocumentTypeAreaBodyStyle}>
           {files.map(file => (
-            <BooleanValue>
+            <BooleanValue key={file.id}>
               {({ value: documentFormIsOpen, set: setDocumentFormIsOpen }) => (
                 <>
                   <DocumentDragWrapper
@@ -155,9 +153,11 @@ const DocumentTypeArea = ({
                       type: type.value,
                     }}
                     canChangeType={canChangeType}
+                    onChangeType={item => {
+                      onSave(files.map(f => (f.id === item.id ? { ...f, type: item.type } : f)));
+                    }}
                   >
                     <BaseCard
-                      key={file.id}
                       icon="DOCUMENT"
                       color="DOCUMENT"
                       onClick={evt => {
@@ -166,6 +166,18 @@ const DocumentTypeArea = ({
                           setDocumentFormIsOpen(true);
                         }
                       }}
+                      actions={[
+                        canDelete && (
+                          <CardAction
+                            icon="REMOVE"
+                            hoverColor="RED"
+                            onClick={evt => {
+                              evt.stopPropagation();
+                              onSave(files.filter(item => item.id !== file.id));
+                            }}
+                          />
+                        ),
+                      ].filter(Boolean)}
                     >
                       <div className={DummyDocumentCard}>{file.id}</div>
                     </BaseCard>

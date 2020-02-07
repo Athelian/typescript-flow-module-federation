@@ -7,14 +7,12 @@ import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { pick } from 'lodash/fp';
 import Dropzone from 'react-dropzone';
-import update from 'immutability-helper';
 import Icon from 'components/Icon';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
 import UploadPlaceholder from 'components/UploadPlaceholder';
-import { CardAction } from 'components/Cards';
-import DocumentCard, { getFileTypesByEntity } from 'components/Cards/DocumentCard';
+import { getFileTypesByEntity } from 'components/Cards/DocumentCard';
 import { Tooltip } from 'components/Tooltip';
 import { SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
@@ -228,13 +226,16 @@ const DocumentsUpload = ({
                 type={type}
                 types={types.map(t => t.value)}
                 files={files.filter(file => file.type === type.value)}
-                onSave={onSave}
+                onSave={updatedValues =>
+                  onSave([...files.filter(file => file.type !== type.value), ...updatedValues])
+                }
                 onUpload={evt => handleUpload(evt, type.value)}
                 canUpload={uploadable}
                 canAddOrphan={addable}
                 canViewForm={viewForm}
                 canDownload={downloadable}
                 canChangeType={editable.type}
+                canDelete={removable}
               />
             );
           })}
@@ -256,40 +257,7 @@ const DocumentsUpload = ({
                         />
                       );
                     }
-                    return (
-                      <DocumentCard
-                        hideParentInfo
-                        file={pick(SELECTED_FIELDS, file)}
-                        onClick={evt => {
-                          evt.stopPropagation();
-                        }}
-                        onChange={(field, value) => {
-                          onSave(
-                            update(files, {
-                              [index]: {
-                                [field]: {
-                                  $set: value,
-                                },
-                              },
-                            })
-                          );
-                        }}
-                        actions={[
-                          removable && (
-                            <CardAction
-                              icon="REMOVE"
-                              hoverColor="RED"
-                              onClick={evt => {
-                                evt.stopPropagation();
-                                onSave(files.filter(item => item?.id !== file?.id));
-                              }}
-                            />
-                          ),
-                        ].filter(Boolean)}
-                        downloadable={downloadable}
-                        key={file?.id}
-                      />
-                    );
+                    return <div>hi</div>;
                   })}
                 </div>
               )}
