@@ -122,7 +122,18 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
 
         return {
           ...container,
-          batches: filteredBatches,
+          batches: filteredBatches.map(batch => {
+            const { followers: batchFollowers = [] } = batch;
+
+            const cleanedBatchFollowers = batchFollowers.filter(
+              follower => follower?.organization?.id !== prevExporter?.id
+            );
+
+            return {
+              ...batch,
+              followers: cleanedBatchFollowers,
+            };
+          }),
           representativeBatch: newRepresentativeBatch,
         };
       });
