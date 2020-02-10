@@ -9919,6 +9919,7 @@ export type EntityInput = {|
   voyageId?: ?$ElementType<Scalars, 'ID'>,
   containerGroupId?: ?$ElementType<Scalars, 'ID'>,
   containerId?: ?$ElementType<Scalars, 'ID'>,
+  warehouseId?: ?$ElementType<Scalars, 'ID'>,
   timelineDateId?: ?$ElementType<Scalars, 'ID'>,
   projectId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
@@ -11568,9 +11569,11 @@ export type MutationNotificationActiveArgs = {|
   id: $ElementType<Scalars, 'ID'>
 |};
 
+
 export type MutationNotificationArchiveArgs = {|
   id: $ElementType<Scalars, 'ID'>
 |};
+
 
 export type MutationNotificationSeeByEntitiesArgs = {|
   entities: Array<EntityInput>
@@ -33638,10 +33641,7 @@ export type BatchFormFragmentFragment = ({
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, followers: Array<({
-      ...{ __typename?: 'User' },
-    ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, totalVolume: ({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalVolume: ({
       ...{ __typename?: 'MetricValue' },
     ...MetricFragmentFragment
   }), todo: ({
@@ -33838,11 +33838,14 @@ export type ImageFragmentFragment = ({
 
 export type DocumentFragmentFragment = ({
     ...{ __typename?: 'File' },
-  ...$Pick<File, {| id: *, name: *, path: *, type: *, status: *, size: *, memo: * |}>,
+  ...$Pick<File, {| id: *, name: *, path: *, type: *, size: *, memo: * |}>,
   ...{| ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: ?({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, entity: ?({
       ...{ __typename?: 'Product' },
     ...$Pick<Product, {| id: *, name: * |}>,
     ...{| ownedBy: ({
@@ -34128,10 +34131,7 @@ export type OwnedByFragmentFragment = ({
 export type ContainerFormFragmentFragment = ({
     ...{ __typename?: 'Container' },
   ...$Pick<Container, {| id: *, archived: *, updatedAt: *, no: *, containerType: *, containerOption: *, memo: *, warehouseArrivalAgreedDate: *, warehouseArrivalActualDate: *, warehouseArrivalAgreedDateApprovedAt: *, warehouseArrivalActualDateApprovedAt: *, freeTimeStartDate: *, freeTimeDuration: *, autoCalculatedFreeTimeStartDate: *, yardName: *, departureDate: *, departureDateApprovedAt: * |}>,
-  ...{| followers: Array<({
-      ...{ __typename?: 'User' },
-    ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, ownedBy: ({
+  ...{| ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, updatedBy: ?({
@@ -34248,7 +34248,10 @@ export type DocumentFormFragmentFragment = ({
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: ?({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, entity: ?({
       ...{ __typename?: 'Product' },
     ...$Pick<Product, {| id: * |}>
   }) | ({
@@ -34858,10 +34861,7 @@ export type ItemFormFragmentFragment = ({
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, followers: Array<({
-      ...{ __typename?: 'User' },
-    ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, price: ({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, price: ({
       ...{ __typename?: 'Price' },
     ...PriceFragmentFragment
   }), customFields: ({
@@ -34963,9 +34963,6 @@ export type ItemInOrderFormFragmentFragment = ({
   }), tags: Array<({
       ...{ __typename?: 'Tag' },
     ...TagFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, followers: Array<({
-      ...{ __typename?: 'User' },
-    ...UserAvatarFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, todo: ({
       ...{ __typename?: 'Todo' },
     ...{| taskCount: ({
@@ -35022,10 +35019,7 @@ export type ItemInOrderFormFragmentFragment = ({
 export type ItemInBatchFormFragmentFragment = ({
     ...{ __typename?: 'OrderItem' },
   ...$Pick<OrderItem, {| id: *, archived: *, no: *, quantity: *, totalBatched: *, totalShipped: *, batchCount: *, batchShippedCount: * |}>,
-  ...{| followers: Array<({
-      ...{ __typename?: 'User' },
-    ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, price: ({
+  ...{| price: ({
       ...{ __typename?: 'Price' },
     ...PriceFragmentFragment
   }), tags: Array<({
@@ -35268,10 +35262,7 @@ export type ProductFormFragmentFragment = ({
         ...{ __typename?: 'Partner' },
       ...PartnerCardFragmentFragment
     }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, followers: Array<({
-      ...{ __typename?: 'User' },
-    ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, updatedBy: ?({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
@@ -35602,10 +35593,7 @@ export type ShipmentFormQueryFragmentFragment = ({
   ...{| updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, followers: Array<({
-      ...{ __typename?: 'User' },
-    ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, totalVolumeOverride: ?({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, totalVolumeOverride: ?({
       ...{ __typename?: 'MetricValue' },
     ...MetricFragmentFragment
   }), totalWeightOverride: ?({
@@ -35656,10 +35644,7 @@ export type ShipmentFormFragmentFragment = ({
   ...{| updatedBy: ?({
       ...{ __typename?: 'User' },
     ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, followers: Array<({
-      ...{ __typename?: 'User' },
-    ...UserAvatarFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, ownedBy: ({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, todo: ({
