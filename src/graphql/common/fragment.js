@@ -54,7 +54,6 @@ export const documentFragment = gql`
     name
     path
     type
-    status
     size
     memo
     ownedBy {
