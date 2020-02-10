@@ -38,6 +38,18 @@ storiesOf('Card/DocumentCard', module)
         memo: faker.lorem.sentence(),
         createdAt: faker.date.future(),
         updatedAt: faker.date.future(),
+        tags: [
+          {
+            id: 1,
+            name: 'Tag A',
+            color: '#AAAAAA',
+          },
+          {
+            id: 2,
+            name: 'Tag B',
+            color: '#EF4848',
+          },
+        ],
         __typename: 'File',
       }}
     />
@@ -60,6 +72,18 @@ storiesOf('Card/DocumentCard', module)
           poNo: faker.name.findName(),
           __typename: 'Order',
         },
+        tags: [
+          {
+            id: 1,
+            name: 'Tag A',
+            color: '#AAAAAA',
+          },
+          {
+            id: 2,
+            name: 'Tag B',
+            color: '#EF4848',
+          },
+        ],
         memo: faker.lorem.sentence(),
         createdAt: faker.date.future(),
         updatedAt: faker.date.future(),
@@ -86,6 +110,18 @@ storiesOf('Card/DocumentCard', module)
           poNo: faker.name.findName(),
           __typename: 'Order',
         },
+        tags: [
+          {
+            id: 1,
+            name: 'Tag A',
+            color: '#AAAAAA',
+          },
+          {
+            id: 2,
+            name: 'Tag B',
+            color: '#EF4848',
+          },
+        ],
         memo: faker.lorem.sentence(),
         createdAt: faker.date.future(),
         updatedAt: faker.date.future(),
@@ -113,6 +149,18 @@ storiesOf('Card/DocumentCard', module)
           poNo: faker.name.findName(),
           __typename: 'Order',
         },
+        tags: [
+          {
+            id: 1,
+            name: 'Tag A',
+            color: '#AAAAAA',
+          },
+          {
+            id: 2,
+            name: 'Tag B',
+            color: '#EF4848',
+          },
+        ],
         memo: '',
         createdAt: faker.date.future(),
         updatedAt: faker.date.future(),

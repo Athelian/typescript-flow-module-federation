@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react';
-import type { FileType, FileStatus, EntityPayload } from 'generated/graphql';
+import type { FilePayload } from 'generated/graphql';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import { isForbidden } from 'utils/data';
 import { FormField } from 'modules/form';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -12,12 +13,8 @@ import {
   getFileExtension,
   getFileName,
 } from 'components/Form/DocumentsUpload/helpers';
-import {
-  SelectInputFactory,
-  TextAreaInputFactory,
-  EnumSelectInputFactory,
-  Label,
-} from 'components/Form';
+import { SelectInputFactory } from 'components/Form';
+import Tag from 'components/Tag';
 import RelateEntity from 'components/RelateEntity';
 import orderMessages from 'modules/order/messages';
 import shipmentMessages from 'modules/shipment/messages';
@@ -30,27 +27,14 @@ import {
   FileExtensionIconStyle,
   FileNameWrapperStyle,
   FileNameStyle,
-  StatusAndButtonsWrapperStyle,
-  MemoButtonStyle,
-  FileStatusColoringWrapperStyle,
+  TagsAndButtonsWrapperStyle,
   DownloadButtonStyle,
-  MemoWrapperStyle,
-  MemoTitleStyle,
-  CloseButtonStyle,
-  MemoInputWrapperStyle,
+  TagsWrapperStyle,
 } from './style';
 
 type Props = {|
   intl: IntlShape,
-  file: {
-    id: string,
-    name: string,
-    type: FileType,
-    status: FileStatus,
-    entity: EntityPayload,
-    memo: string,
-    path: string,
-  },
+  file: FilePayload,
   editable: {
     status: boolean,
     type: boolean,
@@ -163,7 +147,7 @@ export const getFileTypesByEntity = (
   }
 };
 
-let cardHeight = '210px';
+let cardHeight = '150px';
 
 const DocumentCard = ({
   file,
@@ -177,16 +161,12 @@ const DocumentCard = ({
   onClick,
   ...rest
 }: Props) => {
-  cardHeight = hideParentInfo ? '185px' : '210px';
-  const memoHeight = hideParentInfo ? '150px' : '175px';
-
+  cardHeight = hideParentInfo ? '150px' : '175px';
   const name = file?.name ?? '';
   const id = file?.id ?? Date.now();
   const fileExtension = getFileExtension(name);
   const fileName = getFileName(name);
   const fileIcon = computeIcon(fileExtension);
-  const [showMemo, setShowMemo] = React.useState(false);
-
   const { parentIcon, parentData, link } = getParentInfo(file?.entity ?? {});
 
   return (
@@ -200,11 +180,16 @@ const DocumentCard = ({
       {...rest}
     >
       <div className={DocumentCardWrapperStyle(cardHeight)}>
-        {!hideParentInfo && (
-          <div className={DocumentParentWrapperStyle}>
-            <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
+        <div className={FileExtensionIconStyle(fileIcon.color)}>
+          <Icon {...fileIcon} />
+        </div>
+
+        <Tooltip message={`${fileName}.${fileExtension}`}>
+          <div className={FileNameWrapperStyle}>
+            <div className={FileNameStyle}>{fileName}</div>
+            {`.${fileExtension}`}
           </div>
-        )}
+        </Tooltip>
 
         <div
           className={DocumentTypeStyle}
@@ -233,58 +218,26 @@ const DocumentCard = ({
           </FormField>
         </div>
 
-        <div className={FileExtensionIconStyle(fileIcon.color)}>
-          <Icon {...fileIcon} />
-        </div>
-
-        <Tooltip message={`${fileName}.${fileExtension}`}>
-          <div className={FileNameWrapperStyle}>
-            <div className={FileNameStyle}>{fileName}</div>
-            {`.${fileExtension}`}
+        {!hideParentInfo && (
+          <div className={DocumentParentWrapperStyle}>
+            <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
           </div>
-        </Tooltip>
+        )}
 
         <div
-          className={StatusAndButtonsWrapperStyle}
+          className={TagsAndButtonsWrapperStyle}
           onClick={evt => {
             evt.stopPropagation();
           }}
           role="presentation"
         >
-          <button
-            className={MemoButtonStyle(!!file?.memo)}
-            onClick={e => {
-              e.stopPropagation();
-              setShowMemo(true);
-            }}
-            type="button"
-          >
-            <Icon icon="MEMO" />
-          </button>
-
-          <FormField
-            name={`${id}.status`}
-            setFieldValue={(field, value) => onChange && onChange('status', value)}
-            initValue={file?.status ?? ''}
-            saveOnChange
-          >
-            {({ ...inputHandlers }) => (
-              <span className={FileStatusColoringWrapperStyle(file?.status, editable?.status)}>
-                <EnumSelectInputFactory
-                  {...inputHandlers}
-                  enumType="FileStatus"
-                  editable={editable?.status}
-                  inputWidth="105px"
-                  inputHeight="30px"
-                  hideTooltip
-                  inputAlign="center"
-                  dropDirection="up"
-                  required
-                />
-              </span>
-            )}
-          </FormField>
-
+          <div className={TagsWrapperStyle}>
+            {(file?.tags ?? [])
+              .filter(item => !isForbidden(item))
+              .map(tag => (
+                <Tag key={tag.id} tag={tag} />
+              ))}
+          </div>
           {downloadable ? (
             <button
               className={DownloadButtonStyle(false)}
@@ -310,49 +263,6 @@ const DocumentCard = ({
               </div>
             </Tooltip>
           )}
-        </div>
-
-        <div className={MemoWrapperStyle(showMemo ? cardHeight : '0px')}>
-          <div className={MemoTitleStyle}>
-            <Label height="30px">
-              <FormattedMessage {...orderMessages.memo} />
-            </Label>
-
-            <button
-              className={CloseButtonStyle}
-              onClick={e => {
-                e.stopPropagation();
-                setShowMemo(false);
-              }}
-              type="button"
-            >
-              <Icon icon="CHEVRON_DOWN" />
-            </button>
-          </div>
-
-          <div
-            className={MemoInputWrapperStyle}
-            onClick={evt => {
-              evt.stopPropagation();
-            }}
-            role="presentation"
-          >
-            <FormField
-              name={`${id}.memo`}
-              setFieldValue={(field, value) => onChange && onChange('memo', value)}
-              initValue={file?.memo ?? ''}
-            >
-              {({ ...inputHandlers }) => (
-                <TextAreaInputFactory
-                  {...inputHandlers}
-                  isNew
-                  editable={editable?.memo}
-                  inputWidth="185px"
-                  inputHeight={memoHeight}
-                />
-              )}
-            </FormField>
-          </div>
         </div>
       </div>
     </BaseCard>
