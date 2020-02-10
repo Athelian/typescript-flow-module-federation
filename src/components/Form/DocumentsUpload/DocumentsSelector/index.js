@@ -4,7 +4,7 @@ import useFilterSort from 'hooks/useFilterSort';
 import useQueryList from 'hooks/useQueryList';
 import Selector from 'components/Selector';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
-import { DocumentCard } from 'components/Cards';
+import { DocumentMiniCard } from 'components/Cards';
 import {
   EntityIcon,
   Filter,
@@ -74,7 +74,7 @@ const DocumentsSelector = ({ onCancel, onSelect, alreadyAddedDocuments }: Props)
               hasMore={hasMore}
               isLoading={loading}
               renderItem={file => (
-                <DocumentCard key={file.id} file={file} {...getItemProps(file)} />
+                <DocumentMiniCard key={file.id} file={file} {...getItemProps(file)} />
               )}
             />
           </Content>
