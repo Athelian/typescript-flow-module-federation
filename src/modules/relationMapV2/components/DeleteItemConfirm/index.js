@@ -86,7 +86,7 @@ export default function DeleteItemConfirm({ onSuccess }: Props) {
     dialogMessage = (
       <FormattedMessage
         id="modules.RelationMap.deleteItem.loading"
-        defaultMessage="Deleting {itemLabel} ..."
+        defaultMessage="Loading {itemLabel} ..."
         values={{ itemLabel: <ItemLabelIcon /> }}
       />
     );

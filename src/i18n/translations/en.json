@@ -1100,6 +1100,7 @@
   "modules.RelationMap.label.removeFrom": "REMOVE FROM",
   "modules.RelationMap.delete.noPermission": "At least one {entityLabel} selected does not allow you to delete.",
   "modules.RelationMap.delete.deleting": "Deleting {numOfEntity} {entityLabel} ...",
+  "modules.RelationMap.delete.loading": "Loading {numOfEntity} {entityLabel} ...",
   "modules.RelationMap.delete.message": "Are you sure you want to delete {numOfEntity} {entityLabel} that you have selected?",
   "modules.RelationMap.delete.itemMessage2": "All of their {batchesLabel} will be deleted as well",
   "modules.RelationMap.delete.containerMessage2": "All of their {batchesLabel} will be moved to the {shipmentLabel} pool",

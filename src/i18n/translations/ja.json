@@ -1100,6 +1100,7 @@
   "modules.RelationMap.label.removeFrom": "以下から取り外す",
   "modules.RelationMap.delete.noPermission": "削除ができない{source} {entity}が選択されています。選択し直してください",
   "modules.RelationMap.delete.deleting": "{numOfEntity}つの{entityLabel}を削除しています",
+  "modules.RelationMap.delete.loading": "Loading {numOfEntity} {entityLabel} ...",
   "modules.RelationMap.delete.message": "本当に{numOfEntity}つの{entityLabel}を削除しますか？",
   "modules.RelationMap.delete.itemMessage2": "それらの全ての{batchesLabel}も削除されます",
   "modules.RelationMap.delete.containerMessage2": "それらの全ての{batchesLabel}も{shipmentLabel}へ移動されます",

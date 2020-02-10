@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import { forbiddenFragment } from 'graphql';
 
 export const itemQuery = gql`
   query itemQuery($id: ID!) {
@@ -16,4 +17,19 @@ export const itemQuery = gql`
   }
 `;
 
-export default itemQuery;
+export const itemsQuery = gql`
+  query orderItemsByIDs($ids: [ID!]!) {
+    orderItemsByIDs(ids: $ids) {
+      ...forbiddenFragment
+      ... on OrderItem {
+        id
+        files {
+          ... on File {
+            id
+          }
+        }
+      }
+    }
+  }
+  ${forbiddenFragment}
+`;
