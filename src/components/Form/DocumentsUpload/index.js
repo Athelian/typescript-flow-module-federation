@@ -22,14 +22,14 @@ import messages from './messages';
 
 type Props = {|
   files: Array<FilePayload>,
-  onSave: (Array<FilePayload>) => void,
   entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider' | 'Milestone',
-  downloadable: boolean,
-  viewForm: boolean,
-  uploadable: boolean,
-  addable: boolean,
-  removable: boolean,
-  editable: { type: boolean },
+  onSave: (Array<FilePayload>) => void,
+  canUpload: boolean,
+  canAddOrphan: boolean,
+  canViewForm: boolean,
+  canDownload: boolean,
+  canChangeType: boolean,
+  canDelete: boolean,
 |};
 
 type UploadFileState = {
@@ -42,13 +42,14 @@ type UploadFileState = {
   entity?: Object,
 };
 
-const editableFields = ['id', 'type', 'name', 'path', 'memo', 'tags'];
+const editableFields = ['id', 'type', 'name', 'path', 'tags', 'memo'];
 const SELECTED_FIELDS = [
   'id',
   'type',
   'name',
   'path',
   'size',
+  'tags',
   'memo',
   'tags',
   'entity',
@@ -60,13 +61,13 @@ const SELECTED_FIELDS = [
 const DocumentsUpload = ({
   files,
   entity,
-  uploadable,
-  addable,
-  removable,
-  downloadable,
-  viewForm,
   onSave,
-  editable,
+  canUpload,
+  canAddOrphan,
+  canViewForm,
+  canDownload,
+  canChangeType,
+  canDelete,
 }: Props) => {
   const intl = useIntl();
   const [upload] = useMutation(fileUploadMutation);
@@ -219,12 +220,12 @@ const DocumentsUpload = ({
                   onSave([...files.filter(file => file.type !== type.value), ...updatedValues])
                 }
                 onUpload={evt => handleUpload(evt, type.value)}
-                canUpload={uploadable}
-                canAddOrphan={addable}
-                canViewForm={viewForm}
-                canDownload={downloadable}
-                canChangeType={editable.type}
-                canDelete={removable}
+                canUpload={canUpload}
+                canAddOrphan={canAddOrphan}
+                canViewForm={canViewForm}
+                canDownload={canDownload}
+                canChangeType={canChangeType}
+                canDelete={canDelete}
               />
             );
           })}

@@ -30,7 +30,8 @@ export default function normalizeSheetOrderItemInput(
     case 'files':
       return {
         files: newValue.map(
-          ({ __typename, entity: e, ownedBy, path, uploading, progress, size, ...rest }) => rest
+          ({ __typename, entity: e, ownedBy, tags, path, uploading, progress, size, ...rest }) =>
+            rest
         ),
       };
     case 'todo':

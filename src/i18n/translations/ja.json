@@ -477,7 +477,7 @@
   "modules.Documents.documentSection": "書類",
   "modules.Documents.type": "種類",
   "modules.Documents.status": "ステータス",
-  "modules.Documents.memo": "メモ",
+  "modules.Documents.description": "メモ",
   "modules.Documents.filename": "ファイル名",
   "modules.Documents.fileSize": "ファイルサイズ",
   "modules.Documents.download": "ダウンロード",

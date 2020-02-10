@@ -10,16 +10,12 @@ import {
   MILESTONE_SET_DOCUMENTS,
   MILESTONE_DOCUMENT_DELETE,
   MILESTONE_DOCUMENT_CREATE,
-  MILESTONE_DOCUMENT_SET_STATUS,
   MILESTONE_DOCUMENT_SET_TYPE,
-  MILESTONE_DOCUMENT_SET_MEMO,
-  MILESTONE_DOCUMENTS_DOWNLOAD,
+  MILESTONE_DOWNLOAD_DOCUMENTS,
 } from 'modules/permission/constants/milestone';
 import {
   DOCUMENT_CREATE,
   DOCUMENT_DELETE,
-  DOCUMENT_SET_MEMO,
-  DOCUMENT_SET_STATUS,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
   DOCUMENT_FORM,
@@ -28,29 +24,25 @@ import {
 export default function MilestoneDocumentsSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const canSetDocuments = hasPermission(MILESTONE_SET_DOCUMENTS);
-
-  const canRemove = canSetDocuments || hasPermission([MILESTONE_DOCUMENT_DELETE, DOCUMENT_DELETE]);
-
-  const canUpload = canSetDocuments || hasPermission([MILESTONE_DOCUMENT_CREATE, DOCUMENT_CREATE]);
-
-  const canAdd = canSetDocuments || hasPermission([MILESTONE_UPDATE]);
-
-  const canUpdateStatus =
-    canSetDocuments ||
-    hasPermission([DOCUMENT_SET_STATUS, MILESTONE_DOCUMENT_SET_STATUS, DOCUMENT_UPDATE]);
-
-  const canUpdateType =
-    canSetDocuments ||
-    hasPermission([DOCUMENT_SET_TYPE, MILESTONE_DOCUMENT_SET_TYPE, DOCUMENT_UPDATE]);
-
-  const canUpdateMemo =
-    canSetDocuments ||
-    hasPermission([DOCUMENT_SET_MEMO, MILESTONE_DOCUMENT_SET_MEMO, DOCUMENT_UPDATE]);
-
-  const canDownload = hasPermission(MILESTONE_DOCUMENTS_DOWNLOAD);
-
+  const canUpload = hasPermission([
+    MILESTONE_SET_DOCUMENTS,
+    MILESTONE_DOCUMENT_CREATE,
+    DOCUMENT_CREATE,
+  ]);
+  const canAddOrphan = hasPermission([MILESTONE_SET_DOCUMENTS, MILESTONE_UPDATE]);
   const canViewForm = hasPermission(DOCUMENT_FORM);
+  const canDownload = hasPermission(MILESTONE_DOWNLOAD_DOCUMENTS);
+  const canChangeType = hasPermission([
+    MILESTONE_SET_DOCUMENTS,
+    DOCUMENT_SET_TYPE,
+    MILESTONE_DOCUMENT_SET_TYPE,
+    DOCUMENT_UPDATE,
+  ]);
+  const canDelete = hasPermission([
+    MILESTONE_SET_DOCUMENTS,
+    MILESTONE_DOCUMENT_DELETE,
+    DOCUMENT_DELETE,
+  ]);
 
   return (
     <Subscribe to={[MilestoneFilesContainer]}>
@@ -58,19 +50,15 @@ export default function MilestoneDocumentsSection() {
         return (
           <SectionWrapper id="milestone_documentsSection">
             <DocumentsUpload
-              entity="Milestone"
               files={files}
-              removable={canRemove}
-              uploadable={canUpload}
-              addable={canAdd}
-              editable={{
-                status: canUpdateStatus,
-                type: canUpdateType,
-                memo: canUpdateMemo,
-              }}
-              downloadable={canDownload}
-              viewForm={canViewForm}
+              entity="Milestone"
               onSave={updateFiles => setFieldValue('files', updateFiles)}
+              canUpload={canUpload}
+              canAddOrphan={canAddOrphan}
+              canViewForm={canViewForm}
+              canDownload={canDownload}
+              canChangeType={canChangeType}
+              canDelete={canDelete}
             />
           </SectionWrapper>
         );

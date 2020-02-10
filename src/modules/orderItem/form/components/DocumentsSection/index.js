@@ -10,15 +10,11 @@ import {
   ORDER_ITEMS_DOWNLOAD_DOCUMENTS,
   ORDER_ITEMS_DOCUMENT_DELETE,
   ORDER_ITEMS_DOCUMENT_CREATE,
-  ORDER_ITEMS_DOCUMENT_SET_MEMO,
-  ORDER_ITEMS_DOCUMENT_SET_STATUS,
   ORDER_ITEMS_DOCUMENT_SET_TYPE,
 } from 'modules/permission/constants/orderItem';
 import {
   DOCUMENT_CREATE,
   DOCUMENT_DELETE,
-  DOCUMENT_SET_MEMO,
-  DOCUMENT_SET_STATUS,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
   DOCUMENT_FORM,
@@ -28,31 +24,25 @@ import { OrderItemFilesContainer } from 'modules/orderItem/form/containers';
 function ItemDocumentsSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const canSetDocuments = hasPermission(ORDER_ITEMS_SET_DOCUMENTS);
-
-  const canRemove =
-    canSetDocuments || hasPermission([ORDER_ITEMS_DOCUMENT_DELETE, DOCUMENT_DELETE]);
-
-  const canUpload =
-    canSetDocuments || hasPermission([ORDER_ITEMS_DOCUMENT_CREATE, DOCUMENT_CREATE]);
-
-  const canAdd = canSetDocuments || hasPermission([ORDER_ITEMS_UPDATE]);
-
-  const canUpdateStatus =
-    canSetDocuments ||
-    hasPermission([DOCUMENT_SET_STATUS, ORDER_ITEMS_DOCUMENT_SET_STATUS, DOCUMENT_UPDATE]);
-
-  const canUpdateType =
-    canSetDocuments ||
-    hasPermission([DOCUMENT_SET_TYPE, ORDER_ITEMS_DOCUMENT_SET_TYPE, DOCUMENT_UPDATE]);
-
-  const canUpdateMemo =
-    canSetDocuments ||
-    hasPermission([DOCUMENT_SET_MEMO, ORDER_ITEMS_DOCUMENT_SET_MEMO, DOCUMENT_UPDATE]);
-
-  const canDownload = hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS);
-
+  const canUpload = hasPermission([
+    ORDER_ITEMS_SET_DOCUMENTS,
+    ORDER_ITEMS_DOCUMENT_CREATE,
+    DOCUMENT_CREATE,
+  ]);
+  const canAddOrphan = hasPermission([ORDER_ITEMS_SET_DOCUMENTS, ORDER_ITEMS_UPDATE]);
   const canViewForm = hasPermission(DOCUMENT_FORM);
+  const canDownload = hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS);
+  const canChangeType = hasPermission([
+    ORDER_ITEMS_SET_DOCUMENTS,
+    DOCUMENT_SET_TYPE,
+    ORDER_ITEMS_DOCUMENT_SET_TYPE,
+    DOCUMENT_UPDATE,
+  ]);
+  const canDelete = hasPermission([
+    ORDER_ITEMS_SET_DOCUMENTS,
+    ORDER_ITEMS_DOCUMENT_DELETE,
+    DOCUMENT_DELETE,
+  ]);
 
   return (
     <Subscribe to={[OrderItemFilesContainer]}>
@@ -60,19 +50,15 @@ function ItemDocumentsSection() {
         return (
           <SectionWrapper id="orderItem_documentsSection">
             <DocumentsUpload
-              entity="OrderItem"
               files={files}
-              removable={canRemove}
-              uploadable={canUpload}
-              addable={canAdd}
-              editable={{
-                status: canUpdateStatus,
-                type: canUpdateType,
-                memo: canUpdateMemo,
-              }}
-              downloadable={canDownload}
-              viewForm={canViewForm}
+              entity="OrderItem"
               onSave={updateFiles => setFieldValue('files', updateFiles)}
+              canUpload={canUpload}
+              canAddOrphan={canAddOrphan}
+              canViewForm={canViewForm}
+              canDownload={canDownload}
+              canChangeType={canChangeType}
+              canDelete={canDelete}
             />
           </SectionWrapper>
         );

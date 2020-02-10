@@ -238,8 +238,8 @@ export const parseFilesField = (
         id: newFile.id,
         ...parseGenericField('name', getByPathWithDefault(null, 'name', oldFile), newFile.name),
         ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
-        ...parseEnumField('status', getByPathWithDefault(null, 'status', oldFile), newFile.status),
         ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
+        ...parseArrayOfIdsField('tagIds', getByPathWithDefault([], 'tags', oldFile), newFile.tags),
       };
     }
   ),
