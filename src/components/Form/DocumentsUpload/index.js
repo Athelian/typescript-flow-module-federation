@@ -42,13 +42,14 @@ type UploadFileState = {
   entity?: Object,
 };
 
-const editableFields = ['id', 'type', 'name', 'path', 'memo', 'tags'];
+const editableFields = ['id', 'type', 'name', 'path', 'tags', 'memo'];
 const SELECTED_FIELDS = [
   'id',
   'type',
   'name',
   'path',
   'size',
+  'tags',
   'memo',
   'tags',
   'entity',
