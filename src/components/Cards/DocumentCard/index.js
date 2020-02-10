@@ -159,6 +159,8 @@ const DocumentCard = ({
   const fileName = getFileName(name);
   const fileIcon = computeIcon(fileExtension);
   const { parentIcon, parentData, link } = getParentInfo(file?.entity ?? {});
+  const fileTypes = getFileTypesByEntity(file?.entity?.__typename, intl);
+  const fileTypeLabel = fileTypes.find(type => type.value === file?.type)?.label ?? '';
 
   return (
     <BaseCard
@@ -183,20 +185,14 @@ const DocumentCard = ({
 
         {!hideParentInfo && (
           <>
-            <div className={DocumentTypeStyle}>{file?.type}</div>
+            <div className={DocumentTypeStyle}>{fileTypeLabel}</div>
             <div className={DocumentParentWrapperStyle}>
               <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
             </div>
           </>
         )}
 
-        <div
-          className={TagsAndButtonsWrapperStyle}
-          onClick={evt => {
-            evt.stopPropagation();
-          }}
-          role="presentation"
-        >
+        <div className={TagsAndButtonsWrapperStyle}>
           <div className={TagsWrapperStyle}>
             {(file?.tags ?? [])
               .filter(item => !isForbidden(item))

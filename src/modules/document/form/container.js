@@ -8,10 +8,9 @@ import { isEquals } from 'utils/fp';
 const defaultState: File = {
   name: null,
   type: 'Document',
-  status: 'Draft',
   size: null,
   path: null,
-  description: null,
+  memo: null,
   tags: [],
   entity: null,
   order: null,

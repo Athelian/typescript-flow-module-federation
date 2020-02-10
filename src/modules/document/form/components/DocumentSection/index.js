@@ -57,6 +57,8 @@ const DocumentSection = () => {
   const fileName = getFileName(state.name);
   const fileIcon = computeIcon(fileExtension);
 
+  const fileTypeOptions = getFileTypesByEntity(state.entity?.__typename, intl);
+
   return (
     <>
       <SectionHeader
@@ -75,14 +77,15 @@ const DocumentSection = () => {
       <Section>
         <GridColumn>
           <FormField {...getFormFieldProps('type')} saveOnChange>
-            {inputHandlers => (
+            {({ value, ...inputHandlers }) => (
               <SelectInputFactory
+                value={fileTypeOptions ? value : null}
                 {...inputHandlers}
                 label={<FormattedMessage id="modules.Documents.type" defaultMessage="Type" />}
                 editable={canUpdate || hasPermissions(DOCUMENT_SET_TYPE)}
                 originalValue={originalState.type}
                 required
-                items={getFileTypesByEntity(state.entity?.__typename, intl)}
+                items={fileTypeOptions ?? []}
               />
             )}
           </FormField>
@@ -96,7 +99,6 @@ const DocumentSection = () => {
             }
             input={
               <TagsInput
-                id="tags"
                 name="tags"
                 tagType="File"
                 values={state.tags}
