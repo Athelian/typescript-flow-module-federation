@@ -118,6 +118,7 @@ const DocumentTypeArea = ({
                                 ...files,
                                 ...selectedFiles.map(file => ({
                                   ...file,
+                                  type: type.value,
                                   entity: { __typename: entityType },
                                 })),
                               ]);
