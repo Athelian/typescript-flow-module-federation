@@ -1,11 +1,9 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import FormattedNumber from 'components/FormattedNumber';
 import {
   SHIPMENT_UPDATE,
   SHIPMENT_SET_DOCUMENTS,
@@ -27,7 +25,7 @@ import {
 } from 'modules/permission/constants/file';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
-import { DocumentsUpload, SectionHeader } from 'components/Form';
+import { DocumentsUpload } from 'components/Form';
 import { ShipmentFilesContainer } from 'modules/shipment/form/containers';
 import { shipmentFormFilesQuery } from './query';
 
@@ -55,54 +53,35 @@ function DocumentsSection({ entityId, isLoading }: Props) {
         >
           {() => {
             return (
-              <>
-                <SectionHeader
-                  icon="DOCUMENT"
-                  title={
-                    <>
-                      <FormattedMessage id="modules.Orders.documents" defaultMessage="DOCUMENTS" />{' '}
-                      (<FormattedNumber value={files.length} />)
-                    </>
-                  }
-                />
-                <DocumentsUpload
-                  entity="Shipment"
-                  uploadable={
-                    canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_CREATE, DOCUMENT_CREATE])
-                  }
-                  removable={
-                    canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_DELETE, DOCUMENT_DELETE])
-                  }
-                  addable={canSetDocuments || hasPermission([SHIPMENT_UPDATE])}
-                  editable={{
-                    status:
-                      canSetDocuments ||
-                      hasPermission([
-                        DOCUMENT_SET_STATUS,
-                        SHIPMENT_DOCUMENT_SET_STATUS,
-                        DOCUMENT_UPDATE,
-                      ]),
-                    type:
-                      canSetDocuments ||
-                      hasPermission([
-                        DOCUMENT_SET_TYPE,
-                        SHIPMENT_DOCUMENT_SET_TYPE,
-                        DOCUMENT_UPDATE,
-                      ]),
-                    memo:
-                      canSetDocuments ||
-                      hasPermission([
-                        DOCUMENT_SET_MEMO,
-                        SHIPMENT_DOCUMENT_SET_MEMO,
-                        DOCUMENT_UPDATE,
-                      ]),
-                  }}
-                  downloadable={hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS)}
-                  viewForm={hasPermission(DOCUMENT_FORM)}
-                  files={files}
-                  onSave={updateFiles => setFieldValue('files', updateFiles)}
-                />
-              </>
+              <DocumentsUpload
+                entity="Shipment"
+                uploadable={
+                  canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_CREATE, DOCUMENT_CREATE])
+                }
+                removable={
+                  canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_DELETE, DOCUMENT_DELETE])
+                }
+                addable={canSetDocuments || hasPermission([SHIPMENT_UPDATE])}
+                editable={{
+                  status:
+                    canSetDocuments ||
+                    hasPermission([
+                      DOCUMENT_SET_STATUS,
+                      SHIPMENT_DOCUMENT_SET_STATUS,
+                      DOCUMENT_UPDATE,
+                    ]),
+                  type:
+                    canSetDocuments ||
+                    hasPermission([DOCUMENT_SET_TYPE, SHIPMENT_DOCUMENT_SET_TYPE, DOCUMENT_UPDATE]),
+                  memo:
+                    canSetDocuments ||
+                    hasPermission([DOCUMENT_SET_MEMO, SHIPMENT_DOCUMENT_SET_MEMO, DOCUMENT_UPDATE]),
+                }}
+                downloadable={hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS)}
+                viewForm={hasPermission(DOCUMENT_FORM)}
+                files={files}
+                onSave={updateFiles => setFieldValue('files', updateFiles)}
+              />
             );
           }}
         </QueryPlaceHolder>

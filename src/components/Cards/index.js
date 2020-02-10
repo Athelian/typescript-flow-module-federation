@@ -2,7 +2,6 @@ import BaseCard, { CardAction } from './BaseCard';
 import BatchCard from './BatchCard';
 import BatchesPoolCard from './BatchesPoolCard';
 import DocumentCard from './DocumentCard';
-import DocumentMiniCard from './DocumentMiniCard';
 import ContainerBatchCard from './ContainerBatchCard';
 import ContainerCard from './ContainerCard';
 import GrayCard from './GrayCard';
@@ -38,7 +37,6 @@ export {
   ContainerBatchCard,
   ContainerCard,
   DocumentCard,
-  DocumentMiniCard,
   GrayCard,
   ItemCard,
   OrderBatchCard,

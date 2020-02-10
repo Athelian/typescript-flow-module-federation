@@ -1,11 +1,9 @@
 // @flow
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { DocumentsUpload, SectionWrapper, SectionHeader } from 'components/Form';
+import { DocumentsUpload, SectionWrapper } from 'components/Form';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import FormattedNumber from 'components/FormattedNumber';
 import { MilestoneFilesContainer } from 'modules/milestone/form/containers';
 import {
   MILESTONE_UPDATE,
@@ -58,34 +56,23 @@ export default function MilestoneDocumentsSection() {
     <Subscribe to={[MilestoneFilesContainer]}>
       {({ state: { files = [] }, setFieldValue }) => {
         return (
-          <div>
-            <SectionWrapper id="milestone_documentsSection">
-              <SectionHeader
-                icon="DOCUMENT"
-                title={
-                  <>
-                    <FormattedMessage id="modules.Milestone.documents" defaultMessage="Documents" />{' '}
-                    (<FormattedNumber value={files.length} />)
-                  </>
-                }
-              />
-              <DocumentsUpload
-                entity="Milestone"
-                files={files}
-                removable={canRemove}
-                uploadable={canUpload}
-                addable={canAdd}
-                editable={{
-                  status: canUpdateStatus,
-                  type: canUpdateType,
-                  memo: canUpdateMemo,
-                }}
-                downloadable={canDownload}
-                viewForm={canViewForm}
-                onSave={updateFiles => setFieldValue('files', updateFiles)}
-              />
-            </SectionWrapper>
-          </div>
+          <SectionWrapper id="milestone_documentsSection">
+            <DocumentsUpload
+              entity="Milestone"
+              files={files}
+              removable={canRemove}
+              uploadable={canUpload}
+              addable={canAdd}
+              editable={{
+                status: canUpdateStatus,
+                type: canUpdateType,
+                memo: canUpdateMemo,
+              }}
+              downloadable={canDownload}
+              viewForm={canViewForm}
+              onSave={updateFiles => setFieldValue('files', updateFiles)}
+            />
+          </SectionWrapper>
         );
       }}
     </Subscribe>

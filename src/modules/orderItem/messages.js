@@ -72,7 +72,7 @@ export default defineMessages({
   },
   fileTypeDocument: {
     id: 'modules.orderItems.fileType.document',
-    defaultMessage: 'Document',
+    defaultMessage: 'Miscellaneous',
   },
   deliveryDate: {
     id: 'modules.orderItem.deliveryDate',
