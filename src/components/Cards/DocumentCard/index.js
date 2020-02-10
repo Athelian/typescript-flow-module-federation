@@ -5,7 +5,6 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { isForbidden } from 'utils/data';
-import { FormField } from 'modules/form';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import {
@@ -13,7 +12,6 @@ import {
   getFileExtension,
   getFileName,
 } from 'components/Form/DocumentsUpload/helpers';
-import { SelectInputFactory } from 'components/Form';
 import Tag from 'components/Tag';
 import RelateEntity from 'components/RelateEntity';
 import orderMessages from 'modules/order/messages';
@@ -22,14 +20,14 @@ import { getParentInfo } from 'utils/task';
 import BaseCard from '../BaseCard';
 import {
   DocumentCardWrapperStyle,
-  DocumentParentWrapperStyle,
-  DocumentTypeStyle,
   FileExtensionIconStyle,
   FileNameWrapperStyle,
   FileNameStyle,
+  DocumentTypeStyle,
+  DocumentParentWrapperStyle,
   TagsAndButtonsWrapperStyle,
-  DownloadButtonStyle,
   TagsWrapperStyle,
+  DownloadButtonStyle,
 } from './style';
 
 type Props = {|
@@ -161,9 +159,8 @@ const DocumentCard = ({
   onClick,
   ...rest
 }: Props) => {
-  cardHeight = hideParentInfo ? '150px' : '175px';
+  cardHeight = hideParentInfo ? '109px' : '159px';
   const name = file?.name ?? '';
-  const id = file?.id ?? Date.now();
   const fileExtension = getFileExtension(name);
   const fileName = getFileName(name);
   const fileIcon = computeIcon(fileExtension);
@@ -191,37 +188,13 @@ const DocumentCard = ({
           </div>
         </Tooltip>
 
-        <div
-          className={DocumentTypeStyle}
-          onClick={evt => {
-            evt.stopPropagation();
-          }}
-          role="presentation"
-        >
-          <FormField
-            name={`${id}.type`}
-            setFieldValue={(field, value) => onChange && onChange('type', value)}
-            initValue={file?.type ?? ''}
-            saveOnChange
-          >
-            {({ ...inputHandlers }) => (
-              <SelectInputFactory
-                {...inputHandlers}
-                items={getFileTypesByEntity(file?.entity?.__typename, intl)}
-                editable={editable?.type}
-                inputWidth={hideParentInfo ? '165px' : '185px'}
-                inputHeight="30px"
-                hideTooltip
-                required
-              />
-            )}
-          </FormField>
-        </div>
-
         {!hideParentInfo && (
-          <div className={DocumentParentWrapperStyle}>
-            <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
-          </div>
+          <>
+            <div className={DocumentTypeStyle}>{file?.type}</div>
+            <div className={DocumentParentWrapperStyle}>
+              <RelateEntity link={navigable ? link : ''} entity={parentIcon} value={parentData} />
+            </div>
+          </>
         )}
 
         <div
@@ -238,6 +211,7 @@ const DocumentCard = ({
                 <Tag key={tag.id} tag={tag} />
               ))}
           </div>
+
           {downloadable ? (
             <button
               className={DownloadButtonStyle(false)}

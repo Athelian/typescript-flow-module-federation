@@ -5,7 +5,7 @@ import { BooleanValue } from 'react-values';
 import { useDrop } from 'react-dnd';
 import Dropzone from 'react-dropzone';
 import type { FilePayload } from 'generated/graphql';
-import BaseCard, { CardAction } from 'components/Cards';
+import { DocumentCard, CardAction } from 'components/Cards';
 import FormattedNumber from 'components/FormattedNumber';
 import UploadPlaceholder from 'components/UploadPlaceholder';
 import Icon from 'components/Icon';
@@ -23,7 +23,6 @@ import {
   AddDocumentButtonLabelStyle,
   AddDocumentButtonIconStyle,
   DocumentTypeAreaBodyStyle,
-  DummyDocumentCard,
 } from './style';
 
 type Props = {|
@@ -66,9 +65,6 @@ const DocumentTypeArea = ({
       canDrop: monitor.canDrop(),
     }),
   });
-
-  // TODO: Apply when integrate real card
-  console.warn(canDownload);
 
   return (
     <Dropzone onDrop={onUpload}>
@@ -156,7 +152,7 @@ const DocumentTypeArea = ({
               <div className={DocumentTypeAreaBodyStyle}>
                 {files.map(file =>
                   file.uploading ? (
-                    <UploadPlaceholder progress={file.progress ?? 0} height="100px" key={file.id} />
+                    <UploadPlaceholder progress={file.progress ?? 0} height="109px" key={file.id} />
                   ) : (
                     <BooleanValue key={file.id}>
                       {({ value: documentFormIsOpen, set: setDocumentFormIsOpen }) => (
@@ -173,10 +169,16 @@ const DocumentTypeArea = ({
                               );
                             }}
                           >
-                            {/* TODO: Replace with real card */}
-                            <BaseCard
-                              icon="DOCUMENT"
-                              color="DOCUMENT"
+                            <DocumentCard
+                              file={file}
+                              hideParentInfo
+                              navigable
+                              downloadable={canDownload}
+                              editable={{
+                                status: false,
+                                type: false,
+                                memo: false,
+                              }}
                               onClick={evt => {
                                 evt.stopPropagation();
                                 if (canViewForm) {
@@ -196,9 +198,7 @@ const DocumentTypeArea = ({
                                   />
                                 ),
                               ].filter(Boolean)}
-                            >
-                              <div className={DummyDocumentCard}>{file.id}</div>
-                            </BaseCard>
+                            />
                           </DocumentDragWrapper>
 
                           <SlideView

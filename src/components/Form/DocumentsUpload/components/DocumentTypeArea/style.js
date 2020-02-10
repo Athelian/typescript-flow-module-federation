@@ -51,8 +51,3 @@ export const DocumentTypeAreaBodyStyle: string = css`
   grid-column-gap: 20px;
   grid-row-gap: 30px;
 `;
-
-export const DummyDocumentCard: string = css`
-  width: 195px;
-  height: 100px;
-`;

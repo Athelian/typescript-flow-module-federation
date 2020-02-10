@@ -42,7 +42,6 @@ import {
 } from 'modules/permission/constants/milestone';
 import { DOCUMENT_FORM, DOCUMENT_DELETE } from 'modules/permission/constants/file';
 import { getParentInfo } from 'utils/task';
-import { getByPathWithDefault } from 'utils/fp';
 import { deleteFileMutation } from './mutation';
 
 type Props = {
@@ -56,11 +55,11 @@ type Props = {
 
 const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => void): React$Node =>
   file?.uploading ? (
-    <UploadPlaceholder progress={file?.progress ?? 0} height="210px" key={file?.id} />
+    <UploadPlaceholder progress={file?.progress ?? 0} height="159px" key={file?.id} />
   ) : (
-    <PartnerPermissionsWrapper key={getByPathWithDefault('', 'id', file)} data={file}>
+    <PartnerPermissionsWrapper key={file?.id ?? ''} data={file}>
       {permissions => {
-        const { parentType } = getParentInfo(getByPathWithDefault({}, 'entity', file));
+        const { parentType } = getParentInfo(file?.entity ?? {});
         const [isOpen, setIsOpen] = React.useState(false);
         const hasPermission = React.useCallback(
           (checkPermission: string | Array<string>) => {
