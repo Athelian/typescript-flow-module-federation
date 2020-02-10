@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { documentFragment, ownedByFragment, forbiddenFragment } from 'graphql';
+import { documentFragment, tagFragment, ownedByFragment, forbiddenFragment } from 'graphql';
 
 export const documentListQuery = gql`
   query documentListQuery(
@@ -24,6 +24,7 @@ export const documentListQuery = gql`
     }
   }
   ${ownedByFragment}
+  ${tagFragment}
   ${documentFragment}
   ${forbiddenFragment}
 `;

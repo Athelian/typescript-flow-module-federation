@@ -60,6 +60,9 @@ export const documentFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    tags {
+      ...tagFragment
+    }
     # TODO: move to common fragment for entity
     entity {
       ... on Model {
