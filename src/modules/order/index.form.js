@@ -552,13 +552,13 @@ class OrderFormModule extends React.PureComponent<Props> {
                                 },
                                 {
                                   id: uuid(),
-                                  inCharges: [],
                                   currency: 'USD',
                                   customFields: {
                                     mask: null,
                                     fieldValues: [],
                                   },
                                   tags: [],
+                                  followers: [],
                                   importer: isImporter ? organization : {},
                                   todo: {
                                     tasks: [],

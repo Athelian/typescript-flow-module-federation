@@ -5,8 +5,6 @@ import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
-import { getByPath } from 'utils/fp';
-import FormattedNumber from 'components/FormattedNumber';
 import { CloneButton } from 'components/Buttons';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
 import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
@@ -23,9 +21,9 @@ import validator from 'modules/order/form/validator';
 import { FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
+import Followers from 'components/Followers';
 import {
   SectionHeader,
-  LastModified,
   StatusToggle,
   FieldItem,
   Label,
@@ -36,7 +34,6 @@ import {
   DateInputFactory,
   CustomFieldsFactory,
   EnumSearchSelectInputFactory,
-  UserAssignmentInputFactory,
 } from 'components/Form';
 import { getQuantityForOrderSummary } from 'modules/order/helpers';
 import {
@@ -50,9 +47,9 @@ import {
   ORDER_SET_CUSTOM_FIELDS,
   ORDER_SET_CUSTOM_FIELDS_MASK,
   ORDER_SET_MEMO,
-  ORDER_SET_IN_CHARGES,
   ORDER_SET_IMPORTER,
   ORDER_SET_ARCHIVED,
+  ORDER_SET_FOLLOWERS,
   ORDER_CREATE,
 } from 'modules/permission/constants/order';
 import messages from 'modules/order/messages';
@@ -77,16 +74,28 @@ type Props = {
 const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { updatedAt, updatedBy, archived } = order;
+  const { archived } = order;
   return (
     <MainSectionPlaceholder height={961} isLoading={isLoading}>
       <SectionHeader
         icon="ORDER"
         title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
       >
+        <Subscribe to={[OrderInfoContainer]}>
+          {({ originalValues: initialValues, state, setFieldValue }) => {
+            const values = { ...initialValues, ...state };
+            return (
+              <Followers
+                followers={values?.followers ?? []}
+                setFollowers={value => setFieldValue('followers', value)}
+                organizationIds={[values?.importer?.id, values?.exporter?.id].filter(Boolean)}
+                editable={hasPermission([ORDER_UPDATE, ORDER_SET_FOLLOWERS])}
+              />
+            );
+          }}
+        </Subscribe>
         {!isNew && (
           <>
-            <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
             {!isClone && hasPermission([ORDER_CREATE]) && (
               <CloneButton onClick={() => navigate(`/order/clone/${encodeId(order.id)}`)} />
             )}
@@ -374,36 +383,6 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                   </GridColumn>
 
                   <GridColumn>
-                    <UserAssignmentInputFactory
-                      cacheKey="OrderUserSelect"
-                      groupIds={[
-                        getByPath('id', values.importer),
-                        getByPath('id', values.exporter),
-                      ].filter(Boolean)}
-                      name="inCharges"
-                      values={values.inCharges}
-                      onChange={(name: string, assignments: Array<Object>) =>
-                        setFieldValue(name, assignments)
-                      }
-                      label={
-                        <>
-                          <FormattedMessage
-                            id="components.inputs.inCharge"
-                            defaultMessage="IN CHARGE"
-                          />
-                          {' ('}
-                          <FormattedNumber value={values.inCharges.length} />)
-                        </>
-                      }
-                      infoMessage={
-                        <FormattedMessage
-                          id="modules.Orders.inChargeExplanation"
-                          defaultMessage="You can choose up to 5 people in charge."
-                        />
-                      }
-                      editable={hasPermission([ORDER_UPDATE, ORDER_SET_IN_CHARGES])}
-                    />
-
                     <FieldItem
                       vertical
                       label={
@@ -444,18 +423,8 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                   onRequestClose={() => slideToggle(false)}
                                 >
                                   {opened && (
-                                    <Subscribe
-                                      to={[
-                                        OrderItemsContainer,
-                                        OrderTasksContainer,
-                                        OrderInfoContainer,
-                                      ]}
-                                    >
-                                      {(
-                                        { changeExporter: updateOrderItems },
-                                        { changeExporter: updateTasks },
-                                        { changeExporter: updateOrderInfo }
-                                      ) => (
+                                    <Subscribe to={[OrderInfoContainer]}>
+                                      {({ changeExporter: cleanUpFollowers }) => (
                                         <SelectExporter
                                           cacheKey="OrderSelectExporter"
                                           isRequired
@@ -464,14 +433,15 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                           onSelect={newValue => {
                                             slideToggle(false);
                                             setFieldValue('exporter', newValue);
-                                            updateTasks(values.exporter);
-                                            updateOrderInfo(values.exporter);
-                                            updateOrderItems();
+                                            cleanUpFollowers(values.exporter);
+                                            emitter.emit('CLEAN_ORDERS', {
+                                              action: 'CHANGE_EXPORTER',
+                                            });
                                           }}
                                           warningMessage={
                                             <FormattedMessage
                                               id="modules.Orders.changeExporterWarning"
-                                              defaultMessage="Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Exporter from all Tasks and In Charge. Are you sure you want to change the Exporter?"
+                                              defaultMessage="Changing the Exporter will remove all Items and Batches. Are you sure you want to change the Exporter?"
                                             />
                                           }
                                         />

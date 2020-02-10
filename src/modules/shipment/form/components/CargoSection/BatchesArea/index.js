@@ -49,6 +49,7 @@ import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 import {
+  ShipmentInfoContainer,
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
@@ -135,8 +136,9 @@ function BatchesArea({
   const lastBatchInputIds = React.useRef([]);
   const lastFocusedContainerIndex = React.useRef(focusedContainerIndex);
   return (
-    <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
+    <Subscribe to={[ShipmentInfoContainer, ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
+        { state: shipmentInfo },
         {
           state: { batches },
           setFieldValue,
@@ -326,7 +328,7 @@ function BatchesArea({
                         <React.Fragment key={getByPath('id', batch)}>
                           {isSelectBatchesMode ? (
                             <ShipmentBatchCard
-                              batch={batch}
+                              batch={{ ...batch, shipment: { ...batch.shipment, ...shipmentInfo } }}
                               isRepresented={
                                 isFocusedBatchesPool ||
                                 (!isFocusedBatchesPool && !isFocusedContainer)
@@ -358,7 +360,10 @@ function BatchesArea({
                                     {opened && (
                                       <BatchFormInSlide
                                         isNew={!batch.updatedAt}
-                                        batch={batch}
+                                        batch={{
+                                          ...batch,
+                                          shipment: { ...batch.shipment, ...shipmentInfo },
+                                        }}
                                         onSave={value => {
                                           batchSlideToggle(false);
 
@@ -422,7 +427,10 @@ function BatchesArea({
                                       product: hasPermission(PRODUCT_FORM),
                                       container: hasPermission(CONTAINER_FORM),
                                     }}
-                                    batch={batch}
+                                    batch={{
+                                      ...batch,
+                                      shipment: { ...batch.shipment, ...shipmentInfo },
+                                    }}
                                     isRepresented={
                                       isFocusedBatchesPool ||
                                       (!isFocusedBatchesPool && !isFocusedContainer)

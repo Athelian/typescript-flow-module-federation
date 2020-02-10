@@ -13,6 +13,7 @@ import DocumentsSection from './components/DocumentsSection';
 import ShipmentsSection from './components/ShipmentsSection';
 import ContainersSection from './components/ContainersSection';
 import OrderTasksSection from './components/OrderTasksSection';
+import CleanUpOrder from './components/CleanUpOrder';
 import { OrderInfoContainer, OrderTasksContainer, OrderItemsContainer } from './containers';
 import { OrderFormWrapperStyle } from './style';
 
@@ -112,6 +113,15 @@ export default class OrderForm extends React.Component<Props> {
               values={state}
               tasks={tasks}
               setTaskValue={setFieldValue}
+            />
+          )}
+        </Subscribe>
+        <Subscribe to={[OrderItemsContainer]}>
+          {orderItemsContainer => (
+            <CleanUpOrder
+              orderId={order?.id}
+              isNew={isClone || isNew}
+              orderItemsContainer={orderItemsContainer}
             />
           )}
         </Subscribe>

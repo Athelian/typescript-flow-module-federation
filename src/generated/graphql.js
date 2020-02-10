@@ -9919,6 +9919,7 @@ export type EntityInput = {|
   voyageId?: ?$ElementType<Scalars, 'ID'>,
   containerGroupId?: ?$ElementType<Scalars, 'ID'>,
   containerId?: ?$ElementType<Scalars, 'ID'>,
+  warehouseId?: ?$ElementType<Scalars, 'ID'>,
   timelineDateId?: ?$ElementType<Scalars, 'ID'>,
   projectId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
@@ -33837,11 +33838,14 @@ export type ImageFragmentFragment = ({
 
 export type DocumentFragmentFragment = ({
     ...{ __typename?: 'File' },
-  ...$Pick<File, {| id: *, name: *, path: *, type: *, status: *, size: *, memo: * |}>,
+  ...$Pick<File, {| id: *, name: *, path: *, type: *, size: *, memo: * |}>,
   ...{| ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: ?({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, entity: ?({
       ...{ __typename?: 'Product' },
     ...$Pick<Product, {| id: *, name: * |}>,
     ...{| ownedBy: ({
@@ -34244,7 +34248,10 @@ export type DocumentFormFragmentFragment = ({
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, ownedBy: ({
       ...{ __typename?: 'Organization' },
     ...OwnedByFragmentFragment
-  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, entity: ?({
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, tags: Array<({
+      ...{ __typename?: 'Tag' },
+    ...TagFragmentFragment
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }>, entity: ?({
       ...{ __typename?: 'Product' },
     ...$Pick<Product, {| id: * |}>
   }) | ({

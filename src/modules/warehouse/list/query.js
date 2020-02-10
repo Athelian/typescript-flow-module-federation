@@ -7,6 +7,9 @@ export const warehouseListQuery = gql`
     warehouses(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...warehouseCardFragment
+        ... on Followed {
+          notificationUnseenCount
+        }
       }
       page
       totalPage

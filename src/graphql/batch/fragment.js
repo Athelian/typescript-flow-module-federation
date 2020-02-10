@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-// @TODO change container field to use containerCardFragment
+
 export const batchFormFragment = gql`
   fragment batchFormFragment on Batch {
     id
@@ -15,6 +15,12 @@ export const batchFormFragment = gql`
     }
     ownedBy {
       ...ownedByFragment
+    }
+    followers {
+      ...userAvatarFragment
+    }
+    ... on Followed {
+      notificationUnseenCount
     }
     memo
     no
@@ -66,11 +72,26 @@ export const batchFormFragment = gql`
     }
     shipment {
       ...shipmentCardFragment
+      ... on Shipment {
+        forwarders {
+          ... on Organization {
+            id
+            name
+            types
+            partner {
+              ...partnerCardFragment
+            }
+          }
+        }
+      }
     }
     container {
       ... on Container {
         id
         no
+        ... on Followed {
+          notificationUnseenCount
+        }
         representativeBatch {
           ... on Batch {
             id

@@ -9,6 +9,12 @@ export const shipmentFormQueryFragment = gql`
     updatedBy {
       ...userAvatarFragment
     }
+    followers {
+      ...userAvatarFragment
+    }
+    ... on Followed {
+      notificationUnseenCount
+    }
     memo
     no
     blNo
@@ -68,9 +74,6 @@ export const shipmentFormQueryFragment = gql`
         }
       }
     }
-    inCharges {
-      ...userAvatarFragment
-    }
     tags {
       ...tagFragment
     }
@@ -87,6 +90,12 @@ export const shipmentFormFragment = gql`
     updatedAt
     updatedBy {
       ...userAvatarFragment
+    }
+    followers {
+      ...userAvatarFragment
+    }
+    ... on Followed {
+      notificationUnseenCount
     }
     memo
     no
@@ -144,9 +153,6 @@ export const shipmentFormFragment = gql`
           ...partnerCardFragment
         }
       }
-    }
-    inCharges {
-      ...userAvatarFragment
     }
     totalPackageQuantityOverride
     totalPackageQuantityOverriding
@@ -235,6 +241,9 @@ export const shipmentCardFragment = gql`
     batchCount
     totalPackageQuantity
     orderItemCount
+    ... on Followed {
+      notificationUnseenCount
+    }
     totalVolume {
       ...metricFragment
     }

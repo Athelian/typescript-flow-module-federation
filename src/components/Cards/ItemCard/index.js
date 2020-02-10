@@ -179,7 +179,7 @@ const ItemCard = ({
 
   return (
     <BaseCard
-      showBadge={getByPathWithDefault(0, 'timeline.unreadCount', orderItem) > 0}
+      showBadge={orderItem?.notificationUnseenCount > 0}
       icon="ORDER_ITEM"
       color="ORDER_ITEM"
       showActionsOnHover

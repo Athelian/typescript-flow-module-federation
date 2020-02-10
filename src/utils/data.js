@@ -66,6 +66,10 @@ export const isNotFound = (data: Object): boolean => {
   return getByPath('__typename', data) === 'NotFound';
 };
 
+export const isBadRequest = (data: Object): boolean => {
+  return getByPath('__typename', data) === 'BadRequest';
+};
+
 export const extractForbiddenId = (data: Object): Object => {
   if (isForbidden(data)) {
     const id = getByPathWithDefault(null, 'reference.id', data);

@@ -658,7 +658,6 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                     importer: isImporter ? organization : null,
                                     exporter: isExporter ? organization : null,
                                     forwarders: isForwarder ? [organization] : [],
-                                    inCharges: [],
                                     booked: false,
                                     customFields: {
                                       mask: null,
@@ -668,6 +667,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                     containerGroups: [{}],
                                     voyages: [{}],
                                     tags: [],
+                                    followers: [],
                                     todo: {
                                       tasks: [],
                                       taskTemplate: null,

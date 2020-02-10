@@ -126,9 +126,15 @@ function ContainersArea({
 
   return (
     <Subscribe
-      to={[ShipmentContainersContainer, ShipmentBatchesContainer, ShipmentTimelineContainer]}
+      to={[
+        ShipmentInfoContainer,
+        ShipmentContainersContainer,
+        ShipmentBatchesContainer,
+        ShipmentTimelineContainer,
+      ]}
     >
       {(
+        { state: shipmentInfo },
         {
           originalValues: containersOriginalValues,
           state: containersState,
@@ -260,7 +266,12 @@ function ContainersArea({
                     <div key={container.id} className={SelectContainerCardWrapperStyle}>
                       {isSelectBatchesMode ? (
                         <>
-                          <ShipmentContainerCard container={container} />
+                          <ShipmentContainerCard
+                            container={{
+                              ...container,
+                              shipment: { ...container.shipment, ...shipmentInfo },
+                            }}
+                          />
                           {(() => {
                             if (isFocusedContainer && isSelected) {
                               return (
@@ -371,7 +382,13 @@ function ContainersArea({
                                         {({ value: isOpenDialog, set: toggleDialog }) => (
                                           <>
                                             <ShipmentContainerCard
-                                              container={container}
+                                              container={{
+                                                ...container,
+                                                shipment: {
+                                                  ...container.shipment,
+                                                  ...shipmentInfo,
+                                                },
+                                              }}
                                               editable={{
                                                 no: hasPermission([
                                                   CONTAINER_UPDATE,
@@ -526,48 +543,44 @@ function ContainersArea({
                                     </>
                                   )}
                                 </BooleanValue>
-                                <Subscribe to={[ShipmentInfoContainer]}>
-                                  {({ state: shipmentInfo }) => (
-                                    <SlideView
-                                      isOpen={isOpenContainerForm}
-                                      onRequestClose={() => toggleContainerForm(false)}
-                                      shouldConfirm={() => {
-                                        const button = document.getElementById(
-                                          'container_form_save_button'
-                                        );
-                                        return button;
+                                <SlideView
+                                  isOpen={isOpenContainerForm}
+                                  onRequestClose={() => toggleContainerForm(false)}
+                                  shouldConfirm={() => {
+                                    const button = document.getElementById(
+                                      'container_form_save_button'
+                                    );
+                                    return button;
+                                  }}
+                                >
+                                  {isOpenContainerForm && (
+                                    <ContainerFormInSlide
+                                      isNew={!container.updatedAt}
+                                      container={{
+                                        ...container,
+                                        shipment: container.shipment
+                                          ? { ...container.shipment, ...shipmentInfo }
+                                          : shipmentInfo,
                                       }}
-                                    >
-                                      {isOpenContainerForm && (
-                                        <ContainerFormInSlide
-                                          isNew={!container.updatedAt}
-                                          container={{
-                                            ...container,
-                                            shipment: container.shipment
-                                              ? { ...container.shipment, ...shipmentInfo }
-                                              : shipmentInfo,
-                                          }}
-                                          onSave={newContainer => {
-                                            const { batches: newBatches } = newContainer;
-                                            setBatchesState('batches', [
-                                              ...batches.filter(
-                                                ({ container: batchContainer }) =>
-                                                  isNullOrUndefined(batchContainer) ||
-                                                  batchContainer.id !== container.id
-                                              ),
-                                              ...newBatches.map(batch => ({
-                                                ...batch,
-                                                container: newContainer,
-                                              })),
-                                            ]);
-                                            setDeepFieldValue(`containers.${index}`, newContainer);
-                                            toggleContainerForm(false);
-                                          }}
-                                        />
-                                      )}
-                                    </SlideView>
+                                      onSave={newContainer => {
+                                        const { batches: newBatches } = newContainer;
+                                        setBatchesState('batches', [
+                                          ...batches.filter(
+                                            ({ container: batchContainer }) =>
+                                              isNullOrUndefined(batchContainer) ||
+                                              batchContainer.id !== container.id
+                                          ),
+                                          ...newBatches.map(batch => ({
+                                            ...batch,
+                                            container: newContainer,
+                                          })),
+                                        ]);
+                                        setDeepFieldValue(`containers.${index}`, newContainer);
+                                        toggleContainerForm(false);
+                                      }}
+                                    />
                                   )}
-                                </Subscribe>
+                                </SlideView>
                               </>
                             )}
                           </BooleanValue>

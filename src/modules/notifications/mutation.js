@@ -1,10 +1,10 @@
 // @flow
 import gql from 'graphql-tag';
 
-const notificationReadMutation = gql`
-  mutation notificationRead($id: ID!) {
-    notificationRead(id: $id)
+export const archiveAllMutation = gql`
+  mutation notificationArchiveAll {
+    notificationArchiveAll
   }
 `;
 
-export default notificationReadMutation;
+export default archiveAllMutation;

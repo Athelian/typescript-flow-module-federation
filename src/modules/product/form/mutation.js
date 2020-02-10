@@ -91,6 +91,7 @@ export const updateProductMutation: Object = gql`
 `;
 
 export const prepareParsedProductInput = (originalValues: ?Object, newValues: Object): Object => ({
+  ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
   ...parseParentIdField(
     'importerId',
     getByPathWithDefault(null, 'importer', originalValues),

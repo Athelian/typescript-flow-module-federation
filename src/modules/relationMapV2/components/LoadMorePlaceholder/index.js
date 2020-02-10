@@ -26,8 +26,8 @@ export default function LoadMorePlaceholder() {
         width={width}
         height={75}
         speed={2}
-        primaryColor={colors.GRAY_VERY_LIGHT}
-        secondaryColor={colors.WHITE}
+        backgroundColor={colors.GRAY_VERY_LIGHT}
+        foregroundColor={colors.WHITE}
       >
         {selectors.isShipmentFocus ? (
           <>

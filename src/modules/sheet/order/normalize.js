@@ -25,10 +25,6 @@ export default function normalizeSheetOrderInput(
       return {
         tagIds: newValue.map(tag => tag.id).filter(Boolean),
       };
-    case 'inCharges':
-      return {
-        inChargeIds: newValue.map(user => user.id),
-      };
     case 'todo':
       return parseTodoField(oldValue, newValue);
     case 'mask':

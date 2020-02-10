@@ -134,9 +134,6 @@ export const timelineDateFullFragment = gql`
   fragment timelineDateFullFragment on TimelineDate {
     id
     date
-    assignedTo {
-      ...userAvatarFragment
-    }
     approvedBy {
       ...userAvatarFragment
     }

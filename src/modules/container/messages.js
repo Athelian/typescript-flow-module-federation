@@ -34,17 +34,9 @@ export default defineMessages({
     id: 'modules.container.warehouseArrivalAgreedDate',
     defaultMessage: 'Agreed Arrival Date',
   },
-  warehouseArrivalAgreedDateAssignedTo: {
-    id: 'modules.container.warehouseArrivalAgreedDateAssignedTo',
-    defaultMessage: 'Warehouse Arrival Agreed Assigned To'.toUpperCase(),
-  },
   warehouseArrivalActualDate: {
     id: 'modules.container.warehouseArrivalActualDate',
     defaultMessage: 'Actual Arrival Date',
-  },
-  warehouseArrivalActualDateAssignedTo: {
-    id: 'modules.container.warehouseArrivalActualDateAssignedTo',
-    defaultMessage: 'Warehouse Arrival Actual Assigned To'.toUpperCase(),
   },
   warehouseArrivalActualDateApproved: {
     id: 'modules.container.warehouseArrivalActualDateApproved',
@@ -53,10 +45,6 @@ export default defineMessages({
   departureDate: {
     id: 'modules.container.departureDate',
     defaultMessage: 'Departure Date',
-  },
-  departureDateAssignedTo: {
-    id: 'modules.container.departureDateAssignedTo',
-    defaultMessage: 'Departure Date Assigned To',
   },
   departureDateApproved: {
     id: 'modules.container.departureDateApproved',

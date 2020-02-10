@@ -13,7 +13,6 @@ import {
 import { FormField } from 'modules/form';
 import messages from 'modules/batch/messages';
 import Icon from 'components/Icon';
-import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import TaskRing from 'components/TaskRing';
 import ProductImage from 'components/ProductImage';
@@ -58,8 +57,6 @@ import {
   VolumeWrapperStyle,
   OrderWrapperStyle,
   ShipmentWrapperStyle,
-  OrderInChargeWrapperStyle,
-  InChargeWrapperStyle,
   TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
   RepresentIconStyle,
@@ -205,6 +202,7 @@ const ContainerBatchCard = ({
       actions={actions}
       selectable={selectable}
       isArchived={archived}
+      showBadge={batch?.notificationUnseenCount > 0}
       {...rest}
     >
       <div
@@ -450,25 +448,6 @@ const ContainerBatchCard = ({
             />
           </div>
 
-          <div className={OrderInChargeWrapperStyle}>
-            <Label>
-              <FormattedMessage
-                id="components.cards.orderInCharge"
-                defaultMessage="ORDER IN CHARGE"
-              />
-            </Label>
-            <div className={InChargeWrapperStyle}>
-              {order.inCharges &&
-                order.inCharges.map(inCharge => (
-                  <UserAvatar
-                    firstName={inCharge.firstName}
-                    lastName={inCharge.lastName}
-                    key={inCharge.id}
-                  />
-                ))}
-            </div>
-          </div>
-
           <div className={TagsAndTaskWrapperStyle}>
             <div className={BatchTagsWrapperStyle}>
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
@@ -485,7 +464,7 @@ ContainerBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ContainerBatchCard, 'batch', {
   width: '195px',
-  height: '391px',
+  height: '331px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

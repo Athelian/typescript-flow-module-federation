@@ -94,7 +94,6 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                         isNew: true,
                         name: `task - ${tasks.length + 1}`,
                         tags: [],
-                        assignedTo: [],
                         approvers: [],
                         approvable: false,
                         milestone,

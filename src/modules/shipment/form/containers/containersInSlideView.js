@@ -12,7 +12,7 @@ const initValues = {
   containers: [],
 };
 
-export default class ContainersContainer extends Container<FormState> {
+export default class ContainersInSlideViewContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;

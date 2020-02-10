@@ -1,35 +1,10 @@
 // @flow
+import type { Order } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import { isEquals, getByPath } from 'utils/fp';
+import { isEquals } from 'utils/fp';
 
-type FormState = {
-  archived?: boolean,
-  piNo: ?string,
-  poNo: ?string,
-  currency: ?string,
-  deliveryPlace: ?string,
-  importer?: Object,
-  exporter?: { id: string, name: string },
-  incoterm: ?string,
-  issuedAt: ?Date,
-  deliveryDate: ?Date,
-  memo: ?string,
-  shipments: Array<Object>,
-  containers: Array<Object>,
-  inCharges: Array<Object>,
-  customFields: Object,
-  totalPrice: ?Object,
-  totalOrdered: number,
-  totalBatched: number,
-  totalShipped: number,
-  orderItemCount: number,
-  batchCount: number,
-  batchShippedCount: number,
-  shipmentCount: number,
-};
-
-const initValues: FormState = {
+const initValues: Order = {
   piNo: null,
   poNo: null,
   currency: 'USD',
@@ -38,9 +13,9 @@ const initValues: FormState = {
   issuedAt: null,
   deliveryDate: null,
   memo: null,
+  followers: [],
   shipments: [],
   containers: [],
-  inCharges: [],
   customFields: {
     mask: null,
     fieldValues: [],
@@ -55,7 +30,7 @@ const initValues: FormState = {
   shipmentCount: 0,
 };
 
-export default class OrderInfoContainer extends Container<FormState> {
+export default class OrderInfoContainer extends Container<Order> {
   state = initValues;
 
   originalValues = initValues;
@@ -80,14 +55,12 @@ export default class OrderInfoContainer extends Container<FormState> {
     this.originalValues = { ...parsedValues };
   };
 
-  changeExporter = (prevExporter: Object) => {
-    this.setState(state => {
-      const { inCharges } = state;
-      return {
-        inCharges: inCharges.filter(
-          user => getByPath('organization.id', user) !== getByPath('id', prevExporter)
-        ),
-      };
-    });
+  changeExporter = (previousExporter: Object) => {
+    this.setState(prevState => ({
+      ...prevState,
+      followers: prevState.followers?.filter(
+        follower => follower?.organization?.id !== previousExporter?.organization?.id
+      ),
+    }));
   };
 }

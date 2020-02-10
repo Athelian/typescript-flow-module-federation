@@ -41,16 +41,6 @@ export default function normalizeSheetShipmentInput(
             rest
         ),
       };
-    case 'inCharges':
-      return {
-        inChargeIds: newValue.map(user => user.id),
-      };
-    case 'totalWeight':
-      return {
-        totalWeightOverride: newValue.value ? removeTypename(newValue.value) : null,
-        totalWeightOverriding: newValue.auto,
-        totalWeightDisplayMetric: newValue.displayMetric,
-      };
     case 'totalVolume':
       return {
         totalVolumeOverride: newValue.value ? removeTypename(newValue.value) : null,
@@ -164,8 +154,6 @@ export function normalizeSheetTimelineDateInput(
         return {
           date: value ? new Date(value) : null,
         };
-      case 'assignedTo':
-        return { assignedToIds: value.map(user => user?.id) };
       case 'approved':
         return { approvedById: value?.user?.id ?? null };
       case 'timelineDateRevisions':

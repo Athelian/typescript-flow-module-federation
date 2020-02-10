@@ -6,7 +6,7 @@ import emitter from 'utils/emitter';
 type Props = {|
   to: string,
   href?: string,
-  className: string,
+  className?: string,
   children: React$Node,
   onClick?: Event => void,
 |};

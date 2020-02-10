@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type { Warehouse } from 'generated/graphql';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import BaseCard from 'components/Cards';
@@ -15,15 +16,7 @@ import {
 } from './style';
 
 type Props = {|
-  warehouse: {
-    id: string,
-    name: string,
-    ownedBy: {
-      name: string,
-    },
-    locality: ?string,
-    region: ?string,
-  },
+  warehouse: Warehouse,
   onClick: Function,
 |};
 
@@ -37,7 +30,13 @@ const ShipmentWarehouseCard = ({ warehouse, onClick, ...rest }: Props) => {
   const actions = [];
 
   return (
-    <BaseCard icon="WAREHOUSE" color="WAREHOUSE" actions={actions} {...rest}>
+    <BaseCard
+      icon="WAREHOUSE"
+      color="WAREHOUSE"
+      actions={actions}
+      showBadge={warehouse?.notificationUnseenCount > 0}
+      {...rest}
+    >
       <div
         className={ShipmentWarehouseCardWrapperStyle}
         onClick={() => onClick(warehouse)}

@@ -101,14 +101,10 @@ function normalizeInput(
         case 'exporter':
           return {
             exporterId: newValue?.id ?? null,
-            inChargeIds: (item?.inCharges ?? [])
-              .filter(user => user?.organization?.id !== item?.exporter?.id)
-              .map(user => user.id),
             orderItems: [],
             todo: {
               tasks: (item?.todo?.tasks ?? []).map(
                 ({
-                  assignedTo,
                   approvers,
                   inProgressAt,
                   inProgressBy,
@@ -121,9 +117,6 @@ function normalizeInput(
                   approvedAt,
                   approvedBy,
                 }) => ({
-                  assignedToIds: (assignedTo ?? [])
-                    .filter(user => user?.organization?.id !== item?.exporter?.id)
-                    .map(user => user.id),
                   approverIds: (approvers ?? [])
                     .filter(user => user?.organization?.id !== item?.exporter?.id)
                     .map(user => user.id),

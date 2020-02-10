@@ -20,8 +20,11 @@ export const warehouseFormFragment = gql`
         }
       }
     }
-    inCharges {
+    followers {
       ...userAvatarFragment
+    }
+    ... on Followed {
+      notificationUnseenCount
     }
     organizations {
       ... on Organization {

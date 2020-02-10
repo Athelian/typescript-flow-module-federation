@@ -87,8 +87,8 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
         }
       ) => {
         const milestoneIndex = milestones.findIndex(milestone => milestone.id === milestoneId);
-        const currentMilestone = milestones[milestoneIndex];
-        const originalValues = originalMilestones[milestoneIndex] || {};
+        const currentMilestone = milestones?.[milestoneIndex] ?? {};
+        const originalValues = originalMilestones?.[milestoneIndex] ?? {};
 
         const validation = validator({
           name: `${milestoneId}.name`,

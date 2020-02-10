@@ -57,7 +57,6 @@ class NewShipmentForm extends React.PureComponent<Props> {
     const { initDataForSlideView } = this.props;
     const shipment = {
       id: uuid(),
-      inCharges: [],
       booked: false,
       customFields: {
         mask: null,
@@ -67,6 +66,7 @@ class NewShipmentForm extends React.PureComponent<Props> {
       containerGroups: [{}],
       voyages: [{}],
       tags: [],
+      followers: [],
       todo: {
         tasks: [],
         taskTemplate: null,

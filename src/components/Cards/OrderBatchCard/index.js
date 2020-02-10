@@ -193,6 +193,7 @@ const OrderBatchCard = ({
       showActionsOnHover
       actions={actions}
       isArchived={archived}
+      showBadge={batch?.notificationUnseenCount > 0}
       {...rest}
     >
       <div

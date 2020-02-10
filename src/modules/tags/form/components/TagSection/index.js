@@ -445,8 +445,8 @@ const TagSection = ({ isNew, tag }: Props) => {
                                     </div>
                                     <Label>
                                       <FormattedMessage
-                                        id="modules.Tags.file"
-                                        defaultMessage="FILE"
+                                        id="modules.Tags.document"
+                                        defaultMessage="Document"
                                       />
                                     </Label>
                                   </div>

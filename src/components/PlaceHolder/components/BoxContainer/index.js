@@ -25,8 +25,8 @@ export default function BoxContainer({ height, children }: Props) {
           width={880}
           height={40}
           speed={2}
-          primaryColor={colors.GRAY_VERY_LIGHT}
-          secondaryColor={colors.GRAY_SUPER_LIGHT}
+          backgroundColor={colors.GRAY_VERY_LIGHT}
+          foregroundColor={colors.GRAY_SUPER_LIGHT}
         >
           <rect x="10" y="10" rx="5" ry="5" width="20" height="20" />
           <rect x="40" y="10" rx="5" ry="5" width="200" height="20" />

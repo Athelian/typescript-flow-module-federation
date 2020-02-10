@@ -10,6 +10,7 @@ import { getByPath } from 'utils/fp';
 import { isForbidden } from 'utils/data';
 import usePermission from 'hooks/usePermission';
 import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
+import Followers from 'components/Followers';
 import ProductImage from 'components/ProductImage';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
@@ -38,12 +39,12 @@ import {
   PRODUCT_SET_TAGS,
   PRODUCT_SET_MEMO,
   PRODUCT_SET_DOCUMENTS,
+  PRODUCT_SET_FOLLOWERS,
   PRODUCT_DOCUMENT_CREATE,
   PRODUCT_DOCUMENT_DELETE,
 } from 'modules/permission/constants/product';
 import {
   SectionHeader,
-  LastModified,
   StatusToggle,
   FieldItem,
   Label,
@@ -83,8 +84,6 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
 
 const ProductSection = ({ isNew, isOwner, product }: Props) => {
   const { hasPermission } = usePermission(isOwner);
-  const updatedAt = getByPath('updatedAt', product);
-  const updatedBy = getByPath('updatedBy', product);
   const archived = getByPath('archived', product);
   return (
     <>
@@ -92,9 +91,22 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
         icon="PRODUCT"
         title={<FormattedMessage id="modules.Products.product" defaultMessage="PRODUCT" />}
       >
+        <Subscribe to={[ProductInfoContainer]}>
+          {({ originalValues: initialValues, state, setFieldValue }) => {
+            const values = { ...initialValues, ...state };
+            return (
+              <Followers
+                followers={values?.followers ?? []}
+                setFollowers={value => setFieldValue('followers', value)}
+                organizationIds={[values?.importer?.id].filter(Boolean)}
+                editable={hasPermission([PRODUCT_UPDATE, PRODUCT_SET_FOLLOWERS])}
+              />
+            );
+          }}
+        </Subscribe>
+
         {!isNew && (
           <>
-            <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
             <BooleanValue>
               {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                 <StatusToggle
@@ -375,7 +387,10 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                               changeTags('tags', value);
                             }}
                             onClickRemove={value => {
-                              changeTags('tags', tags.filter(({ id }) => id !== value.id));
+                              changeTags(
+                                'tags',
+                                tags.filter(({ id }) => id !== value.id)
+                              );
                             }}
                             editable={{
                               set:

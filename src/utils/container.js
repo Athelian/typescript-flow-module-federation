@@ -12,6 +12,7 @@ export const generateContainer = () =>
   injectUid({
     batches: [],
     tags: [],
+    followers: [],
     warehouseArrivalActualDateAssignedTo: [],
     warehouseArrivalAgreedDateAssignedTo: [],
     representativeBatch: null,

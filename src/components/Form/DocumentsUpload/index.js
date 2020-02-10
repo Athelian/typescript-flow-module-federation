@@ -86,7 +86,10 @@ const DocumentsUpload = ({
   }, [filesState]);
 
   if (
-    !isEquals(files.map(pick(editableFields)), previousFilesRef.current.map(pick(editableFields)))
+    !isEquals(
+      (files ?? []).map(pick(editableFields)),
+      (previousFilesRef.current ?? []).map(pick(editableFields))
+    )
   ) {
     previousFilesRef.current = files.map(pick(SELECTED_FIELDS));
     setFileState(

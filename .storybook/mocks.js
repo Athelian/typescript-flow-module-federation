@@ -8,6 +8,7 @@ import type {
   TaskCount,
   Milestone,
   Timeline,
+  Notification,
 } from 'generated/graphql';
 
 const baseUserMock = (): User => {
@@ -299,8 +300,18 @@ const baseProjectMock = (): Project => {
   };
 };
 
+const baseNotificationMock = (): Notification => {
+  return {
+    id: faker.random.uuid(),
+    createdAt: faker.date.future(),
+    body: faker.lorem.paragraph(),
+    __typename: 'Notification',
+  };
+};
+
 const usersMock: Array<User> = range(10).map(baseUserMock);
 const projectsMock: Array<Project> = range(10).map(baseProjectMock);
+const notificationsMock: Array<Notification> = range(10).map(baseNotificationMock);
 
 export const mocks = {
   User: () => {
@@ -328,6 +339,16 @@ export const mocks = {
   ProjectPayloadPagination: () => {
     return {
       nodes: projectsMock,
+      page: 1,
+      totalPage: 1,
+    };
+  },
+  Notification: () => {
+    return baseNotificationMock();
+  },
+  NotificationPayloadPagination: () => {
+    return {
+      nodes: notificationsMock,
       page: 1,
       totalPage: 1,
     };

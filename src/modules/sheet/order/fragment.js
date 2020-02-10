@@ -15,9 +15,6 @@ export const sheetOrderFragment = gql`
     incoterm
     deliveryPlace
     deliveryDate
-    inCharges {
-      ...userAvatarFragment
-    }
     importer {
       ...partnerNameFragment
     }

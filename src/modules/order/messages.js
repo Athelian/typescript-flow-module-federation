@@ -554,10 +554,6 @@ export default defineMessages({
     id: 'modules.Orders.form.newItems',
     defaultMessage: 'NEW ITEMS',
   },
-  inCharge: {
-    id: 'modules.Orders.inCharge',
-    defaultMessage: 'IN CHARGE',
-  },
   autoFillBatch: {
     id: 'modules.Orders.autoFillBatch',
     defaultMessage: 'AUTOFILL BATCH',
@@ -589,6 +585,6 @@ export default defineMessages({
   changeExporterWarning: {
     id: 'modules.Orders.changeExporterWarning',
     defaultMessage:
-      'Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Exporter from all Tasks and In Charge. Are you sure you want to change the Exporter?',
+      'Changing the Exporter will remove all Items and Batches. Are you sure you want to change the Exporter?',
   },
 });

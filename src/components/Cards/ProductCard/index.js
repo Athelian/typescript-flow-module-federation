@@ -68,7 +68,14 @@ class ProductCard extends React.PureComponent<Props, State> {
     const { archived, name, serial, tags, files = [], productProviders, todo, importer } = product;
 
     return (
-      <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions} isArchived={archived} {...rest}>
+      <BaseCard
+        icon="PRODUCT"
+        color="PRODUCT"
+        actions={actions}
+        isArchived={archived}
+        showBadge={product?.notificationUnseenCount > 0}
+        {...rest}
+      >
         <div className={ProductCardWrapperStyle} onClick={onClick} role="presentation">
           <div className={ProductImageWrapperStyle}>
             <ProductImage height="75px" className={ProductImageStyle} file={files[activeImage]} />

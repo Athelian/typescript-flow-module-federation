@@ -12,6 +12,7 @@ export const SHIPMENT_DOCUMENT_SET_TAGS = 'shipment.files.setTags';
 export const SHIPMENT_DOCUMENT_SET_TYPE = 'shipment.files.setType';
 export const SHIPMENT_DOCUMENT_SET_ENTITY = 'shipment.files.setEntity';
 export const SHIPMENT_DOCUMENT_SET_MEMO = 'shipment.files.setMemo';
+export const SHIPMENT_SET_FOLLOWERS = 'shipment.shipments.setFollowers';
 export const SHIPMENT_SET_ARCHIVED = 'shipment.shipments.setArchived';
 export const SHIPMENT_SET_DOCUMENTS = 'shipment.shipments.setDocuments';
 export const SHIPMENT_SET_IMPORTER = 'shipment.shipments.setImporter';

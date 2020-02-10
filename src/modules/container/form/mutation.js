@@ -113,6 +113,7 @@ export const prepareParsedContainerInput = ({
 
   return {
     ...(!inContainerForm && originalValues ? { id: originalValues.id } : {}),
+    ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
     ...parseGenericField(
       'containerType',
@@ -128,11 +129,6 @@ export const prepareParsedContainerInput = ({
       'warehouseArrivalAgreedDate',
       getByPathWithDefault(null, 'warehouseArrivalAgreedDate', originalValues),
       newValues.warehouseArrivalAgreedDate
-    ),
-    ...parseArrayOfIdsField(
-      'warehouseArrivalAgreedDateAssignedToIds',
-      getByPathWithDefault([], 'warehouseArrivalAgreedDateAssignedTo', originalValues),
-      newValues.warehouseArrivalAgreedDateAssignedTo
     ),
     ...parseApprovalField(
       'warehouseArrivalAgreedDateApprovedById',
@@ -157,11 +153,6 @@ export const prepareParsedContainerInput = ({
       'warehouseArrivalActualDate',
       getByPathWithDefault(null, 'warehouseArrivalActualDate', originalValues),
       newValues.warehouseArrivalActualDate
-    ),
-    ...parseArrayOfIdsField(
-      'warehouseArrivalActualDateAssignedToIds',
-      getByPathWithDefault([], 'warehouseArrivalActualDateAssignedTo', originalValues),
-      newValues.warehouseArrivalActualDateAssignedTo
     ),
     ...parseApprovalField(
       'warehouseArrivalActualDateApprovedById',
@@ -206,11 +197,6 @@ export const prepareParsedContainerInput = ({
       'departureDate',
       getByPathWithDefault(null, 'departureDate', originalValues),
       newValues.departureDate
-    ),
-    ...parseArrayOfIdsField(
-      'departureDateAssignedToIds',
-      getByPathWithDefault([], 'departureDateAssignedTo', originalValues),
-      newValues.departureDateAssignedTo
     ),
     ...parseApprovalField(
       'departureDateApprovedById',

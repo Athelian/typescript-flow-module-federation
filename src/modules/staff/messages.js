@@ -110,4 +110,8 @@ export default defineMessages({
     id: 'modules.Users.organizations',
     defaultMessage: 'Organizations',
   },
+  users: {
+    id: 'components.Users.users',
+    defaultMessage: 'Users',
+  },
 });

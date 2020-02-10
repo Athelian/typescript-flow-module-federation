@@ -22,7 +22,6 @@ import {
   ORDER_SET_DELIVERY_PLACE,
   ORDER_SET_DOCUMENTS,
   ORDER_SET_EXPORTER,
-  ORDER_SET_IN_CHARGES,
   ORDER_SET_INCOTERM,
   ORDER_SET_ISSUE_AT,
   ORDER_SET_MEMO,
@@ -115,20 +114,6 @@ export default function transformSheetOrder({
         order,
         'poNo',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_PO_NO)
-      ),
-    },
-    {
-      columnKey: 'order.inCharges',
-      type: 'user_assignment',
-      computed: root => {
-        const currentOrder = getOrderFromRoot(root);
-        return [currentOrder?.importer?.id, currentOrder?.exporter?.id].filter(Boolean);
-      },
-      ...transformValueField(
-        basePath,
-        order,
-        'inCharges',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_IN_CHARGES)
       ),
     },
     {

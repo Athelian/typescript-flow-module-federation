@@ -12,7 +12,7 @@ export default defineMessages({
   },
   viewAll: {
     id: 'components.Header.notification.viewAll',
-    defaultMessage: 'VIEW ALL NOTIFICATIONS',
+    defaultMessage: 'VIEW ALL',
   },
   noNotifications: {
     id: 'components.Header.notification.noNotifications',

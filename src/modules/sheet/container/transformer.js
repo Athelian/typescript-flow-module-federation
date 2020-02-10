@@ -16,9 +16,6 @@ import {
   CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
   CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
   CONTAINER_APPROVE_DEPARTURE_DATE,
-  CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
-  CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
-  CONTAINER_ASSIGN_DEPARTURE_DATE,
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
   CONTAINER_SET_CONTAINER_OPTION,
@@ -146,25 +143,6 @@ export default function transformSheetContainer({
       ),
     },
     {
-      columnKey: 'container.warehouseArrivalAgreedDateAssignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [
-          currentShipment?.importer?.id,
-          currentShipment?.exporter?.id,
-          ...(currentShipment?.forwarders ?? []).map(f => f.id),
-        ].filter(Boolean);
-      },
-      ...transformValueField(
-        basePath,
-        container,
-        'warehouseArrivalAgreedDateAssignedTo',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE)
-      ),
-    },
-    {
       columnKey: 'container.warehouseArrivalAgreedDateApproved',
       type: 'approval',
       ...transformValueField(
@@ -184,25 +162,6 @@ export default function transformSheetContainer({
         'warehouseArrivalActualDate',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_ACTUAL_ARRIVAL_DATE)
-      ),
-    },
-    {
-      columnKey: 'container.warehouseArrivalActualDateAssignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [
-          currentShipment?.importer?.id,
-          currentShipment?.exporter?.id,
-          ...(currentShipment?.forwarders ?? []).map(f => f.id),
-        ].filter(Boolean);
-      },
-      ...transformValueField(
-        basePath,
-        container,
-        'warehouseArrivalActualDateAssignedTo',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE)
       ),
     },
     {
@@ -303,25 +262,6 @@ export default function transformSheetContainer({
         'departureDate',
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_DEPARTURE_DATE)
-      ),
-    },
-    {
-      columnKey: 'container.departureDateAssignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [
-          currentShipment?.importer?.id,
-          currentShipment?.exporter?.id,
-          ...(currentShipment?.forwarders ?? []).map(f => f.id),
-        ].filter(Boolean);
-      },
-      ...transformValueField(
-        basePath,
-        container,
-        'departureDateAssignedTo',
-        hasPermission =>
-          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_ASSIGN_DEPARTURE_DATE)
       ),
     },
     {

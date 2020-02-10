@@ -91,7 +91,13 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
   const exporter = getByPathWithDefault(null, 'orderItem.order.exporter', batch);
 
   return (
-    <BaseCard icon="BATCH" color="BATCH" isArchived={archived} {...rest}>
+    <BaseCard
+      icon="BATCH"
+      color="BATCH"
+      isArchived={archived}
+      showBadge={batch?.notificationUnseenCount > 0}
+      {...rest}
+    >
       <div className={BatchCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ProductWrapperStyle}>
           <ProductImage

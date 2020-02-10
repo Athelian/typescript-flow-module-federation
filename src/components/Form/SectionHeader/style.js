@@ -7,7 +7,7 @@ export const SectionHeaderWrapperStyle: string = css`
   grid-template-columns: 1fr;
   ${layout.GRID_HORIZONTAL};
   grid-template-rows: 40px;
-  grid-gap: 40px;
+  grid-gap: 20px;
   align-items: center;
   width: 100%;
 `;

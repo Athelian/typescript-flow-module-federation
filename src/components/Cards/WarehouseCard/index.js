@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Warehouse } from 'generated/graphql';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import withForbiddenCard from 'hoc/withForbiddenCard';
@@ -19,13 +20,7 @@ type Props = {|
   selectable: boolean,
   readOnly: boolean,
   actions: Array<React.Node>,
-  warehouse: {
-    id: string,
-    name: string,
-    ownedBy: {
-      name: string,
-    },
-  },
+  warehouse: Warehouse,
 |};
 
 const defaultProps = {
@@ -40,12 +35,13 @@ const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, actions, ...r
 
   return (
     <BaseCard
-      {...rest}
       icon="WAREHOUSE"
       color="WAREHOUSE"
       actions={selectable || readOnly ? [] : actions}
       selectable={selectable}
       readOnly={readOnly}
+      showBadge={warehouse?.notificationUnseenCount > 0}
+      {...rest}
     >
       <div role="presentation" className={WarehouseCardWrapperStyle} onClick={onClick}>
         <img className={WarehouseCardImageStyle} src={FALLBACK_IMAGE} alt="warehouse_image" />

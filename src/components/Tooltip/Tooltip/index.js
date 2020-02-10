@@ -3,7 +3,7 @@ import * as React from 'react';
 import Tippy from '@tippy.js/react';
 
 type OptionalProps = {
-  delay?: number,
+  delay?: number | [number, number],
   maxWidth?: number,
 };
 

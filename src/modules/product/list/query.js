@@ -21,6 +21,9 @@ export const productListQuery = gql`
     products(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...productCardWithOwnedFragment
+        ... on Followed {
+          notificationUnseenCount
+        }
         ...forbiddenFragment
       }
       page

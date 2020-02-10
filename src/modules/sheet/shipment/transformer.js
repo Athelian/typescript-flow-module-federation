@@ -17,7 +17,6 @@ import {
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
-  SHIPMENT_ASSIGN_TIMELINE_DATE,
   SHIPMENT_SET_ARCHIVED,
   SHIPMENT_SET_BL_DATE,
   SHIPMENT_SET_BL_NO,
@@ -31,7 +30,6 @@ import {
   SHIPMENT_SET_DOCUMENTS,
   SHIPMENT_SET_EXPORTER,
   SHIPMENT_SET_FORWARDERS,
-  SHIPMENT_SET_IN_CHARGE,
   SHIPMENT_SET_INCOTERM,
   SHIPMENT_SET_INVOICE_NO,
   SHIPMENT_SET_LOAD_TYPE,
@@ -332,24 +330,6 @@ export default function transformSheetShipment({
       ),
     },
     {
-      columnKey: 'shipment.inCharges',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [
-          currentShipment?.importer?.id,
-          currentShipment?.exporter?.id,
-          ...(currentShipment?.forwarders ?? []).map(f => f.id),
-        ].filter(Boolean);
-      },
-      ...transformValueField(
-        basePath,
-        shipment,
-        'inCharges',
-        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_IN_CHARGE)
-      ),
-    },
-    {
       columnKey: 'shipment.totalBatchQuantity',
       type: 'number',
       ...transformComputedField(basePath, shipment, 'totalBatchQuantity', root =>
@@ -578,21 +558,6 @@ export default function transformSheetShipment({
       ),
     },
     {
-      columnKey: 'shipment.cargoReady.assignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [currentShipment?.importer?.id, currentShipment?.exporter?.id].filter(Boolean);
-      },
-      ...transformValueField(
-        `${basePath}.cargoReady`,
-        shipment?.cargoReady ?? null,
-        'assignedTo',
-        hasPermission =>
-          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
-      ),
-    },
-    {
       columnKey: 'shipment.cargoReady.approved',
       type: 'approval',
       ...transformValueField(
@@ -666,21 +631,6 @@ export default function transformSheetShipment({
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.voyage.0.departure.assignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [currentShipment?.importer?.id, currentShipment?.exporter?.id].filter(Boolean);
-      },
-      ...transformValueField(
-        `${basePath}.voyages.0.departure`,
-        shipment?.voyages?.[0]?.departure ?? null,
-        'assignedTo',
-        hasPermission =>
-          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
       ),
     },
     {
@@ -780,21 +730,6 @@ export default function transformSheetShipment({
       ),
     },
     {
-      columnKey: 'shipment.voyage.0.firstTransitArrival.assignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [currentShipment?.importer?.id, currentShipment?.exporter?.id].filter(Boolean);
-      },
-      ...transformValueField(
-        `${basePath}.voyages.0.arrival`,
-        nbOfVoyages > 1 ? shipment?.voyages?.[0]?.arrival ?? null : null,
-        'assignedTo',
-        hasPermission =>
-          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
-      ),
-    },
-    {
       columnKey: 'shipment.voyage.0.firstTransitArrival.approved',
       type: 'approval',
       ...transformValueField(
@@ -854,21 +789,6 @@ export default function transformSheetShipment({
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.voyage.1.firstTransitDeparture.assignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [currentShipment?.importer?.id, currentShipment?.exporter?.id].filter(Boolean);
-      },
-      ...transformValueField(
-        `${basePath}.voyages.1.departure`,
-        nbOfVoyages > 1 ? shipment?.voyages?.[1]?.departure ?? null : null,
-        'assignedTo',
-        hasPermission =>
-          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
       ),
     },
     {
@@ -968,21 +888,6 @@ export default function transformSheetShipment({
       ),
     },
     {
-      columnKey: 'shipment.voyage.1.secondTransitArrival.assignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [currentShipment?.importer?.id, currentShipment?.exporter?.id].filter(Boolean);
-      },
-      ...transformValueField(
-        `${basePath}.voyages.1.arrival`,
-        nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
-        'assignedTo',
-        hasPermission =>
-          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
-      ),
-    },
-    {
       columnKey: 'shipment.voyage.1.secondTransitArrival.approved',
       type: 'approval',
       ...transformValueField(
@@ -1042,21 +947,6 @@ export default function transformSheetShipment({
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.voyage.2.secondTransitDeparture.assignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [currentShipment?.importer?.id, currentShipment?.exporter?.id].filter(Boolean);
-      },
-      ...transformValueField(
-        `${basePath}.voyages.2.departure`,
-        nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
-        'assignedTo',
-        hasPermission =>
-          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
       ),
     },
     {
@@ -1161,21 +1051,6 @@ export default function transformSheetShipment({
       ),
     },
     {
-      columnKey: 'shipment.voyage.2.arrival.assignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [currentShipment?.importer?.id, currentShipment?.exporter?.id].filter(Boolean);
-      },
-      ...transformValueField(
-        `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}.arrival`,
-        shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
-        'assignedTo',
-        hasPermission =>
-          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
-      ),
-    },
-    {
       columnKey: 'shipment.voyage.2.arrival.approved',
       type: 'approval',
       ...transformValueField(
@@ -1236,21 +1111,6 @@ export default function transformSheetShipment({
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.containerGroup.customClearance.assignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [currentShipment?.importer?.id, currentShipment?.exporter?.id].filter(Boolean);
-      },
-      ...transformValueField(
-        `${basePath}.containerGroups.0.customClearance`,
-        shipment?.containerGroups?.[0]?.customClearance ?? null,
-        'assignedTo',
-        hasPermission =>
-          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
       ),
     },
     {
@@ -1369,29 +1229,6 @@ export default function transformSheetShipment({
       ),
     },
     {
-      columnKey: 'shipment.containerGroup.warehouseArrival.assignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [currentShipment?.importer?.id, currentShipment?.exporter?.id].filter(Boolean);
-      },
-      hide: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        if (currentShipment?.containers) {
-          return (currentShipment?.containers ?? []).length > 0;
-        }
-
-        return (currentShipment?.containerCount ?? 0) > 0;
-      },
-      ...transformValueField(
-        `${basePath}.containerGroups.0.warehouseArrival`,
-        shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
-        'assignedTo',
-        hasPermission =>
-          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
-      ),
-    },
-    {
       columnKey: 'shipment.containerGroup.warehouseArrival.approved',
       type: 'approval',
       hide: root => {
@@ -1476,21 +1313,6 @@ export default function transformSheetShipment({
         'timelineDateRevisions',
         hasPermission =>
           hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
-      ),
-    },
-    {
-      columnKey: 'shipment.containerGroup.deliveryReady.assignedTo',
-      type: 'user_assignment',
-      computed: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        return [currentShipment?.importer?.id, currentShipment?.exporter?.id].filter(Boolean);
-      },
-      ...transformValueField(
-        `${basePath}.containerGroups.0.deliveryReady`,
-        shipment?.containerGroups?.[0]?.deliveryReady ?? null,
-        'assignedTo',
-        hasPermission =>
-          hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_ASSIGN_TIMELINE_DATE)
       ),
     },
     {
