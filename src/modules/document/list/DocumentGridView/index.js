@@ -37,7 +37,7 @@ import {
 } from 'modules/permission/constants/shipment';
 import { PROJECT_FORM } from 'modules/permission/constants/project';
 import {
-  MILESTONE_DOCUMENTS_DOWNLOAD,
+  MILESTONE_DOWNLOAD_DOCUMENTS,
   MILESTONE_DOCUMENT_DELETE,
 } from 'modules/permission/constants/milestone';
 import { DOCUMENT_FORM, DOCUMENT_DELETE } from 'modules/permission/constants/file';
@@ -85,7 +85,7 @@ const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => 
           shipment: hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS),
           product: hasPermission(PRODUCT_DOWNLOAD_DOCUMENTS),
           productProvider: hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS),
-          project: hasPermission(MILESTONE_DOCUMENTS_DOWNLOAD),
+          project: hasPermission(MILESTONE_DOWNLOAD_DOCUMENTS),
         };
         const deletePermissions = {
           order: hasPermission(ORDER_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
@@ -152,11 +152,6 @@ const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => 
               file={file}
               navigable={viewPermissions?.[parentType] || !parentType}
               downloadable={downloadPermissions?.[parentType] || !parentType}
-              editable={{
-                status: false,
-                type: false,
-                memo: false,
-              }}
               onClick={evt => {
                 evt.stopPropagation();
                 if (hasPermission(DOCUMENT_FORM) || !parentType) {

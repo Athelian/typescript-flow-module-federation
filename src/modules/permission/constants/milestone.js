@@ -17,7 +17,7 @@ export const MILESTONE_SET_ESTIMATED_COMPLETION_DATE_BINDING =
   'task.milestones.setEstimatedCompletionDateBinding';
 export const MILESTONE_SET_TASKS = 'task.milestones.setTasks';
 export const MILESTONE_SET_DOCUMENTS = 'task.milestones.setDocuments';
-export const MILESTONE_DOCUMENTS_DOWNLOAD = 'task.milestones.downloadDocuments';
+export const MILESTONE_DOWNLOAD_DOCUMENTS = 'task.milestones.downloadDocuments';
 export const MILESTONE_DOCUMENT_DELETE = 'task.milestonesFiles.delete';
 export const MILESTONE_DOCUMENT_CREATE = 'task.milestonesFiles.create';
 export const MILESTONE_DOCUMENT_SET_NAME = 'task.milestonesFiles.setName';

@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { getByPathWithDefault } from 'utils/fp';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
@@ -10,15 +9,11 @@ import {
   SHIPMENT_DOWNLOAD_DOCUMENTS,
   SHIPMENT_DOCUMENT_DELETE,
   SHIPMENT_DOCUMENT_CREATE,
-  SHIPMENT_DOCUMENT_SET_MEMO,
-  SHIPMENT_DOCUMENT_SET_TAGS,
   SHIPMENT_DOCUMENT_SET_TYPE,
 } from 'modules/permission/constants/shipment';
 import {
   DOCUMENT_CREATE,
   DOCUMENT_DELETE,
-  DOCUMENT_SET_MEMO,
-  DOCUMENT_SET_TAGS,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
   DOCUMENT_FORM,
@@ -37,7 +32,25 @@ type Props = {|
 function DocumentsSection({ entityId, isLoading }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const canSetDocuments = hasPermission(SHIPMENT_SET_DOCUMENTS);
+  const canUpload = hasPermission([
+    SHIPMENT_SET_DOCUMENTS,
+    SHIPMENT_DOCUMENT_CREATE,
+    DOCUMENT_CREATE,
+  ]);
+  const canAddOrphan = hasPermission([SHIPMENT_SET_DOCUMENTS, SHIPMENT_UPDATE]);
+  const canViewForm = hasPermission(DOCUMENT_FORM);
+  const canDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
+  const canChangeType = hasPermission([
+    SHIPMENT_SET_DOCUMENTS,
+    DOCUMENT_SET_TYPE,
+    SHIPMENT_DOCUMENT_SET_TYPE,
+    DOCUMENT_UPDATE,
+  ]);
+  const canDelete = hasPermission([
+    SHIPMENT_SET_DOCUMENTS,
+    SHIPMENT_DOCUMENT_DELETE,
+    DOCUMENT_DELETE,
+  ]);
 
   return (
     <Subscribe to={[ShipmentFilesContainer]}>
@@ -48,39 +61,21 @@ function DocumentsSection({ entityId, isLoading }: Props) {
           entityId={entityId}
           isLoading={isLoading}
           onCompleted={result => {
-            initDetailValues(getByPathWithDefault([], 'shipment.files', result), true);
+            initDetailValues(result?.shipment?.files ?? [], true);
           }}
         >
           {() => {
             return (
               <DocumentsUpload
-                entity="Shipment"
-                uploadable={
-                  canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_CREATE, DOCUMENT_CREATE])
-                }
-                removable={
-                  canSetDocuments || hasPermission([SHIPMENT_DOCUMENT_DELETE, DOCUMENT_DELETE])
-                }
-                addable={canSetDocuments || hasPermission([SHIPMENT_UPDATE])}
-                editable={{
-                  status:
-                    canSetDocuments ||
-                    hasPermission([
-                      DOCUMENT_SET_STATUS,
-                      SHIPMENT_DOCUMENT_SET_STATUS,
-                      DOCUMENT_UPDATE,
-                    ]),
-                  type:
-                    canSetDocuments ||
-                    hasPermission([DOCUMENT_SET_TYPE, SHIPMENT_DOCUMENT_SET_TYPE, DOCUMENT_UPDATE]),
-                  memo:
-                    canSetDocuments ||
-                    hasPermission([DOCUMENT_SET_MEMO, SHIPMENT_DOCUMENT_SET_MEMO, DOCUMENT_UPDATE]),
-                }}
-                downloadable={hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS)}
-                viewForm={hasPermission(DOCUMENT_FORM)}
                 files={files}
+                entity="Shipment"
                 onSave={updateFiles => setFieldValue('files', updateFiles)}
+                canUpload={canUpload}
+                canAddOrphan={canAddOrphan}
+                canViewForm={canViewForm}
+                canDownload={canDownload}
+                canChangeType={canChangeType}
+                canDelete={canDelete}
               />
             );
           }}

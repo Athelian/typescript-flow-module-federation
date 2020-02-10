@@ -33,11 +33,6 @@ import {
 type Props = {|
   intl: IntlShape,
   file: FilePayload,
-  editable: {
-    status: boolean,
-    type: boolean,
-    memo: boolean,
-  },
   actions?: Array<React$Node>,
   hideParentInfo?: boolean,
   downloadable?: boolean,
@@ -145,11 +140,10 @@ export const getFileTypesByEntity = (
   }
 };
 
-let cardHeight = '150px';
+let cardHeight = '159px';
 
 const DocumentCard = ({
   file,
-  editable,
   hideParentInfo,
   actions,
   downloadable,
@@ -170,7 +164,6 @@ const DocumentCard = ({
     <BaseCard
       actions={actions}
       showActionsOnHover
-      readOnly={!editable}
       icon="DOCUMENT"
       color="DOCUMENT"
       onClick={onClick}

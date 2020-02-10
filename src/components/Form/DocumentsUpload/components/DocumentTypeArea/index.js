@@ -172,13 +172,7 @@ const DocumentTypeArea = ({
                             <DocumentCard
                               file={file}
                               hideParentInfo
-                              navigable
                               downloadable={canDownload}
-                              editable={{
-                                status: false,
-                                type: false,
-                                memo: false,
-                              }}
                               onClick={evt => {
                                 evt.stopPropagation();
                                 if (canViewForm) {
