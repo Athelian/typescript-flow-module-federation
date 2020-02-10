@@ -39,6 +39,7 @@ const getEntityType = (entityType: ?string) => {
     Task: 'TASK',
     User: 'STAFF',
     Project: 'PROJECT',
+    File: 'DOCUMENT',
   };
 
   return entityType ? colorsMapping[entityType] : 'GRAY_VERY_LIGHT';
@@ -123,6 +124,13 @@ const TagCard = ({ tag, actions, ...rest }: Props) => {
             )}
           >
             <Icon icon="PROJECT" />
+          </div>
+          <div
+            className={TagTypeStyle(
+              getEntityType(entityTypes.find(entityType => entityType === 'File'))
+            )}
+          >
+            <Icon icon="DOCUMENT" />
           </div>
         </div>
       </Link>
