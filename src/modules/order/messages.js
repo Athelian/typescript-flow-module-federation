@@ -408,7 +408,7 @@ export default defineMessages({
   },
   fileTypeDocument: {
     id: 'modules.Orders.fileType.document',
-    defaultMessage: 'Document',
+    defaultMessage: 'Miscellaneous',
   },
   fileTypeOrderPO: {
     id: 'modules.Orders.fileType.orderPO',

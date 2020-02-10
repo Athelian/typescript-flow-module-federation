@@ -6,14 +6,67 @@ import { BaseButton } from 'components/Buttons';
 import type { ActionComponentProps } from 'components/Sheet/SheetAction/types';
 import { executeActionMutation, useSheetActionDialog } from 'components/Sheet/SheetAction';
 import ActionDialog, { BatchesLabelIcon, ItemLabelIcon } from 'components/Dialog/ActionDialog';
+import DocumentsDeleteDialog from 'components/Dialog/DocumentsDeleteDialog';
+import { deleteManyFileMutation } from 'modules/document/mutation';
 import messages from '../messages';
 import deleteOrderItemActionMutation from './mutation';
 
-const OrderItemDeleteAction = ({ entity, onDone }: ActionComponentProps) => {
-  const [isOpen, close] = useSheetActionDialog(onDone);
-  const [deleteOrderItem, { loading, called }] = useMutation(deleteOrderItemActionMutation);
+type Props = {|
+  getOrderItemFiles: (orderItemId: string, item: Object) => Array<Object>,
+|};
 
-  const onConfirm = () => {
+type ImplProps = {|
+  ...ActionComponentProps,
+  ...Props,
+|};
+
+const OrderItemDeleteActionImpl = ({ entity, item, onDone, getOrderItemFiles }: ImplProps) => {
+  const [step, setStep] = React.useState(1);
+  const [isOpen, close] = useSheetActionDialog(onDone);
+  const [deleteOrderItem, { loading: deleteLoading, called: deleteCalled }] = useMutation(
+    deleteOrderItemActionMutation
+  );
+  const [deleteFiles, { loading: deleteFilesLoading, called: deleteFilesCalled }] = useMutation(
+    deleteManyFileMutation
+  );
+  const files = React.useMemo(() => getOrderItemFiles(entity.id, item), [
+    getOrderItemFiles,
+    entity.id,
+    item,
+  ]);
+
+  const onDeleteConfirm = () => {
+    if (files.length > 0) {
+      setStep(2);
+    } else {
+      executeActionMutation(
+        deleteOrderItem,
+        {
+          id: entity.id,
+        },
+        close
+      );
+    }
+  };
+
+  const onDelete = () => {
+    executeActionMutation(
+      deleteOrderItem,
+      {
+        id: entity.id,
+      },
+      () => {
+        executeActionMutation(
+          deleteFiles,
+          {
+            ids: files.map(file => file.id),
+          },
+          close
+        );
+      }
+    );
+  };
+  const onKeep = () => {
     executeActionMutation(
       deleteOrderItem,
       {
@@ -26,7 +79,7 @@ const OrderItemDeleteAction = ({ entity, onDone }: ActionComponentProps) => {
   let dialogMessage = null;
   let dialogSubMessage = null;
 
-  if (loading || called) {
+  if (deleteLoading || deleteCalled) {
     dialogMessage = (
       <FormattedMessage {...messages.orderItemDeleting} values={{ icon: <ItemLabelIcon /> }} />
     );
@@ -42,10 +95,24 @@ const OrderItemDeleteAction = ({ entity, onDone }: ActionComponentProps) => {
     );
   }
 
+  if (step === 2) {
+    return (
+      <DocumentsDeleteDialog
+        entityType="ITEM"
+        isProcessing={deleteLoading || deleteCalled || deleteFilesLoading || deleteFilesCalled}
+        files={files}
+        isOpen={isOpen}
+        onCancel={close}
+        onKeep={onKeep}
+        onDelete={onDelete}
+      />
+    );
+  }
+
   return (
     <ActionDialog
       isOpen={isOpen}
-      isProcessing={loading || called}
+      isProcessing={deleteLoading || deleteCalled}
       onCancel={close}
       title={<FormattedMessage {...messages.orderItemDeleteTitle} />}
       dialogMessage={dialogMessage}
@@ -54,7 +121,7 @@ const OrderItemDeleteAction = ({ entity, onDone }: ActionComponentProps) => {
         <BaseButton
           label={<FormattedMessage {...messages.orderItemDeleteButton} />}
           icon="REMOVE"
-          onClick={onConfirm}
+          onClick={onDeleteConfirm}
           backgroundColor="RED"
           hoverBackgroundColor="RED_DARK"
         />
@@ -62,5 +129,9 @@ const OrderItemDeleteAction = ({ entity, onDone }: ActionComponentProps) => {
     />
   );
 };
+
+const OrderItemDeleteAction = ({ getOrderItemFiles }: Props) => (props: ActionComponentProps) => (
+  <OrderItemDeleteActionImpl {...props} getOrderItemFiles={getOrderItemFiles} />
+);
 
 export default OrderItemDeleteAction;

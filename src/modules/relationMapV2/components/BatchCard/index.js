@@ -22,6 +22,7 @@ import {
   QuantityVolumeDesiredWrapperStyle,
   DateWrapperStyle,
   DelayStyle,
+  TooltipLabelStyle,
 } from './style';
 
 type Props = {|
@@ -70,48 +71,66 @@ export default function BatchCard({
   if (shipment) {
     const latestLoadPortDepartureDate = latestDate(shipment.voyages?.[0]?.departure);
     if (latestLoadPortDepartureDate && deliveredAt) {
-      deliveredAtDiffMsg = (
-        <div>
-          <FormattedMessage
-            id="components.cards.shipmentLatestLoadPortDeparture"
-            defaultMessage="Shipment's Latest Load Port Departure"
-          />
-          <p>
-            <FormattedDate value={latestLoadPortDepartureDate} />
-          </p>
-          <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
-          <p>
-            <FormattedDate value={deliveredAt} />
-          </p>
-        </div>
-      );
       deliveredAtDiff = differenceInCalendarDays(
         new Date(deliveredAt),
         new Date(latestLoadPortDepartureDate)
+      );
+      deliveredAtDiffMsg = (
+        <div>
+          <div className={TooltipLabelStyle}>
+            <FormattedMessage
+              id="components.cards.shipmentLatestLoadPortDeparture"
+              defaultMessage="Shipment's Latest Load Port Departure"
+            />
+          </div>
+          <FormattedDate value={latestLoadPortDepartureDate} />
+
+          <div className={TooltipLabelStyle}>
+            <FormattedMessage
+              id="components.cards.batchDelivery"
+              defaultMessage="Batch's Delivery Date"
+            />
+          </div>
+          <FormattedDate value={deliveredAt} />
+
+          <div className={TooltipLabelStyle}>
+            <FormattedMessage id="components.cards.difference" defaultMessage="Difference" />
+          </div>
+          {deliveredAtDiff}
+        </div>
       );
     }
 
     if (container) {
       const { warehouseArrivalActualDate } = container;
       if (warehouseArrivalActualDate && desiredAt) {
-        desiredAtDiffMsg = (
-          <div>
-            <FormattedMessage
-              id="components.cards.containerWarehouseActualArrivalDate"
-              defaultMessage="Container's Warehouse Actual Arrival Date"
-            />
-            <p>
-              <FormattedDate value={warehouseArrivalActualDate} />
-            </p>
-            <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
-            <p>
-              <FormattedDate value={desiredAt} />
-            </p>
-          </div>
-        );
         desiredAtDiff = differenceInCalendarDays(
           new Date(desiredAt),
           new Date(warehouseArrivalActualDate)
+        );
+        desiredAtDiffMsg = (
+          <div>
+            <div className={TooltipLabelStyle}>
+              <FormattedMessage
+                id="components.cards.containerWarehouseActualArrivalDate"
+                defaultMessage="Container's Warehouse Actual Arrival Date"
+              />
+            </div>
+            <FormattedDate value={warehouseArrivalActualDate} />
+
+            <div className={TooltipLabelStyle}>
+              <FormattedMessage
+                id="components.cards.batchDesired"
+                defaultMessage="Batch's Desired Date"
+              />
+            </div>
+            <FormattedDate value={desiredAt} />
+
+            <div className={TooltipLabelStyle}>
+              <FormattedMessage id="components.cards.difference" defaultMessage="Difference" />
+            </div>
+            {desiredAtDiff}
+          </div>
         );
       }
     } else if (shipment.containers?.length === 0) {
@@ -209,7 +228,7 @@ export default function BatchCard({
             {canViewDesired ? (
               <>
                 <Display width="80px">
-                  <FormattedDate value={deliveredAt} />
+                  <FormattedDate value={desiredAt} />
                 </Display>
                 {desiredAtDiff !== 0 && desiredAt && (
                   <Tooltip message={desiredAtDiffMsg}>

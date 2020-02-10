@@ -77,7 +77,7 @@ export default function({
         ],
         'order.customField': 'customFields',
       },
-      sort: {
+      sorts: {
         'order.created': {
           name: 'createdAt',
           group: 'order',

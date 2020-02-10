@@ -76,6 +76,7 @@ export const filesByIDsQuery = gql`
   }
 
   ${documentFragment}
+  ${tagFragment}
   ${ownedByFragment}
 `;
 

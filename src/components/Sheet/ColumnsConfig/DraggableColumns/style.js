@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors } from 'styles/common';
+import { colors, fontSizes, borderRadiuses } from 'styles/common';
 
 export const InnerColumnsWrapperStyle: string = css`
   display: grid;
@@ -10,23 +10,22 @@ export const InnerColumnsWrapperStyle: string = css`
 `;
 
 export const InnerColumnStyle: string = css`
+  position: relative;
   display: grid;
-  grid-template-columns: 25px 1fr 30px;
+  grid-template-columns: 25px 1fr min-content;
   align-items: center;
   width: 271px;
 `;
 
 export const NewLabelStyle: string = css`
   height: 18px;
-  margin: 6px 0;
-  font-size: 12px;
-  line-height: 15px;
-  display: flex;
-  align-items: center;
-  text-align: center;
+  ${fontSizes.SMALL};
+  line-height: 18px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: ${colors.WHITE};
-  background: rgba(17, 209, 166, 0.5);
-  border-radius: 5px;
+  background: ${colors.TEAL_HALF};
+  ${borderRadiuses.MAIN};
+  padding: 0 5px;
+  margin: 6px 5px;
 `;

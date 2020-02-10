@@ -2,11 +2,14 @@
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
+import { isNotFound } from 'utils/data';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { TemplateCard } from 'components/Cards';
+import { CardAction } from 'components/Cards/BaseCard';
 import loadMore from 'utils/loadMore';
 import { TableTemplateFormWrapper } from 'modules/tableTemplate/form';
+import DeleteTableTemplateConfirm from './components/DeleteTableTemplateConfirm';
 
 type Props = {
   tableTemplatesData: Object,
@@ -22,6 +25,7 @@ type Props = {
   },
   perPage: number,
   page: number,
+  onRefetch?: () => void,
 };
 
 const TableTemplateList = ({
@@ -30,13 +34,17 @@ const TableTemplateList = ({
   fetchMore,
   customFieldsQueryIsLoading,
   customFields,
+  onRefetch = () => {},
   ...filtersAndSort
 }: Props) => {
   const nextPage = (tableTemplatesData?.maskEdits?.page ?? 1) + 1;
   const totalPages = tableTemplatesData?.maskEdits?.totalPage ?? 1;
   const hasMore = nextPage <= totalPages;
 
-  const tableTemplates = tableTemplatesData?.maskEdits?.nodes ?? [];
+  const tableTemplates = (tableTemplatesData?.maskEdits?.nodes ?? []).filter(
+    template => !isNotFound(template)
+  );
+  const [selectedItem, setSelectedItem] = React.useState(null);
 
   return (
     <GridView
@@ -55,8 +63,25 @@ const TableTemplateList = ({
         <BooleanValue key={tableTemplate.id}>
           {({ value: isOpen, set: toggle }) => (
             <>
+              <DeleteTableTemplateConfirm
+                isOpen={selectedItem?.id === tableTemplate.id}
+                onCancel={() => setSelectedItem(null)}
+                entity={tableTemplate}
+                onSuccess={() => {
+                  setSelectedItem(null);
+                  onRefetch();
+                }}
+              />
               <TemplateCard
+                actions={[
+                  <CardAction
+                    icon="REMOVE"
+                    hoverColor="RED"
+                    onClick={() => setSelectedItem(tableTemplate)}
+                  />,
+                ]}
                 onClick={() => toggle(true)}
+                showActionsOnHover
                 key={tableTemplate.id}
                 template={{
                   id: tableTemplate.id,

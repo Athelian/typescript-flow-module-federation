@@ -74,7 +74,7 @@ const DocumentsSelector = ({ onCancel, onSelect, alreadyAddedDocuments }: Props)
               hasMore={hasMore}
               isLoading={loading}
               renderItem={file => (
-                <DocumentCard key={file.id} file={file} {...getItemProps(file)} />
+                <DocumentCard key={file.id} file={file} hideParentInfo {...getItemProps(file)} />
               )}
             />
           </Content>

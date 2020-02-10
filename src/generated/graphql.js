@@ -11568,11 +11568,9 @@ export type MutationNotificationActiveArgs = {|
   id: $ElementType<Scalars, 'ID'>
 |};
 
-
 export type MutationNotificationArchiveArgs = {|
   id: $ElementType<Scalars, 'ID'>
 |};
-
 
 export type MutationNotificationSeeByEntitiesArgs = {|
   entities: Array<EntityInput>

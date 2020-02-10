@@ -2,54 +2,34 @@
 import * as React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import type { FilePayload } from 'generated/graphql';
-import { BooleanValue } from 'react-values';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { DndProvider } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import { pick } from 'lodash/fp';
-import Dropzone from 'react-dropzone';
-import update from 'immutability-helper';
 import Icon from 'components/Icon';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
-import SlideView from 'components/SlideView';
-import { NewButton } from 'components/Buttons';
-import DocumentFormSideView from 'modules/document/index.formSlideView';
-import SectionNavBar from 'components/NavBar/SectionNavBar';
-import UploadPlaceholder from 'components/UploadPlaceholder';
-import { CardAction } from 'components/Cards';
-import DocumentCard, { getFileTypesByEntity } from 'components/Cards/DocumentCard';
+import { getFileTypesByEntity } from 'components/Cards/DocumentCard';
 import { Tooltip } from 'components/Tooltip';
-import DocumentsSelector from './DocumentsSelector';
+import { SectionHeader } from 'components/Form';
+import FormattedNumber from 'components/FormattedNumber';
+import { StickyScrollingSection } from 'components/Sections';
 import fileUploadMutation from './mutation';
-import {
-  DocumentsSectionWrapperStyle,
-  DocumentsDragAndDropBodyWrapperStyle,
-  DocumentsSectionBodyStyle,
-  DocumentsDragAndDropTooltipWrapperStyle,
-  DocumentsDragAndDropWrapperStyle,
-  DocumentsDragAndDropLabelStyle,
-  DocumentsListStyle,
-  AddDocumentButtonWrapperStyle,
-  AddDocumentButtonLabelStyle,
-  AddDocumentButtonIconStyle,
-  NoDocumentsStyle,
-} from './style';
+import { DocumentTypeArea } from './components';
+import { DocumentsDragAndDropTooltipWrapperStyle, DocumentsUploadWrapperStyle } from './style';
 import messages from './messages';
 
 type Props = {|
   files: Array<FilePayload>,
-  onSave: (Array<FilePayload>) => void,
   entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider' | 'Milestone',
-  editable: {
-    status: boolean,
-    type: boolean,
-    memo: boolean,
-  },
-  downloadable: boolean,
-  viewForm: boolean,
-  uploadable: boolean,
-  addable: boolean,
-  removable: boolean,
+  onSave: (Array<FilePayload>) => void,
+  canUpload: boolean,
+  canAddOrphan: boolean,
+  canViewForm: boolean,
+  canDownload: boolean,
+  canChangeType: boolean,
+  canDelete: boolean,
 |};
 
 type UploadFileState = {
@@ -57,20 +37,21 @@ type UploadFileState = {
   name: string,
   path: string,
   type: string,
-  status: string,
+  tags: Array<Object>,
   memo: string,
   entity?: Object,
 };
 
-const editableFields = ['id', 'type', 'name', 'path', 'status', 'memo'];
+const editableFields = ['id', 'type', 'name', 'path', 'tags', 'memo'];
 const SELECTED_FIELDS = [
   'id',
   'type',
   'name',
   'path',
   'size',
-  'status',
+  'tags',
   'memo',
+  'tags',
   'entity',
   'ownedBy',
   'orphan',
@@ -80,16 +61,15 @@ const SELECTED_FIELDS = [
 const DocumentsUpload = ({
   files,
   entity,
-  editable,
-  uploadable,
-  addable,
-  removable,
-  downloadable,
-  viewForm,
   onSave,
+  canUpload,
+  canAddOrphan,
+  canViewForm,
+  canDownload,
+  canChangeType,
+  canDelete,
 }: Props) => {
   const intl = useIntl();
-  const [selectedFile, setSelectedFile] = React.useState(null);
   const [upload] = useMutation(fileUploadMutation);
   const [filesState, setFileState] = React.useState<
     Array<{
@@ -121,11 +101,12 @@ const DocumentsUpload = ({
     );
   }
 
-  const handleUpload = (newFiles: Array<Object>) => {
-    onSave([...files, ...newFiles]);
-  };
+  const types = getFileTypesByEntity(entity, intl);
 
-  const handleChange = (event: SyntheticInputEvent<HTMLInputElement> | Array<File>) => {
+  const handleUpload = (
+    event: SyntheticInputEvent<HTMLInputElement> | Array<File>,
+    type: string
+  ) => {
     let newFiles = [];
     if (Array.isArray(event)) {
       newFiles = event;
@@ -134,20 +115,20 @@ const DocumentsUpload = ({
       newFiles = Array.from(event.target.files);
     }
 
-    const types = getFileTypesByEntity(entity, intl);
     const currentNumberOfFiles = filesState.length;
 
     setFileState([
       ...filesState,
       ...newFiles.map(({ name }) => ({
         name,
-        type: types[0].value,
+        type,
         id: uuid(),
         path: '',
-        status: 'Draft',
         memo: '',
+        tags: [],
         uploading: true,
         progress: 0,
+        isNew: true,
       })),
     ]);
 
@@ -157,8 +138,7 @@ const DocumentsUpload = ({
           variables: {
             file,
             input: {
-              status: 'Draft',
-              type: types[0].value,
+              type,
             },
           },
           context: ({
@@ -183,16 +163,18 @@ const DocumentsUpload = ({
       )
     )
       .then(uploadResults => {
-        handleUpload(
-          uploadResults.map(({ data }) => ({
+        onSave([
+          ...files,
+          ...uploadResults.map(({ data }) => ({
             ...data.fileUpload,
             uploading: false,
             progress: 100,
             entity: {
               __typename: entity,
             },
-          }))
-        );
+            isNew: true,
+          })),
+        ]);
       })
       .catch(error => {
         logger.error(error);
@@ -206,194 +188,53 @@ const DocumentsUpload = ({
       });
   };
 
-  const isEditable = Object.keys(editable || {}).some(key => editable[key]);
-
   return (
-    <>
-      <div className={DocumentsSectionWrapperStyle}>
-        <SectionNavBar>
-          {uploadable && (
-            <label className={AddDocumentButtonWrapperStyle}>
-              <div className={AddDocumentButtonLabelStyle}>
-                <FormattedMessage {...messages.newDocument} />
-              </div>
-              <div className={AddDocumentButtonIconStyle}>
-                <Icon icon="UPLOAD" />
-              </div>
-              <input type="file" accept="*" hidden multiple value="" onChange={handleChange} />
-            </label>
-          )}
-
-          {addable && (
-            <BooleanValue>
-              {({ value: documentsSelectorIsOpen, set: setDocumentsSelectorIsOpen }) => (
-                <>
-                  <NewButton
-                    label={
-                      <FormattedMessage
-                        id="modules.Documents.selectDocument"
-                        defaultMessage="Select Documents"
-                      />
-                    }
-                    onClick={() => setDocumentsSelectorIsOpen(true)}
-                  />
-
-                  <SlideView
-                    isOpen={documentsSelectorIsOpen}
-                    onRequestClose={() => setDocumentsSelectorIsOpen(false)}
-                    shouldConfirm={() => {
-                      const button = document.getElementById('saveButtonOnSelectDocuments');
-                      return button;
-                    }}
-                  >
-                    <DocumentsSelector
-                      onCancel={() => setDocumentsSelectorIsOpen(false)}
-                      onSelect={selectedFiles => {
-                        onSave([
-                          ...files,
-                          ...selectedFiles.map(file => ({
-                            ...file,
-                            entity: { __typename: entity },
-                          })),
-                        ]);
-                        setDocumentsSelectorIsOpen(false);
-                      }}
-                      alreadyAddedDocuments={files}
-                    />
-                  </SlideView>
-                </>
-              )}
-            </BooleanValue>
-          )}
-        </SectionNavBar>
-
-        {isEditable ? (
-          <Dropzone onDrop={handleChange}>
-            {({ getRootProps, isDragActive }) => (
-              <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
-                <div className={DocumentsSectionBodyStyle}>
-                  {filesState && filesState.length > 0 ? (
-                    <div className={DocumentsListStyle}>
-                      {filesState.map((file, index) => {
-                        if (filesState.length > 0 && filesState[index].uploading) {
-                          return (
-                            <UploadPlaceholder
-                              progress={filesState.length > 0 ? filesState[index].progress : 0}
-                              key={file?.id}
-                            />
-                          );
-                        }
-                        return (
-                          <DocumentCard
-                            hideParentInfo
-                            file={pick(SELECTED_FIELDS, file)}
-                            onClick={evt => {
-                              evt.stopPropagation();
-                              if (viewForm) setSelectedFile(file);
-                            }}
-                            onChange={(field, value) => {
-                              onSave(
-                                update(files, {
-                                  [index]: {
-                                    [field]: {
-                                      $set: value,
-                                    },
-                                  },
-                                })
-                              );
-                            }}
-                            actions={[
-                              removable && (
-                                <CardAction
-                                  icon="REMOVE"
-                                  hoverColor="RED"
-                                  onClick={evt => {
-                                    evt.stopPropagation();
-                                    onSave(files.filter(item => item?.id !== file?.id));
-                                  }}
-                                />
-                              ),
-                            ].filter(Boolean)}
-                            editable={editable}
-                            downloadable={downloadable}
-                            key={file?.id}
-                          />
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className={NoDocumentsStyle}>
-                      <FormattedMessage {...messages.noDocuments} />
-                    </div>
-                  )}
-                </div>
-
-                <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
-                  <div className={DocumentsDragAndDropTooltipWrapperStyle}>
-                    <Icon icon="INFO" />
-                  </div>
-                </Tooltip>
-
-                <div className={DocumentsDragAndDropWrapperStyle(isDragActive)}>
-                  <div className={DocumentsDragAndDropLabelStyle}>
-                    <FormattedMessage {...messages.newDocument} />
-                    <Icon icon="ADD" />
-                  </div>
-                </div>
-              </div>
-            )}
-          </Dropzone>
-        ) : (
-          <div className={DocumentsSectionBodyStyle}>
-            {files && files.length > 0 ? (
-              <div className={DocumentsListStyle}>
-                {files.map(file => (
-                  <DocumentCard
-                    hideParentInfo
-                    onClick={evt => {
-                      evt.stopPropagation();
-                      if (viewForm) setSelectedFile(file);
-                    }}
-                    key={file?.id}
-                    file={pick(SELECTED_FIELDS, file)}
-                    editable={editable}
-                    downloadable={downloadable}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className={NoDocumentsStyle}>
-                <FormattedMessage {...messages.noDocuments} />
-              </div>
-            )}
+    <StickyScrollingSection
+      sectionHeader={
+        <SectionHeader
+          icon="DOCUMENT"
+          title={
+            <>
+              <FormattedMessage id="components.section.documents" defaultMessage="Documents" /> (
+              <FormattedNumber value={files.length} />)
+            </>
+          }
+        />
+      }
+      navbarContent={
+        <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
+          <div className={DocumentsDragAndDropTooltipWrapperStyle}>
+            <Icon icon="INFO" />
           </div>
-        )}
-      </div>
-      <SlideView
-        isOpen={!!selectedFile}
-        onRequestClose={() => setSelectedFile(null)}
-        shouldConfirm={() => {
-          const button = document.getElementById('document_form_save_button');
-          return button;
-        }}
-      >
-        {selectedFile && (
-          <DocumentFormSideView
-            // NOTE: orphan is only queried from selector
-            // that is using for checking the exist file from selector, consider refactor if that finds a simpler way
-            isNew={
-              !selectedFile.entity?.id &&
-              !Object.prototype.hasOwnProperty.call(selectedFile, 'orphan')
-            }
-            file={selectedFile}
-            onSave={updatedFile => {
-              onSave(files.map(file => (file.id === updatedFile.id ? updatedFile : file)));
-              setSelectedFile(null);
-            }}
-          />
-        )}
-      </SlideView>
-    </>
+        </Tooltip>
+      }
+    >
+      <DndProvider backend={HTML5Backend}>
+        <div className={DocumentsUploadWrapperStyle}>
+          {types.map(type => {
+            return (
+              <DocumentTypeArea
+                key={type.value}
+                entityType={entity}
+                type={type}
+                types={types.map(t => t.value)}
+                files={filesState.filter(file => file.type === type.value)}
+                onSave={updatedValues =>
+                  onSave([...files.filter(file => file.type !== type.value), ...updatedValues])
+                }
+                onUpload={evt => handleUpload(evt, type.value)}
+                canUpload={canUpload}
+                canAddOrphan={canAddOrphan}
+                canViewForm={canViewForm}
+                canDownload={canDownload}
+                canChangeType={canChangeType}
+                canDelete={canDelete}
+              />
+            );
+          })}
+        </div>
+      </DndProvider>
+    </StickyScrollingSection>
   );
 };
 

@@ -54,11 +54,13 @@ export const documentFragment = gql`
     name
     path
     type
-    status
     size
     memo
     ownedBy {
       ...ownedByFragment
+    }
+    tags {
+      ...tagFragment
     }
     # TODO: move to common fragment for entity
     entity {

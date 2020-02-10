@@ -81,8 +81,8 @@ const SelectInputFactory = ({
   editable,
   blackout,
 }: Props): React.Node => {
-  const itemToString = item => (item ? item.label : '');
-  const itemToValue = item => (item ? item.value : '');
+  const itemToString = item => item?.label ?? item ?? '';
+  const itemToValue = item => item?.value ?? item ?? '';
 
   const selectedItem = items.find(item => itemToValue(item) === value);
 

@@ -431,6 +431,26 @@ const TagSection = ({ isNew, tag }: Props) => {
                                     </Label>
                                   </div>
                                 </RadioInput>
+                                <RadioInput
+                                  selected={entityTypes.includes('File')}
+                                  onToggle={() => {
+                                    toggleSelectType('File');
+                                    touchEntityTypes();
+                                  }}
+                                  editable={allowCreateOrUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('DOCUMENT')}>
+                                      <Icon icon="DOCUMENT" />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.Tags.file"
+                                        defaultMessage="FILE"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
                               </div>
                             }
                           />
