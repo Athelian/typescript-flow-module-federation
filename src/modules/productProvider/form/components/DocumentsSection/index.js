@@ -12,14 +12,14 @@ import {
   PRODUCT_PROVIDER_DOCUMENT_DELETE,
   PRODUCT_PROVIDER_DOCUMENT_CREATE,
   PRODUCT_PROVIDER_DOCUMENT_SET_MEMO,
-  PRODUCT_PROVIDER_DOCUMENT_SET_STATUS,
+  PRODUCT_PROVIDER_DOCUMENT_SET_TAGS,
   PRODUCT_PROVIDER_DOCUMENT_SET_TYPE,
 } from 'modules/permission/constants/product';
 import {
   DOCUMENT_CREATE,
   DOCUMENT_DELETE,
   DOCUMENT_SET_MEMO,
-  DOCUMENT_SET_STATUS,
+  DOCUMENT_SET_TAGS,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
   DOCUMENT_FORM,
@@ -40,9 +40,9 @@ export default function EndProductDocumentsSection() {
   const canRemove =
     canSetDocuments || hasPermission([PRODUCT_PROVIDER_DOCUMENT_DELETE, DOCUMENT_DELETE]);
 
-  const canUpdateStatus =
+  const canUpdateTags =
     canSetDocuments ||
-    hasPermission([DOCUMENT_SET_STATUS, PRODUCT_PROVIDER_DOCUMENT_SET_STATUS, DOCUMENT_UPDATE]);
+    hasPermission([DOCUMENT_SET_TAGS, PRODUCT_PROVIDER_DOCUMENT_SET_TAGS, DOCUMENT_UPDATE]);
 
   const canUpdateType =
     canSetDocuments ||

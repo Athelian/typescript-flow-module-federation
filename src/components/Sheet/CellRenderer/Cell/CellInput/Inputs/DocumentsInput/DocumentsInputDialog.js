@@ -20,7 +20,7 @@ const DocumentsInputDialog = ({ value, onChange, onClose, open, entityType }: Pr
   // TODO: Maxime said to do dummy permission until he changes it
   const canDelete = true;
   const canUpload = true;
-  const canUpdateStatus = true;
+  const canUpdateTags = true;
   const canUpdateType = true;
   const canUpdateMemo = true;
   const canDownload = true;
@@ -33,7 +33,7 @@ const DocumentsInputDialog = ({ value, onChange, onClose, open, entityType }: Pr
           removable={canDelete}
           uploadable={canUpload}
           editable={{
-            status: canUpdateStatus,
+            tags: canUpdateTags,
             type: canUpdateType,
             memo: canUpdateMemo,
           }}

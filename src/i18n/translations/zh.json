@@ -477,7 +477,7 @@
   "modules.Documents.documentSection": "Document",
   "modules.Documents.type": "类型",
   "modules.Documents.status": "状态",
-  "modules.Documents.memo": "Memo",
+  "modules.Documents.description": "Description",
   "modules.Documents.filename": "Filename",
   "modules.Documents.fileSize": "File Size",
   "modules.Documents.download": "Download",

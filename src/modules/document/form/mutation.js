@@ -21,7 +21,12 @@ import {
   badRequestFragment,
   forbiddenFragment,
 } from 'graphql';
-import { parseParentIdField, parseEnumField, parseMemoField } from 'utils/data';
+import {
+  parseParentIdField,
+  parseEnumField,
+  parseMemoField,
+  parseArrayOfIdsField,
+} from 'utils/data';
 
 // TODO: Match API
 export const documentUpdateMutation: Object = gql`
@@ -60,5 +65,6 @@ export const prepareParsedDocumentInput = (originalValues: ?Object, newValues: O
     ...parseEnumField('status', originalValues?.status, newValues.status),
     ...parseParentIdField('entityId', originalValues?.entity, newValues.entity),
     ...parseMemoField('memo', originalValues?.memo, newValues.memo),
+    ...parseArrayOfIdsField('tagIds', originalValues?.tags ?? [], newValues.tags),
   };
 };

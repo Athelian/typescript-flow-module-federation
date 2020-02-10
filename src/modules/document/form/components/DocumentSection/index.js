@@ -5,14 +5,15 @@ import { useEntityHasPermissions } from 'contexts/Permissions';
 import {
   DOCUMENT_UPDATE,
   DOCUMENT_SET_TYPE,
-  DOCUMENT_SET_STATUS,
+  DOCUMENT_SET_TAGS,
   DOCUMENT_SET_MEMO,
 } from 'modules/permission/constants/file';
+import { TAG_LIST } from 'modules/permission/constants/tag';
 import validator from 'modules/tableTemplate/form/validator';
 import { FormField } from 'modules/form';
 import {
   SelectInputFactory,
-  EnumSelectInputFactory,
+  TagsInput,
   TextAreaInputFactory,
   SectionHeader,
   LastModified,
@@ -86,24 +87,46 @@ const DocumentSection = () => {
             )}
           </FormField>
 
-          <FormField {...getFormFieldProps('status')} saveOnChange>
-            {({ ...inputHandlers }) => (
-              <EnumSelectInputFactory
-                {...inputHandlers}
-                label={<FormattedMessage id="modules.Documents.status" defaultMessage="Status" />}
-                editable={canUpdate || hasPermissions(DOCUMENT_SET_STATUS)}
-                originalValue={originalState.status}
-                required
-                enumType="FileStatus"
+          <FieldItem
+            vertical
+            label={
+              <Label height="30px">
+                <FormattedMessage id="modules.Documents.tags" defaultMessage="Tags" />
+              </Label>
+            }
+            input={
+              <TagsInput
+                id="tags"
+                name="tags"
+                tagType="File"
+                values={state.tags}
+                onChange={value => {
+                  setFieldValue('tags', value);
+                }}
+                onClickRemove={value => {
+                  setFieldValue(
+                    'tags',
+                    state.tags.filter(({ id }) => id !== value.id)
+                  );
+                }}
+                editable={{
+                  set: hasPermissions(TAG_LIST) && (canUpdate || hasPermissions(DOCUMENT_SET_TAGS)),
+                  remove: canUpdate || hasPermissions(DOCUMENT_SET_TAGS),
+                }}
               />
-            )}
-          </FormField>
+            }
+          />
 
           <FormField {...getFormFieldProps('memo')}>
             {inputHandlers => (
               <TextAreaInputFactory
                 {...inputHandlers}
-                label={<FormattedMessage id="modules.Documents.memo" defaultMessage="Memo" />}
+                label={
+                  <FormattedMessage
+                    id="modules.Documents.description"
+                    defaultMessage="Description"
+                  />
+                }
                 editable={canUpdate || hasPermissions(DOCUMENT_SET_MEMO)}
                 originalValue={originalState.memo}
                 inputWidth="400px"

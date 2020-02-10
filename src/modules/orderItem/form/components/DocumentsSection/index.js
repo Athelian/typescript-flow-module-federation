@@ -11,14 +11,14 @@ import {
   ORDER_ITEMS_DOCUMENT_DELETE,
   ORDER_ITEMS_DOCUMENT_CREATE,
   ORDER_ITEMS_DOCUMENT_SET_MEMO,
-  ORDER_ITEMS_DOCUMENT_SET_STATUS,
+  ORDER_ITEMS_DOCUMENT_SET_TAGS,
   ORDER_ITEMS_DOCUMENT_SET_TYPE,
 } from 'modules/permission/constants/orderItem';
 import {
   DOCUMENT_CREATE,
   DOCUMENT_DELETE,
   DOCUMENT_SET_MEMO,
-  DOCUMENT_SET_STATUS,
+  DOCUMENT_SET_TAGS,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
   DOCUMENT_FORM,
@@ -38,9 +38,9 @@ function ItemDocumentsSection() {
 
   const canAdd = canSetDocuments || hasPermission([ORDER_ITEMS_UPDATE]);
 
-  const canUpdateStatus =
+  const canUpdateTags =
     canSetDocuments ||
-    hasPermission([DOCUMENT_SET_STATUS, ORDER_ITEMS_DOCUMENT_SET_STATUS, DOCUMENT_UPDATE]);
+    hasPermission([DOCUMENT_SET_TAGS, ORDER_ITEMS_DOCUMENT_SET_TAGS, DOCUMENT_UPDATE]);
 
   const canUpdateType =
     canSetDocuments ||

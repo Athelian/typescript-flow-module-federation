@@ -1,34 +1,18 @@
 // @flow
 import * as React from 'react';
+import type { File } from 'generated/graphql';
 import { createContainer } from 'unstated-next';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
-import type { UserPayload } from 'generated/graphql';
 
-type State = {
-  name: ?string,
-  type: string,
-  status: string,
-  size: ?number,
-  path: ?string,
-  memo: ?string,
-  entity: ?{ id: string, __typename: string },
-  order: ?Object,
-  orderItem: ?Object,
-  shipment: ?Object,
-  productProvider: ?Object,
-  milestone: ?Object,
-  updatedAt: ?string,
-  updatedBy: ?UserPayload,
-};
-
-const defaultState = {
+const defaultState: File = {
   name: null,
   type: 'Document',
   status: 'Draft',
   size: null,
   path: null,
-  memo: null,
+  description: null,
+  tags: [],
   entity: null,
   order: null,
   orderItem: null,
@@ -39,7 +23,7 @@ const defaultState = {
   updatedBy: null,
 };
 
-const useDocumentFormContainer = (initialState: State = defaultState) => {
+const useDocumentFormContainer = (initialState: File = defaultState) => {
   const [state: State, setState] = React.useState(defaultState);
   const [originalState: State, setOriginalState] = React.useState(defaultState);
 
