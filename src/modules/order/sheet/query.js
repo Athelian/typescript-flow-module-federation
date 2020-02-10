@@ -28,8 +28,8 @@ import { sheetBatchFragment } from 'modules/sheet/batch/fragment';
 import { sheetShipmentFragment, sheetTimelineDateFragment } from 'modules/sheet/shipment/fragment';
 import { sheetContainerFragment } from 'modules/sheet/container/fragment';
 
-const sheetShipmentExtraFragment = gql`
-  fragment sheetShipmentExtraFragment on Shipment {
+const sheetShipmentCountFragment = gql`
+  fragment sheetShipmentCountFragment on Shipment {
     containerCount
   }
 `;
@@ -81,7 +81,7 @@ export const ordersQuery = gql`
                   }
                   shipment {
                     ...sheetShipmentFragment
-                    ...sheetShipmentExtraFragment
+                    ...sheetShipmentCountFragment
                     ...sheetModelFragment
                     ...sheetOwnedFragment
                     ...sheetCustomizableFragment
@@ -104,7 +104,7 @@ export const ordersQuery = gql`
   ${sheetOrderItemFragment}
   ${sheetBatchFragment}
   ${sheetShipmentFragment}
-  ${sheetShipmentExtraFragment}
+  ${sheetShipmentCountFragment}
   ${sheetContainerFragment}
   ${sheetTimelineDateFragment}
   ${sheetModelFragment}
@@ -166,7 +166,7 @@ export const orderItemByIDQuery = gql`
             }
             shipment {
               ...sheetShipmentFragment
-              ...sheetShipmentExtraFragment
+              ...sheetShipmentCountFragment
               ...sheetModelFragment
               ...sheetOwnedFragment
               ...sheetCustomizableFragment
@@ -182,7 +182,7 @@ export const orderItemByIDQuery = gql`
   ${sheetProductProviderFragment}
   ${sheetBatchFragment}
   ${sheetShipmentFragment}
-  ${sheetShipmentExtraFragment}
+  ${sheetShipmentCountFragment}
   ${sheetContainerFragment}
   ${sheetTimelineDateFragment}
   ${sheetModelFragment}
@@ -229,7 +229,7 @@ export const batchByIDQuery = gql`
         }
         shipment {
           ...sheetShipmentFragment
-          ...sheetShipmentExtraFragment
+          ...sheetShipmentCountFragment
           ...sheetModelFragment
           ...sheetOwnedFragment
           ...sheetCustomizableFragment
@@ -240,7 +240,7 @@ export const batchByIDQuery = gql`
 
   ${sheetBatchFragment}
   ${sheetShipmentFragment}
-  ${sheetShipmentExtraFragment}
+  ${sheetShipmentCountFragment}
   ${sheetContainerFragment}
   ${sheetTimelineDateFragment}
   ${sheetModelFragment}
@@ -284,7 +284,7 @@ export const shipmentByIDQuery = gql`
   query shipmentByIDQuery($id: ID!) {
     shipment(id: $id) {
       ...sheetShipmentFragment
-      ...sheetShipmentExtraFragment
+      ...sheetShipmentCountFragment
       ...sheetModelFragment
       ...sheetOwnedFragment
       ...sheetCustomizableFragment
@@ -292,7 +292,7 @@ export const shipmentByIDQuery = gql`
   }
 
   ${sheetShipmentFragment}
-  ${sheetShipmentExtraFragment}
+  ${sheetShipmentCountFragment}
   ${sheetTimelineDateFragment}
   ${sheetModelFragment}
   ${sheetOwnedFragment}
