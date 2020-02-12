@@ -1,21 +1,15 @@
 // @flow
+import type { TaskTemplate } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cloneDeep, set } from 'lodash';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
-type FormState = {
-  name?: string,
-  description?: string,
-  entityType?: string,
-  tasks?: Array<Object>,
-};
-
-const initValues = {
+const initValues: TaskTemplate = {
   tasks: [],
 };
 
-export default class TaskTemplateFormContainer extends Container<FormState> {
+export default class TaskTemplateFormContainer extends Container<TaskTemplate> {
   state = initValues;
 
   originalValues = initValues;
@@ -29,7 +23,9 @@ export default class TaskTemplateFormContainer extends Container<FormState> {
   };
 
   setFieldValue = (path: string, value: mixed) => {
-    this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
+    this.setState((prevState: TaskTemplate): TaskTemplate =>
+      set(cloneDeep(prevState), path, value)
+    );
   };
 
   setFieldValues = (values: Object) => {
@@ -50,9 +46,8 @@ export default class TaskTemplateFormContainer extends Container<FormState> {
     });
   };
 
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...values };
-    this.setState(parsedValues);
-    this.originalValues = { ...parsedValues };
+  initDetailValues = (values: Object, originalValues: Object = {}) => {
+    this.originalValues = { ...initValues, ...originalValues };
+    this.setState({ ...initValues, ...values });
   };
 }

@@ -27,11 +27,12 @@ import {
   EntityIconStyle,
 } from './style';
 
-type Props = {
+type Props = {|
   isNew: boolean,
-};
+  isClone: boolean,
+|};
 
-const TableTemplateSection = ({ isNew }: Props) => {
+const TableTemplateSection = ({ isNew, isClone }: Props) => {
   const { hasPermission } = usePermission();
   const allowUpdate = hasPermission(TASK_TEMPLATE_UPDATE);
 
@@ -55,7 +56,7 @@ const TableTemplateSection = ({ isNew }: Props) => {
                     <TextInputFactory
                       name={name}
                       {...inputHandlers}
-                      isNew={isNew}
+                      isNew={isNew || isClone}
                       originalValue={originalValues[name]}
                       label={
                         <FormattedMessage id="modules.TaskTemplates.name" defaultMessage="NAME" />
@@ -76,7 +77,7 @@ const TableTemplateSection = ({ isNew }: Props) => {
                     <TextAreaInputFactory
                       name={name}
                       {...inputHandlers}
-                      isNew={isNew}
+                      isNew={isNew || isClone}
                       originalValue={originalValues[name]}
                       label={
                         <FormattedMessage
@@ -107,7 +108,7 @@ const TableTemplateSection = ({ isNew }: Props) => {
                       }
                       tooltip={
                         <FormTooltip
-                          isNew={isNew}
+                          isNew={isNew || isClone}
                           errorMessage={isTouched && errorMessage}
                           changedValues={{
                             oldValue: originalValues[name],

@@ -30,7 +30,6 @@ const initFilter = {
 
 const TaskTemplateListModule = () => {
   const { hasPermission } = usePermission();
-  const canCreate = hasPermission(TASK_TEMPLATE_CREATE);
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     initFilter,
     'filterTaskTemplate'
@@ -123,7 +122,7 @@ const TaskTemplateListModule = () => {
             }}
           />
 
-          {canCreate && (
+          {hasPermission(TASK_TEMPLATE_CREATE) && (
             <BooleanValue>
               {({ value: isOpen, set: toggleTaskTemplateForm }) => (
                 <>

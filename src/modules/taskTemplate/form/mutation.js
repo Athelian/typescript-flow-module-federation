@@ -89,16 +89,6 @@ export const prepareParsedTaskTemplate = (originalValues: ?Object, newValues: Ob
           getByPathWithDefault(null, 'approvable', oldTask),
           newTask.approvable
         ),
-        ...parseArrayOfIdsField(
-          'assignedToIds',
-          getByPathWithDefault([], 'assignedTo', oldTask),
-          newTask.assignedTo
-        ),
-        ...parseArrayOfIdsField(
-          'approverIds',
-          getByPathWithDefault([], 'approvers', oldTask),
-          newTask.approvers
-        ),
         ...parseMemoField(
           'description',
           getByPathWithDefault(null, 'description', oldTask),

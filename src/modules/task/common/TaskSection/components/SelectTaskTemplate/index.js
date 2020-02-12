@@ -68,7 +68,7 @@ const SelectTaskTemplate = ({ entityType, onCancel, onSelect }: Props) => {
               isLoading={loading}
               onLoadMore={loadMore}
               items={nodes}
-              renderItem={item => (
+              RenderItem={item => (
                 <TemplateCard
                   key={item.id}
                   type="TASK"

@@ -1,73 +1,85 @@
 // @flow
 import * as React from 'react';
+import type { TaskTemplate } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
-import { TemplateCard } from 'components/Cards';
-import { BooleanValue } from 'react-values';
+import { TemplateCard, CardAction } from 'components/Cards';
 import TaskTemplateFormWrapper from 'modules/taskTemplate/common/TaskTemplateFormWrapper';
-import { TASK_TEMPLATE_FORM } from 'modules/permission/constants/task';
+import { TASK_TEMPLATE_FORM, TASK_TEMPLATE_CREATE } from 'modules/permission/constants/task';
 
-type OptionalProps = {
-  renderItem?: Function,
-};
-
-type Props = OptionalProps & {
-  items: Array<Object>,
+type Props = {|
+  items: Array<TaskTemplate>,
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
-};
+  RenderItem?: React.ComponentType<any>,
+|};
 
-const defaultRenderItem = (item: Object, hasPermission: Function) =>
-  item && item.id ? (
-    <BooleanValue key={`wrapper-${item.id}`}>
-      {({ value: isOpen, set: toggleTaskTemplateForm }) => (
-        <React.Fragment key={item.id}>
-          <TemplateCard
-            type="TASK"
-            template={{
-              id: item.id,
-              title: item.name,
-              description: item.description,
-              count: item.tasks.length,
+const DefaultRenderer = ({ template }: { template: TaskTemplate }) => {
+  const { hasPermission } = usePermission();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isClone, setIsClone] = React.useState(false);
+  const onClose = () => {
+    setIsOpen(false);
+    setIsClone(false);
+  };
+  const onClone = () => {
+    setIsOpen(true);
+    setIsClone(true);
+  };
+  return (
+    <>
+      <TemplateCard
+        type="TASK"
+        template={{
+          id: template.id,
+          title: template.name,
+          description: template.description,
+          count: template.tasks.length,
+        }}
+        showActionsOnHover
+        actions={[
+          ...(hasPermission(TASK_TEMPLATE_CREATE)
+            ? [<CardAction icon="CLONE" onClick={onClone} />]
+            : []),
+        ]}
+        onClick={() => (hasPermission([TASK_TEMPLATE_FORM]) ? setIsOpen(true) : null)}
+      />
+      <SlideView
+        isOpen={isOpen}
+        onRequestClose={onClose}
+        shouldConfirm={() => {
+          const button = document.getElementById('task_template_form_save_button');
+          return button;
+        }}
+      >
+        {isOpen && (
+          <TaskTemplateFormWrapper
+            template={template}
+            isClone={isClone}
+            onCancel={onClose}
+            onClone={() => {
+              onClose();
+              setTimeout(() => {
+                onClone();
+              }, 200);
             }}
-            onClick={() =>
-              hasPermission([TASK_TEMPLATE_FORM]) ? toggleTaskTemplateForm(true) : null
-            }
           />
-          <SlideView
-            isOpen={isOpen}
-            onRequestClose={() => toggleTaskTemplateForm(false)}
-            shouldConfirm={() => {
-              const button = document.getElementById('task_template_form_save_button');
-              return button;
-            }}
-          >
-            {isOpen && (
-              <TaskTemplateFormWrapper
-                template={item}
-                onCancel={() => toggleTaskTemplateForm(false)}
-              />
-            )}
-          </SlideView>
-        </React.Fragment>
-      )}
-    </BooleanValue>
-  ) : (
-    <TemplateCard type="TASK" template={{}} />
+        )}
+      </SlideView>
+    </>
   );
+};
 
 const TaskTemplateGridView = ({
   items,
   onLoadMore,
   hasMore,
   isLoading,
-  renderItem = defaultRenderItem,
+  RenderItem = DefaultRenderer,
 }: Props) => {
-  const { hasPermission } = usePermission();
-
   return (
     <GridView
       onLoadMore={onLoadMore}
@@ -79,7 +91,9 @@ const TaskTemplateGridView = ({
         <FormattedMessage id="modules.TableTemplates.noItem" defaultMessage="No template found" />
       }
     >
-      {items.map(item => renderItem(item, hasPermission))}
+      {items.map(template => (
+        <RenderItem template={template} key={template?.id} />
+      ))}
     </GridView>
   );
 };
