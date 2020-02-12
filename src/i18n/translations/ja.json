@@ -106,6 +106,7 @@
   "components.DeleteDialog.cancel": "キャンセル",
   "components.DocumentsDeleteDialog.title": "削除または保持",
   "components.DocumentsDeleteDialog.message": "この{entityIcon}には{fileCount}つの{fileIcon}があります",
+  "components.DocumentsDeleteDialog.message.multiple": "These {entityIcon} have {fileCount} {fileIcon}.",
   "components.DocumentsDeleteDialog.subMessage": "これらの{fileIcon}を削除しますか？それとも添付先のない書類として保持しますか？",
   "components.DocumentsDeleteDialog.keep": "保持",
   "components.DocumentsDeleteDialog.delete": "削除",

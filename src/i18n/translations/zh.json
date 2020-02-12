@@ -106,6 +106,7 @@
   "components.DeleteDialog.cancel": "取消",
   "components.DocumentsDeleteDialog.title": "删除或保留文件",
   "components.DocumentsDeleteDialog.message": "这个 {entityIcon} 有 {fileCount} 个关联的 {fileIcon}。",
+  "components.DocumentsDeleteDialog.message.multiple": "这些 {entityIcon} 有 {fileCount} 个关联的 {fileIcon}。",
   "components.DocumentsDeleteDialog.subMessage": "您要一并删除这些 {fileIcon} 或者保留他们?",
   "components.DocumentsDeleteDialog.keep": "保留",
   "components.DocumentsDeleteDialog.delete": "删除",

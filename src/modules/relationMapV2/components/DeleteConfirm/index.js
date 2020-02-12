@@ -261,6 +261,7 @@ export default function DeleteConfirm({ onSuccess }: Props) {
     return (
       <DocumentsDeleteDialog
         files={files}
+        isMultiple={items.length > 1}
         isOpen
         entityType="ITEM"
         onCancel={onCancel}
