@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
+import type { Entry } from 'generated/graphql';
+import { useViewerHasPermissions } from 'contexts/Permissions';
 import { Query } from 'react-apollo';
 import type { DocumentNode } from 'graphql/language/ast';
 import GridView from 'components/GridView';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import DefaultFormatters, { type LogFormatter } from 'modules/timeline/formatters';
@@ -26,6 +29,26 @@ const defaultProps = {
   formatters: {},
 };
 
+function filterByItemPriceLog(items: Array<Entry>, isBlackOut: boolean): Array<Entry> {
+  if (!isBlackOut) return items;
+
+  return items
+    .filter(
+      entry =>
+        !(entry?.parentEntityType === 'orderItem' && entry?.parameters?.field?.string === 'price')
+    )
+    .reduce((result, entry, counter, entries) => {
+      const lastEntry = result[result.length - 1];
+      const lastEntryIsSeparator =
+        entry?.__typename === 'DateSeparator' && counter === entries.length - 1;
+      const hasTwoEntriesAreSeparator =
+        lastEntry?.__typename === 'DateSeparator' && entry?.__typename === 'DateSeparator';
+      if (hasTwoEntriesAreSeparator || lastEntryIsSeparator) return result;
+
+      return [...result, entry];
+    }, []);
+}
+
 const Timeline = ({
   query,
   queryField,
@@ -34,6 +57,7 @@ const Timeline = ({
   formatters: customFormatters,
 }: Props) => {
   const ref = React.useRef(null);
+  const hasPermissions = useViewerHasPermissions();
   const [isReady, setIsReady] = React.useState(false);
   const ROW_HEIGHT = 60;
   const variables = {
@@ -97,34 +121,36 @@ const Timeline = ({
                 padding="30px 100px"
                 emptyMessage="No logs"
               >
-                {items.map((item: any) => {
-                  switch (getByPathWithDefault('', '__typename', item)) {
-                    case 'Log':
-                      return (
-                        <Log
-                          key={getByPathWithDefault('', 'id', item)}
-                          formatters={formatters}
-                          log={item}
-                        />
-                      );
-                    case 'Comment':
-                      return (
-                        <Comment
-                          key={getByPathWithDefault('', 'id', item)}
-                          comment={item}
-                          query={query}
-                          queryField={queryField}
-                          variables={variables}
-                        />
-                      );
-                    case 'DateSeparator':
-                      return (
-                        <DateSeparator key={getByPathWithDefault('', 'id', item)} date={item} />
-                      );
-                    default:
-                      return null;
+                {filterByItemPriceLog(items, hasPermissions(ORDER_ITEMS_GET_PRICE)).map(
+                  (item: any) => {
+                    switch (getByPathWithDefault('', '__typename', item)) {
+                      case 'Log':
+                        return (
+                          <Log
+                            key={getByPathWithDefault('', 'id', item)}
+                            formatters={formatters}
+                            log={item}
+                          />
+                        );
+                      case 'Comment':
+                        return (
+                          <Comment
+                            key={getByPathWithDefault('', 'id', item)}
+                            comment={item}
+                            query={query}
+                            queryField={queryField}
+                            variables={variables}
+                          />
+                        );
+                      case 'DateSeparator':
+                        return (
+                          <DateSeparator key={getByPathWithDefault('', 'id', item)} date={item} />
+                        );
+                      default:
+                        return null;
+                    }
                   }
-                })}
+                )}
               </GridView>
             </div>
           );
