@@ -1669,7 +1669,7 @@
   "modules.Tags.container": "集装箱",
   "modules.Tags.task": "任务",
   "modules.Tags.project": "工程",
-  "modules.Tags.file": "FILE",
+  "modules.Tags.document": "Document",
   "modules.tags.deleteTagWarning": "您确定要删除此标签吗？",
   "modules.tags.deleteTagMessage": "这样做会将其从正在使用它的所有数据中删除。",
   "modules.Tags.noItem": "未找到标签",
