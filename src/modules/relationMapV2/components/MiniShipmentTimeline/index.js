@@ -224,18 +224,28 @@ export default function MiniShipmentTimeline({
               <Icon icon="CONTAINER" />
             </div>
 
-            <div
-              className={TimelinePointStyle(
-                warehouseContainerPercent < 100 ? 'GRAY_LIGHT' : 'TEAL'
-              )}
+            <button
+              onClick={event => {
+                event.stopPropagation();
+                onChangeActivePoint(WAREHOUSE_ARRIVAL);
+              }}
+              className={TimelinePointWrapperStyle}
+              type="button"
             >
-              <Icon icon="WAREHOUSE" />
+              <div className={TimelinePointActiveStyle(activePoint === WAREHOUSE_ARRIVAL)} />
+              <div
+                className={TimelinePointStyle(
+                  warehouseContainerPercent < 100 ? 'GRAY_LIGHT' : 'TEAL'
+                )}
+              >
+                <Icon icon="WAREHOUSE" />
 
-              <div className={TimelineRingWrapperStyle(warehouseContainerPercent)}>
-                <div className={TimelineBarStyle(warehouseContainerPercent)} />
-                <div className={TimelineFillStyle(warehouseContainerPercent)} />
+                <div className={TimelineRingWrapperStyle(warehouseContainerPercent)}>
+                  <div className={TimelineBarStyle(warehouseContainerPercent)} />
+                  <div className={TimelineFillStyle(warehouseContainerPercent)} />
+                </div>
               </div>
-            </div>
+            </button>
           </div>
 
           <div className={TimelineLineStyle(deliveryReadyColoring)} />
