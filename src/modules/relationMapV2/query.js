@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { tagFragment, taskCountFragment, ownedByFragment } from 'graphql';
+import { tagFragment, taskCountFragment, ownedByFragment, forbiddenFragment } from 'graphql';
 
 const timelineDateFragment = gql`
   fragment timelineDateFragment on TimelineDate {
@@ -40,6 +40,7 @@ const shipmentEntityCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     exporter {
       ... on Organization {
@@ -115,6 +116,7 @@ const containerEntityCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     warehouse {
       ... on Warehouse {
@@ -164,6 +166,7 @@ const batchEntityCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     shipment {
       ... on Shipment {
@@ -234,6 +237,7 @@ const itemEntityCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
   }
 `;
@@ -259,6 +263,7 @@ const orderEntityCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     currency
     exporter {
@@ -361,6 +366,7 @@ export const orderFocusedListQuery = gql`
   ${taskCountFragment}
   ${ownedByFragment}
   ${timelineDateFragment}
+  ${forbiddenFragment}
 `;
 
 export const orderFullFocusDetailQuery = gql`
@@ -380,6 +386,7 @@ export const orderFullFocusDetailQuery = gql`
   ${taskCountFragment}
   ${ownedByFragment}
   ${timelineDateFragment}
+  ${forbiddenFragment}
 `;
 
 export const shipmentFocusedListQuery = gql`
@@ -422,6 +429,7 @@ export const shipmentFocusedListQuery = gql`
   ${taskCountFragment}
   ${ownedByFragment}
   ${timelineDateFragment}
+  ${forbiddenFragment}
 `;
 
 export const shipmentFullFocusDetailQuery = gql`
@@ -441,4 +449,5 @@ export const shipmentFullFocusDetailQuery = gql`
   ${taskCountFragment}
   ${ownedByFragment}
   ${timelineDateFragment}
+  ${forbiddenFragment}
 `;

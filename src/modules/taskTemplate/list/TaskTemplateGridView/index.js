@@ -37,7 +37,7 @@ const DefaultRenderer = ({ template }: { template: TaskTemplate }) => {
           id: template.id,
           title: template.name,
           description: template.description,
-          count: template.tasks.length,
+          count: template.tasks?.length ?? 0,
         }}
         showActionsOnHover
         actions={[

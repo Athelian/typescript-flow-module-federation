@@ -29,6 +29,7 @@ import {
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
   productProviderPackagingFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const containerFormQuery = gql`
@@ -66,6 +67,7 @@ export const containerFormQuery = gql`
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
   ${productProviderPackagingFragment}
+  ${forbiddenFragment}
 `;
 
 export default containerFormQuery;

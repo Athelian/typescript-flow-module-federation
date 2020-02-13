@@ -13,6 +13,7 @@ export const sheetOrderItemFragment = gql`
     memo
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     files {
       ...documentFragment

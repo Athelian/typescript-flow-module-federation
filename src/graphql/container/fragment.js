@@ -45,6 +45,7 @@ export const containerFormFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     shipment {
       ...shipmentCardFragment
@@ -135,6 +136,7 @@ export const containerCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
   }
 `;

@@ -41,6 +41,7 @@ export const sheetShipmentFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     cargoReady {
       ...sheetTimelineDateFragment

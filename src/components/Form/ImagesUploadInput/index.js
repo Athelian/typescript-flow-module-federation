@@ -23,7 +23,7 @@ type Props = {
   onSave: (Array<FilePayload>) => void,
 };
 
-const SELECTED_FIELDS = ['id', 'name', 'path', 'pathMedium', '__typename'];
+const SELECTED_FIELDS = ['id', 'name', 'path', 'pathMedium', 'tags', '__typename'];
 const editableFields = ['id', 'name', 'path', 'pathMedium'];
 
 const ImagesUploadInput = ({ files, width, height, onSave }: Props) => {
@@ -31,6 +31,7 @@ const ImagesUploadInput = ({ files, width, height, onSave }: Props) => {
   const [filesState, setFileState] = React.useState<
     Array<{
       ...UploadFileState,
+      tags: [],
       uploading: boolean,
       progress: number,
     }>
@@ -75,6 +76,7 @@ const ImagesUploadInput = ({ files, width, height, onSave }: Props) => {
       ...newFiles.map(({ name }) => ({
         name,
         id: uuid(),
+        tags: [],
         path: '',
         pathMedium: '',
         uploading: true,
@@ -97,6 +99,7 @@ const ImagesUploadInput = ({ files, width, height, onSave }: Props) => {
                   setFileState(
                     filesStateRef.current.map((fileState, idx) => ({
                       ...fileState,
+                      tags: [],
                       progress:
                         idx === index + currentNumberOfFiles
                           ? Math.round((loaded / total) * 100)
@@ -114,6 +117,7 @@ const ImagesUploadInput = ({ files, width, height, onSave }: Props) => {
         handleUpload(
           uploadResults.map(({ data }) => ({
             ...data.fileUpload,
+            tags: [],
             uploading: false,
             progress: 100,
           }))
@@ -124,6 +128,7 @@ const ImagesUploadInput = ({ files, width, height, onSave }: Props) => {
         setFileState(
           files.map(pick(SELECTED_FIELDS)).map(item => ({
             ...item,
+            tags: [],
             progress: 100,
             uploading: false,
           }))

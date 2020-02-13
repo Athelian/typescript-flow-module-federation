@@ -12,6 +12,7 @@ export const itemCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     todo {
       taskCount {
@@ -48,6 +49,7 @@ export const itemCardFragment = gql`
             serial
             tags {
               ...tagFragment
+              ...forbiddenFragment
             }
             files {
               ...imageFragment
@@ -103,6 +105,7 @@ export const itemFormFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     memo
     todo {
@@ -146,6 +149,7 @@ export const itemInSelectorFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     todo {
       taskCount {
@@ -186,6 +190,7 @@ export const itemInSelectorFragment = gql`
             serial
             tags {
               ...tagFragment
+              ...forbiddenFragment
             }
             files {
               ...imageFragment
@@ -213,6 +218,7 @@ export const itemInOrderFormFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     followers {
       ...userAvatarFragment
@@ -258,6 +264,7 @@ export const itemInOrderFormFragment = gql`
             serial
             tags {
               ...tagFragment
+              ...forbiddenFragment
             }
             files {
               ...imageFragment
@@ -295,6 +302,7 @@ export const itemInBatchFormFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     todo {
       taskCount {
@@ -345,6 +353,7 @@ export const itemInBatchFormFragment = gql`
             serial
             tags {
               ...tagFragment
+              ...forbiddenFragment
             }
             files {
               ...imageFragment

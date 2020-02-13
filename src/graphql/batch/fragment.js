@@ -66,6 +66,7 @@ export const batchFormFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     orderItem {
       ...itemInBatchFormFragment
@@ -152,6 +153,7 @@ export const batchFormFragment = gql`
         }
         tags {
           ...tagFragment
+          ...forbiddenFragment
         }
       }
     }
@@ -183,6 +185,7 @@ export const batchCardFragment = gql`
     packageQuantity
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     shipment {
       ... on Shipment {

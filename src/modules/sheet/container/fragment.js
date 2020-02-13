@@ -30,8 +30,11 @@ export const sheetContainerFragment = gql`
     containerOption
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     memo
     sort
   }
 `;
+
+export default sheetContainerFragment;

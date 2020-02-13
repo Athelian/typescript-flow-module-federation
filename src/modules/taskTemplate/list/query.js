@@ -5,10 +5,11 @@ import {
   userAvatarFragment,
   taskFormInTemplateFragment,
   tagFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const taskTemplateListQuery = gql`
-  query(
+  query taskTemplates(
     $page: Int!
     $perPage: Int!
     $filterBy: TaskTemplateFilterInput
@@ -27,6 +28,7 @@ export const taskTemplateListQuery = gql`
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${tagFragment}
+  ${forbiddenFragment}
 `;
 
 export default taskTemplateListQuery;

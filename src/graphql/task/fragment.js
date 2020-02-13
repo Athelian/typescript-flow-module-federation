@@ -16,6 +16,7 @@ const taskInfoFragment = gql`
     description
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     startDate
     startDateInterval {
@@ -182,6 +183,7 @@ export const taskCardFragment = gql`
     dueDateBinding
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     milestone {
       ... on Milestone {
@@ -240,6 +242,7 @@ export const taskFormInTemplateFragment = gql`
     description
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     approvers {
       ...userAvatarFragment

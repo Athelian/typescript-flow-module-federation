@@ -11,10 +11,11 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   priceFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const orderFormQuery = gql`
-  query order($id: ID!) {
+  query orderFormQuery($id: ID!) {
     order(id: $id) {
       ...orderFormQueryFragment
     }
@@ -30,6 +31,7 @@ export const orderFormQuery = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${priceFragment}
+  ${forbiddenFragment}
 `;
 
 export default orderFormQuery;

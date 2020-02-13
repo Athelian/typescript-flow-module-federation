@@ -13,6 +13,7 @@ export const documentFormFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     name
     type

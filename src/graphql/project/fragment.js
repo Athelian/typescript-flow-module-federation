@@ -40,6 +40,7 @@ export const projectCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
   }
   ${milestoneInProjectCardFragment}
@@ -86,6 +87,7 @@ export const projectFormQueryFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     milestones {
       ... on Milestone {

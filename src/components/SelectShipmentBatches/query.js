@@ -1,6 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import {
+  forbiddenFragment,
   userAvatarFragment,
   metricFragment,
   sizeFragment,
@@ -98,6 +99,7 @@ export const selectBatchListQuery = gql`
           }
           tags {
             ...tagFragment
+            ...forbiddenFragment
           }
           orderItem {
             ...itemInBatchFormFragment
@@ -172,6 +174,7 @@ export const selectBatchListQuery = gql`
               }
               tags {
                 ...tagFragment
+                ...forbiddenFragment
               }
             }
           }
@@ -182,6 +185,7 @@ export const selectBatchListQuery = gql`
     }
   }
 
+  ${forbiddenFragment}
   ${userAvatarFragment}
   ${metricFragment}
   ${sizeFragment}

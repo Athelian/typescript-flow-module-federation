@@ -21,6 +21,7 @@ export const staffCardFragment = gql`
     lastName
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     organization {
       ... on Organization {

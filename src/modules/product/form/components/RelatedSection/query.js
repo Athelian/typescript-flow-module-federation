@@ -15,6 +15,7 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   ownedByFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const ordersInProductQuery = gql`
@@ -38,9 +39,9 @@ export const ordersInProductQuery = gql`
   ${partnerNameFragment}
   ${tagFragment}
   ${priceFragment}
-  ${userAvatarFragment}
   ${taskCountFragment}
   ${ownedByFragment}
+  ${forbiddenFragment}
 `;
 
 export const itemsInProductQuery = gql`
@@ -66,6 +67,8 @@ export const itemsInProductQuery = gql`
   ${priceFragment}
   ${imageFragment}
   ${taskCountFragment}
+  ${ownedByFragment}
+  ${forbiddenFragment}
 `;
 
 export const batchesInProductQuery = gql`
@@ -92,6 +95,7 @@ export const batchesInProductQuery = gql`
   ${priceFragment}
   ${imageFragment}
   ${taskCountFragment}
+  ${forbiddenFragment}
 `;
 
 export const containersInProductQuery = gql`
@@ -114,6 +118,7 @@ export const containersInProductQuery = gql`
   ${containerCardFragment}
   ${imageFragment}
   ${tagFragment}
+  ${forbiddenFragment}
   ${metricFragment}
 `;
 
@@ -138,8 +143,10 @@ export const shipmentsInProductQuery = gql`
   ${userAvatarFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
+  ${forbiddenFragment}
   ${portFragment}
   ${metricFragment}
   ${taskCountFragment}
   ${partnerNameFragment}
+  ${ownedByFragment}
 `;

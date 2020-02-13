@@ -23,6 +23,7 @@ import {
   sizeFragment,
   ownedByFragment,
   productProviderPackagingFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const taskFormQuery = gql`
@@ -53,6 +54,7 @@ export const taskFormQuery = gql`
   ${sizeFragment}
   ${ownedByFragment}
   ${productProviderPackagingFragment}
+  ${forbiddenFragment}
 `;
 
 export default taskFormQuery;

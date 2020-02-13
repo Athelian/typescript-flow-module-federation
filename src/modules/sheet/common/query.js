@@ -5,6 +5,7 @@ import {
   partnerNameFragment,
   tagFragment,
   userAvatarFragment,
+  forbiddenFragment,
 } from 'graphql';
 import { sheetWarehouseFragment, sheetMaskFragment } from './fragment';
 
@@ -62,10 +63,12 @@ export const tagsByIDsQuery = gql`
   query tagsByIDsQuery($ids: [ID!]!) {
     tagsByIDs(ids: $ids) {
       ...tagFragment
+      ...forbiddenFragment
     }
   }
 
   ${tagFragment}
+  ${forbiddenFragment}
 `;
 
 export const filesByIDsQuery = gql`

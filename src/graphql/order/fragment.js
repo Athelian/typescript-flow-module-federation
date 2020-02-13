@@ -61,6 +61,7 @@ export const orderFormQueryFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
   }
 `;
@@ -122,6 +123,7 @@ export const orderFormFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     todo {
       taskCount {
@@ -176,6 +178,7 @@ export const orderCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     todo {
       taskCount {

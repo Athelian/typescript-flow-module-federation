@@ -33,6 +33,7 @@ const orderItemFormFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     memo
     todo {
@@ -66,6 +67,7 @@ const orderItemFormFragment = gql`
             serial
             tags {
               ...tagFragment
+              ...forbiddenFragment
             }
             files {
               ...imageFragment

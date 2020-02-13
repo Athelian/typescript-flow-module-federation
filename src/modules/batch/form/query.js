@@ -27,6 +27,7 @@ import {
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
   productProviderPackagingFragment,
+  forbiddenFragment,
 } from 'graphql';
 import { commentFragment, eventFragment } from 'modules/timeline/query';
 
@@ -63,6 +64,7 @@ export const batchFormQuery = gql`
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
   ${productProviderPackagingFragment}
+  ${forbiddenFragment}
 `;
 
 export const batchTimelineQuery = gql`

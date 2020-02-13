@@ -74,6 +74,7 @@ const DocumentsUpload = ({
   const [filesState, setFileState] = React.useState<
     Array<{
       ...UploadFileState,
+      tags: [],
       uploading: boolean,
       progress: number,
     }>
@@ -169,6 +170,7 @@ const DocumentsUpload = ({
             ...data.fileUpload,
             uploading: false,
             progress: 100,
+            tags: [],
             entity: {
               __typename: entity,
             },

@@ -76,6 +76,7 @@ export const shipmentFormQueryFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     totalVolume {
       ...metricFragment
@@ -166,6 +167,7 @@ export const shipmentFormFragment = gql`
     totalWeightOverriding
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     files {
       ...documentFragment
@@ -262,6 +264,7 @@ export const shipmentCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     todo {
       taskCount {

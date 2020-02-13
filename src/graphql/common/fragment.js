@@ -61,6 +61,7 @@ export const documentFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     # TODO: move to common fragment for entity
     entity {

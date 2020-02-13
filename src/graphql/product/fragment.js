@@ -46,6 +46,7 @@ export const productFormFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     memo
     files {
@@ -84,6 +85,7 @@ export const productCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     todo {
       taskCount {

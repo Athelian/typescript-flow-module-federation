@@ -348,11 +348,6 @@ export const parseTaskField = (
       getByPathWithDefault(null, 'dueDateBinding', originalTask),
       newTask.dueDateBinding
     ),
-    ...parseArrayOfIdsField(
-      'assignedToIds',
-      getByPathWithDefault([], 'assignedTo', originalTask),
-      newTask.assignedTo
-    ),
     ...parseParentIdField(
       'inProgressById',
       getByPathWithDefault(null, 'inProgressBy', originalTask),

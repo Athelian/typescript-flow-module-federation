@@ -11,6 +11,7 @@ import {
   priceFragment,
   productProviderCardFragment,
   ownedByFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const productProvidersListQuery = gql`
@@ -55,6 +56,7 @@ export const productProvidersListQuery = gql`
   ${tagFragment}
   ${taskCountFragment}
   ${ownedByFragment}
+  ${forbiddenFragment}
 `;
 
 export default productProvidersListQuery;
