@@ -1,13 +1,11 @@
 // @flow
 import { Container } from 'unstated';
+import type { Tag } from 'generated/graphql';
 import { isEquals } from 'utils/fp';
+import { extractForbiddenId } from 'utils/data';
 
 type FormState = {
-  tags?: Array<{
-    id: string,
-    name: string,
-    color: string,
-  }>,
+  tags?: Array<Tag>,
 };
 
 const initValues = {
@@ -31,8 +29,9 @@ export default class OrderTagsContainer extends Container<FormState> {
     });
   };
 
-  initDetailValues = (tags: Array<Object>) => {
-    this.setState({ tags });
-    this.originalValues = { tags };
+  initDetailValues = (tags: Array<Tag>) => {
+    const parsedTags = [...tags.map(tag => extractForbiddenId(tag))];
+    this.setState({ tags: parsedTags });
+    this.originalValues = { tags: parsedTags };
   };
 }

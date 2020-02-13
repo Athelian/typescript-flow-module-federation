@@ -1,13 +1,11 @@
 // @flow
 import { Container } from 'unstated';
+import type { Tag } from 'generated/graphql';
 import { isEquals } from 'utils/fp';
+import { extractForbiddenId } from 'utils/data';
 
 type FormState = {
-  tags?: Array<{
-    id: string,
-    name: string,
-    color: string,
-  }>,
+  tags?: Array<Tag>,
 };
 
 const initValues = {
@@ -23,7 +21,6 @@ export default class ProductTagsContainer extends Container<FormState> {
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
-    this.setState(this.originalValues);
   };
 
   setFieldValue = (name: string, value: mixed) => {
@@ -32,9 +29,9 @@ export default class ProductTagsContainer extends Container<FormState> {
     });
   };
 
-  initDetailValues = (tags: Array<Object>) => {
-    const parsedValues: Array<any> = [...tags];
-    this.setState({ tags: parsedValues });
-    this.originalValues = { tags: parsedValues };
+  initDetailValues = (tags: Array<Tag>) => {
+    const parsedTags = [...tags.map(tag => extractForbiddenId(tag))];
+    this.setState({ tags: parsedTags });
+    this.originalValues = { tags: parsedTags };
   };
 }
