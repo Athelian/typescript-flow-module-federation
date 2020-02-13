@@ -6,6 +6,7 @@ import {
   userAvatarFragment,
   taskFormInTemplateFragment,
   tagFragment,
+  forbiddenFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -27,6 +28,7 @@ export const createTaskTemplateMutation: Object = gql`
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${tagFragment}
+  ${forbiddenFragment}
   ${badRequestFragment}
 `;
 
@@ -41,6 +43,7 @@ export const updateTaskTemplateMutation: Object = gql`
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${tagFragment}
+  ${forbiddenFragment}
   ${badRequestFragment}
 `;
 
