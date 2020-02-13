@@ -10,9 +10,10 @@ import { Display, Blackout, Label } from 'components/Form';
 import { FocusedView, GlobalShipmentPoint } from 'modules/relationMapV2/store';
 import { useHasPermissions } from 'contexts/Permissions';
 import { CONTAINER_CREATE } from 'modules/permission/constants/container';
+import { getAgreedArrivalDates, getActualArrivalDates } from 'modules/shipment/helpers';
 import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import { getPort } from 'utils/shipment';
-import { differenceInCalendarDays } from 'utils/date';
+import { earliest, differenceInCalendarDays } from 'utils/date';
 import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
 import CardActions from 'modules/relationMapV2/components/CardActions';
 import {
@@ -168,12 +169,22 @@ export default function ShipmentCard({
       break;
     }
     case WAREHOUSE_ARRIVAL: {
-      if (containers.length === 0) {
-        place = containerGroups?.[0].warehouse?.name;
+      if (containers.length) {
+        const agreedArrivalDates = getAgreedArrivalDates(containers);
+        const actualArrivalDates = getActualArrivalDates(containers);
+        if (actualArrivalDates.length) {
+          date = earliest(actualArrivalDates);
+        } else if (agreedArrivalDates.length) {
+          date = earliest(agreedArrivalDates);
+        } else {
+          date = containerGroups?.[0].warehouseArrival?.latestDate;
+        }
+      } else {
         date = containerGroups?.[0].warehouseArrival?.latestDate;
-        approved = !!containerGroups?.[0].warehouseArrival?.approvedAt;
-        firstDate = containerGroups?.[0].warehouseArrival?.date;
       }
+      place = containerGroups?.[0].warehouse?.name;
+      approved = !!containerGroups?.[0].warehouseArrival?.approvedAt;
+      firstDate = containerGroups?.[0].warehouseArrival?.date;
       break;
     }
     case DELIVERY_READY: {
