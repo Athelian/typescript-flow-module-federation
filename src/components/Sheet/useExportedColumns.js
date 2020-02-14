@@ -22,10 +22,14 @@ export default function useExportedColumns(
         return localSortBy;
       }, []),
       columns: columns.reduce((exportKeys, column) => {
-        if (!column.hidden && !!column.exportKey) {
-          exportKeys.push(
-            ...(Array.isArray(column.exportKey) ? column.exportKey : [column.exportKey])
-          );
+        if (!column.hidden) {
+          if (column.exportKey) {
+            exportKeys.push(
+              ...(Array.isArray(column.exportKey) ? column.exportKey : [column.exportKey])
+            );
+          } else {
+            exportKeys.push(column.key);
+          }
         }
 
         return exportKeys;
