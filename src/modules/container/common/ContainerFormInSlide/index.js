@@ -1,10 +1,12 @@
 // @flow
 import * as React from 'react';
+import { useMutation } from '@apollo/react-hooks';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { isEquals } from 'utils/fp';
 import ContainerForm from 'modules/container/form';
+import { notificationSeeByEntitiesMutation } from 'components/common/QueryFormV2/mutation';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
@@ -156,4 +158,30 @@ class ContainerFormInSlide extends React.Component<Props> {
   }
 }
 
-export default ContainerFormInSlide;
+const ContainerFormInSlideHoC = (props: Props) => {
+  const { isNew, container } = props;
+  const [notificationSeeByEntities] = useMutation(notificationSeeByEntitiesMutation);
+
+  React.useEffect(() => {
+    // mark as read notification on close
+    return () => {
+      if (!isNew && container?.id) {
+        const notificationUnseenCount = container?.notificationUnseenCount ?? 0;
+        if (notificationUnseenCount > 0) {
+          notificationSeeByEntities({
+            variables: {
+              entities: [
+                {
+                  containerId: container?.id,
+                },
+              ],
+            },
+          });
+        }
+      }
+    };
+  }, [isNew, notificationSeeByEntities, container]);
+  return <ContainerFormInSlide {...props} />;
+};
+
+export default ContainerFormInSlideHoC;

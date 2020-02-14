@@ -17,6 +17,7 @@ const projectSheetFragment = gql`
     dueDate
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     createdAt
     updatedAt
@@ -200,9 +201,6 @@ const taskSheetFragment = gql`
     skippedBy {
       ...userAvatarFragment
     }
-    assignedTo {
-      ...userAvatarFragment
-    }
     approvable
     approvedAt
     approvedBy {
@@ -213,6 +211,7 @@ const taskSheetFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     createdAt
     updatedAt
@@ -344,6 +343,7 @@ export const tagsByIDsQuery = gql`
   query tagsByIDsQuery($ids: [ID!]!) {
     tagsByIDs(ids: $ids) {
       ...tagFragment
+      ...forbiddenFragment
     }
   }
 

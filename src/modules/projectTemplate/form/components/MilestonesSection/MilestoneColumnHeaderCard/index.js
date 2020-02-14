@@ -49,8 +49,8 @@ export default function MilestoneColumnHeaderCard({ milestoneIndex, isDragging, 
         state: { milestones = [] },
         setFieldValue,
       }) => {
-        const milestone = milestones[milestoneIndex];
-        const originalValues = originalMilestones[milestoneIndex] || {};
+        const milestone = milestones?.[milestoneIndex] ?? {};
+        const originalValues = originalMilestones?.[milestoneIndex] ?? {};
 
         const validation = validator({
           name: `${milestone.id}.name`,

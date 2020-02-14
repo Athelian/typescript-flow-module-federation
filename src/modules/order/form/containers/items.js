@@ -108,26 +108,10 @@ export default class OrderItemsContainer extends Container<FormState> {
   };
 
   changeExporter = () => {
-    let retry;
-    if (this.state.hasCalledItemsApiYet) {
-      this.setState({
-        orderItems: [],
-        needDeletedFiles: [],
-      });
-    } else {
-      const waitForApiReady = () => {
-        if (this.state.hasCalledItemsApiYet) {
-          this.setState({
-            orderItems: [],
-            needDeletedFiles: [],
-          });
-          cancelAnimationFrame(retry);
-        } else {
-          retry = requestAnimationFrame(waitForApiReady);
-        }
-      };
-      retry = requestAnimationFrame(waitForApiReady);
-    }
+    this.setState({
+      orderItems: [],
+      needDeletedFiles: [],
+    });
   };
 
   resetAmountWithNewCurrency = (currency: string) => {

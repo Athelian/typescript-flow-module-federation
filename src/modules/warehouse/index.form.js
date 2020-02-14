@@ -284,7 +284,6 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                               mask: null,
                               fieldValues: [],
                             },
-                            inCharges: [],
                             organizations: [],
                           }
                         )

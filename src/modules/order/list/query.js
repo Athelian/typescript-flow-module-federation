@@ -6,7 +6,6 @@ import {
   partnerNameFragment,
   tagFragment,
   priceFragment,
-  userAvatarFragment,
   taskCountFragment,
   forbiddenFragment,
 } from 'graphql';
@@ -20,15 +19,9 @@ export const orderListQuery = gql`
   ) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ... on Order {
-          ...orderCardWithOwnedFragment
-          batchCount
-          batchShippedCount
-          timeline {
-            ... on Timeline {
-              unreadCount
-            }
-          }
+        ...orderCardWithOwnedFragment
+        ... on Followed {
+          notificationUnseenCount
         }
         ...forbiddenFragment
       }
@@ -42,7 +35,6 @@ export const orderListQuery = gql`
   ${partnerNameFragment}
   ${tagFragment}
   ${priceFragment}
-  ${userAvatarFragment}
   ${taskCountFragment}
   ${forbiddenFragment}
 `;

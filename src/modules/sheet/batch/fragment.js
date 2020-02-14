@@ -43,6 +43,7 @@ export const sheetBatchFragment = gql`
     memo
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     todo {
       tasks {

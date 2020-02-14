@@ -60,6 +60,7 @@ export const prepareParsedWarehouseInput = (
   originalValues: ?Object,
   newValues: Object
 ): Object => ({
+  ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
   ...parseGenericField(
     'street',
@@ -95,11 +96,6 @@ export const prepareParsedWarehouseInput = (
     'customFields',
     getByPathWithDefault(null, 'customFields', originalValues),
     newValues.customFields
-  ),
-  ...parseArrayOfIdsField(
-    'inChargeIds',
-    getByPathWithDefault([], 'inCharges', originalValues),
-    newValues.inCharges
   ),
   ...parseArrayOfIdsField(
     'organizationIds',

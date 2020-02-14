@@ -22,8 +22,8 @@ export default function ListCardPlaceHolder({ height }: Props) {
         width={880}
         height={height}
         speed={2}
-        primaryColor={colors.GRAY_SUPER_LIGHT}
-        secondaryColor={colors.WHITE}
+        backgroundColor={colors.GRAY_SUPER_LIGHT}
+        foregroundColor={colors.WHITE}
       >
         <rect x="40" y="45" rx="5" ry="5" width="195" height="210" />
         <rect x="255" y="55" rx="5" ry="5" width="195" height="210" />

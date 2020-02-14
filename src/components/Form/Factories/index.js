@@ -1,5 +1,5 @@
 // @flow
-import AssignmentApprovalFactory from './AssignmentApprovalFactory';
+import ApprovalFactory from './ApprovalFactory';
 import CustomFieldsFactory from './CustomFieldsFactory';
 import DateInputFactory from './DateInputFactory';
 import DateTimeInputFactory from './DateTimeInputFactory';
@@ -15,7 +15,7 @@ import UserAssignmentInputFactory from './UserAssignmentInputFactory';
 import PasswordInputFactory from './PasswordInputFactory';
 
 export {
-  AssignmentApprovalFactory,
+  ApprovalFactory,
   CustomFieldsFactory,
   DateInputFactory,
   DateTimeInputFactory,

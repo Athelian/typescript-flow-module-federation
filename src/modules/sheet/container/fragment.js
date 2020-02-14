@@ -8,17 +8,11 @@ export const sheetContainerFragment = gql`
     freeTimeStartDate
     freeTimeDuration
     warehouseArrivalAgreedDate
-    warehouseArrivalAgreedDateAssignedTo {
-      ...userAvatarFragment
-    }
     warehouseArrivalActualDate
     warehouseArrivalAgreedDateApprovedBy {
       ...userAvatarFragment
     }
     warehouseArrivalAgreedDateApprovedAt
-    warehouseArrivalActualDateAssignedTo {
-      ...userAvatarFragment
-    }
     warehouseArrivalActualDateApprovedBy {
       ...userAvatarFragment
     }
@@ -28,9 +22,6 @@ export const sheetContainerFragment = gql`
     }
     yardName
     departureDate
-    departureDateAssignedTo {
-      ...userAvatarFragment
-    }
     departureDateApprovedBy {
       ...userAvatarFragment
     }
@@ -39,8 +30,11 @@ export const sheetContainerFragment = gql`
     containerOption
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     memo
     sort
   }
 `;
+
+export default sheetContainerFragment;

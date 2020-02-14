@@ -18,3 +18,5 @@ export const usersByIDsQuery = gql`
     }
   }
 `;
+
+export default usersByIDsQuery;

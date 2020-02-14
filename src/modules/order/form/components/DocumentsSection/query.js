@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { documentFragment, ownedByFragment, forbiddenFragment } from 'graphql';
+import { documentFragment, tagFragment, ownedByFragment, forbiddenFragment } from 'graphql';
 
 export const orderFormFilesQuery = gql`
   query orderFormFilesQuery($id: ID!) {
@@ -16,6 +16,7 @@ export const orderFormFilesQuery = gql`
   }
 
   ${documentFragment}
+  ${tagFragment}
   ${ownedByFragment}
   ${forbiddenFragment}
 `;

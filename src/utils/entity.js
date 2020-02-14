@@ -12,9 +12,9 @@ const mappingIcon = {
 };
 
 export const parseRoute = (entityType: string) => {
-  return mappingRoutes[entityType] || entityType;
+  return mappingRoutes?.[entityType] ?? entityType;
 };
 
 export const parseIcon = (entityType: string) => {
-  return mappingIcon[entityType] || entityType.toUpperCase() || 'ORDER';
+  return mappingIcon?.[entityType] ?? entityType?.toUpperCase() ?? 'ORDER';
 };

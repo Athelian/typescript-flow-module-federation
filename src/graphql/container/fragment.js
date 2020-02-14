@@ -9,6 +9,12 @@ export const containerFormFragment = gql`
     containerType
     containerOption
     memo
+    followers {
+      ...userAvatarFragment
+    }
+    ... on Followed {
+      notificationUnseenCount
+    }
     ownedBy {
       ...ownedByFragment
     }
@@ -28,26 +34,18 @@ export const containerFormFragment = gql`
     warehouseArrivalActualDateApprovedBy {
       ...userAvatarFragment
     }
-    warehouseArrivalAgreedDateAssignedTo {
-      ...userAvatarFragment
-    }
-    warehouseArrivalActualDateAssignedTo {
-      ...userAvatarFragment
-    }
     freeTimeStartDate
     freeTimeDuration
     autoCalculatedFreeTimeStartDate
     yardName
     departureDate
-    departureDateAssignedTo {
-      ...userAvatarFragment
-    }
     departureDateApprovedAt
     departureDateApprovedBy {
       ...userAvatarFragment
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     shipment {
       ...shipmentCardFragment
@@ -68,6 +66,9 @@ export const containerCardFragment = gql`
     no
     containerType
     containerOption
+    ... on Followed {
+      notificationUnseenCount
+    }
     representativeBatch {
       ... on Batch {
         id
@@ -135,6 +136,7 @@ export const containerCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
   }
 `;

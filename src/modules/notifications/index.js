@@ -6,7 +6,8 @@ import NotificationListModule from './index.list';
 
 const NotificationModule = () => (
   <Router>
-    <NotificationListModule path="/" />
+    <NotificationListModule path="/:activeTab" />
+    <NotificationListModule path="/" default />
   </Router>
 );
 

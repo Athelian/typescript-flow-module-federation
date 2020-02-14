@@ -7,7 +7,7 @@ import type {
 } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cloneDeep, unset, set } from 'lodash';
-import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
+import { isEquals, getByPath } from 'utils/fp';
 import { removeNulls } from 'utils/data';
 import emitter from 'utils/emitter';
 
@@ -41,9 +41,6 @@ const removeOldImporterStaff = ({
   return {
     [field]: {
       ...entity,
-      assignedTo: getByPathWithDefault([], 'assignedTo', entity).filter(
-        user => getByPath('organization.id', user) !== getByPath('id', partner)
-      ),
       approvedAt:
         getByPath('approvedBy.organization.id', entity) === getByPath('id', partner)
           ? null
@@ -125,23 +122,6 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
 
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };
-  };
-
-  waitForTimelineSectionReadyThenChangePartner = (partner: PartnerPayload) => {
-    let retry;
-    if (this.state.hasCalledTimelineApiYet) {
-      this.onChangePartner(partner);
-    } else {
-      const waitForApiReady = () => {
-        if (this.state.hasCalledTimelineApiYet) {
-          this.onChangePartner(partner);
-          cancelAnimationFrame(retry);
-        } else {
-          retry = requestAnimationFrame(waitForApiReady);
-        }
-      };
-      retry = requestAnimationFrame(waitForApiReady);
-    }
   };
 
   onChangePartner = (partner: PartnerPayload) => {

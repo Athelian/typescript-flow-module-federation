@@ -11,9 +11,9 @@ import {
   orderCardFragment,
   partnerNameFragment,
   partnerCardFragment,
-  userAvatarFragment,
   ownedByFragment,
   productProviderPackagingFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const orderItemsListQuery = gql`
@@ -42,9 +42,9 @@ export const orderItemsListQuery = gql`
   ${orderCardFragment}
   ${partnerNameFragment}
   ${partnerCardFragment}
-  ${userAvatarFragment}
   ${ownedByFragment}
   ${productProviderPackagingFragment}
+  ${forbiddenFragment}
 `;
 
 export default orderItemsListQuery;

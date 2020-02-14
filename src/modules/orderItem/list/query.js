@@ -12,16 +12,17 @@ import {
 } from 'graphql';
 
 export const orderItemListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: OrderItemFilterInput, $sortBy: OrderItemSortInput) {
+  query orderItemListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: OrderItemFilterInput
+    $sortBy: OrderItemSortInput
+  ) {
     orderItems(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ... on OrderItem {
-          ...itemCardWithOwnedFragment
-          timeline {
-            ... on Timeline {
-              unreadCount
-            }
-          }
+        ...itemCardWithOwnedFragment
+        ... on Followed {
+          notificationUnseenCount
         }
         ...forbiddenFragment
       }

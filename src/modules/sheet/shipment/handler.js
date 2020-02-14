@@ -11,7 +11,6 @@ import {
   organizationsByIDsQuery,
   tagsByIDsQuery,
   userByIDQuery,
-  usersByIDsQuery,
   warehouseByIDQuery,
 } from 'modules/sheet/common/query';
 
@@ -58,16 +57,6 @@ export async function handleShipmentChanges(
             __typename: 'StringValue',
           },
         };
-      case 'inCharges':
-        return client
-          .query({
-            query: usersByIDsQuery,
-            variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-          })
-          .then(({ data }) => ({
-            field: change.field,
-            new: newCustomValue(data.usersByIDs),
-          }));
       case 'tags':
         return client
           .query({
@@ -252,16 +241,6 @@ export async function handleTimelineDateChanges(
             }));
         }
         break;
-      case 'assignedTo':
-        return client
-          .query({
-            query: usersByIDsQuery,
-            variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-          })
-          .then(({ data }) => ({
-            field: change.field,
-            new: newCustomValue(data.usersByIDs),
-          }));
       default:
         break;
     }

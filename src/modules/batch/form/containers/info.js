@@ -1,45 +1,14 @@
 // @flow
-import type {
-  ProductProviderPackagePayload,
-  MetricValue,
-  Size,
-  TaskPayload,
-  TagPayload,
-  OrderItemPayload,
-} from 'generated/graphql';
+import type { Batch, ProductProviderPackagePayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import { set, cloneDeep } from 'lodash';
 import { getByPath, isEquals } from 'utils/fp';
-import { cleanFalsyAndTypeName } from 'utils/data';
+import { cleanFalsyAndTypeName, extractForbiddenId } from 'utils/data';
 import { calculatePackageQuantity, calculateVolume } from 'utils/batch';
 import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
-export type BatchFormState = {
-  no?: ?string,
-  quantity: number,
-  deliveredAt?: ?Date | string,
-  desiredAt?: ?Date | string,
-  expiredAt?: ?Date | string,
-  producedAt?: ?Date | string,
-  customFields: ?Object,
-  tags?: Array<TagPayload>,
-  memo: ?string,
-  orderItem: ?OrderItemPayload,
-  packageName?: ?string,
-  packageCapacity?: number,
-  packageQuantity: number,
-  packageGrossWeight: MetricValue,
-  packageVolume: MetricValue,
-  packageSize: Size,
-  autoCalculatePackageQuantity: boolean,
-  autoCalculatePackageVolume: boolean,
-  todo: {
-    tasks: Array<TaskPayload>,
-  },
-};
-
-export const initValues: BatchFormState = {
+export const initValues: Batch = {
   no: null,
   quantity: 0,
   deliveredAt: null,
@@ -51,6 +20,7 @@ export const initValues: BatchFormState = {
     fieldValues: [],
   },
   tags: [],
+  followers: [],
   memo: null,
   orderItem: null,
   packageName: null,
@@ -82,7 +52,7 @@ export const initValues: BatchFormState = {
   },
 };
 
-export default class BatchInfoContainer extends Container<BatchFormState> {
+export default class BatchInfoContainer extends Container<Batch> {
   state = initValues;
 
   originalValues = initValues;
@@ -97,8 +67,9 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
 
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...values };
-    this.setState(parsedValues);
-    this.originalValues = parsedValues;
+    const parsedTags = [...parsedValues.tags.map(tag => extractForbiddenId(tag))];
+    this.setState({ ...parsedValues, tags: parsedTags });
+    this.originalValues = { ...parsedValues, tags: parsedTags };
   };
 
   setFieldValue = (name: string, value: mixed) => {

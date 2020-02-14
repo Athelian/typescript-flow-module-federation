@@ -16,6 +16,7 @@ const taskInfoFragment = gql`
     description
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     startDate
     startDateInterval {
@@ -41,9 +42,6 @@ const taskInfoFragment = gql`
     }
     completedAt
     completedBy {
-      ...userAvatarFragment
-    }
-    assignedTo {
       ...userAvatarFragment
     }
     approvable
@@ -156,9 +154,6 @@ export const taskCardFragment = gql`
         }
       }
     }
-    assignedTo {
-      ...userAvatarFragment
-    }
     approvers {
       ...userAvatarFragment
     }
@@ -188,6 +183,7 @@ export const taskCardFragment = gql`
     dueDateBinding
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     milestone {
       ... on Milestone {
@@ -246,9 +242,7 @@ export const taskFormInTemplateFragment = gql`
     description
     tags {
       ...tagFragment
-    }
-    assignedTo {
-      ...userAvatarFragment
+      ...forbiddenFragment
     }
     approvers {
       ...userAvatarFragment

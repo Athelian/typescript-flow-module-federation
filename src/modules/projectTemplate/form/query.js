@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-
+import { forbiddenFragment } from 'graphql';
 import { projectTemplateFormFragment } from 'graphql/projectTemplate/fragment';
 
 export const projectTemplateFormQuery = gql`
@@ -11,6 +11,7 @@ export const projectTemplateFormQuery = gql`
   }
 
   ${projectTemplateFormFragment}
+  ${forbiddenFragment}
 `;
 
 export default projectTemplateFormQuery;

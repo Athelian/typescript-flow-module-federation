@@ -1,35 +1,10 @@
 // @flow
+import type { Task } from 'generated/graphql';
 import { Container } from 'unstated';
-import { cleanFalsyAndTypeName } from 'utils/data';
+import { cleanFalsyAndTypeName, extractForbiddenId } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
-type FormState = {
-  name: ?string,
-  startDate?: ?string,
-  startDateInterval?: ?Object,
-  startDateBinding?: ?string,
-  dueDate?: ?string,
-  dueDateInterval?: ?Object,
-  dueDateBinding?: ?string,
-  description?: ?string,
-  tags?: Array<Object>,
-  memo?: ?string,
-  assignedTo?: Array<Object>,
-  inProgressBy?: ?Object,
-  inProgressAt?: ?string,
-  skippedBy?: ?Object,
-  skippedAt?: ?string,
-  completedBy?: ?Object,
-  completedAt?: ?string,
-  approvers?: Array<Object>,
-  approvable?: boolean,
-  rejectedBy?: ?Object,
-  rejectedAt?: ?string,
-  approvedBy?: ?Object,
-  approvedAt?: ?string,
-};
-
-export const initValues: FormState = {
+export const initValues: Task = {
   name: null,
   startDate: null,
   startDateInterval: null,
@@ -40,7 +15,6 @@ export const initValues: FormState = {
   description: null,
   tags: [],
   memo: null,
-  assignedTo: [],
   inProgressBy: null,
   inProgressAt: null,
   completedBy: null,
@@ -53,7 +27,7 @@ export const initValues: FormState = {
   approvedAt: null,
 };
 
-export default class TaskContainer extends Container<FormState> {
+export default class TaskContainer extends Container<Task> {
   state = initValues;
 
   originalValues = initValues;
@@ -78,7 +52,8 @@ export default class TaskContainer extends Container<FormState> {
 
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...values };
-    this.setState(parsedValues);
-    this.originalValues = { ...parsedValues };
+    const parsedTags = [...parsedValues.tags.map(tag => extractForbiddenId(tag))];
+    this.setState({ ...parsedValues, tags: parsedTags });
+    this.originalValues = { ...parsedValues, tags: parsedTags };
   };
 }

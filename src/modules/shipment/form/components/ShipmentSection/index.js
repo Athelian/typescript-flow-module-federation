@@ -1,25 +1,22 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue, ObjectValue } from 'react-values';
+import { BooleanValue, ObjectValue, ArrayValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
-import apolloClient from 'apollo';
 import emitter from 'utils/emitter';
-import logger from 'utils/logger';
-import { getByPath, getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
+import { isNullOrUndefined } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import { getUniqueExporters } from 'utils/shipment';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
-import { STAFF_LIST } from 'modules/permission/constants/staff';
 import {
   SHIPMENT_CREATE,
   SHIPMENT_UPDATE,
+  SHIPMENT_SET_FOLLOWERS,
   SHIPMENT_SET_ARCHIVED,
   SHIPMENT_SET_IMPORTER,
   SHIPMENT_SET_EXPORTER,
-  SHIPMENT_SET_IN_CHARGE,
   SHIPMENT_SET_TAGS,
   SHIPMENT_SET_CUSTOM_FIELDS,
   SHIPMENT_SET_CUSTOM_FIELDS_MASK,
@@ -40,7 +37,6 @@ import {
   SHIPMENT_SET_PORT,
 } from 'modules/permission/constants/shipment';
 import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
-import { shipmentFormTimelineAndCargoQuery } from 'modules/shipment/form/components/TimelineAndCargoSections/query';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
 import { FormField } from 'modules/form';
@@ -51,7 +47,6 @@ import {
   ShipmentBatchesContainer,
   ShipmentTagsContainer,
   ShipmentTasksContainer,
-  ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import SelectExporter from 'modules/order/common/SelectExporter';
@@ -66,7 +61,6 @@ import {
   FormTooltip,
   TagsInput,
   SectionHeader,
-  LastModified,
   StatusToggle,
   TextInputFactory,
   DateInputFactory,
@@ -74,7 +68,6 @@ import {
   EnumSearchSelectInputFactory,
   TextAreaInputFactory,
   CustomFieldsFactory,
-  UserAssignmentInputFactory,
   DashedPlusButton,
   ToggleInput,
 } from 'components/Form';
@@ -85,6 +78,7 @@ import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import SelectPartners from 'components/SelectPartners';
 import SelectPartner from 'components/SelectPartner';
+import Followers from 'components/Followers';
 import ShipmentSummary from '../ShipmentSummary';
 import { renderExporters, renderForwarders } from './helpers';
 import {
@@ -109,52 +103,72 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
   const { isOwner } = usePartnerPermission();
   const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
-  const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
-  const isNewOrClone = isNew || isClone;
-  return (
-    <MainSectionPlaceholder height={1766} isLoading={isLoading}>
-      <SectionHeader
-        icon="SHIPMENT"
-        title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
-      >
-        {!isNew && (
-          <>
-            <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
-            {!isClone && hasPermission(SHIPMENT_CREATE) && (
-              <CloneButton onClick={() => navigate(`/shipment/clone/${encodeId(shipmentId)}`)} />
-            )}
-            <BooleanValue>
-              {({ value: statusDialogIsOpen, set: dialogToggle }) => (
-                <StatusToggle
-                  readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_ARCHIVED])}
-                  archived={archived}
-                  openStatusDialog={() => dialogToggle(true)}
-                  activateDialog={
-                    <ShipmentActivateDialog
-                      shipment={shipment}
-                      isOpen={statusDialogIsOpen && !!archived}
-                      onRequestClose={() => dialogToggle(false)}
-                    />
-                  }
-                  archiveDialog={
-                    <ShipmentArchiveDialog
-                      shipment={shipment}
-                      isOpen={statusDialogIsOpen && !archived}
-                      onRequestClose={() => dialogToggle(false)}
-                    />
-                  }
-                />
-              )}
-            </BooleanValue>
-          </>
-        )}
-      </SectionHeader>
-      <Subscribe to={[ShipmentInfoContainer]}>
-        {({ originalValues: initialValues, state, setFieldValue }) => {
-          const values: Object = { ...initialValues, ...state };
-          const { forwarders = [], importer, exporter } = values;
+  const { id: shipmentId, archived } = shipment;
 
-          return (
+  return (
+    <Subscribe to={[ShipmentInfoContainer]}>
+      {({
+        originalValues: initialValues,
+        state,
+        setFieldValue,
+        onChangePartner,
+        onChangeForwarders,
+      }) => {
+        const values: Object = { ...initialValues, ...state };
+        const { forwarders = [], importer, exporter } = values;
+
+        return (
+          <MainSectionPlaceholder height={1766} isLoading={isLoading}>
+            <SectionHeader
+              icon="SHIPMENT"
+              title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
+            >
+              <Followers
+                followers={values?.followers ?? []}
+                setFollowers={value => setFieldValue('followers', value)}
+                organizationIds={[
+                  values?.importer?.id,
+                  values?.exporter?.id,
+                  ...(values?.forwarders ?? []).map(forwarder => forwarder?.id),
+                ].filter(Boolean)}
+                editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FOLLOWERS])}
+              />
+
+              {!isNew && (
+                <>
+                  <BooleanValue>
+                    {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+                      <StatusToggle
+                        readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_ARCHIVED])}
+                        archived={archived}
+                        openStatusDialog={() => dialogToggle(true)}
+                        activateDialog={
+                          <ShipmentActivateDialog
+                            shipment={shipment}
+                            isOpen={statusDialogIsOpen && !!archived}
+                            onRequestClose={() => dialogToggle(false)}
+                          />
+                        }
+                        archiveDialog={
+                          <ShipmentArchiveDialog
+                            shipment={shipment}
+                            isOpen={statusDialogIsOpen && !archived}
+                            onRequestClose={() => dialogToggle(false)}
+                          />
+                        }
+                      />
+                    )}
+                  </BooleanValue>
+
+                  {!isClone && hasPermission(SHIPMENT_CREATE) && (
+                    <CloneButton
+                      onClick={() => navigate(`/shipment/clone/${encodeId(shipmentId)}`)}
+                    />
+                  )}
+                </>
+              )}
+            </SectionHeader>
+
             <div className={ShipmentSectionWrapperStyle}>
               <div className={MainFieldsWrapperStyle}>
                 <GridColumn>
@@ -530,39 +544,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                 </GridColumn>
 
                 <GridColumn>
-                  <UserAssignmentInputFactory
-                    cacheKey="ShipmentUserSelect"
-                    name="inCharges"
-                    groupIds={[
-                      getByPath('importer.id', values),
-                      getByPath('exporter.id', values),
-                    ].filter(Boolean)}
-                    values={values.inCharges}
-                    onChange={(name: string, assignments: Array<Object>) =>
-                      setFieldValue(name, assignments)
-                    }
-                    label={
-                      <>
-                        <FormattedMessage
-                          id="modules.Shipments.inCharge"
-                          defaultMessage="IN CHARGE"
-                        />
-                        {' ('}
-                        <FormattedNumber value={values.inCharges.length} />)
-                      </>
-                    }
-                    infoMessage={
-                      <FormattedMessage
-                        id="modules.Shipments.tooltipInCharge"
-                        defaultMessage="You can choose up to 5 people in charge."
-                      />
-                    }
-                    editable={
-                      hasPermission(STAFF_LIST) &&
-                      hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IN_CHARGE])
-                    }
-                  />
-
                   <FieldItem
                     vertical
                     label={
@@ -589,13 +570,13 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         // Disable to changed importer if there is data send from RM
                         // base on initDataForSlideView
                         isNew &&
-                          Object.keys(initDataForSlideView).length === 0 &&
-                          hasPermission(PARTNER_LIST) &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]) ? (
+                        Object.keys(initDataForSlideView).length === 0 &&
+                        hasPermission(PARTNER_LIST) &&
+                        hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]) ? (
                           <BooleanValue>
                             {({ value: importerSelectorIsOpen, set: importerSelectorToggle }) => (
                               <>
-                                {importer && importer.id ? (
+                                {importer?.id ? (
                                   <PartnerCard
                                     partner={importer}
                                     onClick={() => importerSelectorToggle(true)}
@@ -611,123 +592,73 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                   isOpen={importerSelectorIsOpen}
                                   onRequestClose={() => importerSelectorToggle(false)}
                                 >
-                                  {importerSelectorIsOpen && (
-                                    <>
-                                      {isExporter() ? (
-                                        <BooleanValue>
+                                  {isExporter() ? (
+                                    <BooleanValue>
+                                      {({
+                                        value: importerDialogIsOpen,
+                                        set: importerDialogToggle,
+                                      }) => (
+                                        <ObjectValue defaultValue={values.importer}>
                                           {({
-                                            value: importerDialogIsOpen,
-                                            set: importerDialogToggle,
+                                            value: selectedImporter,
+                                            set: setSelectedImporter,
                                           }) => (
-                                            <ObjectValue defaultValue={values.importer}>
-                                              {({
-                                                value: selectedImporter,
-                                                set: setSelectedImporter,
-                                              }) => (
-                                                <>
-                                                  <SelectPartner
-                                                    partnerTypes={['Importer']}
-                                                    selected={values.importer}
-                                                    onCancel={() => importerSelectorToggle(false)}
-                                                    onSelect={selected => {
-                                                      if (selectedImporter) {
-                                                        setSelectedImporter(selected);
-                                                        importerDialogToggle(true);
-                                                      } else {
-                                                        setFieldValue('importer', selected);
-                                                        importerSelectorToggle(false);
-                                                      }
-                                                    }}
+                                            <>
+                                              <SelectPartner
+                                                partnerTypes={['Importer']}
+                                                selected={values.importer}
+                                                onCancel={() => importerSelectorToggle(false)}
+                                                onSelect={selected => {
+                                                  if (selectedImporter) {
+                                                    setSelectedImporter(selected);
+                                                    importerDialogToggle(true);
+                                                  } else {
+                                                    onChangePartner('importer', selected);
+                                                    importerSelectorToggle(false);
+                                                  }
+                                                }}
+                                              />
+                                              <ConfirmDialog
+                                                message={
+                                                  <FormattedMessage
+                                                    id="modules.Shipment.importerDialogMessage"
+                                                    defaultMessage="Changing the Importer will remove all Batches and all Followers of the current Importer from the Shipment and all Containers. Are you sure you want to change the Importer?"
                                                   />
-                                                  <Subscribe
-                                                    to={[
-                                                      ShipmentBatchesContainer,
-                                                      ShipmentTasksContainer,
-                                                      ShipmentTimelineContainer,
-                                                      ShipmentContainersContainer,
-                                                    ]}
-                                                  >
-                                                    {(
-                                                      batchContainer,
-                                                      taskContainer,
-                                                      timelineContainer,
-                                                      containersContainer
-                                                    ) => (
-                                                      <ConfirmDialog
-                                                        isOpen={importerDialogIsOpen}
-                                                        onRequestClose={() => {
-                                                          importerDialogToggle(false);
-                                                        }}
-                                                        onCancel={() => {
-                                                          importerDialogToggle(false);
-                                                        }}
-                                                        onConfirm={() => {
-                                                          importerDialogToggle(false);
-                                                          importerSelectorToggle(false);
-                                                          setFieldValue(
-                                                            'inCharges',
-                                                            values.inCharges.filter(
-                                                              user =>
-                                                                getByPath(
-                                                                  'organization.id',
-                                                                  user
-                                                                ) !== getByPath('id', importer)
-                                                            )
-                                                          );
-                                                          setFieldValue(
-                                                            'importer',
-                                                            selectedImporter
-                                                          );
-                                                          if (isNewOrClone) {
-                                                            batchContainer.initDetailValues([]);
-                                                            taskContainer.onChangePartner(importer);
-                                                            timelineContainer.onChangePartner(
-                                                              importer
-                                                            );
-                                                            containersContainer.onChangePartner(
-                                                              importer
-                                                            );
-                                                          } else {
-                                                            batchContainer.waitForBatchesSectionReadyThenInitDetailValues(
-                                                              []
-                                                            );
-                                                            taskContainer.waitForTasksSectionReadyThenChangePartner(
-                                                              importer
-                                                            );
-                                                            timelineContainer.waitForTimelineSectionReadyThenChangePartner(
-                                                              importer
-                                                            );
-                                                            containersContainer.waitForContainerSectionReadyThenChangePartner(
-                                                              importer
-                                                            );
-                                                          }
-                                                        }}
-                                                        message={
-                                                          <FormattedMessage
-                                                            id="modules.Shipment.importerDialogMessage"
-                                                            defaultMessage="Changing the Importer will remove all Batches. It will also remove all assigned Staff of the current Importer from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Importer?"
-                                                          />
-                                                        }
-                                                      />
-                                                    )}
-                                                  </Subscribe>
-                                                </>
-                                              )}
-                                            </ObjectValue>
+                                                }
+                                                isOpen={importerDialogIsOpen}
+                                                onRequestClose={() => {
+                                                  importerDialogToggle(false);
+                                                }}
+                                                onCancel={() => {
+                                                  importerDialogToggle(false);
+                                                }}
+                                                onConfirm={() => {
+                                                  onChangePartner('importer', selectedImporter);
+                                                  emitter.emit('CLEAN_SHIPMENTS', {
+                                                    action: 'CHANGE_IMPORTER',
+                                                    payload: {
+                                                      importer,
+                                                    },
+                                                  });
+                                                  importerDialogToggle(false);
+                                                  importerSelectorToggle(false);
+                                                }}
+                                              />
+                                            </>
                                           )}
-                                        </BooleanValue>
-                                      ) : (
-                                        <SelectPartner
-                                          partnerTypes={['Importer']}
-                                          selected={values.importer}
-                                          onCancel={() => importerSelectorToggle(false)}
-                                          onSelect={selected => {
-                                            setFieldValue('importer', selected);
-                                            importerSelectorToggle(false);
-                                          }}
-                                        />
+                                        </ObjectValue>
                                       )}
-                                    </>
+                                    </BooleanValue>
+                                  ) : (
+                                    <SelectPartner
+                                      partnerTypes={['Importer']}
+                                      selected={values.importer}
+                                      onCancel={() => importerSelectorToggle(false)}
+                                      onSelect={selected => {
+                                        setFieldValue('importer', selected);
+                                        importerSelectorToggle(false);
+                                      }}
+                                    />
                                   )}
                                 </SlideView>
                               </>
@@ -755,7 +686,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         infoMessage={
                           <FormattedMessage
                             id="modules.Shipments.tooltipMainExporter"
-                            defaultMessage="The Exporter chosen here will have access to this Shipment"
+                            defaultMessage="The Exporter chosen here will have access to this Shipment and only Batches from Order with that Exporter will be allowed"
                           />
                         }
                       />
@@ -764,7 +695,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       <>
                         {(isForwarder() || isImporter()) &&
                         hasPermission(PARTNER_LIST) &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_EXPORTER]) ? (
+                        hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_EXPORTER]) ? (
                           <BooleanValue>
                             {({ value: exporterSelectorIsOpen, set: exporterSelectorToggle }) => (
                               <>
@@ -785,149 +716,40 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                   onRequestClose={() => exporterSelectorToggle(false)}
                                 >
                                   {exporterSelectorIsOpen && (
-                                    <Subscribe
-                                      to={[
-                                        ShipmentTasksContainer,
-                                        ShipmentTimelineContainer,
-                                        ShipmentContainersContainer,
-                                        ShipmentBatchesContainer,
-                                      ]}
-                                    >
-                                      {(
-                                        taskContainer,
-                                        timelineContainer,
-                                        containersContainer,
-                                        batchesContainer
-                                      ) => (
-                                        <SelectExporter
-                                          cacheKey="ShipmentSelectExporter"
-                                          selected={values.exporter}
-                                          onCancel={() => exporterSelectorToggle(false)}
-                                          selectMessage={
-                                            <FormattedMessage
-                                              id="modules.Shipment.mainExporterSelectMessage"
-                                              defaultMessage="Selecting a Main Exporter will allow them access to this Shipment. However, it will mean only Batches of the Main Exporter can be used in this Shipment. All Batches that are currently in this Shipment that do not belong to this Main Exporter will be removed. Are you sure you want to select a Main Exporter?"
-                                            />
-                                          }
-                                          changeMessage={
-                                            <FormattedMessage
-                                              id="modules.Shipment.mainExporterChangeMessage"
-                                              defaultMessage="Changing the Main Exporter will remove all Batches of the current Main Exporter and all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
-                                            />
-                                          }
-                                          warningMessage={
-                                            <FormattedMessage
-                                              id="modules.Shipment.mainExporterDeselectMessage"
-                                              defaultMessage="Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
-                                            />
-                                          }
-                                          onSelect={selectedExporter => {
-                                            setFieldValue(
-                                              'inCharges',
-                                              values.inCharges.filter(
-                                                user =>
-                                                  getByPath('organization.id', user) !==
-                                                  getByPath('id', exporter)
-                                              )
-                                            );
-                                            setFieldValue('exporter', selectedExporter);
-                                            if (isNewOrClone) {
-                                              batchesContainer.changeMainExporter(selectedExporter);
-                                              containersContainer.changeMainExporter(
-                                                selectedExporter
-                                              );
-                                              if (exporter) {
-                                                taskContainer.onChangePartner(exporter);
-                                                timelineContainer.onChangePartner(exporter);
-                                                containersContainer.onChangePartner(exporter);
-                                              }
-                                              exporterSelectorToggle(false);
-                                            } else {
-                                              // fetch the timeline and cargo data for change the exporter
-                                              if (!batchesContainer.state.hasCalledBatchesApiYet) {
-                                                apolloClient
-                                                  .query({
-                                                    query: shipmentFormTimelineAndCargoQuery,
-                                                    variables: { id: shipment.id },
-                                                  })
-                                                  .then(({ data }) => {
-                                                    logger.warn({
-                                                      data,
-                                                    });
-                                                    const cargoReady = getByPathWithDefault(
-                                                      {},
-                                                      'shipment.cargoReady',
-                                                      data
-                                                    );
-                                                    const voyages = getByPathWithDefault(
-                                                      [],
-                                                      'shipment.voyages',
-                                                      data
-                                                    );
-                                                    const containerGroups = getByPathWithDefault(
-                                                      [{}],
-                                                      'shipment.containerGroups',
-                                                      data
-                                                    );
-                                                    timelineContainer.initDetailValues(
-                                                      {
-                                                        cargoReady,
-                                                        voyages,
-                                                        containerGroups,
-                                                      },
-                                                      true
-                                                    );
-
-                                                    const batches = getByPathWithDefault(
-                                                      [],
-                                                      'shipment.batches',
-                                                      data
-                                                    );
-                                                    batchesContainer.initDetailValues(
-                                                      batches,
-                                                      true
-                                                    );
-                                                    const containers = getByPathWithDefault(
-                                                      [],
-                                                      'shipment.containers',
-                                                      data
-                                                    );
-                                                    containersContainer.initDetailValues(
-                                                      containers,
-                                                      true
-                                                    );
-                                                    exporterSelectorToggle(false);
-                                                  })
-                                                  .catch(error => {
-                                                    logger.error(error);
-                                                    exporterSelectorToggle(false);
-                                                  });
-                                              }
-                                              exporterSelectorToggle(false);
-                                              batchesContainer.waitForBatchesSectionReadyThenChangeMainExporter(
-                                                selectedExporter
-                                              );
-                                              containersContainer.waitForContainerSectionReadyThenChangeMainExporter(
-                                                selectedExporter
-                                              );
-                                              if (exporter) {
-                                                taskContainer.waitForTasksSectionReadyThenChangePartner(
-                                                  exporter
-                                                );
-
-                                                timelineContainer.waitForTimelineSectionReadyThenChangePartner(
-                                                  exporter
-                                                );
-
-                                                containersContainer.waitForContainerSectionReadyThenChangePartner(
-                                                  exporter
-                                                );
-                                              }
-                                            }
-                                          }}
+                                    <SelectExporter
+                                      cacheKey="ShipmentSelectExporter"
+                                      selected={values.exporter}
+                                      onCancel={() => exporterSelectorToggle(false)}
+                                      selectMessage={
+                                        <FormattedMessage
+                                          id="modules.Shipment.mainExporterSelectMessage"
+                                          defaultMessage="Selecting a Main Exporter will allow them access to this Shipment. However, it will mean only Batches of the Main Exporter can be used in this Shipment. All Batches that are currently in this Shipment that do not belong to this Main Exporter will be removed. Are you sure you want to select a Main Exporter?"
                                         />
-                                      )}
-                                    </Subscribe>
+                                      }
+                                      changeMessage={
+                                        <FormattedMessage
+                                          id="modules.Shipment.mainExporterChangeMessage"
+                                          defaultMessage="Changing the Main Exporter will remove all Batches and remove all Followers of the current Main Exporter from the Shipment and all Containers. Are you sure you want to change the Main Exporter?"
+                                        />
+                                      }
+                                      warningMessage={
+                                        <FormattedMessage
+                                          id="modules.Shipment.mainExporterDeselectMessage"
+                                          defaultMessage="Removing the Main Exporter will remove all Followers of the current Main Exporter from the Shipment and all Containers. Are you sure you want to remove the Main Exporter?"
+                                        />
+                                      }
+                                      onSelect={selectedExporter => {
+                                        onChangePartner('exporter', selectedExporter);
+                                        emitter.emit('CLEAN_SHIPMENTS', {
+                                          action: 'CHANGE_EXPORTER',
+                                          payload: {
+                                            exporter,
+                                            selectedExporter,
+                                          },
+                                        });
+                                        exporterSelectorToggle(false);
+                                      }}
+                                    />
                                   )}
                                 </SlideView>
                               </>
@@ -964,14 +786,14 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     }
                     input={
                       <BooleanValue>
-                        {({ value: opened, set: slideToggle }) => (
+                        {({ value: forwardersSelectorIsOpen, set: forwardersSelectorToggle }) => (
                           <>
                             <div
                               onClick={() =>
                                 isImporter() &&
                                 hasPermission(PARTNER_LIST) &&
                                 hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FORWARDERS])
-                                  ? slideToggle(true)
+                                  ? forwardersSelectorToggle(true)
                                   : () => {}
                               }
                               role="presentation"
@@ -981,18 +803,76 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                 hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FORWARDERS])
                               )}
                             </div>
-                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                              {opened && (
-                                <SelectPartners
-                                  partnerTypes={['Forwarder']}
-                                  selected={getByPathWithDefault([], 'forwarders', values)}
-                                  onCancel={() => slideToggle(false)}
-                                  onSelect={selected => {
-                                    slideToggle(false);
-                                    setFieldValue('forwarders', selected);
-                                  }}
-                                />
-                              )}
+
+                            <SlideView
+                              isOpen={forwardersSelectorIsOpen}
+                              onRequestClose={() => forwardersSelectorToggle(false)}
+                            >
+                              <BooleanValue>
+                                {({
+                                  value: forwardersDialogIsOpen,
+                                  set: forwardersDialogToggle,
+                                }) => (
+                                  <ArrayValue defaultValue={forwarders}>
+                                    {({
+                                      value: selectedForwarders,
+                                      set: setSelectedForwarders,
+                                    }) => (
+                                      <>
+                                        <SelectPartners
+                                          partnerTypes={['Forwarder']}
+                                          selected={forwarders}
+                                          onCancel={() => forwardersSelectorToggle(false)}
+                                          onSelect={selected => {
+                                            const removedForwarders = forwarders.filter(
+                                              prevForwarder =>
+                                                !selected.some(
+                                                  newForwarder =>
+                                                    newForwarder.id === prevForwarder.id
+                                                )
+                                            );
+
+                                            if (removedForwarders.length > 0) {
+                                              setSelectedForwarders(selected);
+                                              forwardersDialogToggle(true);
+                                            } else {
+                                              onChangeForwarders(selected);
+                                              forwardersSelectorToggle(false);
+                                            }
+                                          }}
+                                        />
+                                        <ConfirmDialog
+                                          message={
+                                            <FormattedMessage
+                                              id="modules.Shipment.forwardersDialogMessage"
+                                              defaultMessage="Changing the Forwarders will remove all Followers of the removed Forwarders from the Shipment and all Containers. Are you sure you want to change the Forwarders?"
+                                            />
+                                          }
+                                          isOpen={forwardersDialogIsOpen}
+                                          onRequestClose={() => {
+                                            forwardersDialogToggle(false);
+                                          }}
+                                          onCancel={() => {
+                                            forwardersDialogToggle(false);
+                                          }}
+                                          onConfirm={() => {
+                                            onChangeForwarders(selectedForwarders);
+                                            emitter.emit('CLEAN_SHIPMENTS', {
+                                              action: 'CHANGE_FORWARDERS',
+                                              payload: {
+                                                forwarders,
+                                                selectedForwarders,
+                                              },
+                                            });
+                                            forwardersDialogToggle(false);
+                                            forwardersSelectorToggle(false);
+                                          }}
+                                        />
+                                      </>
+                                    )}
+                                  </ArrayValue>
+                                )}
+                              </BooleanValue>
                             </SlideView>
                           </>
                         )}
@@ -1053,10 +933,10 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                 entityId={!isClone && shipment.id ? shipment.id : ''}
               />
             </div>
-          );
-        }}
-      </Subscribe>
-    </MainSectionPlaceholder>
+          </MainSectionPlaceholder>
+        );
+      }}
+    </Subscribe>
   );
 };
 

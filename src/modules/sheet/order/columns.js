@@ -116,13 +116,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
-    key: 'order.inCharges',
-    title: <FormattedMessage {...orderMessages.inCharge} />,
-    icon: 'ORDER',
-    color: colors.ORDER,
-    width: ColumnWidths.Users,
-  },
-  {
     key: 'order.totalOrdered',
     title: <FormattedMessage {...orderMessages.totalOrderedQuantity} />,
     icon: 'ORDER',

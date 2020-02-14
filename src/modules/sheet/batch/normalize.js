@@ -1,5 +1,5 @@
 // @flow
-import { parseTodoField, removeTypename } from 'utils/data';
+import { parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 
 export default function normalizeSheetBatchInput(
@@ -41,7 +41,7 @@ export default function normalizeSheetBatchInput(
       };
     case 'tags':
       return {
-        tagIds: newValue.map(tag => tag.id).filter(Boolean),
+        tagIds: newValue.map(tag => extractForbiddenId(tag).id).filter(Boolean),
       };
     case 'todo':
       return parseTodoField(oldValue, newValue);

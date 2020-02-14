@@ -38,10 +38,6 @@ export default defineMessages({
     id: 'modules.Tasks.approvalStatusDate',
     defaultMessage: 'Approval status date',
   },
-  assignedTo: {
-    id: 'modules.Tasks.assignedTo',
-    defaultMessage: 'Assignees',
-  },
   approvers: {
     id: 'modules.Tasks.approvers',
     defaultMessage: 'Approvers',

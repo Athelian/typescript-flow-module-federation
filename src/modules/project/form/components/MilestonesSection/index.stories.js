@@ -4,6 +4,7 @@ import { Provider } from 'unstated';
 import { range, random } from 'lodash';
 import faker from 'faker';
 import { storiesOf } from '@storybook/react';
+import { ViewerContext } from 'contexts/Viewer';
 import { ProjectMilestonesContainer } from 'modules/project/form/containers';
 import MilestonesSection from './index';
 
@@ -31,7 +32,16 @@ const milestonesContainer = new ProjectMilestonesContainer();
 milestonesContainer.initDetailValues(range(random(2, 10)).map(mileStoneGenerator));
 
 storiesOf('Project/MilestonesSection', module).add('with default props', () => (
-  <Provider inject={[milestonesContainer]}>
-    <MilestonesSection />
-  </Provider>
+  <ViewerContext.Provider
+    value={{
+      authenticated: true,
+      setAuthenticated: () => {},
+      user: {},
+      organization: {},
+    }}
+  >
+    <Provider inject={[milestonesContainer]}>
+      <MilestonesSection />
+    </Provider>
+  </ViewerContext.Provider>
 ));

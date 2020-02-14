@@ -1,6 +1,6 @@
 // @flow
 import type { Shipment } from 'generated/graphql';
-import { parseTodoField, removeTypename } from 'utils/data';
+import { parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 
 const cleanUpPorts = (shipment: Shipment) => {
@@ -32,23 +32,14 @@ export default function normalizeSheetShipmentInput(
       };
     case 'tags':
       return {
-        tagIds: newValue.map(tag => tag.id).filter(Boolean),
+        tagIds: newValue.map(tag => extractForbiddenId(tag).id).filter(Boolean),
       };
     case 'files':
       return {
         files: newValue.map(
-          ({ __typename, entity: e, ownedBy, path, uploading, progress, size, ...rest }) => rest
+          ({ __typename, entity: e, ownedBy, tags, path, uploading, progress, size, ...rest }) =>
+            rest
         ),
-      };
-    case 'inCharges':
-      return {
-        inChargeIds: newValue.map(user => user.id),
-      };
-    case 'totalWeight':
-      return {
-        totalWeightOverride: newValue.value ? removeTypename(newValue.value) : null,
-        totalWeightOverriding: newValue.auto,
-        totalWeightDisplayMetric: newValue.displayMetric,
       };
     case 'totalVolume':
       return {
@@ -163,8 +154,6 @@ export function normalizeSheetTimelineDateInput(
         return {
           date: value ? new Date(value) : null,
         };
-      case 'assignedTo':
-        return { assignedToIds: value.map(user => user?.id) };
       case 'approved':
         return { approvedById: value?.user?.id ?? null };
       case 'timelineDateRevisions':

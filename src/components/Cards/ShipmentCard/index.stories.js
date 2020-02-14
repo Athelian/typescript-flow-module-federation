@@ -88,63 +88,6 @@ const shipment = {
     },
     __typename: 'Todo',
   },
-  inCharges: [
-    {
-      id: faker.random.uuid(),
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      organization: {
-        id: faker.random.uuid(),
-        name: faker.name.findName(),
-        __typename: 'Organization',
-      },
-      __typename: 'User',
-    },
-    {
-      id: faker.random.uuid(),
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      organization: {
-        id: faker.random.uuid(),
-        name: faker.name.findName(),
-        __typename: 'Organization',
-      },
-      __typename: 'User',
-    },
-    {
-      id: faker.random.uuid(),
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      organization: {
-        id: faker.random.uuid(),
-        name: faker.name.findName(),
-        __typename: 'Organization',
-      },
-      __typename: 'User',
-    },
-    {
-      id: faker.random.uuid(),
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      organization: {
-        id: faker.random.uuid(),
-        name: faker.name.findName(),
-        __typename: 'Organization',
-      },
-      __typename: 'User',
-    },
-    {
-      id: faker.random.uuid(),
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      organization: {
-        id: faker.random.uuid(),
-        name: faker.name.findName(),
-        __typename: 'Organization',
-      },
-      __typename: 'User',
-    },
-  ],
   voyages: [
     {
       id: faker.random.uuid(),

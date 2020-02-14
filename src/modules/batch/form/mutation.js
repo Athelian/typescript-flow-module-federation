@@ -102,6 +102,7 @@ export const prepareParsedBatchInput = (
 
   return {
     ...(!inBatchForm && originalValues ? { id: originalValues.id } : {}),
+    ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
     ...parseGenericField(
       'quantity',

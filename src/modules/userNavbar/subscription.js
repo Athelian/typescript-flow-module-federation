@@ -7,7 +7,6 @@ export const subscribeNewNotification = gql`
       id
       type
       body
-      read
       seen
       createdAt
     }

@@ -1,54 +1,66 @@
 // @flow
 import * as React from 'react';
+import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { cx } from 'react-emotion';
 import { TabItemStyle, DisabledStyle, IconStyle, LabelStyle } from './style';
 
-type OptionalProps = {
-  className: string,
-  disabled: boolean,
-  icon: string,
-  allowClickOnDisable: boolean,
-  onClick: Function,
-};
-
-type Props = OptionalProps & {
-  label: React.Node,
+type Props = {|
+  label: React$Node,
   active: boolean,
-};
-
-const defaultProps = {
-  className: '',
-  disabled: false,
-  allowClickOnDisable: false,
-  onClick: () => {},
-};
+  icon?: string,
+  className?: string,
+  allowClickOnDisable?: boolean,
+  disabled?: boolean,
+  showTooltip?: boolean,
+  tooltipMessage?: React$Node,
+  onClick?: Function,
+|};
 
 const TabItem = ({
   icon = '',
-  allowClickOnDisable,
+  allowClickOnDisable = false,
+  disabled = false,
+  showTooltip = false,
+  tooltipMessage = '',
   label,
-  disabled,
   active,
   onClick,
   className,
-}: Props) => (
-  <button
-    type="button"
-    {...(allowClickOnDisable ? {} : { disabled })}
-    onClick={onClick}
-    className={disabled ? DisabledStyle : cx(TabItemStyle(active), className)}
-  >
-    {icon && (
-      <div className={IconStyle}>
-        <Icon icon={icon} />
-      </div>
-    )}
-    {label && <div className={LabelStyle}>{label}</div>}
-    <span />
-  </button>
-);
-
-TabItem.defaultProps = defaultProps;
+}: Props) => {
+  return showTooltip ? (
+    <Tooltip message={tooltipMessage}>
+      <button
+        type="button"
+        {...(allowClickOnDisable ? {} : { disabled })}
+        onClick={onClick}
+        className={disabled ? DisabledStyle : cx(TabItemStyle(active), className)}
+      >
+        {icon && (
+          <div className={IconStyle}>
+            <Icon icon={icon} />
+          </div>
+        )}
+        {label && <div className={LabelStyle}>{label}</div>}
+        <span />
+      </button>
+    </Tooltip>
+  ) : (
+    <button
+      type="button"
+      {...(allowClickOnDisable ? {} : { disabled })}
+      onClick={onClick}
+      className={disabled ? DisabledStyle : cx(TabItemStyle(active), className)}
+    >
+      {icon && (
+        <div className={IconStyle}>
+          <Icon icon={icon} />
+        </div>
+      )}
+      {label && <div className={LabelStyle}>{label}</div>}
+      <span />
+    </button>
+  );
+};
 
 export default TabItem;

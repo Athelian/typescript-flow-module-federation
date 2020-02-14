@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { extractForbiddenId } from 'utils/data';
 import { useAllHasPermission } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
@@ -166,9 +167,9 @@ export default function AddTags({ onSuccess }: Props) {
               return {
                 id: order.id,
                 input: {
-                  tagIds: [...new Set([...order.tags.map(tag => tag.id), ...tagIds])].filter(
-                    Boolean
-                  ),
+                  tagIds: [
+                    ...new Set([...order.tags.map(tag => extractForbiddenId(tag).id), ...tagIds]),
+                  ].filter(Boolean),
                 },
               };
             })
@@ -180,9 +181,9 @@ export default function AddTags({ onSuccess }: Props) {
               return {
                 id: item.id,
                 input: {
-                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])].filter(
-                    Boolean
-                  ),
+                  tagIds: [
+                    ...new Set([...item.tags.map(tag => extractForbiddenId(tag).id), ...tagIds]),
+                  ].filter(Boolean),
                 },
               };
             })
@@ -194,9 +195,9 @@ export default function AddTags({ onSuccess }: Props) {
               return {
                 id: item.id,
                 input: {
-                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])].filter(
-                    Boolean
-                  ),
+                  tagIds: [
+                    ...new Set([...item.tags.map(tag => extractForbiddenId(tag).id), ...tagIds]),
+                  ].filter(Boolean),
                 },
               };
             })
@@ -207,9 +208,9 @@ export default function AddTags({ onSuccess }: Props) {
               return {
                 id: item.id,
                 input: {
-                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])].filter(
-                    Boolean
-                  ),
+                  tagIds: [
+                    ...new Set([...item.tags.map(tag => extractForbiddenId(tag).id), ...tagIds]),
+                  ].filter(Boolean),
                 },
               };
             })
@@ -220,9 +221,9 @@ export default function AddTags({ onSuccess }: Props) {
               return {
                 id: item.id,
                 input: {
-                  tagIds: [...new Set([...item.tags.map(tag => tag.id), ...tagIds])].filter(
-                    Boolean
-                  ),
+                  tagIds: [
+                    ...new Set([...item.tags.map(tag => extractForbiddenId(tag).id), ...tagIds]),
+                  ].filter(Boolean),
                 },
               };
             })

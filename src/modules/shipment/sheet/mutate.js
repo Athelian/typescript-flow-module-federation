@@ -44,9 +44,6 @@ const cleanUpExporter = ({
   field: string,
   exporterId: string,
 }) => ({
-  assignedToIds: (selectedEntity?.[field]?.assignedTo ?? [])
-    .filter(user => user?.organization?.id === exporterId || !isExporter(user))
-    .map(user => user.id),
   approvedById:
     selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId &&
     isExporter(selectedEntity?.[field]?.approvedBy)
@@ -76,9 +73,6 @@ function normalizedInput(
       switch (field) {
         case 'exporter': {
           const exporterId = newValue?.id ?? null;
-          const inChargeIds = (shipment?.inCharges ?? [])
-            .filter(user => user?.organization?.id !== exporterId || !isExporter(user))
-            .map(user => user?.id);
 
           if (exporterId) {
             const batches = [];
@@ -116,9 +110,6 @@ function normalizedInput(
             const todo = {
               tasks: (shipment?.todo?.tasks ?? []).map(task => ({
                 id: task.id,
-                assignedToIds: (task?.assignedTo ?? [])
-                  .filter(user => user?.organization?.id === exporterId || !isExporter(user))
-                  .map(user => user.id),
                 approverIds: (task?.approvers ?? [])
                   .filter(user => user?.organization?.id === exporterId || !isExporter(user))
                   .map(user => user.id),
@@ -197,7 +188,6 @@ function normalizedInput(
             }));
             return {
               exporterId,
-              inChargeIds,
               batches,
               containers,
               cargoReady,
@@ -208,7 +198,6 @@ function normalizedInput(
           }
           return {
             exporterId,
-            inChargeIds,
           };
         }
         default:

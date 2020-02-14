@@ -27,6 +27,7 @@ export const BATCH_SET_PACKAGE_SIZE = 'batch.batches.setPackageSize';
 export const BATCH_SET_TASKS = 'batch.batches.setTasks';
 export const BATCH_SET_TASK_TEMPLATE = 'batch.batches.setTaskTemplate';
 export const BATCH_SET_MILESTONE = 'batch.batches.setMilestone';
+export const BATCH_SET_FOLLOWERS = 'batch.batches.setFollowers';
 export const BATCH_ORDERS_LIST = 'batch.orders.list';
 export const BATCH_TASK_LIST = 'batch.tasks.list';
 export const BATCH_TASK_FORM = 'batch.tasks.form';

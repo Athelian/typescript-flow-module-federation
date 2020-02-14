@@ -1,5 +1,5 @@
 // @flow
-import { parseTodoField } from 'utils/data';
+import { parseTodoField, extractForbiddenId } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 
 export default function normalizeSheetOrderItemInput(
@@ -25,12 +25,13 @@ export default function normalizeSheetOrderItemInput(
       };
     case 'tags':
       return {
-        tagIds: newValue.map(tag => tag.id).filter(Boolean),
+        tagIds: newValue.map(tag => extractForbiddenId(tag).id).filter(Boolean),
       };
     case 'files':
       return {
         files: newValue.map(
-          ({ __typename, entity: e, ownedBy, path, uploading, progress, size, ...rest }) => rest
+          ({ __typename, entity: e, ownedBy, tags, path, uploading, progress, size, ...rest }) =>
+            rest
         ),
       };
     case 'todo':

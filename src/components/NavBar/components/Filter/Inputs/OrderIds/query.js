@@ -6,7 +6,6 @@ import {
   partnerNameFragment,
   tagFragment,
   priceFragment,
-  userAvatarFragment,
   taskCountFragment,
   forbiddenFragment,
 } from 'graphql';
@@ -28,7 +27,6 @@ export const ordersQuery = gql`
   ${partnerNameFragment}
   ${tagFragment}
   ${priceFragment}
-  ${userAvatarFragment}
   ${taskCountFragment}
   ${forbiddenFragment}
 `;

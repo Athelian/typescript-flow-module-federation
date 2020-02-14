@@ -24,20 +24,20 @@ import SaveFormButton from 'components/SaveFormButton';
 import { removeTypename } from 'utils/data';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 
-type OptionalProps = {
-  template: Object,
-  isNew: boolean,
-  onCancel: Function,
-};
-
-type Props = OptionalProps & {
+type Props = {|
   intl: IntlShape,
-};
+  template: Object,
+  isNew?: boolean,
+  isClone?: boolean,
+  onCancel?: Function,
+  onClone?: Function,
+|};
 
 const defaultProps = {
-  template: {},
   isNew: false,
+  isClone: false,
   onCancel: () => {},
+  onClone: () => {},
 };
 
 const formContainer = new FormContainer();
@@ -56,13 +56,13 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
     onSuccess: Function = () => {},
     onErrors: Function = () => {}
   ) => {
-    const { isNew, template, onCancel: closeSlideView } = this.props;
+    const { isNew, isClone, template, onCancel } = this.props;
     const input = prepareParsedTaskTemplate(
       isNew ? null : removeTypename(originalValues),
       removeTypename(values)
     );
 
-    if (isNew) {
+    if (isNew || isClone) {
       const { data } = await saveTaskTemplate({
         variables: { input },
       });
@@ -72,7 +72,8 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
       if (violations && violations.length) {
         onErrors(violations);
       } else {
-        closeSlideView();
+        if (onCancel) onCancel();
+
         onSuccess();
       }
     } else if (template.id) {
@@ -92,7 +93,9 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
             emitter.emit('REFETCH_TASK_TEMPLATES', values.entityType);
           }, 200);
         }
-        closeSlideView();
+
+        if (onCancel) onCancel();
+
         onSuccess();
       }
     }
@@ -113,9 +116,9 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
   };
 
   render() {
-    const { isNew, template, onCancel } = this.props;
+    const { isNew, isClone, template, onCancel, onClone } = this.props;
     let mutationKey = {};
-    if (!isNew) {
+    if (!isNew && !isClone) {
       mutationKey = { key: template.id };
     }
     return (
@@ -123,7 +126,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
         <Subscribe to={[TaskTemplateFormContainer]}>
           {taskTemplateContainer => (
             <Mutation
-              mutation={isNew ? createTaskTemplateMutation : updateTaskTemplateMutation}
+              mutation={isNew || isClone ? createTaskTemplateMutation : updateTaskTemplateMutation}
               onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >
@@ -148,9 +151,9 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                         icon="TASK"
                       />
                     </JumpToSection>
-                    {isNew && <CancelButton onClick={() => onCancel()} />}
+                    {(isNew || isClone) && <CancelButton onClick={onCancel} />}
 
-                    {!isNew && taskTemplateContainer.isDirty() && (
+                    {!(isNew || isClone) && taskTemplateContainer.isDirty() && (
                       <ResetFormButton
                         onClick={() => {
                           resetFormState(taskTemplateContainer);
@@ -158,7 +161,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                         }}
                       />
                     )}
-                    {(isNew || taskTemplateContainer.isDirty()) && (
+                    {(isNew || isClone || taskTemplateContainer.isDirty()) && (
                       <SaveFormButton
                         id="task_template_form_save_button"
                         disabled={!formContainer.isReady(taskTemplateContainer.state, validator)}
@@ -185,7 +188,9 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                     <TaskTemplateForm
                       initDetailValues={taskTemplateContainer.initDetailValues}
                       template={template}
-                      isNew={isNew}
+                      isNew={Boolean(isNew)}
+                      isClone={isClone}
+                      onClone={onClone}
                     />
                   </Content>
                 </SlideViewLayout>

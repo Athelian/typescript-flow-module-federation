@@ -34,7 +34,6 @@ export default class TaskForm extends React.Component<Props> {
   render() {
     const {
       task,
-      groupIds,
       entity,
       parentEntity,
       isInTemplate,
@@ -46,7 +45,6 @@ export default class TaskForm extends React.Component<Props> {
         <TaskInfoSection
           isInTemplate={isInTemplate}
           isInProject={isInProject}
-          groupIds={groupIds}
           parentEntity={parentEntity}
           task={task}
         />

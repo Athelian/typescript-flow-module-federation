@@ -11,6 +11,10 @@ export const documentFormFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    tags {
+      ...tagFragment
+      ...forbiddenFragment
+    }
     name
     type
     status

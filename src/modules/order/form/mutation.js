@@ -108,6 +108,7 @@ export const updateOrderMutation = gql`
 `;
 
 export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Object): OrderForm => ({
+  ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
   ...parseGenericField('poNo', getByPathWithDefault(null, 'poNo', originalValues), newValues.poNo),
   ...parseGenericField('piNo', getByPathWithDefault(null, 'piNo', originalValues), newValues.piNo),
   ...parseDateField(
@@ -146,11 +147,6 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
     newValues.tags
   ),
   ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
-  ...parseArrayOfIdsField(
-    'inChargeIds',
-    getByPathWithDefault([], 'inCharges', originalValues),
-    newValues.inCharges
-  ),
   ...parseParentIdField(
     'exporterId',
     getByPathWithDefault(null, 'exporter', originalValues),

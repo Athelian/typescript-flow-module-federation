@@ -54,11 +54,14 @@ export const documentFragment = gql`
     name
     path
     type
-    status
     size
     memo
     ownedBy {
       ...ownedByFragment
+    }
+    tags {
+      ...tagFragment
+      ...forbiddenFragment
     }
     # TODO: move to common fragment for entity
     entity {
@@ -132,9 +135,6 @@ export const timelineDateFullFragment = gql`
   fragment timelineDateFullFragment on TimelineDate {
     id
     date
-    assignedTo {
-      ...userAvatarFragment
-    }
     approvedBy {
       ...userAvatarFragment
     }

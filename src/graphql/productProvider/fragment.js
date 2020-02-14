@@ -113,6 +113,7 @@ export const productProviderCardFragment = gql`
         }
         tags {
           ...tagFragment
+          ...forbiddenFragment
         }
         files {
           ...imageFragment

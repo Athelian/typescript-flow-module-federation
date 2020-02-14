@@ -6,6 +6,7 @@ import OrdersSection from './OrdersSection';
 import ShipmentSection from './ShipmentSection';
 import ShipmentTasksSection from './ShipmentTasksSection';
 import TimelineAndCargoSections from './TimelineAndCargoSections';
+import CleanUpShipment from './CleanUpShipment';
 
 export {
   TimelineAndCargoSections,
@@ -16,4 +17,5 @@ export {
   OrdersSection,
   ShipmentSection,
   ShipmentTasksSection,
+  CleanUpShipment,
 };

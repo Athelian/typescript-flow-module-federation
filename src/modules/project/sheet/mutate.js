@@ -1,5 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
+import { extractForbiddenId } from 'utils/data';
 import { projectMutation, milestoneMutation, taskMutation } from './query';
 
 const mutations = {
@@ -25,7 +26,7 @@ function normalizedInput(
           };
         case 'tags':
           return {
-            tagIds: value.map(tag => tag.id).filter(Boolean),
+            tagIds: value.map(tag => extractForbiddenId(tag).id).filter(Boolean),
           };
         default:
           return {
@@ -80,7 +81,7 @@ function normalizedInput(
       switch (field) {
         case 'tags':
           return {
-            tagIds: value.map(tag => tag.id).filter(Boolean),
+            tagIds: value.map(tag => extractForbiddenId(tag).id).filter(Boolean),
           };
         case 'status': {
           switch (value) {
@@ -172,10 +173,6 @@ function normalizedInput(
             dueDate: value?.date ? new Date(value?.date) : null,
             dueDateInterval: value?.interval ?? null,
             dueDateBinding: value?.binding ?? null,
-          };
-        case 'assignedTo':
-          return {
-            assignedToIds: value.map(user => user.id),
           };
         case 'approvers':
           return {

@@ -66,6 +66,10 @@ export const isNotFound = (data: Object): boolean => {
   return getByPath('__typename', data) === 'NotFound';
 };
 
+export const isBadRequest = (data: Object): boolean => {
+  return getByPath('__typename', data) === 'BadRequest';
+};
+
 export const extractForbiddenId = (data: Object): Object => {
   if (isForbidden(data)) {
     const id = getByPathWithDefault(null, 'reference.id', data);
@@ -238,8 +242,8 @@ export const parseFilesField = (
         id: newFile.id,
         ...parseGenericField('name', getByPathWithDefault(null, 'name', oldFile), newFile.name),
         ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
-        ...parseEnumField('status', getByPathWithDefault(null, 'status', oldFile), newFile.status),
         ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
+        ...parseArrayOfIdsField('tagIds', getByPathWithDefault([], 'tags', oldFile), newFile.tags),
       };
     }
   ),
@@ -343,11 +347,6 @@ export const parseTaskField = (
       'dueDateBinding',
       getByPathWithDefault(null, 'dueDateBinding', originalTask),
       newTask.dueDateBinding
-    ),
-    ...parseArrayOfIdsField(
-      'assignedToIds',
-      getByPathWithDefault([], 'assignedTo', originalTask),
-      newTask.assignedTo
     ),
     ...parseParentIdField(
       'inProgressById',

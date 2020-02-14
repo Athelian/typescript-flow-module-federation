@@ -6,6 +6,7 @@ import {
   userAvatarFragment,
   taskFormInTemplateFragment,
   tagFragment,
+  forbiddenFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -27,6 +28,7 @@ export const createTaskTemplateMutation: Object = gql`
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${tagFragment}
+  ${forbiddenFragment}
   ${badRequestFragment}
 `;
 
@@ -41,6 +43,7 @@ export const updateTaskTemplateMutation: Object = gql`
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${tagFragment}
+  ${forbiddenFragment}
   ${badRequestFragment}
 `;
 
@@ -88,16 +91,6 @@ export const prepareParsedTaskTemplate = (originalValues: ?Object, newValues: Ob
           'approvable',
           getByPathWithDefault(null, 'approvable', oldTask),
           newTask.approvable
-        ),
-        ...parseArrayOfIdsField(
-          'assignedToIds',
-          getByPathWithDefault([], 'assignedTo', oldTask),
-          newTask.assignedTo
-        ),
-        ...parseArrayOfIdsField(
-          'approverIds',
-          getByPathWithDefault([], 'approvers', oldTask),
-          newTask.approvers
         ),
         ...parseMemoField(
           'description',

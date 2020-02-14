@@ -10,6 +10,7 @@ import {
   ShipmentInfoContainer,
   ShipmentTimelineContainer,
   ShipmentBatchesContainer,
+  ShipmentContainersContainer,
 } from './containers';
 import {
   ShipmentSection,
@@ -17,6 +18,7 @@ import {
   OrdersSection,
   TimelineAndCargoSections,
   ShipmentTasksSection,
+  CleanUpShipment,
 } from './components';
 import { ShipmentFormWrapperStyle } from './style';
 
@@ -119,6 +121,17 @@ class ShipmentForm extends React.Component<Props> {
               values={{ ...info, ...timeline }}
               tasks={tasks}
               setTaskValue={setFieldValue}
+            />
+          )}
+        </Subscribe>
+
+        <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
+          {(batchesContainer, containersContainer) => (
+            <CleanUpShipment
+              isNew={isNew || !!isClone}
+              shipmentId={shipment?.id}
+              containersContainer={containersContainer}
+              batchesContainer={batchesContainer}
             />
           )}
         </Subscribe>

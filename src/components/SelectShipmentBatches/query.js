@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  batchFormFragment,
+  forbiddenFragment,
   userAvatarFragment,
   metricFragment,
   sizeFragment,
@@ -38,14 +38,154 @@ export const selectBatchListQuery = gql`
   ) {
     batches(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...batchFormFragment
+        ... on Batch {
+          id
+          sort
+          shipmentSort
+          archived
+          autoCalculatePackageQuantity
+          autoCalculatePackageVolume
+          updatedAt
+          updatedBy {
+            ...userAvatarFragment
+          }
+          ownedBy {
+            ...ownedByFragment
+          }
+          followers {
+            ...userAvatarFragment
+          }
+          memo
+          no
+          quantity
+          producedQuantity
+          preShippedQuantity
+          shippedQuantity
+          postShippedQuantity
+          deliveredQuantity
+          latestQuantity
+          producedAt
+          deliveredAt
+          desiredAt
+          expiredAt
+          totalVolume {
+            ...metricFragment
+          }
+          todo {
+            taskCount {
+              ...taskCountFragment
+            }
+            tasks {
+              ...taskWithoutParentInfoFragment
+            }
+            taskTemplate {
+              ...taskTemplateCardFragment
+            }
+          }
+          customFields {
+            ...customFieldsFragment
+          }
+          packageName
+          packageCapacity
+          packageQuantity
+          packageGrossWeight {
+            ...metricFragment
+          }
+          packageVolume {
+            ...metricFragment
+          }
+          packageSize {
+            ...sizeFragment
+          }
+          tags {
+            ...tagFragment
+            ...forbiddenFragment
+          }
+          orderItem {
+            ...itemInBatchFormFragment
+          }
+          shipment {
+            ...shipmentCardFragment
+          }
+          container {
+            ... on Container {
+              id
+              no
+              ... on Followed {
+                notificationUnseenCount
+              }
+              representativeBatch {
+                ... on Batch {
+                  id
+                  orderItem {
+                    ... on OrderItem {
+                      id
+                      productProvider {
+                        ... on ProductProvider {
+                          id
+                          product {
+                            ... on Product {
+                              id
+                              files {
+                                ...imageFragment
+                              }
+                              name
+                              serial
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              totalVolume {
+                value
+                metric
+              }
+              batches {
+                ... on Batch {
+                  id
+                }
+              }
+              warehouse {
+                ... on Warehouse {
+                  id
+                  name
+                }
+              }
+              warehouseArrivalAgreedDate
+              warehouseArrivalActualDate
+              warehouseArrivalAgreedDateApprovedBy {
+                ... on User {
+                  id
+                }
+              }
+              warehouseArrivalActualDateApprovedBy {
+                ... on User {
+                  id
+                }
+              }
+              shipment {
+                ... on Shipment {
+                  id
+                  no
+                }
+              }
+              tags {
+                ...tagFragment
+                ...forbiddenFragment
+              }
+            }
+          }
+        }
       }
       page
       totalPage
     }
   }
 
-  ${batchFormFragment}
+  ${forbiddenFragment}
   ${userAvatarFragment}
   ${metricFragment}
   ${sizeFragment}

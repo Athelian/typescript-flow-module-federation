@@ -8,6 +8,7 @@ export const sheetOrderFragment = gql`
     memo
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     issuedAt
     piNo
@@ -15,9 +16,6 @@ export const sheetOrderFragment = gql`
     incoterm
     deliveryPlace
     deliveryDate
-    inCharges {
-      ...userAvatarFragment
-    }
     importer {
       ...partnerNameFragment
     }
@@ -38,3 +36,5 @@ export const sheetOrderFragment = gql`
     }
   }
 `;
+
+export default sheetOrderFragment;

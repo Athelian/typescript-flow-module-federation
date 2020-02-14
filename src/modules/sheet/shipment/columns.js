@@ -158,13 +158,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
-    key: 'shipment.inCharges',
-    title: <FormattedMessage {...shipmentMessages.inCharge} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: ColumnWidths.Users,
-  },
-  {
     key: 'shipment.totalBatchQuantity',
     title: <FormattedMessage {...shipmentMessages.totalBatchQuantity} />,
     icon: 'SHIPMENT',
@@ -263,13 +256,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.DateRevisions,
   },
   {
-    key: 'shipment.cargoReady.assignedTo',
-    title: <FormattedMessage {...shipmentMessages.cargoReadyAssignedTo} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: ColumnWidths.Users,
-  },
-  {
     key: 'shipment.cargoReady.approved',
     title: <FormattedMessage {...shipmentMessages.cargoReadyApproved} />,
     icon: 'SHIPMENT',
@@ -310,13 +296,6 @@ const columns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: ColumnWidths.DateRevisions,
-  },
-  {
-    key: 'shipment.voyage.0.departure.assignedTo',
-    title: <FormattedMessage {...shipmentMessages.loadPortDepartureAssignedTo} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: ColumnWidths.Users,
   },
   {
     key: 'shipment.voyage.0.departure.approved',
@@ -375,13 +354,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.DateRevisions,
   },
   {
-    key: 'shipment.voyage.0.firstTransitArrival.assignedTo',
-    title: <FormattedMessage {...shipmentMessages.firstTransitArrivalAssignedTo} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: ColumnWidths.Users,
-  },
-  {
     key: 'shipment.voyage.0.firstTransitArrival.approved',
     title: <FormattedMessage {...shipmentMessages.firstTransitArrivalApproved} />,
     icon: 'SHIPMENT',
@@ -415,13 +387,6 @@ const columns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: ColumnWidths.DateRevisions,
-  },
-  {
-    key: 'shipment.voyage.1.firstTransitDeparture.assignedTo',
-    title: <FormattedMessage {...shipmentMessages.firstTransitDepartureAssignedTo} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: ColumnWidths.Users,
   },
   {
     key: 'shipment.voyage.1.firstTransitDeparture.approved',
@@ -480,13 +445,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.DateRevisions,
   },
   {
-    key: 'shipment.voyage.1.secondTransitArrival.assignedTo',
-    title: <FormattedMessage {...shipmentMessages.secondTransitArrivalAssignedTo} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: ColumnWidths.Users,
-  },
-  {
     key: 'shipment.voyage.1.secondTransitArrival.approved',
     title: <FormattedMessage {...shipmentMessages.secondTransitArrivalApproved} />,
     icon: 'SHIPMENT',
@@ -522,15 +480,8 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.DateRevisions,
   },
   {
-    key: 'shipment.voyage.2.secondTransitDeparture.assignedTo',
-    title: <FormattedMessage {...shipmentMessages.secondTransitDepartureAssignedTo} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: ColumnWidths.Users,
-  },
-  {
     key: 'shipment.voyage.2.secondTransitDeparture.approved',
-    title: <FormattedMessage {...shipmentMessages.secondTransitDepartureAssignedTo} />,
+    title: <FormattedMessage {...shipmentMessages.secondTransitDepartureApproved} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: ColumnWidths.DateUser,
@@ -585,13 +536,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.DateRevisions,
   },
   {
-    key: 'shipment.voyage.2.arrival.assignedTo',
-    title: <FormattedMessage {...shipmentMessages.dischargePortArrivalAssignedTo} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: ColumnWidths.Users,
-  },
-  {
     key: 'shipment.voyage.2.arrival.approved',
     title: <FormattedMessage {...shipmentMessages.dischargePortArrivalApproved} />,
     icon: 'SHIPMENT',
@@ -625,13 +569,6 @@ const columns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: ColumnWidths.DateRevisions,
-  },
-  {
-    key: 'shipment.containerGroup.customClearance.assignedTo',
-    title: <FormattedMessage {...shipmentMessages.customClearanceAssignedTo} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: ColumnWidths.Users,
   },
   {
     key: 'shipment.containerGroup.customClearance.approved',
@@ -676,13 +613,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.DateRevisions,
   },
   {
-    key: 'shipment.containerGroup.warehouseArrival.assignedTo',
-    title: <FormattedMessage {...shipmentMessages.warehouseArrivalAssignedTo} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: ColumnWidths.Users,
-  },
-  {
     key: 'shipment.containerGroup.warehouseArrival.approved',
     title: <FormattedMessage {...shipmentMessages.warehouseArrivalApproved} />,
     icon: 'SHIPMENT',
@@ -716,13 +646,6 @@ const columns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: ColumnWidths.DateRevisions,
-  },
-  {
-    key: 'shipment.containerGroup.deliveryReady.assignedTo',
-    title: <FormattedMessage {...shipmentMessages.deliveryReadyAssignedTo} />,
-    icon: 'SHIPMENT',
-    color: colors.SHIPMENT,
-    width: ColumnWidths.Users,
   },
   {
     key: 'shipment.containerGroup.deliveryReady.approved',

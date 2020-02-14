@@ -2,9 +2,9 @@
 import gql from 'graphql-tag';
 
 export const notificationListQuery = gql`
-  query notificationListQuery($page: Int!, $perPage: Int!) {
+  query notificationListQuery($page: Int!, $perPage: Int!, $filterBy: NotificationFilterInput) {
     viewer {
-      notifications(page: $page, perPage: $perPage) {
+      notifications(page: $page, perPage: $perPage, filterBy: $filterBy) {
         nodes {
           ... on Notification {
             id
@@ -14,6 +14,11 @@ export const notificationListQuery = gql`
                 id
                 firstName
                 lastName
+                avatar {
+                  ... on File {
+                    path(preset: Small)
+                  }
+                }
               }
             }
             receiver {
@@ -24,8 +29,8 @@ export const notificationListQuery = gql`
               }
             }
             body
-            read
             seen
+            archived
             entity {
               __typename
               ... on Model {
@@ -37,10 +42,30 @@ export const notificationListQuery = gql`
         page
         totalPage
       }
-      notificationUnread
-      notificationUnseen
+      notificationCount
+      notificationUnseenCount
     }
   }
 `;
 
-export default notificationListQuery;
+export const notificationPreferencesQuery = gql`
+  query notificationPreferencesQuery {
+    viewer {
+      notificationPreferences {
+        ... on NotificationPreferences {
+          allowedEmail
+          emailInterval {
+            hours
+            minutes
+          }
+          notifications {
+            ... on NotificationPreference {
+              type
+              enabled
+            }
+          }
+        }
+      }
+    }
+  }
+`;

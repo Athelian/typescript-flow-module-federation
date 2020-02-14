@@ -1,5 +1,6 @@
 // @flow
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
+import { extractForbiddenId } from 'utils/data';
 
 export default function normalizeSheetContainerInput(
   order: Object,
@@ -15,7 +16,7 @@ export default function normalizeSheetContainerInput(
       };
     case 'tags':
       return {
-        tagIds: value.map(tag => tag.id).filter(Boolean),
+        tagIds: value.map(tag => extractForbiddenId(tag).id).filter(Boolean),
       };
     case 'warehouseArrivalAgreedDateApproved':
       return {
@@ -36,21 +37,9 @@ export default function normalizeSheetContainerInput(
         freeTimeStartDate: date ? new Date(date) : null,
       };
     }
-    case 'warehouseArrivalAgreedDateAssignedTo':
-      return {
-        warehouseArrivalAgreedDateAssignedToIds: value.map(user => user.id),
-      };
-    case 'warehouseArrivalActualDateAssignedTo':
-      return {
-        warehouseArrivalActualDateAssignedToIds: value.map(user => user.id),
-      };
     case 'warehouse':
       return {
         warehouseId: value?.id ?? null,
-      };
-    case 'departureDateAssignedTo':
-      return {
-        departureDateAssignedToIds: value.map(user => user.id),
       };
     default:
       return normalizeSheetInput(order, field, value);

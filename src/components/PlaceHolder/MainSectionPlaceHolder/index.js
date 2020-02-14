@@ -32,8 +32,8 @@ export default function MainSectionPlaceholder({ height, isLoading, children }: 
               width={880}
               height={height}
               speed={2}
-              primaryColor={colors.GRAY_SUPER_LIGHT}
-              secondaryColor={colors.WHITE}
+              backgroundColor={colors.GRAY_SUPER_LIGHT}
+              foregroundColor={colors.WHITE}
             >
               <rect x="100" y="45" rx="5" ry="5" width="400" height="20" />
               <rect x="100" y="90" rx="5" ry="5" width="380" height="20" />

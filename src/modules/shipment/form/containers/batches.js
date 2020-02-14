@@ -1,5 +1,10 @@
 // @flow
-import type { BatchPayload, ContainerPayload, PartnerPayload } from 'generated/graphql';
+import type {
+  BatchPayload,
+  ContainerPayload,
+  PartnerPayload,
+  OrganizationPayload,
+} from 'generated/graphql';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import { isEquals, getByPath } from 'utils/fp';
@@ -78,7 +83,7 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
     this.existingBatches = batches;
   };
 
-  changeMainExporter = (exporter: PartnerPayload) => {
+  changeMainExporter = (prevExporter: ?PartnerPayload, exporter: ?PartnerPayload) => {
     if (exporter) {
       this.setState(prevState => {
         return {
@@ -87,40 +92,61 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
           ),
         };
       });
+    } else if (prevExporter) {
+      this.setState(prevState => {
+        const cleanedBatches = prevState.batches.map(batch => {
+          const { followers: batchFollowers = [] } = batch;
+
+          const cleanedBatchFollowers = batchFollowers.filter(
+            follower => prevExporter.id !== follower?.organization?.id
+          );
+
+          return {
+            ...batch,
+            followers: cleanedBatchFollowers,
+          };
+        });
+        return { batches: cleanedBatches };
+      });
     }
   };
 
-  waitForBatchesSectionReadyThenInitDetailValues = (batches: Array<BatchPayload>) => {
-    let retry;
-    if (this.state.hasCalledBatchesApiYet) {
-      this.initDetailValues(batches, true);
-    } else {
-      const waitForApiReady = () => {
-        if (this.state.hasCalledBatchesApiYet) {
-          this.initDetailValues(batches, true);
-          cancelAnimationFrame(retry);
-        } else {
-          retry = requestAnimationFrame(waitForApiReady);
-        }
-      };
-      retry = requestAnimationFrame(waitForApiReady);
+  // On change Importer, clean up followers and batches
+  onChangeImporter = (prevImporter: ?OrganizationPayload) => {
+    if (prevImporter) {
+      this.setState({
+        batches: [],
+      });
     }
   };
 
-  waitForBatchesSectionReadyThenChangeMainExporter = (exporter: PartnerPayload) => {
-    let retry;
-    if (this.state.hasCalledBatchesApiYet) {
-      this.changeMainExporter(exporter);
-    } else {
-      const waitForApiReady = () => {
-        if (this.state.hasCalledBatchesApiYet) {
-          this.changeMainExporter(exporter);
-          cancelAnimationFrame(retry);
-        } else {
-          retry = requestAnimationFrame(waitForApiReady);
-        }
-      };
-      retry = requestAnimationFrame(waitForApiReady);
+  onChangeForwarders = (
+    prevForwarders: Array<OrganizationPayload> = [],
+    newForwarders: Array<OrganizationPayload> = []
+  ) => {
+    const removedForwarders = prevForwarders.filter(
+      prevForwarder => !newForwarders.some(newForwarder => newForwarder.id === prevForwarder.id)
+    );
+
+    if (prevForwarders.length > 0 && removedForwarders.length > 0) {
+      this.setState(({ batches = [] }) => {
+        const cleanedBatches = batches.map(batch => {
+          const { followers: batchFollowers = [] } = batch;
+
+          const cleanedBatchFollowers = batchFollowers.filter(
+            follower =>
+              !removedForwarders.some(
+                removedForwarder => removedForwarder.id === follower?.organization?.id
+              )
+          );
+
+          return {
+            ...batch,
+            followers: cleanedBatchFollowers,
+          };
+        });
+        return { batches: cleanedBatches };
+      });
     }
   };
 }

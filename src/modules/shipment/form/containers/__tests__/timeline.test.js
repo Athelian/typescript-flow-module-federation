@@ -33,31 +33,9 @@ describe('shipment timeline container', () => {
       organization,
     };
 
-    const remainUsers = [
-      {
-        id: faker.random.uuid(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        organization: {
-          id: faker.random.uuid(),
-          name: faker.name.findName(),
-        },
-      },
-      {
-        id: faker.random.uuid(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        organization: {
-          id: faker.random.uuid(),
-          name: faker.name.findName(),
-        },
-      },
-    ];
-
     const cargoReady = {
       id: faker.random.uuid(),
       date: null,
-      assignedTo: [staff, ...remainUsers],
       approvedBy: staff,
       approvedAt: faker.date.future(),
       timelineDateRevisions: [
@@ -93,7 +71,6 @@ describe('shipment timeline container', () => {
     expect(container.state).toEqual({
       cargoReady: {
         ...cargoReady,
-        assignedTo: remainUsers,
         approvedBy: null,
         approvedAt: null,
       },
@@ -117,31 +94,9 @@ describe('shipment timeline container', () => {
       organization,
     };
 
-    const remainUsers = [
-      {
-        id: faker.random.uuid(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        organization: {
-          id: faker.random.uuid(),
-          name: faker.name.findName(),
-        },
-      },
-      {
-        id: faker.random.uuid(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        organization: {
-          id: faker.random.uuid(),
-          name: faker.name.findName(),
-        },
-      },
-    ];
-
     const cargoReady = {
       id: faker.random.uuid(),
       date: null,
-      assignedTo: [staff, ...remainUsers],
       approvedBy: staff,
       approvedAt: faker.date.future(),
       timelineDateRevisions: [
@@ -158,7 +113,6 @@ describe('shipment timeline container', () => {
       warehouse: null,
       customClearance: {
         id: faker.random.uuid(),
-        assignedTo: [staff],
         approvedBy: staff,
         approvedAt: faker.date.future(),
         timelineDateRevisions: [],
@@ -166,14 +120,12 @@ describe('shipment timeline container', () => {
       warehouseArrival: {
         id: faker.random.uuid(),
         date: null,
-        assignedTo: [],
         approvedBy: staff,
         approvedAt: faker.date.future(),
         timelineDateRevisions: [],
       },
       deliveryReady: {
         id: faker.random.uuid(),
-        assignedTo: [],
         approvedBy: staff,
         approvedAt: faker.date.future(),
         timelineDateRevisions: [],
@@ -194,7 +146,6 @@ describe('shipment timeline container', () => {
       departure: {
         id: faker.random.uuid(),
         date: null,
-        assignedTo: [],
         approvedBy: staff,
         approvedAt: faker.date.future(),
         timelineDateRevisions: [],
@@ -202,7 +153,6 @@ describe('shipment timeline container', () => {
       arrival: {
         id: faker.random.uuid(),
         date: null,
-        assignedTo: [],
         approvedBy: staff,
         approvedAt: faker.date.future(),
         timelineDateRevisions: [],
@@ -224,7 +174,6 @@ describe('shipment timeline container', () => {
       hasCalledTimelineApiYet: true,
       cargoReady: {
         ...cargoReady,
-        assignedTo: remainUsers,
         approvedBy: null,
         approvedAt: null,
       },
@@ -233,7 +182,6 @@ describe('shipment timeline container', () => {
           ...containerGroup,
           customClearance: {
             ...containerGroup.customClearance,
-            assignedTo: [],
             approvedBy: null,
             approvedAt: null,
           },

@@ -7,7 +7,6 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
   SHIPMENT_UPDATE,
   SHIPMENT_APPROVE_TIMELINE_DATE,
-  SHIPMENT_ASSIGN_TIMELINE_DATE,
   SHIPMENT_SET_REVISE_TIMELINE_DATE,
   SHIPMENT_SET_TIMELINE_DATE,
 } from 'modules/permission/constants/shipment';
@@ -21,17 +20,12 @@ import {
   SectionHeader,
   DischargePortArrivalAdjustmentWrapper,
   DateInputFactory,
-  AssignmentApprovalFactory,
+  ApprovalFactory,
 } from 'components/Form';
 import { TimelineInfoSectionWrapperStyle, AddDateButtonWrapperStyle } from './style';
 
 type OptionalProps = {
   timelineDate: {
-    assignedTo: Array<{
-      id: string,
-      firstName: string,
-      lastName: string,
-    }>,
     timelineDateRevisions: Array<Object>,
     approvedAt: ?Date,
     approvedBy: ?{
@@ -59,7 +53,6 @@ type Props = OptionalProps & {
 const defaultProps = {
   renderBelowHeader: null,
   timelineDate: {
-    assignedTo: [],
     timelineDateRevisions: [],
     approvedAt: null,
     approvedBy: null,
@@ -93,19 +86,16 @@ const DischargePortArrival = (props: Props) => {
           {renderBelowHeader}
         </SectionHeader>
 
-        <AssignmentApprovalFactory
+        <ApprovalFactory
           cacheKey="ShipmentUserSelect"
           groupIds={groupIds}
           name={sourceName}
-          assignmentsName={`${sourceName}.assignedTo`}
-          assignments={timelineDate && timelineDate.assignedTo}
           approvedAtName={`${sourceName}.approvedAt`}
           approvedAt={timelineDate && timelineDate.approvedAt}
           approvedByName={`${sourceName}.approvedBy`}
           approvedBy={timelineDate && timelineDate.approvedBy}
           setFieldValue={setFieldDeepValue}
           approvable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_APPROVE_TIMELINE_DATE])}
-          assignable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_ASSIGN_TIMELINE_DATE])}
         />
         <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
           <div className={AddDateButtonWrapperStyle}>

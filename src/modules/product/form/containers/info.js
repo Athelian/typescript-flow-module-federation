@@ -1,21 +1,11 @@
 // @flow
 import { Container } from 'unstated';
+import type { Product } from 'generated/graphql';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
 
-type FormState = {
-  name?: string,
-  serial?: string,
-  janCode?: ?string,
-  hsCode?: ?string,
-  material?: ?string,
-  customFields?: Object,
-  memo: string,
-  importer: Object,
-};
-
-const initValues = {
+const initValues: Product = {
   customFields: {
     mask: null,
     fieldValues: [],
@@ -23,7 +13,7 @@ const initValues = {
   memo: null,
 };
 
-export default class ProductInfoContainer extends Container<FormState> {
+export default class ProductInfoContainer extends Container<Product> {
   state = initValues;
 
   originalValues = initValues;

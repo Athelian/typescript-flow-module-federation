@@ -2,31 +2,27 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
-import NotificationItem from 'modules/notifications/components/NotificationItem';
+import NotificationRow from 'modules/notifications/components/NotificationRow';
 
 type Props = {
   items: Array<Object>,
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
-  renderItem?: (item: Object) => React.Node,
-};
-
-const defaultRenderItem = (item: Object) => <NotificationItem key={item.id} notification={item} />;
-
-const defaultProps = {
-  renderItem: defaultRenderItem,
 };
 
 const NotificationListView = (props: Props) => {
-  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
+  const { items, onLoadMore, hasMore, isLoading } = props;
+  const [ignoreList, setIgnoreList] = React.useState([]);
 
   return (
     <GridView
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}
-      itemWidth="860px"
+      itemWidth="100%"
+      padding="0px"
+      rowGap="0px"
       isEmpty={items.length === 0}
       emptyMessage={
         <FormattedMessage
@@ -35,11 +31,19 @@ const NotificationListView = (props: Props) => {
         />
       }
     >
-      {items.map(item => renderItem(item))}
+      {items.map(item =>
+        ignoreList.includes(item.id) ? null : (
+          <NotificationRow
+            key={item.id}
+            notification={item}
+            onRemove={id => {
+              setIgnoreList([...ignoreList, id]);
+            }}
+          />
+        )
+      )}
     </GridView>
   );
 };
-
-NotificationListView.defaultProps = defaultProps;
 
 export default NotificationListView;

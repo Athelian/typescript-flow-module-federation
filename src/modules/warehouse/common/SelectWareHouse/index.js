@@ -14,8 +14,8 @@ import {
   WarehouseFilterConfig,
   WarehouseSortConfig,
 } from 'components/NavBar';
-import { warehouseListQuery } from 'modules/warehouse/list/query';
 import WarehouseGridView from 'modules/warehouse/list/WarehouseGridView';
+import { warehouseListQuery } from './query';
 
 type Props = {
   selected?: ?{

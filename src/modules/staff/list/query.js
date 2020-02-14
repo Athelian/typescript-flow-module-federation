@@ -1,9 +1,14 @@
 // @flow
 import gql from 'graphql-tag';
-import { staffCardFragment, tagFragment } from 'graphql';
+import { staffCardFragment, tagFragment, forbiddenFragment } from 'graphql';
 
 export const staffListQuery = gql`
-  query users($page: Int!, $perPage: Int!, $filterBy: UserFilterInput, $sortBy: UserSortInput) {
+  query staffListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: UserFilterInput
+    $sortBy: UserSortInput
+  ) {
     users(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...staffCardFragment
@@ -15,6 +20,7 @@ export const staffListQuery = gql`
 
   ${staffCardFragment}
   ${tagFragment}
+  ${forbiddenFragment}
 `;
 
 export default staffListQuery;

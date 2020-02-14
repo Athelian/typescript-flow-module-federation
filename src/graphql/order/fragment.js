@@ -12,6 +12,12 @@ export const orderFormQueryFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    followers {
+      ...userAvatarFragment
+    }
+    ... on Followed {
+      notificationUnseenCount
+    }
     memo
     poNo
     currency
@@ -53,11 +59,9 @@ export const orderFormQueryFragment = gql`
         }
       }
     }
-    inCharges {
-      ...userAvatarFragment
-    }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
   }
 `;
@@ -72,6 +76,12 @@ export const orderFormFragment = gql`
     }
     ownedBy {
       ...ownedByFragment
+    }
+    followers {
+      ...userAvatarFragment
+    }
+    ... on Followed {
+      notificationUnseenCount
     }
     memo
     poNo
@@ -111,11 +121,9 @@ export const orderFormFragment = gql`
         }
       }
     }
-    inCharges {
-      ...userAvatarFragment
-    }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     todo {
       taskCount {
@@ -170,16 +178,19 @@ export const orderCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     todo {
       taskCount {
         ...taskCountFragment
       }
     }
-    inCharges {
-      ...userAvatarFragment
-    }
     currency
+    batchCount
+    batchShippedCount
+    ... on Followed {
+      notificationUnseenCount
+    }
   }
 `;
 

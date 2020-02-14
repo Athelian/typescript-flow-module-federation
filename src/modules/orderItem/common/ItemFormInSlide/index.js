@@ -1,9 +1,11 @@
 // @flow
 import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { useMutation } from '@apollo/react-hooks';
 import { BooleanValue } from 'react-values';
 import { Provider, Subscribe } from 'unstated';
 import { FormContainer, resetFormState } from 'modules/form';
+import { notificationSeeByEntitiesMutation } from 'components/common/QueryFormV2/mutation';
 import {
   OrderItemInfoContainer,
   OrderItemTasksContainer,
@@ -31,6 +33,27 @@ type Props = {|
 
 const formContainer = new FormContainer();
 const ItemFormInSlide = ({ orderItem, onSave, isNew }: Props) => {
+  const [notificationSeeByEntities] = useMutation(notificationSeeByEntitiesMutation);
+  useEffect(() => {
+    return () => {
+      // mark to read notification on close
+      if (!isNew && orderItem?.id) {
+        const notificationUnseenCount = orderItem?.notificationUnseenCount ?? 0;
+        if (notificationUnseenCount > 0) {
+          notificationSeeByEntities({
+            variables: {
+              entities: [
+                {
+                  orderItemId: orderItem?.id,
+                },
+              ],
+            },
+          });
+        }
+      }
+    };
+  }, [isNew, notificationSeeByEntities, orderItem]);
+
   useEffect(() => {
     return () => formContainer.onReset();
   });

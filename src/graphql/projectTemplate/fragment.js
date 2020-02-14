@@ -35,6 +35,7 @@ export const projectTemplateCardFragment = gql`
     description
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     milestones {
       ... on MilestoneTemplate {
@@ -58,6 +59,7 @@ export const projectTemplateFormFragment = gql`
     description
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     milestones {
       ...milestoneTemplateFormFragment

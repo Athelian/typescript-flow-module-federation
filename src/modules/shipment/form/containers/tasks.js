@@ -90,23 +90,6 @@ export default class ShipmentTasksContainer extends Container<FormState> {
     }
   };
 
-  waitForTasksSectionReadyThenChangePartner = (partner: OrganizationPayload) => {
-    let retry;
-    if (this.state.hasCalledTasksApiYet) {
-      this.onChangePartner(partner);
-    } else {
-      const waitForApiReady = () => {
-        if (this.state.hasCalledTasksApiYet) {
-          this.onChangePartner(partner);
-          cancelAnimationFrame(retry);
-        } else {
-          retry = requestAnimationFrame(waitForApiReady);
-        }
-      };
-      retry = requestAnimationFrame(waitForApiReady);
-    }
-  };
-
   onChangePartner(partner: OrganizationPayload) {
     const { todo } = this.state;
     this.setState({
@@ -114,9 +97,6 @@ export default class ShipmentTasksContainer extends Container<FormState> {
         ...todo,
         tasks: todo.tasks.map(task => ({
           ...task,
-          assignedTo: getByPathWithDefault([], 'assignedTo', task).filter(
-            user => getByPath('organization.id', user) !== getByPath('id', partner)
-          ),
           approvers: getByPathWithDefault([], 'approvers', task).filter(
             user => getByPath('organization.id', user) !== getByPath('id', partner)
           ),

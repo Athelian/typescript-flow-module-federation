@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { staffCardFragment, tagFragment } from 'graphql';
+import { staffCardFragment, tagFragment, forbiddenFragment } from 'graphql';
 
 export const usersQuery = gql`
   query usersQuery(
@@ -20,4 +20,7 @@ export const usersQuery = gql`
 
   ${staffCardFragment}
   ${tagFragment}
+  ${forbiddenFragment}
 `;
+
+export default usersQuery;

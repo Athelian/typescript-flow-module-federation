@@ -1,34 +1,17 @@
 // @flow
 import * as React from 'react';
+import type { File } from 'generated/graphql';
 import { createContainer } from 'unstated-next';
-import { cleanFalsyAndTypeName } from 'utils/data';
+import { cleanFalsyAndTypeName, extractForbiddenId } from 'utils/data';
 import { isEquals } from 'utils/fp';
-import type { UserPayload } from 'generated/graphql';
 
-type State = {
-  name: ?string,
-  type: string,
-  status: string,
-  size: ?number,
-  path: ?string,
-  memo: ?string,
-  entity: ?{ id: string, __typename: string },
-  order: ?Object,
-  orderItem: ?Object,
-  shipment: ?Object,
-  productProvider: ?Object,
-  milestone: ?Object,
-  updatedAt: ?string,
-  updatedBy: ?UserPayload,
-};
-
-const defaultState = {
+const defaultState: File = {
   name: null,
   type: 'Document',
-  status: 'Draft',
   size: null,
   path: null,
   memo: null,
+  tags: [],
   entity: null,
   order: null,
   orderItem: null,
@@ -39,7 +22,7 @@ const defaultState = {
   updatedBy: null,
 };
 
-const useDocumentFormContainer = (initialState: State = defaultState) => {
+const useDocumentFormContainer = (initialState: File = defaultState) => {
   const [state: State, setState] = React.useState(defaultState);
   const [originalState: State, setOriginalState] = React.useState(defaultState);
 
@@ -49,7 +32,9 @@ const useDocumentFormContainer = (initialState: State = defaultState) => {
       ...initialState,
     };
 
-    setOriginalState(mergedInitialState);
+    const parsedTags = [...mergedInitialState.tags.map(tag => extractForbiddenId(tag))];
+    const finalState = { ...mergedInitialState, tags: parsedTags };
+    setOriginalState(finalState);
   }, [initialState]);
 
   React.useEffect(() => setState(originalState), [originalState]);
@@ -59,9 +44,11 @@ const useDocumentFormContainer = (initialState: State = defaultState) => {
       ...defaultState,
       ...value,
     };
+    const parsedTags = [...mergedState.tags.map(tag => extractForbiddenId(tag))];
+    const finalState = { ...mergedState, tags: parsedTags };
 
-    if (!isEquals(mergedState, originalState)) {
-      setOriginalState(mergedState);
+    if (!isEquals(finalState, originalState)) {
+      setOriginalState(finalState);
     }
   };
 

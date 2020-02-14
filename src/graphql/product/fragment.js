@@ -16,6 +16,12 @@ export const productFormFragment = gql`
         }
       }
     }
+    followers {
+      ...userAvatarFragment
+    }
+    ... on Followed {
+      notificationUnseenCount
+    }
     updatedBy {
       ...userAvatarFragment
     }
@@ -40,6 +46,7 @@ export const productFormFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     memo
     files {
@@ -78,6 +85,7 @@ export const productCardFragment = gql`
     }
     tags {
       ...tagFragment
+      ...forbiddenFragment
     }
     todo {
       taskCount {
