@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds } from 'modules/relationMapV2/helpers';
@@ -18,6 +18,9 @@ import ActionDialog, {
   BatchesLabelIcon,
   ShipmentLabelIcon,
 } from 'components/Dialog/ActionDialog';
+import DocumentsDeleteDialog from 'components/Dialog/DocumentsDeleteDialog';
+import { deleteManyFileMutation } from 'modules/document/mutation';
+import { itemsQuery } from '../DeleteItemConfirm/query';
 import { deleteContainerMutation, deleteOrderItemMutation } from './mutation';
 
 type Props = {|
@@ -25,17 +28,26 @@ type Props = {|
 |};
 
 export default function DeleteConfirm({ onSuccess }: Props) {
+  const [step, setStep] = React.useState(1);
   const { mapping } = Entities.useContainer();
-  const [deleteOrderItem] = useMutation(deleteOrderItemMutation);
-  const [deleteContainer] = useMutation(deleteContainerMutation);
   const { dispatch, state } = FocusedView.useContainer();
   const { isProcessing, isOpen, source } = state.deleteEntities;
   const orderItemIds = targetedIds(state.targets, ORDER_ITEM);
+  const containerIds = targetedIds(state.targets, CONTAINER);
+  const itemsQueryResult = useQuery(itemsQuery, {
+    skip: source !== ORDER_ITEM,
+    variables: {
+      ids: orderItemIds,
+    },
+  });
+  const [deleteOrderItem] = useMutation(deleteOrderItemMutation);
+  const [deleteItemFiles] = useMutation(deleteManyFileMutation);
+  const [deleteContainer] = useMutation(deleteContainerMutation);
+
   const hasItemPermissions = useAllHasPermission(
     orderItemIds.map(id => mapping.entities?.orderItems?.[id]?.ownedBy).filter(Boolean)
   );
   const totalOrderItems = orderItemIds.length;
-  const containerIds = targetedIds(state.targets, CONTAINER);
   const hasContainerPermissions = useAllHasPermission(
     containerIds.map(id => mapping.entities?.containers?.[id]?.ownedBy).filter(Boolean)
   );
@@ -68,34 +80,46 @@ export default function DeleteConfirm({ onSuccess }: Props) {
       type: 'DELETE_CLOSE',
       payload: {},
     });
+    setStep(0);
   };
+
+  const deleteItemsHandler = React.useCallback(() => {
+    Promise.all(
+      orderItemIds.map(id =>
+        deleteOrderItem({
+          variables: {
+            id,
+          },
+        })
+      )
+    )
+      .then(() => {
+        onSuccess({
+          orderItemIds,
+          containerIds: [],
+        });
+      })
+      .catch(() => {
+        dispatch({
+          type: 'DELETE_CLOSE',
+          payload: {},
+        });
+      });
+  }, [deleteOrderItem, dispatch, onSuccess, orderItemIds]);
+
   const onConfirm = () => {
     dispatch({
       type: 'DELETE_START',
       payload: {},
     });
     if (source === ORDER_ITEM) {
-      Promise.all(
-        orderItemIds.map(id =>
-          deleteOrderItem({
-            variables: {
-              id,
-            },
-          })
-        )
-      )
-        .then(() => {
-          onSuccess({
-            orderItemIds,
-            containerIds: [],
-          });
-        })
-        .catch(() => {
-          dispatch({
-            type: 'DELETE_CLOSE',
-            payload: {},
-          });
-        });
+      const items = itemsQueryResult.data?.orderItemsByIDs ?? [];
+      const files = items.reduce((currFiles, item) => currFiles.concat(item.files), []);
+      if (files.length) {
+        setStep(2);
+      } else {
+        deleteItemsHandler();
+      }
     } else {
       Promise.all(
         containerIds.map(id =>
@@ -178,6 +202,17 @@ export default function DeleteConfirm({ onSuccess }: Props) {
           }}
         />
       );
+    } else if (itemsQueryResult.loading) {
+      dialogMessage = (
+        <FormattedMessage
+          id="modules.RelationMap.deleteItem.loading"
+          defaultMessage="Loading {numOfEntity} {entityLabel} ..."
+          values={{
+            numOfEntity,
+            entityLabel,
+          }}
+        />
+      );
     } else {
       // Has permission to delete
       dialogMessage = (
@@ -218,6 +253,29 @@ export default function DeleteConfirm({ onSuccess }: Props) {
           break;
       }
     }
+  }
+
+  const items = itemsQueryResult.data?.orderItemsByIDs ?? [];
+  const files = items.reduce((currFiles, item) => currFiles.concat(item.files), []);
+  if (step === 2 && files.length > 0) {
+    return (
+      <DocumentsDeleteDialog
+        files={files}
+        isMultiple={items.length > 1}
+        isOpen
+        entityType="ITEM"
+        onCancel={onCancel}
+        onKeep={deleteItemsHandler}
+        onDelete={() => {
+          deleteItemsHandler();
+          deleteItemFiles({
+            variables: {
+              ids: files.map(file => file.id),
+            },
+          });
+        }}
+      />
+    );
   }
 
   return (

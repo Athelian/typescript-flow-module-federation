@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 import ActionDialog, {
   ItemLabelIcon,
@@ -9,15 +9,16 @@ import ActionDialog, {
   FileLabelIcon,
 } from 'components/Dialog/ActionDialog';
 
-type Props = {
+type Props = {|
   entityType: string,
+  isMultiple?: boolean,
   files: any,
   isOpen: boolean,
   isProcessing?: boolean,
   onDelete: Function,
   onKeep?: Function,
   onCancel?: Function,
-};
+|};
 
 const generateEntityIcon = (type: string) => {
   switch (type) {
@@ -37,6 +38,7 @@ const generateEntityIcon = (type: string) => {
 
 export default function DocumentsDeleteDialog({
   entityType,
+  isMultiple = false,
   files,
   isOpen,
   isProcessing,
@@ -44,6 +46,27 @@ export default function DocumentsDeleteDialog({
   onKeep = () => {},
   onCancel = () => {},
 }: Props) {
+  const dialogMessage = defineMessages({
+    single: {
+      id: 'components.DocumentsDeleteDialog.message',
+      defaultMessage: 'this {entityIcon} has {fileCount} {fileIcon}.',
+      values: {
+        entityIcon: generateEntityIcon(entityType),
+        fileCount: files.length,
+        fileIcon: <FileLabelIcon />,
+      },
+    },
+    multiple: {
+      id: 'components.DocumentsDeleteDialog.message.multiple',
+      defaultMessage: 'this {entityIcon} has {fileCount} {fileIcon}.',
+      values: {
+        entityIcon: generateEntityIcon(entityType),
+        fileCount: files.length,
+        fileIcon: <FileLabelIcon />,
+      },
+    },
+  });
+
   return (
     <ActionDialog
       isOpen={isOpen}
@@ -56,15 +79,11 @@ export default function DocumentsDeleteDialog({
         />
       }
       dialogMessage={
-        <FormattedMessage
-          id="components.DocumentsDeleteDialog.message"
-          defaultMessage="This {entityIcon} has {fileCount} {fileIcon}."
-          values={{
-            entityIcon: generateEntityIcon(entityType),
-            fileCount: files.length,
-            fileIcon: <FileLabelIcon />,
-          }}
-        />
+        isMultiple ? (
+          <FormattedMessage {...dialogMessage.multiple} />
+        ) : (
+          <FormattedMessage {...dialogMessage.single} />
+        )
       }
       dialogSubMessage={
         <FormattedMessage
