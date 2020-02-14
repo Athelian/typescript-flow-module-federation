@@ -4,7 +4,7 @@ import { Container } from 'unstated';
 import update from 'immutability-helper';
 import { set, cloneDeep } from 'lodash';
 import { getByPath, isEquals } from 'utils/fp';
-import { cleanFalsyAndTypeName } from 'utils/data';
+import { cleanFalsyAndTypeName, extractForbiddenId } from 'utils/data';
 import { calculatePackageQuantity, calculateVolume } from 'utils/batch';
 import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
@@ -67,8 +67,9 @@ export default class BatchInfoContainer extends Container<Batch> {
 
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...values };
-    this.setState(parsedValues);
-    this.originalValues = parsedValues;
+    const parsedTags = [...parsedValues.tags.map(tag => extractForbiddenId(tag))];
+    this.setState({ ...parsedValues, tags: parsedTags });
+    this.originalValues = { ...parsedValues, tags: parsedTags };
   };
 
   setFieldValue = (name: string, value: mixed) => {

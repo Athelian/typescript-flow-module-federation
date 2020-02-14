@@ -4,7 +4,7 @@ import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { formatToDateTimeInput } from 'utils/date';
 import { isEquals, isNullOrUndefined } from 'utils/fp';
-import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
+import { removeNulls, cleanFalsyAndTypeName, extractForbiddenId } from 'utils/data';
 
 const initValues: ContainerPayload = {
   autoCalculatedFreeTimeStartDate: false,
@@ -90,7 +90,8 @@ export default class ContainerInfoContainer extends Container<ContainerPayload> 
 
     const parsedValues = { ...initValues, ...info };
 
-    this.setState(parsedValues);
-    this.originalValues = { ...parsedValues };
+    const parsedTags = [...parsedValues.tags.map(tag => extractForbiddenId(tag))];
+    this.setState({ ...parsedValues, tags: parsedTags });
+    this.originalValues = { ...parsedValues, tags: parsedTags };
   };
 }

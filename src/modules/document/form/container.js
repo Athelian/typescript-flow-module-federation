@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { File } from 'generated/graphql';
 import { createContainer } from 'unstated-next';
-import { cleanFalsyAndTypeName } from 'utils/data';
+import { cleanFalsyAndTypeName, extractForbiddenId } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 const defaultState: File = {
@@ -32,7 +32,9 @@ const useDocumentFormContainer = (initialState: File = defaultState) => {
       ...initialState,
     };
 
-    setOriginalState(mergedInitialState);
+    const parsedTags = [...mergedInitialState.tags.map(tag => extractForbiddenId(tag))];
+    const finalState = { ...mergedInitialState, tags: parsedTags };
+    setOriginalState(finalState);
   }, [initialState]);
 
   React.useEffect(() => setState(originalState), [originalState]);
@@ -42,9 +44,11 @@ const useDocumentFormContainer = (initialState: File = defaultState) => {
       ...defaultState,
       ...value,
     };
+    const parsedTags = [...mergedState.tags.map(tag => extractForbiddenId(tag))];
+    const finalState = { ...mergedState, tags: parsedTags };
 
-    if (!isEquals(mergedState, originalState)) {
-      setOriginalState(mergedState);
+    if (!isEquals(finalState, originalState)) {
+      setOriginalState(finalState);
     }
   };
 

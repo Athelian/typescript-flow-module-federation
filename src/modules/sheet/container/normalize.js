@@ -1,5 +1,6 @@
 // @flow
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
+import { extractForbiddenId } from 'utils/data';
 
 export default function normalizeSheetContainerInput(
   order: Object,
@@ -15,7 +16,7 @@ export default function normalizeSheetContainerInput(
       };
     case 'tags':
       return {
-        tagIds: value.map(tag => tag.id).filter(Boolean),
+        tagIds: value.map(tag => extractForbiddenId(tag).id).filter(Boolean),
       };
     case 'warehouseArrivalAgreedDateApproved':
       return {

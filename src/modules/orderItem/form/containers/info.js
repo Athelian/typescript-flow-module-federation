@@ -3,7 +3,7 @@ import { Container } from 'unstated';
 import type { OrderItem } from 'generated/graphql';
 import { set, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { cleanFalsyAndTypeName } from 'utils/data';
+import { extractForbiddenId, cleanFalsyAndTypeName } from 'utils/data';
 
 export const initValues: OrderItem = {
   no: null,
@@ -39,8 +39,9 @@ export default class OrderItemInfoContainer extends Container<OrderItem> {
 
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...values };
-    this.setState(parsedValues);
-    this.originalValues = { ...parsedValues };
+    const parsedTags = [...parsedValues.tags.map(tag => extractForbiddenId(tag))];
+    this.setState({ ...parsedValues, tags: parsedTags });
+    this.originalValues = { ...parsedValues, tags: parsedTags };
   };
 
   setFieldValue = (name: string, value: mixed) => {
