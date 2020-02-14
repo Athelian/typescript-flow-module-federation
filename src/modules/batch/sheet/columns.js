@@ -122,7 +122,7 @@ export default function({
           'orderItem.todo.taskCount.skipped',
           'orderItem.todo.taskCount.delayed',
         ],
-        'orderItem.customField': 'orderItems.customFields',
+        'orderItem.customField': 'orderItem.customFields',
       },
       fieldDefinitions: orderItemFieldDefinitions,
     }).filter(
