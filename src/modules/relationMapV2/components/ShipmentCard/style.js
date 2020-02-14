@@ -68,3 +68,12 @@ export const ApprovedIconStyle = (approved: boolean): string => css`
   height: 20px;
   color: ${approved ? colors.BLUE : colors.GRAY_SUPER_LIGHT};
 `;
+
+export const EarliestArrivalDateStyle: string = css`
+  padding: 0 5px;
+  color: ${colors.TEAL};
+`;
+
+export const LatestArrivalDateStyle: string = css`
+  padding: 0 5px;
+`;

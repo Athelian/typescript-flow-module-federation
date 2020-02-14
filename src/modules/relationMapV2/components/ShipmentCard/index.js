@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Tag from 'components/Tag';
+import { Tooltip } from 'components/Tooltip';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import TaskRing from 'components/TaskRing';
@@ -13,7 +14,7 @@ import { CONTAINER_CREATE } from 'modules/permission/constants/container';
 import { getAgreedArrivalDates, getActualArrivalDates } from 'modules/shipment/helpers';
 import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import { getPort } from 'utils/shipment';
-import { earliest, differenceInCalendarDays } from 'utils/date';
+import { earliest, latest, differenceInCalendarDays } from 'utils/date';
 import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
 import CardActions from 'modules/relationMapV2/components/CardActions';
 import {
@@ -37,6 +38,8 @@ import {
   TimelineAndDateWrapperStyle,
   DelayStyle,
   ApprovedIconStyle,
+  LatestArrivalDateStyle,
+  EarliestArrivalDateStyle,
 } from './style';
 
 const getInitLocalShipmentPoint = (globalShipmentPoint: string, voyages: Array<Object>): string => {
@@ -109,6 +112,10 @@ export default function ShipmentCard({
 
   let place = null;
   let date = null;
+  let earliestContainerActualArrivalDate = null;
+  let latestContainerActualArrivalDate = null;
+  let earliestContainerAgreedArrivalDate = null;
+  let latestContainerAgreedArrivalDate = null;
   let approved = false;
   let firstDate = null;
   let delayAmount = 0;
@@ -169,19 +176,25 @@ export default function ShipmentCard({
       break;
     }
     case WAREHOUSE_ARRIVAL: {
-      if (containers.length) {
-        const agreedArrivalDates = getAgreedArrivalDates(containers);
-        const actualArrivalDates = getActualArrivalDates(containers);
-        if (actualArrivalDates.length) {
-          date = earliest(actualArrivalDates);
-        } else if (agreedArrivalDates.length) {
-          date = earliest(agreedArrivalDates);
-        } else {
-          date = containerGroups?.[0].warehouseArrival?.latestDate;
-        }
-      } else {
+      if (!containers.length) {
         date = containerGroups?.[0].warehouseArrival?.latestDate;
+      } else {
+        const actualArrivalDates = getActualArrivalDates(containers);
+        const agreedArrivalDates = getAgreedArrivalDates(containers);
+
+        if (actualArrivalDates.length) {
+          earliestContainerActualArrivalDate = earliest(actualArrivalDates);
+          latestContainerActualArrivalDate = latest(actualArrivalDates);
+          date = earliest(actualArrivalDates);
+        }
+
+        if (agreedArrivalDates.length) {
+          earliestContainerAgreedArrivalDate = earliest(agreedArrivalDates);
+          latestContainerAgreedArrivalDate = latest(agreedArrivalDates);
+          date = date || earliest(agreedArrivalDates);
+        }
       }
+
       place = containerGroups?.[0].warehouse?.name;
       approved = !!containerGroups?.[0].warehouseArrival?.approvedAt;
       firstDate = containerGroups?.[0].warehouseArrival?.date;
@@ -253,9 +266,59 @@ export default function ShipmentCard({
 
           {canViewDate ? (
             <>
-              <Display width="80px">
-                <FormattedDate value={date} />
-              </Display>
+              {localShipmentPoint === WAREHOUSE_ARRIVAL &&
+              (earliestContainerActualArrivalDate || earliestContainerAgreedArrivalDate) ? (
+                <Tooltip
+                  message={
+                    <>
+                      {earliestContainerActualArrivalDate && (
+                        <div>
+                          <Label width="440px">
+                            <FormattedMessage
+                              id="components.cards.containerWarehouseActualArrivalDate"
+                              defaultMessage="Container's Warehouse Actual Arrival Date"
+                            />
+                          </Label>
+                          <span className={EarliestArrivalDateStyle}>
+                            <FormattedDate value={earliestContainerActualArrivalDate} />
+                          </span>
+                          -
+                          <span className={LatestArrivalDateStyle}>
+                            <FormattedDate value={latestContainerActualArrivalDate} />
+                          </span>
+                        </div>
+                      )}
+                      {earliestContainerAgreedArrivalDate && (
+                        <div>
+                          <Label width="440px">
+                            <FormattedMessage
+                              id="components.cards.containerWarehouseAgreedArrivalDate"
+                              defaultMessage="Container's Warehouse Agreed Arrival Date"
+                            />
+                          </Label>
+                          <span className={EarliestArrivalDateStyle}>
+                            <FormattedDate value={earliestContainerAgreedArrivalDate} />
+                          </span>
+                          -
+                          <span className={LatestArrivalDateStyle}>
+                            <FormattedDate value={latestContainerAgreedArrivalDate} />
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  }
+                >
+                  <div>
+                    <Display width="80px">
+                      <FormattedDate value={date} />
+                    </Display>
+                  </div>
+                </Tooltip>
+              ) : (
+                <Display width="80px">
+                  <FormattedDate value={date} />
+                </Display>
+              )}
 
               <div className={DelayStyle(delayAmount)}>
                 {delayAmount !== 0 && (
