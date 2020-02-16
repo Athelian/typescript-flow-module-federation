@@ -176,28 +176,38 @@ export default function ShipmentCard({
       break;
     }
     case WAREHOUSE_ARRIVAL: {
-      if (!containers.length) {
-        date = containerGroups?.[0].warehouseArrival?.latestDate;
-      } else {
-        const actualArrivalDates = getActualArrivalDates(containers);
-        const agreedArrivalDates = getAgreedArrivalDates(containers);
-
-        if (actualArrivalDates.length) {
-          earliestContainerActualArrivalDate = earliest(actualArrivalDates);
-          latestContainerActualArrivalDate = latest(actualArrivalDates);
-          date = earliest(actualArrivalDates);
-        }
-
-        if (agreedArrivalDates.length) {
-          earliestContainerAgreedArrivalDate = earliest(agreedArrivalDates);
-          latestContainerAgreedArrivalDate = latest(agreedArrivalDates);
-          date = date || earliest(agreedArrivalDates);
-        }
-      }
-
       place = containerGroups?.[0].warehouse?.name;
       approved = !!containerGroups?.[0].warehouseArrival?.approvedAt;
       firstDate = containerGroups?.[0].warehouseArrival?.date;
+
+      if (!containers.length) {
+        date = containerGroups?.[0].warehouseArrival?.latestDate;
+        break;
+      }
+
+      const actualArrivalDates = getActualArrivalDates(containers);
+      const agreedArrivalDates = getAgreedArrivalDates(containers);
+      if (!actualArrivalDates.length && !agreedArrivalDates.length) {
+        console.log('we are here');
+        console.dir(shipment);
+        earliestContainerActualArrivalDate = shipment.earliestWarehouseActualArrival;
+        latestContainerActualArrivalDate = shipment.latestWarehouseActualArrival;
+        earliestContainerAgreedArrivalDate = shipment.earliestWarehouseAgreedArrival;
+        latestContainerAgreedArrivalDate = shipment.latestWarehouseAgreedArrival;
+        date = earliestContainerActualArrivalDate || earliestContainerAgreedArrivalDate;
+        break;
+      }
+
+      if (actualArrivalDates.length) {
+        earliestContainerActualArrivalDate = earliest(actualArrivalDates);
+        latestContainerActualArrivalDate = latest(actualArrivalDates);
+        date = earliest(actualArrivalDates);
+      }
+      if (agreedArrivalDates.length) {
+        earliestContainerAgreedArrivalDate = earliest(agreedArrivalDates);
+        latestContainerAgreedArrivalDate = latest(agreedArrivalDates);
+        date = date || earliest(agreedArrivalDates);
+      }
       break;
     }
     case DELIVERY_READY: {
