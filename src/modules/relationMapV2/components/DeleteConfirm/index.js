@@ -2,9 +2,18 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation, useQuery } from '@apollo/react-hooks';
+import apolloClient from 'apollo';
 import { useAllHasPermission } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import { targetedIds } from 'modules/relationMapV2/helpers';
+import {
+  orderFullFocusDetailQuery,
+  shipmentFullFocusDetailQuery,
+} from 'modules/relationMapV2/query';
+import {
+  targetedIds,
+  findOrderIdsByContainer,
+  findShipmentIdsByOrderItem,
+} from 'modules/relationMapV2/helpers';
 import { ORDER_ITEM, CONTAINER } from 'modules/relationMapV2/constants';
 import { ORDER_ITEMS_DELETE } from 'modules/permission/constants/orderItem';
 import { CONTAINER_DELETE } from 'modules/permission/constants/container';
@@ -30,7 +39,7 @@ type Props = {|
 export default function DeleteConfirm({ onSuccess }: Props) {
   const [step, setStep] = React.useState(1);
   const { mapping } = Entities.useContainer();
-  const { dispatch, state } = FocusedView.useContainer();
+  const { dispatch, state, selectors } = FocusedView.useContainer();
   const { isProcessing, isOpen, source } = state.deleteEntities;
   const orderItemIds = targetedIds(state.targets, ORDER_ITEM);
   const containerIds = targetedIds(state.targets, CONTAINER);
@@ -98,6 +107,29 @@ export default function DeleteConfirm({ onSuccess }: Props) {
           orderItemIds,
           containerIds: [],
         });
+
+        if (selectors.isShipmentFocus) {
+          const shipmentIds = orderItemIds
+            .flatMap(itemId => findShipmentIdsByOrderItem(itemId, mapping.entities))
+            .filter(Boolean);
+          if (shipmentIds.length > 0) {
+            apolloClient
+              .query({
+                query: shipmentFullFocusDetailQuery,
+                variables: {
+                  ids: shipmentIds,
+                },
+              })
+              .then(result => {
+                dispatch({
+                  type: 'FETCH_SHIPMENTS',
+                  payload: {
+                    shipments: result.data.shipmentsByIDs,
+                  },
+                });
+              });
+          }
+        }
       })
       .catch(() => {
         dispatch({
@@ -105,7 +137,14 @@ export default function DeleteConfirm({ onSuccess }: Props) {
           payload: {},
         });
       });
-  }, [deleteOrderItem, dispatch, onSuccess, orderItemIds]);
+  }, [
+    deleteOrderItem,
+    dispatch,
+    mapping.entities,
+    onSuccess,
+    orderItemIds,
+    selectors.isShipmentFocus,
+  ]);
 
   const onConfirm = () => {
     dispatch({
@@ -135,6 +174,34 @@ export default function DeleteConfirm({ onSuccess }: Props) {
             orderItemIds: [],
             containerIds,
           });
+          if (!selectors.isShipmentFocus) {
+            const orderIds = containerIds
+              .flatMap(containerId =>
+                findOrderIdsByContainer({
+                  viewer: 'ORDER',
+                  containerId,
+                  entities: mapping.entities,
+                })
+              )
+              .filter(Boolean);
+            if (orderIds.length) {
+              apolloClient
+                .query({
+                  query: orderFullFocusDetailQuery,
+                  variables: {
+                    ids: orderIds,
+                  },
+                })
+                .then(result => {
+                  dispatch({
+                    type: 'FETCH_ORDERS',
+                    payload: {
+                      orders: result.data.ordersByIDs,
+                    },
+                  });
+                });
+            }
+          }
         })
         .catch(() => {
           dispatch({
