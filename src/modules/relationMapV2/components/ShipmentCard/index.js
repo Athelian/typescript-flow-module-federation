@@ -188,8 +188,6 @@ export default function ShipmentCard({
       const actualArrivalDates = getActualArrivalDates(containers);
       const agreedArrivalDates = getAgreedArrivalDates(containers);
       if (!actualArrivalDates.length && !agreedArrivalDates.length) {
-        console.log('we are here');
-        console.dir(shipment);
         earliestContainerActualArrivalDate = shipment.earliestWarehouseActualArrival;
         latestContainerActualArrivalDate = shipment.latestWarehouseActualArrival;
         earliestContainerAgreedArrivalDate = shipment.earliestWarehouseAgreedArrival;
