@@ -15,6 +15,8 @@ export type RenderInputProps = {
   getInputProps: Function,
   getToggleButtonProps: Function,
   itemToString: any => string,
+  width?: number,
+  height?: number,
 };
 
 export type RenderOptionProps = {

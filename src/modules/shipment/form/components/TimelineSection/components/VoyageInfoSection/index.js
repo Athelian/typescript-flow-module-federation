@@ -11,14 +11,8 @@ import {
 } from 'modules/permission/constants/shipment';
 import GridColumn from 'components/GridColumn';
 import { FormField } from 'modules/form';
-import {
-  SectionHeader,
-  Label,
-  FieldItem,
-  FormTooltip,
-  EnumSearchSelectInputFactory,
-  TextInputFactory,
-} from 'components/Form';
+import { SectionHeader, Label, FieldItem, FormTooltip, TextInputFactory } from 'components/Form';
+import PortSelect from '../PortSelect';
 import { VoyageInfoSectionWrapperStyle, SelectTransportTypeMessageStyle } from './style';
 
 const parseEnumValue = (enumValue: ?string | ?{ name: string }) => {
@@ -79,6 +73,69 @@ const defaultProps = {
   },
 };
 
+const PortSearchSelectInputFactory = ({
+  name,
+  label,
+  required,
+  isNew,
+  isTouched,
+  errorMessage,
+  originalValue,
+  value,
+  readOnly,
+  onChange,
+  transportType,
+}: {|
+  name: string,
+  transportType: string,
+  label: React$Node,
+  errorMessage: React$Node,
+  required: boolean,
+  isTouched: boolean,
+  isNew: boolean,
+  originalValue: any,
+  value: any,
+  readOnly: boolean,
+  onChange: Function,
+|}) => {
+  const parsedValue = transportType === 'Sea' ? { seaport: value } : { airport: value };
+  return (
+    <FieldItem
+      label={
+        <Label required={required} width="210px" height="30px">
+          {label}
+        </Label>
+      }
+      tooltip={
+        <FormTooltip
+          isNew={isNew}
+          errorMessage={isTouched && errorMessage}
+          changedValues={{
+            oldValue: originalValue,
+            newValue: value,
+          }}
+        />
+      }
+      input={
+        <PortSelect
+          name={name}
+          type={transportType}
+          onChange={selectedValue =>
+            onChange({
+              target: {
+                name,
+                value: selectedValue?.airport || selectedValue?.seaport,
+              },
+            })
+          }
+          readonly={readOnly}
+          value={parsedValue}
+        />
+      }
+    />
+  );
+};
+
 const VoyageInfoSection = ({
   isNew,
   icon,
@@ -93,14 +150,13 @@ const VoyageInfoSection = ({
   const { hasPermission } = usePermission(isOwner);
 
   const canSelectPorts = icon === 'SHIPMENT' || icon === 'PLANE';
-  const enumType = icon === 'SHIPMENT' ? 'Seaport' : 'Airport';
   const deepField = icon === 'SHIPMENT' ? 'seaport' : 'airport';
+  const transportType = icon === 'SHIPMENT' ? 'Sea' : 'Air';
 
   return (
     <div className={VoyageInfoSectionWrapperStyle} {...rest}>
       <GridColumn>
         <SectionHeader icon={icon} title={title} />
-
         {canSelectPorts ? (
           <FormField
             name={`${sourceName}.departurePort.${deepField}`}
@@ -108,17 +164,15 @@ const VoyageInfoSection = ({
               voyage.departurePort && voyage.departurePort[deepField]
             )}
             setFieldValue={setFieldDeepValue}
+            saveOnChange
+            values={voyage}
           >
             {({ name, ...inputHandlers }) => (
-              <EnumSearchSelectInputFactory
+              <PortSearchSelectInputFactory
                 {...inputHandlers}
-                editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
-                enumType={enumType}
-                originalValue={
-                  initialVoyage &&
-                  initialVoyage.departurePort &&
-                  initialVoyage.departurePort[deepField]
-                }
+                transportType={transportType}
+                readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
+                originalValue={initialVoyage?.departurePort?.[deepField]}
                 name={name}
                 isNew={isNew}
                 label={
@@ -165,19 +219,17 @@ const VoyageInfoSection = ({
         {canSelectPorts ? (
           <FormField
             name={`${sourceName}.arrivalPort.${deepField}`}
-            initValue={parseEnumDescriptionOrValue(
-              voyage.arrivalPort && voyage.arrivalPort[deepField]
-            )}
+            initValue={voyage?.arrivalPort?.[deepField]}
             setFieldValue={setFieldDeepValue}
+            values={voyage}
+            saveOnChange
           >
             {({ name, ...inputHandlers }) => (
-              <EnumSearchSelectInputFactory
+              <PortSearchSelectInputFactory
                 {...inputHandlers}
-                editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
-                enumType={enumType}
-                originalValue={
-                  initialVoyage && initialVoyage.arrivalPort && initialVoyage.arrivalPort[deepField]
-                }
+                transportType={transportType}
+                readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
+                originalValue={initialVoyage?.arrivalPort?.[deepField]}
                 name={name}
                 isNew={isNew}
                 label={
