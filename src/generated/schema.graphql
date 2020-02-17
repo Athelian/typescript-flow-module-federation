@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Feb 06 2020 11:49:38 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Feb 14 2020 18:54:41 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -86966,7 +86966,10 @@ type Shipment implements Model & Owned & Tagged & Followed & Supervised & Docume
   totalPackageQuantity: Float!
   totalPackageQuantityOverride: Float
   totalPackageQuantityOverriding: Boolean!
-  earliestWarehouseArrival: DateTime
+  earliestWarehouseAgreedArrival: DateTime
+  latestWarehouseAgreedArrival: DateTime
+  earliestWarehouseActualArrival: DateTime
+  latestWarehouseActualArrival: DateTime
   orderCount: Int!
   orderItemCount: Int!
   batchCount: Int!

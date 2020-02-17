@@ -103,6 +103,10 @@ const shipmentEntityCardFragment = gql`
         warehouseArrivalActualDateApprovedAt
       }
     }
+    earliestWarehouseAgreedArrival
+    latestWarehouseAgreedArrival
+    earliestWarehouseActualArrival
+    latestWarehouseActualArrival
   }
 `;
 

@@ -1064,6 +1064,7 @@
   "components.cards.batchDelivery": "Batch's Delivery Date",
   "components.cards.difference": "Difference",
   "components.cards.containerWarehouseActualArrivalDate": "Container's Warehouse Actual Arrival Date",
+  "components.cards.containerWarehouseAgreedArrivalDate": "Container's Warehouse Agreed Arrival Date",
   "components.cards.batchDesired": "Batch's Desired Date",
   "components.cards.shipmentLatestWarehouseArrivalDate": "Shipment's Latest Warehouse Arrival Date",
   "components.cards.vol": "VOL",
