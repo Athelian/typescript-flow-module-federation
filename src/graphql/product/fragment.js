@@ -75,6 +75,7 @@ export const productCardFragment = gql`
     productProviders {
       ... on ProductProvider {
         id
+        referenced
         exporter {
           ...partnerNameFragment
         }

@@ -9,6 +9,7 @@ import {
   taskCountFragment,
   imageFragment,
   forbiddenFragment,
+  notFoundFragment,
 } from 'graphql';
 
 export const productListQuery = gql`
@@ -25,6 +26,7 @@ export const productListQuery = gql`
           notificationUnseenCount
         }
         ...forbiddenFragment
+        ...notFoundFragment
       }
       page
       totalPage
@@ -39,6 +41,7 @@ export const productListQuery = gql`
   ${taskCountFragment}
   ${imageFragment}
   ${forbiddenFragment}
+  ${notFoundFragment}
 `;
 
 export default productListQuery;
