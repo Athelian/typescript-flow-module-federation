@@ -7,6 +7,7 @@ import ActionDialog, {
   MilestoneLabelIcon,
   EndProductLabelIcon,
   FileLabelIcon,
+  FilesLabelIcon,
 } from 'components/Dialog/ActionDialog';
 
 type Props = {|
@@ -49,7 +50,7 @@ export default function DocumentsDeleteDialog({
   const dialogMessage = defineMessages({
     single: {
       id: 'components.DocumentsDeleteDialog.message',
-      defaultMessage: 'this {entityIcon} has {fileCount} {fileIcon}.',
+      defaultMessage: 'This {entityIcon} has {fileCount} {fileIcon}.',
       values: {
         entityIcon: generateEntityIcon(entityType),
         fileCount: files.length,
@@ -58,11 +59,11 @@ export default function DocumentsDeleteDialog({
     },
     multiple: {
       id: 'components.DocumentsDeleteDialog.message.multiple',
-      defaultMessage: 'this {entityIcon} has {fileCount} {fileIcon}.',
+      defaultMessage: 'This {entityIcon} has {fileCount} {fileIcon}.',
       values: {
         entityIcon: generateEntityIcon(entityType),
         fileCount: files.length,
-        fileIcon: <FileLabelIcon />,
+        fileIcon: <FilesLabelIcon />,
       },
     },
   });
@@ -90,7 +91,7 @@ export default function DocumentsDeleteDialog({
           id="components.DocumentsDeleteDialog.subMessage"
           defaultMessage="Would you also like to delete these {fileIcon} or keep them, making them parentless?"
           values={{
-            fileIcon: <FileLabelIcon />,
+            fileIcon: <FilesLabelIcon />,
           }}
         />
       }

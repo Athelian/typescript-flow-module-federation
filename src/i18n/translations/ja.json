@@ -87,6 +87,7 @@
   "modules.RelationMap.label.endProduct": "輸出者・製造者",
   "modules.RelationMap.label.endProducts": "輸出者・製造者",
   "modules.RelationMap.label.file": "書類",
+  "modules.RelationMap.label.files": "書類",
   "modules.RelationMap.label.item": "発注商品",
   "modules.RelationMap.label.items": "発注商品",
   "modules.RelationMap.label.milestone": "マイルストーン",
