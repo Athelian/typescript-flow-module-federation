@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useLazyQuery } from 'react-apollo';
+import apolloClient from 'apollo';
 import usePrevious from 'hooks/usePrevious';
 import useUser from 'hooks/useUser';
 import SlideView from 'components/SlideView';
@@ -9,12 +10,21 @@ import OrderForm from 'modules/order/index.form';
 import ItemForm from 'modules/orderItem/index.form';
 import BatchForm from 'modules/batch/index.form';
 import ContainerForm from 'modules/container/index.form';
+import {
+  orderFullFocusDetailQuery,
+  shipmentFullFocusDetailQuery,
+} from 'modules/relationMapV2/query';
 // FIXME: binding date is not working yet
 import RMEditTasks from 'modules/relationMapV2/components/RMEditTasks';
 import ShipmentForm from 'modules/shipment/index.form';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, CONTAINER } from 'modules/relationMapV2/constants';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import { targetedIds, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
+import {
+  targetedIds,
+  findParentIdsByBatch,
+  findShipmentIdByContainer,
+  findOrderIdByItem,
+} from 'modules/relationMapV2/helpers';
 import NewOrderForm from 'modules/order/common/NewOrderForm';
 import NewShipmentForm from 'modules/shipment/common/NewShipmentForm';
 import NewContainerForm from 'modules/shipment/common/NewContainerForm';
@@ -46,37 +56,122 @@ const EditFormSlideView = ({ onClose }: Props) => {
     }
   );
   const { type, selectedId: id } = state.edit;
-  const { mapping, checkRemoveEntities, onSetBadges } = Entities.useContainer();
+  const { mapping, onSetBadges } = Entities.useContainer();
   const onRequestClose = React.useCallback(() => {
     if (isReady.current) {
       onClose();
     }
   }, [onClose]);
 
-  const orders = mapping?.entities?.orders ?? {};
-  const orderItems = mapping?.entities?.orderItems ?? {};
   React.useEffect(() => {
     const listener = emitter.addListener('MUTATION', (result: Object) => {
       isReady.current = !!result;
-      const entity = result?.data?.orderItemUpdate || result?.data?.orderUpdate;
-      if (entity) {
-        dispatch({
-          type: 'RECHECK_TARGET',
-          payload: {
-            ...result.data,
-            mapping: {
-              orderItems,
-              orders,
-            },
-          },
-        });
-        checkRemoveEntities(entity);
+      // reload order if order or item updated on the form
+      if (
+        state.viewer === 'Order' &&
+        (result?.data?.orderItemUpdate || result?.data?.orderUpdate)
+      ) {
+        if (result?.data?.orderUpdate?.id) {
+          const orderId = result?.data?.orderUpdate?.id;
+          if (orderId) {
+            apolloClient
+              .query({
+                query: orderFullFocusDetailQuery,
+                variables: {
+                  ids: [orderId],
+                },
+              })
+              .then(refetchResult => {
+                dispatch({
+                  type: 'FETCH_ORDERS',
+                  payload: {
+                    orders: refetchResult.data.ordersByIDs,
+                  },
+                });
+              });
+          }
+        }
+
+        if (result?.data?.orderItemUpdate?.id) {
+          const orderItemId = result?.data?.orderItemUpdate?.id;
+          if (orderItemId) {
+            apolloClient
+              .query({
+                query: orderFullFocusDetailQuery,
+                variables: {
+                  ids: [
+                    findOrderIdByItem({
+                      viewer: 'ORDER',
+                      orderItemId,
+                      entities: mapping?.entities,
+                    }),
+                  ].filter(Boolean),
+                },
+              })
+              .then(refetchResult => {
+                dispatch({
+                  type: 'FETCH_ORDERS',
+                  payload: {
+                    orders: refetchResult.data.ordersByIDs,
+                  },
+                });
+              });
+          }
+        }
+      }
+
+      // reload shipment if shipment or container has update on the form
+      if (
+        state.viewer !== 'Order' &&
+        (result?.data?.shipmentUpdate?.id || result?.data?.containerUpdate?.id)
+      ) {
+        if (result?.data?.shipmentUpdate?.id) {
+          const shipmentId = result?.data?.shipmentUpdate?.id;
+          if (shipmentId) {
+            apolloClient
+              .query({
+                query: shipmentFullFocusDetailQuery,
+                variables: {
+                  ids: [shipmentId],
+                },
+              })
+              .then(refetchResult => {
+                dispatch({
+                  type: 'FETCH_SHIPMENTS',
+                  payload: {
+                    shipments: refetchResult.data.shipmentsByIDs,
+                  },
+                });
+              });
+          }
+        }
+
+        if (result?.data?.containerUpdate?.id) {
+          const containerId = result?.data?.containerUpdate?.id;
+          if (containerId) {
+            apolloClient
+              .query({
+                query: shipmentFullFocusDetailQuery,
+                variables: {
+                  ids: [findShipmentIdByContainer(containerId, mapping?.entities)].filter(Boolean),
+                },
+              })
+              .then(refetchResult => {
+                dispatch({
+                  type: 'FETCH_SHIPMENTS',
+                  payload: {
+                    shipments: refetchResult.data.shipmentsByIDs,
+                  },
+                });
+              });
+          }
+        }
       }
     });
     return () => {
       listener.remove();
     };
-  }, [checkRemoveEntities, dispatch, orderItems, orders]);
+  }, [dispatch, mapping, state.viewer]);
 
   const orderIds = state.edit.orderIds || [];
   const shipmentIds = state.edit.shipmentIds || [];

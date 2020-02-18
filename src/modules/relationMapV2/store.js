@@ -2,7 +2,6 @@
 /* eslint-disable no-param-reassign */
 import type { Hit, Order, Shipment, Batch, OrderItem } from 'generated/graphql';
 import { useState, useRef, useEffect, useCallback, useReducer } from 'react';
-import { intersection } from 'lodash';
 import { createContainer } from 'unstated-next';
 import update from 'immutability-helper';
 import produce from 'immer';
@@ -202,72 +201,9 @@ function useEntities(
     return findRelateIds(relatedIds, type);
   };
 
-  const checkRemoveEntities = (entity: Order | OrderItem) => {
-    switch (entity.__typename) {
-      case 'Order': {
-        setMapping(
-          produce(mapping, draft => {
-            const orderId = entity?.id;
-            if (!orderId) {
-              return;
-            }
-            const orderItems = entity?.orderItems ?? [];
-            const previousIds = {
-              orderItemIds: draft.entities?.orders?.[orderId]?.orderItems ?? [],
-              mapping: {},
-            };
-            previousIds.orderItemIds.forEach(itemId => {
-              previousIds.mapping[itemId] = draft.entities?.orderItems?.[itemId]?.batches ?? [];
-            });
-            const orderItemIds = orderItems.map(item => item?.id);
-            const existItemIds = intersection(previousIds.orderItemIds, orderItemIds);
-            previousIds.orderItemIds.forEach(itemId => {
-              if (!existItemIds.includes(itemId)) {
-                delete draft.entities.orderItems[itemId];
-                previousIds.mapping[itemId].forEach(batchId => {
-                  delete draft.entities.batches[batchId];
-                });
-              } else {
-                const existBatchIds = intersection(
-                  previousIds.mapping[itemId],
-                  (orderItems?.[itemId]?.batches ?? []).map(batch => batch?.id)
-                );
-                previousIds.mapping[itemId].forEach(batchId => {
-                  if (!existBatchIds.includes(batchId)) delete draft.entities.batches[batchId];
-                });
-              }
-            });
-          })
-        );
-        break;
-      }
-
-      case 'OrderItem': {
-        setMapping(
-          produce(mapping, draft => {
-            const itemId = entity?.id;
-            const batches = entity?.batches ?? [];
-            const existBatchIds = intersection(
-              draft.entities?.orderItems?.[itemId]?.batches ?? [],
-              batches.map(batch => batch?.id)
-            );
-
-            (draft.entities.orderItems?.[itemId]?.batches ?? []).forEach(batchId => {
-              if (!existBatchIds.includes(batchId)) delete draft.entities.batches[batchId];
-            });
-          })
-        );
-        break;
-      }
-
-      default:
-        break;
-    }
-  };
   return {
     mapping,
     initMapping,
-    checkRemoveEntities,
     badge,
     onSetBadges,
     getRelatedBy,
@@ -821,7 +757,6 @@ function orderReducer(
       | 'TARGET'
       | 'TARGET_ALL'
       | 'TARGET_TREE'
-      | 'RECHECK_TARGET'
       | 'REMOVE_TARGETS'
       | 'DND'
       | 'START_DND'
@@ -1024,71 +959,6 @@ function orderReducer(
           }
         });
       });
-    case 'RECHECK_TARGET': {
-      if (action.payload?.orderUpdate?.id) {
-        return produce(state, draft => {
-          const orderId = action.payload?.orderUpdate?.id ?? '';
-          if (!orderId) {
-            return;
-          }
-          const orderItems = action.payload?.orderUpdate?.orderItems ?? [];
-          const previousIds = {
-            orderItemIds: action.payload?.mapping?.orders?.[orderId]?.orderItems ?? [],
-            mapping: {},
-          };
-          previousIds.orderItemIds.forEach(itemId => {
-            previousIds.mapping[itemId] =
-              action.payload?.mapping?.orderItems?.[itemId]?.batches ?? [];
-          });
-          const orderItemIds = orderItems.map(item => item.id);
-          const existItemIds = intersection(previousIds.orderItemIds, orderItemIds);
-          previousIds.orderItemIds.forEach(itemId => {
-            if (!existItemIds.includes(itemId)) {
-              if (draft.targets.includes(`${ORDER_ITEM}-${itemId || ''}`))
-                draft.targets.splice(draft.targets.indexOf(`${ORDER_ITEM}-${itemId || ''}`), 1);
-              previousIds.mapping[itemId].forEach(batchId => {
-                if (draft.targets.includes(`${BATCH}-${batchId || ''}`))
-                  draft.targets.splice(draft.targets.indexOf(`${BATCH}-${batchId || ''}`), 1);
-              });
-            } else {
-              const existBatchIds = intersection(
-                previousIds.mapping[itemId],
-                (orderItems?.[itemId]?.batches ?? []).map(batch => batch.id)
-              );
-              previousIds.mapping[itemId].forEach(batchId => {
-                if (
-                  !existBatchIds.includes(batchId) &&
-                  draft.targets.includes(`${BATCH}-${batchId || ''}`)
-                )
-                  draft.targets.splice(draft.targets.indexOf(`${BATCH}-${batchId || ''}`), 1);
-              });
-            }
-          });
-        });
-      }
-
-      if (action.payload?.orderItemUpdate?.id) {
-        return produce(state, draft => {
-          const itemId = action.payload?.orderItemUpdate?.id ?? '';
-          const previousBatchIds = action.payload?.mapping?.orderItems?.[itemId]?.batches ?? [];
-          const batches = action.payload?.orderItemUpdate?.batches ?? [];
-          const existBatchIds = intersection(
-            previousBatchIds,
-            batches.map(batch => batch.id)
-          );
-
-          previousBatchIds.forEach(batchId => {
-            if (
-              !existBatchIds.includes(batchId) &&
-              draft.targets.includes(`${BATCH}-${batchId || ''}`)
-            )
-              draft.targets.splice(draft.targets.indexOf(`${BATCH}-${batchId || ''}`), 1);
-          });
-        });
-      }
-
-      return state;
-    }
     case 'DND': {
       return update(state, {
         moveEntity: {
