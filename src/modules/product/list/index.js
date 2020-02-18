@@ -17,7 +17,7 @@ type Props = {
 
 const ProductList = ({ ...filtersAndSort }: Props) => {
   React.useEffect(() => {
-    emitter.once('CHANGE_PRODUCT_STATUS', () => {
+    emitter.addListener('CHANGE_PRODUCT_STATUS', () => {
       apolloClient.reFetchObservableQueries();
     });
   });
