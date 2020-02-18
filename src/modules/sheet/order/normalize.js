@@ -17,8 +17,18 @@ export default function normalizeSheetOrderInput(
     case 'files':
       return {
         files: newValue.map(
-          ({ __typename, entity: e, ownedBy, tags, path, uploading, progress, size, ...rest }) =>
-            rest
+          ({
+            __typename,
+            entity: e,
+            ownedBy,
+            tags,
+            path,
+            uploading,
+            progress,
+            size,
+            isNew,
+            ...rest
+          }) => rest
         ),
       };
     case 'tags':
