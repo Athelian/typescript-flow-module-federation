@@ -5,6 +5,7 @@ import Dialog from 'components/Dialog';
 import { FormContainer } from 'modules/form';
 import { DocumentsUpload as DocumentsSection } from 'components/Form';
 import type { FilePayload } from 'generated/graphql';
+import { DocumentsDialogWrapperStyle } from './style';
 
 const formContainer = new FormContainer();
 
@@ -20,29 +21,27 @@ const DocumentsInputDialog = ({ value, onChange, onClose, open, entityType }: Pr
   // TODO: Maxime said to do dummy permission until he changes it
   const canDelete = true;
   const canUpload = true;
-  const canUpdateTags = true;
-  const canUpdateType = true;
-  const canUpdateMemo = true;
+  const canAddOrphan = true;
+  const canChangeType = true;
   const canDownload = true;
   const canViewForm = false;
 
   return (
     <Provider inject={[formContainer]}>
       <Dialog isOpen={open} onRequestClose={onClose}>
-        <DocumentsSection
-          removable={canDelete}
-          uploadable={canUpload}
-          editable={{
-            tags: canUpdateTags,
-            type: canUpdateType,
-            memo: canUpdateMemo,
-          }}
-          downloadable={canDownload}
-          canViewForm={canViewForm}
-          files={value}
-          onSave={onChange}
-          entity={entityType}
-        />
+        <div className={DocumentsDialogWrapperStyle}>
+          <DocumentsSection
+            files={value}
+            entity={entityType}
+            onSave={onChange}
+            canUpload={canUpload}
+            canAddOrphan={canAddOrphan}
+            canViewForm={canViewForm}
+            canDownload={canDownload}
+            canChangeType={canChangeType}
+            canDelete={canDelete}
+          />
+        </div>
       </Dialog>
     </Provider>
   );

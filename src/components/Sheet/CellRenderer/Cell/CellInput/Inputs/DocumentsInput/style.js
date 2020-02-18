@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizes, colors } from 'styles/common';
+import { fontSizes, colors, borderRadiuses } from 'styles/common';
 
 export const DocumentsInputWrapperStyle: string = css`
   display: flex;
@@ -22,4 +22,10 @@ export const DocumentIconStyle = (color: string): string => css`
   width: 20px;
   text-align: center;
   flex-shrink: 0;
+`;
+
+export const DocumentsDialogWrapperStyle: string = css`
+  padding: 0 40px 20px 40px;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  ${borderRadiuses.MAIN};
 `;
