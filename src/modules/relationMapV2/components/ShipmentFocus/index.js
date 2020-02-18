@@ -16,12 +16,14 @@ import { SHIPMENT, CONTAINER, BATCH, ORDER_ITEM, ORDER } from 'modules/relationM
 import {
   shipmentFocusedListQuery,
   shipmentFullFocusDetailQuery,
+  orderFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
 import {
   loadMore,
   findShipmentIdByContainer,
   findShipmentIdByBatch,
   findParentIdsByBatch,
+  findOrderIdByItem,
 } from 'modules/relationMapV2/helpers';
 import {
   Hits,
@@ -131,6 +133,29 @@ export default function ShipmentFocus() {
   }, [listRef, scrollPosition, scrollToRow]);
 
   const { state, dispatch } = FocusedView.useContainer();
+  const queryOrdersDetail = React.useCallback(
+    (orderIds: Array<string>) => {
+      if (orderIds.length) {
+        apolloClient
+          .query({
+            query: orderFullFocusDetailQuery,
+            variables: {
+              ids: orderIds,
+            },
+          })
+          .then(result => {
+            dispatch({
+              type: 'FETCH_ORDERS',
+              payload: {
+                orders: result.data.ordersByIDs,
+              },
+            });
+          });
+      }
+    },
+    [dispatch]
+  );
+
   const queryShipmentsDetail = React.useCallback(
     (shipmentIds: Array<string>) => {
       if (shipmentIds.length) {
@@ -295,7 +320,22 @@ export default function ShipmentFocus() {
                     }}
                   />
                   <DeleteConfirm
-                    onSuccess={({ containerIds }) => {
+                    onSuccess={({ orderItemIds, containerIds }) => {
+                      const orderIds = [];
+                      const batchIds = [];
+                      orderItemIds.forEach(orderItemId => {
+                        const parentOrderId = findOrderIdByItem({
+                          orderItemId,
+                          entities,
+                          viewer: ORDER,
+                        });
+                        if (parentOrderId) {
+                          orderIds.push(parentOrderId);
+                        }
+                        batchIds.push(...(entities.orderItems?.[orderItemId]?.batches ?? []));
+                      });
+                      queryOrdersDetail(orderIds);
+
                       const ids = containerIds.map(containerId =>
                         findShipmentIdByContainer(containerId, entities)
                       );
@@ -309,9 +349,11 @@ export default function ShipmentFocus() {
                           dispatch({
                             type: 'REMOVE_TARGETS',
                             payload: {
-                              targets: containerIds.map(
-                                containerId => `${CONTAINER}-${containerId}`
-                              ),
+                              targets: [
+                                ...batchIds.map(batchId => `${BATCH}-${batchId}`),
+                                ...orderItemIds.map(itemId => `${ORDER_ITEM}-${itemId}`),
+                                ...containerIds.map(containerId => `${CONTAINER}-${containerId}`),
+                              ],
                             },
                           });
                         },

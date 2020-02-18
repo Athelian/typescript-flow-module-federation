@@ -127,6 +127,10 @@ export default function DeleteConfirm({ onSuccess }: Props) {
                     shipments: result.data.shipmentsByIDs,
                   },
                 });
+                dispatch({
+                  type: 'DELETE_END',
+                  payload: {},
+                });
               });
           }
         }
@@ -329,7 +333,7 @@ export default function DeleteConfirm({ onSuccess }: Props) {
       <DocumentsDeleteDialog
         files={files}
         isMultiple={items.length > 1}
-        isOpen
+        isOpen={isOpen}
         entityType="ITEM"
         onCancel={onCancel}
         onKeep={deleteItemsHandler}
