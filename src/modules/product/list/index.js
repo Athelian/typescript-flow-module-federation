@@ -20,6 +20,7 @@ const ProductList = ({ ...filtersAndSort }: Props) => {
     emitter.addListener('CHANGE_PRODUCT_STATUS', () => {
       apolloClient.reFetchObservableQueries();
     });
+    return () => emitter.removeAllListeners('CHANGE_PRODUCT_STATUS');
   });
 
   return (
