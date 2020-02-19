@@ -1,23 +1,25 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { BaseButton } from 'components/Buttons';
 import ActionDialog, {
   ItemLabelIcon,
   MilestoneLabelIcon,
   EndProductLabelIcon,
   FileLabelIcon,
+  FilesLabelIcon,
 } from 'components/Dialog/ActionDialog';
 
-type Props = {
+type Props = {|
   entityType: string,
+  isMultiple?: boolean,
   files: any,
   isOpen: boolean,
   isProcessing?: boolean,
   onDelete: Function,
   onKeep?: Function,
   onCancel?: Function,
-};
+|};
 
 const generateEntityIcon = (type: string) => {
   switch (type) {
@@ -37,6 +39,7 @@ const generateEntityIcon = (type: string) => {
 
 export default function DocumentsDeleteDialog({
   entityType,
+  isMultiple = false,
   files,
   isOpen,
   isProcessing,
@@ -44,6 +47,27 @@ export default function DocumentsDeleteDialog({
   onKeep = () => {},
   onCancel = () => {},
 }: Props) {
+  const dialogMessage = defineMessages({
+    single: {
+      id: 'components.DocumentsDeleteDialog.message',
+      defaultMessage: 'This {entityIcon} has {fileCount} {fileIcon}.',
+      values: {
+        entityIcon: generateEntityIcon(entityType),
+        fileCount: files.length,
+        fileIcon: <FileLabelIcon />,
+      },
+    },
+    multiple: {
+      id: 'components.DocumentsDeleteDialog.message.multiple',
+      defaultMessage: 'This {entityIcon} has {fileCount} {fileIcon}.',
+      values: {
+        entityIcon: generateEntityIcon(entityType),
+        fileCount: files.length,
+        fileIcon: <FilesLabelIcon />,
+      },
+    },
+  });
+
   return (
     <ActionDialog
       isOpen={isOpen}
@@ -56,22 +80,18 @@ export default function DocumentsDeleteDialog({
         />
       }
       dialogMessage={
-        <FormattedMessage
-          id="components.DocumentsDeleteDialog.message"
-          defaultMessage="This {entityIcon} has {fileCount} {fileIcon}."
-          values={{
-            entityIcon: generateEntityIcon(entityType),
-            fileCount: files.length,
-            fileIcon: <FileLabelIcon />,
-          }}
-        />
+        isMultiple ? (
+          <FormattedMessage {...dialogMessage.multiple} />
+        ) : (
+          <FormattedMessage {...dialogMessage.single} />
+        )
       }
       dialogSubMessage={
         <FormattedMessage
           id="components.DocumentsDeleteDialog.subMessage"
           defaultMessage="Would you also like to delete these {fileIcon} or keep them, making them parentless?"
           values={{
-            fileIcon: <FileLabelIcon />,
+            fileIcon: <FilesLabelIcon />,
           }}
         />
       }

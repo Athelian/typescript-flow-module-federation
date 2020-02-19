@@ -4,6 +4,7 @@ export const PRODUCT_EXPORT_LIST = 'product.products.exportList';
 export const PRODUCT_FORM = 'product.products.form';
 export const PRODUCT_CREATE = 'product.products.create';
 export const PRODUCT_UPDATE = 'product.products.update';
+export const PRODUCT_DELETE = 'product.products.delete';
 export const PRODUCT_TASK_LIST = 'product.tasks.list';
 export const PRODUCT_TASK_FORM = 'product.tasks.form';
 export const PRODUCT_TASK_CREATE = 'product.tasks.create';
