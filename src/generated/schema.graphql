@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Feb 14 2020 18:54:41 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Feb 19 2020 17:13:51 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26829,6 +26829,7 @@ type ChangeType {
 type Comment implements Model & Owned {
   entity: EntityPayload!
   content: String!
+  mentions: [UserPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -26842,12 +26843,14 @@ type Comment implements Model & Owned {
 input CommentCreateInput {
   content: String!
   entity: EntityInput!
+  mentionIds: [ID!]
 }
 
 union CommentPayload = Comment | BadRequest | Forbidden | NotFound
 
 input CommentUpdateInput {
   content: String
+  mentionIds: [ID!]
 }
 
 type Container implements Model & Owned & Tagged & Followed & Sortable & Memorizable {
@@ -87954,6 +87957,7 @@ type ViolationParameter {
 scalar Void
 
 type Voyage implements Model & Owned & Sortable {
+  no: String
   vesselName: String
   vesselCode: String
   departurePort: Port
@@ -87974,6 +87978,7 @@ type Voyage implements Model & Owned & Sortable {
 
 input VoyageNestedInput {
   id: ID
+  no: String
   vesselName: String
   vesselCode: String
   departurePort: PortInput
