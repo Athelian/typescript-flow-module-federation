@@ -323,23 +323,38 @@ export default function ShipmentFocus() {
                     onSuccess={({ orderItemIds, containerIds }) => {
                       const orderIds = [];
                       const batchIds = [];
-                      orderItemIds.forEach(orderItemId => {
-                        const parentOrderId = findOrderIdByItem({
-                          orderItemId,
-                          entities,
-                          viewer: ORDER,
-                        });
-                        if (parentOrderId) {
-                          orderIds.push(parentOrderId);
-                        }
-                        batchIds.push(...(entities.orderItems?.[orderItemId]?.batches ?? []));
-                      });
-                      queryOrdersDetail(orderIds);
+                      let targets = [];
 
-                      const ids = containerIds.map(containerId =>
-                        findShipmentIdByContainer(containerId, entities)
-                      );
-                      queryShipmentsDetail(ids);
+                      if (orderItemIds.length) {
+                        orderItemIds.forEach(orderItemId => {
+                          const parentOrderId = findOrderIdByItem({
+                            orderItemId,
+                            entities,
+                            viewer: ORDER,
+                          });
+                          if (parentOrderId) {
+                            orderIds.push(parentOrderId);
+                          }
+                          batchIds.push(...(entities.orderItems?.[orderItemId]?.batches ?? []));
+                        });
+                        queryOrdersDetail(orderIds);
+                        targets = [
+                          ...batchIds.map(batchId => `${BATCH}-${batchId}`),
+                          ...orderItemIds.map(itemId => `${ORDER_ITEM}-${itemId}`),
+                        ];
+                      }
+
+                      if (containerIds) {
+                        const ids = containerIds.map(containerId =>
+                          findShipmentIdByContainer(containerId, entities)
+                        );
+                        queryShipmentsDetail(ids);
+                        targets = [
+                          ...targets,
+                          ...containerIds.map(containerId => `${CONTAINER}-${containerId}`),
+                        ];
+                      }
+
                       window.requestIdleCallback(
                         () => {
                           dispatch({
@@ -349,11 +364,7 @@ export default function ShipmentFocus() {
                           dispatch({
                             type: 'REMOVE_TARGETS',
                             payload: {
-                              targets: [
-                                ...batchIds.map(batchId => `${BATCH}-${batchId}`),
-                                ...orderItemIds.map(itemId => `${ORDER_ITEM}-${itemId}`),
-                                ...containerIds.map(containerId => `${CONTAINER}-${containerId}`),
-                              ],
+                              targets,
                             },
                           });
                         },
