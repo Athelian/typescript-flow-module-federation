@@ -16,7 +16,6 @@ import { SHIPMENT, CONTAINER, BATCH, ORDER_ITEM, ORDER } from 'modules/relationM
 import {
   shipmentFocusedListQuery,
   shipmentFullFocusDetailQuery,
-  orderFullFocusDetailQuery,
 } from 'modules/relationMapV2/query';
 import {
   loadMore,
@@ -133,29 +132,6 @@ export default function ShipmentFocus() {
   }, [listRef, scrollPosition, scrollToRow]);
 
   const { state, dispatch } = FocusedView.useContainer();
-  const queryOrdersDetail = React.useCallback(
-    (orderIds: Array<string>) => {
-      if (orderIds.length) {
-        apolloClient
-          .query({
-            query: orderFullFocusDetailQuery,
-            variables: {
-              ids: orderIds,
-            },
-          })
-          .then(result => {
-            dispatch({
-              type: 'FETCH_ORDERS',
-              payload: {
-                orders: result.data.ordersByIDs,
-              },
-            });
-          });
-      }
-    },
-    [dispatch]
-  );
-
   const queryShipmentsDetail = React.useCallback(
     (shipmentIds: Array<string>) => {
       if (shipmentIds.length) {
@@ -337,7 +313,6 @@ export default function ShipmentFocus() {
                           }
                           batchIds.push(...(entities.orderItems?.[orderItemId]?.batches ?? []));
                         });
-                        queryOrdersDetail(orderIds);
                         targets = [
                           ...batchIds.map(batchId => `${BATCH}-${batchId}`),
                           ...orderItemIds.map(itemId => `${ORDER_ITEM}-${itemId}`),
