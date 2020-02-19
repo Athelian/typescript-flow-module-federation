@@ -9,7 +9,6 @@ import {
   CellDisplayWrapperStyle,
   DisplayContentStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
-import { removeTypename } from 'utils/data';
 import TasksInputDialog from './TasksInputDialog';
 import {
   TasksInputWrapperStyle,
@@ -117,7 +116,7 @@ const TasksInput = (entityType: string) => {
           taskTemplate={taskTemplate}
           onChange={onChange}
           onClose={() => {
-            onChange({ tasks: removeTypename(tasks), taskTemplate }, true);
+            onChange({ tasks, taskTemplate }, true);
             forceBlur();
           }}
           open={focus}
