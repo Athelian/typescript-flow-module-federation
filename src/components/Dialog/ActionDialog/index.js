@@ -20,6 +20,7 @@ import ShipmentsLabelIcon from './LabelIcon/ShipmentsLabelIcon';
 import TagLabelIcon from './LabelIcon/TagLabelIcon';
 import TagsLabelIcon from './LabelIcon/TagsLabelIcon';
 import FileLabelIcon from './LabelIcon/FileLabelIcon';
+import FilesLabelIcon from './LabelIcon/FilesLabelIcon';
 import MilestoneLabelIcon from './LabelIcon/MilestoneLabelIcon';
 import TableTemplateLabelIcon from './LabelIcon/TableTemplateLabelIcon';
 import {
@@ -102,6 +103,7 @@ export {
   TagLabelIcon,
   TagsLabelIcon,
   FileLabelIcon,
+  FilesLabelIcon,
   MilestoneLabelIcon,
   TableTemplateLabelIcon,
 };
