@@ -127,10 +127,6 @@ export default function DeleteConfirm({ onSuccess }: Props) {
                     shipments: result.data.shipmentsByIDs,
                   },
                 });
-                dispatch({
-                  type: 'DELETE_END',
-                  payload: {},
-                });
               });
           }
         }
