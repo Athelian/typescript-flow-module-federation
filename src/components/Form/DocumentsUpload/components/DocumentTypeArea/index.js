@@ -58,6 +58,7 @@ const DocumentTypeArea = ({
   canDelete,
 }: Props) => {
   const hasPermissions = useViewerHasPermissions();
+  const canView = canViewFile(hasPermissions, type.value);
   const otherTypes = types.filter(t => t !== type);
 
   const [{ isDraggedOver, canDrop }, dropRef] = useDrop({
@@ -69,8 +70,6 @@ const DocumentTypeArea = ({
       canDrop: monitor.canDrop(),
     }),
   });
-
-  const canView = canViewFile(hasPermissions, type.value);
 
   return (
     <Dropzone onDrop={onUpload}>
