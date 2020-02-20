@@ -67,7 +67,7 @@ export default function normalizeSheetShipmentInput(
         forwarderIds: newValue.map(({ id }) => id),
       };
     case 'todo':
-      return parseTodoField(oldValue, newValue);
+      return removeTypename(parseTodoField(oldValue, newValue));
     case 'mask':
       return {
         customFields: {
