@@ -1,5 +1,5 @@
 // @flow
-import { parseTodoField, extractForbiddenId } from 'utils/data';
+import { parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 
 export default function normalizeSheetOrderItemInput(
@@ -45,7 +45,7 @@ export default function normalizeSheetOrderItemInput(
         ),
       };
     case 'todo':
-      return parseTodoField(oldValue, newValue);
+      return removeTypename(parseTodoField(oldValue, newValue));
     case 'mask':
       return {
         customFields: {

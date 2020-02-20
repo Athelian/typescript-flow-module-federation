@@ -44,7 +44,7 @@ export default function normalizeSheetBatchInput(
         tagIds: newValue.map(tag => extractForbiddenId(tag).id).filter(Boolean),
       };
     case 'todo':
-      return parseTodoField(oldValue, newValue);
+      return removeTypename(parseTodoField(oldValue, newValue));
     case 'mask':
       return {
         customFields: {
