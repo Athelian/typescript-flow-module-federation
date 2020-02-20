@@ -72,6 +72,7 @@ const Header = React.memo<any>(
     const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
     const clientSorts = ClientSorts.useContainer();
     const { globalShipmentPoint, setGlobalShipmentPoint } = GlobalShipmentPoint.useContainer();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const hasPermissions = useViewerHasPermissions();
     const orderSort = [
       { title: intl.formatMessage(orderMessages.updatedAt), value: 'updatedAt' },
