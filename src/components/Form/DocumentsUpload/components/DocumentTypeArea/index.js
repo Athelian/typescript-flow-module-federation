@@ -5,6 +5,9 @@ import { BooleanValue } from 'react-values';
 import { useDrop } from 'react-dnd';
 import Dropzone from 'react-dropzone';
 import type { FilePayload } from 'generated/graphql';
+import { canViewFile } from 'utils/file';
+import { useViewerHasPermissions } from 'contexts/Permissions';
+import { isForbidden } from 'utils/data';
 import { DocumentCard, CardAction } from 'components/Cards';
 import FormattedNumber from 'components/FormattedNumber';
 import UploadPlaceholder from 'components/UploadPlaceholder';
@@ -54,6 +57,7 @@ const DocumentTypeArea = ({
   canChangeType,
   canDelete,
 }: Props) => {
+  const hasPermissions = useViewerHasPermissions();
   const otherTypes = types.filter(t => t !== type);
 
   const [{ isDraggedOver, canDrop }, dropRef] = useDrop({
@@ -66,13 +70,15 @@ const DocumentTypeArea = ({
     }),
   });
 
+  const canView = canViewFile(hasPermissions, type.value);
+
   return (
     <Dropzone onDrop={onUpload}>
       {({ getRootProps: dropZoneProps, isDragActive: isDraggingFilesOver }) => (
         <div {...dropZoneProps()}>
           <div
             className={DocumentTypeAreaWrapperStyle(
-              (isDraggedOver && canDrop) || (canUpload && isDraggingFilesOver)
+              (isDraggedOver && canDrop && canView) || (canView && canUpload && isDraggingFilesOver)
             )}
             ref={dropRef}
           >
@@ -84,7 +90,7 @@ const DocumentTypeArea = ({
               </Label>
 
               <GridRow gap="5px">
-                {canAddOrphan && (
+                {canView && canAddOrphan && (
                   <BooleanValue>
                     {({ value: documentsSelectorIsOpen, set: setDocumentsSelectorIsOpen }) => (
                       <>
@@ -132,7 +138,7 @@ const DocumentTypeArea = ({
                   </BooleanValue>
                 )}
 
-                {canUpload && (
+                {canUpload && canView && (
                   <label className={AddDocumentButtonWrapperStyle}>
                     <div className={AddDocumentButtonLabelStyle}>
                       <FormattedMessage
@@ -149,75 +155,83 @@ const DocumentTypeArea = ({
               </GridRow>
             </div>
 
-            {files.length > 0 && (
+            {canView && files.length > 0 && (
               <div className={DocumentTypeAreaBodyStyle}>
-                {files.map(file =>
-                  file.uploading ? (
-                    <UploadPlaceholder progress={file.progress ?? 0} height="109px" key={file.id} />
-                  ) : (
-                    <BooleanValue key={file.id}>
-                      {({ value: documentFormIsOpen, set: setDocumentFormIsOpen }) => (
-                        <>
-                          <DocumentDragWrapper
-                            item={{
-                              id: file.id,
-                              type: type.value,
-                            }}
-                            canChangeType={canChangeType}
-                            onChangeType={item => {
-                              onSave(
-                                files.map(f => (f.id === item.id ? { ...f, type: item.type } : f))
-                              );
-                            }}
-                          >
-                            <DocumentCard
-                              file={file}
-                              hideParentInfo
-                              downloadable={canDownload}
-                              onClick={evt => {
-                                evt.stopPropagation();
-                                if (canViewForm) {
-                                  setDocumentFormIsOpen(true);
-                                }
+                {files
+                  .filter(file => !isForbidden(file))
+                  .map(file =>
+                    file.uploading ? (
+                      <UploadPlaceholder
+                        progress={file.progress ?? 0}
+                        height="109px"
+                        key={file.id}
+                      />
+                    ) : (
+                      <BooleanValue key={file.id}>
+                        {({ value: documentFormIsOpen, set: setDocumentFormIsOpen }) => (
+                          <>
+                            <DocumentDragWrapper
+                              item={{
+                                id: file.id,
+                                type: type.value,
                               }}
-                              showActionsOnHover
-                              actions={[
-                                canDelete && (
-                                  <CardAction
-                                    icon="REMOVE"
-                                    hoverColor="RED"
-                                    onClick={evt => {
-                                      evt.stopPropagation();
-                                      onSave(files.filter(item => item.id !== file.id));
-                                    }}
-                                  />
-                                ),
-                              ].filter(Boolean)}
-                            />
-                          </DocumentDragWrapper>
+                              canChangeType={canChangeType}
+                              onChangeType={item => {
+                                onSave(
+                                  files.map(f => (f.id === item.id ? { ...f, type: item.type } : f))
+                                );
+                              }}
+                            >
+                              <DocumentCard
+                                file={file}
+                                hideParentInfo
+                                downloadable={canDownload}
+                                onClick={evt => {
+                                  evt.stopPropagation();
+                                  if (canViewForm) {
+                                    setDocumentFormIsOpen(true);
+                                  }
+                                }}
+                                showActionsOnHover
+                                actions={[
+                                  canDelete && (
+                                    <CardAction
+                                      icon="REMOVE"
+                                      hoverColor="RED"
+                                      onClick={evt => {
+                                        evt.stopPropagation();
+                                        onSave(files.filter(item => item.id !== file.id));
+                                      }}
+                                    />
+                                  ),
+                                ].filter(Boolean)}
+                              />
+                            </DocumentDragWrapper>
 
-                          <SlideView
-                            isOpen={documentFormIsOpen}
-                            onRequestClose={() => setDocumentFormIsOpen(false)}
-                            shouldConfirm={() => {
-                              const button = document.getElementById('document_form_save_button');
-                              return button;
-                            }}
-                          >
-                            <DocumentFormSlideView
-                              isNew={file.isNew}
-                              file={file}
-                              onSave={updatedFile => {
-                                onSave(files.map(f => (f.id === updatedFile.id ? updatedFile : f)));
-                                setDocumentFormIsOpen(false);
+                            <SlideView
+                              isOpen={documentFormIsOpen}
+                              onRequestClose={() => setDocumentFormIsOpen(false)}
+                              shouldConfirm={() => {
+                                const button = document.getElementById('document_form_save_button');
+                                return button;
                               }}
-                            />
-                          </SlideView>
-                        </>
-                      )}
-                    </BooleanValue>
-                  )
-                )}
+                            >
+                              <DocumentFormSlideView
+                                isNew={file.isNew}
+                                file={file}
+                                onSave={updatedFile => {
+                                  onSave(
+                                    files.map(f => (f.id === updatedFile.id ? updatedFile : f))
+                                  );
+                                  setDocumentFormIsOpen(false);
+                                }}
+                              />
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+                    )
+                  )}
               </div>
             )}
           </div>
