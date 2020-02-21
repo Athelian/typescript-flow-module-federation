@@ -1105,6 +1105,7 @@
   "modules.RelationMap.delete.noPermission": "至少选择一个{source} {entity}不允许您删除。请重新选择并重试",
   "modules.RelationMap.delete.deleting": "正在删除{numOfEntity}个{entityLabel}...",
   "modules.RelationMap.deleteItem.loading": "正在加载 {itemLabel} ...",
+  "modules.RelationMap.delete.loading": "正在加载{numOfEntity}个{entityLabel} ...",
   "modules.RelationMap.delete.message": "确定要删除所选的{numOfEntity}个{entityLabel}吗？",
   "modules.RelationMap.delete.itemMessage2": "他们的所有{batchesLabel}也将被删除",
   "modules.RelationMap.delete.containerMessage2": "他们的所有{batchesLabel}都将移至{shipmentLabel}池中",

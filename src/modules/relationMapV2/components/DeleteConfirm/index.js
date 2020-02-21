@@ -272,7 +272,7 @@ export default function DeleteConfirm({ onSuccess }: Props) {
     } else if (itemsQueryResult.loading) {
       dialogMessage = (
         <FormattedMessage
-          id="modules.RelationMap.deleteItem.loading"
+          id="modules.RelationMap.delete.loading"
           defaultMessage="Loading {numOfEntity} {entityLabel} ..."
           values={{
             numOfEntity,
