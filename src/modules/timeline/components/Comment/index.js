@@ -23,6 +23,7 @@ import {
   EditedStyle,
   DeleteButtonStyle,
   ContentWrapperStyle,
+  SuggestionListStyle,
 } from './style';
 
 type Props = {|
@@ -33,10 +34,80 @@ type Props = {|
   users: Array<UserPayload>,
 |};
 
+const style = {
+  control: {
+    backgroundColor: '#fff',
+    fontSize: 14,
+    fontWeight: 'normal',
+  },
+
+  highlighter: {
+    overflow: 'hidden',
+  },
+
+  input: {
+    margin: 0,
+    overflow: 'auto',
+    height: 70,
+  },
+
+  '&singleLine': {
+    control: {
+      display: 'inline-block',
+      width: 130,
+    },
+
+    highlighter: {
+      padding: 1,
+      border: '2px inset transparent',
+    },
+
+    input: {
+      padding: 1,
+      border: '2px inset',
+    },
+  },
+
+  '&multiLine': {
+    control: {
+      fontFamily: 'monospace',
+    },
+
+    highlighter: {
+      padding: 9,
+    },
+
+    input: {
+      padding: 9,
+      minHeight: 63,
+      outline: 0,
+      border: 0,
+    },
+  },
+
+  suggestions: {
+    list: {
+      backgroundColor: 'white',
+      border: '1px solid rgba(0,0,0,0.15)',
+      fontSize: 14,
+    },
+
+    item: {
+      padding: '5px',
+      borderBottom: '1px solid rgba(0,0,0,0.15)',
+
+      '&focused': {
+        backgroundColor: '#EEEEEE',
+      },
+    },
+  },
+};
+
 const Comment = ({ comment, query, queryField, variables, users }: Props) => {
   const [editing, setEditing] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
   const buttonRef = React.useRef(null);
+  const mentionInputRef = React.useRef(null);
 
   return (
     <div className={CommentWrapperStyle}>
@@ -51,7 +122,7 @@ const Comment = ({ comment, query, queryField, variables, users }: Props) => {
           setEditing(false);
           setFocused(false);
         }}
-        ignoreElements={buttonRef && buttonRef.current ? [buttonRef.current] : []}
+        ignoreElements={[buttonRef.current, mentionInputRef.current].filter(Boolean)}
       >
         <div
           className={ContentStyle}
@@ -88,48 +159,69 @@ const Comment = ({ comment, query, queryField, variables, users }: Props) => {
                         height="90px"
                       >
                         {users.length ? (
-                          <MentionsInput
-                            className={TextAreaReadOnlyStyle({
-                              align: 'left',
-                              readOnlyWidth: '100%',
-                              readOnlyHeight: '90px',
-                            })}
-                            value={value}
-                            onChange={e => set(e.target.value)}
-                            onFocus={() => setFocused(true)}
-                            onBlur={() => {
-                              const content = value.trim();
-                              if (content === '' || comment.content === content) {
-                                setEditing(false);
-                                setFocused(false);
-                                return;
-                              }
+                          <>
+                            <div ref={mentionInputRef} className={SuggestionListStyle} />
+                            <MentionsInput
+                              style={style}
+                              suggestionsPortalHost={mentionInputRef.current}
+                              className={TextAreaReadOnlyStyle({
+                                align: 'left',
+                                readOnlyWidth: '100%',
+                                readOnlyHeight: '90px',
+                              })}
+                              value={value}
+                              onChange={e => set(e.target.value)}
+                              onFocus={() => setFocused(true)}
+                              onBlur={() => {
+                                if (mentionInputRef.current?.childNodes.length) {
+                                  return;
+                                }
 
-                              commentUpdate({
-                                variables: {
-                                  id: comment.id,
-                                  input: {
-                                    content,
+                                const content = value.trim();
+                                if (content === '' || comment.content === content) {
+                                  setEditing(false);
+                                  setFocused(false);
+                                  return;
+                                }
+
+                                commentUpdate({
+                                  variables: {
+                                    id: comment.id,
+                                    input: {
+                                      content,
+                                    },
                                   },
-                                },
-                              }).then(() => {
-                                setEditing(false);
-                                setFocused(false);
-                              });
-                            }}
-                          >
-                            <Mention
-                              data={users.map(user => ({
-                                ...user,
-                                display: `${user.firstName} ${user.lastName}`,
-                              }))}
-                              trigger="@"
-                              markup="@[__display__](__id__)"
-                              renderSuggestion={(suggestion, search, highlightedDisplay) => (
-                                <div className="user">{highlightedDisplay}</div>
-                              )}
-                            />
-                          </MentionsInput>
+                                }).then(() => {
+                                  setEditing(false);
+                                  setFocused(false);
+                                });
+                              }}
+                            >
+                              <Mention
+                                data={users.map(user => ({
+                                  ...user,
+                                  display: `${user.firstName} ${user.lastName}`,
+                                }))}
+                                trigger="@"
+                                markup="@[__display__](__id__)"
+                                renderSuggestion={(suggestion, search, highlightedDisplay) => (
+                                  <div className="user" style={{ display: 'flex' }}>
+                                    <UserAvatar
+                                      firstName={suggestion.firstName}
+                                      lastName={suggestion.lastName}
+                                      showBothInitials
+                                      width="25px"
+                                      height="25px"
+                                    />
+                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                      {highlightedDisplay}
+                                      <p>{suggestion.organization.name}</p>
+                                    </div>
+                                  </div>
+                                )}
+                              />
+                            </MentionsInput>
+                          </>
                         ) : (
                           <TextAreaInput
                             align="left"
