@@ -51,20 +51,10 @@ export default function DocumentsDeleteDialog({
     single: {
       id: 'components.DocumentsDeleteDialog.message',
       defaultMessage: 'This {entityIcon} has {fileCount} {fileIcon}.',
-      values: {
-        entityIcon: generateEntityIcon(entityType),
-        fileCount: files.length,
-        fileIcon: <FileLabelIcon />,
-      },
     },
     multiple: {
       id: 'components.DocumentsDeleteDialog.message.multiple',
       defaultMessage: 'These {entityIcon} have {fileCount} {fileIcon}.',
-      values: {
-        entityIcon: generateEntityIcon(entityType),
-        fileCount: files.length,
-        fileIcon: <FilesLabelIcon />,
-      },
     },
   });
 
@@ -81,9 +71,23 @@ export default function DocumentsDeleteDialog({
       }
       dialogMessage={
         isMultiple ? (
-          <FormattedMessage {...dialogMessage.multiple} />
+          <FormattedMessage
+            {...dialogMessage.multiple}
+            values={{
+              entityIcon: generateEntityIcon(entityType),
+              fileCount: files.length,
+              fileIcon: <FileLabelIcon />,
+            }}
+          />
         ) : (
-          <FormattedMessage {...dialogMessage.single} />
+          <FormattedMessage
+            {...dialogMessage.single}
+            values={{
+              entityIcon: generateEntityIcon(entityType),
+              fileCount: files.length,
+              fileIcon: <FilesLabelIcon />,
+            }}
+          />
         )
       }
       dialogSubMessage={
