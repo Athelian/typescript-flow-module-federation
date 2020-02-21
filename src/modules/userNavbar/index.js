@@ -5,7 +5,6 @@ import { UserConsumer } from 'contexts/Viewer';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import { NotificationsDropdown, UserMenuDropdown } from './components';
 import { notificationSeeAllMutation } from './mutation';
@@ -67,17 +66,7 @@ class UserNavBar extends React.Component<Props, State> {
     const { isNotificationOpen, isUserMenuOpen, unSeen } = this.state;
 
     return (
-      <Query
-        query={countNotificationQuery}
-        fetchPolicy="network-only"
-        onCompleted={result => {
-          if (unSeen !== getByPathWithDefault(0, 'viewer.notificationUnseen', result)) {
-            this.setState({
-              unSeen: getByPathWithDefault(0, 'viewer.notificationUnseen', result),
-            });
-          }
-        }}
-      >
+      <Query query={countNotificationQuery} fetchPolicy="network-only">
         {({ client, refetch }) => {
           return (
             <div className={SettingsWrapperStyle}>

@@ -98,6 +98,7 @@ const TaskFormInSlide = ({
                                     entity={{
                                       taskId: task.id,
                                     }}
+                                    users={[]}
                                   />
                                 </Content>
                               </>

@@ -349,43 +349,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                     icon="CONTAINER"
                   />
                 </JumpToSection>
-                <BooleanValue>
-                  {({ value: opened, set: slideToggle }) =>
-                    !isNewOrClone && (
-                      <>
-                        <LogsButton
-                          entityType="order"
-                          entityId={orderId}
-                          onClick={() => slideToggle(true)}
-                        />
-                        <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                          <SlideViewLayout>
-                            {orderId && opened && (
-                              <>
-                                <SlideViewNavBar>
-                                  <EntityIcon icon="LOGS" color="LOGS" />
-                                </SlideViewNavBar>
 
-                                <Content>
-                                  <Timeline
-                                    query={orderTimelineQuery}
-                                    queryField="order"
-                                    variables={{
-                                      id: decodeId(orderId),
-                                    }}
-                                    entity={{
-                                      orderId: decodeId(orderId),
-                                    }}
-                                  />
-                                </Content>
-                              </>
-                            )}
-                          </SlideViewLayout>
-                        </SlideView>
-                      </>
-                    )
-                  }
-                </BooleanValue>
                 <Subscribe
                   to={[
                     OrderItemsContainer,
@@ -412,6 +376,47 @@ class OrderFormModule extends React.PureComponent<Props> {
                       orderTasksState.isDirty();
                     return (
                       <>
+                        <BooleanValue>
+                          {({ value: opened, set: slideToggle }) =>
+                            !isNewOrClone && (
+                              <>
+                                <LogsButton
+                                  entityType="order"
+                                  entityId={orderId}
+                                  onClick={() => slideToggle(true)}
+                                />
+                                <SlideView
+                                  isOpen={opened}
+                                  onRequestClose={() => slideToggle(false)}
+                                >
+                                  <SlideViewLayout>
+                                    {orderId && opened && (
+                                      <>
+                                        <SlideViewNavBar>
+                                          <EntityIcon icon="LOGS" color="LOGS" />
+                                        </SlideViewNavBar>
+
+                                        <Content>
+                                          <Timeline
+                                            query={orderTimelineQuery}
+                                            queryField="order"
+                                            variables={{
+                                              id: decodeId(orderId),
+                                            }}
+                                            entity={{
+                                              orderId: decodeId(orderId),
+                                            }}
+                                            users={orderInfoState.state.followers}
+                                          />
+                                        </Content>
+                                      </>
+                                    )}
+                                  </SlideViewLayout>
+                                </SlideView>
+                              </>
+                            )
+                          }
+                        </BooleanValue>
                         {isNewOrClone ? (
                           <CancelButton onClick={() => (onCancel ? onCancel() : this.onCancel())} />
                         ) : (

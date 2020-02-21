@@ -1,6 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, fontSizes, layout, presets } from 'styles/common';
+import {
+  colors,
+  fontSizesWithHeights,
+  scrollbars,
+  fontSizes,
+  layout,
+  presets,
+} from 'styles/common';
 
 export const InputWrapperStyle = css`
   ${layout.VERTICAL};
@@ -29,4 +36,29 @@ export const ButtonStyle = css`
       color: ${colors.TEAL};
     }
   }
+`;
+
+export const TextAreaReadOnlyStyle = ({
+  align,
+  readOnlyWidth,
+  readOnlyHeight,
+}: {
+  align: 'left' | 'right' | 'center',
+  readOnlyWidth: string,
+  readOnlyHeight: string,
+}): string => css`
+  ${fontSizesWithHeights.MAIN};
+  font-weight: bold;
+  color: ${colors.BLACK};
+  text-align: ${align};
+  min-width: 0;
+  width: ${readOnlyWidth};
+  flex: 1;
+  max-width: ${readOnlyWidth};
+  height: ${readOnlyHeight};
+  padding: 1px 5px;
+  ${scrollbars.SMALL};
+  overflow-x: hidden;
+  overflow-y: auto;
+  white-space: pre-wrap;
 `;

@@ -152,45 +152,45 @@ class BatchFormModule extends React.Component<Props> {
                   />
                 </JumpToSection>
 
-                <BooleanValue>
-                  {({ value: isOpen, set: toggleLogs }) => (
-                    <>
-                      <LogsButton
-                        entityType="batch"
-                        entityId={batchId}
-                        onClick={() => toggleLogs(true)}
-                      />
-                      <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
-                        <SlideViewLayout>
-                          {batchId && isOpen && (
-                            <>
-                              <SlideViewNavBar>
-                                <EntityIcon icon="LOGS" color="LOGS" />
-                              </SlideViewNavBar>
-
-                              <Content>
-                                <Timeline
-                                  query={batchTimelineQuery}
-                                  queryField="batch"
-                                  variables={{
-                                    id: decodeId(batchId),
-                                  }}
-                                  entity={{
-                                    batchId: decodeId(batchId),
-                                  }}
-                                />
-                              </Content>
-                            </>
-                          )}
-                        </SlideViewLayout>
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue>
-
                 <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
                   {(batchInfoContainer, batchTasksContainer) => (
                     <>
+                      <BooleanValue>
+                        {({ value: isOpen, set: toggleLogs }) => (
+                          <>
+                            <LogsButton
+                              entityType="batch"
+                              entityId={batchId}
+                              onClick={() => toggleLogs(true)}
+                            />
+                            <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
+                              <SlideViewLayout>
+                                {batchId && isOpen && (
+                                  <>
+                                    <SlideViewNavBar>
+                                      <EntityIcon icon="LOGS" color="LOGS" />
+                                    </SlideViewNavBar>
+
+                                    <Content>
+                                      <Timeline
+                                        query={batchTimelineQuery}
+                                        queryField="batch"
+                                        variables={{
+                                          id: decodeId(batchId),
+                                        }}
+                                        entity={{
+                                          batchId: decodeId(batchId),
+                                        }}
+                                        users={batchInfoContainer.state.followers}
+                                      />
+                                    </Content>
+                                  </>
+                                )}
+                              </SlideViewLayout>
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
                       {(batchInfoContainer.isDirty() || batchTasksContainer.isDirty()) && (
                         <>
                           <ResetFormButton

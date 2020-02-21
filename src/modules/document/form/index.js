@@ -89,6 +89,7 @@ const DocumentForm = ({
                         entity={{
                           fileId: decodeId(documentId),
                         }}
+                        users={[]}
                       />
                     </Content>
                   </SlideViewLayout>

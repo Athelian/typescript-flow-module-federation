@@ -53,6 +53,8 @@ const LogsInput = ({
               queryField={queryField}
               entity={{ [entityKey]: value }}
               variables={{ id: value }}
+              // TODO: query the users for mention
+              users={[]}
             />
           </Content>
         </SlideViewLayout>

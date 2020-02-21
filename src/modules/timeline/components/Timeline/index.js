@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import type { Entry } from 'generated/graphql';
+import type { Entry, UserPayload } from 'generated/graphql';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import { Query } from 'react-apollo';
 import type { DocumentNode } from 'graphql/language/ast';
@@ -23,6 +23,7 @@ type Props = {|
   variables: Object,
   entity: Object,
   formatters: { [key: string]: LogFormatter },
+  users: Array<UserPayload>,
 |};
 
 const defaultProps = {
@@ -72,6 +73,7 @@ function filterByFile(items: Array<Entry>, hasPermissions: Function): Array<Entr
 }
 
 const Timeline = ({
+  users,
   query,
   queryField,
   variables: baseVariables,
@@ -161,6 +163,7 @@ const Timeline = ({
                         <Comment
                           key={getByPathWithDefault('', 'id', item)}
                           comment={item}
+                          users={users}
                           query={query}
                           queryField={queryField}
                           variables={variables}
@@ -185,6 +188,7 @@ const Timeline = ({
           query={query}
           queryField={queryField}
           variables={variables}
+          users={users}
           onCompleted={() => {
             if (ref.current) {
               ref.current.scrollTop = ref.current.scrollHeight;

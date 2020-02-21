@@ -224,6 +224,7 @@ class ContainerFormModule extends React.Component<Props> {
                                         entity={{
                                           containerId: decodeId(containerId),
                                         }}
+                                        users={containerInfoContainer.state.followers}
                                       />
                                     </Content>
                                   </>
