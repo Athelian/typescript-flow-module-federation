@@ -59,7 +59,7 @@ export default function DocumentsDeleteDialog({
     },
     multiple: {
       id: 'components.DocumentsDeleteDialog.message.multiple',
-      defaultMessage: 'This {entityIcon} has {fileCount} {fileIcon}.',
+      defaultMessage: 'These {entityIcon} have {fileCount} {fileIcon}.',
       values: {
         entityIcon: generateEntityIcon(entityType),
         fileCount: files.length,
