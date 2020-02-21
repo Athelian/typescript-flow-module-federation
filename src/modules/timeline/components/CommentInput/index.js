@@ -167,6 +167,7 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
                       <div ref={mentionInputRef} className={SuggestionListStyle} />
                       <MentionsInput
                         value={value}
+                        suggestionsPortalHost={mentionInputRef.current}
                         className={TextAreaReadOnlyStyle({
                           align: 'left',
                           readOnlyWidth: '100%',

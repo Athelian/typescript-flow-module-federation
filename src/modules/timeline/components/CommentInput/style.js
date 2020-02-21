@@ -65,7 +65,7 @@ export const TextAreaReadOnlyStyle = ({
 
 export const SuggestionListStyle = css`
   & div {
-    max-height: 120px;
+    max-height: 90px;
     overflow: auto;
   }
 `;

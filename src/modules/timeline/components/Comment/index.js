@@ -4,10 +4,11 @@ import type { UserPayload } from 'generated/graphql';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import { StringValue } from 'react-values';
+import replaceString from 'replace-string';
 import { clone } from 'ramda';
+import { MentionsInput, Mention } from 'react-mentions';
 import type { DocumentNode } from 'graphql/language/ast';
 import { DefaultStyle, TextAreaInput } from 'components/Form/Inputs';
-import { MentionsInput, Mention } from 'react-mentions';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
@@ -102,6 +103,24 @@ const style = {
     },
   },
 };
+
+function parseUserMention(content: string, users: Array<UserPayload>) {
+  if (users.length) {
+    let txt = content;
+    users.forEach(user => {
+      if (txt.includes(`(${user.id})`)) {
+        txt = replaceString(
+          txt,
+          `@[${user.firstName} ${user.lastName}](${user.id})`,
+          `@[${user.firstName} ${user.lastName}]`
+        );
+      }
+    });
+    return txt;
+  }
+
+  return content;
+}
 
 const Comment = ({ comment, query, queryField, variables, users }: Props) => {
   const [editing, setEditing] = React.useState(false);
@@ -291,7 +310,7 @@ const Comment = ({ comment, query, queryField, variables, users }: Props) => {
             </>
           ) : (
             <>
-              {comment.content}{' '}
+              {parseUserMention(comment.content, users)}{' '}
               {comment.createdAt.getTime() !== comment.updatedAt.getTime() && (
                 <span className={EditedStyle}>
                   (
