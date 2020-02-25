@@ -1677,6 +1677,7 @@
   "modules.Tags.task": "TASK",
   "modules.Tags.project": "PROJECT",
   "modules.Tags.document": "Document",
+  "modules.Tags.partner": "Partner",
   "modules.tags.deleteTagWarning": "Are you sure you want to delete this tag?",
   "modules.tags.deleteTagMessage": "Doing this will remove it from all data that is using it.",
   "modules.Tags.noItem": "No tags found",

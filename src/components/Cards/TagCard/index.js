@@ -132,6 +132,13 @@ const TagCard = ({ tag, actions, ...rest }: Props) => {
           >
             <Icon icon="DOCUMENT" />
           </div>
+          <div
+            className={TagTypeStyle(
+              getEntityType(entityTypes.find(entityType => entityType === 'Partner'))
+            )}
+          >
+            <Icon icon="PARTNER" />
+          </div>
         </div>
       </Link>
     </BaseCard>
