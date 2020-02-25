@@ -13,7 +13,7 @@ export default defineMessages({
   },
   quantity: {
     id: 'components.BatchItem.quantity',
-    defaultMessage: 'INITIAL QUANTITY',
+    defaultMessage: 'Initial Quantity',
   },
   differenceQuantity: {
     id: 'components.BatchItem.differenceQuantity',
@@ -21,27 +21,27 @@ export default defineMessages({
   },
   initialQuantity: {
     id: 'components.BatchItem.initialQuantity',
-    defaultMessage: 'INITIAL QUANTITY',
+    defaultMessage: 'Initial Quantity',
   },
   producedQuantity: {
     id: 'components.BatchItem.producedQuantity',
-    defaultMessage: 'PRODUCED QUANTITY',
+    defaultMessage: 'Produced Quantity',
   },
   preShippedQuantity: {
     id: 'components.BatchItem.preShippedQuantity',
-    defaultMessage: 'PRE-SHIPPED QUANTITY',
+    defaultMessage: 'Pre-Shipped Quantity',
   },
   shippedQuantity: {
     id: 'components.BatchItem.shippedQuantity',
-    defaultMessage: 'SHIPPED QUANTITY',
+    defaultMessage: 'Shipped Quantity',
   },
   postShippedQuantity: {
     id: 'components.BatchItem.postShippedQuantity',
-    defaultMessage: 'POST SHIPPED QUANTITY',
+    defaultMessage: 'Post-Shipped Quantity',
   },
   deliveredQuantity: {
     id: 'components.BatchItem.deliveredQuantity',
-    defaultMessage: 'DELIVERED QUANTITY',
+    defaultMessage: 'Delivered Quantity',
   },
   shortQuantity: {
     id: 'components.BatchItem.shortQuantity',

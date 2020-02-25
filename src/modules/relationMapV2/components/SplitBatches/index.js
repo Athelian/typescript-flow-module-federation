@@ -15,6 +15,7 @@ import { useNumberInput } from 'modules/form/hooks';
 import { Label, Display, NumberInputFactory } from 'components/Form';
 import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from 'components/Dialog/ActionDialog';
 import { batchSimpleSplitMutation } from './mutation';
+import SplitTable from './SplitTable';
 import { SplitInputsWrapperStyle, SplitRowStyle } from './style';
 import validator from './validator';
 
@@ -271,6 +272,15 @@ export default function SplitBatches({ onSuccess }: Props) {
           />
         }
       >
+        <SplitTable
+          selectedBatches={batchIds.map(batchId => mapping.entities?.batches?.[batchId])}
+          onChange={(batchId, value) =>
+            setBatches([
+              ...batches.filter(batch => batch?.id !== batchId),
+              { id: batchId, ...value },
+            ])
+          }
+        />
         {!allHasNoQuantity && (
           <div className={SplitInputsWrapperStyle}>
             {batchIds.map(batchId => (
