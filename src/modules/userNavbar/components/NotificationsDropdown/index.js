@@ -9,6 +9,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import NavigateLink from 'components/NavigateLink';
 import { BaseButton } from 'components/Buttons';
 import { Label } from 'components/Form';
+import { notificationSeeAllMutation } from 'modules/userNavbar/mutation';
 import { notificationListQuery } from 'modules/notifications/query';
 import { archiveAllMutation } from 'modules/notifications/mutation';
 import { isNotFound, isForbidden, isBadRequest } from 'utils/data';
@@ -40,6 +41,7 @@ const NotificationsDropdown = ({
 }: Props) => {
   const perPage = 10;
   const [archiveAll] = useMutation(archiveAllMutation);
+  const [seeAll] = useMutation(notificationSeeAllMutation);
   const { data, loading, error, refetch } = useQuery(notificationListQuery, {
     variables: {
       perPage,
@@ -147,6 +149,7 @@ const NotificationsDropdown = ({
             className={ArchiveAllButtonStyle}
             onClick={() => {
               archiveAll();
+              seeAll();
               refetch();
               // NOTE: fix for the edge case, open the view all from dropdown on notification page
               if (window.location.href.includes('/notifications')) {
