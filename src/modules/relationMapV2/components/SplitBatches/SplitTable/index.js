@@ -38,8 +38,6 @@ function SplitRow({ splitBatch, onChange, maxQuantity }: SplitRowProps) {
     isRequired: false,
   });
 
-  console.warn(!validation.isValidSync(splitBatch));
-
   return (
     <div className={RightRowStyle}>
       <TextInputFactory
@@ -51,8 +49,8 @@ function SplitRow({ splitBatch, onChange, maxQuantity }: SplitRowProps) {
         inputWidth="200px"
         inputHeight="30px"
         {...textInputHandlers}
-        onBlur={evt => {
-          textInputHandlers.onBlur(evt);
+        onBlur={() => {
+          textInputHandlers.onBlur();
           onChange(id, { ...splitBatch, no: textInputHandlers.value || '' });
         }}
         errorMessage={

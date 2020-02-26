@@ -199,7 +199,7 @@ export default function SplitBatches({ onSuccess }: Props) {
         <SplitTable
           selectedBatches={batchIds.map(batchId => mapping.entities?.batches?.[batchId])}
           splitBatches={batches}
-          onChange={(batchId, value) =>
+          onChange={(batchId, value: { no: string, quantity: number }) =>
             setBatches([
               ...batches.map(batch => {
                 if (batch?.id === batchId) {
