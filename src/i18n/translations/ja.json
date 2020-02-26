@@ -1677,6 +1677,7 @@
   "modules.Tags.task": "タスク",
   "modules.Tags.project": "プロジェクト",
   "modules.Tags.document": "書類",
+  "modules.Tags.partner": "取引先",
   "modules.tags.deleteTagWarning": "本当にこのタグを削除しますか？",
   "modules.tags.deleteTagMessage": "これにより、該当する全てのデータからこのタグが削除されます。",
   "modules.Tags.noItem": "タグが見つかりません",
