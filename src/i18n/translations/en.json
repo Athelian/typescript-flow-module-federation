@@ -840,6 +840,7 @@
   "modules.OrderItems.tasks": "Tasks",
   "modules.OrderItems.logs": "Logs",
   "modules.OrderItems.mask": "Custom fields template",
+  "modules.Partners.partner": "PARTNER",
   "modules.Partners.noPartnersFound": "No partners found",
   "modules.Partners.newPartner": "ADD NEW PARTNER",
   "modules.Partners.noPartners": "No partners found.",

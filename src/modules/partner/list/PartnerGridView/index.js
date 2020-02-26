@@ -1,8 +1,12 @@
 // @flow
 import * as React from 'react';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { PartnerCard } from 'components/Cards';
+import { encodeId } from 'utils/id';
+import usePermission from 'hooks/usePermission';
+import { PARTNER_FORM } from 'modules/permission/constants/partner';
 
 type Props = {
   items: Array<Object>,
@@ -12,7 +16,15 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <PartnerCard key={item.id} partner={item} />;
+const defaultRenderItem = ({ item, allowViewForm }: { item: Object, allowViewForm: boolean }) => {
+  return (
+    <PartnerCard
+      key={item.id}
+      partner={item}
+      onClick={allowViewForm ? () => navigate(`/partner/${encodeId(item.id)}`) : null}
+    />
+  );
+};
 
 const defaultProps = {
   renderItem: defaultRenderItem,
@@ -20,6 +32,8 @@ const defaultProps = {
 
 const PartnerGridView = (props: Props) => {
   const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
+  const { hasPermission } = usePermission();
+  const allowViewForm = hasPermission(PARTNER_FORM);
 
   return (
     <GridView
@@ -35,7 +49,7 @@ const PartnerGridView = (props: Props) => {
         />
       }
     >
-      {items.map(item => renderItem(item))}
+      {items.map(item => renderItem({ item, allowViewForm }))}
     </GridView>
   );
 };
