@@ -3,98 +3,20 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/react-hooks';
 import { useAllHasPermission } from 'contexts/Permissions';
-import { getBatchLatestQuantity, findActiveQuantityField } from 'utils/batch';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
-import messages from 'modules/batch/messages';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { BATCH } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
-import { useNumberInput } from 'modules/form/hooks';
-import { Label, Display, NumberInputFactory } from 'components/Form';
 import ActionDialog, { BatchesLabelIcon, BatchLabelIcon } from 'components/Dialog/ActionDialog';
 import { batchSimpleSplitMutation } from './mutation';
 import SplitTable from './SplitTable';
-import { SplitInputsWrapperStyle, SplitRowStyle } from './style';
 import validator from './validator';
 
 type Props = {|
   onSuccess: (orderIds: Array<string>, batchIds: Object) => void,
 |};
-
-const DEFAULT_QTY = 0;
-
-function SplitBatch({
-  id,
-  no,
-  field,
-  latestQuantity,
-  onChange,
-}: {|
-  id: string,
-  no: string,
-  field: string,
-  latestQuantity: number,
-  onChange: (quantity: number) => void,
-|}) {
-  const validation = validator(DEFAULT_QTY, latestQuantity);
-  const { hasError, touch, ...inputHandlers } = useNumberInput(DEFAULT_QTY, { isRequire: false });
-  return (
-    <>
-      <div className={SplitRowStyle}>
-        <Label>
-          <FormattedMessage id="components.BatchItem.batchNo" />
-        </Label>
-
-        <Label>
-          <FormattedMessage {...messages[field]} />
-        </Label>
-
-        <Label>
-          <FormattedMessage
-            id="modules.RelationMap.label.splitInto"
-            defaultMessage="Quantity to Split Into"
-          />
-        </Label>
-      </div>
-      <div className={SplitRowStyle}>
-        <Display height="30px">{no}</Display>
-
-        <Display height="30px">
-          <FormattedNumber value={latestQuantity} />
-        </Display>
-
-        <NumberInputFactory
-          name={`split-batch-${id}`}
-          originalValue={DEFAULT_QTY}
-          isNew
-          editable
-          inputWidth="200px"
-          inputHeight="30px"
-          {...inputHandlers}
-          onBlur={evt => {
-            inputHandlers.onBlur(evt);
-            onChange(inputHandlers.value || DEFAULT_QTY);
-          }}
-          isTouched={touch}
-          errorMessage={
-            !validation.isValidSync({ quantity: inputHandlers.value }) && (
-              <FormattedMessage
-                id="modules.RelationMap.split.validationError"
-                defaultMessage="Please enter the number between {min} and {max}"
-                values={{
-                  min: 1,
-                  max: latestQuantity,
-                }}
-              />
-            )
-          }
-        />
-      </div>
-    </>
-  );
-}
 
 export default function SplitBatches({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
@@ -109,12 +31,11 @@ export default function SplitBatches({ onSuccess }: Props) {
     batchIds.map(id => mapping.entities?.batches?.[id]?.ownedBy).filter(Boolean)
   );
   const totalBatches = batchIds.length;
-  const [batches, setBatches] = React.useState(batchIds.map(id => ({ id, quantity: DEFAULT_QTY })));
-  React.useEffect(() => {
-    return () => {
-      if (!isOpen) setBatches([]);
-    };
-  }, [isOpen]);
+
+  const [batches, setBatches] = React.useState(
+    batchIds.map(id => ({ id, no: `[Split] ${mapping.entities?.batches?.[id]?.no}`, quantity: 0 }))
+  );
+
   const onCancel = React.useCallback(() => {
     dispatch({
       type: 'SPLIT_END',
@@ -128,11 +49,13 @@ export default function SplitBatches({ onSuccess }: Props) {
       payload: {},
     });
     Promise.all(
-      batches.map(({ id, quantity }) =>
-        batchSimpleSplit({
-          variables: { id, input: { quantity } },
-        })
-      )
+      batches
+        .filter(({ quantity }) => quantity)
+        .map(({ id, no, quantity }) =>
+          batchSimpleSplit({
+            variables: { id, input: { no, quantity } },
+          })
+        )
     )
       .then(result => {
         const orderIds = [];
@@ -154,8 +77,9 @@ export default function SplitBatches({ onSuccess }: Props) {
     const validSplitBatches = batches.filter(({ quantity }) => quantity);
     return (
       validSplitBatches.length > 0 &&
-      validSplitBatches.every(({ id, quantity }) =>
+      validSplitBatches.every(({ id, no, quantity }) =>
         validator(1, mapping.entities?.batches?.[id]?.latestQuantity ?? 0).isValidSync({
+          no,
           quantity,
         })
       )
@@ -274,40 +198,18 @@ export default function SplitBatches({ onSuccess }: Props) {
       >
         <SplitTable
           selectedBatches={batchIds.map(batchId => mapping.entities?.batches?.[batchId])}
+          splitBatches={batches}
           onChange={(batchId, value) =>
             setBatches([
-              ...batches.filter(batch => batch?.id !== batchId),
-              { id: batchId, ...value },
+              ...batches.map(batch => {
+                if (batch?.id === batchId) {
+                  return { id: batchId, ...value };
+                }
+                return batch;
+              }),
             ])
           }
         />
-        {!allHasNoQuantity && (
-          <div className={SplitInputsWrapperStyle}>
-            {batchIds.map(batchId => (
-              <SplitBatch
-                key={batchId}
-                id={batchId}
-                field={findActiveQuantityField({
-                  producedQuantity: mapping.entities?.batches?.[batchId]?.producedQuantity,
-                  preShippedQuantity: mapping.entities?.batches?.[batchId]?.preShippedQuantity,
-                  shippedQuantity: mapping.entities?.batches?.[batchId]?.shippedQuantity,
-                  postShippedQuantity: mapping.entities?.batches?.[batchId]?.postShippedQuantity,
-                  deliveredQuantity: mapping.entities?.batches?.[batchId]?.deliveredQuantity,
-                })}
-                onChange={quantity =>
-                  setBatches([
-                    ...batches.filter(batch => batch?.id !== batchId),
-                    { id: batchId, quantity },
-                  ])
-                }
-                no={mapping.entities?.batches?.[batchId]?.no ?? ''}
-                latestQuantity={
-                  getBatchLatestQuantity(mapping.entities?.batches?.[batchId]) ?? DEFAULT_QTY
-                }
-              />
-            ))}
-          </div>
-        )}
       </ActionDialog>
     </>
   );

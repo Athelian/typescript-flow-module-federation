@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Label, Display, NumberInputFactory } from 'components/Form';
+import { Label, Display, TextInputFactory, NumberInputFactory } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import { findActiveQuantityField, getBatchLatestQuantity } from 'utils/batch';
 import messages from 'modules/batch/messages';
-import { useNumberInput } from 'modules/form/hooks';
+import { useTextInput, useNumberInput } from 'modules/form/hooks';
 import validator from '../validator';
 import {
   SplitTableWrapperStyle,
@@ -14,25 +14,52 @@ import {
   LeftRowStyle,
   TableCellStyle,
   RightSideWrapperStyle,
+  RightTitleStyle,
   RightTableWrapperStyle,
   RightRowStyle,
 } from './style';
 
 type SplitRowProps = {
-  selectedBatch: Object,
+  splitBatch: Object,
   onChange: (string, { no: string, quantity: number }) => void,
+  maxQuantity: number,
 };
 
-function SplitRow({ selectedBatch, onChange }: SplitRowProps) {
-  const { id } = selectedBatch;
-  const latestQuantity = getBatchLatestQuantity(selectedBatch);
+function SplitRow({ splitBatch, onChange, maxQuantity }: SplitRowProps) {
+  const { id, no, quantity } = splitBatch;
 
-  const validation = validator(0, latestQuantity);
-  const { hasError, touch, ...inputHandlers } = useNumberInput(0, {
-    isRequire: false,
+  const validation = validator(0, maxQuantity);
+
+  const { hasError: textHasError, ...textInputHandlers } = useTextInput(no, {
+    isRequired: true,
   });
+
+  const { hasError, touch, ...numberInputHandlers } = useNumberInput(quantity, {
+    isRequired: false,
+  });
+
+  console.warn(!validation.isValidSync(splitBatch));
+
   return (
     <div className={RightRowStyle}>
+      <TextInputFactory
+        name={`${id}.no`}
+        originalValue={no}
+        isNew
+        editable
+        isTouched
+        inputWidth="200px"
+        inputHeight="30px"
+        {...textInputHandlers}
+        onBlur={evt => {
+          textInputHandlers.onBlur(evt);
+          onChange(id, { ...splitBatch, no: textInputHandlers.value || '' });
+        }}
+        errorMessage={
+          textHasError && <FormattedMessage id="components.BatchItem.validation.required" />
+        }
+      />
+
       <NumberInputFactory
         name={`split-batch-${id}`}
         originalValue={0}
@@ -40,20 +67,20 @@ function SplitRow({ selectedBatch, onChange }: SplitRowProps) {
         editable
         inputWidth="200px"
         inputHeight="30px"
-        {...inputHandlers}
+        isTouched
+        {...numberInputHandlers}
         onBlur={evt => {
-          inputHandlers.onBlur(evt);
-          onChange(id, { quantity: inputHandlers.value || 0 });
+          numberInputHandlers.onBlur(evt);
+          onChange(id, { ...splitBatch, quantity: numberInputHandlers.value || 0 });
         }}
-        isTouched={touch}
         errorMessage={
-          !validation.isValidSync({ quantity: inputHandlers.value }) && (
+          !validation.isValidSync({ no: 'valid', quantity: numberInputHandlers.value }) && (
             <FormattedMessage
               id="modules.RelationMap.split.validationError"
               defaultMessage="Please enter the number between {min} and {max}"
               values={{
                 min: 1,
-                max: latestQuantity,
+                max: maxQuantity,
               }}
             />
           )
@@ -65,10 +92,11 @@ function SplitRow({ selectedBatch, onChange }: SplitRowProps) {
 
 type Props = {|
   selectedBatches: Array<Object>,
+  splitBatches: Array<Object>,
   onChange: (string, { no: string, quantity: number }) => void,
 |};
 
-export default function SplitTable({ selectedBatches, onChange }: Props) {
+export default function SplitTable({ selectedBatches, splitBatches, onChange }: Props) {
   return (
     <div className={SplitTableWrapperStyle}>
       <div className={LeftSideWrapperStyle}>
@@ -189,12 +217,14 @@ export default function SplitTable({ selectedBatches, onChange }: Props) {
       </div>
 
       <div className={RightSideWrapperStyle}>
-        <Label height="30px">
-          <FormattedMessage
-            id="modules.RelationMap.split.batchesSplittingOff"
-            defaultMessage="Batches Splitting Off"
-          />
-        </Label>
+        <div className={RightTitleStyle}>
+          <Label height="30px">
+            <FormattedMessage
+              id="modules.RelationMap.split.batchesSplittingOff"
+              defaultMessage="Batches Splitting Off"
+            />
+          </Label>
+        </div>
 
         <div className={RightTableWrapperStyle}>
           <div className={RightRowStyle}>
@@ -207,8 +237,17 @@ export default function SplitTable({ selectedBatches, onChange }: Props) {
             </Label>
           </div>
 
-          {selectedBatches.map(selectedBatch => {
-            return <SplitRow selectedBatch={selectedBatch} onChange={onChange} />;
+          {splitBatches.map(splitBatch => {
+            return (
+              <SplitRow
+                key={splitBatch.id}
+                splitBatch={splitBatch}
+                onChange={onChange}
+                maxQuantity={getBatchLatestQuantity(
+                  selectedBatches.find(selectedBatch => selectedBatch.id === splitBatch.id)
+                )}
+              />
+            );
           })}
         </div>
       </div>

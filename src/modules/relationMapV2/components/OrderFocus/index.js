@@ -442,30 +442,32 @@ export default function OrderFocus() {
                       );
                     }}
                   />
-                  <SplitBatches
-                    onSuccess={(orderIds, batchIds) => {
-                      onSetBadges(
-                        Object.keys(batchIds).map(id => ({
-                          id: batchIds[id],
-                          type: 'split',
-                          entity: 'batch',
-                        }))
-                      );
-                      onSetSplitBatchRelated(batchIds);
-                      queryOrdersDetail(orderIds);
-                      window.requestIdleCallback(
-                        () => {
-                          dispatch({
-                            type: 'SPLIT_CLOSE',
-                            payload: {},
-                          });
-                        },
-                        {
-                          timeout: 250,
-                        }
-                      );
-                    }}
-                  />
+                  {state.split.isOpen && (
+                    <SplitBatches
+                      onSuccess={(orderIds, batchIds) => {
+                        onSetBadges(
+                          Object.keys(batchIds).map(id => ({
+                            id: batchIds[id],
+                            type: 'split',
+                            entity: 'batch',
+                          }))
+                        );
+                        onSetSplitBatchRelated(batchIds);
+                        queryOrdersDetail(orderIds);
+                        window.requestIdleCallback(
+                          () => {
+                            dispatch({
+                              type: 'SPLIT_CLOSE',
+                              payload: {},
+                            });
+                          },
+                          {
+                            timeout: 250,
+                          }
+                        );
+                      }}
+                    />
+                  )}
                   <InlineCreateBatch
                     onSuccess={(orderId, batch) => {
                       if (orderId) {

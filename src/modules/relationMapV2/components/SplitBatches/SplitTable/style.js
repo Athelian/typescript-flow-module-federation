@@ -4,13 +4,12 @@ import { colors } from 'styles/common';
 
 export const SplitTableWrapperStyle: string = css`
   display: flex;
-  width: 800px;
 `;
 
 export const LeftSideWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
-  width: 400px;
+  width: 350px;
 `;
 
 export const LeftTableWrapperStyle: string = css`
@@ -20,6 +19,8 @@ export const LeftTableWrapperStyle: string = css`
   overflow-x: auto;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   width: 100%;
+  border-right: 2px solid ${colors.GRAY_LIGHT};
+  padding: 0 0 10px 0;
 `;
 
 export const LeftRowStyle: string = css`
@@ -39,15 +40,21 @@ export const RightSideWrapperStyle: string = css`
   width: 400px;
 `;
 
+export const RightTitleStyle: string = css`
+  padding: 0 0 0 20px;
+`;
+
 export const RightTableWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   width: 100%;
+  padding: 0 0 10px 20px;
 `;
 
 export const RightRowStyle: string = css`
   display: grid;
   grid-template-rows: 30px;
-  grid-template-columns: repeat(2, 200px);
+  grid-template-columns: 200px 150px;
+  grid-gap: 20px;
 `;
