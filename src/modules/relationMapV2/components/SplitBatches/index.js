@@ -179,38 +179,70 @@ export default function SplitBatches({ onSuccess }: Props) {
   }
 
   return (
-    <>
-      <ActionDialog
-        isOpen={isOpen}
-        isProcessing={isProcessing}
-        onCancel={onCancel}
-        title={<FormattedMessage id="modules.RelationMap.label.split" defaultMessage="SPLIT" />}
-        dialogMessage={dialogMessage}
-        dialogSubMessage={dialogSubMessage}
-        buttons={
-          <BaseButton
-            label={<FormattedMessage id="modules.RelationMap.label.split" defaultMessage="SPLIT" />}
-            icon="SPLIT"
-            disabled={noPermission || !isValid() || allHasNoQuantity}
-            onClick={onConfirm}
-          />
-        }
-      >
-        <SplitTable
-          selectedBatches={batchIds.map(batchId => mapping.entities?.batches?.[batchId])}
-          splitBatches={batches}
-          onChange={(batchId, value: { no: string, quantity: number }) =>
-            setBatches([
-              ...batches.map(batch => {
-                if (batch?.id === batchId) {
-                  return { id: batchId, ...value };
-                }
-                return batch;
-              }),
-            ])
-          }
+    <ActionDialog
+      isOpen={isOpen}
+      isProcessing={isProcessing}
+      onCancel={onCancel}
+      title={<FormattedMessage id="modules.RelationMap.label.split" defaultMessage="SPLIT" />}
+      dialogMessage={dialogMessage}
+      dialogSubMessage={dialogSubMessage}
+      buttons={
+        <BaseButton
+          label={<FormattedMessage id="modules.RelationMap.label.split" defaultMessage="SPLIT" />}
+          icon="SPLIT"
+          disabled={noPermission || !isValid() || allHasNoQuantity}
+          onClick={onConfirm}
         />
-      </ActionDialog>
-    </>
+      }
+    >
+      <SplitTable
+        selectedBatches={batchIds.map(batchId => {
+          console.warn(mapping);
+          let orderNo = '';
+          let itemNo = '';
+          let productName = '';
+          let productSerial = '';
+
+          mapping.orders.some(order => {
+            if (
+              order.orderItems.some(orderItem =>
+                orderItem.batches.some(batch => {
+                  if (batch.id === batchId) {
+                    itemNo = orderItem?.no;
+                    productName = orderItem?.productProvider?.product?.name;
+                    productSerial = orderItem?.productProvider?.product?.serial;
+                    return true;
+                  }
+                  return false;
+                })
+              )
+            ) {
+              orderNo = order.poNo;
+              return true;
+            }
+            return false;
+          });
+
+          return {
+            ...mapping.entities?.batches?.[batchId],
+            orderNo,
+            itemNo,
+            productName,
+            productSerial,
+          };
+        })}
+        splitBatches={batches}
+        onChange={(batchId, value: Object) =>
+          setBatches([
+            ...batches.map(batch => {
+              if (batch?.id === batchId) {
+                return { id: batchId, ...value };
+              }
+              return batch;
+            }),
+          ])
+        }
+      />
+    </ActionDialog>
   );
 }

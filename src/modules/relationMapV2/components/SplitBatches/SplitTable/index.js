@@ -154,6 +154,10 @@ export default function SplitTable({ selectedBatches, splitBatches, onChange }: 
               shippedQuantity,
               postShippedQuantity,
               deliveredQuantity,
+              orderNo,
+              itemNo,
+              productName,
+              productSerial,
             } = selectedBatch;
 
             const currentQuantityType = findActiveQuantityField({
@@ -187,25 +191,25 @@ export default function SplitTable({ selectedBatches, splitBatches, onChange }: 
 
                 <div className={TableCellStyle}>
                   <Display height="30px" width="200px">
-                    Order No
+                    {orderNo}
                   </Display>
                 </div>
 
                 <div className={TableCellStyle}>
                   <Display height="30px" width="200px">
-                    Item No
+                    {itemNo}
                   </Display>
                 </div>
 
                 <div className={TableCellStyle}>
                   <Display height="30px" width="200px">
-                    Product Name
+                    {productName}
                   </Display>
                 </div>
 
                 <div className={TableCellStyle}>
                   <Display height="30px" width="200px">
-                    Product Serial
+                    {productSerial}
                   </Display>
                 </div>
               </div>
