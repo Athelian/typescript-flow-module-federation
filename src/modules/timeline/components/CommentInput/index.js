@@ -17,8 +17,13 @@ import {
   HeaderWrapperStyle,
   InputWrapperStyle,
   TitleStyle,
-  TextAreaReadOnlyStyle,
+  MentionsInputStyle,
+  MentionStyle,
   SuggestionListStyle,
+  MentionSuggestionStyle,
+  MentionSuggestionNameWrapperStyle,
+  MentionNameStyle,
+  MentionCompanyStyle,
 } from './style';
 
 type Props = {|
@@ -29,75 +34,6 @@ type Props = {|
   users: Array<UserPayload>,
   onCompleted: () => void,
 |};
-
-const style = {
-  control: {
-    backgroundColor: '#fff',
-    fontSize: 14,
-    fontWeight: 'normal',
-  },
-
-  highlighter: {
-    overflow: 'hidden',
-  },
-
-  input: {
-    margin: 0,
-    overflow: 'auto',
-    height: 70,
-  },
-
-  '&singleLine': {
-    control: {
-      display: 'inline-block',
-      width: 130,
-    },
-
-    highlighter: {
-      padding: 1,
-      border: '2px inset transparent',
-    },
-
-    input: {
-      padding: 1,
-      border: '2px inset',
-    },
-  },
-
-  '&multiLine': {
-    control: {
-      fontFamily: 'monospace',
-    },
-
-    highlighter: {
-      padding: 9,
-    },
-
-    input: {
-      padding: 9,
-      minHeight: 63,
-      outline: 0,
-      border: 0,
-    },
-  },
-
-  suggestions: {
-    list: {
-      backgroundColor: 'white',
-      border: '1px solid rgba(0,0,0,0.15)',
-      fontSize: 14,
-    },
-
-    item: {
-      padding: '5px',
-      borderBottom: '1px solid rgba(0,0,0,0.15)',
-
-      '&focused': {
-        backgroundColor: '#EEEEEE',
-      },
-    },
-  },
-};
 
 const CommentInput = ({ entity, query, queryField, variables, onCompleted, users }: Props) => {
   const [focused, setFocused] = React.useState(false);
@@ -162,17 +98,13 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
                   forceHoverStyle
                   height="90px"
                 >
-                  {users.length ? (
+                  {users.length > 0 ? (
                     <>
                       <div ref={mentionInputRef} className={SuggestionListStyle} />
                       <MentionsInput
+                        className={MentionsInputStyle}
                         value={value}
                         suggestionsPortalHost={mentionInputRef.current}
-                        className={TextAreaReadOnlyStyle({
-                          align: 'left',
-                          readOnlyWidth: '100%',
-                          readOnlyHeight: '90px',
-                        })}
                         onChange={e => set(e.target.value)}
                         onFocus={() => setFocused(true)}
                         onBlur={() => setFocused(false)}
@@ -183,18 +115,23 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
                             submit();
                           }
                         }}
-                        style={style}
-                        placeholder="Mention any user by typing `@` followed by at least one char"
                       >
                         <Mention
+                          className={MentionStyle}
                           data={users.map(user => ({
                             ...user,
                             display: `${user.firstName} ${user.lastName}`,
                           }))}
                           trigger="@"
                           markup="@[__display__](__id__)"
-                          renderSuggestion={(suggestion, search, highlightedDisplay) => (
-                            <div className="user" style={{ display: 'flex' }}>
+                          renderSuggestion={(
+                            suggestion,
+                            search,
+                            highlightedDisplay,
+                            index,
+                            isFocused
+                          ) => (
+                            <div className={MentionSuggestionStyle(isFocused)}>
                               <UserAvatar
                                 firstName={suggestion.firstName}
                                 lastName={suggestion.lastName}
@@ -202,9 +139,12 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
                                 width="25px"
                                 height="25px"
                               />
-                              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                {highlightedDisplay}
-                                <p>{suggestion.organization.name}</p>
+
+                              <div className={MentionSuggestionNameWrapperStyle}>
+                                <div className={MentionNameStyle}>{highlightedDisplay}</div>
+                                <div className={MentionCompanyStyle}>
+                                  {suggestion.organization.name}
+                                </div>
                               </div>
                             </div>
                           )}

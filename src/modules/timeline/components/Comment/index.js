@@ -15,7 +15,15 @@ import Icon from 'components/Icon';
 import { commentDeleteMutation, commentUpdateMutation } from 'modules/timeline/mutation';
 import type { CommentItem } from 'modules/timeline/types';
 import messages from 'modules/timeline/messages';
-import { TextAreaReadOnlyStyle } from '../CommentInput/style';
+import {
+  MentionsInputStyle,
+  MentionStyle,
+  SuggestionListStyle,
+  MentionSuggestionStyle,
+  MentionSuggestionNameWrapperStyle,
+  MentionNameStyle,
+  MentionCompanyStyle,
+} from '../CommentInput/style';
 import {
   ContentStyle,
   CommentWrapperStyle,
@@ -24,7 +32,6 @@ import {
   EditedStyle,
   DeleteButtonStyle,
   ContentWrapperStyle,
-  SuggestionListStyle,
 } from './style';
 
 type Props = {|
@@ -35,75 +42,6 @@ type Props = {|
   users: Array<UserPayload>,
 |};
 
-const style = {
-  control: {
-    backgroundColor: '#fff',
-    fontSize: 14,
-    fontWeight: 'normal',
-  },
-
-  highlighter: {
-    overflow: 'hidden',
-  },
-
-  input: {
-    margin: 0,
-    overflow: 'auto',
-    height: 70,
-  },
-
-  '&singleLine': {
-    control: {
-      display: 'inline-block',
-      width: 130,
-    },
-
-    highlighter: {
-      padding: 1,
-      border: '2px inset transparent',
-    },
-
-    input: {
-      padding: 1,
-      border: '2px inset',
-    },
-  },
-
-  '&multiLine': {
-    control: {
-      fontFamily: 'monospace',
-    },
-
-    highlighter: {
-      padding: 9,
-    },
-
-    input: {
-      padding: 9,
-      minHeight: 63,
-      outline: 0,
-      border: 0,
-    },
-  },
-
-  suggestions: {
-    list: {
-      backgroundColor: 'white',
-      border: '1px solid rgba(0,0,0,0.15)',
-      fontSize: 14,
-    },
-
-    item: {
-      padding: '5px',
-      borderBottom: '1px solid rgba(0,0,0,0.15)',
-
-      '&focused': {
-        backgroundColor: '#EEEEEE',
-      },
-    },
-  },
-};
-
 function parseUserMention(content: string, users: Array<UserPayload>) {
   if (users.length) {
     let txt = content;
@@ -112,7 +50,7 @@ function parseUserMention(content: string, users: Array<UserPayload>) {
         txt = replaceString(
           txt,
           `@[${user.firstName} ${user.lastName}](${user.id})`,
-          `@[${user.firstName} ${user.lastName}]`
+          `@${user.firstName} ${user.lastName}`
         );
       }
     });
@@ -181,13 +119,8 @@ const Comment = ({ comment, query, queryField, variables, users }: Props) => {
                           <>
                             <div ref={mentionInputRef} className={SuggestionListStyle} />
                             <MentionsInput
-                              style={style}
+                              className={MentionsInputStyle}
                               suggestionsPortalHost={mentionInputRef.current}
-                              className={TextAreaReadOnlyStyle({
-                                align: 'left',
-                                readOnlyWidth: '100%',
-                                readOnlyHeight: '90px',
-                              })}
                               value={value}
                               onChange={e => set(e.target.value)}
                               onFocus={() => setFocused(true)}
@@ -217,14 +150,21 @@ const Comment = ({ comment, query, queryField, variables, users }: Props) => {
                               }}
                             >
                               <Mention
+                                className={MentionStyle}
                                 data={users.map(user => ({
                                   ...user,
                                   display: `${user.firstName} ${user.lastName}`,
                                 }))}
                                 trigger="@"
                                 markup="@[__display__](__id__)"
-                                renderSuggestion={(suggestion, search, highlightedDisplay) => (
-                                  <div className="user" style={{ display: 'flex' }}>
+                                renderSuggestion={(
+                                  suggestion,
+                                  search,
+                                  highlightedDisplay,
+                                  index,
+                                  isFocused
+                                ) => (
+                                  <div className={MentionSuggestionStyle(isFocused)}>
                                     <UserAvatar
                                       firstName={suggestion.firstName}
                                       lastName={suggestion.lastName}
@@ -232,9 +172,12 @@ const Comment = ({ comment, query, queryField, variables, users }: Props) => {
                                       width="25px"
                                       height="25px"
                                     />
-                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                      {highlightedDisplay}
-                                      <p>{suggestion.organization.name}</p>
+
+                                    <div className={MentionSuggestionNameWrapperStyle}>
+                                      <div className={MentionNameStyle}>{highlightedDisplay}</div>
+                                      <div className={MentionCompanyStyle}>
+                                        {suggestion.organization.name}
+                                      </div>
                                     </div>
                                   </div>
                                 )}
