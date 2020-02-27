@@ -79,7 +79,15 @@ class UserNavBar extends React.Component<Props, State> {
                       await client.mutate({
                         mutation: notificationSeeAllMutation,
                       });
-                      refetch();
+
+                      this.setState(
+                        {
+                          unSeen: 0,
+                        },
+                        () => {
+                          refetch();
+                        }
+                      );
                     }
                   }}
                   type="button"
