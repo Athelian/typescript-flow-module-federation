@@ -99,7 +99,14 @@ export default function useColumns(
 
       if (cacheKey) {
         const cache = getColumnsCache(cacheKey, columns);
+
         if (cache) {
+          cache.sort((a, b) => {
+            return (
+              value.findIndex(column => column.key === a.key) -
+              value.findIndex(column => column.key === b.key)
+            );
+          });
           value = cache;
         }
       }
