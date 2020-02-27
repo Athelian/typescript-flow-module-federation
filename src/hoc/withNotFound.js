@@ -7,7 +7,6 @@ import { decodeId } from 'utils/id';
 export default function withNotFound(WrappedComponent: React.ComponentType<any>, id: string) {
   return function NotFoundWrappedComponent(props: any) {
     const parsedId = parseInt(decodeId(props[id]), 10);
-    console.log(`parsedId: ${parsedId}`);
     if (parsedId || props.path === 'new') {
       return <WrappedComponent {...props} />;
     }
