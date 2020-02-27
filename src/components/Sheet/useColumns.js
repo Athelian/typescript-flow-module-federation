@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useAuthenticated } from 'contexts/Viewer';
+import { groupBy } from 'lodash';
 import { getCache, invalidateCache, setCache } from 'utils/cache';
 import type { ColumnConfig } from './SheetState/types';
 
@@ -101,13 +102,13 @@ export default function useColumns(
         const cache = getColumnsCache(cacheKey, columns);
 
         if (cache) {
-          cache.sort((a, b) => {
-            return (
-              value.findIndex(column => column.key === a.key) -
-              value.findIndex(column => column.key === b.key)
-            );
-          });
-          value = cache;
+          const valueByGroup = groupBy(value, column => column.key.split('.')[0]);
+          const cacheByGroup = groupBy(cache, column => column.key.split('.')[0]);
+
+          value = Object.keys(valueByGroup).reduce(
+            (newValues, key) => newValues.concat(cacheByGroup[key]),
+            []
+          );
         }
       }
 
