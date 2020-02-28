@@ -2,6 +2,7 @@
 import * as React from 'react';
 import type { MaskEdit, MaskEditColumn } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
+import { groupBy } from 'lodash';
 import useLocalStorage from 'hooks/useLocalStorage';
 import BaseCard from 'components/Cards';
 import Dialog from 'components/Dialog';
@@ -184,13 +185,24 @@ const ColumnsConfig = ({
 
   const handleTemplateChange = (template: MaskEdit) => {
     if (template) {
-      currentTemplate.current = template;
+      const defaultColumnsByGroup = groupBy(defaultColumns, column => column.key.split('.')[0]);
+      const newColumnsByGroup = groupBy(template.columns, column => column.key.split('.')[0]);
+
+      const parsedTemplate = {
+        ...template,
+        columns: Object.keys(defaultColumnsByGroup).reduce(
+          (newColumns, groupName) => newColumns.concat(newColumnsByGroup[groupName]),
+          []
+        ),
+      };
+      currentTemplate.current = parsedTemplate;
+
       if (onLoadTemplate) {
-        setDirtyColumns(convertMappingColumns(onLoadTemplate(template)));
+        setDirtyColumns(convertMappingColumns(onLoadTemplate(parsedTemplate)));
       } else {
         const templateColumns = getColumnsConfigured(
           defaultColumns,
-          template.columns.reduce(
+          parsedTemplate.columns.reduce(
             (config, col) => ({
               ...config,
               [col.key]: col.hidden,
