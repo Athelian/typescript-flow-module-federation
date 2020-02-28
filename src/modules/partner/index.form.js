@@ -76,7 +76,8 @@ class PartnerFormContainer extends React.PureComponent<Props> {
       const { data } = await savePartner({
         variables: {
           input,
-          id: decodeId(partnerId),
+          // id: decodeId(partnerId),
+          id: partnerId,
         },
       });
       if (!data) return;
@@ -109,6 +110,7 @@ class PartnerFormContainer extends React.PureComponent<Props> {
   render() {
     const { partnerId } = this.props;
     let mutationKey = {};
+
     if (partnerId) {
       mutationKey = { key: decodeId(partnerId) };
     }

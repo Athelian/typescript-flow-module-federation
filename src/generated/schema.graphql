@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Feb 19 2020 17:13:51 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Feb 28 2020 12:40:12 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26756,6 +26756,7 @@ type BatchPayloadPaginatedSearch implements Paginated {
 
 input BatchSimpleSplitInput {
   quantity: Float!
+  no: String
 }
 
 input BatchSortInput {
@@ -29906,6 +29907,7 @@ type Mutation {
   userUpdate(id: ID!, input: UserUpdateInput!): UserPayload!
   userAddRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
   userRemoveRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
+  partnerUpdate(id: ID!, input: PartnerUpdateInput!): PartnerPayload!
   productCreate(input: ProductCreateInput!): ProductPayload!
   productUpdate(id: ID!, input: ProductUpdateInput!): ProductPayload!
   productUpdateMany(products: [ProductUpdateWrapperInput!]!): [ProductPayload]!
@@ -30685,12 +30687,14 @@ type Partnership implements Model {
   leftName: String
   leftCode: String
   leftConfirmedAt: DateTime
+  leftTags: [TagPayload!]!
   leftRoles: [RolePayload!]!
   rightOrganization: OrganizationPayload!
   rightTypes: [OrganizationType!]!
   rightName: String
   rightCode: String
   rightConfirmedAt: DateTime
+  rightTags: [TagPayload!]!
   rightRoles: [RolePayload!]!
   id: ID!
   createdAt: DateTime!
@@ -30718,6 +30722,14 @@ input PartnerSortInput {
   updatedAt: SortOrder
   name: SortOrder
   code: SortOrder
+}
+
+input PartnerUpdateInput {
+  name: String
+  code: String
+  types: [OrganizationType!]
+  confirmedAt: DateTime
+  tagIds: [ID!]
 }
 
 type Port {
@@ -31241,6 +31253,7 @@ type Query {
   usersByIDs(ids: [ID!]!): [UserPayload!]!
   organization(id: ID!): OrganizationPayload!
   organizationsByIDs(ids: [ID!]!): [OrganizationPayload!]!
+  partner(id: ID!): PartnerPayload!
   partnership(id: ID!): PartnershipPayload!
   partnerships(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPayloadPaginatedSearch!
   product(id: ID!): ProductPayload!
@@ -87344,6 +87357,9 @@ enum TagEntityType {
 
   """User"""
   User
+
+  """Partner"""
+  Partner
 
   """Task"""
   Task

@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 
 export const partnerFormFragment = gql`
-  fragment partnerFormFragment on Organization {
+  fragment partnerFormFragment on Partner {
     id
   }
 `;

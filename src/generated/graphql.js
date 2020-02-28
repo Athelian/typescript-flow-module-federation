@@ -35208,7 +35208,7 @@ export type OrderCardWithOwnedFragmentFragment = ({
 });
 
 export type PartnerFormFragmentFragment = ({
-    ...{ __typename?: 'Organization' },
+    ...{ __typename?: 'Partner' },
   ...$Pick<Organization, {| id: * |}>
 });
 
