@@ -185,15 +185,12 @@ const ColumnsConfig = ({
 
   const handleTemplateChange = (template: MaskEdit) => {
     if (template) {
-      const currentColumnsByGroup = groupBy(
-        currentTemplate.current?.columns,
-        column => column.key.split('.')[0]
-      );
+      const defaultColumnsByGroup = groupBy(defaultColumns, column => column.key.split('.')[0]);
       const newColumnsByGroup = groupBy(template.columns, column => column.key.split('.')[0]);
 
       const parsedTemplate = {
         ...template,
-        columns: Object.keys(currentColumnsByGroup).reduce(
+        columns: Object.keys(defaultColumnsByGroup).reduce(
           (newColumns, groupName) => newColumns.concat(newColumnsByGroup[groupName]),
           []
         ),
