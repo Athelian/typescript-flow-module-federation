@@ -106,7 +106,7 @@ export default function useColumns(
           const cacheByGroup = groupBy(cache, column => column.key.split('.')[0]);
 
           value = Object.keys(valueByGroup).reduce(
-            (newValues, key) => newValues.concat(cacheByGroup[key]),
+            (newValue, groupName) => newValue.concat(cacheByGroup[groupName]),
             []
           );
         }
