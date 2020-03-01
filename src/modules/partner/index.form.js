@@ -194,21 +194,28 @@ class PartnerFormContainer extends React.PureComponent<Props> {
                   query={partnerFormQuery}
                   entityId={partnerId}
                   entityType="partner"
-                  render={(partner, loading) => (
-                    <>
-                      <PartnerForm partner={partner} isLoading={loading} />
-                      <Subscribe to={[PartnerInfoContainer]}>
-                        {partnerInfoState =>
-                          this.onFormReady(
-                            {
-                              partnerInfoState,
-                            },
-                            partner
-                          )
-                        }
-                      </Subscribe>
-                    </>
-                  )}
+                  render={(partnerRaw, loading) => {
+                    const partner = {
+                      ...partnerRaw,
+                      name: partnerRaw.organization?.name,
+                    };
+
+                    return (
+                      <>
+                        <PartnerForm partner={partner} isLoading={loading} />
+                        <Subscribe to={[PartnerInfoContainer]}>
+                          {partnerInfoState =>
+                            this.onFormReady(
+                              {
+                                partnerInfoState,
+                              },
+                              partner
+                            )
+                          }
+                        </Subscribe>
+                      </>
+                    );
+                  }}
                 />
               </Content>
             </>

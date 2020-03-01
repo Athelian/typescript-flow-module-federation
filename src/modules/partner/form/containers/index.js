@@ -8,9 +8,7 @@ import { isEquals } from 'utils/fp';
 export const partnerInfoInitValues: Partner = {
   name: '',
   code: '',
-  types: {
-    value: '',
-  },
+  types: [],
 };
 
 export default class PartnerInfoContainer extends Container<Partner> {
@@ -40,8 +38,12 @@ export default class PartnerInfoContainer extends Container<Partner> {
   };
 
   initDetailValues = (values: Object) => {
+    console.log('initDetailValues');
+    console.dir(partnerInfoInitValues);
+    console.dir(values);
     const parsedValues: Object = { ...partnerInfoInitValues, ...values };
-    this.setState(parsedValues);
-    this.originalValues = { ...parsedValues };
+    console.dir(parsedValues);
+    // this.setState(parsedValues);
+    // this.originalValues = { ...parsedValues };
   };
 }

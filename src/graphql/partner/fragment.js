@@ -4,6 +4,15 @@ import gql from 'graphql-tag';
 export const partnerFormFragment = gql`
   fragment partnerFormFragment on Partner {
     id
+    name
+    code
+    types
+    organization {
+      ... on Organization {
+        id
+        name
+      }
+    }
   }
 `;
 
