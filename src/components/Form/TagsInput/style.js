@@ -47,6 +47,7 @@ export const InputStyle = (width: string): string => css`
   overflow-x: auto;
   ${scrollbars.SMALL};
   padding: 0 0 0 5px;
+  min-height: 30px;
   & > div {
     margin-right: 5px;
   }

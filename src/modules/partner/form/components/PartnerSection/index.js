@@ -1,104 +1,149 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Subscribe } from 'unstated';
-// import { PARTNER_UPDATE } from 'modules/permission/constants/partner';
-// import usePermission from 'hooks/usePermission';
-// import usePartnerPermission from 'hooks/usePartnerPermission';
-import WarehouseInfoContainer from 'modules/warehouse/form/containers';
-import validator from 'modules/warehouse/form/validator';
-import { getByPath } from 'utils/fp';
-import { FormField } from 'modules/form';
+import { useEntityHasPermissions } from 'contexts/Permissions';
+import { PARTNER_UPDATE, PARTNER_SET_TAGS } from 'modules/permission/constants/partner';
+import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TagsInput, SectionHeader, LastModified, FieldItem, Display, Label } from 'components/Form';
 import GridColumn from 'components/GridColumn';
-import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
-import { SectionHeader, TextInputFactory } from 'components/Form';
-import { PartnerSectionWrapperStyle, MainFieldsWrapperStyle } from './style';
+import PartnerFormContainer from 'modules/partner/form/container';
+import { Section } from 'components/Sections';
 
-type Props = {
-  isNew: boolean,
-  isClone: boolean,
-  isLoading: boolean,
-};
+const PartnerSection = () => {
+  const { state, setFieldValue } = PartnerFormContainer.useContainer();
 
-const PartnerSection = ({ isLoading }: Props) => {
-  // const { isOwner } = usePartnerPermission();
-  // const { hasPermission } = usePermission(isOwner);
-  // const allowUpdate = hasPermission(PARTNER_UPDATE);
+  const hasPermissions = useEntityHasPermissions(state);
+  const canUpdate = hasPermissions(PARTNER_UPDATE);
 
   return (
-    <Subscribe to={[WarehouseInfoContainer]}>
-      {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
-        const values = { ...originalValues, ...state };
-        return (
-          <MainSectionPlaceholder height={665} isLoading={isLoading}>
-            <SectionHeader
-              icon="PARTNER"
-              title={<FormattedMessage id="modules.Partners.partner" defaultMessage="PARTNER" />}
-            />
-            <div className={PartnerSectionWrapperStyle}>
-              <div className={MainFieldsWrapperStyle}>
-                <GridColumn>
-                  <FormField
-                    name="name"
-                    initValue={values.name}
-                    validator={validator}
-                    setFieldValue={setFieldValue}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <TextInputFactory
-                        name={name}
-                        {...inputHandlers}
-                        isNew={false}
-                        required
-                        originalValue={originalValues[name]}
-                        label={
-                          <FormattedMessage id="modules.Partners.name" defaultMessage="Name" />
-                        }
-                        editable={false}
-                      />
-                    )}
-                  </FormField>
+    <>
+      <SectionHeader
+        icon="PARTNER"
+        title={<FormattedMessage id="modules.Partner.partnerSection" defaultMessage="Partner" />}
+      >
+        {state.updatedAt && state.updatedBy && (
+          <LastModified updatedAt={state.updatedAt} updatedBy={state.updatedBy} />
+        )}
+      </SectionHeader>
 
-                  <FormField name="code" initValue={values.code} setFieldValue={setFieldValue}>
-                    {({ name, ...inputHandlers }) => (
-                      <TextInputFactory
-                        name={name}
-                        {...inputHandlers}
-                        isNew={false}
-                        originalValue={originalValues[name]}
-                        label={
-                          <FormattedMessage id="modules.Partners.code" defaultMessage="Code" />
-                        }
-                        editable={false}
-                      />
-                    )}
-                  </FormField>
-                  <FormField
-                    name="types"
-                    initValue={getByPath('types', values)}
-                    setFieldValue={(field, value) => setFieldArrayValue('types', value)}
-                    values={values}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <TextInputFactory
-                        name={name}
-                        {...inputHandlers}
-                        isNew={false}
-                        originalValue={getByPath('types', originalValues)}
-                        label={
-                          <FormattedMessage id="modules.Partners.type" defaultMessage="TYPE" />
-                        }
-                        editable={false}
-                      />
-                    )}
-                  </FormField>
-                </GridColumn>
-              </div>
-            </div>
-          </MainSectionPlaceholder>
-        );
-      }}
-    </Subscribe>
+      <Section>
+        <GridColumn>
+          <FieldItem
+            label={
+              <Label height="30px">
+                <FormattedMessage id="modules.Partner.name" defaultMessage="Name" />
+              </Label>
+            }
+            input={<Display height="30px">{state.name || state.organization?.name}</Display>}
+          />
+
+          <FieldItem
+            label={
+              <Label height="30px">
+                <FormattedMessage id="modules.Partner.code" defaultMessage="Code" />
+              </Label>
+            }
+            input={<Display height="30px">{state.code}</Display>}
+          />
+
+          <FieldItem
+            label={
+              <Label height="30px">
+                <FormattedMessage id="modules.Partner.type" defaultMessage="Type" />
+              </Label>
+            }
+            input={state.types.map(type => (
+              <Display height="30px" key={type}>
+                {type}
+              </Display>
+            ))}
+          />
+
+          <FieldItem
+            label={
+              <Label height="30px">
+                <FormattedMessage id="modules.Partner.phoneNumber" defaultMessage="Phone Number" />
+              </Label>
+            }
+            input={<Display height="30px">{state.organization?.tel}</Display>}
+          />
+
+          <FieldItem
+            label={
+              <Label height="30px">
+                <FormattedMessage id="modules.Partner.country" defaultMessage="Country" />
+              </Label>
+            }
+            input={<Display height="30px">{state.organization?.country}</Display>}
+          />
+
+          <FieldItem
+            label={
+              <Label height="30px">
+                <FormattedMessage id="modules.Partner.region" defaultMessage="Region" />
+              </Label>
+            }
+            input={<Display height="30px">{state.organization?.region}</Display>}
+          />
+
+          <FieldItem
+            label={
+              <Label height="30px">
+                <FormattedMessage id="modules.Partner.locality" defaultMessage="Locality" />
+              </Label>
+            }
+            input={<Display height="30px">{state.organization?.locality}</Display>}
+          />
+
+          <FieldItem
+            label={
+              <Label height="30px">
+                <FormattedMessage id="modules.Partner.street" defaultMessage="Street" />
+              </Label>
+            }
+            input={<Display height="30px">{state.organization?.street}</Display>}
+          />
+
+          <FieldItem
+            label={
+              <Label height="30px">
+                <FormattedMessage id="modules.Partner.postalCode" defaultMessage="Post Code" />
+              </Label>
+            }
+            input={<Display height="30px">{state.organization?.postalCode}</Display>}
+          />
+
+          <FieldItem
+            vertical
+            label={
+              <Label height="30px">
+                <FormattedMessage id="modules.Partner.tags" defaultMessage="Tags" />
+              </Label>
+            }
+            input={
+              <TagsInput
+                name="tags"
+                tagType="Partner"
+                values={state.tags}
+                onChange={value => {
+                  setFieldValue('tags', value);
+                }}
+                onClickRemove={value => {
+                  setFieldValue(
+                    'tags',
+                    state.tags.filter(({ id }) => id !== value.id)
+                  );
+                }}
+                editable={{
+                  set: hasPermissions(TAG_LIST) && (canUpdate || hasPermissions(PARTNER_SET_TAGS)),
+                  remove: canUpdate || hasPermissions(PARTNER_SET_TAGS),
+                }}
+              />
+            }
+          />
+        </GridColumn>
+      </Section>
+    </>
   );
 };
 export default PartnerSection;

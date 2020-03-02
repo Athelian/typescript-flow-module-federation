@@ -2,40 +2,27 @@
 import gql from 'graphql-tag';
 import {
   partnerFormFragment,
-  fieldValuesFragment,
-  fieldDefinitionFragment,
+  userAvatarFragment,
   badRequestFragment,
   forbiddenFragment,
 } from 'graphql';
-import { parseGenericField, parseArrayOfIdsField } from 'utils/data';
-import { getByPathWithDefault } from 'utils/fp';
+import { parseArrayOfIdsField } from 'utils/data';
 
-export const updatePartnerMutation = gql`
+export const partnerUpdateMutation = gql`
   mutation partnerUpdate($id: ID!, $input: PartnerUpdateInput!) {
     partnerUpdate(id: $id, input: $input) {
       ...partnerFormFragment
-      ...badRequestFragment
       ...forbiddenFragment
+      ...badRequestFragment
     }
   }
+
   ${partnerFormFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
+  ${userAvatarFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
 `;
 
 export const prepareParsedPartnerInput = (originalValues: ?Object, newValues: Object): Object => ({
-  ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
-  ...parseGenericField('code', getByPathWithDefault(null, 'code', originalValues), newValues.code),
-  ...parseArrayOfIdsField(
-    'types',
-    getByPathWithDefault([], 'types', originalValues),
-    newValues.types
-  ),
-  ...parseArrayOfIdsField(
-    'tagIds',
-    getByPathWithDefault([], 'tagIds', originalValues),
-    newValues.tagIds
-  ),
+  ...parseArrayOfIdsField('tagIds', originalValues?.tags ?? [], newValues.tags),
 });
