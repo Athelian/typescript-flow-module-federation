@@ -55,7 +55,10 @@ const PartnersSelectorInput = ({
           selected={value || []}
           onCancel={forceBlur}
           onSelect={newValue => {
-            onChange(newValue, true);
+            onChange(
+              newValue.map(newVal => newVal?.organization),
+              true
+            );
             forceBlur();
           }}
         />

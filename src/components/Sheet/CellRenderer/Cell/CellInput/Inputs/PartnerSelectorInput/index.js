@@ -55,7 +55,7 @@ const PartnerSelectorInput = ({
           selected={value}
           onCancel={forceBlur}
           onSelect={newValue => {
-            onChange(newValue, true);
+            onChange(newValue?.organization, true);
             forceBlur();
           }}
         />
