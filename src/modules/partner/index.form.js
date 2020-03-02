@@ -7,7 +7,6 @@ import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
 import { FormContainer } from 'modules/form';
 import { partnerUpdateMutation, prepareParsedPartnerInput } from 'modules/partner/form/mutation';
-import validator from 'modules/partner/form/validator';
 import PartnerForm from 'modules/partner/form';
 import PartnerFormContainer from 'modules/partner/form/container';
 import { partnerQuery } from 'modules/partner/form/query';
@@ -61,7 +60,6 @@ const PartnerFormModuleImpl = ({ isLoading, partnerId }: ImplProps) => {
     <PartnerForm
       {...(partnerId ? { partnerId } : {})}
       isDirty={isDirty}
-      isValidated={formContainer.isReady(state, validator)}
       resetState={resetState}
       isLoading={isLoading}
       isProcessing={isProcessing}

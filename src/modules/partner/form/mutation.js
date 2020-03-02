@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import {
   partnerFormFragment,
   userAvatarFragment,
+  tagFragment,
   badRequestFragment,
   forbiddenFragment,
 } from 'graphql';
@@ -19,6 +20,7 @@ export const partnerUpdateMutation = gql`
 
   ${partnerFormFragment}
   ${userAvatarFragment}
+  ${tagFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
 `;

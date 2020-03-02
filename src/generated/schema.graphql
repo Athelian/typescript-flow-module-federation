@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Feb 28 2020 12:40:12 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Mar 02 2020 15:46:59 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -30641,7 +30641,7 @@ type Parameter {
   value: Value
 }
 
-type Partner implements Model {
+type Partner implements Model & Tagged {
   organization: OrganizationPayload!
   types: [OrganizationType!]!
   name: String
@@ -30656,6 +30656,7 @@ type Partner implements Model {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
+  tags: [TagPayload!]!
 }
 
 input PartnerFilterInput {

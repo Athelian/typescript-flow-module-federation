@@ -14,7 +14,6 @@ import PartnerSection from './components/PartnerSection';
 
 type Props = {
   isDirty: boolean,
-  isValidated: boolean,
   resetState: () => void,
   isSlideView?: boolean,
   isLoading?: boolean,
@@ -24,7 +23,6 @@ type Props = {
 
 const PartnerForm = ({
   isDirty,
-  isValidated,
   resetState,
   isSlideView,
   isLoading,
@@ -58,7 +56,6 @@ const PartnerForm = ({
         {isDirty && (
           <SaveFormButton
             id="partner_form_save_button"
-            disabled={!isValidated}
             isLoading={isProcessing}
             onClick={handleSave}
           />
