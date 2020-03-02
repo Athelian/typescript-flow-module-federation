@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import type { FilterBy, SortBy } from 'types';
 import PartnerGridView from './PartnerGridView';
@@ -30,16 +29,13 @@ export default function PartnerList({ ...filtersAndSort }: Props) {
         if (error) {
           return error.message;
         }
-        const parsedData = getByPathWithDefault([], `${partnerPath}.nodes`, data).map(item => ({
-          ...item,
-          ...item.organization,
-        }));
-        const nextPage = getByPathWithDefault(1, `${partnerPath}.page`, data) + 1;
-        const totalPage = getByPathWithDefault(1, `${partnerPath}.totalPage`, data);
+        const partners = data?.viewer?.user?.organization?.partners?.nodes ?? [];
+        const nextPage = (data?.viewer?.user?.organization?.partners?.page ?? 1) + 1;
+        const totalPage = data?.viewer?.user?.organization?.partners?.totalPage ?? 1;
         const hasMore = nextPage <= totalPage;
         return (
           <PartnerGridView
-            items={parsedData}
+            items={partners}
             onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, partnerPath)}
             hasMore={hasMore}
             isLoading={loading}

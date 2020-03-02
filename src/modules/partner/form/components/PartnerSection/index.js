@@ -8,6 +8,7 @@ import { TagsInput, SectionHeader, LastModified, FieldItem, Display, Label } fro
 import GridColumn from 'components/GridColumn';
 import PartnerFormContainer from 'modules/partner/form/container';
 import { Section } from 'components/Sections';
+import { PartnerTypesWrapperStyle } from './style';
 
 const PartnerSection = () => {
   const { state, setFieldValue } = PartnerFormContainer.useContainer();
@@ -52,11 +53,15 @@ const PartnerSection = () => {
                 <FormattedMessage id="modules.Partner.type" defaultMessage="Type" />
               </Label>
             }
-            input={state.types.map(type => (
-              <Display height="30px" key={type}>
-                {type}
-              </Display>
-            ))}
+            input={
+              <div className={PartnerTypesWrapperStyle}>
+                {state.types.map(type => (
+                  <Display height="30px" key={type}>
+                    {type}
+                  </Display>
+                ))}
+              </div>
+            }
           />
 
           <FieldItem

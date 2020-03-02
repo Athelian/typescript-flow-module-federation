@@ -13,10 +13,10 @@ type Props = {
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
-  renderItem?: (item: Object) => React.Node,
+  renderItem?: (item: Object, allowViewForm: boolean) => React.Node,
 };
 
-const defaultRenderItem = ({ item, allowViewForm }: { item: Object, allowViewForm: boolean }) => {
+const defaultRenderItem = (item: Object, allowViewForm: boolean) => {
   return (
     <PartnerCard
       key={item.id}
@@ -49,7 +49,7 @@ const PartnerGridView = (props: Props) => {
         />
       }
     >
-      {items.map(item => renderItem({ item, allowViewForm }))}
+      {items.map(item => renderItem(item, allowViewForm))}
     </GridView>
   );
 };

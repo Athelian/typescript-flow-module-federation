@@ -110,8 +110,9 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                     }
                                     onSelect={newValue => {
                                       exporterSlideToggle(false);
-                                      const existName = getByPathWithDefault('', 'name', values);
-                                      const entityName = getByPathWithDefault('', 'name', newValue);
+                                      const existName = values?.name || '';
+                                      const entityName =
+                                        newValue?.name || newValue?.organization?.name || '';
                                       const generatedName = generateName(
                                         {
                                           entityName,
@@ -199,7 +200,8 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                     onSelect={newValue => {
                                       supplierSlideToggle(false);
                                       const existName = getByPathWithDefault('', 'name', values);
-                                      const entityName = getByPathWithDefault('', 'name', newValue);
+                                      const entityName =
+                                        newValue?.name || newValue?.organization?.name || '';
                                       const generatedName = generateName(
                                         {
                                           entityName,

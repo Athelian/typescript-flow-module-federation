@@ -58,15 +58,6 @@ const SelectPartner = ({
     'viewer.user.organization.partners'
   );
 
-  const partners = React.useMemo(
-    () =>
-      nodes.map(item => ({
-        ...item,
-        ...item.organization,
-      })),
-    [nodes]
-  );
-
   return (
     <Selector.Single selected={selected} required={isRequired}>
       {({ value, dirty, getItemProps }) => (
@@ -133,7 +124,7 @@ const SelectPartner = ({
               hasMore={hasMore}
               isLoading={loading}
               onLoadMore={loadMore}
-              items={partners}
+              items={nodes}
               renderItem={item => (
                 <PartnerCard key={item.id} partner={item} {...getItemProps(cleanUpData(item))} />
               )}

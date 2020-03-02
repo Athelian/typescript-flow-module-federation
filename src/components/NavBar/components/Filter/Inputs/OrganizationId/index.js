@@ -51,15 +51,6 @@ const OrganizationSelector = ({
     'viewer.user.organization.partners'
   );
 
-  const partners = React.useMemo(
-    () =>
-      nodes.map(item => ({
-        ...item,
-        ...item.organization,
-      })),
-    [nodes]
-  );
-
   return (
     <Selector.Single selected={selected ? { id: selected } : null}>
       {({ value, dirty, getItemProps }) => (
@@ -75,7 +66,10 @@ const OrganizationSelector = ({
             <Search query={query} onChange={setQuery} />
             <Sort sortBy={sortBy} onChange={setSortBy} config={PartnerSortConfig} />
             <CancelButton onClick={onClose} />
-            <SaveButton disabled={!dirty} onClick={() => setSelected(value?.id ?? null)} />
+            <SaveButton
+              disabled={!dirty}
+              onClick={() => setSelected(value?.organization?.id ?? null)}
+            />
           </SlideViewNavBar>
 
           <Content>
@@ -83,11 +77,11 @@ const OrganizationSelector = ({
               onLoadMore={loadMore}
               hasMore={hasMore}
               isLoading={loading}
-              isEmpty={partners.length === 0}
+              isEmpty={nodes.length === 0}
               emptyMessage={null}
               itemWidth="195px"
             >
-              {partners.map(partner => (
+              {nodes.map(partner => (
                 <PartnerCard key={partner?.id} partner={partner} {...getItemProps(partner)} />
               ))}
             </GridView>
@@ -119,9 +113,9 @@ const OrganizationId = (organizationType: ?string, title: React.Node) => ({
     )}
     query={organizationQuery}
     getItem={data => data?.organization}
-    renderItem={partner => (
+    renderItem={organization => (
       <BaseCard icon="PARTNER" color="PARTNER" wrapperClassName={CardStyle}>
-        <Display height="30px">{partner?.partner?.name || partner?.name}</Display>
+        <Display height="30px">{organization?.partner?.name || organization?.name}</Display>
       </BaseCard>
     )}
   />

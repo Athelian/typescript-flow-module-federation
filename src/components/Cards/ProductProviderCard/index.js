@@ -111,12 +111,12 @@ const ProductProviderCard = ({
         <div className={InfoWrapperStyle}>
           <div className={ExporterStyle}>
             <Icon icon="EXPORTER" />
-            {exporter && exporter.name}
+            {exporter?.name || exporter?.organization?.name}
           </div>
 
           <div className={SupplierStyle}>
             <Icon icon="SUPPLIER" />
-            {supplier && supplier.name}
+            {supplier?.name || supplier?.organization?.name}
           </div>
 
           <div className={TaskWrapperStyle}>

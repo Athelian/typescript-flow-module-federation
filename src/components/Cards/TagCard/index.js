@@ -40,6 +40,7 @@ const getEntityType = (entityType: ?string) => {
     User: 'STAFF',
     Project: 'PROJECT',
     File: 'DOCUMENT',
+    Partner: 'PARTNER',
   };
 
   return entityType ? colorsMapping[entityType] : 'GRAY_VERY_LIGHT';
