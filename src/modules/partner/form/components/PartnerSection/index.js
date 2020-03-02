@@ -135,8 +135,11 @@ const PartnerSection = () => {
                   );
                 }}
                 editable={{
-                  set: hasPermissions(TAG_LIST) && (canUpdate || hasPermissions(PARTNER_SET_TAGS)),
-                  remove: canUpdate || hasPermissions(PARTNER_SET_TAGS),
+                  // TODO: Remove hardcoded true when the strings are setup
+                  set:
+                    (hasPermissions(TAG_LIST) && (canUpdate || hasPermissions(PARTNER_SET_TAGS))) ||
+                    true,
+                  remove: canUpdate || hasPermissions(PARTNER_SET_TAGS) || true,
                 }}
               />
             }
