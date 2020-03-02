@@ -33,7 +33,6 @@ export default function PartnerList({ ...filtersAndSort }: Props) {
         const parsedData = getByPathWithDefault([], `${partnerPath}.nodes`, data).map(item => ({
           ...item,
           ...item.organization,
-          id: item.id,
         }));
         const nextPage = getByPathWithDefault(1, `${partnerPath}.page`, data) + 1;
         const totalPage = getByPathWithDefault(1, `${partnerPath}.totalPage`, data);
