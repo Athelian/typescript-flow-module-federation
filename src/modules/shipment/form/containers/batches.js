@@ -1,13 +1,8 @@
 // @flow
-import type {
-  BatchPayload,
-  ContainerPayload,
-  PartnerPayload,
-  OrganizationPayload,
-} from 'generated/graphql';
+import type { BatchPayload, ContainerPayload, OrganizationPayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
-import { isEquals, getByPath } from 'utils/fp';
+import { isEquals } from 'utils/fp';
 
 type BatchFormState = {|
   batches: Array<BatchPayload>,
@@ -33,7 +28,7 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
   removeExistingBatches = (batches: Array<BatchPayload>) => {
     this.existingBatches = [
       ...this.existingBatches.filter(existingBatch =>
-        batches.some(batch => getByPath('id', batch) !== getByPath('id', existingBatch))
+        batches.some(batch => batch?.id === existingBatch?.id)
       ),
     ];
   };
@@ -44,7 +39,7 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
   ) => {
     this.existingBatches = [
       ...this.existingBatches.map(existingBatch =>
-        batches.some(batch => getByPath('id', batch) === getByPath('id', existingBatch))
+        batches.some(batch => batch?.id === existingBatch?.id)
           ? update(existingBatch, { container: { $set: container } })
           : existingBatch
       ),
@@ -83,12 +78,12 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
     this.existingBatches = batches;
   };
 
-  changeMainExporter = (prevExporter: ?PartnerPayload, exporter: ?PartnerPayload) => {
+  changeMainExporter = (prevExporter: ?OrganizationPayload, exporter: ?OrganizationPayload) => {
     if (exporter) {
       this.setState(prevState => {
         return {
           batches: prevState.batches.filter(
-            batch => getByPath('orderItem.order.exporter.id', batch) === getByPath('id', exporter)
+            batch => batch?.orderItem?.order?.exporter?.id === exporter?.id
           ),
         };
       });
@@ -98,7 +93,7 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
           const { followers: batchFollowers = [] } = batch;
 
           const cleanedBatchFollowers = batchFollowers.filter(
-            follower => prevExporter.id !== follower?.organization?.id
+            follower => follower?.organization?.id !== prevExporter.id
           );
 
           return {
