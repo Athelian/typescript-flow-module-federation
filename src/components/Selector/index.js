@@ -49,7 +49,7 @@ const SelectorSingle = ({ selected, required, children }: SingleProps) => (
         dirty: selected?.id !== value?.id,
         getItemProps: (item, selectable = true) => ({
           selectable,
-          selected: value?.id === item.id,
+          selected: value?.id === item.id || value?.partner?.id === item.id,
           onSelect: () => {
             if (item.id === value?.id) {
               if (!required) {
