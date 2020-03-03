@@ -5,6 +5,18 @@ export const SHIPMENT_FORM = 'shipment.shipments.form';
 export const SHIPMENT_CREATE = 'shipment.shipments.create';
 export const SHIPMENT_UPDATE = 'shipment.shipments.update';
 export const SHIPMENT_DOWNLOAD_DOCUMENTS = 'shipment.shipments.downloadDocuments';
+export const SHIPMENT_DOCUMENT_GET = 'shipment.files.get';
+export const SHIPMENT_DOCUMENT_GET_TYPE_BL = 'shipment.files.getByTypeBL';
+export const SHIPMENT_DOCUMENT_GET_TYPE_INVOICE = 'shipment.files.getByTypeInvoice';
+export const SHIPMENT_DOCUMENT_GET_TYPE_PACKING_LIST = 'shipment.files.getByTypePackingList';
+export const SHIPMENT_DOCUMENT_GET_TYPE_IMPORT_DECLARATION =
+  'shipment.files.getByTypeImportDeclaration';
+export const SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_APPLICATION =
+  'shipment.files.getByTypeInspectionApplication';
+export const SHIPMENT_DOCUMENT_GET_TYPE_WAREHOUSE_ARRIVAL_REPORT =
+  'shipment.files.getByTypeWarehouseArrivalReport';
+export const SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT =
+  'shipment.files.getByTypeWarehouseInspectionReport';
 export const SHIPMENT_DOCUMENT_DELETE = 'shipment.files.delete';
 export const SHIPMENT_DOCUMENT_CREATE = 'shipment.files.create';
 export const SHIPMENT_DOCUMENT_SET_NAME = 'shipment.files.setName';
@@ -21,7 +33,6 @@ export const SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY =
   'shipment.shipments.setTotalPackageQuantityOverride';
 export const SHIPMENT_SET_TOTAL_VOLUME = 'shipment.shipments.setTotalVolumeOverride';
 export const SHIPMENT_SET_TOTAL_WEIGHT = 'shipment.shipments.setTotalWeightOverride';
-
 export const SHIPMENT_SET_FORWARDERS = 'shipment.shipments.setForwarders';
 export const SHIPMENT_SET_IN_CHARGE = 'shipment.shipments.setInCharges';
 export const SHIPMENT_SET_TAGS = 'shipment.shipments.setTags';

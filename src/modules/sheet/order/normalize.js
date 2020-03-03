@@ -1,5 +1,5 @@
 // @flow
-import { parseTodoField, extractForbiddenId } from 'utils/data';
+import { parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 
 export default function normalizeSheetOrderInput(
@@ -9,6 +9,10 @@ export default function normalizeSheetOrderInput(
   newValue: any
 ): Object {
   switch (field) {
+    case 'followers':
+      return {
+        followerIds: newValue.map(follower => follower.id),
+      };
     case 'deliveryDate':
     case 'issuedAt':
       return {
@@ -36,7 +40,7 @@ export default function normalizeSheetOrderInput(
         tagIds: newValue.map(tag => extractForbiddenId(tag).id).filter(Boolean),
       };
     case 'todo':
-      return parseTodoField(oldValue, newValue);
+      return removeTypename(parseTodoField(oldValue, newValue));
     case 'mask':
       return {
         customFields: {

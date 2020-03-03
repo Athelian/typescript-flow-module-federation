@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
@@ -100,7 +99,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                   <SelectExporter
                                     cacheKey="EndProductSelectExporter"
                                     isRequired
-                                    selected={values.exporter}
+                                    selected={values?.exporter?.partner}
                                     onCancel={() => exporterSlideToggle(false)}
                                     warningMessage={
                                       <FormattedMessage
@@ -108,10 +107,16 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                         defaultMessage="Changing the Exporter will remove all assigned Staff of the current Exporter from all Tasks. Are you sure you want to change the Exporter?"
                                       />
                                     }
-                                    onSelect={newValue => {
-                                      exporterSlideToggle(false);
-                                      const existName = getByPathWithDefault('', 'name', values);
-                                      const entityName = getByPathWithDefault('', 'name', newValue);
+                                    onSelect={({ organization, ...partner }) => {
+                                      const assembledOrg = {
+                                        ...organization,
+                                        partner: {
+                                          ...partner,
+                                        },
+                                      };
+                                      const existName = values?.name || '';
+                                      const entityName =
+                                        assembledOrg?.partner?.name || assembledOrg?.name || '';
                                       const generatedName = generateName(
                                         {
                                           entityName,
@@ -119,15 +124,16 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                           type: 'exporter',
                                         },
                                         {
-                                          supplier: getByPath('supplier.name', values),
-                                          exporter: getByPath('exporter.name', values),
+                                          supplier: values?.supplier?.name,
+                                          exporter: values?.exporter?.name,
                                         }
                                       );
                                       if (generatedName !== existName) {
                                         setFieldValue('name', generatedName);
                                       }
-                                      setFieldValue('exporter', newValue);
+                                      setFieldValue('exporter', assembledOrg);
                                       onChangeExporter(values.exporter);
+                                      exporterSlideToggle(false);
                                     }}
                                   />
                                 )}
@@ -194,12 +200,18 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                 {({ onChange }) => (
                                   <SelectPartner
                                     partnerTypes={['Supplier']}
-                                    selected={values.supplier}
+                                    selected={values?.supplier?.partner}
                                     onCancel={() => supplierSlideToggle(false)}
-                                    onSelect={newValue => {
-                                      supplierSlideToggle(false);
-                                      const existName = getByPathWithDefault('', 'name', values);
-                                      const entityName = getByPathWithDefault('', 'name', newValue);
+                                    onSelect={({ organization, ...partner }) => {
+                                      const assembledOrg = {
+                                        ...organization,
+                                        partner: {
+                                          ...partner,
+                                        },
+                                      };
+                                      const existName = values?.name ?? '';
+                                      const entityName =
+                                        assembledOrg?.partner?.name || assembledOrg?.name || '';
                                       const generatedName = generateName(
                                         {
                                           entityName,
@@ -207,15 +219,16 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                           type: 'supplier',
                                         },
                                         {
-                                          supplier: getByPath('supplier.name', values),
-                                          exporter: getByPath('exporter.name', values),
+                                          supplier: values?.supplier?.name,
+                                          exporter: values?.exporter?.name,
                                         }
                                       );
 
                                       if (generatedName !== existName) {
                                         onChange(convertValueToFormFieldFormat(generatedName));
                                       }
-                                      setFieldValue('supplier', newValue);
+                                      setFieldValue('supplier', assembledOrg);
+                                      supplierSlideToggle(false);
                                     }}
                                   />
                                 )}

@@ -131,6 +131,14 @@ export const eventFragment = gql`
     logs {
       id
       translationKey
+      entity {
+        ... on Model {
+          id
+        }
+        ... on File {
+          type
+        }
+      }
       parameters {
         key
         value {

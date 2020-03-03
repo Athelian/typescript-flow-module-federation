@@ -1,8 +1,12 @@
 // @flow
 import * as React from 'react';
+import type { FilePayload } from 'generated/graphql';
 import useFilterSort from 'hooks/useFilterSort';
 import useQueryList from 'hooks/useQueryList';
 import Selector from 'components/Selector';
+import { isForbidden } from 'utils/data';
+import { canViewFile } from 'utils/file';
+import { useViewerHasPermissions } from 'contexts/Permissions';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { DocumentCard } from 'components/Cards';
 import {
@@ -21,6 +25,14 @@ type Props = {
   onCancel: Function,
   onSelect: Function,
   alreadyAddedDocuments: Array<Object>,
+};
+
+const RenderItem = ({ file, selectItemProps }: {| file: FilePayload, selectItemProps: any |}) => {
+  const hasPermissions = useViewerHasPermissions();
+  const canView = canViewFile(hasPermissions, file.type);
+  if (!canView) return null;
+
+  return <DocumentCard key={file.id} file={file} hideParentInfo {...selectItemProps} />;
 };
 
 const DocumentsSelector = ({ onCancel, onSelect, alreadyAddedDocuments }: Props) => {
@@ -69,13 +81,11 @@ const DocumentsSelector = ({ onCancel, onSelect, alreadyAddedDocuments }: Props)
 
           <Content>
             <DocumentGridView
-              files={nodes}
+              files={nodes.filter(file => !isForbidden(file))}
               onLoadMore={loadMore}
               hasMore={hasMore}
               isLoading={loading}
-              renderItem={file => (
-                <DocumentCard key={file.id} file={file} hideParentInfo {...getItemProps(file)} />
-              )}
+              renderItem={file => <RenderItem file={file} selectItemProps={getItemProps(file)} />}
             />
           </Content>
         </SlideViewLayout>

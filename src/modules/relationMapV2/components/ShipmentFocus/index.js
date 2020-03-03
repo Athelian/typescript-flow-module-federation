@@ -22,6 +22,7 @@ import {
   findShipmentIdByContainer,
   findShipmentIdByBatch,
   findParentIdsByBatch,
+  findOrderIdByItem,
 } from 'modules/relationMapV2/helpers';
 import {
   Hits,
@@ -295,11 +296,40 @@ export default function ShipmentFocus() {
                     }}
                   />
                   <DeleteConfirm
-                    onSuccess={({ containerIds }) => {
-                      const ids = containerIds.map(containerId =>
-                        findShipmentIdByContainer(containerId, entities)
-                      );
-                      queryShipmentsDetail(ids);
+                    onSuccess={({ orderItemIds, containerIds }) => {
+                      const orderIds = [];
+                      const batchIds = [];
+                      let targets = [];
+
+                      if (orderItemIds.length) {
+                        orderItemIds.forEach(orderItemId => {
+                          const parentOrderId = findOrderIdByItem({
+                            orderItemId,
+                            entities,
+                            viewer: ORDER,
+                          });
+                          if (parentOrderId) {
+                            orderIds.push(parentOrderId);
+                          }
+                          batchIds.push(...(entities.orderItems?.[orderItemId]?.batches ?? []));
+                        });
+                        targets = [
+                          ...batchIds.map(batchId => `${BATCH}-${batchId}`),
+                          ...orderItemIds.map(itemId => `${ORDER_ITEM}-${itemId}`),
+                        ];
+                      }
+
+                      if (containerIds) {
+                        const ids = containerIds.map(containerId =>
+                          findShipmentIdByContainer(containerId, entities)
+                        );
+                        queryShipmentsDetail(ids);
+                        targets = [
+                          ...targets,
+                          ...containerIds.map(containerId => `${CONTAINER}-${containerId}`),
+                        ];
+                      }
+
                       window.requestIdleCallback(
                         () => {
                           dispatch({
@@ -309,9 +339,7 @@ export default function ShipmentFocus() {
                           dispatch({
                             type: 'REMOVE_TARGETS',
                             payload: {
-                              targets: containerIds.map(
-                                containerId => `${CONTAINER}-${containerId}`
-                              ),
+                              targets,
                             },
                           });
                         },

@@ -260,6 +260,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                     entity={{
                                       projectId: decodeId(projectId),
                                     }}
+                                    users={[]}
                                   />
                                 </Content>
                               </>

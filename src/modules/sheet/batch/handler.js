@@ -91,3 +91,5 @@ export async function handleBatchChanges(
 
   return changes;
 }
+
+export default handleBatchChanges;

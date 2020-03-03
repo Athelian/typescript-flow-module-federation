@@ -414,41 +414,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                       icon="ORDER"
                     />
                   </JumpToSection>
-                  <BooleanValue>
-                    {({ value: opened, set: slideToggle }) =>
-                      !isNewOrClone && (
-                        <>
-                          <LogsButton
-                            entityType="shipment"
-                            entityId={shipmentId}
-                            onClick={() => slideToggle(true)}
-                          />
-                          <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                            <SlideViewLayout
-                              navBar={
-                                <SlideViewNavBar>
-                                  <EntityIcon icon="LOGS" color="LOGS" />
-                                </SlideViewNavBar>
-                              }
-                            >
-                              {shipmentId && opened ? (
-                                <Timeline
-                                  query={shipmentTimelineQuery}
-                                  queryField="shipment"
-                                  variables={{
-                                    id: decodeId(shipmentId),
-                                  }}
-                                  entity={{
-                                    shipmentId: decodeId(shipmentId),
-                                  }}
-                                />
-                              ) : null}
-                            </SlideViewLayout>
-                          </SlideView>
-                        </>
-                      )
-                    }
-                  </BooleanValue>
+
                   <Subscribe
                     to={[
                       ShipmentInfoContainer,
@@ -482,6 +448,45 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                         shipmentTasksContainer.isDirty();
                       return (
                         <>
+                          <BooleanValue>
+                            {({ value: opened, set: slideToggle }) =>
+                              !isNewOrClone && (
+                                <>
+                                  <LogsButton
+                                    entityType="shipment"
+                                    entityId={shipmentId}
+                                    onClick={() => slideToggle(true)}
+                                  />
+                                  <SlideView
+                                    isOpen={opened}
+                                    onRequestClose={() => slideToggle(false)}
+                                  >
+                                    <SlideViewLayout
+                                      navBar={
+                                        <SlideViewNavBar>
+                                          <EntityIcon icon="LOGS" color="LOGS" />
+                                        </SlideViewNavBar>
+                                      }
+                                    >
+                                      {shipmentId && opened ? (
+                                        <Timeline
+                                          query={shipmentTimelineQuery}
+                                          queryField="shipment"
+                                          variables={{
+                                            id: decodeId(shipmentId),
+                                          }}
+                                          entity={{
+                                            shipmentId: decodeId(shipmentId),
+                                          }}
+                                          users={shipmentInfoContainer.state.followers}
+                                        />
+                                      ) : null}
+                                    </SlideViewLayout>
+                                  </SlideView>
+                                </>
+                              )
+                            }
+                          </BooleanValue>
                           {isNewOrClone ? (
                             <CancelButton
                               onClick={() => (onCancel ? onCancel() : this.onCancel())}

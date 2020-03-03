@@ -272,7 +272,7 @@ export default function DeleteConfirm({ onSuccess }: Props) {
     } else if (itemsQueryResult.loading) {
       dialogMessage = (
         <FormattedMessage
-          id="modules.RelationMap.deleteItem.loading"
+          id="modules.RelationMap.delete.loading"
           defaultMessage="Loading {numOfEntity} {entityLabel} ..."
           values={{
             numOfEntity,
@@ -329,7 +329,7 @@ export default function DeleteConfirm({ onSuccess }: Props) {
       <DocumentsDeleteDialog
         files={files}
         isMultiple={items.length > 1}
-        isOpen
+        isOpen={isOpen}
         entityType="ITEM"
         onCancel={onCancel}
         onKeep={deleteItemsHandler}

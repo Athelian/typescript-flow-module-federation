@@ -1,11 +1,12 @@
 // @flow
 import * as React from 'react';
-import type { Entry } from 'generated/graphql';
+import type { Entry, UserPayload } from 'generated/graphql';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import { Query } from 'react-apollo';
 import type { DocumentNode } from 'graphql/language/ast';
 import GridView from 'components/GridView';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import { canViewFile } from 'utils/file';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import DefaultFormatters, { type LogFormatter } from 'modules/timeline/formatters';
@@ -22,6 +23,7 @@ type Props = {|
   variables: Object,
   entity: Object,
   formatters: { [key: string]: LogFormatter },
+  users: Array<UserPayload>,
 |};
 
 const defaultProps = {
@@ -49,7 +51,29 @@ function filterByItemPriceLog(items: Array<Entry>, isBlackOut: boolean): Array<E
     }, []);
 }
 
+function filterByFile(items: Array<Entry>, hasPermissions: Function): Array<Entry> {
+  return items
+    .filter(
+      entry =>
+        (entry?.entityType === 'file' &&
+          ['order', 'shipment', 'product'].includes(entry?.parentEntityType) &&
+          canViewFile(hasPermissions, entry?.entity?.type)) ||
+        entry?.entityType !== 'file'
+    )
+    .reduce((result, entry, counter, entries) => {
+      const lastEntry = result[result.length - 1];
+      const lastEntryIsSeparator =
+        entry?.__typename === 'DateSeparator' && counter === entries.length - 1;
+      const hasTwoEntriesAreSeparator =
+        lastEntry?.__typename === 'DateSeparator' && entry?.__typename === 'DateSeparator';
+      if (hasTwoEntriesAreSeparator || lastEntryIsSeparator) return result;
+
+      return [...result, entry];
+    }, []);
+}
+
 const Timeline = ({
+  users,
   query,
   queryField,
   variables: baseVariables,
@@ -121,36 +145,38 @@ const Timeline = ({
                 padding="30px 100px"
                 emptyMessage="No logs"
               >
-                {filterByItemPriceLog(items, hasPermissions(ORDER_ITEMS_GET_PRICE)).map(
-                  (item: any) => {
-                    switch (getByPathWithDefault('', '__typename', item)) {
-                      case 'Log':
-                        return (
-                          <Log
-                            key={getByPathWithDefault('', 'id', item)}
-                            formatters={formatters}
-                            log={item}
-                          />
-                        );
-                      case 'Comment':
-                        return (
-                          <Comment
-                            key={getByPathWithDefault('', 'id', item)}
-                            comment={item}
-                            query={query}
-                            queryField={queryField}
-                            variables={variables}
-                          />
-                        );
-                      case 'DateSeparator':
-                        return (
-                          <DateSeparator key={getByPathWithDefault('', 'id', item)} date={item} />
-                        );
-                      default:
-                        return null;
-                    }
+                {filterByItemPriceLog(
+                  filterByFile(items, hasPermissions),
+                  hasPermissions(ORDER_ITEMS_GET_PRICE)
+                ).map((item: any) => {
+                  switch (getByPathWithDefault('', '__typename', item)) {
+                    case 'Log':
+                      return (
+                        <Log
+                          key={getByPathWithDefault('', 'id', item)}
+                          formatters={formatters}
+                          log={item}
+                        />
+                      );
+                    case 'Comment':
+                      return (
+                        <Comment
+                          key={getByPathWithDefault('', 'id', item)}
+                          comment={item}
+                          users={users}
+                          query={query}
+                          queryField={queryField}
+                          variables={variables}
+                        />
+                      );
+                    case 'DateSeparator':
+                      return (
+                        <DateSeparator key={getByPathWithDefault('', 'id', item)} date={item} />
+                      );
+                    default:
+                      return null;
                   }
-                )}
+                })}
               </GridView>
             </div>
           );
@@ -162,6 +188,7 @@ const Timeline = ({
           query={query}
           queryField={queryField}
           variables={variables}
+          users={users}
           onCompleted={() => {
             if (ref.current) {
               ref.current.scrollTop = ref.current.scrollHeight;

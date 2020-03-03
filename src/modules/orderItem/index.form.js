@@ -176,41 +176,6 @@ class OrderItemFormModule extends React.Component<Props> {
                     icon="SHIPMENT"
                   />
                 </JumpToSection>
-                <BooleanValue>
-                  {({ value: isOpen, set: toggleLogs }) => (
-                    <>
-                      <LogsButton
-                        entityType="orderItem"
-                        entityId={orderItemId}
-                        onClick={() => toggleLogs(true)}
-                      />
-                      <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
-                        <SlideViewLayout>
-                          {orderItemId && isOpen && (
-                            <>
-                              <SlideViewNavBar>
-                                <EntityIcon icon="LOGS" color="LOGS" />
-                              </SlideViewNavBar>
-
-                              <Content>
-                                <Timeline
-                                  query={orderItemTimelineQuery}
-                                  queryField="orderItem"
-                                  variables={{
-                                    id: decodeId(orderItemId),
-                                  }}
-                                  entity={{
-                                    orderItemId: decodeId(orderItemId),
-                                  }}
-                                />
-                              </Content>
-                            </>
-                          )}
-                        </SlideViewLayout>
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue>
 
                 <Subscribe
                   to={[
@@ -231,6 +196,42 @@ class OrderItemFormModule extends React.Component<Props> {
                     form
                   ) => (
                     <>
+                      <BooleanValue>
+                        {({ value: isOpen, set: toggleLogs }) => (
+                          <>
+                            <LogsButton
+                              entityType="orderItem"
+                              entityId={orderItemId}
+                              onClick={() => toggleLogs(true)}
+                            />
+                            <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
+                              <SlideViewLayout>
+                                {orderItemId && isOpen && (
+                                  <>
+                                    <SlideViewNavBar>
+                                      <EntityIcon icon="LOGS" color="LOGS" />
+                                    </SlideViewNavBar>
+
+                                    <Content>
+                                      <Timeline
+                                        query={orderItemTimelineQuery}
+                                        queryField="orderItem"
+                                        variables={{
+                                          id: decodeId(orderItemId),
+                                        }}
+                                        entity={{
+                                          orderItemId: decodeId(orderItemId),
+                                        }}
+                                        users={orderItemInfoContainer.state.followers}
+                                      />
+                                    </Content>
+                                  </>
+                                )}
+                              </SlideViewLayout>
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
                       {(orderItemInfoContainer.isDirty() ||
                         orderItemBatchesContainer.isDirty() ||
                         orderItemFilesContainer.isDirty() ||

@@ -68,3 +68,10 @@ export const ContentFigureStyle = css`
     border-radius: 50%;
   }
 `;
+
+export const SuggestionListStyle = css`
+  & div {
+    max-height: 120px;
+    overflow: auto;
+  }
+`;

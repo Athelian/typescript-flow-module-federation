@@ -35208,8 +35208,12 @@ export type OrderCardWithOwnedFragmentFragment = ({
 });
 
 export type PartnerFormFragmentFragment = ({
-    ...{ __typename?: 'Organization' },
-  ...$Pick<Organization, {| id: * |}>
+    ...{ __typename?: 'Partner' },
+  ...$Pick<Partner, {| id: *, name: *, code: *, types: * |}>,
+  ...{| organization: ({
+      ...{ __typename?: 'Organization' },
+    ...$Pick<Organization, {| id: *, name: * |}>
+  }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' } |}
 });
 
 export type PartnerCardFragmentFragment = ({

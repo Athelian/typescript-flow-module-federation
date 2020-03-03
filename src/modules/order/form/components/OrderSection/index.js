@@ -428,15 +428,21 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                         <SelectExporter
                                           cacheKey="OrderSelectExporter"
                                           isRequired
-                                          selected={values.exporter}
+                                          selected={values?.exporter?.partner}
                                           onCancel={() => slideToggle(false)}
-                                          onSelect={newValue => {
-                                            slideToggle(false);
-                                            setFieldValue('exporter', newValue);
+                                          onSelect={({ organization, ...partner }) => {
+                                            const assembledOrg = {
+                                              ...organization,
+                                              partner: {
+                                                ...partner,
+                                              },
+                                            };
+                                            setFieldValue('exporter', assembledOrg);
                                             cleanUpFollowers(values.exporter);
                                             emitter.emit('CLEAN_ORDERS', {
                                               action: 'CHANGE_EXPORTER',
                                             });
+                                            slideToggle(false);
                                           }}
                                           warningMessage={
                                             <FormattedMessage

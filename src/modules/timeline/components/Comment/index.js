@@ -1,9 +1,12 @@
 // @flow
 import * as React from 'react';
+import type { UserPayload } from 'generated/graphql';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import { StringValue } from 'react-values';
+import replaceString from 'replace-string';
 import { clone } from 'ramda';
+import { MentionsInput, Mention } from 'react-mentions';
 import type { DocumentNode } from 'graphql/language/ast';
 import { DefaultStyle, TextAreaInput } from 'components/Form/Inputs';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -12,6 +15,15 @@ import Icon from 'components/Icon';
 import { commentDeleteMutation, commentUpdateMutation } from 'modules/timeline/mutation';
 import type { CommentItem } from 'modules/timeline/types';
 import messages from 'modules/timeline/messages';
+import {
+  MentionsInputStyle,
+  MentionStyle,
+  SuggestionListStyle,
+  MentionSuggestionStyle,
+  MentionSuggestionNameWrapperStyle,
+  MentionNameStyle,
+  MentionCompanyStyle,
+} from '../CommentInput/style';
 import {
   ContentStyle,
   CommentWrapperStyle,
@@ -22,17 +34,37 @@ import {
   ContentWrapperStyle,
 } from './style';
 
-type Props = {
+type Props = {|
   comment: CommentItem,
   query: DocumentNode,
   queryField: string,
   variables: Object,
-};
+  users: Array<UserPayload>,
+|};
 
-const Comment = ({ comment, query, queryField, variables }: Props) => {
+function parseUserMention(content: string, users: Array<UserPayload>) {
+  if (users.length) {
+    let txt = content;
+    users.forEach(user => {
+      if (txt.includes(`(${user.id})`)) {
+        txt = replaceString(
+          txt,
+          `@[${user.firstName} ${user.lastName}](${user.id})`,
+          `@${user.firstName} ${user.lastName}`
+        );
+      }
+    });
+    return txt;
+  }
+
+  return content;
+}
+
+const Comment = ({ comment, query, queryField, variables, users }: Props) => {
   const [editing, setEditing] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
   const buttonRef = React.useRef(null);
+  const mentionInputRef = React.useRef(null);
 
   return (
     <div className={CommentWrapperStyle}>
@@ -47,7 +79,7 @@ const Comment = ({ comment, query, queryField, variables }: Props) => {
           setEditing(false);
           setFocused(false);
         }}
-        ignoreElements={buttonRef && buttonRef.current ? [buttonRef.current] : []}
+        ignoreElements={[buttonRef.current, mentionInputRef.current].filter(Boolean)}
       >
         <div
           className={ContentStyle}
@@ -83,33 +115,104 @@ const Comment = ({ comment, query, queryField, variables }: Props) => {
                         forceHoverStyle
                         height="90px"
                       >
-                        <TextAreaInput
-                          align="left"
-                          name="content"
-                          value={value}
-                          onChange={e => set(e.target.value)}
-                          onFocus={() => setFocused(true)}
-                          onBlur={() => {
-                            const content = value.trim();
-                            if (content === '' || comment.content === content) {
-                              setEditing(false);
-                              setFocused(false);
-                              return;
-                            }
+                        {users.length ? (
+                          <>
+                            <div ref={mentionInputRef} className={SuggestionListStyle} />
+                            <MentionsInput
+                              className={MentionsInputStyle}
+                              suggestionsPortalHost={mentionInputRef.current}
+                              value={value}
+                              onChange={e => set(e.target.value)}
+                              onFocus={() => setFocused(true)}
+                              onBlur={() => {
+                                if (mentionInputRef.current?.childNodes.length) {
+                                  return;
+                                }
 
-                            commentUpdate({
-                              variables: {
-                                id: comment.id,
-                                input: {
-                                  content,
+                                const content = value.trim();
+                                if (content === '' || comment.content === content) {
+                                  setEditing(false);
+                                  setFocused(false);
+                                  return;
+                                }
+
+                                commentUpdate({
+                                  variables: {
+                                    id: comment.id,
+                                    input: {
+                                      content,
+                                    },
+                                  },
+                                }).then(() => {
+                                  setEditing(false);
+                                  setFocused(false);
+                                });
+                              }}
+                            >
+                              <Mention
+                                className={MentionStyle}
+                                data={users.map(user => ({
+                                  ...user,
+                                  display: `${user.firstName} ${user.lastName}`,
+                                }))}
+                                trigger="@"
+                                markup="@[__display__](__id__)"
+                                renderSuggestion={(
+                                  suggestion,
+                                  search,
+                                  highlightedDisplay,
+                                  index,
+                                  isFocused
+                                ) => (
+                                  <div className={MentionSuggestionStyle(isFocused)}>
+                                    <UserAvatar
+                                      firstName={suggestion.firstName}
+                                      lastName={suggestion.lastName}
+                                      showBothInitials
+                                      width="25px"
+                                      height="25px"
+                                    />
+
+                                    <div className={MentionSuggestionNameWrapperStyle}>
+                                      <div className={MentionNameStyle}>{highlightedDisplay}</div>
+                                      <div className={MentionCompanyStyle}>
+                                        {suggestion.organization.name}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              />
+                            </MentionsInput>
+                          </>
+                        ) : (
+                          <TextAreaInput
+                            align="left"
+                            name="content"
+                            value={value}
+                            onChange={e => set(e.target.value)}
+                            onFocus={() => setFocused(true)}
+                            onBlur={() => {
+                              const content = value.trim();
+                              if (content === '' || comment.content === content) {
+                                setEditing(false);
+                                setFocused(false);
+                                return;
+                              }
+
+                              commentUpdate({
+                                variables: {
+                                  id: comment.id,
+                                  input: {
+                                    content,
+                                  },
                                 },
-                              },
-                            }).then(() => {
-                              setEditing(false);
-                              setFocused(false);
-                            });
-                          }}
-                        />
+                              }).then(() => {
+                                setEditing(false);
+                                setFocused(false);
+                              });
+                            }}
+                          />
+                        )}
                       </DefaultStyle>
                     )}
                   </StringValue>
@@ -150,7 +253,7 @@ const Comment = ({ comment, query, queryField, variables }: Props) => {
             </>
           ) : (
             <>
-              {comment.content}{' '}
+              {parseUserMention(comment.content, users)}{' '}
               {comment.createdAt.getTime() !== comment.updatedAt.getTime() && (
                 <span className={EditedStyle}>
                   (

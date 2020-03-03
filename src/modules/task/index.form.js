@@ -147,6 +147,7 @@ class TaskFormModule extends React.Component<Props> {
                                         entity={{
                                           taskId: decodeId(taskId),
                                         }}
+                                        users={[]}
                                       />
                                     </Content>
                                   </>

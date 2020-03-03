@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import type { FileInput, FilePayload } from 'generated/graphql';
+import { isForbidden } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import type { FilterBy, SortBy } from 'types';
 import DocumentGridView from './DocumentGridView';
@@ -38,7 +39,7 @@ const DocumentList = ({ uploadFiles, ...filtersAndSort }: Props) => {
 
         return (
           <DocumentGridView
-            files={mergeFiles(data?.files?.nodes ?? [])}
+            files={mergeFiles(data?.files?.nodes ?? []).filter(file => !isForbidden(file))}
             onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'files')}
             hasMore={hasMore}
             isLoading={loading}

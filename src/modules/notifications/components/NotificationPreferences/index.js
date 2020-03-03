@@ -5,12 +5,12 @@ import {
   NotificationTypeValues,
   NotificationPreference,
 } from 'generated/graphql';
+import { FormattedMessage } from 'react-intl';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { isEquals } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 import LoadingIcon from 'components/LoadingIcon';
 import Dialog from 'components/Dialog';
-import { FormattedMessage } from 'react-intl';
 import { ToggleInput, SelectInputFactory } from 'components/Form';
 import { ApplyButton, ResetButton } from 'components/Buttons';
 import { Tooltip } from 'components/Tooltip';
@@ -57,43 +57,76 @@ const preferencesByType = ({
     }));
 };
 
-const defaultTimer = {
-  hours: 0,
-  minutes: 10,
+const defaultTimer = null;
+
+const parseIntervalToAPI = (value: string) => {
+  switch (value) {
+    case 'instant':
+      return null;
+    case '10m':
+      return {
+        minutes: 10,
+        hours: 0,
+      };
+    case '30m':
+      return {
+        minutes: 30,
+        hours: 0,
+      };
+    case '1hr':
+      return {
+        minutes: 0,
+        hours: 1,
+      };
+    case '6hr':
+      return {
+        minutes: 0,
+        hours: 6,
+      };
+    case '12hr':
+      return {
+        minutes: 0,
+        hours: 12,
+      };
+    default:
+      return null;
+  }
 };
 
-function convertTimer(timer: string) {
-  if (timer.includes('h')) {
-    const [hours] = timer.split('h');
-    return {
-      hours: Number(hours),
-      minutes: 0,
-    };
-  }
-
-  const [minutes] = timer.split('m');
-  return {
-    minutes: Number(minutes),
-    hours: 0,
-  };
-}
+const parseIntervalFromAPI = (value: ?Object) => {
+  if (value?.minutes === 10) return '10m';
+  if (value?.minutes === 30) return '30m';
+  if (value?.hours === 1) return '1hr';
+  if (value?.hours === 6) return '6hr';
+  if (value?.hours === 12) return '12hr';
+  return 'instant';
+};
 
 function NotificationPreferences({ isOpen, onClose }: Props) {
   const [notificationPreferencesUpdate] = useMutation(notificationPreferencesUpdateMutation);
   const [isEmailNotificationsEnabled, setEmailNotificationsEnabled] = React.useState(false);
   const [preferences, setPreferences] = React.useState([]);
-  const [timer, setTimer] = React.useState(defaultTimer);
+  const [timer, setTimer] = React.useState('instant');
   const { data, loading, error, refetch } = useQuery(notificationPreferencesQuery, {
     onCompleted: result => {
       setEmailNotificationsEnabled(result?.viewer?.notificationPreferences?.allowedEmail ?? false);
       setPreferences(result?.viewer?.notificationPreferences?.notifications ?? []);
-      setTimer(result?.viewer?.notificationPreferences?.emailInterval ?? defaultTimer);
+      setTimer(
+        parseIntervalFromAPI(
+          removeTypename(result?.viewer?.notificationPreferences?.emailInterval ?? defaultTimer)
+        )
+      );
     },
   });
 
   const isDirty =
     data?.viewer?.notificationPreferences?.allowedEmail !== isEmailNotificationsEnabled ||
-    !isEquals(data?.viewer?.notificationPreferences?.emailInterval ?? defaultTimer, timer) ||
+    !isEquals(
+      parseIntervalFromAPI(
+        removeTypename(data?.viewer?.notificationPreferences?.emailInterval ?? defaultTimer)
+      ),
+      timer
+    ) ||
     !isEquals(data?.viewer?.notificationPreferences?.notifications ?? [], preferences);
 
   const togglePreference = (type: string, enabled: boolean) => {
@@ -105,17 +138,7 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
       variables: {
         input: {
           allowedEmail: isEmailNotificationsEnabled,
-          emailInterval: {
-            years: 0,
-            months: 0,
-            weeks: 0,
-            days: 0,
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            nanos: 0,
-            ...removeTypename(timer),
-          },
+          emailInterval: parseIntervalToAPI(timer),
           notifications: preferences.map(({ type, enabled }) => ({ type, enabled })),
         },
       },
@@ -127,7 +150,11 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
   const handleReset = React.useCallback(() => {
     setEmailNotificationsEnabled(data?.viewer?.notificationPreferences?.allowedEmail ?? false);
     setPreferences(data?.viewer?.notificationPreferences?.notifications ?? []);
-    setTimer(data?.viewer?.notificationPreferences?.emailInterval ?? defaultTimer);
+    setTimer(
+      parseIntervalFromAPI(
+        removeTypename(data?.viewer?.notificationPreferences?.emailInterval ?? defaultTimer)
+      )
+    );
   }, [data]);
 
   // Clear state after closing setting
@@ -140,8 +167,6 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
   if (error) {
     return error.message;
   }
-
-  const interval = timer.hours ? `${timer.hours}h` : `${timer.minutes}m`;
 
   return (
     <Dialog isOpen={isOpen} onRequestClose={onClose}>
@@ -180,36 +205,67 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
 
             {isEmailNotificationsEnabled && (
               <SelectInputFactory
-                value={interval}
+                value={timer}
                 items={[
                   {
-                    label: '10 min',
+                    label: (
+                      <FormattedMessage
+                        id="modules.Notifications.instant"
+                        defaultMessage="Instant"
+                      />
+                    ),
+                    value: 'instant',
+                  },
+                  {
+                    label: (
+                      <FormattedMessage
+                        id="modules.Notifications.tenMinutes"
+                        defaultMessage="10 min"
+                      />
+                    ),
                     value: '10m',
                   },
                   {
-                    label: '30 min',
+                    label: (
+                      <FormattedMessage
+                        id="modules.Notifications.thirtyMinutes"
+                        defaultMessage="30 min"
+                      />
+                    ),
                     value: '30m',
                   },
                   {
-                    label: '1 hr',
-                    value: '1h',
+                    label: (
+                      <FormattedMessage id="modules.Notifications.oneHour" defaultMessage="1 hr" />
+                    ),
+                    value: '1hr',
                   },
                   {
-                    label: '6 hrs',
-                    value: '6h',
+                    label: (
+                      <FormattedMessage
+                        id="modules.Notifications.sixHours"
+                        defaultMessage="6 hrs"
+                      />
+                    ),
+                    value: '6hr',
                   },
                   {
-                    label: '12 hrs',
-                    value: '12h',
+                    label: (
+                      <FormattedMessage
+                        id="modules.Notifications.twelveHours"
+                        defaultMessage="12 hrs"
+                      />
+                    ),
+                    value: '12hr',
                   },
                 ]}
-                inputWidth="60px"
+                inputWidth="80px"
                 inputHeight="20px"
                 editable
                 required
                 hideDropdownArrow
                 hideTooltip
-                onChange={evt => setTimer(convertTimer(evt.target.value))}
+                onChange={evt => setTimer(evt.target.value)}
               />
             )}
           </div>

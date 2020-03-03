@@ -24,6 +24,7 @@ import {
 } from 'modules/permission/constants/product';
 import validator from 'modules/productProvider/form/validator';
 import { getByPath } from 'utils/fp';
+import { toFloat } from 'utils/number';
 import { SpecificationsSectionWrapperStyle } from './style';
 
 type Props = {
@@ -89,6 +90,18 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                     name={name}
                     {...inputHandlers}
                     isNew={isNew}
+                    onBlur={(evt: any) => {
+                      const { onBlur } = inputHandlers;
+                      if (onBlur) {
+                        onBlur({
+                          ...evt,
+                          target: {
+                            ...evt.target,
+                            value: toFloat(evt.target.value),
+                          },
+                        });
+                      }
+                    }}
                     originalValue={getByPath('unitPrice.amount', originalValues)}
                     label={
                       <FormattedMessage

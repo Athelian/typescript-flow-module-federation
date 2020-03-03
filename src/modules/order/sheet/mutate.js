@@ -101,6 +101,9 @@ function normalizeInput(
         case 'exporter':
           return {
             exporterId: newValue?.id ?? null,
+            followerIds: (item?.followers ?? [])
+              .filter(user => user?.organization?.id !== item?.exporter?.id)
+              .map(user => user.id),
             orderItems: [],
             todo: {
               tasks: (item?.todo?.tasks ?? []).map(

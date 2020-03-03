@@ -21,6 +21,12 @@ export const PRODUCT_SET_TASK_TEMPLATE = 'product.products.setTaskTemplate';
 export const PRODUCT_SET_MILESTONE = 'product.products.setMilestone';
 export const PRODUCT_SET_DOCUMENTS = 'product.products.setDocuments';
 export const PRODUCT_DOWNLOAD_DOCUMENTS = 'product.products.downloadDocuments';
+export const PRODUCT_DOCUMENT_GET = 'product.files.get';
+export const PRODUCT_DOCUMENT_GET_TYPE_SPECIFICATION = 'product.files.getByTypeSpecification';
+export const PRODUCT_DOCUMENT_GET_TYPE_ANALYSIS_CERTIFICATE =
+  'product.files.getByTypeAnalysisCertificate';
+export const PRODUCT_DOCUMENT_GET_TYPE_ORIGIN_CERTIFICATE =
+  'product.files.getByTypeOriginCertificate';
 export const PRODUCT_DOCUMENT_CREATE = 'product.files.create';
 export const PRODUCT_DOCUMENT_DELETE = 'product.files.delete';
 export const PRODUCT_SET_CUSTOM_FIELDS = 'product.products.setCustomFields';

@@ -409,7 +409,7 @@ export default function({
         ],
         'order.customField': 'order.customFields',
       },
-      fieldDefinition: orderFieldDefinitions,
+      fieldDefinitions: orderFieldDefinitions,
     }).filter(
       c =>
         ![

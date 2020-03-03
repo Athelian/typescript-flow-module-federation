@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { navigate } from '@reach/router';
 import { intersection } from 'lodash';
 import { FormattedMessage } from 'react-intl';
+import { canViewFile } from 'utils/file';
 import { encodeId } from 'utils/id';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import UploadPlaceholder from 'components/UploadPlaceholder';
@@ -108,6 +109,10 @@ const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => 
             setIsOpen(false);
           });
         };
+
+        const canView = canViewFile(hasPermission, file.type);
+
+        if (!canView) return null;
 
         return (
           <>

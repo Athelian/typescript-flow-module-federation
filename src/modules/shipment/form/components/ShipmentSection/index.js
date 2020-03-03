@@ -606,14 +606,20 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                             <>
                                               <SelectPartner
                                                 partnerTypes={['Importer']}
-                                                selected={values.importer}
+                                                selected={values.importer?.partner}
                                                 onCancel={() => importerSelectorToggle(false)}
-                                                onSelect={selected => {
+                                                onSelect={({ organization, ...partner }) => {
+                                                  const assembledOrg = {
+                                                    ...organization,
+                                                    partner: {
+                                                      ...partner,
+                                                    },
+                                                  };
                                                   if (selectedImporter) {
-                                                    setSelectedImporter(selected);
+                                                    setSelectedImporter(assembledOrg);
                                                     importerDialogToggle(true);
                                                   } else {
-                                                    onChangePartner('importer', selected);
+                                                    onChangePartner('importer', assembledOrg);
                                                     importerSelectorToggle(false);
                                                   }
                                                 }}
@@ -718,7 +724,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                   {exporterSelectorIsOpen && (
                                     <SelectExporter
                                       cacheKey="ShipmentSelectExporter"
-                                      selected={values.exporter}
+                                      selected={values.exporter?.partner}
                                       onCancel={() => exporterSelectorToggle(false)}
                                       selectMessage={
                                         <FormattedMessage
@@ -738,13 +744,19 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                           defaultMessage="Removing the Main Exporter will remove all Followers of the current Main Exporter from the Shipment and all Containers. Are you sure you want to remove the Main Exporter?"
                                         />
                                       }
-                                      onSelect={selectedExporter => {
-                                        onChangePartner('exporter', selectedExporter);
+                                      onSelect={({ organization, ...partner }) => {
+                                        const assembledOrg = {
+                                          ...organization,
+                                          partner: {
+                                            ...partner,
+                                          },
+                                        };
+                                        onChangePartner('exporter', assembledOrg);
                                         emitter.emit('CLEAN_SHIPMENTS', {
                                           action: 'CHANGE_EXPORTER',
                                           payload: {
                                             exporter,
-                                            selectedExporter,
+                                            assembledOrg,
                                           },
                                         });
                                         exporterSelectorToggle(false);
@@ -821,22 +833,30 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                       <>
                                         <SelectPartners
                                           partnerTypes={['Forwarder']}
-                                          selected={forwarders}
+                                          selected={forwarders.map(forwarder => forwarder?.partner)}
                                           onCancel={() => forwardersSelectorToggle(false)}
                                           onSelect={selected => {
+                                            const assembledOrgs = selected.map(
+                                              ({ organization, ...partner }) => ({
+                                                ...organization,
+                                                partner: {
+                                                  ...partner,
+                                                },
+                                              })
+                                            );
                                             const removedForwarders = forwarders.filter(
                                               prevForwarder =>
-                                                !selected.some(
+                                                !assembledOrgs.some(
                                                   newForwarder =>
                                                     newForwarder.id === prevForwarder.id
                                                 )
                                             );
 
                                             if (removedForwarders.length > 0) {
-                                              setSelectedForwarders(selected);
+                                              setSelectedForwarders(assembledOrgs);
                                               forwardersDialogToggle(true);
                                             } else {
-                                              onChangeForwarders(selected);
+                                              onChangeForwarders(assembledOrgs);
                                               forwardersSelectorToggle(false);
                                             }
                                           }}
