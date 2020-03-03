@@ -10,7 +10,7 @@ const FollowersInput = ({
   focus,
   onChange,
   readonly,
-}: InputProps<string, Array<string>>) => {
+}: InputProps<Array<Object>, Array<string>>) => {
   const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
     if (focus) {
       e.stopPropagation();
@@ -23,7 +23,7 @@ const FollowersInput = ({
       <Followers
         followers={value || []}
         setFollowers={changedFollowers => onChange(changedFollowers, true)}
-        organizationIds={context}
+        organizationIds={context || []}
         editable={!readonly}
         height={26}
         borderColor="WHITE"
