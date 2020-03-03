@@ -7,16 +7,21 @@ import type { DisplayProps } from 'components/Sheet/CellRenderer/Cell/CellDispla
 import { CellDisplayWrapperStyle } from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
 import { CardStyle } from './style';
 
-const PartnerDisplay = ({ value }: DisplayProps<Object | null>) => (
-  <div className={CellDisplayWrapperStyle}>
-    {value && (
-      <div className={CardStyle}>
-        <Display height="20px">{value?.name}</Display>
+const PartnerDisplay = ({ value }: DisplayProps<Object | null>) => {
+  const name = value?.partner?.name || value?.name || '';
+  const code = value?.partner?.code || '';
 
-        <CornerIcon icon="PARTNER" color={colors.PARTNER} />
-      </div>
-    )}
-  </div>
-);
+  return (
+    <div className={CellDisplayWrapperStyle}>
+      {value && (
+        <div className={CardStyle}>
+          <Display height="20px">{`${name} ${code}`}</Display>
+
+          <CornerIcon icon="PARTNER" color={colors.PARTNER} />
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default PartnerDisplay;
