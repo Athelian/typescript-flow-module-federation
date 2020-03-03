@@ -524,6 +524,7 @@
   "modules.metadata.items": "ITEMS",
   "modules.metadata.batches": "BATCHES",
   "modules.metadata.shipments": "SHIPMENTS",
+  "modules.metadata.container": "CONTAINER",
   "modules.metadata.products": "PRODUCTS",
   "modules.metadata.endProducts": "END PRODUCTS",
   "modules.metadata.warehouse": "WAREHOUSE",

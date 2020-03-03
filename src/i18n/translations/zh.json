@@ -524,6 +524,7 @@
   "modules.metadata.items": "订单商品",
   "modules.metadata.batches": "批次",
   "modules.metadata.shipments": "装运",
+  "modules.metadata.container": "集装箱",
   "modules.metadata.products": "商品",
   "modules.metadata.endProducts": "出口商•供应商",
   "modules.metadata.warehouse": "仓库",

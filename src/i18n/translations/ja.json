@@ -524,6 +524,7 @@
   "modules.metadata.items": "発注商品",
   "modules.metadata.batches": "バッチ",
   "modules.metadata.shipments": "シップメント",
+  "modules.metadata.container": "コンテナ",
   "modules.metadata.products": "商品",
   "modules.metadata.endProducts": "輸出者•製造者",
   "modules.metadata.warehouse": "倉庫",

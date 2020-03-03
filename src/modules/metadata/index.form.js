@@ -89,6 +89,19 @@ const MetadataForm = () => {
             }}
           />
           <TabItem
+            active={activeType === 'Container'}
+            label={<FormattedMessage id="modules.metadata.container" defaultMessage="CONTAINER" />}
+            icon="CONTAINER"
+            onClick={() => {
+              if (activeType !== 'Container') {
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { ...filterAndSort.filter, entityTypes: ['Container'] },
+                });
+              }
+            }}
+          />
+          <TabItem
             active={activeType === 'Product'}
             label={<FormattedMessage id="modules.metadata.products" defaultMessage="PRODUCTS" />}
             icon="PRODUCT"

@@ -23,6 +23,8 @@ import {
   CONTAINER_SET_FREE_TIME_DURATION,
   CONTAINER_SET_YARD_NAME,
   CONTAINER_SET_DEPARTURE_DATE,
+  CONTAINER_SET_CUSTOM_FIELDS,
+  CONTAINER_SET_CUSTOM_FIELDS_MASK,
   CONTAINER_SET_FOLLOWERS,
   CONTAINER_APPROVE_DEPARTURE_DATE,
 } from 'modules/permission/constants/container';
@@ -44,6 +46,7 @@ import {
   DateInputFactory,
   DayInputFactory,
   SelectInputFactory,
+  CustomFieldsFactory,
   EnumSelectInputFactory,
   Display,
 } from 'components/Form';
@@ -544,6 +547,15 @@ const ContainerSection = ({ container }: Props) => {
                         approvable={allowUpdate || hasPermission(CONTAINER_APPROVE_DEPARTURE_DATE)}
                       />
                     </GridColumn>
+                    <CustomFieldsFactory
+                      entityType="Container"
+                      customFields={values.customFields}
+                      setFieldValue={setFieldValue}
+                      editable={{
+                        values: hasPermission([CONTAINER_UPDATE, CONTAINER_SET_CUSTOM_FIELDS]),
+                        mask: hasPermission([CONTAINER_UPDATE, CONTAINER_SET_CUSTOM_FIELDS_MASK]),
+                      }}
+                    />
                   </GridColumn>
 
                   <div className={WarehouseSectionStyle}>
