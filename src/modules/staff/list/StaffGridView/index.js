@@ -10,6 +10,7 @@ type Props = {
   hasMore: boolean,
   isLoading: boolean,
   renderItem?: (item: Object) => React.Node,
+  padding?: string,
 };
 
 const defaultRenderItem = (item: Object) => <StaffCard key={item.id} staff={item} />;
@@ -18,9 +19,14 @@ const defaultProps = {
   renderItem: defaultRenderItem,
 };
 
-const StaffGridView = (props: Props) => {
-  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
-
+const StaffGridView = ({
+  items,
+  onLoadMore,
+  hasMore,
+  isLoading,
+  renderItem = defaultRenderItem,
+  padding,
+}: Props) => {
   return (
     <GridView
       onLoadMore={onLoadMore}
@@ -31,6 +37,7 @@ const StaffGridView = (props: Props) => {
       emptyMessage={
         <FormattedMessage id="modules.Staff.noStaffFound" defaultMessage="No staff found" />
       }
+      padding={padding}
     >
       {items.map(item => renderItem(item))}
     </GridView>

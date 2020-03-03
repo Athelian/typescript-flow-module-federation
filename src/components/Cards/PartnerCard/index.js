@@ -31,33 +31,32 @@ const defaultProps = {
 };
 
 const PartnerCard = ({ partner, onClick, size, selectable, ...rest }: Props) => {
-  const { name, types: organizationTypes, partner: partnerInfo } = partner;
-
   const actions = selectable ? [] : [];
-
-  const types = partnerInfo?.types ?? organizationTypes;
+  const types = partner?.partner?.types || partner?.types || [];
 
   return (
     <BaseCard actions={actions} icon="PARTNER" color="PARTNER" selectable={selectable} {...rest}>
       <div className={PartnerCardStyle(size)} role="presentation" onClick={onClick}>
         <img className={PartnerCardImageStyle} src={FALLBACK_IMAGE} alt="exporter_image" />
         <div className={PartnerInfoWrapperStyle(size)}>
-          <div className={PartnerNameStyle}>{name}</div>
-          <div className={PartnerCodeStyle}>{partnerInfo && partnerInfo.code}</div>
+          <div className={PartnerNameStyle}>
+            {partner?.partner?.name || partner?.name || partner?.organization?.name}
+          </div>
+          <div className={PartnerCodeStyle}>{partner?.code}</div>
           <div className={PartnerTypesWrapperStyle(size)}>
-            <div className={PartnerTypeStyle(types && types.includes('Importer'))}>
+            <div className={PartnerTypeStyle(types.includes('Importer'))}>
               <Icon icon="IMPORTER" />
             </div>
-            <div className={PartnerTypeStyle(types && types.includes('Exporter'))}>
+            <div className={PartnerTypeStyle(types.includes('Exporter'))}>
               <Icon icon="EXPORTER" />
             </div>
-            <div className={PartnerTypeStyle(types && types.includes('Supplier'))}>
+            <div className={PartnerTypeStyle(types.includes('Supplier'))}>
               <Icon icon="SUPPLIER" />
             </div>
-            <div className={PartnerTypeStyle(types && types.includes('Forwarder'))}>
+            <div className={PartnerTypeStyle(types.includes('Forwarder'))}>
               <Icon icon="FORWARDER" />
             </div>
-            <div className={PartnerTypeStyle(types && types.includes('Warehouser'))}>
+            <div className={PartnerTypeStyle(types.includes('Warehouser'))}>
               <Icon icon="WAREHOUSER" />
             </div>
           </div>

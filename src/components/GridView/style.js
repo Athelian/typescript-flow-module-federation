@@ -30,4 +30,5 @@ export const EmptyGridViewStyle: string = css`
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100px;
 `;

@@ -59,7 +59,7 @@ export default class OrderInfoContainer extends Container<Order> {
     this.setState(prevState => ({
       ...prevState,
       followers: prevState.followers?.filter(
-        follower => follower?.organization?.id !== previousExporter?.organization?.id
+        follower => follower?.organization?.id !== previousExporter?.id
       ),
     }));
   };

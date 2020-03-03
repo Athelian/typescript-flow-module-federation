@@ -55,6 +55,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => {
               <Page Component={AsyncContainer} path="container/*" />
               <Page Component={AsyncProduct} path="product/*" />
               <Page Component={AsyncWarehouse} path="warehouse/*" />
+              <Page Component={AsyncPartner} path="partner/*" />
               <Page Component={AsyncProject} path="project/*" />
               <Page Component={AsyncTask} path="task/*" />
               <Page Component={AsyncTags} path="tags/*" />
@@ -63,7 +64,6 @@ const Routes: StatelessFunctionalComponent<{}> = () => {
               <Page Component={AsyncTaskTemplate} path="templates/task-template/*" />
               <Page Component={AsyncProjectTemplate} path="templates/project/*" />
               <Page Component={AsyncDocument} path="document/*" />
-              <AsyncPartner path="partner/*" />
               <AsyncStaff path="staff/*" />
               <AsyncProfile path="profile/*" />
               <AsyncNotifications path="notifications/*" />

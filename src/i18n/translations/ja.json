@@ -840,6 +840,7 @@
   "modules.OrderItems.tasks": "タスク",
   "modules.OrderItems.logs": "ログ",
   "modules.OrderItems.mask": "フィールドテンプレート",
+  "modules.Partners.partner": "取引先",
   "modules.Partners.noPartnersFound": "取引先が見つかりません",
   "modules.Partners.newPartner": "新規追加",
   "modules.Partners.noPartners": "取引先がありません",
