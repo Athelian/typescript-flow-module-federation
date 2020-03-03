@@ -36,6 +36,7 @@ import MainExporterInput from './Inputs/MainExporterInput';
 import MaskSelectorInput from './Inputs/MaskSelectorInput';
 import StatusSelectInput from './Inputs/StatusSelectInput';
 import StatusDateInput from './Inputs/StatusDateInput';
+import FollowersInput from './Inputs/FollowersInput';
 
 type Props = {
   value: any,
@@ -113,6 +114,7 @@ const inputs = {
   main_exporter: MainExporterInput,
   warehouse: WarehouseSelectorInput,
   mask: MaskSelectorInput,
+  followers: FollowersInput,
   // Logs
   order_logs: LogsInput.Order,
   order_item_logs: LogsInput.OrderItem,

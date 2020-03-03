@@ -9,6 +9,7 @@ import {
   filesByIDsQuery,
   maskByIDQuery,
   userByIDQuery,
+  usersByIDsQuery,
 } from 'modules/sheet/common/query';
 
 export function handleOrderChanges(
@@ -17,6 +18,16 @@ export function handleOrderChanges(
 ): Promise<Array<EntityEventChange>> {
   return mapAsync(changes, change => {
     switch (change.field) {
+      case 'followers':
+        return client
+          .query({
+            query: usersByIDsQuery,
+            variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+          })
+          .then(({ data }) => ({
+            field: change.field,
+            new: newCustomValue(data.usersByIDs),
+          }));
       case 'importer':
       case 'exporter':
         return client
@@ -81,3 +92,5 @@ export function handleOrderChanges(
     return change;
   });
 }
+
+export default handleOrderChanges;
