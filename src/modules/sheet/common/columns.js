@@ -12,6 +12,7 @@ export const ColumnWidths = {
   Select: 100,
   Users: 160,
   Logs: 120,
+  Followers: 220,
 };
 
 export function populateColumns(

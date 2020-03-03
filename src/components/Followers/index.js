@@ -25,6 +25,8 @@ type Props = {|
   setFollowers: (Array<User>) => void,
   organizationIds: Array<string>,
   editable: boolean,
+  height?: number,
+  borderColor?: string,
 |};
 
 const Followers = ({
@@ -32,6 +34,8 @@ const Followers = ({
   setFollowers,
   organizationIds = [],
   editable = false,
+  height = 30,
+  borderColor = 'GRAY_SUPER_LIGHT',
 }: Props) => {
   const [isStaffSelectorOpen, setStaffSelectorOpen] = React.useState(false);
 
@@ -49,7 +53,7 @@ const Followers = ({
         delay={[1000, 200]}
       >
         <button
-          className={FollowersWrapperStyle(editable)}
+          className={FollowersWrapperStyle(editable, height)}
           onClick={() => {
             if (editable) {
               setStaffSelectorOpen(true);
@@ -78,7 +82,10 @@ const Followers = ({
               {numOfFollowers > MAX_FOLLOWERS_SHOWN ? (
                 <div className={StackedAvatarsWrapperStyle(MAX_FOLLOWERS_SHOWN)}>
                   {followers.slice(0, MAX_FOLLOWERS_SHOWN).map((follower, index) => (
-                    <div className={StackedAvatarWrapperStyle(index)} key={follower?.id}>
+                    <div
+                      className={StackedAvatarWrapperStyle(index, borderColor)}
+                      key={follower?.id}
+                    >
                       <UserAvatar
                         firstName={follower?.firstName}
                         lastName={follower?.lastName}
@@ -87,14 +94,14 @@ const Followers = ({
                       />
                     </div>
                   ))}
-                  <div className={StackedMoreStyle(MAX_FOLLOWERS_SHOWN)}>
+                  <div className={StackedMoreStyle(MAX_FOLLOWERS_SHOWN, borderColor)}>
                     +{numOfFollowers - MAX_FOLLOWERS_SHOWN}
                   </div>
                 </div>
               ) : (
                 <div className={AvatarsWrapperStyle}>
                   {followers.map(follower => (
-                    <div className={AvatarWrapperStyle} key={follower?.id}>
+                    <div className={AvatarWrapperStyle(borderColor)} key={follower?.id}>
                       <UserAvatar
                         firstName={follower?.firstName}
                         lastName={follower?.lastName}

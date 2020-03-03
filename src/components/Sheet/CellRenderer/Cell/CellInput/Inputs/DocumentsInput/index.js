@@ -94,13 +94,13 @@ const DocumentsInputImpl = ({
   );
 };
 
-const DocumentsUpload = (entityType: string) => (props: InputProps<Array<FilePayload>>) => (
+const DocumentsInput = (entityType: string) => (props: InputProps<Array<FilePayload>>) => (
   <DocumentsInputImpl {...props} entityType={entityType} />
 );
 
 export default {
-  Order: DocumentsUpload('Order'),
-  OrderItem: DocumentsUpload('OrderItem'),
-  Shipment: DocumentsUpload('Shipment'),
-  Milestone: DocumentsUpload('Milestone'),
+  Order: DocumentsInput('Order'),
+  OrderItem: DocumentsInput('OrderItem'),
+  Shipment: DocumentsInput('Shipment'),
+  Milestone: DocumentsInput('Milestone'),
 };

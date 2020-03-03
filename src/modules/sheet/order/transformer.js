@@ -29,6 +29,7 @@ import {
   ORDER_SET_PO_NO,
   ORDER_SET_TAGS,
   ORDER_SET_TASKS,
+  ORDER_SET_FOLLOWERS,
   ORDER_UPDATE,
 } from 'modules/permission/constants/order';
 
@@ -104,6 +105,20 @@ export default function transformSheetOrder({
         order,
         'archived',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_ARCHIVED)
+      ),
+    },
+    {
+      columnKey: 'order.followers',
+      type: 'followers',
+      computed: root => {
+        const currentOrder = getOrderFromRoot(root);
+        return [currentOrder?.importer?.id, currentOrder?.exporter?.id].filter(Boolean);
+      },
+      ...transformValueField(
+        basePath,
+        order,
+        'followers',
+        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_FOLLOWERS)
       ),
     },
     {

@@ -307,7 +307,7 @@ const ColumnsConfig = ({
                 <Tooltip message={<FormattedMessage {...messages.columnsConfigDefaultButton} />}>
                   <IconButton
                     onClick={handleDefault}
-                    icon="TABLE"
+                    icon="UNDO"
                     textColor="GRAY_DARK"
                     hoverTextColor="WHITE"
                     backgroundColor="GRAY_SUPER_LIGHT"

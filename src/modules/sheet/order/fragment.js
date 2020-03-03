@@ -3,6 +3,9 @@ import gql from 'graphql-tag';
 
 export const sheetOrderFragment = gql`
   fragment sheetOrderFragment on Order {
+    followers {
+      ...userAvatarFragment
+    }
     archived
     poNo
     memo

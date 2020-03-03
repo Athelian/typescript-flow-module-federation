@@ -2,21 +2,18 @@
 import { css } from 'react-emotion';
 import { layout, presets, borderRadiuses, colors, transitions, fontSizes } from 'styles/common';
 
-export const FollowersWrapperStyle = (editable: boolean): string => css`
+export const FollowersWrapperStyle = (editable: boolean, height: number): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
-  height: 30px;
+  height: ${height}px;
   padding: 0 5px 0 0;
   ${editable
     ? `
     &:hover {
-      background-color: ${colors.GRAY_VERY_LIGHT};
+      background-color: rgba(0, 0, 0, 0.1);
       & > div {
         border-color: ${colors.TEAL};
         color: ${colors.TEAL};
-        & > div {
-          border-color: ${colors.GRAY_VERY_LIGHT};
-        }
       }
     }
   `
@@ -30,9 +27,9 @@ export const AvatarsWrapperStyle: string = css`
     grid-gap: 1px;};
 `;
 
-export const AvatarWrapperStyle: string = css`
+export const AvatarWrapperStyle = (borderColor: string): string => css`
   ${borderRadiuses.CIRCLE};
-  border: 2px solid ${colors.GRAY_SUPER_LIGHT};
+  border: 2px solid ${colors[borderColor]};
   ${transitions.MAIN};
 `;
 
@@ -43,21 +40,21 @@ export const StackedAvatarsWrapperStyle = (maxFollowersShown: number): string =>
   width: ${(maxFollowersShown + 1) * 16 + 8}px;
 `;
 
-export const StackedAvatarWrapperStyle = (index: number): string => css`
+export const StackedAvatarWrapperStyle = (index: number, borderColor: string): string => css`
   ${borderRadiuses.CIRCLE};
-  border: 2px solid ${colors.GRAY_SUPER_LIGHT};
+  border: 2px solid ${colors[borderColor]};
   ${transitions.MAIN};
   position: absolute;
   top: 0;
   left: ${index * 16}px;
 `;
 
-export const StackedMoreStyle = (maxFollowersShown: number): string => css`
+export const StackedMoreStyle = (maxFollowersShown: number, borderColor: string): string => css`
   display: flex;
   align-items: center;
   justify-content: center;
   ${borderRadiuses.CIRCLE};
-  border: 2px solid ${colors.GRAY_SUPER_LIGHT};
+  border: 2px solid ${colors[borderColor]};
   background-color: ${colors.WHITE};
   color: ${colors.GRAY_DARK};
   ${fontSizes.SMALL};
