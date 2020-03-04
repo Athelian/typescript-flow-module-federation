@@ -7,7 +7,13 @@ import { Display } from 'components/Form';
 import Icon from 'components/Icon';
 import CornerIcon from 'components/CornerIcon';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import { PartnerCardStyle, CardsWrapperStyle, ButtonStyle, PlusButtonStyle } from './style';
+import {
+  PartnerCardStyle,
+  CardsWrapperStyle,
+  ButtonStyle,
+  PlusButtonStyle,
+  PartnerCodeStyle,
+} from './style';
 
 type ExtraProps = {
   partnerTypes: Array<string>,
@@ -33,13 +39,18 @@ const PartnersSelectorInput = ({
       <button disabled={readonly} type="button" onClick={forceFocus} className={ButtonStyle}>
         <div className={CardsWrapperStyle}>
           {(value || []).length ? (
-            (value || []).map(item => (
-              <div key={item.id} className={PartnerCardStyle}>
-                <Display height="20px">{item.name}</Display>
+            (value || []).map(item => {
+              const name = item?.partner?.name || item?.name || item?.organization?.name || '';
+              const code = item?.partner?.code || '';
 
-                <CornerIcon icon="PARTNER" color={colors.PARTNER} />
-              </div>
-            ))
+              return (
+                <div key={item.id} className={PartnerCardStyle}>
+                  <Display height="20px">{name}</Display>
+                  <div className={PartnerCodeStyle}>{code}</div>
+                  <CornerIcon icon="PARTNER" color={colors.PARTNER} />
+                </div>
+              );
+            })
           ) : (
             <div className={PlusButtonStyle}>
               <Icon icon="ADD" />
@@ -54,10 +65,7 @@ const PartnersSelectorInput = ({
           selected={value || []}
           onCancel={forceBlur}
           onSelect={newValue => {
-            onChange(
-              newValue.map(newVal => newVal?.organization),
-              true
-            );
+            onChange(newValue, true);
             forceBlur();
           }}
         />
