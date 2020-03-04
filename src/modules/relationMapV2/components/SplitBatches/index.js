@@ -197,34 +197,18 @@ export default function SplitBatches({ onSuccess }: Props) {
     >
       <SplitTable
         selectedBatches={batchIds.map(batchId => {
-          console.warn(mapping);
-          let orderNo = '';
-          let itemNo = '';
-          let productName = '';
-          let productSerial = '';
+          const batchFromMapping = mapping.entities?.batches?.[batchId] ?? {};
+          const orderItemFromMapping =
+            mapping.entities?.orderItems?.[batchFromMapping?.orderItem] ?? {};
+          const orderFromMapping = mapping.entities?.orders?.[orderItemFromMapping?.order] ?? {};
 
-          mapping.orders.some(order => {
-            if (
-              order.orderItems.some(orderItem =>
-                orderItem.batches.some(batch => {
-                  if (batch.id === batchId) {
-                    itemNo = orderItem?.no;
-                    productName = orderItem?.productProvider?.product?.name;
-                    productSerial = orderItem?.productProvider?.product?.serial;
-                    return true;
-                  }
-                  return false;
-                })
-              )
-            ) {
-              orderNo = order.poNo;
-              return true;
-            }
-            return false;
-          });
+          const orderNo = orderFromMapping?.poNo ?? '';
+          const itemNo = orderItemFromMapping?.no ?? '';
+          const productName = orderItemFromMapping?.productProvider?.product?.name ?? '';
+          const productSerial = orderItemFromMapping?.productProvider?.product?.serial ?? '';
 
           return {
-            ...mapping.entities?.batches?.[batchId],
+            ...batchFromMapping,
             orderNo,
             itemNo,
             productName,
