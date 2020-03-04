@@ -258,16 +258,16 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
 
               const values = {
                 totalPackageQuantityOverride: baseValues.totalPackageQuantityOverriding
-                  ? totalPackageQuantity
-                  : baseValues.totalPackageQuantityOverride,
+                  ? baseValues.totalPackageQuantityOverride
+                  : totalPackageQuantity,
                 totalPackageQuantityOverriding: baseValues.totalPackageQuantityOverriding,
                 totalWeightOverride: baseValues.totalWeightOverriding
-                  ? calculateTotalWeight
-                  : baseValues.totalWeightOverride,
+                  ? baseValues.totalWeightOverride
+                  : calculateTotalWeight,
                 totalWeightOverriding: baseValues.totalWeightOverriding,
                 totalVolumeOverride: baseValues.totalVolumeOverriding
-                  ? calculateTotalVolume
-                  : baseValues.totalVolumeOverride,
+                  ? baseValues.totalVolumeOverride
+                  : calculateTotalVolume,
                 totalVolumeOverriding: baseValues.totalVolumeOverriding,
               };
 
@@ -662,18 +662,18 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                           showExtraToggleButton={
                             canUpdate || hasPermission(SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY)
                           }
-                          hideTooltip={values.totalPackageQuantityOverriding}
-                          autoCalculateIsToggled={values.totalPackageQuantityOverriding}
+                          hideTooltip={!values.totalPackageQuantityOverriding}
+                          autoCalculateIsToggled={!values.totalPackageQuantityOverriding}
                           onToggleAutoCalculate={() => {
                             if (values.totalPackageQuantityOverriding) {
                               setFieldValues({
                                 totalPackageQuantityOverriding: false,
-                                totalPackageQuantityOverride: totalPackageQuantity,
+                                totalPackageQuantityOverride: 0,
                               });
                             } else {
                               setFieldValues({
                                 totalPackageQuantityOverriding: true,
-                                totalPackageQuantityOverride: 0,
+                                totalPackageQuantityOverride: totalPackageQuantity,
                               });
                             }
                           }}
@@ -705,18 +705,18 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                           showExtraToggleButton={
                             canUpdate || hasPermission(SHIPMENT_SET_TOTAL_WEIGHT)
                           }
-                          hideTooltip={values.totalWeightOverriding}
-                          autoCalculateIsToggled={values.totalWeightOverriding}
+                          hideTooltip={!values.totalWeightOverriding}
+                          autoCalculateIsToggled={!values.totalWeightOverriding}
                           onToggleAutoCalculate={() => {
                             if (values.totalWeightOverriding) {
                               setFieldValues({
                                 totalWeightOverriding: false,
-                                totalWeightOverride: calculateTotalWeight,
+                                totalWeightOverride: defaultWeight,
                               });
                             } else {
                               setFieldValues({
                                 totalWeightOverriding: true,
-                                totalWeightOverride: defaultWeight,
+                                totalWeightOverride: calculateTotalWeight,
                               });
                             }
                           }}
@@ -748,18 +748,18 @@ const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
                           showExtraToggleButton={
                             canUpdate || hasPermission(SHIPMENT_SET_TOTAL_VOLUME)
                           }
-                          hideTooltip={values.totalVolumeOverriding}
-                          autoCalculateIsToggled={values.totalVolumeOverriding}
+                          hideTooltip={!values.totalVolumeOverriding}
+                          autoCalculateIsToggled={!values.totalVolumeOverriding}
                           onToggleAutoCalculate={() => {
                             if (values.totalVolumeOverriding) {
                               setFieldValues({
                                 totalVolumeOverriding: false,
-                                totalVolumeOverride: calculateTotalVolume,
+                                totalVolumeOverride: defaultVolume,
                               });
                             } else {
                               setFieldValues({
                                 totalVolumeOverriding: true,
-                                totalVolumeOverride: defaultVolume,
+                                totalVolumeOverride: calculateTotalVolume,
                               });
                             }
                           }}

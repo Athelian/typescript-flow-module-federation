@@ -104,9 +104,9 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
 
   const totalContainerTypeCount = sortedContainerTypes.reduce((sum, { count }) => sum + count, 0);
 
-  const totalVol = !totalVolumeOverriding ? totalVolumeOverride : totalVolume;
+  const totalVol = totalVolumeOverriding ? totalVolumeOverride : totalVolume;
 
-  const totalPackages = !totalPackageQuantityOverriding
+  const totalPackages = totalPackageQuantityOverriding
     ? totalPackageQuantityOverride
     : totalPackageQuantity;
 
