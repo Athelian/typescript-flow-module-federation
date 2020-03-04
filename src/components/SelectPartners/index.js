@@ -51,6 +51,7 @@ const SelectPartners = ({ partnerTypes, selected, onCancel, onSelect }: Props) =
         if (isSelected) {
           filter(i => i.id !== item?.organization?.id);
         } else if (!max || value.length < max) {
+          // kill me and FIXME
           const { organization, types, ...rest } = item;
           push({ ...organization, types, partner: { ...rest } });
         }

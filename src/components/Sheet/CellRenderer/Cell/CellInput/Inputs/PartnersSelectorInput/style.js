@@ -25,7 +25,7 @@ export const PartnerCardStyle = css`
   position: relative;
   overflow: hidden;
   border-bottom-right-radius: 0;
-  width: 200px;
+  width: 400px;
   height: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   &:hover,
