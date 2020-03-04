@@ -28,7 +28,6 @@ const PartnersSelectorInput = ({
       e.preventDefault();
     }
   };
-
   return (
     <div onBlur={handleBlur}>
       <button disabled={readonly} type="button" onClick={forceFocus} className={ButtonStyle}>
