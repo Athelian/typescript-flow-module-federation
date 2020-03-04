@@ -34,6 +34,7 @@ type Props = {|
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
+  containerFieldDefinitions: Array<FieldDefinition>,
 |};
 
 export default function({
@@ -42,6 +43,7 @@ export default function({
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
+  containerFieldDefinitions,
 }: Props): Array<ColumnConfig> {
   return [
     ...batchColumns({
@@ -108,7 +110,9 @@ export default function({
           'order.action',
         ].includes(c.key)
     ),
-    ...containerColumns({}).filter(
+    ...containerColumns({
+      fieldDefinitions: containerFieldDefinitions,
+    }).filter(
       c =>
         ![
           'container.totalPrice',

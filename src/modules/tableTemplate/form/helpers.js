@@ -24,6 +24,7 @@ export const getDefaultColumns = (
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
         batchFieldDefinitions: customFields?.batchCustomFields ?? [],
         shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
+        containerFieldDefinitions: customFields?.containerCustomFields ?? [],
       });
     case MaskEditTypeValues.ShipmentSheet:
       return shipmentColumns({
@@ -32,6 +33,7 @@ export const getDefaultColumns = (
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
         batchFieldDefinitions: customFields?.batchCustomFields ?? [],
         shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
+        containerFieldDefinitions: customFields?.containerCustomFields ?? [],
       });
     case MaskEditTypeValues.BatchSheet:
       return batchColumns({
@@ -40,6 +42,7 @@ export const getDefaultColumns = (
         orderItemFieldDefinitions: customFields?.orderItemCustomFields ?? [],
         batchFieldDefinitions: customFields?.batchCustomFields ?? [],
         shipmentFieldDefinitions: customFields?.shipmentCustomFields ?? [],
+        containerFieldDefinitions: customFields?.containerCustomFields ?? [],
       });
     case MaskEditTypeValues.ProjectSheet:
       return projectDefaultColumns;

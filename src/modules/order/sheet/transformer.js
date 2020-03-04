@@ -202,12 +202,17 @@ function transformBatch(
   }));
 }
 
-function transformBatchContainer(basePath: string, batch: Object): Array<CellValue> {
+function transformBatchContainer(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  batch: Object
+): Array<CellValue> {
   return transformSheetContainer({
     basePath,
     container: batch?.container ?? null,
     getContainerFromRoot: root => getCurrentBatch(batch?.id, root)?.container,
     getShipmentFromRoot: root => getCurrentBatch(batch?.id, root)?.shipment,
+    fieldDefinitions,
   }).map(c => ({
     ...c,
     duplicable: true,
@@ -236,13 +241,14 @@ function transformBatchShipment(
 function transformFullBatch(
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
+  containerFieldDefinitions: Array<FieldDefinition>,
   basePath: string,
   batch: Object,
   intl: IntlShape
 ): Array<CellValue> {
   return [
     ...transformBatch(batchFieldDefinitions, basePath, batch, intl),
-    ...transformBatchContainer(`${basePath}.container`, batch),
+    ...transformBatchContainer(containerFieldDefinitions, `${basePath}.container`, batch),
     ...transformBatchShipment(shipmentFieldDefinitions, `${basePath}.shipment`, batch),
   ];
 }
@@ -253,6 +259,7 @@ type Props = {|
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
+  containerFieldDefinitions: Array<FieldDefinition>,
   intl: IntlShape,
 |};
 
@@ -262,6 +269,7 @@ export default function transformer({
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
+  containerFieldDefinitions,
   intl,
 }: Props) {
   return (index: number, order: Object): Array<Array<CellValue>> => {
@@ -300,6 +308,7 @@ export default function transformer({
               ...transformFullBatch(
                 batchFieldDefinitions,
                 shipmentFieldDefinitions,
+                containerFieldDefinitions,
                 `${index}.orderItems.${orderItemIdx}.batches.${batchIdx}`,
                 batch,
                 intl
@@ -349,6 +358,7 @@ export default function transformer({
             ...transformFullBatch(
               batchFieldDefinitions,
               shipmentFieldDefinitions,
+              containerFieldDefinitions,
               `${index}.orderItems.${orderItemIdx}.batches.0`,
               null,
               intl
@@ -377,6 +387,7 @@ export default function transformer({
         ...transformFullBatch(
           batchFieldDefinitions,
           shipmentFieldDefinitions,
+          containerFieldDefinitions,
           `${index}.orderItems.0.batches.0`,
           null,
           intl

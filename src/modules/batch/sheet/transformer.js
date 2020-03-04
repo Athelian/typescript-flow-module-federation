@@ -89,12 +89,17 @@ function transformOrder(
   }));
 }
 
-function transformContainer(basePath: string, batch: Batch): Array<CellValue> {
+function transformContainer(
+  fieldDefinitions: Array<FieldDefinition>,
+  basePath: string,
+  batch: Batch
+): Array<CellValue> {
   return transformSheetContainer({
     basePath: `${basePath}.container`,
     container: batch?.container ?? null,
     getContainerFromRoot: root => root?.container,
     getShipmentFromRoot: root => root?.shipment,
+    fieldDefinitions,
   }).map(cell => ({
     ...cell,
     disabled: !(batch?.container ?? null),
@@ -127,6 +132,7 @@ type Props = {|
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
+  containerFieldDefinitions: Array<FieldDefinition>,
 |};
 
 export default function transformer({
@@ -135,6 +141,7 @@ export default function transformer({
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
+  containerFieldDefinitions,
 }: Props) {
   return (index: number, batch: Batch): Array<Array<CellValue>> => {
     const batchCells = transformBatch(batchFieldDefinitions, `${index}`, batch);
@@ -153,7 +160,7 @@ export default function transformer({
       batch?.orderItem?.productProvider
     );
     const orderCells = transformOrder(orderFieldDefinitions, `${index}`, batch?.orderItem?.order);
-    const containerCells = transformContainer(`${index}`, batch);
+    const containerCells = transformContainer(containerFieldDefinitions, `${index}`, batch);
     const shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, batch);
 
     return [

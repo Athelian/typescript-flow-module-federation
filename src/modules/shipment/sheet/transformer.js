@@ -48,6 +48,7 @@ function transformShipment(
 }
 
 function transformContainer(
+  fieldDefinitions: Array<FieldDefinition>,
   basePath: string,
   container: ?Object,
   hasContainers: boolean
@@ -57,6 +58,7 @@ function transformContainer(
     container,
     getContainerFromRoot: root => root.containers.find(c => c.id === container?.id),
     getShipmentFromRoot: root => root,
+    fieldDefinitions,
   }).map(c => ({
     ...c,
     disabled: !hasContainers && !container,
@@ -185,6 +187,7 @@ type Props = {|
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
+  containerFieldDefinitions: Array<FieldDefinition>,
   intl: IntlShape,
 |};
 
@@ -194,6 +197,7 @@ export default function transformer({
   batchFieldDefinitions,
   shipmentFieldDefinitions,
   productFieldDefinitions,
+  containerFieldDefinitions,
   intl,
 }: Props) {
   return (index: number, shipment: Object): Array<Array<CellValue>> => {
@@ -204,7 +208,7 @@ export default function transformer({
     (shipment?.batchesWithoutContainer ?? []).forEach((batch, batchIdx) => {
       rows.push([
         ...shipmentCells,
-        ...transformContainer(`${index}.containers.-1`, null, false),
+        ...transformContainer(containerFieldDefinitions, `${index}.containers.-1`, null, false),
         ...transformBatch(
           batchFieldDefinitions,
           `${index}.batchesWithoutContainer.${batchIdx}`,
@@ -238,6 +242,7 @@ export default function transformer({
     if ((shipment?.containers?.length ?? 0) > 0) {
       (shipment?.containers ?? []).forEach((container, containerIdx) => {
         let containerCells = transformContainer(
+          containerFieldDefinitions,
           `${index}.containers.${containerIdx}`,
           container,
           true
@@ -275,7 +280,12 @@ export default function transformer({
               ),
             ]);
 
-            containerCells = transformContainer(`${index}.containers.${containerIdx}`, null, true);
+            containerCells = transformContainer(
+              containerFieldDefinitions,
+              `${index}.containers.${containerIdx}`,
+              null,
+              true
+            );
             shipmentCells = transformShipment(shipmentFieldDefinitions, `${index}`, null);
           });
         } else {
@@ -315,7 +325,7 @@ export default function transformer({
     } else if ((shipment?.batchesWithoutContainer?.length ?? 0) === 0) {
       rows.push([
         ...shipmentCells,
-        ...transformContainer(`${index}.containers.-1`, null, false),
+        ...transformContainer(containerFieldDefinitions, `${index}.containers.-1`, null, false),
         ...transformBatch(batchFieldDefinitions, `${index}.containers.-1.batches.-1`, null, intl),
         ...transformBatchOrderItem(
           orderItemFieldDefinitions,

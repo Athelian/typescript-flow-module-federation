@@ -146,6 +146,7 @@ const ShipmentSheetModule = ({ shipmentIds }: Props) => {
     batchFieldDefinitions: fieldDefinitions?.Batch ?? [],
     shipmentFieldDefinitions: fieldDefinitions?.Shipment ?? [],
     productFieldDefinitions: fieldDefinitions?.Product ?? [],
+    containerFieldDefinitions: fieldDefinitions?.Container ?? [],
   };
 
   return (
