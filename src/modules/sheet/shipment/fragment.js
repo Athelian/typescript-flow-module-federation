@@ -2,6 +2,9 @@ import gql from 'graphql-tag';
 
 export const sheetShipmentFragment = gql`
   fragment sheetShipmentFragment on Shipment {
+    followers {
+      ...userAvatarFragment
+    }
     archived
     no
     blNo

@@ -72,6 +72,7 @@ function normalizedInput(
     case 'Shipment':
       switch (field) {
         case 'exporter': {
+          // TODO: Handle followers
           const exporterId = newValue?.id ?? null;
 
           if (exporterId) {

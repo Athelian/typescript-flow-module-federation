@@ -46,6 +46,7 @@ import {
   SHIPMENT_SET_TRANSPORT_TYPE,
   SHIPMENT_SET_VESSEL_NAME,
   SHIPMENT_SET_WAREHOUSE,
+  SHIPMENT_SET_FOLLOWERS,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
 import messages from 'modules/sheet/common/messages';
@@ -132,6 +133,24 @@ export default function transformSheetShipment({
         shipment,
         'archived',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_ARCHIVED)
+      ),
+    },
+    {
+      columnKey: 'shipment.followers',
+      type: 'followers',
+      computed: root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return [
+          currentShipment?.importer?.id,
+          currentShipment?.exporter?.id,
+          (currentShipment?.forwarders ?? []).map(forwarder => forwarder?.id),
+        ].filter(Boolean);
+      },
+      ...transformValueField(
+        basePath,
+        shipment,
+        'followers',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_FOLLOWERS)
       ),
     },
     {
