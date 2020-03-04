@@ -29,6 +29,7 @@ import {
   BATCH_SET_QUANTITY,
   BATCH_SET_TAGS,
   BATCH_SET_TASKS,
+  BATCH_SET_FOLLOWERS,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
 import { differenceInCalendarDays } from 'date-fns';
@@ -112,6 +113,26 @@ export default function transformSheetBatch({
         root =>
           (getOrderFromRoot(root)?.archived ?? true) &&
           (getShipmentFromRoot(root)?.archived ?? true)
+      ),
+    },
+    {
+      columnKey: 'batch.followers',
+      type: 'followers',
+      computed: root => {
+        const currentBatch = getBatchFromRoot(root);
+        return [
+          currentBatch?.orderItem?.order?.importer?.id,
+          currentBatch?.orderItem?.order?.exporter?.id,
+          currentBatch?.shipment?.importer?.id,
+          currentBatch?.shipment?.exporter?.id,
+          ...(currentBatch?.shipment?.forwarders ?? []).map(forwarder => forwarder?.id),
+        ].filter(Boolean);
+      },
+      ...transformValueField(
+        basePath,
+        batch,
+        'followers',
+        hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_FOLLOWERS)
       ),
     },
     {

@@ -143,7 +143,7 @@ export default function transformSheetShipment({
         return [
           currentShipment?.importer?.id,
           currentShipment?.exporter?.id,
-          (currentShipment?.forwarders ?? []).map(forwarder => forwarder?.id),
+          ...(currentShipment?.forwarders ?? []).map(forwarder => forwarder?.id),
         ].filter(Boolean);
       },
       ...transformValueField(

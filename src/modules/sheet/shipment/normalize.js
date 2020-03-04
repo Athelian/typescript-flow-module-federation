@@ -26,7 +26,7 @@ export default function normalizeSheetShipmentInput(
       };
     case 'transportType':
       return {
-        [field]: newValue,
+        transportType: newValue,
         ...cleanUpPorts(shipment),
       };
     case 'blDate':
