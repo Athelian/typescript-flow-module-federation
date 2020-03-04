@@ -120,7 +120,7 @@ export async function handleShipmentChanges(
         }),
         totalWeightOverriding: (i, v) => ({
           ...i,
-          auto: v,
+          auto: !v,
         }),
         totalWeightDisplayMetric: (i, v) => ({
           ...i,
@@ -140,7 +140,7 @@ export async function handleShipmentChanges(
         }),
         totalVolumeOverriding: (i, v) => ({
           ...i,
-          auto: v,
+          auto: !v,
         }),
         totalVolumeDisplayMetric: (i, v) => ({
           ...i,
@@ -160,7 +160,7 @@ export async function handleShipmentChanges(
         }),
         totalPackageQuantityOverriding: (i, v) => ({
           ...i,
-          auto: v,
+          auto: !v,
         }),
       },
       'totalPackages',
