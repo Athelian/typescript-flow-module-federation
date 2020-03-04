@@ -53,7 +53,17 @@ const OrganizationSelector = ({
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <Selector.Many selected={selected.map(id => ({ id }))}>
+      <Selector.Many
+        selected={selected.map(id => ({ id }))}
+        onSelect={({ isSelected, filter, item, max, value, push }) => {
+          if (isSelected) {
+            filter(i => i.id !== item?.organization?.id);
+          } else if (!max || value.length < max) {
+            push({ id: item?.organization?.id });
+          }
+        }}
+        valueToSelected={({ value, item }) => value.some(i => i.id === item?.organization?.id)}
+      >
         {({ value, dirty, getItemProps }) => (
           <SlideViewLayout>
             <SlideViewNavBar>
@@ -69,7 +79,7 @@ const OrganizationSelector = ({
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={!dirty}
-                onClick={() => setSelected(value.map(partner => partner?.organization?.id))}
+                onClick={() => setSelected(value.map(org => org?.id))}
               />
             </SlideViewNavBar>
 
@@ -82,9 +92,12 @@ const OrganizationSelector = ({
                 emptyMessage={null}
                 itemWidth="195px"
               >
-                {nodes.map(partner => (
-                  <PartnerCard key={partner?.id} partner={partner} {...getItemProps(partner)} />
-                ))}
+                {nodes.map(partner => {
+                  console.warn(value);
+                  return (
+                    <PartnerCard key={partner?.id} partner={partner} {...getItemProps(partner)} />
+                  );
+                })}
               </GridView>
             </Content>
           </SlideViewLayout>
