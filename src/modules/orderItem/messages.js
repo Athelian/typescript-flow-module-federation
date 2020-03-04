@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  followers: {
+    id: 'modules.OrderItems.followers',
+    defaultMessage: 'Followers',
+  },
   save: {
     id: 'modules.OrderItems.save',
     defaultMessage: 'SAVE',
