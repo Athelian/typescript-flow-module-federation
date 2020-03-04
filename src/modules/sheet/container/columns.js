@@ -84,7 +84,7 @@ const columns: Array<ColumnConfig> = [
     title: <FormattedMessage {...containerMessages.warehouse} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: ColumnWidths.Default,
+    width: ColumnWidths.Partner,
   },
   {
     key: 'container.freeTime',

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, borderRadiuses } from 'styles/common';
+import { layout, colors, fontSizes, presets, borderRadiuses } from 'styles/common';
 
 export const CardStyle: string = css`
   ${layout.HORIZONTAL};
@@ -12,4 +12,13 @@ export const CardStyle: string = css`
   min-width: 40px;
   height: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+`;
+
+export const PartnerCodeStyle: string = css`
+  ${fontSizes.SMALL};
+  line-height: 20px;
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  padding: 0 5px;
+  flex: 1;
 `;

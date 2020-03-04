@@ -49,14 +49,14 @@ const columns: Array<ColumnConfig> = [
     title: <FormattedMessage {...orderMessages.importer} />,
     icon: 'ORDER',
     color: colors.ORDER,
-    width: ColumnWidths.Default,
+    width: ColumnWidths.Partner,
   },
   {
     key: 'order.exporter',
     title: <FormattedMessage {...orderMessages.exporter} />,
     icon: 'ORDER',
     color: colors.ORDER,
-    width: ColumnWidths.Default,
+    width: ColumnWidths.Partner,
   },
   {
     key: 'order.piNo',

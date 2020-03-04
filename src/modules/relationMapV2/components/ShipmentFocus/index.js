@@ -518,34 +518,36 @@ export default function ShipmentFocus() {
                       );
                     }}
                   />
-                  <SplitBatches
-                    onSuccess={(_, batchIds) => {
-                      onSetBadges(
-                        Object.keys(batchIds).map(id => ({
-                          id: batchIds[id],
-                          type: 'split',
-                          entity: 'batch',
-                        }))
-                      );
-                      onSetSplitBatchRelated(batchIds);
-                      queryShipmentsDetail(
-                        Object.keys(batchIds)
-                          .map(batchId => findShipmentIdByBatch(batchId, entities))
-                          .filter(Boolean)
-                      );
-                      window.requestIdleCallback(
-                        () => {
-                          dispatch({
-                            type: 'SPLIT_CLOSE',
-                            payload: {},
-                          });
-                        },
-                        {
-                          timeout: 250,
-                        }
-                      );
-                    }}
-                  />
+                  {state.split.isOpen && (
+                    <SplitBatches
+                      onSuccess={(_, batchIds) => {
+                        onSetBadges(
+                          Object.keys(batchIds).map(id => ({
+                            id: batchIds[id],
+                            type: 'split',
+                            entity: 'batch',
+                          }))
+                        );
+                        onSetSplitBatchRelated(batchIds);
+                        queryShipmentsDetail(
+                          Object.keys(batchIds)
+                            .map(batchId => findShipmentIdByBatch(batchId, entities))
+                            .filter(Boolean)
+                        );
+                        window.requestIdleCallback(
+                          () => {
+                            dispatch({
+                              type: 'SPLIT_CLOSE',
+                              payload: {},
+                            });
+                          },
+                          {
+                            timeout: 250,
+                          }
+                        );
+                      }}
+                    />
+                  )}
                   <DeleteBatchConfirm
                     onSuccess={batchId => {
                       queryShipmentsDetail([findShipmentIdByBatch(batchId, entities)]);
