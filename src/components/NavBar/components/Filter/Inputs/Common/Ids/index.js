@@ -72,7 +72,7 @@ const Ids = ({
         onClose: () => setOpen(false),
         selected: value,
         setSelected: newValue => {
-          onChange(newValue);
+          onChange(newValue.filter(Boolean));
           setOpen(false);
         },
       })}

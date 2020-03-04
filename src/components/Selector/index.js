@@ -35,6 +35,8 @@ type SingleProps = {|
 type ManyProps = {|
   selected: Array<Object>,
   max?: number,
+  onSelect?: Object => void,
+  valueToSelected?: Object => boolean,
   children: (RenderWithIncrementProps<Array<Object>>) => React.Node,
 |};
 
@@ -65,7 +67,7 @@ const SelectorSingle = ({ selected, required, children }: SingleProps) => (
   </ObjectValue>
 );
 
-const SelectorMany = ({ selected, max, children }: ManyProps) => (
+const SelectorMany = ({ selected, max, onSelect, valueToSelected, children }: ManyProps) => (
   <ArrayValue defaultValue={selected}>
     {({ value, push, filter, splice }) =>
       children({
@@ -75,12 +77,16 @@ const SelectorMany = ({ selected, max, children }: ManyProps) => (
           value.map(i => i.id)
         ),
         getItemProps: (item, selectable = true) => {
-          const isSelected = value.some(i => i.id === item.id);
+          const isSelected = valueToSelected
+            ? valueToSelected({ value, item })
+            : value.some(i => i.id === item.id);
           return {
             selectable,
             selected: isSelected,
             onSelect: () => {
-              if (isSelected) {
+              if (onSelect) {
+                onSelect({ isSelected, filter, item, max, value, push });
+              } else if (isSelected) {
                 filter(i => i.id !== item.id);
               } else if (!max || value.length < max) {
                 push(item);
