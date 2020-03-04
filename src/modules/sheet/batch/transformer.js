@@ -119,13 +119,14 @@ export default function transformSheetBatch({
       columnKey: 'batch.followers',
       type: 'followers',
       computed: root => {
-        const currentBatch = getBatchFromRoot(root);
+        const currentOrder = getOrderFromRoot(root);
+        const currentShipment = getShipmentFromRoot(root);
         return [
-          currentBatch?.orderItem?.order?.importer?.id,
-          currentBatch?.orderItem?.order?.exporter?.id,
-          currentBatch?.shipment?.importer?.id,
-          currentBatch?.shipment?.exporter?.id,
-          ...(currentBatch?.shipment?.forwarders ?? []).map(forwarder => forwarder?.id),
+          currentOrder?.importer?.id,
+          currentOrder?.exporter?.id,
+          currentShipment?.importer?.id,
+          currentShipment?.exporter?.id,
+          ...(currentShipment?.forwarders ?? []).map(forwarder => forwarder?.id),
         ].filter(Boolean);
       },
       ...transformValueField(
