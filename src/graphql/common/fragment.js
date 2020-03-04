@@ -128,6 +128,13 @@ export const partnerNameFragment = gql`
     id
     name
     types
+    partner {
+      ... on Partner {
+        id
+        name
+        code
+      }
+    }
   }
 `;
 

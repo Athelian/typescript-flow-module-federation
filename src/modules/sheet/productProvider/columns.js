@@ -14,7 +14,7 @@ const columns: Array<ColumnConfig> = [
     title: <FormattedMessage {...messages.supplier} />,
     icon: 'PRODUCT_PROVIDER',
     color: colors.PRODUCT_PROVIDER,
-    width: ColumnWidths.Default,
+    width: ColumnWidths.Partner,
   },
   {
     key: 'productProvider.name',

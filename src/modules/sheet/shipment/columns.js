@@ -42,14 +42,14 @@ const columns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.importer} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: ColumnWidths.Default,
+    width: ColumnWidths.Partner,
   },
   {
     key: 'shipment.exporter',
     title: <FormattedMessage {...shipmentMessages.mainExporter} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: ColumnWidths.Default,
+    width: ColumnWidths.Partner,
   },
   {
     key: 'shipment.forwarders',
@@ -582,7 +582,7 @@ const columns: Array<ColumnConfig> = [
     title: <FormattedMessage {...shipmentMessages.warehouse} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
-    width: ColumnWidths.Default,
+    width: ColumnWidths.Partner,
   },
   {
     key: 'shipment.containerGroup.warehouseArrival.latestDate',
