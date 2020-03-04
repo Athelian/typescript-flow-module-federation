@@ -242,12 +242,18 @@ export const shipmentCardFragment = gql`
     transportType
     batchCount
     totalPackageQuantity
+    totalPackageQuantityOverriding
+    totalPackageQuantityOverride
+    totalVolume {
+      ...metricFragment
+    }
+    totalVolumeOverriding
+    totalVolumeOverride {
+      ...metricFragment
+    }
     orderItemCount
     ... on Followed {
       notificationUnseenCount
-    }
-    totalVolume {
-      ...metricFragment
     }
     containerTypeCounts {
       containerType
