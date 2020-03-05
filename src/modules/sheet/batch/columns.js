@@ -214,12 +214,35 @@ const columns: Array<ColumnConfig> = [
   },
 ];
 
+const exportKeys = {
+  'batch.created': ['batch.createdAt', 'batch.createdBy'],
+  'batch.updated': ['batch.updatedAt', 'batch.updatedBy'],
+  'batch.packageGrossWeight': ['batch.packageGrossWeight.value', 'batch.packageGrossWeight.metric'],
+  'batch.packageVolume': ['batch.packageVolume.value', 'batch.packageVolume.metric'],
+  'batch.packageSize': [
+    'batch.packageSize.length.value',
+    'batch.packageSize.length.metric',
+    'batch.packageSize.width.value',
+    'batch.packageSize.width.metric',
+    'batch.packageSize.height.value',
+    'batch.packageSize.height.metric',
+  ],
+  'batch.todo': [
+    'batch.todo.taskCount.count',
+    'batch.todo.taskCount.remain',
+    'batch.todo.taskCount.inProgress',
+    'batch.todo.taskCount.completed',
+    'batch.todo.taskCount.rejected',
+    'batch.todo.taskCount.approved',
+    'batch.todo.taskCount.skipped',
+    'batch.todo.taskCount.delayed',
+  ],
+};
+
 export default function batchColumns({
-  exportKeys,
   sorts = {},
   fieldDefinitions = [],
 }: {
-  exportKeys: { [string]: string | Array<string> },
   sorts?: { [string]: ColumnSortConfig },
   fieldDefinitions?: Array<FieldDefinition>,
 }): Array<ColumnConfig> {
@@ -227,10 +250,7 @@ export default function batchColumns({
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `batch.customField.${fieldDefinition.id}`,
-      exportKey:
-        exportKeys['batch.customField'] && !Array.isArray(exportKeys['batch.customField'])
-          ? `${exportKeys['batch.customField']}.${fieldDefinition.id}`
-          : undefined,
+      exportKey: `batch.customFields.${fieldDefinition.id}`,
       title: fieldDefinition.name,
       icon: 'BATCH',
       color: colors.BATCH,
