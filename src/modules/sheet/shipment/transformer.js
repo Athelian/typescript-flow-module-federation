@@ -56,7 +56,7 @@ type Props = {|
   basePath: string,
   shipment: ?Object,
   getShipmentFromRoot: Object => ?Object,
-  readonlyExporter: boolean,
+  isShipmentSheet: boolean,
   staticComputedFields?: boolean,
 |};
 
@@ -65,7 +65,7 @@ export default function transformSheetShipment({
   basePath,
   shipment,
   getShipmentFromRoot,
-  readonlyExporter,
+  isShipmentSheet,
   staticComputedFields,
 }: Props): Array<CellValue> {
   const nbOfVoyages = (shipment?.voyages ?? []).length;
@@ -168,13 +168,8 @@ export default function transformSheetShipment({
       type: 'partner',
       ...transformReadonlyField(basePath, shipment, 'importer', shipment?.importer ?? null),
     },
-    readonlyExporter
+    isShipmentSheet
       ? {
-          columnKey: 'shipment.exporter',
-          type: 'partner',
-          ...transformReadonlyField(basePath, shipment, 'exporter', shipment?.exporter ?? null),
-        }
-      : {
           columnKey: 'shipment.exporter',
           type: 'main_exporter',
           ...transformValueField(
@@ -185,6 +180,11 @@ export default function transformSheetShipment({
               hasPermission(PARTNER_LIST) &&
               (hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_EXPORTER))
           ),
+        }
+      : {
+          columnKey: 'shipment.exporter',
+          type: 'partner',
+          ...transformReadonlyField(basePath, shipment, 'exporter', shipment?.exporter ?? null),
         },
     {
       columnKey: 'shipment.relatedExporters',
@@ -206,17 +206,24 @@ export default function transformSheetShipment({
         return Array.from(exporters.values()).filter(Boolean);
       }),
     },
-    {
-      columnKey: 'shipment.forwarders',
-      type: 'partners',
-      extra: { partnerTypes: ['Forwarder'] },
-      ...transformValueField(
-        basePath,
-        shipment,
-        'forwarders',
-        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_FORWARDERS)
-      ),
-    },
+    isShipmentSheet
+      ? {
+          columnKey: 'shipment.forwarders',
+          type: 'partners',
+          extra: { partnerTypes: ['Forwarder'] },
+          ...transformValueField(
+            basePath,
+            shipment,
+            'forwarders',
+            hasPermission =>
+              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_FORWARDERS)
+          ),
+        }
+      : {
+          columnKey: 'shipment.forwarders',
+          type: 'partners',
+          ...transformReadonlyField(basePath, shipment, 'forwarders', shipment?.forwarders ?? []),
+        },
     {
       columnKey: 'shipment.blNo',
       type: 'text',

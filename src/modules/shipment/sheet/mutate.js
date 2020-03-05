@@ -169,6 +169,80 @@ function normalizedInput(
             containers: cleanedContainers,
           };
         }
+        case 'forwarders': {
+          const removedForwarders = (oldValue ?? []).filter(
+            prevForwarder =>
+              !(newValue ?? []).some(newForwarder => newForwarder.id === prevForwarder.id)
+          );
+
+          // Remove followers from shipment of removed forwarders
+          const cleanedFollowers = (shipment?.followers ?? [])
+            .filter(
+              follower =>
+                !removedForwarders.some(
+                  removedForwarder => removedForwarder.id === follower?.organization?.id
+                )
+            )
+            .map(follower => follower?.id);
+
+          // Remove followers from batches of removed forwarders
+          const cleanedBatches = (shipment?.batchesWithoutContainer ?? []).map(batch => {
+            const cleanedBatchFollowers = (batch?.followers ?? [])
+              .filter(
+                follower =>
+                  !removedForwarders.some(
+                    removedForwarder => removedForwarder.id === follower?.organization?.id
+                  )
+              )
+              .map(follower => follower?.id);
+
+            return {
+              id: batch?.id,
+              followerIds: cleanedBatchFollowers,
+            };
+          });
+
+          // Remove followers from containers of removed forwarders and followers from batches of containers of removed forwarders
+          const cleanedContainers = (shipment?.containers ?? []).map(container => {
+            const cleanedContainerFollowers = (container?.followers ?? [])
+              .filter(
+                follower =>
+                  !removedForwarders.some(
+                    removedForwarder => removedForwarder.id === follower?.organization?.id
+                  )
+              )
+              .map(follower => follower?.id);
+
+            const cleanedContainerBatches = (shipment?.batchesWithoutContainer ?? []).map(batch => {
+              const cleanedBatchFollowers = (batch?.followers ?? [])
+                .filter(
+                  follower =>
+                    !removedForwarders.some(
+                      removedForwarder => removedForwarder.id === follower?.organization?.id
+                    )
+                )
+                .map(follower => follower?.id);
+
+              return {
+                id: batch?.id,
+                followerIds: cleanedBatchFollowers,
+              };
+            });
+
+            return {
+              id: container?.id,
+              followerIds: cleanedContainerFollowers,
+              batches: cleanedContainerBatches,
+            };
+          });
+
+          return {
+            forwarderIds: newValue.map(forwarder => forwarder?.id),
+            followerIds: cleanedFollowers,
+            batches: cleanedBatches,
+            containers: cleanedContainers,
+          };
+        }
         default:
           return normalizeSheetShipmentInput(shipment, field, oldValue, newValue);
       }

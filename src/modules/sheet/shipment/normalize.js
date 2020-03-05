@@ -72,10 +72,6 @@ export default function normalizeSheetShipmentInput(
         totalPackageQuantityOverride: newValue.value,
         totalPackageQuantityOverriding: !newValue.auto,
       };
-    case 'forwarders':
-      return {
-        forwarderIds: newValue.filter(Boolean).map(({ id }) => id),
-      };
     case 'todo':
       return removeTypename(parseTodoField(oldValue, newValue));
     case 'mask':

@@ -39,7 +39,7 @@ function transformShipment(
     basePath,
     shipment,
     getShipmentFromRoot: root => root,
-    readonlyExporter: false,
+    isShipmentSheet: true,
   }).map(c => ({
     ...c,
     empty: !shipment,

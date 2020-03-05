@@ -225,7 +225,7 @@ function transformBatchShipment(
     basePath,
     shipment: batch?.shipment ?? null,
     getShipmentFromRoot: root => getCurrentBatch(batch?.id, root)?.shipment,
-    readonlyExporter: true,
+    isShipmentSheet: false,
   }).map(c => ({
     ...c,
     duplicable: true,

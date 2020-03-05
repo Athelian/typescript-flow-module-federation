@@ -112,7 +112,7 @@ function transformShipment(
     basePath: `${basePath}.shipment`,
     shipment: batch?.shipment ?? null,
     getShipmentFromRoot: root => root?.shipment,
-    readonlyExporter: true,
+    isShipmentSheet: false,
     staticComputedFields: true,
   }).map(c => ({
     ...c,
