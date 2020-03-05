@@ -70,7 +70,7 @@ export default function normalizeSheetShipmentInput(
       };
     case 'forwarders':
       return {
-        forwarderIds: newValue.map(({ id }) => id),
+        forwarderIds: newValue.filter(Boolean).map(({ id }) => id),
       };
     case 'todo':
       return removeTypename(parseTodoField(oldValue, newValue));
