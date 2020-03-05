@@ -32,12 +32,18 @@ const columns: Array<ColumnConfig> = [
   },
 ];
 
+const exportKeys = {
+  'productProvider.supplier': ['productProvider.supplier', 'productProvider.supplierCode'],
+  'productProvider.unitPrice': [
+    'productProvider.unitPrice.amount',
+    'productProvider.unitPrice.currency',
+  ],
+};
+
 export default function productProviderColumns({
-  exportKeys,
   sorts = {},
   fieldDefinitions = [],
 }: {
-  exportKeys: { [string]: string | Array<string> },
   sorts?: { [string]: ColumnSortConfig },
   fieldDefinitions?: Array<FieldDefinition>,
 }): Array<ColumnConfig> {
@@ -45,11 +51,7 @@ export default function productProviderColumns({
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `productProvider.customField.${fieldDefinition.id}`,
-      exportKey:
-        exportKeys['productProvider.customField'] &&
-        !Array.isArray(exportKeys['productProvider.customField'])
-          ? `${exportKeys['productProvider.customField']}.${fieldDefinition.id}`
-          : undefined,
+      exportKey: `productProvider.customFields.${fieldDefinition.id}`,
       title: fieldDefinition.name,
       icon: 'PRODUCT_PROVIDER',
       color: colors.PRODUCT_PROVIDER,

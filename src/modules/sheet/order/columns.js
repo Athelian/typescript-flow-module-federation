@@ -180,12 +180,29 @@ const columns: Array<ColumnConfig> = [
   },
 ];
 
+const exportKeys = {
+  'order.created': ['order.createdAt', 'order.createdBy'],
+  'order.updated': ['order.updatedAt', 'order.updatedBy'],
+  'order.importer': ['order.importer', 'order.importerCode'],
+  'order.exporter': ['order.exporter', 'order.exporterCode'],
+  'order.totalPrice': ['order.totalPrice.amount', 'order.totalPrice.currency'],
+  'order.todo': [
+    'order.todo.taskCount.count',
+    'order.todo.taskCount.remain',
+    'order.todo.taskCount.inProgress',
+    'order.todo.taskCount.completed',
+    'order.todo.taskCount.rejected',
+    'order.todo.taskCount.approved',
+    'order.todo.taskCount.skipped',
+    'order.todo.taskCount.delayed',
+  ],
+  'order.customField': 'order.customFields',
+};
+
 export default function orderColumns({
-  exportKeys,
   sorts = {},
   fieldDefinitions = [],
 }: {
-  exportKeys: { [string]: string | Array<string> },
   sorts?: { [string]: ColumnSortConfig },
   fieldDefinitions?: Array<FieldDefinition>,
 }): Array<ColumnConfig> {
@@ -193,10 +210,7 @@ export default function orderColumns({
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `order.customField.${fieldDefinition.id}`,
-      exportKey:
-        exportKeys['order.customField'] && !Array.isArray(exportKeys['order.customField'])
-          ? `${exportKeys['order.customField']}.${fieldDefinition.id}`
-          : undefined,
+      exportKey: `order.customFields.${fieldDefinition.id}`,
       title: fieldDefinition.name,
       icon: 'ORDER',
       color: colors.ORDER,

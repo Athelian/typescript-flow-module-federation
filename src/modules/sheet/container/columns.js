@@ -208,11 +208,26 @@ const columns: Array<ColumnConfig> = [
   // actions
 ];
 
+const exportKeys = {
+  'container.created': ['container.createdAt', 'container.createdBy'],
+  'container.updated': ['container.updatedAt', 'container.updatedBy'],
+  'container.warehouseArrivalAgreedDateApproved': [
+    'container.warehouseArrivalAgreedDateApprovedAt',
+    'container.warehouseArrivalAgreedDateApprovedBy',
+  ],
+  'container.warehouseArrivalActualDateApproved': [
+    'container.warehouseArrivalActualDateApprovedAt',
+    'container.warehouseArrivalActualDateApprovedBy',
+  ],
+  'container.departureDateApproved': [
+    'container.departureDateApprovedAt',
+    'container.departureDateApprovedBy',
+  ],
+};
+
 export default function containerColumns({
-  exportKeys,
   sorts = {},
 }: {
-  exportKeys: { [string]: string | Array<string> },
   sorts?: { [string]: ColumnSortConfig },
 }): Array<ColumnConfig> {
   return populateColumns(columns, exportKeys, sorts);
