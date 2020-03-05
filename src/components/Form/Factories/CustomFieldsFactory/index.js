@@ -28,6 +28,7 @@ const CustomFieldsFactory = ({
   editable,
 }: Props): React.Node => {
   const { fieldDefinitions, mask, fieldValues } = customFields;
+
   if (fieldDefinitions) {
     return (
       <CustomFieldsInput
