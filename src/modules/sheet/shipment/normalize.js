@@ -20,9 +20,13 @@ export default function normalizeSheetShipmentInput(
   newValue: any
 ): Object {
   switch (field) {
+    case 'followers':
+      return {
+        followerIds: newValue.map(follower => follower.id),
+      };
     case 'transportType':
       return {
-        [field]: newValue,
+        transportType: newValue,
         ...cleanUpPorts(shipment),
       };
     case 'blDate':
@@ -67,10 +71,6 @@ export default function normalizeSheetShipmentInput(
       return {
         totalPackageQuantityOverride: newValue.value,
         totalPackageQuantityOverriding: !newValue.auto,
-      };
-    case 'forwarders':
-      return {
-        forwarderIds: newValue.filter(Boolean).map(({ id }) => id),
       };
     case 'todo':
       return removeTypename(parseTodoField(oldValue, newValue));

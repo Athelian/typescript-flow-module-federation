@@ -30,6 +30,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Status,
   },
   {
+    key: 'container.followers',
+    title: <FormattedMessage {...containerMessages.followers} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Followers,
+  },
+  {
     key: 'container.no',
     title: <FormattedMessage {...containerMessages.containerNo} />,
     icon: 'CONTAINER',

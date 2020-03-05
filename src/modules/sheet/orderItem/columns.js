@@ -31,6 +31,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Status,
   },
   {
+    key: 'orderItem.followers',
+    title: <FormattedMessage {...orderItemMessages.followers} />,
+    icon: 'ORDER_ITEM',
+    color: colors.ORDER_ITEM,
+    width: ColumnWidths.Followers,
+  },
+  {
     key: 'orderItem.no',
     title: <FormattedMessage {...orderItemMessages.no} />,
     icon: 'ORDER_ITEM',

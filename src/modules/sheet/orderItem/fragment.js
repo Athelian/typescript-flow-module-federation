@@ -3,6 +3,9 @@ import gql from 'graphql-tag';
 
 export const sheetOrderItemFragment = gql`
   fragment sheetOrderItemFragment on OrderItem {
+    followers {
+      ...userAvatarFragment
+    }
     no
     quantity
     price {

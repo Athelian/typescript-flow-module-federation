@@ -39,7 +39,7 @@ function transformShipment(
     basePath,
     shipment,
     getShipmentFromRoot: root => root,
-    readonlyExporter: false,
+    isShipmentSheet: true,
   }).map(c => ({
     ...c,
     empty: !shipment,
@@ -75,7 +75,7 @@ function transformBatch(
     fieldDefinitions,
     basePath,
     batch,
-    getOrderFromRoot: root => getCurrentBatch(batch?.id, root)?.order,
+    getOrderFromRoot: root => getCurrentBatch(batch?.id, root)?.orderItem?.order,
     getShipmentFromRoot: root => root,
     getContainerFromRoot: root =>
       root.containers.find(c => (c?.batches ?? []).some(b => b.id === batch.id)),

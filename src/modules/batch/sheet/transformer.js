@@ -19,9 +19,9 @@ function transformBatch(
     fieldDefinitions,
     basePath,
     batch,
-    getOrderFromRoot: root => root.order,
-    getShipmentFromRoot: root => root.shipment,
-    getContainerFromRoot: root => root.container,
+    getOrderFromRoot: root => root?.orderItem?.order,
+    getShipmentFromRoot: root => root?.shipment,
+    getContainerFromRoot: root => root?.container,
     getBatchFromRoot: root => root,
     actions: [],
   });
@@ -36,8 +36,8 @@ function transformOrderItem(
     fieldDefinitions,
     basePath,
     orderItem,
-    getOrderFromRoot: root => root.orderItem.order,
-    getOrderItemFromRoot: root => root.orderItem,
+    getOrderFromRoot: root => root?.orderItem?.order,
+    getOrderItemFromRoot: root => root?.orderItem,
     actions: [],
   }).map(c => ({
     ...c,
@@ -54,7 +54,7 @@ function transformProduct(
     fieldDefinitions,
     basePath: `${basePath}.orderItem.productProvider.product`,
     product,
-    getProductFromRoot: root => root.orderItem.productProvider.product,
+    getProductFromRoot: root => root?.orderItem?.productProvider?.product,
   }).map(c => ({
     ...c,
     duplicable: true,
@@ -93,12 +93,8 @@ function transformContainer(basePath: string, batch: Batch): Array<CellValue> {
   return transformSheetContainer({
     basePath: `${basePath}.container`,
     container: batch?.container ?? null,
-    getContainerFromRoot: root => {
-      return root.container;
-    },
-    getShipmentFromRoot: root => {
-      return root.shipment;
-    },
+    getContainerFromRoot: root => root?.container,
+    getShipmentFromRoot: root => root?.shipment,
   }).map(cell => ({
     ...cell,
     disabled: !(batch?.container ?? null),
@@ -115,8 +111,8 @@ function transformShipment(
     fieldDefinitions,
     basePath: `${basePath}.shipment`,
     shipment: batch?.shipment ?? null,
-    getShipmentFromRoot: root => root?.shipment ?? null,
-    readonlyExporter: true,
+    getShipmentFromRoot: root => root?.shipment,
+    isShipmentSheet: false,
     staticComputedFields: true,
   }).map(c => ({
     ...c,

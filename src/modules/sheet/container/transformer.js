@@ -28,6 +28,7 @@ import {
   CONTAINER_SET_TAGS,
   CONTAINER_SET_WAREHOUSE,
   CONTAINER_SET_YARD_NAME,
+  CONTAINER_SET_FOLLOWERS,
   CONTAINER_UPDATE,
 } from 'modules/permission/constants/container';
 
@@ -98,6 +99,24 @@ export default function transformSheetContainer({
         const currentShipment = getShipmentFromRoot(root);
         return currentShipment?.archived ?? true;
       }),
+    },
+    {
+      columnKey: 'container.followers',
+      type: 'followers',
+      computed: root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return [
+          currentShipment?.importer?.id,
+          currentShipment?.exporter?.id,
+          ...(currentShipment?.forwarders ?? []).map(forwarder => forwarder?.id),
+        ].filter(Boolean);
+      },
+      ...transformValueField(
+        basePath,
+        container,
+        'followers',
+        hasPermission => hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_FOLLOWERS)
+      ),
     },
     {
       columnKey: 'container.no',

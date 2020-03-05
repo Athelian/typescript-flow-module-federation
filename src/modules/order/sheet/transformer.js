@@ -206,14 +206,8 @@ function transformBatchContainer(basePath: string, batch: Object): Array<CellVal
   return transformSheetContainer({
     basePath,
     container: batch?.container ?? null,
-    getContainerFromRoot: root => {
-      const currentBatch = getCurrentBatch(batch?.id, root);
-      return currentBatch?.container;
-    },
-    getShipmentFromRoot: root => {
-      const currentBatch = getCurrentBatch(batch?.id, root);
-      return currentBatch?.shipment;
-    },
+    getContainerFromRoot: root => getCurrentBatch(batch?.id, root)?.container,
+    getShipmentFromRoot: root => getCurrentBatch(batch?.id, root)?.shipment,
   }).map(c => ({
     ...c,
     duplicable: true,
@@ -230,11 +224,8 @@ function transformBatchShipment(
     fieldDefinitions,
     basePath,
     shipment: batch?.shipment ?? null,
-    getShipmentFromRoot: root => {
-      const currentBatch = getCurrentBatch(batch?.id, root);
-      return currentBatch?.shipment ?? null;
-    },
-    readonlyExporter: true,
+    getShipmentFromRoot: root => getCurrentBatch(batch?.id, root)?.shipment,
+    isShipmentSheet: false,
   }).map(c => ({
     ...c,
     duplicable: true,
