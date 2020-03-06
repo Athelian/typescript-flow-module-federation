@@ -9199,6 +9199,7 @@ export type Container = {|
     notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     sort: $ElementType<Scalars, 'Int'>,
     memo?: ?$ElementType<Scalars, 'String'>,
+    customFields?: ?CustomFieldsInput,
   |}
 |};
 

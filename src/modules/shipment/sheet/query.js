@@ -82,6 +82,7 @@ export const shipmentsQuery = gql`
             ...sheetContainerFragment
             ...sheetModelFragment
             ...sheetOwnedFragment
+            ...sheetCustomizableFragment
             ... on Container {
               batches {
                 ...sheetBatchFragment
