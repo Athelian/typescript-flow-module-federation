@@ -464,6 +464,7 @@
   "modules.container.yardName": "场地",
   "modules.container.dueDate": "截止日期",
   "modules.container.logs": "日志",
+  "modules.container.mask": "Custom fields template",
   "modules.container.createdAt": "创作日期",
   "modules.container.updatedAt": "最后修改日期",
   "modules.container.noContainerFound": "未找到集装箱",

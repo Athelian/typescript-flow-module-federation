@@ -464,6 +464,7 @@
   "modules.container.yardName": "Yard",
   "modules.container.dueDate": "Due date",
   "modules.container.logs": "Logs",
+  "modules.container.mask": "Custom fields template",
   "modules.container.createdAt": "Date Created",
   "modules.container.updatedAt": "Last Modified",
   "modules.container.noContainerFound": "NO CONTAINERS FOUND",

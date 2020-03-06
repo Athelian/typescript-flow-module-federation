@@ -464,6 +464,7 @@
   "modules.container.yardName": "ヤード名",
   "modules.container.dueDate": "期限",
   "modules.container.logs": "ログ",
+  "modules.container.mask": "フィールドテンプレート",
   "modules.container.createdAt": "作成日",
   "modules.container.updatedAt": "最終更新",
   "modules.container.noContainerFound": "コンテナ情報がありません",
