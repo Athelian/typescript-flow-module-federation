@@ -16,6 +16,7 @@ export const FieldDefinitionEntityTypes = [
   'OrderItem',
   'Batch',
   'Shipment',
+  'Container',
 ];
 
 export const OrderSheetColumnGroups = [

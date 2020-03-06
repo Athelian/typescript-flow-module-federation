@@ -16,6 +16,7 @@ export const FieldDefinitionEntityTypes = [
   'Shipment',
   'Product',
   'ProductProvider',
+  'Container',
 ];
 
 export const BatchSheetColumnGroups = [
