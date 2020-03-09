@@ -8,6 +8,7 @@ import {
   maskByIDQuery,
   tagsByIDsQuery,
   userByIDQuery,
+  usersByIDsQuery,
 } from 'modules/sheet/common/query';
 
 export async function handleOrderItemChanges(
@@ -16,6 +17,16 @@ export async function handleOrderItemChanges(
 ): Promise<Array<EntityEventChange>> {
   return mapAsync(changes, change => {
     switch (change.field) {
+      case 'followers':
+        return client
+          .query({
+            query: usersByIDsQuery,
+            variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+          })
+          .then(({ data }) => ({
+            field: change.field,
+            new: newCustomValue(data.usersByIDs),
+          }));
       case 'tags':
         return client
           .query({
@@ -69,3 +80,5 @@ export async function handleOrderItemChanges(
     return change;
   });
 }
+
+export default handleOrderItemChanges;

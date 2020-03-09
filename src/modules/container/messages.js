@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  followers: {
+    id: 'modules.container.followers',
+    defaultMessage: 'Followers',
+  },
   container: {
     id: 'modules.container.container',
     defaultMessage: 'CONTAINER',
@@ -65,6 +69,10 @@ export default defineMessages({
   logs: {
     id: 'modules.container.logs',
     defaultMessage: 'Logs',
+  },
+  mask: {
+    id: 'modules.container.mask',
+    defaultMessage: 'Custom fields template',
   },
   createdAt: {
     id: 'modules.container.createdAt',

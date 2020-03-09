@@ -65,6 +65,8 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
     batchCount,
     orderItemCount,
     totalVolume,
+    totalVolumeOverriding,
+    totalVolumeOverride,
     containers,
     importer,
     exporter,
@@ -72,6 +74,8 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
     containerTypeCounts,
     voyages,
     totalPackageQuantity,
+    totalPackageQuantityOverriding,
+    totalPackageQuantityOverride,
     batches,
   } = shipment;
   let exporterName = '';
@@ -99,6 +103,12 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
   });
 
   const totalContainerTypeCount = sortedContainerTypes.reduce((sum, { count }) => sum + count, 0);
+
+  const totalVol = totalVolumeOverriding ? totalVolumeOverride : totalVolume;
+
+  const totalPackages = totalPackageQuantityOverriding
+    ? totalPackageQuantityOverride
+    : totalPackageQuantity;
 
   return (
     <BaseCard
@@ -142,7 +152,7 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
                 <div className={ShipmentExporterIconStyle}>
                   <Icon icon="EXPORTER" />
                 </div>
-                <div className={ShipmentExporterStyle}>{exporterName}</div>
+                <div className={ShipmentExporterStyle(remainingExporterCount)}>{exporterName}</div>
                 {remainingExporterCount !== 0 && (
                   <div className={RemainingExporterCountStyle}>
                     +<FormattedNumber value={remainingExporterCount} />
@@ -170,9 +180,7 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
                   <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
                 </Label>
                 <div className={ShipmentBadgeStyle('60px')}>
-                  {totalVolume && (
-                    <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
-                  )}
+                  {totalVol && <FormattedNumber value={totalVol.value} suffix={totalVol.metric} />}
                 </div>
               </div>
 
@@ -181,7 +189,7 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
                   <FormattedMessage id="components.cards.ttlPkgs" defaultMessage="TTL PKGS" />
                 </Label>
                 <div className={ShipmentBadgeStyle('40px')}>
-                  <FormattedNumber value={totalPackageQuantity} />
+                  <FormattedNumber value={totalPackages} />
                 </div>
               </div>
 

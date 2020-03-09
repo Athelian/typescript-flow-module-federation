@@ -2,7 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  // fields
+  followers: {
+    id: 'components.BatchItem.followers',
+    defaultMessage: 'Followers',
+  },
   batchNo: {
     id: 'components.BatchItem.batchNo',
     defaultMessage: 'Batch No.',

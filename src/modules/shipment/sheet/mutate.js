@@ -1,6 +1,5 @@
 // @flow
 import ApolloClient from 'apollo-client';
-import type { User } from 'generated/graphql';
 import normalizeSheetOrderInput from 'modules/sheet/order/normalize';
 import normalizeSheetOrderItemInput from 'modules/sheet/orderItem/normalize';
 import normalizeSheetBatchInput from 'modules/sheet/batch/normalize';
@@ -33,24 +32,6 @@ const mutations = {
   ContainerGroup: sheetShipmentMutation,
 };
 
-const isExporter = (user: User) => (user?.organization?.types ?? []).includes('Exporter');
-
-const cleanUpExporter = ({
-  selectedEntity,
-  field,
-  exporterId,
-}: {
-  selectedEntity: Object,
-  field: string,
-  exporterId: string,
-}) => ({
-  approvedById:
-    selectedEntity?.[field]?.approvedBy?.organization?.id !== exporterId &&
-    isExporter(selectedEntity?.[field]?.approvedBy)
-      ? null
-      : selectedEntity?.[field]?.approvedBy?.id,
-});
-
 function getEntityId(entity: Object, item: Object): string {
   switch (entity.type) {
     case 'TimelineDate': {
@@ -72,132 +53,194 @@ function normalizedInput(
     case 'Shipment':
       switch (field) {
         case 'exporter': {
-          const exporterId = newValue?.id ?? null;
+          // When exporter was null:
+          if (!oldValue) {
+            // Remove batches from shipment that dont belong to new exporter
+            const cleanedBatches = (shipment?.batchesWithoutContainer ?? [])
+              .filter(batch => batch?.orderItem?.order?.exporter?.id === newValue?.id)
+              .map(batch => ({
+                id: batch?.id,
+              }));
 
-          if (exporterId) {
-            const batches = [];
-            (shipment?.batchesWithoutContainer ?? []).forEach(batch => {
-              if (batch?.orderItem?.order?.exporter?.id === exporterId) {
-                batches.push({
+            // Remove batches from containers that dont belong to new exporter
+            const cleanedContainers = (shipment?.containers ?? []).map(container => {
+              const cleanedContainerBatches = (container?.batches ?? [])
+                .filter(batch => batch?.orderItem?.order?.exporter?.id === newValue?.id)
+                .map(batch => ({
                   id: batch?.id,
-                });
-              }
-            });
-            const containers = [];
-            (shipment?.containers ?? []).forEach(container => {
-              const { representativeBatch } = container;
-              const newBatches = [];
-              (container?.batches ?? []).forEach(batch => {
-                if (batch?.orderItem?.order?.exporter?.id === exporterId) {
-                  newBatches.push({
-                    id: batch?.id,
-                  });
-                  batches.push({
-                    id: batch?.id,
-                  });
-                }
-              });
-              const newRepresentativeBatch = newBatches
+                }));
+
+              // Need to update representativeBatch if it was removed
+              const representativeBatchIndex = cleanedContainerBatches
                 .map(batch => batch.id)
-                .indexOf(representativeBatch?.id);
-              containers.push({
+                .indexOf(container?.representativeBatch?.id);
+
+              return {
                 id: container.id,
-                batches: newBatches,
-                representativeBatchIndex: newRepresentativeBatch >= 0 ? newRepresentativeBatch : 0,
-              });
+                batches: cleanedContainerBatches,
+                representativeBatchIndex:
+                  representativeBatchIndex >= 0 ? representativeBatchIndex : 0,
+              };
             });
 
-            const todo = {
-              tasks: (shipment?.todo?.tasks ?? []).map(task => ({
-                id: task.id,
-                approverIds: (task?.approvers ?? [])
-                  .filter(user => user?.organization?.id === exporterId || !isExporter(user))
-                  .map(user => user.id),
-                inProgressAt:
-                  task?.inProgressBy?.organization?.id !== exporterId &&
-                  isExporter(task?.inProgressBy)
-                    ? null
-                    : task?.inProgressAt,
-                inProgressById:
-                  task?.inProgressBy?.organization?.id !== exporterId &&
-                  isExporter(task?.inProgressBy)
-                    ? null
-                    : task?.inProgressBy?.id,
-                completedAt:
-                  task?.completedBy?.organization?.id !== exporterId &&
-                  isExporter(task?.completedBy)
-                    ? null
-                    : task?.completedAt,
-                completedById:
-                  task?.completedBy?.organization?.id !== exporterId &&
-                  isExporter(task?.completedBy)
-                    ? null
-                    : task?.completedBy?.id,
-                rejectedAt:
-                  task?.rejectedBy?.organization?.id !== exporterId && isExporter(task?.rejectedBy)
-                    ? null
-                    : task?.rejectedAt,
-                rejectedById:
-                  task?.rejectedBy?.organization?.id !== exporterId && isExporter(task?.rejectedBy)
-                    ? null
-                    : task?.rejectedBy?.id,
-                approvedAt:
-                  task?.approvedBy?.organization?.id !== exporterId && isExporter(task?.approvedBy)
-                    ? null
-                    : task?.approvedAt,
-                approvedById:
-                  task?.approvedBy?.organization?.id !== exporterId && isExporter(task?.approvedBy)
-                    ? null
-                    : task?.approvedBy?.id,
-              })),
-            };
-
-            const cargoReady = cleanUpExporter({
-              selectedEntity: shipment,
-              field: 'cargoReady',
-              exporterId,
-            });
-
-            const voyages = (shipment?.voyages ?? []).map(voyage => ({
-              id: voyage.id,
-              arrival: cleanUpExporter({ selectedEntity: voyage, field: 'arrival', exporterId }),
-              departure: cleanUpExporter({
-                selectedEntity: voyage,
-                field: 'departure',
-                exporterId,
-              }),
-            }));
-
-            const containerGroups = (shipment?.containerGroups ?? []).map(group => ({
-              id: group.id,
-              customClearance: cleanUpExporter({
-                selectedEntity: group,
-                field: 'customClearance',
-                exporterId,
-              }),
-              warehouseArrival: cleanUpExporter({
-                selectedEntity: group,
-                field: 'warehouseArrival',
-                exporterId,
-              }),
-              deliveryReady: cleanUpExporter({
-                selectedEntity: group,
-                field: 'deliveryReady',
-                exporterId,
-              }),
-            }));
             return {
-              exporterId,
-              batches,
-              containers,
-              cargoReady,
-              voyages,
-              containerGroups,
-              todo,
+              exporterId: newValue?.id,
+              batches: cleanedBatches,
+              containers: cleanedContainers,
             };
           }
+          // When exporter was not null:
+          // Remove followers from shipment of previous exporter
+          const cleanedFollowers = (shipment?.followers ?? [])
+            .filter(follower => follower?.organization?.id !== oldValue?.id)
+            .map(follower => follower?.id);
+
+          // When remove exporter:
+          if (!newValue) {
+            // Remove followers from batches of shipment of previous exporter
+            const cleanedBatches = (shipment?.batchesWithoutContainer ?? []).map(batch => {
+              const cleanedBatchFollowers = (batch?.followers ?? [])
+                .filter(follower => follower?.organization?.id !== oldValue?.id)
+                .map(follower => follower?.id);
+
+              return {
+                id: batch?.id,
+                followerIds: cleanedBatchFollowers,
+              };
+            });
+
+            // Remove followers from containers of previous exporter and followers from batches of containers of previous exporter
+            const cleanedContainers = (shipment?.containers ?? []).map(container => {
+              const cleanedContainerBatches = (container?.batches ?? []).map(batch => {
+                const cleanedBatchFollowers = (batch?.followers ?? [])
+                  .filter(follower => follower?.organization?.id !== oldValue?.id)
+                  .map(follower => follower?.id);
+
+                return {
+                  id: batch?.id,
+                  followerIds: cleanedBatchFollowers,
+                };
+              });
+
+              const cleanedContainerFollowers = (container?.followers ?? [])
+                .filter(follower => follower?.organization?.id !== oldValue?.id)
+                .map(follower => follower?.id);
+
+              return {
+                id: container.id,
+                batches: cleanedContainerBatches,
+                followerIds: cleanedContainerFollowers,
+              };
+            });
+
+            return {
+              exporterId: null,
+              followerIds: cleanedFollowers,
+              batches: cleanedBatches,
+              containers: cleanedContainers,
+            };
+          }
+          // When change exporter:
+          // Remove all batches from shipment
+          const cleanedBatches = [];
+
+          // Remove followers from containers of previous exporter and all batches from containers
+          const cleanedContainers = (shipment?.containers ?? []).map(container => {
+            const containerBatches = [];
+
+            const representativeBatchIndex = null;
+
+            const containerFollowers = (container?.followers ?? [])
+              .filter(follower => follower?.organization?.id !== oldValue?.id)
+              .map(follower => follower?.id);
+
+            return {
+              id: container.id,
+              batches: containerBatches,
+              representativeBatchIndex,
+              followerIds: containerFollowers,
+            };
+          });
+
           return {
-            exporterId,
+            exporterId: newValue?.id,
+            followerIds: cleanedFollowers,
+            batches: cleanedBatches,
+            containers: cleanedContainers,
+          };
+        }
+        case 'forwarders': {
+          const removedForwarders = (oldValue ?? []).filter(
+            prevForwarder =>
+              !(newValue ?? []).some(newForwarder => newForwarder.id === prevForwarder.id)
+          );
+
+          // Remove followers from shipment of removed forwarders
+          const cleanedFollowers = (shipment?.followers ?? [])
+            .filter(
+              follower =>
+                !removedForwarders.some(
+                  removedForwarder => removedForwarder.id === follower?.organization?.id
+                )
+            )
+            .map(follower => follower?.id);
+
+          // Remove followers from batches of removed forwarders
+          const cleanedBatches = (shipment?.batchesWithoutContainer ?? []).map(batch => {
+            const cleanedBatchFollowers = (batch?.followers ?? [])
+              .filter(
+                follower =>
+                  !removedForwarders.some(
+                    removedForwarder => removedForwarder.id === follower?.organization?.id
+                  )
+              )
+              .map(follower => follower?.id);
+
+            return {
+              id: batch?.id,
+              followerIds: cleanedBatchFollowers,
+            };
+          });
+
+          // Remove followers from containers of removed forwarders and followers from batches of containers of removed forwarders
+          const cleanedContainers = (shipment?.containers ?? []).map(container => {
+            const cleanedContainerFollowers = (container?.followers ?? [])
+              .filter(
+                follower =>
+                  !removedForwarders.some(
+                    removedForwarder => removedForwarder.id === follower?.organization?.id
+                  )
+              )
+              .map(follower => follower?.id);
+
+            const cleanedContainerBatches = (shipment?.batchesWithoutContainer ?? []).map(batch => {
+              const cleanedBatchFollowers = (batch?.followers ?? [])
+                .filter(
+                  follower =>
+                    !removedForwarders.some(
+                      removedForwarder => removedForwarder.id === follower?.organization?.id
+                    )
+                )
+                .map(follower => follower?.id);
+
+              return {
+                id: batch?.id,
+                followerIds: cleanedBatchFollowers,
+              };
+            });
+
+            return {
+              id: container?.id,
+              followerIds: cleanedContainerFollowers,
+              batches: cleanedContainerBatches,
+            };
+          });
+
+          return {
+            forwarderIds: newValue.map(forwarder => forwarder?.id),
+            followerIds: cleanedFollowers,
+            batches: cleanedBatches,
+            containers: cleanedContainers,
           };
         }
         default:

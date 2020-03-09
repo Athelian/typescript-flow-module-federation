@@ -43,6 +43,7 @@ import {
   parseArrayOfChildrenField,
   parseApprovalField,
   parseDefaultIndexField,
+  parseCustomFieldsField,
 } from 'utils/data';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 
@@ -237,6 +238,11 @@ export const prepareParsedContainerInput = ({
       getByPathWithDefault(null, 'representativeBatch', originalValues),
       newValues.representativeBatch,
       newValues.batches
+    ),
+    ...parseCustomFieldsField(
+      'customFields',
+      getByPathWithDefault(null, 'customFields', originalValues),
+      newValues.customFields
     ),
   };
 };

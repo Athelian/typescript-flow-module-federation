@@ -39,12 +39,12 @@ const columns: Array<ColumnConfig> = [
   },
 ];
 
+const exportKeys = {};
+
 export default function productColumns({
-  exportKeys,
   sorts = {},
   fieldDefinitions = [],
 }: {
-  exportKeys: { [string]: string | Array<string> },
   sorts?: { [string]: ColumnSortConfig },
   fieldDefinitions?: Array<FieldDefinition>,
 }): Array<ColumnConfig> {
@@ -52,10 +52,7 @@ export default function productColumns({
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `product.customField.${fieldDefinition.id}`,
-      exportKey:
-        exportKeys['product.customField'] && !Array.isArray(exportKeys['product.customField'])
-          ? `${exportKeys['product.customField']}.${fieldDefinition.id}`
-          : undefined,
+      exportKey: `product.customFields.${fieldDefinition.id}`,
       title: fieldDefinition.name,
       icon: 'PRODUCT',
       color: colors.PRODUCT,

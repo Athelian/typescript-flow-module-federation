@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, presets, transitions, borderRadiuses } from 'styles/common';
+import { layout, colors, fontSizes, presets, transitions, borderRadiuses } from 'styles/common';
 
 export const ButtonStyle = css`
   ${presets.BUTTON};
@@ -25,13 +25,22 @@ export const PartnerCardStyle = css`
   position: relative;
   overflow: hidden;
   border-bottom-right-radius: 0;
-  width: 200px;
+  width: 400px;
   height: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   &:hover,
   :focus {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
+`;
+
+export const PartnerCodeStyle: string = css`
+  ${fontSizes.SMALL};
+  line-height: 20px;
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  padding: 0 5px;
+  flex: 1;
 `;
 
 export const PlusButtonStyle: string = css`

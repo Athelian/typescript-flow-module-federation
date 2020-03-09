@@ -17,6 +17,10 @@ const initValues: ContainerPayload = {
   no: null,
   containerType: null,
   containerOption: null,
+  customFields: {
+    mask: null,
+    fieldValues: [],
+  },
   shipment: null,
   tags: [],
   followers: [],

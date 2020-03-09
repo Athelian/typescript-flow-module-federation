@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  followers: {
+    id: 'modules.Shipments.followers',
+    defaultMessage: 'Followers',
+  },
   shipment: {
     id: 'modules.Shipments.shipment',
     defaultMessage: 'SHIPMENT',

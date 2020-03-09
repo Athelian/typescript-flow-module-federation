@@ -119,11 +119,11 @@ export const ShipmentExporterIconStyle: string = css`
   ${fontSizes.SMALL};
 `;
 
-export const ShipmentExporterStyle: string = css`
+export const ShipmentExporterStyle = (remainingExporterCount: number): string => css`
   color: ${colors.BLACK};
   ${presets.ELLIPSIS};
   ${fontSizes.SMALL};
-  width: 95px;
+  width: ${remainingExporterCount > 0 ? '95px' : '120px'};
 `;
 
 export const RemainingExporterCountStyle: string = css`

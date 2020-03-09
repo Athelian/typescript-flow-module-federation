@@ -12,6 +12,7 @@ import {
   tagsByIDsQuery,
   userByIDQuery,
   warehouseByIDQuery,
+  usersByIDsQuery,
 } from 'modules/sheet/common/query';
 
 export async function handleShipmentChanges(
@@ -21,6 +22,16 @@ export async function handleShipmentChanges(
 ): Promise<Array<EntityEventChange>> {
   changes = await mapAsync(changes, change => {
     switch (change.field) {
+      case 'followers':
+        return client
+          .query({
+            query: usersByIDsQuery,
+            variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+          })
+          .then(({ data }) => ({
+            field: change.field,
+            new: newCustomValue(data.usersByIDs),
+          }));
       case 'importer':
       case 'exporter':
         if (change.new) {
@@ -120,7 +131,7 @@ export async function handleShipmentChanges(
         }),
         totalWeightOverriding: (i, v) => ({
           ...i,
-          auto: v,
+          auto: !v,
         }),
         totalWeightDisplayMetric: (i, v) => ({
           ...i,
@@ -140,7 +151,7 @@ export async function handleShipmentChanges(
         }),
         totalVolumeOverriding: (i, v) => ({
           ...i,
-          auto: v,
+          auto: !v,
         }),
         totalVolumeDisplayMetric: (i, v) => ({
           ...i,
@@ -160,7 +171,7 @@ export async function handleShipmentChanges(
         }),
         totalPackageQuantityOverriding: (i, v) => ({
           ...i,
-          auto: v,
+          auto: !v,
         }),
       },
       'totalPackages',

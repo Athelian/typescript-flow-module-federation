@@ -4,7 +4,12 @@ import { ApolloClient } from 'apollo-client';
 import { mapAsync } from 'utils/async';
 import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import type { EntityEventChange } from 'components/Sheet/SheetLive/types';
-import { tagsByIDsQuery, userByIDQuery, warehouseByIDQuery } from 'modules/sheet/common/query';
+import {
+  tagsByIDsQuery,
+  userByIDQuery,
+  warehouseByIDQuery,
+  usersByIDsQuery,
+} from 'modules/sheet/common/query';
 
 export async function handleContainerChanges(
   client: ApolloClient<any>,
@@ -13,6 +18,16 @@ export async function handleContainerChanges(
 ): Promise<Array<EntityEventChange>> {
   changes = await mapAsync(changes, change => {
     switch (change.field) {
+      case 'followers':
+        return client
+          .query({
+            query: usersByIDsQuery,
+            variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+          })
+          .then(({ data }) => ({
+            field: change.field,
+            new: newCustomValue(data.usersByIDs),
+          }));
       case 'warehouse':
         if (change.new) {
           return client
@@ -148,3 +163,5 @@ export async function handleContainerChanges(
 
   return changes;
 }
+
+export default handleContainerChanges;

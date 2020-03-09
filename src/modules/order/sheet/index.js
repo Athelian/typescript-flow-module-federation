@@ -140,6 +140,7 @@ const OrderSheetModule = ({ orderIds }: Props) => {
     orderItemFieldDefinitions: fieldDefinitions?.OrderItem ?? [],
     batchFieldDefinitions: fieldDefinitions?.Batch ?? [],
     shipmentFieldDefinitions: fieldDefinitions?.Shipment ?? [],
+    containerFieldDefinitions: fieldDefinitions?.Container ?? [],
   };
 
   return (

@@ -3,35 +3,39 @@ import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 import { extractForbiddenId } from 'utils/data';
 
 export default function normalizeSheetContainerInput(
-  order: Object,
+  container: Object,
   field: string,
-  value: any
+  newValue: any
 ): Object {
   switch (field) {
+    case 'followers':
+      return {
+        followerIds: newValue.map(follower => follower.id),
+      };
     case 'warehouseArrivalAgreedDate':
     case 'warehouseArrivalActualDate':
     case 'departureDate':
       return {
-        [(field: string)]: value ? new Date(value) : null,
+        [(field: string)]: newValue ? new Date(newValue) : null,
       };
     case 'tags':
       return {
-        tagIds: value.map(tag => extractForbiddenId(tag).id).filter(Boolean),
+        tagIds: newValue.map(tag => extractForbiddenId(tag).id).filter(Boolean),
       };
     case 'warehouseArrivalAgreedDateApproved':
       return {
-        warehouseArrivalAgreedDateApprovedById: value?.user?.id ?? null,
+        warehouseArrivalAgreedDateApprovedById: newValue?.user?.id ?? null,
       };
     case 'warehouseArrivalActualDateApproved':
       return {
-        warehouseArrivalActualDateApprovedById: value?.user?.id ?? null,
+        warehouseArrivalActualDateApprovedById: newValue?.user?.id ?? null,
       };
     case 'departureDateApproved':
       return {
-        departureDateApprovedById: value?.user?.id ?? null,
+        departureDateApprovedById: newValue?.user?.id ?? null,
       };
     case 'freeTimeStartDate': {
-      const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = value || {};
+      const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = newValue || {};
       return {
         autoCalculatedFreeTimeStartDate,
         freeTimeStartDate: date ? new Date(date) : null,
@@ -39,9 +43,15 @@ export default function normalizeSheetContainerInput(
     }
     case 'warehouse':
       return {
-        warehouseId: value?.id ?? null,
+        warehouseId: newValue?.id ?? null,
+      };
+    case 'mask':
+      return {
+        customFields: {
+          maskId: newValue?.id ?? null,
+        },
       };
     default:
-      return normalizeSheetInput(order, field, value);
+      return normalizeSheetInput(container, field, newValue);
   }
 }

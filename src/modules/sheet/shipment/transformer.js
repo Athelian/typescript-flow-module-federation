@@ -46,6 +46,7 @@ import {
   SHIPMENT_SET_TRANSPORT_TYPE,
   SHIPMENT_SET_VESSEL_NAME,
   SHIPMENT_SET_WAREHOUSE,
+  SHIPMENT_SET_FOLLOWERS,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
 import messages from 'modules/sheet/common/messages';
@@ -55,7 +56,7 @@ type Props = {|
   basePath: string,
   shipment: ?Object,
   getShipmentFromRoot: Object => ?Object,
-  readonlyExporter: boolean,
+  isShipmentSheet: boolean,
   staticComputedFields?: boolean,
 |};
 
@@ -64,7 +65,7 @@ export default function transformSheetShipment({
   basePath,
   shipment,
   getShipmentFromRoot,
-  readonlyExporter,
+  isShipmentSheet,
   staticComputedFields,
 }: Props): Array<CellValue> {
   const nbOfVoyages = (shipment?.voyages ?? []).length;
@@ -135,6 +136,24 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.followers',
+      type: 'followers',
+      computed: root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return [
+          currentShipment?.importer?.id,
+          currentShipment?.exporter?.id,
+          ...(currentShipment?.forwarders ?? []).map(forwarder => forwarder?.id),
+        ].filter(Boolean);
+      },
+      ...transformValueField(
+        basePath,
+        shipment,
+        'followers',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_FOLLOWERS)
+      ),
+    },
+    {
       columnKey: 'shipment.no',
       type: 'text',
       ...transformValueField(
@@ -149,13 +168,8 @@ export default function transformSheetShipment({
       type: 'partner',
       ...transformReadonlyField(basePath, shipment, 'importer', shipment?.importer ?? null),
     },
-    readonlyExporter
+    isShipmentSheet
       ? {
-          columnKey: 'shipment.exporter',
-          type: 'partner',
-          ...transformReadonlyField(basePath, shipment, 'exporter', shipment?.exporter ?? null),
-        }
-      : {
           columnKey: 'shipment.exporter',
           type: 'main_exporter',
           ...transformValueField(
@@ -166,6 +180,11 @@ export default function transformSheetShipment({
               hasPermission(PARTNER_LIST) &&
               (hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_EXPORTER))
           ),
+        }
+      : {
+          columnKey: 'shipment.exporter',
+          type: 'partner',
+          ...transformReadonlyField(basePath, shipment, 'exporter', shipment?.exporter ?? null),
         },
     {
       columnKey: 'shipment.relatedExporters',
@@ -187,17 +206,24 @@ export default function transformSheetShipment({
         return Array.from(exporters.values()).filter(Boolean);
       }),
     },
-    {
-      columnKey: 'shipment.forwarders',
-      type: 'partners',
-      extra: { partnerTypes: ['Forwarder'] },
-      ...transformValueField(
-        basePath,
-        shipment,
-        'forwarders',
-        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_FORWARDERS)
-      ),
-    },
+    isShipmentSheet
+      ? {
+          columnKey: 'shipment.forwarders',
+          type: 'partners',
+          extra: { partnerTypes: ['Forwarder'] },
+          ...transformValueField(
+            basePath,
+            shipment,
+            'forwarders',
+            hasPermission =>
+              hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_FORWARDERS)
+          ),
+        }
+      : {
+          columnKey: 'shipment.forwarders',
+          type: 'partners',
+          ...transformReadonlyField(basePath, shipment, 'forwarders', shipment?.forwarders ?? []),
+        },
     {
       columnKey: 'shipment.blNo',
       type: 'text',

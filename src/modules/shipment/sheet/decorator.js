@@ -83,17 +83,17 @@ function decorateShipment(shipment: Object): Object {
     ...shipment,
     totalWeight: {
       value: shipment.totalWeightOverride,
-      auto: shipment.totalWeightOverriding,
+      auto: !shipment.totalWeightOverriding,
       displayMetric: shipment.totalWeightDisplayMetric,
     },
     totalVolume: {
       value: shipment.totalVolumeOverride,
-      auto: shipment.totalVolumeOverriding,
+      auto: !shipment.totalVolumeOverriding,
       displayMetric: shipment.totalVolumeDisplayMetric,
     },
     totalPackages: {
       value: shipment.totalPackageQuantityOverride,
-      auto: shipment.totalPackageQuantityOverriding,
+      auto: !shipment.totalPackageQuantityOverriding,
     },
     cargoReady: {
       ...shipment.cargoReady,

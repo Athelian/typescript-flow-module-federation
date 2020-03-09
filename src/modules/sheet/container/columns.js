@@ -2,6 +2,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import type { FieldDefinition } from 'types';
 import { colors } from 'styles/common';
 import type { ColumnSortConfig, ColumnConfig } from 'components/Sheet/SheetState/types';
 import containerMessages from 'modules/container/messages';
@@ -28,6 +29,13 @@ const columns: Array<ColumnConfig> = [
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: ColumnWidths.Status,
+  },
+  {
+    key: 'container.followers',
+    title: <FormattedMessage {...containerMessages.followers} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Followers,
   },
   {
     key: 'container.no',
@@ -198,15 +206,51 @@ const columns: Array<ColumnConfig> = [
     color: colors.CONTAINER,
     width: ColumnWidths.Logs,
   },
+  {
+    key: 'container.mask',
+    title: <FormattedMessage {...containerMessages.mask} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Default,
+  },
+
   // actions
 ];
 
+const exportKeys = {
+  'container.created': ['container.createdAt', 'container.createdBy'],
+  'container.updated': ['container.updatedAt', 'container.updatedBy'],
+  'container.warehouseArrivalAgreedDateApproved': [
+    'container.warehouseArrivalAgreedDateApprovedAt',
+    'container.warehouseArrivalAgreedDateApprovedBy',
+  ],
+  'container.warehouseArrivalActualDateApproved': [
+    'container.warehouseArrivalActualDateApprovedAt',
+    'container.warehouseArrivalActualDateApprovedBy',
+  ],
+  'container.departureDateApproved': [
+    'container.departureDateApprovedAt',
+    'container.departureDateApprovedBy',
+  ],
+  'container.customField': 'container.customFields',
+};
+
 export default function containerColumns({
-  exportKeys,
   sorts = {},
+  fieldDefinitions = [],
 }: {
-  exportKeys: { [string]: string | Array<string> },
   sorts?: { [string]: ColumnSortConfig },
+  fieldDefinitions?: Array<FieldDefinition>,
 }): Array<ColumnConfig> {
-  return populateColumns(columns, exportKeys, sorts);
+  return [
+    ...populateColumns(columns, exportKeys, sorts),
+    ...fieldDefinitions.map(fieldDefinition => ({
+      key: `container.customField.${fieldDefinition.id}`,
+      exportKey: `order.customFields.${fieldDefinition.id}`,
+      title: fieldDefinition.name,
+      icon: 'CONTAINER',
+      color: colors.CONTAINER,
+      width: ColumnWidths.Default,
+    })),
+  ];
 }

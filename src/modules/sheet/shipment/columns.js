@@ -31,6 +31,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Status,
   },
   {
+    key: 'shipment.followers',
+    title: <FormattedMessage {...shipmentMessages.followers} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Followers,
+  },
+  {
     key: 'shipment.no',
     title: <FormattedMessage {...shipmentMessages.shipmentId} />,
     icon: 'SHIPMENT',
@@ -685,12 +692,67 @@ const columns: Array<ColumnConfig> = [
   // actions
 ];
 
+const exportKeys = {
+  'shipment.created': ['shipment.createdAt', 'shipment.createdBy'],
+  'shipment.updated': ['shipment.updatedAt', 'shipment.updatedBy'],
+  'shipment.importer': ['shipment.importer', 'shipment.importerCode'],
+  'shipment.exporter': ['shipment.exporter', 'shipment.exporterCode'],
+  'shipment.cargoReady.approved': [
+    'shipment.cargoReady.approvedAt',
+    'shipment.cargoReady.approvedBy',
+  ],
+  'shipment.voyage.0.departure.approved': [
+    'shipment.voyage.0.departure.approvedAt',
+    'shipment.voyage.0.departure.approvedBy',
+  ],
+  'shipment.voyage.0.firstTransitArrival.approved': [
+    'shipment.voyage.0.firstTransitArrival.approvedAt',
+    'shipment.voyage.0.firstTransitArrival.approvedBy',
+  ],
+  'shipment.voyage.1.firstTransitDeparture.approved': [
+    'shipment.voyage.1.firstTransitDeparture.approvedAt',
+    'shipment.voyage.1.firstTransitDeparture.approvedBy',
+  ],
+  'shipment.voyage.1.secondTransitArrival.approved': [
+    'shipment.voyage.1.secondTransitArrival.approvedAt',
+    'shipment.voyage.1.secondTransitArrival.approvedBy',
+  ],
+  'shipment.voyage.2.secondTransitDeparture.approved': [
+    'shipment.voyage.2.secondTransitDeparture.approvedAt',
+    'shipment.voyage.2.secondTransitDeparture.approvedBy',
+  ],
+  'shipment.voyage.2.arrival.approved': [
+    'shipment.voyage.2.arrival.approvedAt',
+    'shipment.voyage.2.arrival.approvedBy',
+  ],
+  'shipment.containerGroup.customClearance.approved': [
+    'shipment.containerGroup.customClearance.approvedAt',
+    'shipment.containerGroup.customClearance.approvedBy',
+  ],
+  'shipment.containerGroup.warehouseArrival.approved': [
+    'shipment.containerGroup.warehouseArrival.approvedAt',
+    'shipment.containerGroup.warehouseArrival.approvedBy',
+  ],
+  'shipment.containerGroup.deliveryReady.approved': [
+    'shipment.containerGroup.deliveryReady.approvedAt',
+    'shipment.containerGroup.deliveryReady.approvedBy',
+  ],
+  'shipment.todo': [
+    'shipment.todo.taskCount.count',
+    'shipment.todo.taskCount.remain',
+    'shipment.todo.taskCount.inProgress',
+    'shipment.todo.taskCount.completed',
+    'shipment.todo.taskCount.rejected',
+    'shipment.todo.taskCount.approved',
+    'shipment.todo.taskCount.skipped',
+    'shipment.todo.taskCount.delayed',
+  ],
+};
+
 export default function shipmentColumns({
-  exportKeys,
   sorts = {},
   fieldDefinitions = [],
 }: {
-  exportKeys: { [string]: string | Array<string> },
   sorts?: { [string]: ColumnSortConfig },
   fieldDefinitions?: Array<FieldDefinition>,
 }): Array<ColumnConfig> {
@@ -698,10 +760,7 @@ export default function shipmentColumns({
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `shipment.customField.${fieldDefinition.id}`,
-      exportKey:
-        exportKeys['shipment.customField'] && !Array.isArray(exportKeys['shipment.customField'])
-          ? `${exportKeys['shipment.customField']}.${fieldDefinition.id}`
-          : undefined,
+      exportKey: `shipment.customFields.${fieldDefinition.id}`,
       title: fieldDefinition.name,
       icon: 'SHIPMENT',
       color: colors.SHIPMENT,
