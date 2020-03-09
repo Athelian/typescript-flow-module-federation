@@ -78,6 +78,7 @@ export const ordersQuery = gql`
                     ...sheetContainerFragment
                     ...sheetModelFragment
                     ...sheetOwnedFragment
+                    ...sheetCustomizableFragment
                   }
                   shipment {
                     ...sheetShipmentFragment
@@ -163,6 +164,7 @@ export const orderItemByIDQuery = gql`
               ...sheetContainerFragment
               ...sheetModelFragment
               ...sheetOwnedFragment
+              ...sheetCustomizableFragment
             }
             shipment {
               ...sheetShipmentFragment
@@ -226,6 +228,7 @@ export const batchByIDQuery = gql`
           ...sheetContainerFragment
           ...sheetModelFragment
           ...sheetOwnedFragment
+          ...sheetCustomizableFragment
         }
         shipment {
           ...sheetShipmentFragment
@@ -268,12 +271,14 @@ export const containerByIDQuery = gql`
       ...sheetContainerFragment
       ...sheetModelFragment
       ...sheetOwnedFragment
+      ...sheetCustomizableFragment
     }
   }
 
   ${sheetContainerFragment}
   ${sheetModelFragment}
   ${sheetOwnedFragment}
+  ${sheetCustomizableFragment}
   ${sheetWarehouseFragment}
 
   ${userAvatarFragment}
