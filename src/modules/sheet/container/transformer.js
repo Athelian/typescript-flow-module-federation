@@ -5,12 +5,15 @@ import { addDays, differenceInCalendarDays } from 'date-fns';
 import { calculateDueDate, startOfToday } from 'utils/date';
 import { convertVolume, convertWeight } from 'utils/metric';
 import { getLatestDate } from 'utils/shipment';
+import type { FieldDefinition } from 'types';
 import { calculatePackageQuantity, calculateVolume, getBatchLatestQuantity } from 'utils/batch';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   transformComputedField,
   transformReadonlyField,
+  transformField,
   transformValueField,
+  transformCustomField,
 } from 'components/Sheet';
 import {
   CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
@@ -30,9 +33,12 @@ import {
   CONTAINER_SET_YARD_NAME,
   CONTAINER_SET_FOLLOWERS,
   CONTAINER_UPDATE,
+  CONTAINER_SET_CUSTOM_FIELDS,
+  CONTAINER_SET_CUSTOM_FIELDS_MASK,
 } from 'modules/permission/constants/container';
 
 type Props = {|
+  fieldDefinitions: Array<FieldDefinition>,
   basePath: string,
   container: ?Object,
   getContainerFromRoot: Object => ?Object,
@@ -40,6 +46,7 @@ type Props = {|
 |};
 
 export default function transformSheetContainer({
+  fieldDefinitions,
   basePath,
   container,
   getContainerFromRoot,
@@ -440,5 +447,34 @@ export default function transformSheetContainer({
       type: 'container_logs',
       ...transformValueField(basePath, container, 'id', () => true),
     },
+    {
+      columnKey: 'container.mask',
+      type: 'mask',
+      extra: { entityType: 'Container' },
+      ...transformField(
+        container,
+        `${basePath}.customFields.mask`,
+        'mask',
+        container?.customFields?.mask ?? null,
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_CUSTOM_FIELDS_MASK)
+      ),
+    },
+    ...fieldDefinitions.map(fieldDefinition => ({
+      columnKey: `container.customField.${fieldDefinition.id}`,
+      type: 'text',
+      hide: (root: Object) => {
+        const currentContainer = getContainerFromRoot(root);
+        const mask = currentContainer?.customFields?.mask ?? null;
+        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+      },
+      ...transformCustomField(
+        basePath,
+        container,
+        fieldDefinition.id,
+        hasPermission =>
+          hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_CUSTOM_FIELDS)
+      ),
+    })),
   ];
 }

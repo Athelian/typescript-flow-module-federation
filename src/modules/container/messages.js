@@ -70,6 +70,10 @@ export default defineMessages({
     id: 'modules.container.logs',
     defaultMessage: 'Logs',
   },
+  mask: {
+    id: 'modules.container.mask',
+    defaultMessage: 'Custom fields template',
+  },
   createdAt: {
     id: 'modules.container.createdAt',
     defaultMessage: 'Date Created',

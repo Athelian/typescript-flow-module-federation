@@ -16,6 +16,7 @@ export const FieldDefinitionEntityTypes = [
   'OrderItem',
   'Batch',
   'Shipment',
+  'Container',
 ];
 
 export const OrderSheetColumnGroups = [
@@ -34,6 +35,7 @@ type Props = {|
   orderItemFieldDefinitions: Array<FieldDefinition>,
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
+  containerFieldDefinitions: Array<FieldDefinition>,
 |};
 
 export default function({
@@ -42,6 +44,7 @@ export default function({
   orderItemFieldDefinitions,
   batchFieldDefinitions,
   shipmentFieldDefinitions,
+  containerFieldDefinitions,
 }: Props): Array<ColumnConfig> {
   return [
     ...orderColumns({
@@ -229,6 +232,7 @@ export default function({
           group: 'batch',
         },
       },
+      fieldDefinitions: containerFieldDefinitions,
     }).filter(
       c =>
         ![

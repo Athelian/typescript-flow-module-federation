@@ -45,6 +45,12 @@ export default function normalizeSheetContainerInput(
       return {
         warehouseId: newValue?.id ?? null,
       };
+    case 'mask':
+      return {
+        customFields: {
+          maskId: newValue?.id ?? null,
+        },
+      };
     default:
       return normalizeSheetInput(container, field, newValue);
   }

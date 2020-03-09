@@ -16,6 +16,7 @@ export const FieldDefinitionEntityTypes = [
   'Shipment',
   'Product',
   'ProductProvider',
+  'Container',
 ];
 
 export const ShipmentSheetColumnGroups = [
@@ -34,6 +35,7 @@ type Props = {|
   batchFieldDefinitions: Array<FieldDefinition>,
   shipmentFieldDefinitions: Array<FieldDefinition>,
   productFieldDefinitions: Array<FieldDefinition>,
+  containerFieldDefinitions: Array<FieldDefinition>,
 |};
 
 export default function({
@@ -42,6 +44,7 @@ export default function({
   batchFieldDefinitions,
   shipmentFieldDefinitions,
   productFieldDefinitions,
+  containerFieldDefinitions,
 }: Props): Array<ColumnConfig> {
   return [
     ...shipmentColumns({
@@ -154,6 +157,7 @@ export default function({
           group: 'container',
         },
       },
+      fieldDefinitions: containerFieldDefinitions,
     }),
     ...batchColumns({
       sorts: {

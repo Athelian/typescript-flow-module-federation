@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Mar 02 2020 15:46:59 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Mar 04 2020 21:41:35 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26854,7 +26854,7 @@ input CommentUpdateInput {
   mentionIds: [ID!]
 }
 
-type Container implements Model & Owned & Tagged & Followed & Sortable & Memorizable {
+type Container implements Model & Owned & Tagged & Followed & Sortable & Customizable & Memorizable {
   archived: Boolean!
   no: String!
   representativeBatch: BatchPayload
@@ -26900,6 +26900,7 @@ type Container implements Model & Owned & Tagged & Followed & Sortable & Memoriz
   followers: [UserPayload!]!
   notificationUnseenCount: Int!
   sort: Int!
+  customFields: CustomFields!
   memo: String
 }
 
@@ -26956,6 +26957,7 @@ input ContainerCreateInput {
   memo: String
   tagIds: [ID!]
   followerIds: [ID!]
+  customFields: CustomFieldsInput
   todo: TodoInput
   shipmentId: ID!
 }
@@ -27054,6 +27056,7 @@ input ContainerUpdateInput {
   memo: String
   tagIds: [ID!]
   followerIds: [ID!]
+  customFields: CustomFieldsInput
   todo: TodoInput
   shipmentId: ID
 }
@@ -28354,6 +28357,7 @@ enum CustomizableEntityType {
   OrderItem
   Batch
   Shipment
+  Container
   Warehouse
 }
 
@@ -87068,6 +87072,7 @@ input ShipmentContainerCreateInput {
   memo: String
   tagIds: [ID!]
   followerIds: [ID!]
+  customFields: CustomFieldsInput
   todo: TodoInput
 }
 
@@ -87095,6 +87100,7 @@ input ShipmentContainerUpdateInput {
   memo: String
   tagIds: [ID!]
   followerIds: [ID!]
+  customFields: CustomFieldsInput
   todo: TodoInput
   id: ID
 }

@@ -47,6 +47,9 @@ export const containerFormFragment = gql`
       ...tagFragment
       ...forbiddenFragment
     }
+    customFields {
+      ...customFieldsFragment
+    }
     shipment {
       ...shipmentCardFragment
     }
