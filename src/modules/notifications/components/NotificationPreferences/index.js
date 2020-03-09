@@ -5,7 +5,7 @@ import {
   NotificationTypeValues,
   NotificationPreference,
 } from 'generated/graphql';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { isEquals } from 'utils/fp';
 import { removeTypename } from 'utils/data';
@@ -103,6 +103,7 @@ const parseIntervalFromAPI = (value: ?Object) => {
 };
 
 function NotificationPreferences({ isOpen, onClose }: Props) {
+  const intl = useIntl();
   const [notificationPreferencesUpdate] = useMutation(notificationPreferencesUpdateMutation);
   const [isEmailNotificationsEnabled, setEmailNotificationsEnabled] = React.useState(false);
   const [preferences, setPreferences] = React.useState([]);
@@ -208,54 +209,45 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
                 value={timer}
                 items={[
                   {
-                    label: (
-                      <FormattedMessage
-                        id="modules.Notifications.instant"
-                        defaultMessage="Instant"
-                      />
-                    ),
+                    label: intl.formatMessage({
+                      id: 'modules.Notifications.instant',
+                      defaultMessage: 'Instant',
+                    }),
                     value: 'instant',
                   },
                   {
-                    label: (
-                      <FormattedMessage
-                        id="modules.Notifications.tenMinutes"
-                        defaultMessage="10 min"
-                      />
-                    ),
+                    label: intl.formatMessage({
+                      id: 'modules.Notifications.tenMinutes',
+                      defaultMessage: '10 min',
+                    }),
                     value: '10m',
                   },
                   {
-                    label: (
-                      <FormattedMessage
-                        id="modules.Notifications.thirtyMinutes"
-                        defaultMessage="30 min"
-                      />
-                    ),
+                    label: intl.formatMessage({
+                      id: 'modules.Notifications.thirtyMinutes',
+                      defaultMessage: '30 min',
+                    }),
                     value: '30m',
                   },
                   {
-                    label: (
-                      <FormattedMessage id="modules.Notifications.oneHour" defaultMessage="1 hr" />
-                    ),
+                    label: intl.formatMessage({
+                      id: 'modules.Notifications.oneHour',
+                      defaultMessage: '1 hr',
+                    }),
                     value: '1hr',
                   },
                   {
-                    label: (
-                      <FormattedMessage
-                        id="modules.Notifications.sixHours"
-                        defaultMessage="6 hrs"
-                      />
-                    ),
+                    label: intl.formatMessage({
+                      id: 'modules.Notifications.sixHours',
+                      defaultMessage: '6 hrs',
+                    }),
                     value: '6hr',
                   },
                   {
-                    label: (
-                      <FormattedMessage
-                        id="modules.Notifications.twelveHours"
-                        defaultMessage="12 hrs"
-                      />
-                    ),
+                    label: intl.formatMessage({
+                      id: 'modules.Notifications.twelveHours',
+                      defaultMessage: '12 hrs',
+                    }),
                     value: '12hr',
                   },
                 ]}
