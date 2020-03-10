@@ -1392,6 +1392,7 @@
   "modules.Shipments.selectTransportType": "輸送手段を選択してください",
   "modules.Voyages.arrivalPort": "揚港",
   "modules.Shipments.tooltipArrivalPort": "先にページ上部のシップメント情報の輸送手段を選択してください。",
+  "modules.Voyages.voyageNo": "VOYAGE NO",
   "modules.Voyages.vesselName": "便名",
   "modules.Voyages.vesselCode": "Voyage No./Flight No.",
   "modules.Shipments.ofVoyages": "積み替え情報",

@@ -1392,6 +1392,7 @@
   "modules.Shipments.selectTransportType": "请选择输送类型",
   "modules.Voyages.arrivalPort": "到达港",
   "modules.Shipments.tooltipArrivalPort": "您可以在装运部分的输送字段下选择输送类型",
+  "modules.Voyages.voyageNo": "船编号",
   "modules.Voyages.vesselName": "船名称",
   "modules.Voyages.vesselCode": "船号",
   "modules.Shipments.ofVoyages": "航程数量",

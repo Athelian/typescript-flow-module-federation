@@ -1392,6 +1392,7 @@
   "modules.Shipments.selectTransportType": "Please select a transport type",
   "modules.Voyages.arrivalPort": "ARRIVAL PORT",
   "modules.Shipments.tooltipArrivalPort": "You can select a transport type in the Shipment section under field labeled \"TRANSPORTATION\"",
+  "modules.Voyages.voyageNo": "VOYAGE NO",
   "modules.Voyages.vesselName": "VESSEL NAME",
   "modules.Voyages.vesselCode": "VESSEL CODE",
   "modules.Shipments.ofVoyages": "# OF VOYAGES",
