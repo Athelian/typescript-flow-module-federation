@@ -178,6 +178,7 @@ export const shipmentFormFragment = gql`
     voyages {
       ... on Voyage {
         id
+        no
         vesselName
         vesselCode
         departurePort {
@@ -292,6 +293,7 @@ export const shipmentCardFragment = gql`
         arrival {
           ...timelineDateMinimalFragment
         }
+        no
         vesselName
       }
     }
