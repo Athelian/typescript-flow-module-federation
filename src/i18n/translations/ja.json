@@ -49,6 +49,7 @@
   "components.cards.arrival": "倉庫到着",
   "components.cards.ttlItems": "商品数",
   "components.cards.poDate": "発注日",
+  "components.cards.createdAt": "作成日",
   "components.cards.contractDate": "契約日",
   "components.cards.currencyDifferentWarningMessage": "商品価格の通貨が発注情報の通貨と異なるため、商品価格は自動的に同期されません。",
   "modules.Orders.price": "価格",
