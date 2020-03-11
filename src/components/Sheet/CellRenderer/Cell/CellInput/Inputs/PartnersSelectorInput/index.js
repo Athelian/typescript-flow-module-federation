@@ -62,10 +62,22 @@ const PartnersSelectorInput = ({
       <SlideView isOpen={focus} onRequestClose={forceBlur}>
         <SelectPartners
           partnerTypes={extra?.partnerTypes ?? []}
-          selected={value || []}
+          selected={(value ?? []).map(organization => {
+            const assembledPartner = {
+              ...organization?.partner,
+              organization,
+            };
+            return assembledPartner;
+          })}
           onCancel={forceBlur}
           onSelect={newValue => {
-            onChange(newValue, true);
+            const assembledOrgs = newValue.map(({ organization, ...partner }) => ({
+              ...organization,
+              partner: {
+                ...partner,
+              },
+            }));
+            onChange(assembledOrgs, true);
             forceBlur();
           }}
         />
