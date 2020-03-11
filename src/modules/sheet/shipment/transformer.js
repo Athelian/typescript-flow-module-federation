@@ -845,7 +845,7 @@ export default function transformSheetShipment({
       type: 'text',
       ...transformValueField(
         `${basePath}.voyages.1`,
-        shipment?.voyages?.[0] ?? null,
+        shipment?.voyages?.[1] ?? null,
         'no',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VOYAGE_NO)
       ),
@@ -1013,7 +1013,7 @@ export default function transformSheetShipment({
       type: 'text',
       ...transformValueField(
         `${basePath}.voyages.2`,
-        shipment?.voyages?.[0] ?? null,
+        shipment?.voyages?.[2] ?? null,
         'no',
         hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VOYAGE_NO)
       ),
