@@ -71,7 +71,6 @@ const PartnersSelectorInput = ({
           })}
           onCancel={forceBlur}
           onSelect={newValue => {
-            console.warn(newValue);
             const assembledOrgs = newValue.map(({ organization, ...partner }) => ({
               ...organization,
               partner: {
