@@ -51,6 +51,7 @@ export const shipmentFormTimelineAndCargoQuery = gql`
         voyages {
           ... on Voyage {
             id
+            no
             vesselName
             vesselCode
             departurePort {

@@ -75,6 +75,7 @@ export const shipmentFormSummaryQuery = gql`
         voyages {
           ... on Voyage {
             id
+            no
             vesselName
             departurePort {
               ...portFragment

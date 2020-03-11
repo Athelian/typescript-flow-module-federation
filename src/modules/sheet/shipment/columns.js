@@ -312,6 +312,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.DateUser,
   },
   {
+    key: 'shipment.voyage.0.no',
+    title: <FormattedMessage {...shipmentMessages.firstVoyageNo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'shipment.voyage.0.vesselName',
     title: <FormattedMessage {...shipmentMessages.firstVesselName} />,
     icon: 'SHIPMENT',
@@ -403,6 +410,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.DateUser,
   },
   {
+    key: 'shipment.voyage.1.no',
+    title: <FormattedMessage {...shipmentMessages.secondVoyageNo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'shipment.voyage.1.vesselName',
     title: <FormattedMessage {...shipmentMessages.secondVesselName} />,
     icon: 'SHIPMENT',
@@ -492,6 +506,13 @@ const columns: Array<ColumnConfig> = [
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: ColumnWidths.DateUser,
+  },
+  {
+    key: 'shipment.voyage.2.no',
+    title: <FormattedMessage {...shipmentMessages.thirdVoyageNo} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Default,
   },
   {
     key: 'shipment.voyage.2.vesselName',

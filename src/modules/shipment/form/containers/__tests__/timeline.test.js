@@ -133,6 +133,7 @@ describe('shipment timeline container', () => {
     };
     const voyage = {
       id: faker.random.uuid(),
+      no: null,
       vesselName: null,
       vesselCode: null,
       departurePort: {

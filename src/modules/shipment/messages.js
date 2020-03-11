@@ -154,6 +154,18 @@ export default defineMessages({
     id: 'modules.Shipments.dischargePortArrivalApproved',
     defaultMessage: 'DISCHARGE PORT ARRIVAL APPROVED',
   },
+  firstVoyageNo: {
+    id: 'modules.Shipments.firstVoyageNo',
+    defaultMessage: 'FIRST VOYAGE NO',
+  },
+  secondVoyageNo: {
+    id: 'modules.Shipments.secondVoyageNo',
+    defaultMessage: 'SECOND VOYAGE NO',
+  },
+  thirdVoyageNo: {
+    id: 'modules.Shipments.thirdVoyageNo',
+    defaultMessage: 'THIRD VOYAGE NO',
+  },
   firstVesselName: {
     id: 'modules.Shipments.firstVesselName',
     defaultMessage: 'FIRST VESSEL NAME',
