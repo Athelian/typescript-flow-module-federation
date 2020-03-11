@@ -45,20 +45,7 @@ const SelectPartners = ({ partnerTypes, selected, onCancel, onSelect }: Props) =
   );
 
   return (
-    <Selector.Many
-      selected={selected}
-      onSelect={({ isSelected, filter, item, max, value, push }) => {
-        if (isSelected) {
-          filter(i => i.id !== item?.organization?.id);
-        } else if (!max || value.length < max) {
-          // kill me and FIXME
-          const { organization, types, ...rest } = item;
-          push({ ...organization, types, partner: { ...rest } });
-        }
-      }}
-      valueToSelected={({ value, item }) => value.some(i => i.id === item?.organization?.id)}
-      max={MAX_SELECTIONS}
-    >
+    <Selector.Many selected={selected} max={MAX_SELECTIONS}>
       {({ value, dirty, getItemProps }) => (
         <SlideViewLayout>
           <SlideViewNavBar>
@@ -77,12 +64,7 @@ const SelectPartners = ({ partnerTypes, selected, onCancel, onSelect }: Props) =
               {value.length}/{MAX_SELECTIONS}
             </h3>
             <CancelButton disabled={false} onClick={onCancel} />
-            <SaveButton
-              disabled={!dirty}
-              onClick={() => {
-                onSelect(value);
-              }}
-            />
+            <SaveButton disabled={!dirty} onClick={() => onSelect(value)} />
           </SlideViewNavBar>
 
           <Content>
