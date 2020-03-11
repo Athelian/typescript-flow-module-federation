@@ -191,7 +191,10 @@ const ColumnsConfig = ({
       const parsedTemplate = {
         ...template,
         columns: Object.keys(defaultColumnsByGroup).reduce(
-          (newColumns, groupName) => newColumns.concat(newColumnsByGroup[groupName]),
+          (newColumns, groupName) =>
+            newColumnsByGroup[groupName]
+              ? newColumns.concat(newColumnsByGroup[groupName])
+              : newColumns,
           []
         ),
       };
