@@ -294,7 +294,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           <DeleteButton
                             isHovered={isHovered}
                             onClick={() => {
-                              setStep(2);
+                              onRemove(milestoneId, removeOnTasks);
                             }}
                           />
                         );
