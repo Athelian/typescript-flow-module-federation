@@ -55,6 +55,16 @@ export const DocumentParentWrapperStyle: string = css`
   padding: 0 5px;
 `;
 
+export const CreatedAtStyle: string = css`
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  text-align: right;
+
+  color: ${colors.GRAY_DARK_1};
+`;
+
 export const TagsAndButtonsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;

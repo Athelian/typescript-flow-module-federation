@@ -27,6 +27,7 @@ import {
   FileNameStyle,
   DocumentTypeStyle,
   DocumentParentWrapperStyle,
+  CreatedAtStyle,
   TagsAndButtonsWrapperStyle,
   TagsWrapperStyle,
   DownloadButtonStyle,
@@ -202,8 +203,8 @@ const DocumentCard = ({
             </Label>
           }
           input={
-            <Display>
-              <FormattedDate value={createdAt} />
+            <Display className={CreatedAtStyle}>
+              <FormattedDate value={createdAt} mode="datetime" />
             </Display>
           }
         />
