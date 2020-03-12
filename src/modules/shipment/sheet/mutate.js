@@ -37,6 +37,9 @@ function getEntityId(entity: Object, item: Object): string {
     case 'TimelineDate': {
       return item.id;
     }
+    case 'Voyage': {
+      return item.id;
+    }
     default:
       return entity.id;
   }
