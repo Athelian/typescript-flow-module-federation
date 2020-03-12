@@ -49,7 +49,7 @@
   "components.cards.arrival": "仓库到达",
   "components.cards.ttlItems": "总商品",
   "components.cards.poDate": "订单日期",
-  "components.cards.uploadedAt": "更新日期",
+  "components.cards.uploadedAt": "上传时间",
   "components.cards.contractDate": "合同日期",
   "components.cards.currencyDifferentWarningMessage": "价格不会自动同步到物料中，因为此出口商/供应商的货币价格与此订货不匹配。",
   "modules.Orders.price": "单价",

@@ -56,13 +56,10 @@ export const DocumentParentWrapperStyle: string = css`
 `;
 
 export const CreatedAtStyle: string = css`
-  font-size: 12px;
-  line-height: 15px;
-  display: flex;
-  align-items: center;
-  text-align: right;
-
-  color: ${colors.GRAY_DARK_1};
+  color: ${colors.BLACK};
+  ${fontSizes.SMALL};
+  line-height: 20px;
+  padding: 0 5px 0 0;
 `;
 
 export const TagsAndButtonsWrapperStyle: string = css`
