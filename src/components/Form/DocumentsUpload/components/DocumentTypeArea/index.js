@@ -182,7 +182,7 @@ const DocumentTypeArea = ({
                               }}
                             >
                               <DocumentCard
-                                file={file}
+                                file={{ file }}
                                 hideParentInfo
                                 downloadable={canDownload}
                                 onClick={evt => {
