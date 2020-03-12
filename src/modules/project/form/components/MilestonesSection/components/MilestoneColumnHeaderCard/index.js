@@ -183,6 +183,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                   {hasPermission([MILESTONE_DELETE]) && milestones.length > 1 && (
                     <NumberValue defaultValue={0}>
                       {({ value: step, set: setStep }) => {
+                        console.warn(step);
                         let removeOnTasks = false;
                         const onRemove = (id, withTasks) => {
                           removeMilestone(id, withTasks);
@@ -294,7 +295,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           <DeleteButton
                             isHovered={isHovered}
                             onClick={() => {
-                              setStep(2);
+                              onRemove(milestoneId, removeOnTasks);
                             }}
                           />
                         );
