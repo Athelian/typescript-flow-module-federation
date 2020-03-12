@@ -35,6 +35,7 @@ export type ShipmentGroups = ?{
 };
 
 export type ShipmentVoyage = ?{
+  no?: string,
   vesselName?: string,
   vesselCode?: string,
   departure?: ?ShipmentTimeline,

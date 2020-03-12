@@ -6,6 +6,7 @@ import usePermission from 'hooks/usePermission';
 import {
   SHIPMENT_UPDATE,
   SHIPMENT_SET_PORT,
+  SHIPMENT_SET_VOYAGE_NO,
   SHIPMENT_SET_VESSEL_NAME,
   SHIPMENT_SET_VESSEL_CODE,
 } from 'modules/permission/constants/shipment';
@@ -37,10 +38,12 @@ type OptionalProps = {
       airport: string,
       seaport: string,
     },
+    no: string,
     vesselCode: string,
     vesselName: string,
   },
   initialVoyage: {
+    no: string,
     arrivalPort?: {
       airport: string,
       seaport: string,
@@ -269,6 +272,23 @@ const VoyageInfoSection = ({
             }
           />
         )}
+
+        <FormField
+          name={`${sourceName}.no`}
+          initValue={voyage.no}
+          setFieldValue={setFieldDeepValue}
+        >
+          {({ name, ...inputHandlers }) => (
+            <TextInputFactory
+              {...inputHandlers}
+              editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_VOYAGE_NO])}
+              originalValue={initialVoyage.no}
+              name={name}
+              isNew={isNew}
+              label={<FormattedMessage id="modules.Voyages.voyageNo" defaultMessage="VESSEL NO" />}
+            />
+          )}
+        </FormField>
 
         <FormField
           name={`${sourceName}.vesselName`}

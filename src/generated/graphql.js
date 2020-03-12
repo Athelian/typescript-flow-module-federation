@@ -32673,6 +32673,7 @@ export type ShipmentSortInput = {|
   secondTransitPortArrival?: ?SortOrder,
   secondTransitPortDeparture?: ?SortOrder,
   dischargePortArrival?: ?SortOrder,
+  no?: ?SortOrder,
   vesselName?: ?SortOrder,
   customClearance?: ?SortOrder,
   warehouseArrival?: ?SortOrder,
@@ -33503,6 +33504,7 @@ export type Voyage = {|
   ...Sortable,
   ...{|
      __typename?: 'Voyage',
+    no?: ?$ElementType<Scalars, 'String'>,
     vesselName?: ?$ElementType<Scalars, 'String'>,
     vesselCode?: ?$ElementType<Scalars, 'String'>,
     departurePort?: ?Port,
@@ -33524,6 +33526,7 @@ export type Voyage = {|
 
 export type VoyageNestedInput = {|
   id?: ?$ElementType<Scalars, 'ID'>,
+  no?: ?$ElementType<Scalars, 'String'>,
   vesselName?: ?$ElementType<Scalars, 'String'>,
   vesselCode?: ?$ElementType<Scalars, 'String'>,
   departurePort?: ?PortInput,
@@ -35705,7 +35708,7 @@ export type ShipmentFormFragmentFragment = ({
     ...TimelineDateFullFragmentFragment
   }) | { __typename?: 'BadRequest' } | { __typename?: 'Forbidden' } | { __typename?: 'NotFound' }, voyages: Array<({
       ...{ __typename?: 'Voyage' },
-    ...$Pick<Voyage, {| id: *, vesselName: *, vesselCode: * |}>,
+    ...$Pick<Voyage, {| id: *, no: *, vesselName: *, vesselCode: * |}>,
     ...{| departurePort: ?({
         ...{ __typename?: 'Port' },
       ...PortFragmentFragment
@@ -35780,7 +35783,7 @@ export type ShipmentCardFragmentFragment = ({
     }) |}
   }), voyages: Array<({
       ...{ __typename?: 'Voyage' },
-    ...$Pick<Voyage, {| id: *, vesselName: * |}>,
+    ...$Pick<Voyage, {| id: *, no: *, vesselName: * |}>,
     ...{| departurePort: ?({
         ...{ __typename?: 'Port' },
       ...PortFragmentFragment

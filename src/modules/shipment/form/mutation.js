@@ -391,6 +391,7 @@ export const prepareParsedShipmentInput = ({
       newValues.voyages,
       (oldVoyage: ?Object, newVoyage: Object) => ({
         ...(!oldVoyage ? {} : { id: oldVoyage.id }),
+        ...parseGenericField('no', getByPathWithDefault(null, 'no', oldVoyage), newVoyage.no),
         ...parseGenericField(
           'vesselName',
           getByPathWithDefault(null, 'vesselName', oldVoyage),
