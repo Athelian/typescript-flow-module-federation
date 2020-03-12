@@ -199,7 +199,7 @@ const DocumentCard = ({
         <FieldItem
           label={
             <Label>
-              <FormattedMessage id="components.cards.createdAt" defaultMessage="CREATED AT" />
+              <FormattedMessage id="components.cards.uploadedAt" defaultMessage="UPLOADED" />
             </Label>
           }
           input={
