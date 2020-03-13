@@ -102,16 +102,22 @@ export default function OrderItemCard({
           <Blackout />
         )}
 
-        <RelateEntity
-          blackout={!canViewProductName}
-          link={productLink}
-          entity="PRODUCT"
-          value={productName}
-          width="125px"
-        />
+        <FullValueTooltip message={productName}>
+          <div>
+            <RelateEntity
+              blackout={!canViewProductName}
+              link={productLink}
+              entity="PRODUCT"
+              value={productName}
+              width="125px"
+            />
+          </div>
+        </FullValueTooltip>
 
         {canViewProductSerial ? (
-          <div className={ProductSerialStyle}>{productSerial}</div>
+          <FullValueTooltip message={productSerial}>
+            <div className={ProductSerialStyle}>{productSerial}</div>
+          </FullValueTooltip>
         ) : (
           <Blackout />
         )}
