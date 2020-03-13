@@ -56,7 +56,7 @@ export default function ContainerCard({
       <div className={TopRowWrapperStyle}>
         <Display blackout={!canViewNo}>
           <FullValueTooltip message={no}>
-            <div>{no}</div>
+            <span>{no}</span>
           </FullValueTooltip>
         </Display>
 
