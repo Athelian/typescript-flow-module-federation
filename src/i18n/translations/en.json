@@ -49,6 +49,7 @@
   "components.cards.arrival": "ARRIVAL",
   "components.cards.ttlItems": "TTL ITEMS",
   "components.cards.poDate": "PO DATE",
+  "components.cards.uploadedAt": "UPLOADED",
   "components.cards.contractDate": "CONTRACT DATE",
   "components.cards.currencyDifferentWarningMessage": "The Unit Price will not be automatically synced into the Item because the Currency of the Unit Price of this End Product does not match the Currency of this Order.",
   "modules.Orders.price": "UNIT PRICE",

@@ -40,6 +40,7 @@ type UploadFileState = {
   tags: Array<Object>,
   memo: string,
   entity?: Object,
+  createdAt: string,
 };
 
 const editableFields = ['id', 'type', 'name', 'path', 'tags', 'memo'];
@@ -53,6 +54,7 @@ const SELECTED_FIELDS = [
   'memo',
   'tags',
   'entity',
+  'createdAt',
   'ownedBy',
   'orphan',
   '__typename',
@@ -130,6 +132,7 @@ const DocumentsUpload = ({
         uploading: true,
         progress: 0,
         isNew: true,
+        createdAt: '',
       })),
     ]);
 

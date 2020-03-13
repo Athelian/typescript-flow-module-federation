@@ -2,7 +2,9 @@
 import * as React from 'react';
 import type { FilePayload } from 'generated/graphql';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import FormattedDate from 'components/FormattedDate';
 import type { IntlShape } from 'react-intl';
+import { Label, Display, FieldItem } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { isForbidden } from 'utils/data';
 import { Tooltip } from 'components/Tooltip';
@@ -25,6 +27,7 @@ import {
   FileNameStyle,
   DocumentTypeStyle,
   DocumentParentWrapperStyle,
+  CreatedAtStyle,
   TagsAndButtonsWrapperStyle,
   TagsWrapperStyle,
   DownloadButtonStyle,
@@ -140,7 +143,7 @@ export const getFileTypesByEntity = (
   }
 };
 
-let cardHeight = '159px';
+let cardHeight = '184px';
 
 const DocumentCard = ({
   file,
@@ -153,7 +156,7 @@ const DocumentCard = ({
   onClick,
   ...rest
 }: Props) => {
-  cardHeight = hideParentInfo ? '109px' : '159px';
+  cardHeight = hideParentInfo ? '134px' : '184px';
   const name = file?.name ?? '';
   const fileExtension = getFileExtension(name);
   const fileName = getFileName(name);
@@ -161,6 +164,7 @@ const DocumentCard = ({
   const { parentIcon, parentData, link } = getParentInfo(file?.entity ?? {});
   const fileTypes = getFileTypesByEntity(file?.entity?.__typename, intl);
   const fileTypeLabel = fileTypes.find(type => type.value === file?.type)?.label ?? '';
+  const createdAt = file?.createdAt ?? '';
 
   return (
     <BaseCard
@@ -191,6 +195,19 @@ const DocumentCard = ({
             </div>
           </>
         )}
+
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage id="components.cards.uploadedAt" defaultMessage="UPLOADED" />
+            </Label>
+          }
+          input={
+            <Display className={CreatedAtStyle}>
+              <FormattedDate value={createdAt} mode="datetime" />
+            </Display>
+          }
+        />
 
         <div className={TagsAndButtonsWrapperStyle}>
           <div className={TagsWrapperStyle}>
