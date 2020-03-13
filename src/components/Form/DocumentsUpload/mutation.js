@@ -12,9 +12,6 @@ const fileUploadMutation = gql`
   mutation fileUpload($file: Upload!, $input: FileInput!) {
     fileUpload(file: $file, input: $input) {
       ...documentFragment
-      ... on File {
-        createdAt
-      }
       ...badRequestFragment
       ...forbiddenFragment
     }
