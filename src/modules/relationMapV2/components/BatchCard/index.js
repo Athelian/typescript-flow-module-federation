@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { differenceInCalendarDays } from 'utils/date';
 import { getLatestDate } from 'utils/shipment';
 import Tag from 'components/Tag';
-import { Tooltip } from 'components/Tooltip';
+import { Tooltip, FullValueTooltip } from 'components/Tooltip';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import TaskRing from 'components/TaskRing';
@@ -166,7 +166,9 @@ export default function BatchCard({
     <div className={BatchCardWrapperStyle}>
       <div className={TopRowWrapperStyle}>
         <Display blackout={!canViewNo} width="100px">
-          {no}
+          <FullValueTooltip message={no}>
+            <span>{no}</span>
+          </FullValueTooltip>
         </Display>
 
         <div className={TagsAndDeliveryWrapperStyle}>
