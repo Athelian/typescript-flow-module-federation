@@ -5,6 +5,7 @@ import Tag from 'components/Tag';
 import TaskRing from 'components/TaskRing';
 import ProductImage from 'components/ProductImage';
 import FormattedNumber from 'components/FormattedNumber';
+import { FullValueTooltip } from 'components/Tooltip';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
@@ -116,7 +117,9 @@ class ProductCard extends React.PureComponent<Props, State> {
           </div>
 
           <div className={ProductInfoWrapperStyle}>
-            <div className={ProductNameStyle}>{name}</div>
+            <FullValueTooltip message={name}>
+              <div className={ProductNameStyle}>{name}</div>
+            </FullValueTooltip>
             <div className={ProductSerialStyle}>{serial}</div>
             <div className={ProductProvidersWrapperStyle}>
               <div className={ProductExporterStyle}>

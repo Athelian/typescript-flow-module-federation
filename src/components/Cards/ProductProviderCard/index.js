@@ -6,6 +6,7 @@ import withForbiddenCard from 'hoc/withForbiddenCard';
 import TaskRing from 'components/TaskRing';
 import { Display } from 'components/Form';
 import DocumentsDeleteDialog from 'components/Dialog/DocumentsDeleteDialog';
+import { FullValueTooltip } from 'components/Tooltip';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   ProductProviderCardWrapperStyle,
@@ -51,6 +52,8 @@ const ProductProviderCard = ({
   ...rest
 }: Props) => {
   const { archived, name, exporter, supplier, referenced, todo, files } = productProvider;
+  const exporterName = exporter?.partner?.name || exporter?.name;
+  const supplierName = supplier?.partner?.name || supplier?.name;
   const actions = [];
 
   if (!selectable) {
@@ -104,19 +107,29 @@ const ProductProviderCard = ({
       {...rest}
     >
       <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">
-        <div className={NameStyle}>
-          <Display align="left">{name}</Display>
-        </div>
+        <FullValueTooltip message={name}>
+          <div className={NameStyle}>
+            <Display align="left">{name}</Display>
+          </div>
+        </FullValueTooltip>
 
         <div className={InfoWrapperStyle}>
           <div className={ExporterStyle}>
             <Icon icon="EXPORTER" />
-            {exporter?.partner?.name || exporter?.name}
+            {exporterName && (
+              <FullValueTooltip message={exporterName}>
+                <span>{exporterName}</span>
+              </FullValueTooltip>
+            )}
           </div>
 
           <div className={SupplierStyle}>
             <Icon icon="SUPPLIER" />
-            {supplier?.partner?.name || supplier?.name}
+            {supplierName && (
+              <FullValueTooltip message={supplierName}>
+                <span>{supplierName}</span>
+              </FullValueTooltip>
+            )}
           </div>
 
           <div className={TaskWrapperStyle}>

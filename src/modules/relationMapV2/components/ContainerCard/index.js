@@ -7,6 +7,7 @@ import { CONTAINER_DELETE, CONTAINER_FORM } from 'modules/permission/constants/c
 import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import { Display, Blackout, Label } from 'components/Form';
+import { FullValueTooltip } from 'components/Tooltip';
 import CardActions from 'modules/relationMapV2/components/CardActions';
 import {
   ContainerCardWrapperStyle,
@@ -53,7 +54,11 @@ export default function ContainerCard({
   return (
     <div className={ContainerCardWrapperStyle}>
       <div className={TopRowWrapperStyle}>
-        <Display blackout={!canViewNo}>{no}</Display>
+        <Display blackout={!canViewNo}>
+          <FullValueTooltip message={no}>
+            <span>{no}</span>
+          </FullValueTooltip>
+        </Display>
 
         {canViewTags ? (
           <div className={TagsWrapperStyle}>
