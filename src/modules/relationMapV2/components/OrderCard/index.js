@@ -5,6 +5,7 @@ import Tag from 'components/Tag';
 import RelateEntity from 'components/RelateEntity';
 import TaskRing from 'components/TaskRing';
 import { Display, Blackout } from 'components/Form';
+import { FullValueTooltip } from 'components/Tooltip';
 import { useHasPermissions } from 'contexts/Permissions';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
@@ -42,7 +43,11 @@ export default function OrderCard({ order, onViewForm, onCreateItem, organizatio
   return (
     <div className={OrderCardWrapperStyle}>
       <div className={TopRowWrapperStyle}>
-        <Display blackout={!canViewPoNo}>{poNo}</Display>
+        <Display blackout={!canViewPoNo}>
+          <FullValueTooltip message={poNo}>
+            <span>{poNo}</span>
+          </FullValueTooltip>
+        </Display>
 
         {canViewTags ? (
           <div className={TagsWrapperStyle}>
@@ -56,19 +61,27 @@ export default function OrderCard({ order, onViewForm, onCreateItem, organizatio
       </div>
 
       <div className={BottomRowWrapperStyle}>
-        <RelateEntity
-          blackout={!canViewImporter}
-          entity="IMPORTER"
-          value={importer?.name}
-          width="100px"
-        />
+        <FullValueTooltip message={importer?.name}>
+          <div>
+            <RelateEntity
+              blackout={!canViewImporter}
+              entity="IMPORTER"
+              value={importer?.name}
+              width="100px"
+            />
+          </div>
+        </FullValueTooltip>
 
-        <RelateEntity
-          blackout={!canViewExporter}
-          entity="EXPORTER"
-          value={exporter?.name}
-          width="100px"
-        />
+        <FullValueTooltip message={exporter?.name}>
+          <div>
+            <RelateEntity
+              blackout={!canViewExporter}
+              entity="EXPORTER"
+              value={exporter?.name}
+              width="100px"
+            />
+          </div>
+        </FullValueTooltip>
 
         <TaskRing blackout={!canViewTasks} {...todo} />
       </div>
