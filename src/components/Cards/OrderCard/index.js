@@ -7,6 +7,7 @@ import FormattedDate from 'components/FormattedDate';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import TaskRing from 'components/TaskRing';
+import { FullValueTooltip } from 'components/Tooltip';
 import { Label, Display, FieldItem } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { isForbidden } from 'utils/data';
@@ -64,16 +65,26 @@ const OrderCard = ({ order, actions, onClick, ...rest }: Props) => {
     >
       <div className={OrderCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={OrderInfoWrapperStyle}>
-          <div className={PONoWrapperStyle}>
-            <Display align="left">{poNo}</Display>
-          </div>
+          <FullValueTooltip message={poNo}>
+            <div className={PONoWrapperStyle}>
+              <Display align="left">{poNo}</Display>
+            </div>
+          </FullValueTooltip>
           <div className={ImporterWrapperStyle}>
             <Icon icon="IMPORTER" />
-            {importer && importer.name}
+            {importer && importer.name && (
+              <FullValueTooltip message={importer.name}>
+                <span>{importer.name}</span>
+              </FullValueTooltip>
+            )}
           </div>
           <div className={ImporterWrapperStyle}>
             <Icon icon="EXPORTER" />
-            {exporter && exporter.name}
+            {exporter && exporter.name && (
+              <FullValueTooltip message={exporter.name}>
+                <span>{exporter.name}</span>
+              </FullValueTooltip>
+            )}
           </div>
           <FieldItem
             label={

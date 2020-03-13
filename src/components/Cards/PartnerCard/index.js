@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { Partner } from 'generated/graphql';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
-import { Tooltip } from 'components/Tooltip';
+import { FullValueTooltip } from 'components/Tooltip';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
@@ -41,9 +41,9 @@ const PartnerCard = ({ partner, onClick, size, selectable, ...rest }: Props) => 
       <div className={PartnerCardStyle(size)} role="presentation" onClick={onClick}>
         <img className={PartnerCardImageStyle} src={FALLBACK_IMAGE} alt="exporter_image" />
         <div className={PartnerInfoWrapperStyle(size)}>
-          <Tooltip message={partnerName}>
+          <FullValueTooltip message={partnerName}>
             <div className={PartnerNameStyle}>{partnerName}</div>
-          </Tooltip>
+          </FullValueTooltip>
           <div className={PartnerCodeStyle}>{partner?.code}</div>
           <div className={PartnerTypesWrapperStyle(size)}>
             <div className={PartnerTypeStyle(types.includes('Importer'))}>
