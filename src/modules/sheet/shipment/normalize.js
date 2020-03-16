@@ -51,6 +51,7 @@ export default function normalizeSheetShipmentInput(
             progress,
             size,
             isNew,
+            createdAt,
             ...rest
           }) => rest
         ),
