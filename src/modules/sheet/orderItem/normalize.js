@@ -44,6 +44,7 @@ export default function normalizeSheetOrderItemInput(
             progress,
             size,
             isNew,
+            createdAt,
             ...rest
           }) => rest
         ),
