@@ -52,6 +52,7 @@ export const sheetShipmentFragment = gql`
     voyages {
       ... on Voyage {
         id
+        no
         vesselName
         vesselCode
         departurePort {

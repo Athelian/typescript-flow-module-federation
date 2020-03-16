@@ -56,6 +56,7 @@ export const documentFragment = gql`
     type
     size
     memo
+    createdAt
     ownedBy {
       ...ownedByFragment
     }

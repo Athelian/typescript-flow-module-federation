@@ -55,6 +55,13 @@ export const DocumentParentWrapperStyle: string = css`
   padding: 0 5px;
 `;
 
+export const CreatedAtStyle: string = css`
+  color: ${colors.BLACK};
+  ${fontSizes.SMALL};
+  line-height: 20px;
+  padding: 0 5px 0 0;
+`;
+
 export const TagsAndButtonsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;

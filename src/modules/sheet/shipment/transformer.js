@@ -44,7 +44,9 @@ import {
   SHIPMENT_SET_TOTAL_VOLUME,
   SHIPMENT_SET_TOTAL_WEIGHT,
   SHIPMENT_SET_TRANSPORT_TYPE,
+  SHIPMENT_SET_VOYAGE_NO,
   SHIPMENT_SET_VESSEL_NAME,
+  SHIPMENT_SET_VESSEL_CODE,
   SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_SET_FOLLOWERS,
   SHIPMENT_UPDATE,
@@ -671,6 +673,16 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.voyage.0.no',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.voyages.0`,
+        shipment?.voyages?.[0] ?? null,
+        'no',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VOYAGE_NO)
+      ),
+    },
+    {
       columnKey: 'shipment.voyage.0.vesselName',
       type: 'text',
       ...transformValueField(
@@ -687,7 +699,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.0`,
         shipment?.voyages?.[0] ?? null,
         'vesselCode',
-        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_CODE)
       ),
     },
     {
@@ -829,6 +841,16 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.voyage.1.no',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.voyages.1`,
+        shipment?.voyages?.[1] ?? null,
+        'no',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VOYAGE_NO)
+      ),
+    },
+    {
       columnKey: 'shipment.voyage.1.vesselName',
       type: 'text',
       ...transformValueField(
@@ -845,7 +867,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.1`,
         shipment?.voyages?.[1] ?? null,
         'vesselCode',
-        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_CODE)
       ),
     },
     {
@@ -987,6 +1009,16 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.voyage.2.no',
+      type: 'text',
+      ...transformValueField(
+        `${basePath}.voyages.2`,
+        shipment?.voyages?.[2] ?? null,
+        'no',
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VOYAGE_NO)
+      ),
+    },
+    {
       columnKey: 'shipment.voyage.2.vesselName',
       type: 'text',
       ...transformValueField(
@@ -1003,7 +1035,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.2`,
         shipment?.voyages?.[2] ?? null,
         'vesselCode',
-        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_VESSEL_CODE)
       ),
     },
     {

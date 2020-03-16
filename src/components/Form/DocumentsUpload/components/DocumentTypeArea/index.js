@@ -162,7 +162,7 @@ const DocumentTypeArea = ({
                     file.uploading ? (
                       <UploadPlaceholder
                         progress={file.progress ?? 0}
-                        height="109px"
+                        height="134px"
                         key={file.id}
                       />
                     ) : (

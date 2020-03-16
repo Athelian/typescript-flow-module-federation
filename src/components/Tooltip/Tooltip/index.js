@@ -9,7 +9,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   message: React.Node | string,
-  children: React.Node,
+  children: React.Node | string,
 };
 
 export default function Tooltip({ message, children, delay, maxWidth, ...rest }: Props) {

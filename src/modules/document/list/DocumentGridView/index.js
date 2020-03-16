@@ -56,7 +56,7 @@ type Props = {
 
 const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => void): React$Node =>
   file?.uploading ? (
-    <UploadPlaceholder progress={file?.progress ?? 0} height="159px" key={file?.id} />
+    <UploadPlaceholder progress={file?.progress ?? 0} height="184px" key={file?.id} />
   ) : (
     <PartnerPermissionsWrapper key={file?.id ?? ''} data={file}>
       {permissions => {

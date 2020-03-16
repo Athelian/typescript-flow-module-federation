@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Tag from 'components/Tag';
-import { Tooltip } from 'components/Tooltip';
+import { Tooltip, FullValueTooltip } from 'components/Tooltip';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import TaskRing from 'components/TaskRing';
@@ -234,7 +234,11 @@ export default function ShipmentCard({
   return (
     <div className={ShipmentCardWrapperStyle(selectors.isShipmentFocus)}>
       <div className={TopRowWrapperStyle}>
-        <Display blackout={!canViewNo}>{no}</Display>
+        <Display blackout={!canViewNo}>
+          <FullValueTooltip message={no}>
+            <span>{no}</span>
+          </FullValueTooltip>
+        </Display>
 
         <div className={TagsAndPlaceWrapperStyle}>
           {canViewTags ? (

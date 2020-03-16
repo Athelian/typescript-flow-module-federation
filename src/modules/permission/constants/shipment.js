@@ -62,6 +62,7 @@ export const SHIPMENT_ADD_BATCH = 'shipment.batches.add';
 export const SHIPMENT_REMOVE_BATCH = 'shipment.batches.remove';
 export const SHIPMENT_BATCH_LIST_IN_CONTAINER = 'shipment.containerBatches.list';
 export const SHIPMENT_CONTAINER_LIST = 'shipment.containers.list';
+export const SHIPMENT_SET_VOYAGE_NO = 'shipment.shipments.setVoyageNo';
 export const SHIPMENT_SET_VESSEL_CODE = 'shipment.shipments.setVesselCode';
 export const SHIPMENT_SET_VESSEL_NAME = 'shipment.shipments.setVesselName';
 export const SHIPMENT_SET_VOYAGES = 'shipment.shipments.setVoyages';

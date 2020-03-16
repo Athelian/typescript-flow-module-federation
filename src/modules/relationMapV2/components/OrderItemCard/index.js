@@ -7,6 +7,7 @@ import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import RelateEntity from 'components/RelateEntity';
 import TaskRing from 'components/TaskRing';
 import { Display, Blackout, Label } from 'components/Form';
+import { FullValueTooltip } from 'components/Tooltip';
 import { encodeId } from 'utils/id';
 import { useHasPermissions } from 'contexts/Permissions';
 import { BATCH_CREATE } from 'modules/permission/constants/batch';
@@ -68,7 +69,11 @@ export default function OrderItemCard({
   return (
     <div className={ItemCardWrapperStyle}>
       <div className={TopRowWrapperStyle}>
-        <Display blackout={!canViewNo}>{no}</Display>
+        <Display blackout={!canViewNo}>
+          <FullValueTooltip message={productName}>
+            <span>{no}</span>
+          </FullValueTooltip>
+        </Display>
 
         <div className={TagsAndDeliveryWrapperStyle}>
           {canViewTags ? (
@@ -97,16 +102,22 @@ export default function OrderItemCard({
           <Blackout />
         )}
 
-        <RelateEntity
-          blackout={!canViewProductName}
-          link={productLink}
-          entity="PRODUCT"
-          value={productName}
-          width="125px"
-        />
+        <FullValueTooltip message={productName}>
+          <div>
+            <RelateEntity
+              blackout={!canViewProductName}
+              link={productLink}
+              entity="PRODUCT"
+              value={productName}
+              width="125px"
+            />
+          </div>
+        </FullValueTooltip>
 
         {canViewProductSerial ? (
-          <div className={ProductSerialStyle}>{productSerial}</div>
+          <FullValueTooltip message={productSerial}>
+            <div className={ProductSerialStyle}>{productSerial}</div>
+          </FullValueTooltip>
         ) : (
           <Blackout />
         )}
