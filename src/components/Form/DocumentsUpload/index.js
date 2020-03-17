@@ -30,6 +30,7 @@ type Props = {|
   canDownload: boolean,
   canChangeType: boolean,
   canDelete: boolean,
+  isInDialog?: boolean,
 |};
 
 type UploadFileState = {
@@ -70,6 +71,7 @@ const DocumentsUpload = ({
   canDownload,
   canChangeType,
   canDelete,
+  isInDialog = false,
 }: Props) => {
   const intl = useIntl();
   const [upload] = useMutation(fileUploadMutation);
@@ -193,7 +195,37 @@ const DocumentsUpload = ({
       });
   };
 
-  return (
+  const documentsBody = (
+    <DndProvider backend={HTML5Backend}>
+      <div className={DocumentsUploadWrapperStyle}>
+        {types.map(type => {
+          return (
+            <DocumentTypeArea
+              key={type.value}
+              entityType={entity}
+              type={type}
+              types={types.map(t => t.value)}
+              files={filesState.filter(file => file.type === type.value)}
+              onSave={updatedValues =>
+                onSave([...files.filter(file => file.type !== type.value), ...updatedValues])
+              }
+              onUpload={evt => handleUpload(evt, type.value)}
+              canUpload={canUpload}
+              canAddOrphan={canAddOrphan}
+              canViewForm={canViewForm}
+              canDownload={canDownload}
+              canChangeType={canChangeType}
+              canDelete={canDelete}
+            />
+          );
+        })}
+      </div>
+    </DndProvider>
+  );
+
+  return isInDialog ? (
+    documentsBody
+  ) : (
     <StickyScrollingSection
       sectionHeader={
         <SectionHeader
@@ -214,31 +246,7 @@ const DocumentsUpload = ({
         </Tooltip>
       }
     >
-      <DndProvider backend={HTML5Backend}>
-        <div className={DocumentsUploadWrapperStyle}>
-          {types.map(type => {
-            return (
-              <DocumentTypeArea
-                key={type.value}
-                entityType={entity}
-                type={type}
-                types={types.map(t => t.value)}
-                files={filesState.filter(file => file.type === type.value)}
-                onSave={updatedValues =>
-                  onSave([...files.filter(file => file.type !== type.value), ...updatedValues])
-                }
-                onUpload={evt => handleUpload(evt, type.value)}
-                canUpload={canUpload}
-                canAddOrphan={canAddOrphan}
-                canViewForm={canViewForm}
-                canDownload={canDownload}
-                canChangeType={canChangeType}
-                canDelete={canDelete}
-              />
-            );
-          })}
-        </div>
-      </DndProvider>
+      {documentsBody}
     </StickyScrollingSection>
   );
 };
