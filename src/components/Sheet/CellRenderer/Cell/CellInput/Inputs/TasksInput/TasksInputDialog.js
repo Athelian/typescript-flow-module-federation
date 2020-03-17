@@ -191,10 +191,8 @@ const TasksInputDialog = ({
                         entityType={entityType}
                         onCancel={() => slideToggle(false)}
                         onSelect={template => {
-                          const nonTemplateTasks = tasks.filter(task => !task.taskTemplate);
-                          const templateTasks = template.tasks.map(({ id, ...rest }) => ({
-                            ...rest,
-                          }));
+                          const nonTemplateTasks = tasks.filter(task => !task?.taskTemplate);
+                          const templateTasks = template.tasks;
                           const newTaskList = [...nonTemplateTasks, ...templateTasks];
 
                           onChange({ taskTemplate: template, tasks: newTaskList });

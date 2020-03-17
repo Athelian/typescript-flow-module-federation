@@ -41,7 +41,7 @@ export default function normalizeSheetOrderInput(
         tagIds: newValue.map(tag => extractForbiddenId(tag).id).filter(Boolean),
       };
     case 'todo':
-      return removeTypename(parseTodoField(oldValue, newValue));
+      return parseTodoField(removeTypename(oldValue), removeTypename(newValue));
     case 'mask':
       return {
         customFields: {

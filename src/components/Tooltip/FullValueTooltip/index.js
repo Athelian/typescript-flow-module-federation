@@ -12,9 +12,6 @@ type Props = OptionalProps & {
 };
 
 export default function FullValueTooltip({ message, children, delay, ...rest }: Props) {
-  console.log('Full Value Tooltip');
-  console.dir(message);
-  console.dir(children);
   return (
     <Tooltip delay={delay || 500} message={message} {...rest}>
       {children}
