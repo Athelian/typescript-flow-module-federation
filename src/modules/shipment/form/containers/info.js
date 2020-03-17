@@ -52,11 +52,11 @@ const initValues = {
   forwarders: [],
   exporter: null,
   totalPackageQuantityOverride: 0,
-  totalPackageQuantityOverriding: true,
+  totalPackageQuantityOverriding: false,
   totalVolumeOverride: { value: 0, metric: defaultVolumeMetric },
-  totalVolumeOverriding: true,
+  totalVolumeOverriding: false,
   totalWeightOverride: { value: 0, metric: defaultWeightMetric },
-  totalWeightOverriding: true,
+  totalWeightOverriding: false,
 };
 
 export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
