@@ -205,6 +205,7 @@ const DocumentsUpload = ({
               entityType={entity}
               type={type}
               types={types.map(t => t.value)}
+              allFiles={filesState}
               files={filesState.filter(file => file.type === type.value)}
               onSave={updatedValues =>
                 onSave([...files.filter(file => file.type !== type.value), ...updatedValues])
