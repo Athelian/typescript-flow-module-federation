@@ -15,6 +15,7 @@
   "components.button.showTemplate": "显示模版",
   "components.button.sync": "同步",
   "components.button.yes": "是",
+  "components.cards.deliveryWarehouse": "运送",
   "components.cards.delivery": "运送",
   "components.cards.desiredAt": "期望",
   "components.cards.unitPrice": "单价",
