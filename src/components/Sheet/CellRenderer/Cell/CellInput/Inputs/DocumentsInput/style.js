@@ -25,7 +25,6 @@ export const DocumentIconStyle = (color: string): string => css`
 `;
 
 export const DocumentsDialogWrapperStyle: string = css`
-  padding: 0 40px 20px 40px;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
+  background-color: ${colors.GRAY_VERY_LIGHT};
   ${borderRadiuses.MAIN};
 `;

@@ -32,6 +32,7 @@ type Props = {|
   entityType: string,
   type: { value: string, label: React$Node },
   types: Array<string>,
+  allFiles: Array<FilePayload>,
   files: Array<FilePayload>,
   onSave: Function,
   onUpload: Function,
@@ -47,6 +48,7 @@ const DocumentTypeArea = ({
   entityType,
   type,
   types,
+  allFiles,
   files,
   onSave,
   onUpload,
@@ -129,7 +131,7 @@ const DocumentTypeArea = ({
                               ]);
                               setDocumentsSelectorIsOpen(false);
                             }}
-                            alreadyAddedDocuments={files}
+                            alreadyAddedDocuments={allFiles}
                           />
                         </SlideView>
                       </>
