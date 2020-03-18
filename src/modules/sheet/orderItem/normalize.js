@@ -50,7 +50,7 @@ export default function normalizeSheetOrderItemInput(
         ),
       };
     case 'todo':
-      return removeTypename(parseTodoField(oldValue, newValue));
+      return parseTodoField(removeTypename(oldValue), removeTypename(newValue));
     case 'mask':
       return {
         customFields: {

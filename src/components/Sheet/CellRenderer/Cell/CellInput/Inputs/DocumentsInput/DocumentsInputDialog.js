@@ -175,6 +175,7 @@ const DocumentsInputDialog = ({ value, onChange, onClose, open, entityType }: Pr
             entity={entityType}
             onSave={onChange}
             {...allowActions}
+            isInDialog
           />
         </div>
       </Dialog>

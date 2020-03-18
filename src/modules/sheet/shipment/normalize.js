@@ -73,8 +73,9 @@ export default function normalizeSheetShipmentInput(
         totalPackageQuantityOverride: newValue.value,
         totalPackageQuantityOverriding: !newValue.auto,
       };
-    case 'todo':
-      return removeTypename(parseTodoField(oldValue, newValue));
+    case 'todo': {
+      return parseTodoField(removeTypename(oldValue), removeTypename(newValue));
+    }
     case 'mask':
       return {
         customFields: {
