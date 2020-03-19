@@ -15,6 +15,7 @@
   "components.button.showTemplate": "USE TEMPLATE",
   "components.button.sync": "SYNC",
   "components.button.yes": "YES",
+  "components.cards.deliveryWarehouse": "DELIVERY",
   "components.cards.delivery": "DELIVERY",
   "components.cards.desiredAt": "DESIRED",
   "components.cards.unitPrice": "UNIT PRICE",

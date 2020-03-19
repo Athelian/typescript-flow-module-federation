@@ -74,7 +74,6 @@ export const ShipmentSortConfig: Array<SortConfig> = [
   { message: shipmentMessages.createdAt, field: 'createdAt' },
   { message: shipmentMessages.shipmentId, field: 'no' },
   { message: shipmentMessages.blNo, field: 'blNo' },
-  { message: shipmentMessages.voyageNo, field: 'voyageNo' },
   { message: shipmentMessages.vesselName, field: 'vesselName' },
   { message: shipmentMessages.cargoReady, field: 'cargoReady' },
   { message: shipmentMessages.loadPortDeparture, field: 'loadPortDeparture' },
