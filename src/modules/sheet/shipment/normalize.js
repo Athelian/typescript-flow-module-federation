@@ -178,7 +178,7 @@ export function normalizeSheetTimelineDateInput(
         return {
           timelineDateRevisions: value.map(({ sort, date, ...revision }) => ({
             ...removeTypename(revision),
-            date: value ? new Date(value) : null,
+            date: date ? new Date(date) : null,
           })),
         };
       default:
