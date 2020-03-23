@@ -10,6 +10,8 @@ import {
   ColumnFillerStyle,
   ColumnsWrapperStyle,
   SheetWrapperStyle,
+  StickiesWrapperStyle,
+  StickyStyle,
   GridStyle,
   InnerGridStyle,
 } from './style';
@@ -32,28 +34,69 @@ type InnerGridProps = {|
 
 const GridColumnContext = React.createContext<Array<ColumnState>>([]);
 
+const StickiesRenderer = ({ columns }: { columns: Array<ColumnState> }) => {
+  const stickies = React.useMemo(() => {
+    const list = [];
+    let width = 0;
+
+    columns
+      .slice()
+      .reverse()
+      .forEach(column => {
+        width += column.width;
+
+        if (column.sticky) {
+          list.push({
+            key: column.key,
+            label: column.sticky,
+            color: column.color,
+            width,
+          });
+
+          width = 0;
+        }
+      });
+
+    return list.slice().reverse();
+  }, [columns]);
+
+  return (
+    <div className={StickiesWrapperStyle}>
+      {stickies.map(sticky => (
+        <div key={sticky.key} style={{ minWidth: `${sticky.width}px` }}>
+          <div className={StickyStyle(sticky.color)}>{sticky.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const InnerGrid = React.forwardRef(({ children, ...rest }: InnerGridProps, ref) => (
   <div ref={ref} {...rest} className={InnerGridStyle}>
     <GridColumnContext.Consumer>
       {columns => (
-        <div className={ColumnsWrapperStyle}>
-          {columns.map(column => (
-            <Column
-              key={column.key}
-              title={column.title}
-              sortable={!!column.sort}
-              direction={column.sort?.direction}
-              onSortToggle={column.sort?.onToggle}
-              color={column.color}
-              width={column.width}
-              minWidth={column.minWidth}
-              onResize={column.onResize}
-            />
-          ))}
-          {columns.length > 0 && (
-            <div className={ColumnFillerStyle(columns[columns.length - 1].color)} />
-          )}
-        </div>
+        <>
+          <div className={ColumnsWrapperStyle}>
+            {columns.map(column => (
+              <Column
+                key={column.key}
+                title={column.title}
+                sortable={!!column.sort}
+                direction={column.sort?.direction}
+                onSortToggle={column.sort?.onToggle}
+                color={column.color}
+                width={column.width}
+                minWidth={column.minWidth}
+                onResize={column.onResize}
+                sticky={column.sticky}
+              />
+            ))}
+            {columns.length > 0 && (
+              <div className={ColumnFillerStyle(columns[columns.length - 1].color)} />
+            )}
+          </div>
+          <StickiesRenderer columns={columns} />
+        </>
       )}
     </GridColumnContext.Consumer>
 

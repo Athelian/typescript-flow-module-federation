@@ -21,6 +21,7 @@ type Column = {|
   minWidth?: number,
   hidden?: boolean,
   isNew?: boolean,
+  sticky?: React.Node,
 |};
 
 export type ColumnConfig = {|

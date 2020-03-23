@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import type { SortBy } from 'types';
 import { getCache, setCache } from 'utils/cache';
 import { colors } from 'styles/common';
@@ -485,6 +485,7 @@ type Output = {
 };
 
 export function useProjectColumnStates({ sortBy, setSortBy, cacheKey }: Input): Output {
+  const intl = useIntl();
   const [currentColumns, setCurrentColumns] = useProjectColumns(cacheKey);
   const [currentResizedColumns, onColumnResize] = useResizedColumns(currentColumns, cacheKey);
   const [currentSortableResizedColumns, onColumnSort] = useSortedColumns({
@@ -494,56 +495,9 @@ export function useProjectColumnStates({ sortBy, setSortBy, cacheKey }: Input): 
     cacheKey,
   });
 
-  /**
-   * Add a prefix to each milestone and task columns title.
-   * For milestone columns: #{milestone index + 1} {title}
-   * For tasks columns: #{milestone index + 1}-{task index + 1} {title}
-   *
-   * @type {Array<ColumnConfig>}
-   */
-  const columnsWithPrefix = React.useMemo<Array<ColumnConfig>>(
+  const columnStates = React.useMemo<Array<ColumnState>>(
     () =>
-      currentSortableResizedColumns.map(col => {
-        if (col.key.startsWith('milestones')) {
-          let matches = col.key.match(/milestones\.(\d+)/);
-          if (matches) {
-            const milestoneIdx = parseFloat(matches[1]);
-
-            if (col.key.startsWith(`milestones.${milestoneIdx}.tasks`)) {
-              matches = col.key.match(/milestones\.\d+\.tasks.(\d+)/);
-              if (matches) {
-                const taskIdx = parseFloat(matches[1]);
-
-                return {
-                  ...col,
-                  title: (
-                    <>
-                      #{milestoneIdx + 1}-{taskIdx + 1} {col.title}
-                    </>
-                  ),
-                };
-              }
-            }
-
-            return {
-              ...col,
-              title: (
-                <>
-                  #{milestoneIdx + 1} {col.title}
-                </>
-              ),
-            };
-          }
-        }
-
-        return col;
-      }),
-    [currentSortableResizedColumns]
-  );
-
-  const columnStates = React.useMemo(
-    () =>
-      columnsWithPrefix.map(column => ({
+      currentSortableResizedColumns.map(column => ({
         ...column,
         onResize: width => onColumnResize(column.key, width),
         sort: column.sort
@@ -553,12 +507,64 @@ export function useProjectColumnStates({ sortBy, setSortBy, cacheKey }: Input): 
             }
           : undefined,
       })),
-    [columnsWithPrefix, onColumnResize, onColumnSort]
+    [currentSortableResizedColumns, onColumnResize, onColumnSort]
   );
+
+  const columnStatesWithSticky = React.useMemo<Array<ColumnState>>(() => {
+    const encounterGroups = [];
+
+    return columnStates.map(col => {
+      if (col.hidden) {
+        return col;
+      }
+
+      let label = null;
+      let group = null;
+
+      if (col.key.startsWith('project')) {
+        group = `project`;
+        label = intl.formatMessage(projectMessages.projectSticky);
+      } else if (col.key.startsWith('milestones')) {
+        let matches = col.key.match(/milestones\.(\d+)/);
+        if (matches) {
+          const milestoneIdx = parseFloat(matches[1]);
+
+          if (col.key.startsWith(`milestones.${milestoneIdx}.tasks`)) {
+            matches = col.key.match(/milestones\.\d+\.tasks.(\d+)/);
+            if (matches) {
+              const taskIdx = parseFloat(matches[1]);
+
+              group = `milestones.${milestoneIdx}.tasks.${taskIdx}`;
+              label = intl.formatMessage(projectMessages.taskSticky, {
+                task: taskIdx + 1,
+                milestone: milestoneIdx + 1,
+              });
+            }
+          } else {
+            group = `milestones.${milestoneIdx}`;
+            label = intl.formatMessage(projectMessages.milestoneSticky, {
+              milestone: milestoneIdx + 1,
+            });
+          }
+        }
+      }
+
+      if (!group === null || encounterGroups.includes(group)) {
+        return col;
+      }
+
+      encounterGroups.push(group);
+
+      return {
+        ...col,
+        sticky: label,
+      };
+    });
+  }, [columnStates, intl]);
 
   return {
     columns: currentSortableResizedColumns,
-    columnStates,
+    columnStates: columnStatesWithSticky,
     setColumns: setCurrentColumns,
   };
 }

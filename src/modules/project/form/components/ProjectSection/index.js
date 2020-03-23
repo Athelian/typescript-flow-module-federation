@@ -177,7 +177,10 @@ const ProjectSection = ({ isNew }: Props) => {
                                 changeTags('tags', value);
                               }}
                               onClickRemove={value => {
-                                changeTags('tags', tags.filter(({ id }) => id !== value.id));
+                                changeTags(
+                                  'tags',
+                                  tags.filter(({ id }) => id !== value.id)
+                                );
                               }}
                               editable={{
                                 set:
