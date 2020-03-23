@@ -29,7 +29,7 @@ export default function useColumnStates({ columns, sortBy, setSortBy, cacheKey }
     cacheKey,
   });
 
-  const columnStates = React.useMemo(
+  const columnStates = React.useMemo<Array<ColumnState>>(
     () =>
       currentSortableResizedColumns.map(column => ({
         ...column,
