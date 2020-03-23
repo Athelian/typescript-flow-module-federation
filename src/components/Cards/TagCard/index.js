@@ -150,7 +150,7 @@ TagCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(TagCard, 'tag', {
   width: '195px',
-  height: '118px',
+  height: '128px',
   entityIcon: 'TAG',
   entityColor: 'TAG',
 });

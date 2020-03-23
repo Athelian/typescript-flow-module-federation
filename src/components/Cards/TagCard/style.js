@@ -6,15 +6,19 @@ export const TagCardWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-template-columns: 195px;
   grid-gap: 5px;
-  padding: 5px 0;
-  height: 118px;
+  padding: 10px 0;
+  height: 128px;
 `;
 
 export const TagWrapperStyle: string = css`
   display: flex;
   align-items: center;
-  width: 175px;
+  width: 155px;
   margin: 0 10px;
+  & > div {
+    display: block;
+    width: 100%;
+  }
 `;
 
 export const TagDescriptionWrapperStyle: string = css`
