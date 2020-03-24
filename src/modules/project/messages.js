@@ -42,4 +42,16 @@ export default defineMessages({
     id: 'modules.Projects.sheet.repeat',
     defaultMessage: 'Repeat',
   },
+  projectSticky: {
+    id: 'modules.Projects.sheet.projectSticky',
+    defaultMessage: 'Project',
+  },
+  milestoneSticky: {
+    id: 'modules.Projects.sheet.milestoneSticky',
+    defaultMessage: 'Milestone {milestone}',
+  },
+  taskSticky: {
+    id: 'modules.Projects.sheet.taskSticky',
+    defaultMessage: 'Task {task} of milestone {milestone}',
+  },
 });
