@@ -561,6 +561,8 @@
   "modules.Notifications.emailTooltipEnabled": "受け取った通知は任意の時間ごとにメールアドレスに送信されます。",
   "modules.Notifications.emailTooltipDisabled": "受け取った通知はメールアドレスには送信されません。",
   "modules.Notifications.settingTooltip": "通知設定を変更すると、フォローしている全てのデータに関して変更が適用されます。",
+  "modules.Notification.preferences.columnsConfigSelectAllButton": "全て選択",
+  "modules.Notification.preferences.columnsConfigUnselectAllButton": "選択解除",
   "modules.Notification.preferences.order_create": "作成",
   "modules.Notification.preferences.order_update": "更新",
   "modules.Notification.preferences.order_archived": "ステータスを終了に変更",
