@@ -561,6 +561,8 @@
   "modules.Notifications.emailTooltipEnabled": "Notifications received will also be sent to your email at the specified interval",
   "modules.Notifications.emailTooltipDisabled": "Notifications received will not be sent to your email",
   "modules.Notifications.settingTooltip": "Changing your notification preferences will take effect on all data that you are following",
+  "modules.Notification.preferences.columnsConfigSelectAllButton": "Select all",
+  "modules.Notification.preferences.columnsConfigUnselectAllButton": "Unselect all",
   "modules.Notification.preferences.order_create": "Create",
   "modules.Notification.preferences.order_update": "Update",
   "modules.Notification.preferences.order_archived": "Archive",

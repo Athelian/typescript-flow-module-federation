@@ -20,7 +20,7 @@ export default defineMessages({
   },
   columnsConfigUnselectAllButton: {
     id: 'components.Sheet.columnsConfigUnselectAllButton',
-    defaultMessage: 'Un select all',
+    defaultMessage: 'Unselect all',
   },
   columnsConfigUseTemplate: {
     id: 'components.Sheet.columnsConfigUseTemplate',

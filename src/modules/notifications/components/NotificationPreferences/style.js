@@ -22,6 +22,11 @@ export const NavbarWrapperStyle: string = css`
   border-bottom-right-radius: 0;
 `;
 
+export const NavbarLeftWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 10px;
+`;
+
 export const EmailNotificationsWrapperStyle = (isEmailNotificationsEnabled: boolean): string => css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 10px;
