@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 
 export const commentFragment = gql`
-  fragment commentFragment on Comment {
+  fragment commentFragment on TimelineComment {
     id
     content
     createdBy {
@@ -95,7 +95,7 @@ const valueFragment = gql`
 `;
 
 export const eventFragment = gql`
-  fragment eventFragment on Event {
+  fragment eventFragment on TimelineEvent {
     id
     entity {
       ... on Model {
