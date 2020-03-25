@@ -203,96 +203,96 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
                 hoverBackgroundColor="GRAY_LIGHT"
               />
             </Tooltip>
-          </div>
-          <div className={EmailNotificationsWrapperStyle(isEmailNotificationsEnabled)}>
-            <Icon icon="EMAIL" />
 
-            <FormattedMessage
-              id="modules.Notifications.emailNotification"
-              defaultMessage="Email Notifications"
-            />
+            <div className={EmailNotificationsWrapperStyle(isEmailNotificationsEnabled)}>
+              <Icon icon="EMAIL" />
 
-            <Tooltip
-              message={
-                isEmailNotificationsEnabled ? (
-                  <FormattedMessage
-                    id="modules.Notifications.emailTooltipEnabled"
-                    defaultMessage="Notifications received will also be sent to your email at the specified interval"
-                  />
-                ) : (
-                  <FormattedMessage
-                    id="modules.Notifications.emailTooltipDisabled"
-                    defaultMessage="Notifications received will not be sent to your email"
-                  />
-                )
-              }
-            >
-              <div>
-                <ToggleInput
-                  toggled={isEmailNotificationsEnabled}
-                  onToggle={() => setEmailNotificationsEnabled(!isEmailNotificationsEnabled)}
-                />
-              </div>
-            </Tooltip>
-
-            {isEmailNotificationsEnabled && (
-              <SelectInputFactory
-                value={timer}
-                items={[
-                  {
-                    label: intl.formatMessage({
-                      id: 'modules.Notifications.instant',
-                      defaultMessage: 'Instant',
-                    }),
-                    value: 'instant',
-                  },
-                  {
-                    label: intl.formatMessage({
-                      id: 'modules.Notifications.tenMinutes',
-                      defaultMessage: '10 min',
-                    }),
-                    value: '10m',
-                  },
-                  {
-                    label: intl.formatMessage({
-                      id: 'modules.Notifications.thirtyMinutes',
-                      defaultMessage: '30 min',
-                    }),
-                    value: '30m',
-                  },
-                  {
-                    label: intl.formatMessage({
-                      id: 'modules.Notifications.oneHour',
-                      defaultMessage: '1 hr',
-                    }),
-                    value: '1hr',
-                  },
-                  {
-                    label: intl.formatMessage({
-                      id: 'modules.Notifications.sixHours',
-                      defaultMessage: '6 hrs',
-                    }),
-                    value: '6hr',
-                  },
-                  {
-                    label: intl.formatMessage({
-                      id: 'modules.Notifications.twelveHours',
-                      defaultMessage: '12 hrs',
-                    }),
-                    value: '12hr',
-                  },
-                ]}
-                inputWidth="80px"
-                inputHeight="20px"
-                editable
-                required
-                hideDropdownArrow
-                hideTooltip
-                onChange={evt => setTimer(evt.target.value)}
+              <FormattedMessage
+                id="modules.Notifications.emailNotification"
+                defaultMessage="Email Notifications"
               />
-            )}
-          </div>
 
+              <Tooltip
+                message={
+                  isEmailNotificationsEnabled ? (
+                    <FormattedMessage
+                      id="modules.Notifications.emailTooltipEnabled"
+                      defaultMessage="Notifications received will also be sent to your email at the specified interval"
+                    />
+                  ) : (
+                    <FormattedMessage
+                      id="modules.Notifications.emailTooltipDisabled"
+                      defaultMessage="Notifications received will not be sent to your email"
+                    />
+                  )
+                }
+              >
+                <div>
+                  <ToggleInput
+                    toggled={isEmailNotificationsEnabled}
+                    onToggle={() => setEmailNotificationsEnabled(!isEmailNotificationsEnabled)}
+                  />
+                </div>
+              </Tooltip>
+
+              {isEmailNotificationsEnabled && (
+                <SelectInputFactory
+                  value={timer}
+                  items={[
+                    {
+                      label: intl.formatMessage({
+                        id: 'modules.Notifications.instant',
+                        defaultMessage: 'Instant',
+                      }),
+                      value: 'instant',
+                    },
+                    {
+                      label: intl.formatMessage({
+                        id: 'modules.Notifications.tenMinutes',
+                        defaultMessage: '10 min',
+                      }),
+                      value: '10m',
+                    },
+                    {
+                      label: intl.formatMessage({
+                        id: 'modules.Notifications.thirtyMinutes',
+                        defaultMessage: '30 min',
+                      }),
+                      value: '30m',
+                    },
+                    {
+                      label: intl.formatMessage({
+                        id: 'modules.Notifications.oneHour',
+                        defaultMessage: '1 hr',
+                      }),
+                      value: '1hr',
+                    },
+                    {
+                      label: intl.formatMessage({
+                        id: 'modules.Notifications.sixHours',
+                        defaultMessage: '6 hrs',
+                      }),
+                      value: '6hr',
+                    },
+                    {
+                      label: intl.formatMessage({
+                        id: 'modules.Notifications.twelveHours',
+                        defaultMessage: '12 hrs',
+                      }),
+                      value: '12hr',
+                    },
+                  ]}
+                  inputWidth="80px"
+                  inputHeight="20px"
+                  editable
+                  required
+                  hideDropdownArrow
+                  hideTooltip
+                  onChange={evt => setTimer(evt.target.value)}
+                />
+              )}
+            </div>
+          </div>
           <div className={NavbarRightWrapperStyle}>
             {isDirty && (
               <>
