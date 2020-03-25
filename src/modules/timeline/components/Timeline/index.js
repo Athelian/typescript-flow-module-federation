@@ -158,7 +158,7 @@ const Timeline = ({
                           log={item}
                         />
                       );
-                    case 'Comment':
+                    case 'TimelineComment':
                       return (
                         <Comment
                           key={getByPathWithDefault('', 'id', item)}

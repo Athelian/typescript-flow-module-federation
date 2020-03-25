@@ -27,7 +27,7 @@ export const normalizeEntries = (entries: Array<Object>): Array<Entry> =>
   entries.reduce((normalizedEntries: Array<Entry>, entry: Object): Array<Entry> => {
     // eslint-disable-next-line no-underscore-dangle
     switch (entry.__typename) {
-      case 'Event':
+      case 'TimelineEvent':
         normalizedEntries.push(
           ...entry.logs.map(({ parameters, ...log }) => {
             const normalizedParameters = normalizeParameters(parameters);
@@ -44,7 +44,7 @@ export const normalizeEntries = (entries: Array<Object>): Array<Entry> =>
           })
         );
         break;
-      case 'Comment':
+      case 'TimelineComment':
         normalizedEntries.push({
           ...entry,
           createdAt: new Date(entry.createdAt),
