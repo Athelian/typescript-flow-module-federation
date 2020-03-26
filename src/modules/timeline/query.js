@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import { partnerNameFragment } from 'graphql';
 
 export const commentFragment = gql`
   fragment commentFragment on TimelineComment {
@@ -89,6 +90,7 @@ const valueFragment = gql`
           firstName
           lastName
         }
+        ...partnerNameFragment
       }
     }
   }
@@ -154,4 +156,5 @@ export const eventFragment = gql`
   }
 
   ${valueFragment}
+  ${partnerNameFragment}
 `;
