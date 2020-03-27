@@ -5,7 +5,15 @@ import FormattedName from 'components/FormattedName';
 import Tag from 'components/Tag';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import User from './components/User';
-import { ARCHIVED, CREATE, IN_CHARGES, TAGS, UNARCHIVED, UPDATE_FIELD } from './constants';
+import {
+  ARCHIVED,
+  CREATE,
+  IN_CHARGES,
+  TAGS,
+  FORWARDERS,
+  UNARCHIVED,
+  UPDATE_FIELD,
+} from './constants';
 import type { LogItem } from './types';
 import EntityIdentifier from './components/EntityIdentifier';
 import { Value, ValueWrapper } from './components/Value';
@@ -177,6 +185,30 @@ export const TagsFormatter = (log: LogItem): * => {
   return <FormattedMessage {...message} values={values} />;
 };
 
+export const ForwardersFormatter = (log: LogItem): * => {
+  const added = getByPathWithDefault([], 'parameters.added.values', log);
+  const removed = getByPathWithDefault([], 'parameters.removed.values', log);
+
+  let message = null;
+  const values = {
+    user: <User user={log.createdBy} />,
+    added: added.map(v => v.entity?.partner?.name ?? v.entity?.name).join(', '),
+    addedCount: added.length,
+    removed: removed.map(v => v.entity?.partner?.name ?? v.entity?.name).join(', '),
+    removedCount: removed.length,
+  };
+
+  if (added.length > 0 && removed.length > 0) {
+    message = messages.addedAndRemovedForwarders;
+  } else if (added.length > 0) {
+    message = messages.addedForwarders;
+  } else {
+    message = messages.removedForwarders;
+  }
+
+  return <FormattedMessage {...message} values={values} />;
+};
+
 export const InChargesFormatter = (log: LogItem): * => {
   const added = getByPathWithDefault([], 'parameters.added.values', log);
   const removed = getByPathWithDefault([], 'parameters.removed.values', log);
@@ -241,6 +273,7 @@ const DefaultFormatters = {
   [ARCHIVED]: ArchivedFormatter,
   [UNARCHIVED]: UnarchivedFormatter,
   [TAGS]: TagsFormatter,
+  [FORWARDERS]: ForwardersFormatter,
   [IN_CHARGES]: InChargesFormatter,
 };
 

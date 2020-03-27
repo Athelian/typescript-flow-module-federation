@@ -99,6 +99,30 @@ export default defineMessages({
       other {tags}
      } {added} to {child}`,
   },
+  addedForwarders: {
+    id: 'modules.timeline.addedForwarders',
+    defaultMessage: `{user} has added {addedCount, plural,
+      one {the forwarder}
+      other {forwarders}
+     } {added}`,
+  },
+  removedForwarders: {
+    id: 'modules.timeline.removedForwarders',
+    defaultMessage: `{user} has removed {removedCount, plural,
+      one {the forwarder}
+      other {forwarders}
+     } {removed}`,
+  },
+  addedAndRemovedForwarders: {
+    id: 'modules.timeline.addedAndRemovedForwarders',
+    defaultMessage: `{user} has removed {removedCount, plural,
+      one {the forwarder}
+      other {forwarders}
+     } {removed} and added {addedCount, plural,
+      one {the forwarder}
+      other {forwarders}
+     } {added}`,
+  },
   addedInCharges: {
     id: 'modules.timeline.addedInCharges',
     defaultMessage: `{user} has assigned {added}`,
