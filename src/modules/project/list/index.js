@@ -29,7 +29,7 @@ const ProjectList = ({ ...filtersAndSort }: Props) => {
       onCompleted={logger.warn}
       onError={logger.error}
     >
-      {({ loading, data, fetchMore, error, refetch }) => {
+      {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;
         }
@@ -43,7 +43,6 @@ const ProjectList = ({ ...filtersAndSort }: Props) => {
             onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'projects')}
             hasMore={hasMore}
             isLoading={loading}
-            onRefetch={() => refetch(projectListQuery)}
           />
         );
       }}

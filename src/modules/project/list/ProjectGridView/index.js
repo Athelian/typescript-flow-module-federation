@@ -14,10 +14,11 @@ type Props = {
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
-  onRefetch: () => void,
 };
 
-const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading, onRefetch }: Props) => {
+const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
+  const [deletedIds, setDeletedIds] = React.useState([]);
+
   return (
     <GridView
       onLoadMore={onLoadMore}
@@ -29,39 +30,41 @@ const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading, onRefetch }: P
       }
       itemWidth="645px"
     >
-      {items.map(item => (
-        <BooleanValue key={item.id}>
-          {({ value: isDeleteDialogOpen, set: setDeleteDialogOpen }) => (
-            <>
-              <ProjectCard
-                project={item}
-                onClick={() => navigate(`/project/${encodeId(item.id)}`)}
-                actions={[
-                  <CardAction
-                    icon="REMOVE"
-                    hoverColor="RED"
-                    onClick={evt => {
-                      evt.stopPropagation();
-                      setDeleteDialogOpen(true);
-                    }}
-                  />,
-                ]}
-                showActionsOnHover
-              />
+      {items.map(item =>
+        deletedIds.some(deletedId => deletedId === item.id) ? null : (
+          <BooleanValue key={item.id}>
+            {({ value: isDeleteDialogOpen, set: setDeleteDialogOpen }) => (
+              <>
+                <ProjectCard
+                  project={item}
+                  onClick={() => navigate(`/project/${encodeId(item.id)}`)}
+                  actions={[
+                    <CardAction
+                      icon="REMOVE"
+                      hoverColor="RED"
+                      onClick={evt => {
+                        evt.stopPropagation();
+                        setDeleteDialogOpen(true);
+                      }}
+                    />,
+                  ]}
+                  showActionsOnHover
+                />
 
-              <DeleteProjectDialog
-                isOpen={isDeleteDialogOpen}
-                onCancel={() => setDeleteDialogOpen(false)}
-                entity={item}
-                onSuccess={() => {
-                  setDeleteDialogOpen(false);
-                  onRefetch();
-                }}
-              />
-            </>
-          )}
-        </BooleanValue>
-      ))}
+                <DeleteProjectDialog
+                  isOpen={isDeleteDialogOpen}
+                  onCancel={() => setDeleteDialogOpen(false)}
+                  entity={item}
+                  onSuccess={(id: string) => {
+                    setDeleteDialogOpen(false);
+                    setDeletedIds([...deletedIds, id]);
+                  }}
+                />
+              </>
+            )}
+          </BooleanValue>
+        )
+      )}
     </GridView>
   );
 };

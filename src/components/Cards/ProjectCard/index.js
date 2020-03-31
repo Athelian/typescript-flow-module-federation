@@ -25,6 +25,8 @@ type Props = {|
   onClick: Function,
   selectable?: boolean,
   selected?: boolean,
+  actions: Array<React.Node>,
+  showActionsOnHover: boolean,
 |};
 
 const ProjectCard = ({ project, onClick, ...rest }: Props) => {
