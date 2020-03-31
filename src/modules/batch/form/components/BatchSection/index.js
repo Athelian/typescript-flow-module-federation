@@ -22,7 +22,6 @@ import {
   BATCH_SET_TAGS,
   BATCH_SET_MEMO,
   BATCH_SET_CUSTOM_FIELDS_MASK,
-  BATCH_SET_FOLLOWERS,
 } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -45,7 +44,6 @@ import {
   DateInputFactory,
   TextAreaInputFactory,
 } from 'components/Form';
-import Followers from 'components/Followers';
 import messages from 'modules/batch/messages';
 import {
   StatusStyle,
@@ -71,25 +69,6 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
         icon="BATCH"
         title={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
       >
-        <Subscribe to={[BatchInfoContainer]}>
-          {({ originalValues: initialValues, state, setFieldValue }) => {
-            const values = { ...initialValues, ...state };
-            return (
-              <Followers
-                followers={values?.followers ?? []}
-                setFollowers={value => setFieldValue('followers', value)}
-                organizationIds={[
-                  values?.orderItem?.order?.importer?.id,
-                  values?.orderItem?.order?.exporter?.id,
-                  values?.shipment?.importer?.id,
-                  values?.shipment?.exporter?.id,
-                  ...(values?.shipment?.forwarders ?? []).map(forwarder => forwarder?.id),
-                ].filter(Boolean)}
-                editable={hasPermission([BATCH_UPDATE, BATCH_SET_FOLLOWERS])}
-              />
-            );
-          }}
-        </Subscribe>
         {batch.updatedAt && (
           <div className={StatusStyle(batch.archived)}>
             <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />
