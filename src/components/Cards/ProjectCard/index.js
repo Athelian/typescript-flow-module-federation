@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { FormattedMessage, FormattedDate } from 'react-intl';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -25,6 +25,8 @@ type Props = {|
   onClick: Function,
   selectable?: boolean,
   selected?: boolean,
+  actions?: Array<React.Node>,
+  showActionsOnHover?: boolean,
 |};
 
 const ProjectCard = ({ project, onClick, ...rest }: Props) => {
