@@ -147,7 +147,6 @@ export const generateCloneBatch = (
       tasks: [],
     },
     tags: hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]) ? tags : [],
-    followers: [],
     customFields: {
       ...customFields,
       fieldValues: hasPermission([BATCH_UPDATE, BATCH_SET_CUSTOM_FIELDS])
@@ -221,7 +220,6 @@ export const generateBatchByOrderItem = (orderItem: OrderItemPayload): Batch => 
     autoCalculatePackageQuantity: true,
     no: '',
     tags: [],
-    followers: [],
     sort: 0,
     containerSort: 0,
     shipmentSort: 0,

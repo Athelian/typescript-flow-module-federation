@@ -115,9 +115,6 @@ const containerEntityCardFragment = gql`
     id
     no
     archived
-    ... on Followed {
-      notificationUnseenCount
-    }
     tags {
       ...tagFragment
       ...forbiddenFragment
@@ -149,9 +146,6 @@ const batchEntityCardFragment = gql`
     deliveredAt
     expiredAt
     desiredAt
-    ... on Followed {
-      notificationUnseenCount
-    }
     ownedBy {
       ...ownedByFragment
     }
@@ -195,9 +189,6 @@ const itemEntityCardFragment = gql`
     id
     updatedAt
     createdAt
-    ... on Followed {
-      notificationUnseenCount
-    }
     ownedBy {
       ...ownedByFragment
     }

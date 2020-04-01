@@ -9,10 +9,6 @@ export default function normalizeSheetBatchInput(
   newValue: any
 ): Object {
   switch (field) {
-    case 'followers':
-      return {
-        followerIds: newValue.map(follower => follower.id),
-      };
     case 'desiredAt':
     case 'expiredAt':
     case 'deliveredAt':

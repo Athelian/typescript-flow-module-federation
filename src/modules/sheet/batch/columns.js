@@ -31,13 +31,6 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Status,
   },
   {
-    key: 'batch.followers',
-    title: <FormattedMessage {...batchMessages.followers} />,
-    icon: 'BATCH',
-    color: colors.BATCH,
-    width: ColumnWidths.Followers,
-  },
-  {
     key: 'batch.no',
     title: <FormattedMessage {...batchMessages.batchNo} />,
     icon: 'BATCH',

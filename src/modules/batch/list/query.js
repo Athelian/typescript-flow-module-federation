@@ -23,9 +23,6 @@ export const batchListQuery = gql`
     batches(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...batchCardWithOwnedFragment
-        ... on Followed {
-          notificationUnseenCount
-        }
         ...forbiddenFragment
       }
       page

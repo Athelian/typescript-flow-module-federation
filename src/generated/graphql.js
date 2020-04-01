@@ -8904,7 +8904,6 @@ export type Batch = {|
   ...Owned,
   ...Package,
   ...Tagged,
-  ...Followed,
   ...Customizable,
   ...Memorizable,
   ...Sortable,
@@ -8948,7 +8947,6 @@ export type Batch = {|
     packageSize?: ?Size,
     packageCapacity?: ?$ElementType<Scalars, 'Float'>,
     tags: Array<TagPayload>,
-    followers: Array<UserPayload>,
     notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
@@ -9148,7 +9146,6 @@ export type Container = {|
   ...Model,
   ...Owned,
   ...Tagged,
-  ...Followed,
   ...Sortable,
   ...Memorizable,
   ...{|
@@ -9195,7 +9192,6 @@ export type Container = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     tags: Array<TagPayload>,
-    followers: Array<UserPayload>,
     notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     sort: $ElementType<Scalars, 'Int'>,
     memo?: ?$ElementType<Scalars, 'String'>,
@@ -12055,7 +12051,6 @@ export type OrderItem = {|
   ...Owned,
   ...Sortable,
   ...Tagged,
-  ...Followed,
   ...Documented,
   ...Customizable,
   ...Memorizable,
@@ -12088,7 +12083,6 @@ export type OrderItem = {|
     ownedBy: OrganizationPayload,
     sort: $ElementType<Scalars, 'Int'>,
     tags: Array<TagPayload>,
-    followers: Array<UserPayload>,
     notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     files: Array<FilePayload>,
     customFields: CustomFields,
@@ -37299,12 +37293,6 @@ export type WarehouseCardFragmentFragment = ({
             "name": "Product"
           },
           {
-            "name": "Batch"
-          },
-          {
-            "name": "OrderItem"
-          },
-          {
             "name": "Order"
           },
           {
@@ -37313,9 +37301,6 @@ export type WarehouseCardFragmentFragment = ({
           {
             "name": "Warehouse"
           },
-          {
-            "name": "Container"
-          }
         ]
       },
       {

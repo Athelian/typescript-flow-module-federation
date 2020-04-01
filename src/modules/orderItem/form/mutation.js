@@ -95,7 +95,6 @@ export const prepareParseOrderItem = (originalValues: Object, newValues: Object)
     newValues.productProvider
   ),
   ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
-  ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
   ...parseGenericField(
     'quantity',
     getByPathWithDefault(null, 'quantity', originalValues),

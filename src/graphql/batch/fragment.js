@@ -16,12 +16,6 @@ export const batchFormFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
-    followers {
-      ...userAvatarFragment
-    }
-    ... on Followed {
-      notificationUnseenCount
-    }
     memo
     no
     quantity
@@ -90,9 +84,6 @@ export const batchFormFragment = gql`
       ... on Container {
         id
         no
-        ... on Followed {
-          notificationUnseenCount
-        }
         representativeBatch {
           ... on Batch {
             id

@@ -102,37 +102,22 @@ function normalizedInput(
           if (!newValue) {
             // Remove followers from batches of shipment of previous exporter
             const cleanedBatches = (shipment?.batchesWithoutContainer ?? []).map(batch => {
-              const cleanedBatchFollowers = (batch?.followers ?? [])
-                .filter(follower => follower?.organization?.id !== oldValue?.id)
-                .map(follower => follower?.id);
-
               return {
                 id: batch?.id,
-                followerIds: cleanedBatchFollowers,
               };
             });
 
             // Remove followers from containers of previous exporter and followers from batches of containers of previous exporter
             const cleanedContainers = (shipment?.containers ?? []).map(container => {
               const cleanedContainerBatches = (container?.batches ?? []).map(batch => {
-                const cleanedBatchFollowers = (batch?.followers ?? [])
-                  .filter(follower => follower?.organization?.id !== oldValue?.id)
-                  .map(follower => follower?.id);
-
                 return {
                   id: batch?.id,
-                  followerIds: cleanedBatchFollowers,
                 };
               });
-
-              const cleanedContainerFollowers = (container?.followers ?? [])
-                .filter(follower => follower?.organization?.id !== oldValue?.id)
-                .map(follower => follower?.id);
 
               return {
                 id: container.id,
                 batches: cleanedContainerBatches,
-                followerIds: cleanedContainerFollowers,
               };
             });
 
@@ -153,15 +138,10 @@ function normalizedInput(
 
             const representativeBatchIndex = null;
 
-            const containerFollowers = (container?.followers ?? [])
-              .filter(follower => follower?.organization?.id !== oldValue?.id)
-              .map(follower => follower?.id);
-
             return {
               id: container.id,
               batches: containerBatches,
               representativeBatchIndex,
-              followerIds: containerFollowers,
             };
           });
 
@@ -190,51 +170,21 @@ function normalizedInput(
 
           // Remove followers from batches of removed forwarders
           const cleanedBatches = (shipment?.batchesWithoutContainer ?? []).map(batch => {
-            const cleanedBatchFollowers = (batch?.followers ?? [])
-              .filter(
-                follower =>
-                  !removedForwarders.some(
-                    removedForwarder => removedForwarder.id === follower?.organization?.id
-                  )
-              )
-              .map(follower => follower?.id);
-
             return {
               id: batch?.id,
-              followerIds: cleanedBatchFollowers,
             };
           });
 
           // Remove followers from containers of removed forwarders and followers from batches of containers of removed forwarders
           const cleanedContainers = (shipment?.containers ?? []).map(container => {
-            const cleanedContainerFollowers = (container?.followers ?? [])
-              .filter(
-                follower =>
-                  !removedForwarders.some(
-                    removedForwarder => removedForwarder.id === follower?.organization?.id
-                  )
-              )
-              .map(follower => follower?.id);
-
             const cleanedContainerBatches = (shipment?.batchesWithoutContainer ?? []).map(batch => {
-              const cleanedBatchFollowers = (batch?.followers ?? [])
-                .filter(
-                  follower =>
-                    !removedForwarders.some(
-                      removedForwarder => removedForwarder.id === follower?.organization?.id
-                    )
-                )
-                .map(follower => follower?.id);
-
               return {
                 id: batch?.id,
-                followerIds: cleanedBatchFollowers,
               };
             });
 
             return {
               id: container?.id,
-              followerIds: cleanedContainerFollowers,
               batches: cleanedContainerBatches,
             };
           });

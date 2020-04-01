@@ -9,12 +9,6 @@ export const containerFormFragment = gql`
     containerType
     containerOption
     memo
-    followers {
-      ...userAvatarFragment
-    }
-    ... on Followed {
-      notificationUnseenCount
-    }
     ownedBy {
       ...ownedByFragment
     }
@@ -69,9 +63,6 @@ export const containerCardFragment = gql`
     no
     containerType
     containerOption
-    ... on Followed {
-      notificationUnseenCount
-    }
     representativeBatch {
       ... on Batch {
         id

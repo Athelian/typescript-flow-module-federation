@@ -51,15 +51,9 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     if (prevImporter) {
       this.setState(({ containers = [] }) => {
         const cleanedContainers = containers.map(container => {
-          const { followers } = container;
-          const cleanedFollowers = followers.filter(
-            follower => follower?.organization?.id !== prevImporter?.id
-          );
-
           return {
             ...container,
             batches: [],
-            followers: cleanedFollowers,
           };
         });
 
@@ -72,32 +66,14 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
   onChangeExporter = (prevExporter: ?OrganizationPayload, newExporter: ?OrganizationPayload) => {
     this.setState(({ containers = [] }) => {
       const cleanedContainers = containers.map(container => {
-        const { followers = [], batches = [], representativeBatch } = container;
+        const { batches = [], representativeBatch } = container;
 
         if (prevExporter) {
-          const cleanedFollowers = followers.filter(
-            follower => follower?.organization?.id !== prevExporter?.id
-          );
-
           // When Exporter is removed
           if (!newExporter) {
-            const cleanedBatches = batches.map(batch => {
-              const { followers: batchFollowers = [] } = batch;
-
-              const cleanedBatchFollowers = batchFollowers.filter(
-                follower => follower?.organization?.id !== prevExporter?.id
-              );
-
-              return {
-                ...batch,
-                followers: cleanedBatchFollowers,
-              };
-            });
-
             return {
               ...container,
-              batches: cleanedBatches,
-              followers: cleanedFollowers,
+              batches,
             };
           }
 
@@ -106,7 +82,6 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
             ...container,
             batches: [],
             representativeBatch: null,
-            followers: cleanedFollowers,
           };
         }
 
@@ -122,18 +97,7 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
 
         return {
           ...container,
-          batches: filteredBatches.map(batch => {
-            const { followers: batchFollowers = [] } = batch;
-
-            const cleanedBatchFollowers = batchFollowers.filter(
-              follower => follower?.organization?.id !== prevExporter?.id
-            );
-
-            return {
-              ...batch,
-              followers: cleanedBatchFollowers,
-            };
-          }),
+          batches: filteredBatches,
           representativeBatch: newRepresentativeBatch,
         };
       });
@@ -153,32 +117,9 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     if (prevForwarders.length > 0 && removedForwarders.length > 0) {
       this.setState(({ containers = [] }) => {
         const cleanedContainers = containers.map(container => {
-          const { followers = [], batches = [] } = container;
+          const { batches = [] } = container;
 
-          const cleanedFollowers = followers.filter(
-            follower =>
-              !removedForwarders.some(
-                removedForwarder => removedForwarder.id === follower?.organization?.id
-              )
-          );
-
-          const cleanedBatches = batches.map(batch => {
-            const { followers: batchFollowers = [] } = batch;
-
-            const cleanedBatchFollowers = batchFollowers.filter(
-              follower =>
-                !removedForwarders.some(
-                  removedForwarder => removedForwarder.id === follower?.organization?.id
-                )
-            );
-
-            return {
-              ...batch,
-              followers: cleanedBatchFollowers,
-            };
-          });
-
-          return { ...container, batches: cleanedBatches, followers: cleanedFollowers };
+          return { ...container, batches };
         });
 
         return { containers: cleanedContainers };

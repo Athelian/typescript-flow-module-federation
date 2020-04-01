@@ -1,5 +1,17 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Mar 04 2020 21:41:35 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Apr 01 2020 15:22:07 GMT+0900 (Japan Standard Time)
+
+input AddShipmentPackageInput {
+  version: Int!
+  shipmentId: ID!
+  number: String!
+}
+
+input AddShipmentProductInput {
+  version: Int!
+  shipmentId: ID!
+  name: String!
+}
 
 enum Airport {
   """Andorra la Vella"""
@@ -26625,11 +26637,23 @@ enum Airport {
   ZWWKI
 }
 
+input AppointShipmentConsigneeInput {
+  version: Int!
+  shipmentId: ID!
+  consigneeId: ID!
+}
+
+input AppointShipmentShipperInput {
+  version: Int!
+  shipmentId: ID!
+  shipperId: ID!
+}
+
 type BadRequest {
   violations: [Violation!]!
 }
 
-type Batch implements Model & Owned & Package & Tagged & Followed & Customizable & Memorizable & Sortable {
+type Batch implements Model & Owned & Package & Tagged & Customizable & Memorizable & Sortable {
   archived: Boolean!
   no: String!
   orderItem: OrderItemPayload!
@@ -26668,7 +26692,6 @@ type Batch implements Model & Owned & Package & Tagged & Followed & Customizable
   packageSize: Size
   packageCapacity: Float
   tags: [TagPayload!]!
-  followers: [UserPayload!]!
   notificationUnseenCount: Int!
   customFields: CustomFields!
   memo: String
@@ -26827,19 +26850,12 @@ type ChangeType {
   field: String!
 }
 
-type Comment implements Model & Owned {
+type CommandResponse {
   entity: EntityPayload!
-  content: String!
-  mentions: [UserPayload!]!
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  createdBy: UserPayload
-  updatedBy: UserPayload
-  deletedBy: UserPayload
-  ownedBy: OrganizationPayload!
+  events: [Event!]!
 }
+
+union CommandResponsePayload = CommandResponse | BadRequest | Forbidden | NotFound
 
 input CommentCreateInput {
   content: String!
@@ -26847,14 +26863,12 @@ input CommentCreateInput {
   mentionIds: [ID!]
 }
 
-union CommentPayload = Comment | BadRequest | Forbidden | NotFound
-
 input CommentUpdateInput {
   content: String
   mentionIds: [ID!]
 }
 
-type Container implements Model & Owned & Tagged & Followed & Sortable & Customizable & Memorizable {
+type Container implements Model & Owned & Tagged & Sortable & Customizable & Memorizable {
   archived: Boolean!
   no: String!
   representativeBatch: BatchPayload
@@ -26897,7 +26911,6 @@ type Container implements Model & Owned & Tagged & Followed & Sortable & Customi
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
-  followers: [UserPayload!]!
   notificationUnseenCount: Int!
   sort: Int!
   customFields: CustomFields!
@@ -28442,34 +28455,20 @@ input EntityInput {
   fileId: ID
 }
 
-union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | BadRequest | Forbidden | NotFound
+union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | ShipmentAggregate | BadRequest | Forbidden | NotFound
 
 type EntityValue {
   entity: EntityPayload
 }
 
-union Entry = Event | Comment | BadRequest | Forbidden | NotFound
+union Event = ShipmentBookedDraftStartedEvent | ShipmentShipperAppointedEventType | ShipmentConsigneeAppointedEventType | ShipmentIncotermsSetEventType | ShipmentBookingNumberSetEventType | ShipmentProductsCurrencySetEventType | ShipmentProductAddedEventType | ShipmentPackageAddedEventType
 
-type EntryPaginatedList implements Paginated {
-  nodes: [Entry!]!
-  page: Int!
-  perPage: Int!
-  totalPage: Int!
-  count: Int!
-  totalCount: Int!
-}
-
-type Event implements Model & Owned {
-  entity: EntityPayload!
-  logs: [Log!]!
+interface EventInterface {
   id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  createdBy: UserPayload
-  updatedBy: UserPayload
-  deletedBy: UserPayload
-  ownedBy: OrganizationPayload!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
 }
 
 type Export {
@@ -28827,10 +28826,6 @@ enum Incoterm {
   DDP
 }
 
-interface Integrated {
-  integrationLinks: [IntegrationLinkPayload!]!
-}
-
 type Integration implements Model & Owned {
   name: String!
   service: String!
@@ -28851,7 +28846,6 @@ type IntegrationConfiguration implements Model & Owned {
   automated: Boolean!
   interval: Duration!
   key: String
-  integrationLinks(page: Int! = 1, perPage: Int! = 10): IntegrationLinkPayloadPaginatedList!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -28910,68 +28904,6 @@ input IntegrationFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   organizationId: ID
-}
-
-type IntegrationLink implements Model & Owned {
-  configuration: IntegrationConfigurationPayload!
-  status: IntegrationLinkStatus!
-  entity: EntityPayload!
-  externalId: ID!
-  automated: Boolean!
-  interval: Duration!
-  lastRunAt: DateTime
-  nextRunAt: DateTime
-  lastError: String
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  createdBy: UserPayload
-  updatedBy: UserPayload
-  deletedBy: UserPayload
-  ownedBy: OrganizationPayload!
-}
-
-input IntegrationLinkCreateInput {
-  configurationId: ID!
-  entity: EntityInput!
-  externalId: ID!
-  automated: Boolean
-  interval: DurationInput!
-}
-
-union IntegrationLinkPayload = IntegrationLink | BadRequest | Forbidden | NotFound
-
-type IntegrationLinkPayloadPaginatedList implements Paginated {
-  nodes: [IntegrationLinkPayload!]!
-  page: Int!
-  perPage: Int!
-  totalPage: Int!
-  count: Int!
-  totalCount: Int!
-}
-
-enum IntegrationLinkStatus {
-  """Idle"""
-  Idle
-
-  """Pending"""
-  Pending
-
-  """Running"""
-  Running
-
-  """Error"""
-  Error
-
-  """Stop"""
-  Stop
-}
-
-input IntegrationLinkUpdateInput {
-  externalId: ID
-  automated: Boolean
-  interval: DurationInput
 }
 
 union IntegrationPayload = Integration | BadRequest | Forbidden | NotFound
@@ -29972,8 +29904,8 @@ type Mutation {
   maskEditCreate(input: MaskEditCreateInput!): MaskEditPayload!
   maskEditUpdate(id: ID!, input: MaskEditUpdateInput!): MaskEditPayload!
   maskEditDelete(id: ID!): EmptyPayload
-  commentCreate(input: CommentCreateInput!): CommentPayload!
-  commentUpdate(id: ID!, input: CommentUpdateInput!): CommentPayload!
+  commentCreate(input: CommentCreateInput!): TimelineCommentPayload!
+  commentUpdate(id: ID!, input: CommentUpdateInput!): TimelineCommentPayload!
   commentDelete(id: ID!): EmptyPayload
   timelineRead(entity: EntityInput!): EmptyPayload
   notificationActive(id: ID!): Boolean!
@@ -30006,11 +29938,6 @@ type Mutation {
   integrationConfigurationCreate(input: IntegrationConfigurationCreateInput!): IntegrationConfigurationPayload!
   integrationConfigurationUpdate(id: ID!, input: IntegrationConfigurationUpdateInput!): IntegrationConfigurationPayload!
   integrationConfigurationDelete(id: ID!): EmptyPayload
-  integrationLinkCreate(input: IntegrationLinkCreateInput!): IntegrationLinkPayload!
-  integrationLinkUpdate(id: ID!, input: IntegrationLinkUpdateInput!): IntegrationLinkPayload!
-  integrationLinkReset(id: ID!): EmptyPayload
-  integrationLinkExecute(id: ID!): EmptyPayload
-  integrationLinkDelete(id: ID!): EmptyPayload
   import(file: Upload!): ImportPayload!
   aitImport(file: Upload!): EmptyPayload
   focus(id: ID!, input: FocusingInput!): Void!
@@ -30021,6 +29948,14 @@ type Mutation {
   focusSubscribe(id: ID!, input: SubscriptionInput!): [FocusPayload!]!
   focusUnsubscribe(id: ID!, input: SubscriptionInput!): Void!
   focusUnsubscribeAll(id: ID!): Void!
+  shipmentStartBookedDraft(input: StartShipmentBookedDraftInput!): CommandResponsePayload!
+  shipmentAppointShipper(input: AppointShipmentShipperInput!): CommandResponsePayload!
+  shipmentAppointConsignee(input: AppointShipmentConsigneeInput!): CommandResponsePayload!
+  shipmentSetIncoterms(input: SetShipmentIncotermsInput!): CommandResponsePayload!
+  shipmentSetBookingNumber(input: SetShipmentBookingNumberInput!): CommandResponsePayload!
+  shipmentSetProductsCurrency(input: SetShipmentProductsCurrencyInput!): CommandResponsePayload!
+  shipmentAddProduct(input: AddShipmentProductInput!): CommandResponsePayload!
+  shipmentAddPackage(input: AddShipmentPackageInput!): CommandResponsePayload!
 }
 
 type NotFound {
@@ -30180,38 +30115,11 @@ enum NotificationType {
   """batch_unarchived"""
   batch_unarchived
 
-  """batch_create_assignment"""
-  batch_create_assignment
-
-  """batch_update_assignment_quantity"""
-  batch_update_assignment_quantity
-
-  """batch_delete_assignment"""
-  batch_delete_assignment
-
   """batch_update_quantity"""
   batch_update_quantity
 
   """batch_update_quantity_in_shipment"""
   batch_update_quantity_in_shipment
-
-  """batch_create_adjustment"""
-  batch_create_adjustment
-
-  """batch_create_adjustment_in_shipment"""
-  batch_create_adjustment_in_shipment
-
-  """batch_update_adjustment"""
-  batch_update_adjustment
-
-  """batch_update_adjustment_in_shipment"""
-  batch_update_adjustment_in_shipment
-
-  """batch_delete_adjustment"""
-  batch_delete_adjustment
-
-  """batch_delete_adjustment_in_shipment"""
-  batch_delete_adjustment_in_shipment
 
   """warehouse_create"""
   warehouse_create
@@ -30242,6 +30150,9 @@ enum NotificationType {
 
   """container_approve_actual_date"""
   container_approve_actual_date
+
+  """file_uploaded_to_entity"""
+  file_uploaded_to_entity
 }
 
 type Order implements Model & Owned & Tagged & Followed & Supervised & Documented & Customizable & Memorizable {
@@ -30365,7 +30276,7 @@ input OrderFilterInput {
   containerFreeTimeOverdue: Boolean
 }
 
-type OrderItem implements Model & Owned & Sortable & Tagged & Followed & Documented & Customizable & Memorizable {
+type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Customizable & Memorizable {
   order: OrderPayload!
   productProvider: ProductProviderPayload!
   archived: Boolean!
@@ -30393,7 +30304,6 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Followed & Documen
   ownedBy: OrganizationPayload!
   sort: Int!
   tags: [TagPayload!]!
-  followers: [UserPayload!]!
   notificationUnseenCount: Int!
   files: [FilePayload!]!
   customFields: CustomFields!
@@ -31341,7 +31251,6 @@ type Query {
   integrations(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationFilterInput, sortBy: IntegrationSortInput): IntegrationPayloadPaginatedSearch!
   integrationConfiguration(id: ID!): IntegrationConfigurationPayload!
   integrationConfigurations(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationConfigurationFilterInput, sortBy: IntegrationConfigurationSortInput): IntegrationConfigurationPayloadPaginatedSearch!
-  integrationLink(id: ID!): IntegrationLinkPayload!
   file(id: ID!): FilePayload!
   files(page: Int! = 1, perPage: Int! = 10, filterBy: FileFilterInput, sortBy: FileSortInput): FilePayloadPaginatedSearch!
   filesByIDs(ids: [ID!]!): [FilePayload!]!
@@ -31352,6 +31261,11 @@ type Query {
   roles(page: Int! = 1, perPage: Int! = 10): RolePayloadPaginatedList!
   permissions: [String!]!
   focuses(id: ID!, entities: [EntityInput!]!): [FocusPayload!]!
+  shipmentAggregate(id: ID!): ShipmentAggregatePayload!
+  shipmentAggregates(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentAggregateFilterInput, sortBy: ShipmentAggregateSortInput): ShipmentAggregatePayloadPaginatedSearch!
+  shipmentAggregatesByIDs(ids: [ID!]!): [ShipmentAggregatePayload!]!
+  shipmentPackageList(id: ID!): ShipmentPackageListPayload!
+  shipmentPackageListsByIDs(ids: [ID!]!): [ShipmentPackageListPayload!]!
 }
 
 type Reference {
@@ -86956,7 +86870,25 @@ enum Seaport {
   ZWZMZ
 }
 
-type Shipment implements Model & Owned & Tagged & Followed & Supervised & Documented & Customizable & Memorizable & Integrated {
+input SetShipmentBookingNumberInput {
+  version: Int!
+  shipmentId: ID!
+  bookingNumber: String!
+}
+
+input SetShipmentIncotermsInput {
+  version: Int!
+  shipmentId: ID!
+  incoterms: Incoterm!
+}
+
+input SetShipmentProductsCurrencyInput {
+  version: Int!
+  shipmentId: ID!
+  productsCurrency: Currency!
+}
+
+type Shipment implements Model & Owned & Tagged & Followed & Supervised & Documented & Customizable & Memorizable {
   archived: Boolean!
   importer: OrganizationPayload!
   exporter: OrganizationPayload
@@ -87016,7 +86948,53 @@ type Shipment implements Model & Owned & Tagged & Followed & Supervised & Docume
   files: [FilePayload!]!
   customFields: CustomFields!
   memo: String
-  integrationLinks: [IntegrationLinkPayload!]!
+}
+
+type ShipmentAggregate {
+  id: ID!
+  version: Int!
+  state: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+  packageList: ShipmentPackageListPayload!
+  shipper: OrganizationPayload
+  consignee: OrganizationPayload
+  shipperForwarder: OrganizationPayload
+  consigneeForwarder: OrganizationPayload
+  incoterms: Incoterm
+  bookingNumber: String
+  productsCurrency: Currency
+}
+
+input ShipmentAggregateFilterInput {
+  query: String
+  ownerId: ID
+  excludeIds: [ID!]
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  shipperId: ID
+  consigneeId: ID
+  shipperForwarderId: ID
+  consigneeForwarderId: ID
+}
+
+union ShipmentAggregatePayload = ShipmentAggregate | BadRequest | Forbidden | NotFound
+
+type ShipmentAggregatePayloadPaginatedSearch implements Paginated {
+  nodes: [ShipmentAggregatePayload!]!
+  hits: [Hit!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input ShipmentAggregateSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
 }
 
 input ShipmentBatchInput {
@@ -87046,6 +87024,35 @@ input ShipmentBatchInput {
   todo: TodoInput
   id: ID
   orderItemId: ID
+}
+
+type ShipmentBookedDraftStartedEvent implements ShipmentEventInterface & EventInterface {
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentBookingNumberSetEventType implements ShipmentEventInterface & EventInterface {
+  bookingNumber: String!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentConsigneeAppointedEventType implements ShipmentEventInterface & EventInterface {
+  consignee: OrganizationPayload!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
 }
 
 input ShipmentContainerCreateInput {
@@ -87142,6 +87149,15 @@ input ShipmentCreateInput {
   todo: TodoInput
 }
 
+interface ShipmentEventInterface {
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
 input ShipmentFilterInput {
   query: String
   ownerId: ID
@@ -87203,6 +87219,51 @@ input ShipmentFilterInput {
   productProviderOrigin: Country
 }
 
+type ShipmentIncotermsSetEventType implements ShipmentEventInterface & EventInterface {
+  incoterms: Incoterm!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentPackage {
+  id: ID!
+  number: String!
+  description: String
+  netWeight: Float
+  grossWeight: Float
+  holds: [ShipmentPackageHold!]!
+}
+
+type ShipmentPackageAddedEventType implements ShipmentEventInterface & EventInterface {
+  packageId: ID!
+  number: String!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentPackageHold {
+  productId: ID!
+  quantity: Float!
+}
+
+type ShipmentPackageList {
+  id: ID!
+  version: Int!
+  productsCurrency: Currency
+  products: [ShipmentProduct!]!
+  packages: [ShipmentPackage!]!
+}
+
+union ShipmentPackageListPayload = ShipmentPackageList | BadRequest | Forbidden | NotFound
+
 union ShipmentPayload = Shipment | BadRequest | Forbidden | NotFound
 
 type ShipmentPayloadPaginatedSearch implements Paginated {
@@ -87213,6 +87274,45 @@ type ShipmentPayloadPaginatedSearch implements Paginated {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+type ShipmentProduct {
+  id: ID!
+  name: String!
+  unitPrice: Float
+  unitNetWeight: Float
+  quantity: Float
+}
+
+type ShipmentProductAddedEventType implements ShipmentEventInterface & EventInterface {
+  productId: ID!
+  name: String!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentProductsCurrencySetEventType implements ShipmentEventInterface & EventInterface {
+  productsCurrency: Currency!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentShipperAppointedEventType implements ShipmentEventInterface & EventInterface {
+  shipper: OrganizationPayload!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
 }
 
 input ShipmentSortInput {
@@ -87299,6 +87399,10 @@ interface Sortable {
 enum SortOrder {
   ASCENDING
   DESCENDING
+}
+
+input StartShipmentBookedDraftInput {
+  version: Int!
 }
 
 type StringValue {
@@ -87726,8 +87830,24 @@ input TaskUpdateWrapperInput {
 
 type Timeline {
   unreadCount: Int!
-  entries(page: Int! = 1, perPage: Int! = 10): EntryPaginatedList!
+  entries(page: Int! = 1, perPage: Int! = 10): TimelineEntryPaginatedList!
 }
+
+type TimelineComment implements Model & Owned {
+  entity: EntityPayload!
+  content: String!
+  mentions: [UserPayload!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: OrganizationPayload!
+}
+
+union TimelineCommentPayload = TimelineComment | BadRequest | Forbidden | NotFound
 
 type TimelineDate implements Model & Owned & Memorizable {
   date: DateTime
@@ -87792,6 +87912,30 @@ enum TimelineDateRevisionType {
 
   """Other"""
   Other
+}
+
+union TimelineEntry = TimelineEvent | TimelineComment | BadRequest | Forbidden | NotFound
+
+type TimelineEntryPaginatedList implements Paginated {
+  nodes: [TimelineEntry!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+type TimelineEvent implements Model & Owned {
+  entity: EntityPayload!
+  logs: [Log!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: OrganizationPayload!
 }
 
 type Todo {
@@ -88000,7 +88144,6 @@ type Voyage implements Model & Owned & Sortable {
 }
 
 input VoyageNestedInput {
-  id: ID
   no: String
   vesselName: String
   vesselCode: String
@@ -88008,6 +88151,7 @@ input VoyageNestedInput {
   arrivalPort: PortInput
   departure: TimelineDateNestedInput
   arrival: TimelineDateNestedInput
+  id: ID
 }
 
 union VoyagePayload = Voyage | BadRequest | Forbidden | NotFound
