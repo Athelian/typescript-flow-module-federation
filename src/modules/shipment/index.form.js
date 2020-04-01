@@ -612,7 +612,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                   {apiError && <p>Error: Please try again.</p>}
                   {this.isNew() || !shipmentId ? (
                     <UserConsumer>
-                      {({ organization }) => {
+                      {({ organization, user }) => {
                         const { types = [] } = organization;
                         const isImporter = types.includes('Importer');
                         const isExporter = types.includes('Exporter');
@@ -672,7 +672,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                     containerGroups: [{}],
                                     voyages: [{}],
                                     tags: [],
-                                    followers: [],
+                                    followers: [user],
                                     todo: {
                                       tasks: [],
                                       taskTemplate: null,
