@@ -31,6 +31,7 @@ type OptionalProps = {
 type Props = OptionalProps & {
   productProviders: Array<Object>,
   productProvider: Object,
+  product?: Object,
   onSave: Function,
   onCancel: Function,
 };
@@ -63,6 +64,7 @@ const ProductProviderFormWrapper = ({
   isOwner,
   isNew,
   onSave,
+  product,
   productProviders,
   productProvider,
   onCancel,
@@ -175,7 +177,7 @@ const ProductProviderFormWrapper = ({
                                     entity={{
                                       productProviderId: productProvider.id,
                                     }}
-                                    users={productProvider.followers}
+                                    users={[...(product?.followers || [])]}
                                   />
                                 </Content>
                               </>
