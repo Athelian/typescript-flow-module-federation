@@ -102,20 +102,4 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
       });
     }
   };
-
-  // TODO: will remove this
-  onChangeForwarders = (
-    prevForwarders: Array<OrganizationPayload> = [],
-    newForwarders: Array<OrganizationPayload> = []
-  ) => {
-    const removedForwarders = prevForwarders.filter(
-      prevForwarder => !newForwarders.some(newForwarder => newForwarder.id === prevForwarder.id)
-    );
-
-    if (prevForwarders.length > 0 && removedForwarders.length > 0) {
-      this.setState(({ batches = [] }) => {
-        return { batches };
-      });
-    }
-  };
 }

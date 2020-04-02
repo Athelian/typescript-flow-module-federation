@@ -95,7 +95,6 @@ export default function CleanUpShipment({
             containersContainer.onChangeImporter(payload.importer);
             break;
           case 'CHANGE_FORWARDERS':
-            batchesContainer.onChangeForwarders(payload.forwarders, payload.selectedForwarders);
             containersContainer.onChangeForwarders(payload.forwarders, payload.selectedForwarders);
             break;
 
