@@ -181,7 +181,11 @@ class BatchFormModule extends React.Component<Props> {
                                         entity={{
                                           batchId: decodeId(batchId),
                                         }}
-                                        users={batchInfoContainer.state.shipment.followers}
+                                        users={[
+                                          ...(batchInfoContainer.state.shipment?.followers || []),
+                                          ...(batchInfoContainer.state.orderItem?.order
+                                            ?.followers || []),
+                                        ]}
                                       />
                                     </Content>
                                   </>
