@@ -672,7 +672,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                     containerGroups: [{}],
                                     voyages: [{}],
                                     tags: [],
-                                    followers: [user],
+                                    followers: [{ ...user, organization }],
                                     todo: {
                                       tasks: [],
                                       taskTemplate: null,
