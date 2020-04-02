@@ -46,6 +46,10 @@ type CreateShipmentResponse = {|
 
 const formContainer = new FormContainer();
 class NewShipmentForm extends React.PureComponent<Props> {
+  componentWillUnmount() {
+    formContainer.onReset();
+  }
+
   onSave = async (
     originalValues: Object,
     existingBatches: Array<Object>,
