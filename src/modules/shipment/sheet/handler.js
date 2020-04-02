@@ -9,7 +9,7 @@ import type {
   EntityEventHandler,
 } from 'components/Sheet/SheetLive/types';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
-import { handleFieldValueEvent } from 'modules/sheet/common/handler';
+import { handleFieldValueEvent, handleTaskEvent } from 'modules/sheet/common/handler';
 import { handleOrderChanges } from 'modules/sheet/order/handler';
 import { handleOrderItemChanges } from 'modules/sheet/orderItem/handler';
 import { handleBatchChanges } from 'modules/sheet/batch/handler';
@@ -398,6 +398,57 @@ function onDeleteBatchFactory(dispatch: Action => void) {
   };
 }
 
+async function onTask(
+  client: ApolloClient<any>,
+  dispatch: Action => void,
+  shipments: Array<Object>,
+  event: EntityEvent
+) {
+  const entity = (() => {
+    switch (event.entity.parentEntity.__typename) {
+      case 'Order':
+        return shipments
+          .flatMap(shipment => [
+            ...shipment.batchesWithoutContainer,
+            ...shipment.containers.flatMap(c => c.batches),
+          ])
+          .map(b => b?.orderItem?.order)
+          .filter(Boolean)
+          .find(o => o?.id === event.entity?.parentEntity.id);
+      case 'OrderItem':
+        return shipments
+          .flatMap(shipment => [
+            ...shipment.batchesWithoutContainer,
+            ...shipment.containers.flatMap(c => c.batches),
+          ])
+          .map(b => b?.orderItem)
+          .filter(Boolean)
+          .find(oi => oi?.id === event.entity?.parentEntity.id);
+      case 'Batch':
+        return shipments
+          .flatMap(shipment => [
+            ...shipment.batchesWithoutContainer,
+            ...shipment.containers.flatMap(c => c.batches),
+          ])
+          .filter(Boolean)
+          .find(b => b?.id === event.entity?.parentEntity.id);
+      case 'Shipment':
+        return shipments.find(s => s?.id === event.entity?.parentEntity.id);
+      case 'Container':
+        return shipments
+          .flatMap(shipment => shipment.containers)
+          .filter(Boolean)
+          .find(c => c?.id === event.entity?.parentEntity.id);
+      default:
+        return null;
+    }
+  })();
+  if (!entity) {
+    return;
+  }
+  await handleTaskEvent(client, dispatch, entity.todo, event);
+}
+
 export default function entityEventHandler(
   // $FlowFixMe not compatible with hook implementation
   client: ApolloClient,
@@ -420,6 +471,9 @@ export default function entityEventHandler(
           }
           case 'Batch':
             await onCreateBatch(event.entity.id);
+            break;
+          case 'Task':
+            await onTask(client, dispatch, shipments, event);
             break;
           default:
             break;
@@ -522,6 +576,9 @@ export default function entityEventHandler(
           case 'FieldValue':
             handleFieldValueEvent(dispatch, event);
             return;
+          case 'Task':
+            await onTask(client, dispatch, shipments, event);
+            break;
           default:
             break;
         }
@@ -545,6 +602,9 @@ export default function entityEventHandler(
             break;
           case 'Batch':
             onDeleteBatch(event.entity.id);
+            break;
+          case 'Task':
+            await onTask(client, dispatch, shipments, event);
             break;
           default:
             break;

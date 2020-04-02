@@ -6,6 +6,9 @@ import {
   tagFragment,
   userAvatarFragment,
   forbiddenFragment,
+  taskWithoutParentInfoFragment,
+  milestoneCardFragment,
+  projectCardFragment,
 } from 'graphql';
 import { sheetWarehouseFragment, sheetMaskFragment } from './fragment';
 
@@ -91,4 +94,17 @@ export const maskByIDQuery = gql`
   }
 
   ${sheetMaskFragment}
+`;
+
+export const taskByIDQuery = gql`
+  query taskByIDQuery($id: ID!) {
+    task(id: $id) {
+      ...taskWithoutParentInfoFragment
+    }
+  }
+
+  ${taskWithoutParentInfoFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${forbiddenFragment}
 `;
