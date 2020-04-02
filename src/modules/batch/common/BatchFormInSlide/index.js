@@ -151,7 +151,7 @@ const BatchFormInSlide = ({ batch, isNew, onSave, ...rest }: Props) => {
                                     entity={{
                                       batchId: batch.id,
                                     }}
-                                    users={batch.followers}
+                                    users={batch.shipment.followers}
                                   />
                                 </Content>
                               </>
