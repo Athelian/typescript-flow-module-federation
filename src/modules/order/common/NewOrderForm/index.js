@@ -25,6 +25,7 @@ import {
   OrderTasksContainer,
 } from 'modules/order/form/containers';
 import { createOrderMutation, prepareParsedOrderInput } from 'modules/order/form/mutation';
+import { UserConsumer } from 'contexts/Viewer';
 
 type Props = {|
   onSuccessCallback: Function,
@@ -41,42 +42,17 @@ type CreateOrderResponse = {|
   },
 |};
 
-const orderItemState = new OrderItemsContainer();
-const orderInfoState = new OrderInfoContainer();
-const orderTagsState = new OrderTagsContainer();
-const orderFilesState = new OrderFilesContainer();
-const orderTasksState = new OrderTasksContainer();
-const form = new FormContainer();
+const formContainer = new FormContainer();
 class NewOrderForm extends React.PureComponent<Props> {
   isMountedOnDOM = false;
 
   componentDidMount() {
-    const { initDataForSlideView } = this.props;
     this.isMountedOnDOM = true;
-    const order = {
-      id: uuid(),
-      currency: 'USD',
-      customFields: {
-        mask: null,
-        fieldValues: [],
-      },
-      tags: [],
-      importer: {},
-      todo: {
-        tasks: [],
-      },
-      files: [],
-      orderItems: [],
-      shipments: [],
-      containers: [],
-      ...initDataForSlideView,
-    };
-    this.initAllValues(order);
   }
 
   componentWillUnmount() {
     this.isMountedOnDOM = false;
-    form.onReset();
+    formContainer.onReset();
   }
 
   onSave = async (
@@ -109,7 +85,10 @@ class NewOrderForm extends React.PureComponent<Props> {
     }
   };
 
-  initAllValues = (order: Object) => {
+  initAllValues = (
+    { orderItemState, orderInfoState, orderTagsState, orderFilesState, orderTasksState },
+    order: Object
+  ) => {
     const {
       orderItems = [],
       hasCalledItemsApiYet = false,
@@ -126,6 +105,26 @@ class NewOrderForm extends React.PureComponent<Props> {
     orderTagsState.initDetailValues(tags);
   };
 
+  onFormReady = (
+    { orderItemState, orderInfoState, orderTagsState, orderFilesState, orderTasksState },
+    order: Object
+  ) => {
+    const hasInitialStateYet = orderInfoState.state.id || Object.keys(order).length === 0;
+    if (hasInitialStateYet) return null;
+
+    this.initAllValues(
+      {
+        orderItemState,
+        orderInfoState,
+        orderTagsState,
+        orderFilesState,
+        orderTasksState,
+      },
+      order
+    );
+    return null;
+  };
+
   onMutationCompleted = (result: CreateOrderResponse) => {
     const { intl } = this.props;
 
@@ -133,18 +132,9 @@ class NewOrderForm extends React.PureComponent<Props> {
   };
 
   render() {
-    const { onCancel } = this.props;
+    const { onCancel, initDataForSlideView } = this.props;
     return (
-      <Provider
-        inject={[
-          orderItemState,
-          orderInfoState,
-          orderTagsState,
-          orderFilesState,
-          orderTasksState,
-          form,
-        ]}
-      >
+      <Provider inject={[formContainer]}>
         <Mutation mutation={createOrderMutation} onCompleted={this.onMutationCompleted}>
           {(saveOrder, { loading: isLoading, error: apiError }) => (
             <SlideViewLayout>
@@ -193,15 +183,22 @@ class NewOrderForm extends React.PureComponent<Props> {
                 </JumpToSection>
                 <Subscribe
                   to={[
+                    OrderItemsContainer,
+                    OrderInfoContainer,
+                    OrderTagsContainer,
+                    OrderFilesContainer,
+                    OrderTasksContainer,
+                    FormContainer,
+                  ]}
+                >
+                  {(
                     orderItemState,
                     orderInfoState,
                     orderTagsState,
                     orderFilesState,
                     orderTasksState,
-                    form,
-                  ]}
-                >
-                  {() => {
+                    form
+                  ) => {
                     const isDirty =
                       orderItemState.isDirty() ||
                       orderInfoState.isDirty() ||
@@ -248,11 +245,20 @@ class NewOrderForm extends React.PureComponent<Props> {
                                 },
                                 saveOrder,
                                 updateOrder => {
-                                  this.initAllValues({
-                                    ...updateOrder,
-                                    hasCalledItemsApiYet: true,
-                                    hasCalledTasksApiYet: true,
-                                  });
+                                  this.initAllValues(
+                                    {
+                                      orderItemState,
+                                      orderInfoState,
+                                      orderTagsState,
+                                      orderFilesState,
+                                      orderTasksState,
+                                    },
+                                    {
+                                      ...updateOrder,
+                                      hasCalledItemsApiYet: true,
+                                      hasCalledTasksApiYet: true,
+                                    }
+                                  );
                                   form.onReset();
                                 },
                                 form.onErrors
@@ -267,7 +273,61 @@ class NewOrderForm extends React.PureComponent<Props> {
               </SlideViewNavBar>
               <Content>
                 {apiError && <p>Error: Please try again.</p>}
-                <OrderForm isNew />
+                <UserConsumer>
+                  {({ user, organization }) => {
+                    return (
+                      <>
+                        <OrderForm isNew />
+                        <Subscribe
+                          to={[
+                            OrderItemsContainer,
+                            OrderInfoContainer,
+                            OrderTagsContainer,
+                            OrderFilesContainer,
+                            OrderTasksContainer,
+                          ]}
+                        >
+                          {(
+                            orderItemState,
+                            orderInfoState,
+                            orderTagsState,
+                            orderFilesState,
+                            orderTasksState
+                          ) =>
+                            this.onFormReady(
+                              {
+                                orderItemState,
+                                orderInfoState,
+                                orderTagsState,
+                                orderFilesState,
+                                orderTasksState,
+                              },
+                              {
+                                id: uuid(),
+                                currency: 'USD',
+                                customFields: {
+                                  mask: null,
+                                  fieldValues: [],
+                                },
+                                tags: [],
+                                followers: [{ ...user, organization }],
+                                importer: {},
+                                todo: {
+                                  tasks: [],
+                                },
+                                files: [],
+                                orderItems: [],
+                                shipments: [],
+                                containers: [],
+                                ...initDataForSlideView,
+                              }
+                            )
+                          }
+                        </Subscribe>
+                      </>
+                    );
+                  }}
+                </UserConsumer>
               </Content>
             </SlideViewLayout>
           )}

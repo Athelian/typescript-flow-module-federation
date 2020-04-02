@@ -525,7 +525,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                 {apiError && <p>Error: Please try again.</p>}
                 {this.isNew() || !orderId ? (
                   <UserConsumer>
-                    {({ organization }) => {
+                    {({ user, organization }) => {
                       const { types = [] } = organization;
                       const isImporter = types.includes('Importer');
                       return (
@@ -563,7 +563,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                     fieldValues: [],
                                   },
                                   tags: [],
-                                  followers: [],
+                                  followers: [{ ...user, organization }],
                                   importer: isImporter ? organization : {},
                                   todo: {
                                     tasks: [],

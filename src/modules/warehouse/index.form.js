@@ -18,6 +18,7 @@ import { removeTypename } from 'utils/data';
 import { getByPath } from 'utils/fp';
 import { decodeId, encodeId, uuid } from 'utils/id';
 import { defaultAreaMetric } from 'utils/metric';
+import { UserConsumer } from 'contexts/Viewer';
 import WarehouseForm from './form';
 import WarehouseInfoContainer from './form/containers';
 import { warehouseFormQuery } from './form/query';
@@ -260,36 +261,43 @@ class WarehouseFormModule extends React.PureComponent<Props> {
               <Content>
                 {apiError && <p>Error: Please try again.</p>}
                 {this.isNew() || !warehouseId ? (
-                  <>
-                    <WarehouseForm isNew />
-                    <Subscribe to={[WarehouseInfoContainer]}>
-                      {warehouseInfoState =>
-                        this.onFormReady(
-                          {
-                            warehouseInfoState,
-                          },
-                          {
-                            id: uuid(),
-                            name: '',
-                            street: '',
-                            locality: '',
-                            region: '',
-                            postalCode: '',
-                            country: null,
-                            surface: {
-                              value: 0,
-                              metric: defaultAreaMetric,
-                            },
-                            customFields: {
-                              mask: null,
-                              fieldValues: [],
-                            },
-                            organizations: [],
-                          }
-                        )
-                      }
-                    </Subscribe>
-                  </>
+                  <UserConsumer>
+                    {({ user }) => {
+                      return (
+                        <>
+                          <WarehouseForm isNew />
+                          <Subscribe to={[WarehouseInfoContainer]}>
+                            {warehouseInfoState =>
+                              this.onFormReady(
+                                {
+                                  warehouseInfoState,
+                                },
+                                {
+                                  id: uuid(),
+                                  name: '',
+                                  street: '',
+                                  locality: '',
+                                  region: '',
+                                  postalCode: '',
+                                  country: null,
+                                  followers: [user],
+                                  surface: {
+                                    value: 0,
+                                    metric: defaultAreaMetric,
+                                  },
+                                  customFields: {
+                                    mask: null,
+                                    fieldValues: [],
+                                  },
+                                  organizations: [],
+                                }
+                              )
+                            }
+                          </Subscribe>
+                        </>
+                      );
+                    }}
+                  </UserConsumer>
                 ) : (
                   <QueryFormV2
                     query={warehouseFormQuery}

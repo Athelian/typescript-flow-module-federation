@@ -442,7 +442,7 @@ class ProductFormModule extends React.Component<Props> {
               {apiError && <p>Error: Please try again.</p>}
               {!productId ? (
                 <UserConsumer>
-                  {({ organization }) => {
+                  {({ organization, user }) => {
                     const { types = [] } = organization;
                     const isImporter = types.includes('Importer');
                     return (
@@ -476,7 +476,7 @@ class ProductFormModule extends React.Component<Props> {
                                 id: uuid(),
                                 importer: isImporter ? organization : {},
                                 tags: [],
-                                followers: [],
+                                followers: [user],
                                 todo: {
                                   tasks: [],
                                 },
