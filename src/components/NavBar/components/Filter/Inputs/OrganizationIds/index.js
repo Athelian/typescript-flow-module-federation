@@ -19,6 +19,7 @@ import { Display } from 'components/Form';
 import Selector from 'components/Selector';
 import useFilterSort from 'hooks/useFilterSort';
 import useQueryList from 'hooks/useQueryList';
+import logger from 'utils/logger';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
 import Ids, { type SelectorProps as BaseSelectorProps } from '../Common/Ids';
@@ -93,7 +94,7 @@ const OrganizationSelector = ({
                 itemWidth="195px"
               >
                 {nodes.map(partner => {
-                  console.warn(value);
+                  logger.warn({ value });
                   return (
                     <PartnerCard key={partner?.id} partner={partner} {...getItemProps(partner)} />
                   );

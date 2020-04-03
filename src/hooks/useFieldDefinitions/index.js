@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import type { FieldDefinition } from 'types';
+import logger from 'utils/logger';
 import { fieldDefinitionsQuery } from './query';
 
 export default function useFieldDefinitions(
@@ -28,7 +29,11 @@ export default function useFieldDefinitions(
             .then(({ data }) => {
               return data?.fieldDefinitions ?? [];
             })
-            .catch(console.warn),
+            .catch(error => {
+              logger.warn({
+                error,
+              });
+            }),
         {}
       )
     )
@@ -44,7 +49,11 @@ export default function useFieldDefinitions(
         );
         setLoading(false);
       })
-      .catch(console.warn);
+      .catch(error => {
+        logger.warn({
+          error,
+        });
+      });
   }, [client, entityTypes]);
 
   return {
