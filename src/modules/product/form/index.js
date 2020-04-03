@@ -70,7 +70,11 @@ class ProductForm extends React.Component<Props> {
               }}
             </Subscribe>
 
-            <AsyncProductProvidersSection isOwner={isOwner} productIsArchived={product.archived} />
+            <AsyncProductProvidersSection
+              product={product}
+              isOwner={isOwner}
+              productIsArchived={product.archived}
+            />
 
             <Subscribe to={[ProductTasksContainer]}>
               {({

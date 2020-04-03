@@ -59,9 +59,6 @@ export default function CleanUpShipment({
           batchesContainer.onChangeImporter(payload.importer);
           containersContainer.onChangeImporter(payload.importer);
           break;
-        case 'CHANGE_FORWARDERS':
-          containersContainer.onChangeForwarders(payload.forwarders, payload.selectedForwarders);
-          break;
 
         default:
           logger.warn('not support yet', action);
@@ -93,10 +90,6 @@ export default function CleanUpShipment({
           case 'CHANGE_IMPORTER':
             batchesContainer.onChangeImporter(payload.importer);
             containersContainer.onChangeImporter(payload.importer);
-            break;
-          case 'CHANGE_FORWARDERS':
-            batchesContainer.onChangeForwarders(payload.forwarders, payload.selectedForwarders);
-            containersContainer.onChangeForwarders(payload.forwarders, payload.selectedForwarders);
             break;
 
           default:

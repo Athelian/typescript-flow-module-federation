@@ -25,7 +25,6 @@ import {
   CONTAINER_SET_DEPARTURE_DATE,
   CONTAINER_SET_CUSTOM_FIELDS,
   CONTAINER_SET_CUSTOM_FIELDS_MASK,
-  CONTAINER_SET_FOLLOWERS,
   CONTAINER_APPROVE_DEPARTURE_DATE,
 } from 'modules/permission/constants/container';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -50,7 +49,6 @@ import {
   EnumSelectInputFactory,
   Display,
 } from 'components/Form';
-import Followers from 'components/Followers';
 import GridColumn from 'components/GridColumn';
 import { WarehouseCard, GrayCard } from 'components/Cards';
 import { FormField } from 'modules/form';
@@ -133,23 +131,6 @@ const ContainerSection = ({ container }: Props) => {
         icon="CONTAINER"
         title={<FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />}
       >
-        <Subscribe to={[ContainerInfoContainer]}>
-          {({ originalValues: initialValues, state, setFieldValue }) => {
-            const values = { ...initialValues, ...state };
-            return (
-              <Followers
-                followers={values?.followers ?? []}
-                setFollowers={value => setFieldValue('followers', value)}
-                organizationIds={[
-                  values?.shipment?.importer?.id,
-                  values?.shipment?.exporter?.id,
-                  ...(values?.shipment?.forwarders ?? []).map(forwarder => forwarder?.id),
-                ].filter(Boolean)}
-                editable={hasPermission([CONTAINER_UPDATE, CONTAINER_SET_FOLLOWERS])}
-              />
-            );
-          }}
-        </Subscribe>
         {container.updatedAt && (
           <div className={StatusStyle(container.archived)}>
             <Icon icon={container.archived ? 'ARCHIVED' : 'ACTIVE'} />

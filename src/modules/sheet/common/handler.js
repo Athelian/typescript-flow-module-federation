@@ -3,6 +3,7 @@ import type { Action } from 'components/Sheet/SheetState/types';
 import type { EntityEvent } from 'components/Sheet/SheetLive/types';
 import { Actions } from 'components/Sheet/SheetState/constants';
 
+// eslint-disable-next-line import/prefer-default-export
 export function handleFieldValueEvent(dispatch: Action => void, event: EntityEvent) {
   const change = event.changes.find(c => c.field === 'value');
   if (change) {

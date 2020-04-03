@@ -18,6 +18,7 @@ function computeMergedCells(
       }
 
       let toX = x;
+      // eslint-disable-next-line no-constant-condition
       while (true) {
         if (rows.length <= toX + 1) {
           break;

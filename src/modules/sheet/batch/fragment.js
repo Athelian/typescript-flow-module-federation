@@ -2,9 +2,6 @@ import gql from 'graphql-tag';
 
 export const sheetBatchFragment = gql`
   fragment sheetBatchFragment on Batch {
-    followers {
-      ...userAvatarFragment
-    }
     no
     quantity
     producedQuantity

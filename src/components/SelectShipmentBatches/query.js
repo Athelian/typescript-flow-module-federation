@@ -52,9 +52,6 @@ export const selectBatchListQuery = gql`
           ownedBy {
             ...ownedByFragment
           }
-          followers {
-            ...userAvatarFragment
-          }
           memo
           no
           quantity
@@ -111,9 +108,6 @@ export const selectBatchListQuery = gql`
             ... on Container {
               id
               no
-              ... on Followed {
-                notificationUnseenCount
-              }
               representativeBatch {
                 ... on Batch {
                   id

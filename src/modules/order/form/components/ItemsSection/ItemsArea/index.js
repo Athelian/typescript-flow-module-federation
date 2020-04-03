@@ -525,7 +525,6 @@ function ItemsArea({
                                 taskTemplate: null,
                               },
                               tags,
-                              followers: [],
                               archived: orderIsArchived,
                             });
                           }),

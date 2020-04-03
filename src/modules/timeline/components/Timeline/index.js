@@ -73,7 +73,7 @@ function filterByFile(items: Array<Entry>, hasPermissions: Function): Array<Entr
 }
 
 const Timeline = ({
-  users,
+  users = [],
   query,
   queryField,
   variables: baseVariables,

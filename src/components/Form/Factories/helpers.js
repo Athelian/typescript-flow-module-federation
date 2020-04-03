@@ -38,7 +38,7 @@ export function enumToString(enumType: string, intl: IntlShape): any => string {
   }
 
   if (messages[enumType]) {
-    return function(enumValue: any): string {
+    return (enumValue: any): string => {
       const selectedValue = enumString(enumValue);
       const enumMessages = messages[enumType];
       return enumMessages[selectedValue]

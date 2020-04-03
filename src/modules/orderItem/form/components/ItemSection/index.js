@@ -16,7 +16,6 @@ import {
   ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK,
   ORDER_ITEMS_SET_TAGS,
   ORDER_ITEMS_SET_MEMO,
-  ORDER_ITEMS_SET_FOLLOWERS,
 } from 'modules/permission/constants/orderItem';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { TAG_LIST } from 'modules/permission/constants/tag';
@@ -39,7 +38,6 @@ import {
   TagsInput,
   TextAreaInputFactory,
 } from 'components/Form';
-import Followers from 'components/Followers';
 import {
   OrderItemInfoContainer,
   OrderItemBatchesContainer,
@@ -68,29 +66,6 @@ const ItemSection = ({ isSlideView, orderItem }: Props) => {
         icon="ORDER_ITEM"
         title={<FormattedMessage id="modules.OrderItems.orderItem" defaultMessage="ITEM" />}
       >
-        <Subscribe to={[OrderItemInfoContainer, OrderItemBatchesContainer]}>
-          {({ originalValues: initialValues, state, setFieldValue }, { state: { batches } }) => {
-            const values = { ...initialValues, ...state };
-            return (
-              <Followers
-                followers={values?.followers ?? []}
-                setFollowers={value => setFieldValue('followers', value)}
-                organizationIds={[
-                  values?.order?.importer?.id,
-                  values?.order?.exporter?.id,
-                  ...batches.flatMap(batch =>
-                    [
-                      batch?.shipment?.importer?.id,
-                      batch?.shipment?.exporter?.id,
-                      ...(batch?.shipment?.forwarders ?? []).map(forwarder => forwarder?.id),
-                    ].filter(Boolean)
-                  ),
-                ].filter(Boolean)}
-                editable={hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_FOLLOWERS])}
-              />
-            );
-          }}
-        </Subscribe>
         {orderItem.updatedAt && (
           <div className={StatusStyle(orderItem.archived)}>
             <Icon icon={orderItem.archived ? 'ARCHIVED' : 'ACTIVE'} />

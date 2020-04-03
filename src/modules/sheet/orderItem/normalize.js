@@ -9,10 +9,6 @@ export default function normalizeSheetOrderItemInput(
   newValue: any
 ): Object {
   switch (field) {
-    case 'followers':
-      return {
-        followerIds: newValue.map(follower => follower.id),
-      };
     case 'price':
       if (newValue.value === null) {
         return { price: null };

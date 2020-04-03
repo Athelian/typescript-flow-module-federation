@@ -4,12 +4,7 @@ import { ApolloClient } from 'apollo-client';
 import type { EntityEventChange } from 'components/Sheet/SheetLive/types';
 import { mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
 import { mapAsync } from 'utils/async';
-import {
-  maskByIDQuery,
-  tagsByIDsQuery,
-  userByIDQuery,
-  usersByIDsQuery,
-} from 'modules/sheet/common/query';
+import { maskByIDQuery, tagsByIDsQuery, userByIDQuery } from 'modules/sheet/common/query';
 
 export async function handleBatchChanges(
   client: ApolloClient<any>,
@@ -18,16 +13,6 @@ export async function handleBatchChanges(
 ): Promise<Array<EntityEventChange>> {
   changes = await mapAsync(changes, change => {
     switch (change.field) {
-      case 'followers':
-        return client
-          .query({
-            query: usersByIDsQuery,
-            variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
-          })
-          .then(({ data }) => ({
-            field: change.field,
-            new: newCustomValue(data.usersByIDs),
-          }));
       case 'tags':
         return client
           .query({

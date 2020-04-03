@@ -21,7 +21,6 @@ import {
   ORDER_ITEMS_SET_QUANTITY,
   ORDER_ITEMS_SET_TAGS,
   ORDER_ITEMS_SET_TASKS,
-  ORDER_ITEMS_SET_FOLLOWERS,
   ORDER_ITEMS_UPDATE,
 } from 'modules/permission/constants/orderItem';
 
@@ -97,24 +96,6 @@ export default function transformSheetOrderItem({
         orderItem,
         'archived',
         root => getOrderFromRoot(root)?.archived ?? false
-      ),
-    },
-    {
-      columnKey: 'orderItem.followers',
-      type: 'followers',
-      computed: root => {
-        const currentOrderItem = getOrderItemFromRoot(root);
-        return [
-          currentOrderItem?.order?.importer?.id,
-          currentOrderItem?.order?.exporter?.id,
-        ].filter(Boolean);
-      },
-      ...transformValueField(
-        basePath,
-        orderItem,
-        'followers',
-        hasPermission =>
-          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_FOLLOWERS)
       ),
     },
     {

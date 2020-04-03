@@ -18,7 +18,6 @@ export const initValues: OrderItem = {
     fieldValues: [],
   },
   tags: [],
-  followers: [],
   memo: null,
   productProvider: null,
   order: null,

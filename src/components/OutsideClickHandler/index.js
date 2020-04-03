@@ -19,9 +19,9 @@ const defaultProps = {
 };
 
 export default class OutsideClickHandler extends React.Component<Props> {
-  static defaultProps = defaultProps;
-
   wrapperRef: HTMLDivElement;
+
+  static defaultProps = defaultProps;
 
   componentDidMount() {
     document.addEventListener('mousedown', this.onOutsideClick);

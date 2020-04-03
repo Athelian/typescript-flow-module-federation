@@ -148,7 +148,7 @@ const ItemFormInSlide = ({ orderItem, onSave, isNew }: Props) => {
                                     entity={{
                                       orderItemId: orderItem.id,
                                     }}
-                                    users={orderItem.followers}
+                                    users={orderItem.order.followers}
                                   />
                                 </Content>
                               </>

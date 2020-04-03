@@ -3,9 +3,6 @@ import gql from 'graphql-tag';
 
 export const sheetContainerFragment = gql`
   fragment sheetContainerFragment on Container {
-    followers {
-      ...userAvatarFragment
-    }
     no
     autoCalculatedFreeTimeStartDate
     freeTimeStartDate

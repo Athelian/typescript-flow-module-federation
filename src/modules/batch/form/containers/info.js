@@ -20,7 +20,6 @@ export const initValues: Batch = {
     fieldValues: [],
   },
   tags: [],
-  followers: [],
   memo: null,
   orderItem: null,
   packageName: null,
