@@ -105,25 +105,4 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
       return { containers: cleanedContainers };
     });
   };
-
-  onChangeForwarders = (
-    prevForwarders: Array<OrganizationPayload> = [],
-    newForwarders: Array<OrganizationPayload> = []
-  ) => {
-    const removedForwarders = prevForwarders.filter(
-      prevForwarder => !newForwarders.some(newForwarder => newForwarder.id === prevForwarder.id)
-    );
-
-    if (prevForwarders.length > 0 && removedForwarders.length > 0) {
-      this.setState(({ containers = [] }) => {
-        const cleanedContainers = containers.map(container => {
-          const { batches = [] } = container;
-
-          return { ...container, batches };
-        });
-
-        return { containers: cleanedContainers };
-      });
-    }
-  };
 }

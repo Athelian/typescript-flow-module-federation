@@ -87,10 +87,6 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
           ),
         };
       });
-    } else if (prevExporter) {
-      this.setState(prevState => {
-        return { batches: prevState.batches };
-      });
     }
   };
 
