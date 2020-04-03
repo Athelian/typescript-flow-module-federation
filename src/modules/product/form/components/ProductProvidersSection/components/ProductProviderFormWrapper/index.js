@@ -177,7 +177,7 @@ const ProductProviderFormWrapper = ({
                                     entity={{
                                       productProviderId: productProvider.id,
                                     }}
-                                    users={[...(product?.followers || [])]}
+                                    users={product?.followers ?? []}
                                   />
                                 </Content>
                               </>
