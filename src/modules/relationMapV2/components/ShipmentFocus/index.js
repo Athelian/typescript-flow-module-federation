@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 // @flow
 import * as React from 'react';
 import { DndProvider } from 'react-dnd';

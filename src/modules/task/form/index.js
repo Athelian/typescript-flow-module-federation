@@ -8,6 +8,7 @@ import { TaskFormWrapperStyle } from './style';
 import EntitySection from './components/EntitySection';
 
 type Props = {|
+  // eslint-disable-next-line react/no-unused-prop-types
   groupIds: Array<string>,
   task?: Object,
   entity?: Object,
