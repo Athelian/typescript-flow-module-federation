@@ -34,7 +34,7 @@ function transformOrderItem(
 ): Array<CellValue> {
   return transformSheetOrderItem({
     fieldDefinitions,
-    basePath,
+    basePath: `${basePath}.orderItem`,
     orderItem,
     getOrderFromRoot: root => root?.orderItem?.order,
     getOrderItemFromRoot: root => root?.orderItem,
