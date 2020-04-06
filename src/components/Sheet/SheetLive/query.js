@@ -81,6 +81,13 @@ export const entityEventSubscription = gql`
             }
           }
         }
+        ... on Task {
+          parentEntity: entity {
+            ... on Model {
+              id
+            }
+          }
+        }
       }
       changes {
         field
