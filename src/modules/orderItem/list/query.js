@@ -21,9 +21,6 @@ export const orderItemListQuery = gql`
     orderItems(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...itemCardWithOwnedFragment
-        ... on Followed {
-          notificationUnseenCount
-        }
         ...forbiddenFragment
       }
       page

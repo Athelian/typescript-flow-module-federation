@@ -2,6 +2,14 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  columnsConfigSelectAllButton: {
+    id: 'modules.Notification.preferences.columnsConfigSelectAllButton',
+    defaultMessage: 'Select all',
+  },
+  columnsConfigUnselectAllButton: {
+    id: 'modules.Notification.preferences.columnsConfigUnselectAllButton',
+    defaultMessage: 'Unselect all',
+  },
   order_create: {
     id: 'modules.Notification.preferences.order_create',
     defaultMessage: 'Create',

@@ -28,9 +28,10 @@ import {
 type Props = {
   isOwner: boolean,
   productIsArchived: boolean,
+  product?: Object,
 };
 
-function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
+function ProductProvidersSection({ isOwner, productIsArchived, product }: Props) {
   const { hasPermission } = usePermission(isOwner);
   return (
     hasPermission(PRODUCT_PROVIDER_FORM) && (
@@ -69,6 +70,7 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                         {opened && (
                           <ProductProviderFormWrapper
                             isAddedProvider
+                            product={product}
                             productProviders={productProviders}
                             productProvider={{
                               isNew: true,
@@ -129,6 +131,7 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                               {updateFormOpened && (
                                 <ProductProviderFormWrapper
                                   isOwner={isOwner}
+                                  product={product}
                                   productProviders={productProviders}
                                   productProvider={productProvider}
                                   onCancel={() => slideToggle('updateFormOpened', false)}
@@ -154,6 +157,7 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                                 <ProductProviderFormWrapper
                                   isNew
                                   isOwner={isOwner}
+                                  product={product}
                                   productProviders={productProviders}
                                   productProvider={{
                                     ...productProvider,

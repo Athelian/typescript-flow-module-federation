@@ -52,13 +52,13 @@ const defaultProps = {
 };
 
 export default class BaseCard extends React.Component<Props, State> {
+  cornerIcon: { current: HTMLButtonElement | null } = React.createRef();
+
   static defaultProps = defaultProps;
 
   state = {
     actionsAreShown: false,
   };
-
-  cornerIcon: { current: HTMLButtonElement | null } = React.createRef();
 
   toggleActions = () => {
     const { actionsAreShown } = this.state;

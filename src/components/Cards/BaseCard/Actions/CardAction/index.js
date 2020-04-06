@@ -6,7 +6,7 @@ import { CardActionStyle } from './style';
 type Props = {
   icon: string,
   hoverColor: string,
-  onClick: () => void,
+  onClick: Function,
 };
 
 const defaultProps = {

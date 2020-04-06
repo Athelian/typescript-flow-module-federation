@@ -28,6 +28,7 @@ import {
 import ShipmentForm from 'modules/shipment/form';
 import validator from 'modules/shipment/form/validator';
 import { createShipmentMutation, prepareParsedShipmentInput } from 'modules/shipment/form/mutation';
+import { UserConsumer } from 'contexts/Viewer';
 
 type Props = {|
   onSuccessCallback: ?Function,
@@ -43,42 +44,8 @@ type CreateShipmentResponse = {|
   },
 |};
 
-const shipmentInfoContainer = new ShipmentInfoContainer();
-const shipmentTagsContainer = new ShipmentTagsContainer();
-const shipmentTransportTypeContainer = new ShipmentTransportTypeContainer();
-const shipmentTimelineContainer = new ShipmentTimelineContainer();
-const shipmentBatchesContainer = new ShipmentBatchesContainer();
-const shipmentContainersContainer = new ShipmentContainersContainer();
-const shipmentFilesContainer = new ShipmentFilesContainer();
-const shipmentTasksContainer = new ShipmentTasksContainer();
 const formContainer = new FormContainer();
 class NewShipmentForm extends React.PureComponent<Props> {
-  componentDidMount() {
-    const { initDataForSlideView } = this.props;
-    const shipment = {
-      id: uuid(),
-      booked: false,
-      customFields: {
-        mask: null,
-        fieldValues: [],
-      },
-      cargoReady: {},
-      containerGroups: [{}],
-      voyages: [{}],
-      tags: [],
-      followers: [],
-      todo: {
-        tasks: [],
-        taskTemplate: null,
-      },
-      files: [],
-      containers: [],
-      batches: [],
-      ...initDataForSlideView,
-    };
-    this.initAllValues(shipment);
-  }
-
   componentWillUnmount() {
     formContainer.onReset();
   }
@@ -120,7 +87,19 @@ class NewShipmentForm extends React.PureComponent<Props> {
     }
   };
 
-  initAllValues = (shipment: Object) => {
+  initAllValues = (
+    {
+      shipmentInfoContainer,
+      shipmentTagsContainer,
+      shipmentTransportTypeContainer,
+      shipmentTimelineContainer,
+      shipmentBatchesContainer,
+      shipmentContainersContainer,
+      shipmentFilesContainer,
+      shipmentTasksContainer,
+    },
+    shipment: Object
+  ) => {
     const {
       batches = [],
       containers = [],
@@ -161,6 +140,38 @@ class NewShipmentForm extends React.PureComponent<Props> {
     shipmentTransportTypeContainer.initDetailValues(transportType);
   };
 
+  onFormReady = (
+    {
+      shipmentInfoContainer,
+      shipmentTagsContainer,
+      shipmentTransportTypeContainer,
+      shipmentTimelineContainer,
+      shipmentBatchesContainer,
+      shipmentContainersContainer,
+      shipmentFilesContainer,
+      shipmentTasksContainer,
+    },
+    shipment: Object
+  ) => {
+    const hasInitialStateYet = shipmentInfoContainer.state.id || Object.keys(shipment).length === 0;
+    if (hasInitialStateYet) return null;
+
+    this.initAllValues(
+      {
+        shipmentInfoContainer,
+        shipmentTagsContainer,
+        shipmentTransportTypeContainer,
+        shipmentTimelineContainer,
+        shipmentBatchesContainer,
+        shipmentContainersContainer,
+        shipmentFilesContainer,
+        shipmentTasksContainer,
+      },
+      shipment
+    );
+    return null;
+  };
+
   onMutationCompleted = (result: CreateShipmentResponse) => {
     const { intl } = this.props;
 
@@ -170,19 +181,7 @@ class NewShipmentForm extends React.PureComponent<Props> {
   render() {
     const { onCancel, initDataForSlideView } = this.props;
     return (
-      <Provider
-        inject={[
-          shipmentInfoContainer,
-          shipmentTagsContainer,
-          shipmentTransportTypeContainer,
-          shipmentTimelineContainer,
-          shipmentBatchesContainer,
-          shipmentContainersContainer,
-          shipmentFilesContainer,
-          shipmentTasksContainer,
-          formContainer,
-        ]}
-      >
+      <Provider inject={[formContainer]}>
         <Mutation mutation={createShipmentMutation} onCompleted={this.onMutationCompleted}>
           {(saveShipment, { loading: isLoading, error: apiError }) => {
             return (
@@ -244,6 +243,18 @@ class NewShipmentForm extends React.PureComponent<Props> {
                   </JumpToSection>
                   <Subscribe
                     to={[
+                      ShipmentInfoContainer,
+                      ShipmentTagsContainer,
+                      ShipmentTransportTypeContainer,
+                      ShipmentTimelineContainer,
+                      ShipmentBatchesContainer,
+                      ShipmentContainersContainer,
+                      ShipmentFilesContainer,
+                      ShipmentTasksContainer,
+                      FormContainer,
+                    ]}
+                  >
+                    {(
                       shipmentInfoContainer,
                       shipmentTagsContainer,
                       shipmentTransportTypeContainer,
@@ -252,10 +263,8 @@ class NewShipmentForm extends React.PureComponent<Props> {
                       shipmentContainersContainer,
                       shipmentFilesContainer,
                       shipmentTasksContainer,
-                      formContainer,
-                    ]}
-                  >
-                    {() => {
+                      form
+                    ) => {
                       const isDirty =
                         shipmentInfoContainer.isDirty() ||
                         shipmentTagsContainer.isDirty() ||
@@ -273,7 +282,7 @@ class NewShipmentForm extends React.PureComponent<Props> {
                             <SaveFormButton
                               id="shipment_form_save_button"
                               disabled={
-                                !formContainer.isReady(
+                                !form.isReady(
                                   {
                                     ...shipmentBatchesContainer.state,
                                     ...shipmentContainersContainer.state,
@@ -313,17 +322,29 @@ class NewShipmentForm extends React.PureComponent<Props> {
                                   },
                                   saveShipment,
                                   updateShipment => {
-                                    this.initAllValues({
-                                      ...updateShipment,
-                                      hasCalledTasksApiYet: true,
-                                      hasCalledBatchesApiYet: true,
-                                      hasCalledTimelineApiYet: true,
-                                      hasCalledContainerApiYet: true,
-                                      hasCalledFilesApiYet: true,
-                                    });
-                                    formContainer.onReset();
+                                    this.initAllValues(
+                                      {
+                                        shipmentInfoContainer,
+                                        shipmentTagsContainer,
+                                        shipmentTransportTypeContainer,
+                                        shipmentTimelineContainer,
+                                        shipmentBatchesContainer,
+                                        shipmentContainersContainer,
+                                        shipmentFilesContainer,
+                                        shipmentTasksContainer,
+                                      },
+                                      {
+                                        ...updateShipment,
+                                        hasCalledTasksApiYet: true,
+                                        hasCalledBatchesApiYet: true,
+                                        hasCalledTimelineApiYet: true,
+                                        hasCalledContainerApiYet: true,
+                                        hasCalledFilesApiYet: true,
+                                      }
+                                    );
+                                    form.onReset();
                                   },
-                                  formContainer.onErrors
+                                  form.onErrors
                                 );
                               }}
                             />
@@ -335,12 +356,77 @@ class NewShipmentForm extends React.PureComponent<Props> {
                 </SlideViewNavBar>
                 <Content>
                   {apiError && <p>Error: Please try again.</p>}
-                  <ShipmentForm
-                    shipment={{}}
-                    isNew
-                    loading={false}
-                    initDataForSlideView={initDataForSlideView}
-                  />
+                  <UserConsumer>
+                    {({ user, organization }) => {
+                      return (
+                        <>
+                          <ShipmentForm
+                            shipment={{}}
+                            isNew
+                            loading={false}
+                            initDataForSlideView={initDataForSlideView}
+                          />
+                          <Subscribe
+                            to={[
+                              ShipmentInfoContainer,
+                              ShipmentTagsContainer,
+                              ShipmentTransportTypeContainer,
+                              ShipmentTimelineContainer,
+                              ShipmentBatchesContainer,
+                              ShipmentContainersContainer,
+                              ShipmentFilesContainer,
+                              ShipmentTasksContainer,
+                            ]}
+                          >
+                            {(
+                              shipmentInfoContainer,
+                              shipmentTagsContainer,
+                              shipmentTransportTypeContainer,
+                              shipmentTimelineContainer,
+                              shipmentBatchesContainer,
+                              shipmentContainersContainer,
+                              shipmentFilesContainer,
+                              shipmentTasksContainer
+                            ) =>
+                              this.onFormReady(
+                                {
+                                  shipmentInfoContainer,
+                                  shipmentTagsContainer,
+                                  shipmentTransportTypeContainer,
+                                  shipmentTimelineContainer,
+                                  shipmentBatchesContainer,
+                                  shipmentContainersContainer,
+                                  shipmentFilesContainer,
+                                  shipmentTasksContainer,
+                                },
+                                {
+                                  id: uuid(),
+                                  booked: false,
+                                  customFields: {
+                                    mask: null,
+                                    fieldValues: [],
+                                  },
+                                  cargoReady: {},
+                                  containerGroups: [{}],
+                                  voyages: [{}],
+                                  tags: [],
+                                  followers: [{ ...user, organization }],
+                                  todo: {
+                                    tasks: [],
+                                    taskTemplate: null,
+                                  },
+                                  files: [],
+                                  containers: [],
+                                  batches: [],
+                                  ...initDataForSlideView,
+                                }
+                              )
+                            }
+                          </Subscribe>
+                        </>
+                      );
+                    }}
+                  </UserConsumer>
                 </Content>
               </SlideViewLayout>
             );

@@ -104,7 +104,7 @@ class ContainerFormInSlide extends React.Component<Props> {
                                 entity={{
                                   containerId: container.id,
                                 }}
-                                users={container.followers}
+                                users={container.shipment.followers}
                               />
                             </Content>
                           </>

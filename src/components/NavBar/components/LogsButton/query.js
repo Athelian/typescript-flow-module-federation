@@ -1,3 +1,4 @@
+/* eslint-disable graphql/template-strings */
 // @flow
 import { upperFirst } from 'lodash';
 import gql from 'graphql-tag';

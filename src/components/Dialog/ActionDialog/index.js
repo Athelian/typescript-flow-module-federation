@@ -15,6 +15,7 @@ import ItemLabelIcon from './LabelIcon/ItemLabelIcon';
 import ItemsLabelIcon from './LabelIcon/ItemsLabelIcon';
 import OrderLabelIcon from './LabelIcon/OrderLabelIcon';
 import OrdersLabelIcon from './LabelIcon/OrdersLabelIcon';
+import ProjectLabelIcon from './LabelIcon/ProjectLabelIcon';
 import ShipmentLabelIcon from './LabelIcon/ShipmentLabelIcon';
 import ShipmentsLabelIcon from './LabelIcon/ShipmentsLabelIcon';
 import TagLabelIcon from './LabelIcon/TagLabelIcon';
@@ -22,7 +23,9 @@ import TagsLabelIcon from './LabelIcon/TagsLabelIcon';
 import FileLabelIcon from './LabelIcon/FileLabelIcon';
 import FilesLabelIcon from './LabelIcon/FilesLabelIcon';
 import MilestoneLabelIcon from './LabelIcon/MilestoneLabelIcon';
+import MilestonesLabelIcon from './LabelIcon/MilestonesLabelIcon';
 import TableTemplateLabelIcon from './LabelIcon/TableTemplateLabelIcon';
+import TasksLabelIcon from './LabelIcon/TasksLabelIcon';
 import {
   ActionDialogWrapperStyle,
   DialogMessageStyle,
@@ -98,6 +101,7 @@ export {
   ItemsLabelIcon,
   OrderLabelIcon,
   OrdersLabelIcon,
+  ProjectLabelIcon,
   ShipmentLabelIcon,
   ShipmentsLabelIcon,
   TagLabelIcon,
@@ -105,5 +109,7 @@ export {
   FileLabelIcon,
   FilesLabelIcon,
   MilestoneLabelIcon,
+  MilestonesLabelIcon,
   TableTemplateLabelIcon,
+  TasksLabelIcon,
 };

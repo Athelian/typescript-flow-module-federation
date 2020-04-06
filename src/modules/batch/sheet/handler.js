@@ -10,7 +10,7 @@ import type {
   EntityEventHandler,
 } from 'components/Sheet/SheetLive/types';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
-import { handleFieldValueEvent } from 'modules/sheet/common/handler';
+import { handleFieldValueEvent, handleTaskEvent } from 'modules/sheet/common/handler';
 import { handleOrderChanges } from 'modules/sheet/order/handler';
 import { handleProductChanges } from 'modules/sheet/product/handler';
 import { handleProductProviderChanges } from 'modules/sheet/productProvider/handler';
@@ -237,6 +237,46 @@ function isBelongToShipment(shipment: Object, timelineDateId: string) {
   );
 }
 
+async function onTask(
+  client: ApolloClient<any>,
+  dispatch: Action => void,
+  batches: Array<Object>,
+  event: EntityEvent
+) {
+  const entity = (() => {
+    switch (event.entity.parentEntity.__typename) {
+      case 'Order':
+        return batches
+          .map(b => b?.orderItem?.order)
+          .filter(Boolean)
+          .find(o => o?.id === event.entity?.parentEntity.id);
+      case 'OrderItem':
+        return batches
+          .map(b => b?.orderItem)
+          .filter(Boolean)
+          .find(oi => oi?.id === event.entity?.parentEntity.id);
+      case 'Batch':
+        return batches.find(b => b?.id === event.entity?.parentEntity.id);
+      case 'Shipment':
+        return batches
+          .map(b => b.shipment)
+          .filter(Boolean)
+          .find(s => s?.id === event.entity?.parentEntity.id);
+      case 'Container':
+        return batches
+          .map(b => b.container)
+          .filter(Boolean)
+          .find(c => c?.id === event.entity?.parentEntity.id);
+      default:
+        return null;
+    }
+  })();
+  if (!entity) {
+    return;
+  }
+  await handleTaskEvent(client, dispatch, entity.todo, event);
+}
+
 export default function entityEventHandler(
   // $FlowFixMe Cannot use  `ApolloClient` [1] without 1 type argument.Flow(InferError)
   client: ApolloClient,
@@ -252,17 +292,15 @@ export default function entityEventHandler(
     switch (event.lifeCycle) {
       case 'Create':
         switch (event.entity.__typename) {
+          case 'Task':
+            await onTask(client, dispatch, batches, event);
+            break;
           default:
             break;
         }
         break;
       case 'Update': {
         let { changes } = event;
-
-        switch (event.entity.__typename) {
-          default:
-            break;
-        }
 
         switch (event.entity.__typename) {
           case 'Order': {
@@ -345,6 +383,9 @@ export default function entityEventHandler(
           case 'FieldValue':
             handleFieldValueEvent(dispatch, event);
             return;
+          case 'Task':
+            await onTask(client, dispatch, batches, event);
+            break;
           default:
             break;
         }
@@ -365,6 +406,9 @@ export default function entityEventHandler(
         switch (event.entity.__typename) {
           case 'Batch':
             onDeleteBatch(event.entity.id);
+            break;
+          case 'Task':
+            await onTask(client, dispatch, batches, event);
             break;
           default:
             break;

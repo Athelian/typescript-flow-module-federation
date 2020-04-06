@@ -21,9 +21,6 @@ export const containerListQuery = gql`
     containers(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...containerCardWithOwnedFragment
-        ... on Followed {
-          notificationUnseenCount
-        }
         ...badRequestFragment
         ...forbiddenFragment
         ...notFoundFragment

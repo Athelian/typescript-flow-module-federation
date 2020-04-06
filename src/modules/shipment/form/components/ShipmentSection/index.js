@@ -628,7 +628,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                 message={
                                                   <FormattedMessage
                                                     id="modules.Shipment.importerDialogMessage"
-                                                    defaultMessage="Changing the Importer will remove all Batches and all Followers of the current Importer from the Shipment and all Containers. Are you sure you want to change the Importer?"
+                                                    defaultMessage="Changing the Importer will remove all Batches and all Followers of the current Importer from the Shipment. Are you sure you want to change the Importer?"
                                                   />
                                                 }
                                                 isOpen={importerDialogIsOpen}
@@ -735,13 +735,13 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                       changeMessage={
                                         <FormattedMessage
                                           id="modules.Shipment.mainExporterChangeMessage"
-                                          defaultMessage="Changing the Main Exporter will remove all Batches and remove all Followers of the current Main Exporter from the Shipment and all Containers. Are you sure you want to change the Main Exporter?"
+                                          defaultMessage="Changing the Main Exporter will remove all Batches and remove all Followers of the current Main Exporter from the Shipment. Are you sure you want to change the Main Exporter?"
                                         />
                                       }
                                       warningMessage={
                                         <FormattedMessage
                                           id="modules.Shipment.mainExporterDeselectMessage"
-                                          defaultMessage="Removing the Main Exporter will remove all Followers of the current Main Exporter from the Shipment and all Containers. Are you sure you want to remove the Main Exporter?"
+                                          defaultMessage="Removing the Main Exporter will remove all Followers of the current Main Exporter from the Shipment. Are you sure you want to remove the Main Exporter?"
                                         />
                                       }
                                       onSelect={({ organization, ...partner }) => {
@@ -865,7 +865,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                           message={
                                             <FormattedMessage
                                               id="modules.Shipment.forwardersDialogMessage"
-                                              defaultMessage="Changing the Forwarders will remove all Followers of the removed Forwarders from the Shipment and all Containers. Are you sure you want to change the Forwarders?"
+                                              defaultMessage="Changing the Forwarders will remove all Followers of the removed Forwarders from the Shipment. Are you sure you want to change the Forwarders?"
                                             />
                                           }
                                           isOpen={forwardersDialogIsOpen}

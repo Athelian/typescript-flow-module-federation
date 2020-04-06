@@ -87,22 +87,6 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
           ),
         };
       });
-    } else if (prevExporter) {
-      this.setState(prevState => {
-        const cleanedBatches = prevState.batches.map(batch => {
-          const { followers: batchFollowers = [] } = batch;
-
-          const cleanedBatchFollowers = batchFollowers.filter(
-            follower => follower?.organization?.id !== prevExporter.id
-          );
-
-          return {
-            ...batch,
-            followers: cleanedBatchFollowers,
-          };
-        });
-        return { batches: cleanedBatches };
-      });
     }
   };
 
@@ -111,36 +95,6 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
     if (prevImporter) {
       this.setState({
         batches: [],
-      });
-    }
-  };
-
-  onChangeForwarders = (
-    prevForwarders: Array<OrganizationPayload> = [],
-    newForwarders: Array<OrganizationPayload> = []
-  ) => {
-    const removedForwarders = prevForwarders.filter(
-      prevForwarder => !newForwarders.some(newForwarder => newForwarder.id === prevForwarder.id)
-    );
-
-    if (prevForwarders.length > 0 && removedForwarders.length > 0) {
-      this.setState(({ batches = [] }) => {
-        const cleanedBatches = batches.map(batch => {
-          const { followers: batchFollowers = [] } = batch;
-
-          const cleanedBatchFollowers = batchFollowers.filter(
-            follower =>
-              !removedForwarders.some(
-                removedForwarder => removedForwarder.id === follower?.organization?.id
-              )
-          );
-
-          return {
-            ...batch,
-            followers: cleanedBatchFollowers,
-          };
-        });
-        return { batches: cleanedBatches };
       });
     }
   };

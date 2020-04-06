@@ -222,7 +222,7 @@ class OrderItemFormModule extends React.Component<Props> {
                                         entity={{
                                           orderItemId: decodeId(orderItemId),
                                         }}
-                                        users={orderItemInfoContainer.state.followers}
+                                        users={orderItemInfoContainer.state.order.followers}
                                       />
                                     </Content>
                                   </>

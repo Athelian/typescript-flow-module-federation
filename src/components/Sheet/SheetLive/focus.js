@@ -14,6 +14,7 @@ import {
   focusUnsubscribeMutation,
 } from './query';
 
+// eslint-disable-next-line import/prefer-default-export
 export const useSheetLiveFocus = () => {
   const id = useSheetLiveID();
   const client = useApolloClient();

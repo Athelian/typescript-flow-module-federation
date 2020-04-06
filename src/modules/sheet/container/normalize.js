@@ -8,10 +8,6 @@ export default function normalizeSheetContainerInput(
   newValue: any
 ): Object {
   switch (field) {
-    case 'followers':
-      return {
-        followerIds: newValue.map(follower => follower.id),
-      };
     case 'warehouseArrivalAgreedDate':
     case 'warehouseArrivalActualDate':
     case 'departureDate':
