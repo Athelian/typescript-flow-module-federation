@@ -495,6 +495,21 @@ export default function Actions({ targets }: Props) {
                 <ActionSubMenu isCollapsed={currentMenu !== ORDER}>
                   <ActionButton
                     onClick={() => {
+                      console.log('FOLLOWERS Action');
+                      console.dir(orderIds);
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'FOLLOWERS',
+                        payload: {
+                          source: ORDER,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="STAFF" />
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
                       setCurrentMenu(null);
                       dispatch({
                         type: 'STATUS',

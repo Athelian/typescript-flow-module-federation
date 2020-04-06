@@ -142,6 +142,11 @@ export type State = {|
     isOpen: boolean,
     isProcessing: boolean,
   },
+  followers: {
+    source: string,
+    isOpen: boolean,
+    isProcessing: boolean,
+  },
   status: {
     source: string,
     isOpen: boolean,

@@ -25,6 +25,7 @@ import {
 } from 'modules/relationMapV2/store';
 import { loadMore, findOrderIdByItem, findParentIdsByBatch } from 'modules/relationMapV2/helpers';
 import EditFormSlideView from '../EditFormSlideView';
+import FollowersSlideView from '../FollowersSlideView';
 import MoveEntityConfirm from '../MoveEntityConfirm';
 import CloneEntities from '../CloneEntities';
 import InlineCreateItem from '../InlineCreateItem';
@@ -46,6 +47,7 @@ import MoveItem from '../MoveItem';
 import MoveBatch from '../MoveBatch';
 import AddTags from '../AddTags';
 import DeleteConfirm from '../DeleteConfirm';
+import FollowersConfirm from '../FollowersConfirm';
 import SplitBatches from '../SplitBatches';
 import InitLoadingPlaceholder from '../InitLoadingPlaceholder';
 import { WrapperStyle, ListStyle, ActionsBackdropStyle, NoOrdersFoundStyle } from './style';
@@ -483,10 +485,9 @@ export default function OrderFocus() {
                           // need to find the position base on the order and batch
                           // then use the react-window to navigate to the row
                           // try to get from sort first, if not there, then try to use from entities
-                          const originalBatches = // $FlowIgnore this doesn't support yet
-                          (entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []).map(
-                            batchId => entities.batches?.[batchId]
-                          );
+                          const originalBatches = ( // $FlowIgnore this doesn't support yet
+                            entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []
+                          ).map(batchId => entities.batches?.[batchId]);
                           const batchList = getBatchesSortByItemId({
                             // $FlowIgnore this doesn't support yet
                             id: batch?.orderItem?.id,
@@ -630,6 +631,11 @@ export default function OrderFocus() {
                       }
                     }}
                   />
+                  <FollowersConfirm
+                    onSuccess={() => {
+                      console.log('FollowersConfirm');
+                    }}
+                  />
                   <DeleteConfirm
                     onSuccess={({ orderItemIds, containerIds }) => {
                       const orderIds = [];
@@ -759,6 +765,26 @@ export default function OrderFocus() {
                       } else if (state.edit.orderIds && state.edit.orderIds.length) {
                         queryOrdersDetail(state.edit.orderIds);
                       }
+                      if (result?.moveToTop) {
+                        queryOrdersDetail([result?.id ?? ''].filter(Boolean));
+                        scrollToRow({
+                          position: 0,
+                          id: result?.id ?? '',
+                          type: result?.type ?? '',
+                        });
+                      }
+                      dispatch({
+                        type: 'EDIT',
+                        payload: {
+                          type: '',
+                          selectedId: '',
+                        },
+                      });
+                    }}
+                  />
+                  <FollowersSlideView
+                    onClose={result => {
+                      console.log('onClose FollowersSlideView');
                       if (result?.moveToTop) {
                         queryOrdersDetail([result?.id ?? ''].filter(Boolean));
                         scrollToRow({
