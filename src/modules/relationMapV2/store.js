@@ -718,6 +718,7 @@ const initialState: State = {
   },
   followers: {
     source: ORDER,
+    ids: [],
     isOpen: false,
     isProcessing: false,
   },
@@ -806,6 +807,7 @@ function orderReducer(
       | 'SPLIT_END'
       | 'SPLIT_CLOSE'
       | 'FOLLOWERS'
+      | 'FOLLOWERS_START'
       | 'FOLLOWERS_CLOSE'
       | 'STATUS'
       | 'STATUS_START'
@@ -1319,17 +1321,25 @@ function orderReducer(
       });
     }
     case 'FOLLOWERS': {
-      console.log('case FOLLOWERS');
       return update(state, {
         followers: {
           isOpen: { $set: true },
           isProcessing: { $set: false },
           source: { $set: action.payload?.source ?? '' },
+          ids: { $set: action.payload?.ids ?? [] },
+        },
+      });
+    }
+    case 'FOLLOWERS_START': {
+      return update(state, {
+        followers: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          ids: { $set: action.payload?.ids ?? [] },
         },
       });
     }
     case 'FOLLOWERS_CLOSE': {
-      console.log('case FOLLOWERS_CLOSE');
       return update(state, {
         followers: {
           isOpen: { $set: false },
