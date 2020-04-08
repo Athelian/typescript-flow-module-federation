@@ -16,14 +16,16 @@ type Props = {|
 
 export default function AddFollowers({ onSuccess }: Props) {
   const [isShowDialog, setIsShowDialog] = React.useState(true);
-  const [sharedFollowerIds, setSharedFollowerIds] = React.useState([]);
+  const [sharedFollowers, setSharedFollowers] = React.useState([]);
   const [sharedPartnerIds, setSharedPartnerIds] = React.useState([]);
+  const [excludedPartnerNames, setExcludedPartnerNames] = React.useState([]);
   const { dispatch, state } = FocusedView.useContainer();
   const { isProcessing, isOpen, source, ids } = state.followers;
   const entitiesQuery = source === ORDER ? ordersByIDsQuery : shipmentsByIDsQuery;
 
   const { data: entities, loading } = useQuery(entitiesQuery, {
     onCompleted: () => {
+      const partnerNameMap = new Map();
       let newFlatFollowers = [];
       let newSharedPartnerIds = [];
       let newExcludedPartnerIds = [];
@@ -33,16 +35,22 @@ export default function AddFollowers({ onSuccess }: Props) {
           const flatPartnerIds = [];
           if (entity?.exporter?.id && !flatPartnerIds.includes(entity.exporter.id)) {
             flatPartnerIds.push(entity.exporter.id);
+            partnerNameMap.set(entity.exporter.id, entity.exporter.name);
           }
 
           if (entity?.importer?.id && !flatPartnerIds.includes(entity.importer.id)) {
             flatPartnerIds.push(entity.importer.id);
+            partnerNameMap.set(entity.importer.id, entity.importer.name);
           }
 
           if (source === SHIPMENT && entity?.forwarders?.length) {
-            flatPartnerIds.concat(
-              entity.forwarders.filter(forwarder => !flatPartnerIds.includes(forwarder.id))
+            const forwarders = entity.forwarders.filter(
+              forwarder => !flatPartnerIds.includes(forwarder.id)
             );
+            flatPartnerIds.concat(forwarders.map(forwader => forwader.id));
+            forwarders.forEach(forwarder => {
+              partnerNameMap.set(forwarder.id, forwarder.name);
+            });
           }
 
           if (!newSharedPartnerIds.length) {
@@ -57,17 +65,17 @@ export default function AddFollowers({ onSuccess }: Props) {
           ];
           newSharedPartnerIds = [...newSharedPartnerIds.filter(id => flatPartnerIds.includes(id))];
         });
-        setSharedPartnerIds(newSharedPartnerIds);
         setIsShowDialog(!!newExcludedPartnerIds.length);
+        setSharedPartnerIds(newSharedPartnerIds);
+        setSharedFollowers([
+          ...new Set(
+            newFlatFollowers.filter(follower =>
+              newSharedPartnerIds.includes(follower.organization.id)
+            )
+          ),
+        ]);
+        setExcludedPartnerNames(newExcludedPartnerIds.map(id => partnerNameMap.get(id)));
       }
-
-      setSharedFollowerIds([
-        ...new Set(
-          newFlatFollowers
-            .filter(follower => newSharedPartnerIds.includes(follower.organization.id))
-            .map(follower => follower.id)
-        ),
-      ]);
     },
     variables: {
       ids,
@@ -87,7 +95,9 @@ export default function AddFollowers({ onSuccess }: Props) {
     setIsShowDialog(false);
   };
 
-  const dialogMessage = loading ? 'loading...' : 'Followers dialogMessage';
+  const dialogMessage = loading
+    ? 'loading...'
+    : `excluede partners: ${excludedPartnerNames.toString()}`;
   if (isShowDialog || loading) {
     return (
       <ActionDialog
@@ -120,7 +130,7 @@ export default function AddFollowers({ onSuccess }: Props) {
       }}
     >
       <StaffSelector
-        selected={sharedFollowerIds}
+        selected={sharedFollowers}
         onSelect={() => {
           console.log('onSelect');
         }}
