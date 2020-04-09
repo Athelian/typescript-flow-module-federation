@@ -41,6 +41,13 @@ export default function normalizeSheetOrderItemInput(
             size,
             isNew,
             createdAt,
+            order,
+            orderItem: oi,
+            shipment,
+            productProvider,
+            milestone,
+            updatedAt,
+            updatedBy,
             ...rest
           }) => rest
         ),
