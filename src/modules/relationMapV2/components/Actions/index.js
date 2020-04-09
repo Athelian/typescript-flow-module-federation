@@ -161,6 +161,20 @@ export default function Actions({ targets }: Props) {
                     onClick={() => {
                       setCurrentMenu(null);
                       dispatch({
+                        type: 'FOLLOWERS',
+                        payload: {
+                          source: SHIPMENT,
+                          ids: shipmentIds,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="STAFF" />
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
                         type: 'STATUS',
                         payload: {
                           source: SHIPMENT,
