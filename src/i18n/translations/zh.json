@@ -1124,6 +1124,7 @@
   "modules.RelationMap.clone.containerMessage2": "任何选中的 {batchesLabel} 也会随 {containersLabel} 一起被复制.",
   "modules.RelationMap.clone.noPermission": "至少选择一个{source} {entity}不允许您复制。请重新选择并重试",
   "modules.RelationMap.label.clone": "复制",
+  "components.cards.deliveryWarehouse": "运送",
   "components.cards.noWarehouse": "未找到仓库",
   "modules.RelationMap.deleteBatch.deleting": "正在删除{batchLabel}...",
   "modules.RelationMap.deleteBatch.message1": "确定要删除此{batchLabel}",

@@ -457,6 +457,20 @@ export default function Actions({ targets }: Props) {
                     onClick={() => {
                       setCurrentMenu(null);
                       dispatch({
+                        type: 'FOLLOWERS',
+                        payload: {
+                          source: ORDER,
+                          ids: orderIds,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="STAFF" />
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
                         type: 'STATUS',
                         payload: {
                           source: ORDER,
@@ -836,6 +850,20 @@ export default function Actions({ targets }: Props) {
               >
                 <Icon icon="SHIPMENT" />
                 <ActionSubMenu isCollapsed={currentMenu !== SHIPMENT}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'FOLLOWERS',
+                        payload: {
+                          source: SHIPMENT,
+                          ids: shipmentIds,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="STAFF" />
+                  </ActionButton>
                   <ActionButton
                     onClick={() => {
                       setCurrentMenu(null);

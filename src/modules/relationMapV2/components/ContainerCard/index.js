@@ -81,7 +81,7 @@ export default function ContainerCard({
       <div className={BottomRowWrapperStyle}>
         <div className={DeliveryWarehouseWrapperStyle}>
           <Label width="75px">
-            <FormattedMessage id="components.cards.deliveryWarehouse" />
+            <FormattedMessage id="components.cards.deliveryWarehouse" defaultMessage="Delivery" />
           </Label>
           <Display
             blackout={!canViewWarehouse}

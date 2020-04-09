@@ -1124,6 +1124,7 @@
   "modules.RelationMap.clone.containerMessage2": "選択した{containersLabel}の下にある{batchesLabel}を選択している場合はそれらも複製されます",
   "modules.RelationMap.clone.noPermission": "複製機能を利用する権限がありません",
   "modules.RelationMap.label.clone": "複製",
+  "components.cards.deliveryWarehouse": "Delivery",
   "components.cards.noWarehouse": "倉庫がありません",
   "modules.RelationMap.deleteBatch.deleting": "{batchLabel}を削除しています",
   "modules.RelationMap.deleteBatch.message1": "本当にこの{batchLabel}を削除しますか？",
