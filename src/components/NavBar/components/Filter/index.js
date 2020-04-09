@@ -57,6 +57,7 @@ import {
   ShipmentTags,
   TaskTags,
   UserTags,
+  FileTags,
 } from './Inputs/Tags';
 import {
   ActionsStyle,
@@ -115,6 +116,7 @@ const inputs = {
   project_tags: ProjectTags,
   task_tags: TaskTags,
   user_tags: UserTags,
+  file_tags: FileTags,
   organization_types: OrganizationTypes,
   task_template_entity_types: TaskTemplateEntityTypes,
   mask_edit_type: MaskEditType,

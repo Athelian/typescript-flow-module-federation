@@ -65,5 +65,6 @@ export const ContainerTags = Tags('Container');
 export const UserTags = Tags('User');
 export const TaskTags = Tags('Task');
 export const ProjectTags = Tags('Project');
+export const FileTags = Tags('File');
 
 export default Tags;

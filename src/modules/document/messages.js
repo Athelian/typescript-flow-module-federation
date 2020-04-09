@@ -34,4 +34,8 @@ export default defineMessages({
     id: 'modules.Documents.hasEntity',
     defaultMessage: 'Has Parent',
   },
+  tags: {
+    id: 'modules.Documents.tags',
+    defaultMessage: 'Tags',
+  },
 });
