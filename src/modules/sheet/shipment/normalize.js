@@ -52,6 +52,13 @@ export default function normalizeSheetShipmentInput(
             size,
             isNew,
             createdAt,
+            order,
+            orderItem,
+            shipment: s,
+            productProvider,
+            milestone,
+            updatedAt,
+            updatedBy,
             ...rest
           }) => rest
         ),
