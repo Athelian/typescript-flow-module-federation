@@ -301,6 +301,26 @@ export default function({
           name: 'shipmentNumOfVoyages',
           group: 'batch',
         },
+        'shipment.voyage.0.departurePort': {
+          local: true,
+          name: 'shipmentLoadPort',
+          group: 'batch',
+        },
+        'shipment.voyage.0.departure.latestDate': {
+          local: true,
+          name: 'shipmentLoadPortDeparture',
+          group: 'batch',
+        },
+        'shipment.voyage.2.arrivalPort': {
+          local: true,
+          name: 'shipmentDischargePort',
+          group: 'batch',
+        },
+        'shipment.voyage.2.arrival.latestDate': {
+          local: true,
+          name: 'shipmentDischargePortArrival',
+          group: 'batch',
+        },
       },
       fieldDefinitions: shipmentFieldDefinitions,
     }).filter(

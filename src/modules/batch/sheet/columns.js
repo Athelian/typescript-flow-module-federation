@@ -129,19 +129,19 @@ export default function({
       sorts: {
         'shipment.voyage.0.departurePort': {
           name: 'shipmentLoadPort',
-          group: 'shipment',
+          group: 'batch',
         },
         'shipment.voyage.0.departure.latestDate': {
           name: 'shipmentLoadPortDeparture',
-          group: 'shipment',
+          group: 'batch',
         },
         'shipment.voyage.2.arrivalPort': {
           name: 'shipmentDischargePort',
-          group: 'shipment',
+          group: 'batch',
         },
         'shipment.voyage.2.arrival.latestDate': {
           name: 'shipmentDischargePortArrival',
-          group: 'shipment',
+          group: 'batch',
         },
       },
     }).filter(
