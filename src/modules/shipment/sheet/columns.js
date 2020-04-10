@@ -69,6 +69,10 @@ export default function({
           name: 'cargoReady',
           group: 'shipment',
         },
+        'shipment.voyage.0.departurePort': {
+          name: 'loadPort',
+          group: 'shipment',
+        },
         'shipment.voyage.0.departure.date': {
           name: 'loadPortDeparture',
           group: 'shipment',
@@ -87,6 +91,10 @@ export default function({
         },
         'shipment.voyage.2.secondTransitDeparture.date': {
           name: 'secondTransitPortDeparture',
+          group: 'shipment',
+        },
+        'shipment.voyage.2.arrivalPort': {
+          name: 'dischargePort',
           group: 'shipment',
         },
         'shipment.voyage.2.arrival.date': {
