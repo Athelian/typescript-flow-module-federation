@@ -146,6 +146,22 @@ export default defineMessages({
     id: 'components.BatchItem.productSerial',
     defaultMessage: 'Product Serial',
   },
+  shipmentLoadPort: {
+    id: 'components.BatchItem.shipmentLoadPort',
+    defaultMessage: 'Shipment load port',
+  },
+  shipmentLoadPortDeparture: {
+    id: 'components.BatchItem.shipmentLoadPortDeparture',
+    defaultMessage: 'Shipment load port departure',
+  },
+  shipmentDischargePort: {
+    id: 'components.BatchItem.shipmentDischargePort',
+    defaultMessage: 'Shipment discharge port',
+  },
+  shipmentDischargePortArrival: {
+    id: 'components.BatchItem.shipmentDischargePortArrival',
+    defaultMessage: 'Shipment discharge port arrival',
+  },
   deliveredAt: {
     id: 'components.BatchItem.deliveredAt',
     defaultMessage: 'Delivery Date',
