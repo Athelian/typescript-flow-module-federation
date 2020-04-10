@@ -67,6 +67,10 @@ export const BatchSortConfig: Array<SortConfig> = [
   { message: batchMessages.deliveredAt, field: 'deliveredAt' },
   { message: batchMessages.expiredAt, field: 'expiredAt' },
   { message: batchMessages.desiredAt, field: 'desiredAt' },
+  { message: batchMessages.shipmentLoadPort, field: 'shipmentLoadPort' },
+  { message: batchMessages.shipmentLoadPortDeparture, field: 'shipmentLoadPortDeparture' },
+  { message: batchMessages.shipmentDischargePort, field: 'shipmentDischargePort' },
+  { message: batchMessages.shipmentDischargePortArrival, field: 'shipmentDischargePortArrival' },
 ];
 
 export const ShipmentSortConfig: Array<SortConfig> = [

@@ -126,6 +126,24 @@ export default function({
     ),
     ...shipmentColumns({
       fieldDefinitions: shipmentFieldDefinitions,
+      sorts: {
+        'shipment.voyage.0.departurePort': {
+          name: 'shipmentLoadPort',
+          group: 'shipment',
+        },
+        'shipment.voyage.0.departure.latestDate': {
+          name: 'shipmentLoadPortDeparture',
+          group: 'shipment',
+        },
+        'shipment.voyage.2.arrivalPort': {
+          name: 'shipmentDischargePort',
+          group: 'shipment',
+        },
+        'shipment.voyage.2.arrival.latestDate': {
+          name: 'shipmentDischargePortArrival',
+          group: 'shipment',
+        },
+      },
     }).filter(
       c =>
         ![
