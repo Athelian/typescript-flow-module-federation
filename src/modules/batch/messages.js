@@ -148,19 +148,19 @@ export default defineMessages({
   },
   shipmentLoadPort: {
     id: 'components.BatchItem.shipmentLoadPort',
-    defaultMessage: 'Shipment load port',
+    defaultMessage: 'Load Port',
   },
   shipmentLoadPortDeparture: {
     id: 'components.BatchItem.shipmentLoadPortDeparture',
-    defaultMessage: 'Shipment load port departure',
+    defaultMessage: 'Load Port Departure',
   },
   shipmentDischargePort: {
     id: 'components.BatchItem.shipmentDischargePort',
-    defaultMessage: 'Shipment discharge port',
+    defaultMessage: 'Discharge Port',
   },
   shipmentDischargePortArrival: {
     id: 'components.BatchItem.shipmentDischargePortArrival',
-    defaultMessage: 'Shipment discharge port arrival',
+    defaultMessage: 'Discharge Port Arrival',
   },
   deliveredAt: {
     id: 'components.BatchItem.deliveredAt',
