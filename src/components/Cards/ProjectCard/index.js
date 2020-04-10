@@ -4,7 +4,7 @@ import { FormattedMessage, FormattedDate } from 'react-intl';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import { Display, Label } from 'components/Form';
-import { Tooltip } from 'components/Tooltip';
+import { Tooltip, FullValueTooltip } from 'components/Tooltip';
 import { differenceInCalendarDays } from 'utils/date';
 import ProjectDueDateDiffToolTip from './components/ProjectDueDateDiffToolTip';
 import MilestoneTimelineItem from './components/MilestoneTimelineItem';
@@ -57,7 +57,9 @@ const ProjectCard = ({ project, onClick, ...rest }: Props) => {
       <div className={ProjectCardStyle}>
         <div className={ProjectCardHeaderStyle}>
           <Display width="200px" height="20px">
-            {name}
+            <FullValueTooltip message={name}>
+              <span>{name}</span>
+            </FullValueTooltip>
           </Display>
 
           <div className={ProjectDueDateStyle}>
