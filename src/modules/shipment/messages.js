@@ -939,6 +939,10 @@ export const shipmentSortMessages = defineMessages({
     id: 'modules.Shipments.sort.cargoReady',
     defaultMessage: 'CARGO READY',
   },
+  loadPort: {
+    id: 'modules.Shipments.sort.loadPort',
+    defaultMessage: 'LOAD PORT',
+  },
   loadPortDeparture: {
     id: 'modules.Shipments.sort.loadPortDeparture',
     defaultMessage: 'LOAD PORT DEPARTURE',
@@ -958,6 +962,10 @@ export const shipmentSortMessages = defineMessages({
   secondTransitPortDeparture: {
     id: 'modules.Shipments.sort.secondTransitPortDeparture',
     defaultMessage: '2ND TRANSIT DEPARTURE',
+  },
+  dischargePort: {
+    id: 'modules.Shipments.sort.dischargePort',
+    defaultMessage: 'DISCHARGE PORT',
   },
   dischargePortArrival: {
     id: 'modules.Shipments.sort.dischargePortArrival',
