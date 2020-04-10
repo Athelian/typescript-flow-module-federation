@@ -29,7 +29,7 @@ const TimelineWarehouseName = ({ name, vertical, containers = [] }: Props) => {
   const haveContainer = containers && containers.length > 0;
   return (
     <div className={TimelineWarehouseNameWrapperStyle(vertical, haveContainer)}>
-      <FullValueTooltip message={name}>
+      <FullValueTooltip message={name ?? ''}>
         <div className={TimelineWarehouseNameStyle(vertical)}>{name}</div>
       </FullValueTooltip>
       {warehouses.length > 0 && (
