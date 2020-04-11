@@ -143,30 +143,30 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
                 {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
               </div>
 
-              <div className={ShipmentImporterWrapperStyle}>
-                <div className={ShipmentImporterIconStyle}>
-                  <Icon icon="IMPORTER" />
-                </div>
-                <FullValueTooltip message={importer && importer.name}>
+              <FullValueTooltip message={importer && importer.name}>
+                <div className={ShipmentImporterWrapperStyle}>
+                  <div className={ShipmentImporterIconStyle}>
+                    <Icon icon="IMPORTER" />
+                  </div>
                   <div className={ShipmentImporterStyle}>{importer && importer.name}</div>
-                </FullValueTooltip>
-              </div>
-
-              <div className={ShipmentExporterWrapperStyle}>
-                <div className={ShipmentExporterIconStyle}>
-                  <Icon icon="EXPORTER" />
                 </div>
-                <FullValueTooltip message={exporterName}>
+              </FullValueTooltip>
+
+              <FullValueTooltip message={exporterName}>
+                <div className={ShipmentExporterWrapperStyle}>
+                  <div className={ShipmentExporterIconStyle}>
+                    <Icon icon="EXPORTER" />
+                  </div>
                   <div className={ShipmentExporterStyle(remainingExporterCount)}>
                     {exporterName}
                   </div>
-                </FullValueTooltip>
-                {remainingExporterCount !== 0 && (
-                  <div className={RemainingExporterCountStyle}>
-                    +<FormattedNumber value={remainingExporterCount} />
-                  </div>
-                )}
-              </div>
+                  {remainingExporterCount !== 0 && (
+                    <div className={RemainingExporterCountStyle}>
+                      +<FormattedNumber value={remainingExporterCount} />
+                    </div>
+                  )}
+                </div>
+              </FullValueTooltip>
             </div>
 
             <div className={ShipmentDataWrapperStyle}>
@@ -176,7 +176,7 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
                 </Label>
                 <FullValueTooltip
                   message={getByPathWithDefault(
-                    <FormattedMessage id="components.cards.na" defaultMessage="N/A" />,
+                    '',
                     `${(voyages || []).length - 1}.vesselName`,
                     voyages
                   )}

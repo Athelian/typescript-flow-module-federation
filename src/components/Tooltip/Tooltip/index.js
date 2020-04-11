@@ -13,6 +13,10 @@ type Props = OptionalProps & {
 };
 
 export default function Tooltip({ message, children, delay, maxWidth, ...rest }: Props) {
+  if (!message) {
+    return null;
+  }
+
   return (
     <Tippy
       content={message}
