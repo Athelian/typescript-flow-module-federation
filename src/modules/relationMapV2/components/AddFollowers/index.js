@@ -12,12 +12,11 @@ import { ordersByIDsQuery, shipmentsByIDsQuery } from './query';
 import { updateOrdersMutation, updateShipmentMutation } from './mutation';
 
 type Props = {|
-  onSuccess: (ids: Array<string>) => void,
+  onSuccess?: (ids: Array<string>) => void,
 |};
 
 export default function AddFollowers({ onSuccess }: Props) {
   const [isShowDialog, setIsShowDialog] = React.useState(true);
-  const [sharedFollowers, setSharedFollowers] = React.useState([]);
   const [sharedPartnerIds, setSharedPartnerIds] = React.useState([]);
   const [excludedPartnerNames, setExcludedPartnerNames] = React.useState([]);
   const { dispatch, state } = FocusedView.useContainer();
@@ -81,13 +80,6 @@ export default function AddFollowers({ onSuccess }: Props) {
         });
         setIsShowDialog(!!newExcludedPartnerIds.length);
         setSharedPartnerIds(newSharedPartnerIds);
-        setSharedFollowers([
-          ...new Set(
-            newSharedFollowers.filter(follower =>
-              newSharedPartnerIds.includes(follower.organization.id)
-            )
-          ),
-        ]);
         setExcludedPartnerNames(newExcludedPartnerIds.map(id => partnerNameMap.get(id)));
       }
     },
@@ -133,7 +125,10 @@ export default function AddFollowers({ onSuccess }: Props) {
           })),
         },
       });
-      onSuccess(ids);
+
+      if (onSuccess) {
+        onSuccess(ids);
+      }
     }
   };
 
@@ -172,7 +167,7 @@ export default function AddFollowers({ onSuccess }: Props) {
       }}
     >
       <StaffSelector
-        selected={sharedFollowers}
+        selected={[]}
         onSelect={onSetFollowers}
         onCancel={onCancel}
         organizationIds={sharedPartnerIds}

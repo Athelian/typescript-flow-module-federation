@@ -630,11 +630,7 @@ export default function OrderFocus() {
                       }
                     }}
                   />
-                  <AddFollowers
-                    onSuccess={() => {
-                      // Do something when success?
-                    }}
-                  />
+                  {state.followers.isOpen && <AddFollowers />}
                   <DeleteConfirm
                     onSuccess={({ orderItemIds, containerIds }) => {
                       const orderIds = [];

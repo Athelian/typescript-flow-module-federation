@@ -297,11 +297,7 @@ export default function ShipmentFocus() {
                       );
                     }}
                   />
-                  <AddFollowers
-                    onSuccess={() => {
-                      // Do something when success?
-                    }}
-                  />
+                  <AddFollowers />
                   <DeleteConfirm
                     onSuccess={({ orderItemIds, containerIds }) => {
                       const orderIds = [];
