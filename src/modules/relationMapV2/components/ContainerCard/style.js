@@ -18,7 +18,7 @@ export const ContainerCardWrapperStyle: string = css`
 
 export const TopRowWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 225px 115px;
+  grid-template-columns: 225px 135px 75px;
   grid-template-rows: 20px;
   grid-gap: 5px;
   padding: 5px;
@@ -34,7 +34,7 @@ export const TagsWrapperStyle: string = css`
 
 export const BottomRowWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 225px 135px;
+  grid-template-columns: 225px 135px 75px;
   grid-template-rows: 20px;
   grid-gap: 5px;
   padding: 0 0 5px 5px;
