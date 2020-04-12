@@ -18,7 +18,7 @@ export const ShipmentCardWrapperStyle = (isShipmentFocus: boolean): string => cs
 
 export const TopRowWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 165px 1fr;
+  grid-template-columns: 165px 335px 55px;
   grid-template-rows: 20px;
   grid-gap: 5px;
   padding: 5px 25px 5px 5px;
@@ -38,7 +38,7 @@ export const TagsWrapperStyle: string = css`
 
 export const BottomRowWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 1fr 20px;
+  grid-template-columns: 480px 20px 55px;
   grid-template-rows: 20px;
   grid-gap: 5px;
   padding: 0 0 5px 5px;

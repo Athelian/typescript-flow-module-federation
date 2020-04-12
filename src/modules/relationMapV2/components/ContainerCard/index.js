@@ -55,8 +55,6 @@ export default function ContainerCard({
   const canViewWarehouseArrival = true;
 
   const { totalVolume } = findSummary(container);
-  console.log('totalVolume');
-  console.dir(totalVolume);
 
   return (
     <div className={ContainerCardWrapperStyle}>
