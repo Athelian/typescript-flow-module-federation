@@ -148,7 +148,7 @@ export default defineMessages({
   },
   containerFreeTimeDueDate: {
     id: 'components.BatchItem.containerFreeTimeDueDate',
-    defaultMessage: 'Free time due date',
+    defaultMessage: 'Due Date',
   },
   shipmentLoadPort: {
     id: 'components.BatchItem.shipmentLoadPort',
