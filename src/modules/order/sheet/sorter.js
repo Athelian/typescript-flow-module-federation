@@ -7,7 +7,6 @@ import {
   numberSort,
   stringSort,
 } from 'components/Sheet/SheetState/sorter';
-import { getLatestDate } from 'utils/shipment';
 import { calculateDueDate } from 'utils/date';
 import { getLatestDate } from 'utils/shipment';
 
