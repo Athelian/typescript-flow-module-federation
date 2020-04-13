@@ -113,6 +113,12 @@ export default function({
     ),
     ...containerColumns({
       fieldDefinitions: containerFieldDefinitions,
+      sorts: {
+        'container.dueDate': {
+          name: 'containerFreeTimeDueDate',
+          group: 'batch',
+        },
+      },
     }).filter(
       c =>
         ![

@@ -154,6 +154,11 @@ export default function({
           name: 'freeTimeStartDate',
           group: 'container',
         },
+        'container.dueDate': {
+          local: true,
+          name: 'dueDate',
+          group: 'container',
+        },
         'container.yardName': {
           local: true,
           name: 'yardName',

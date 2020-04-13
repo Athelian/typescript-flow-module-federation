@@ -221,6 +221,11 @@ export default function({
           name: 'containerWarehouseArrivalActualDate',
           group: 'batch',
         },
+        'container.dueDate': {
+          local: true,
+          name: 'containerDueDate',
+          group: 'batch',
+        },
         'container.yardName': {
           local: true,
           name: 'containerYardName',
