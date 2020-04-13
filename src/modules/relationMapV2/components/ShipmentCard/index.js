@@ -266,7 +266,7 @@ export default function ShipmentCard({
         </div>
 
         {canViewTotalVolume && (
-          <Label width="75px">
+          <Label>
             <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
           </Label>
         )}
@@ -362,11 +362,11 @@ export default function ShipmentCard({
           )}
         </div>
 
-        <TaskRing blackout={!canViewTasks} {...todo} />
-
         <Display blackout={!canViewTotalVolume}>
           {totalVol && <FormattedNumber value={totalVol.value} suffix={totalVol.metric} />}
         </Display>
+
+        <TaskRing blackout={!canViewTasks} {...todo} />
       </div>
 
       <CardActions

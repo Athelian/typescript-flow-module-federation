@@ -76,7 +76,7 @@ export default function ContainerCard({
         )}
 
         {canViewTotalVolume && (
-          <Label width="75px">
+          <Label>
             <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
           </Label>
         )}
