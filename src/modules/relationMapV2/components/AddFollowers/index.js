@@ -4,12 +4,13 @@ import { FormattedMessage } from 'react-intl';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { FocusedView } from 'modules/relationMapV2/store';
 import { ORDER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { YesButton } from 'components/Buttons';
-import ActionDialog from 'components/Dialog/ActionDialog';
+import { BaseButton } from 'components/Buttons';
+import ActionDialog, { OrderLabelIcon, ShipmentLabelIcon } from 'components/Dialog/ActionDialog';
 import SlideView from 'components/SlideView';
 import StaffSelector from 'components/Followers/StaffSelector';
 import { ordersByIDsQuery, shipmentsByIDsQuery } from './query';
 import { updateOrdersMutation, updateShipmentMutation } from './mutation';
+import { ExcludedPartnerListStyle } from './style';
 
 type Props = {|
   onSuccess?: (ids: Array<string>) => void,
@@ -80,7 +81,9 @@ export default function AddFollowers({ onSuccess }: Props) {
         });
         setIsShowDialog(!!newExcludedPartnerIds.length);
         setSharedPartnerIds(newSharedPartnerIds);
-        setExcludedPartnerNames(newExcludedPartnerIds.map(id => partnerNameMap.get(id)));
+        setExcludedPartnerNames([
+          ...new Set(newExcludedPartnerIds.map(id => partnerNameMap.get(id))),
+        ]);
       }
     },
     variables: {
@@ -132,9 +135,7 @@ export default function AddFollowers({ onSuccess }: Props) {
     }
   };
 
-  const dialogMessage = loading
-    ? 'loading...'
-    : `excluede partners: ${excludedPartnerNames.toString()}`;
+  const isLoading = isProcessing || loading;
   if (isShowDialog || loading) {
     return (
       <ActionDialog
@@ -143,15 +144,51 @@ export default function AddFollowers({ onSuccess }: Props) {
         onCancel={onCancel}
         title={
           <FormattedMessage
-            id="modules.RelationMap.label.activateArchive"
-            defaultMessage="ACTIVATE/ARCHIVE"
+            id="modules.RelationMap.addFollowers.title"
+            defaultMessage="Add Followers"
           />
         }
-        dialogMessage={dialogMessage}
-        dialogSubMessage="Followers dialogSubMessage"
+        dialogMessage={
+          !isLoading &&
+          excludedPartnerNames.length && (
+            <>
+              <FormattedMessage
+                id="modules.RelationMap.addFollowers.message"
+                defaultMessage="Note: The staff of the following partners will not be available for selection because they are not present in every {entityLabel} that you have selected."
+                values={{
+                  entityLabel: source === ORDER ? <OrderLabelIcon /> : <ShipmentLabelIcon />,
+                }}
+              />
+              <br />
+              <ul className={ExcludedPartnerListStyle}>
+                {excludedPartnerNames.map(name => (
+                  <li key={name}>{name}</li>
+                ))}
+              </ul>
+            </>
+          )
+        }
+        dialogSubMessage={
+          !isLoading && (
+            <FormattedMessage
+              id="modules.RelationMap.addFollowers.subMessage"
+              defaultMessage="Continue to select followers to add?"
+            />
+          )
+        }
         buttons={
           <>
-            <YesButton disabled={!data && !loading} onClick={onStart} />
+            <BaseButton
+              disabled={!data && !loading}
+              icon="ARROW_RIGHT"
+              label={
+                <FormattedMessage
+                  id="modules.RelationMap.addFollowers.continue"
+                  defaultMessage="Continue"
+                />
+              }
+              onClick={onStart}
+            />
           </>
         }
       />
