@@ -7,6 +7,7 @@ import {
   numberSort,
   stringSort,
 } from 'components/Sheet/SheetState/sorter';
+import { getLatestDate } from 'utils/shipment';
 
 function orderItemSorter(sorts: Array<ColumnSort>) {
   return (a: Object, b: Object): number => {
@@ -208,6 +209,58 @@ function batchSorter(sorts: Array<ColumnSort>) {
         case 'shipmentNumOfVoyages':
           result = setDirection(
             numberSort(a.shipment?.voyages?.length ?? 0, b.shipment?.voyages?.length ?? 0),
+            sort.direction
+          );
+          break;
+        case 'shipmentLoadPort':
+          result = setDirection(
+            stringSort(
+              a.shipment?.voyages?.[0]?.departurePort?.seaportName ??
+                a.shipment?.voyages?.[0]?.departurePort?.airportName ??
+                '',
+              b.shipment?.voyages?.[0]?.departurePort?.seaportName ??
+                a.shipment?.voyages?.[0]?.departurePort?.airportName ??
+                ''
+            ),
+            sort.direction
+          );
+          break;
+        case 'shipmentLoadPortDeparture':
+          result = setDirection(
+            dateSort(
+              getLatestDate(a.shipment?.voyages?.[0]?.departure) || new Date(),
+              getLatestDate(b.shipment?.voyages?.[0]?.departure) || new Date()
+            ),
+            sort.direction
+          );
+          break;
+        case 'shipmentDischargePort':
+          result = setDirection(
+            stringSort(
+              a.shipment?.voyages?.[(a.shipment?.voyages?.length ?? 0) - 1]?.arrivalPort
+                ?.seaportName ??
+                a.shipment?.voyages?.[(a.shipment?.voyages?.length ?? 0) - 1]?.arrivalPort
+                  ?.airportName ??
+                '',
+              b.shipment?.voyages?.[(b.shipment?.voyages?.length ?? 0) - 1]?.arrivalPort
+                ?.seaportName ??
+                b.shipment?.voyages?.[(b.shipment?.voyages?.length ?? 0) - 1]?.arrivalPort
+                  ?.airportName ??
+                ''
+            ),
+            sort.direction
+          );
+          break;
+        case 'shipmentDischargePortArrival':
+          result = setDirection(
+            dateSort(
+              getLatestDate(
+                a.shipment?.voyages?.[(a.shipment?.voyages?.length ?? 0) - 1]?.arrival
+              ) || new Date(),
+              getLatestDate(
+                b.shipment?.voyages?.[(b.shipment?.voyages?.length ?? 0) - 1]?.arrival
+              ) || new Date()
+            ),
             sort.direction
           );
           break;

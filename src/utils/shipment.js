@@ -10,11 +10,8 @@ export const getLatestDate = (timelineDate: ?Object) => {
   const { date, timelineDateRevisions } = timelineDate;
 
   const hasDateRevisions = timelineDateRevisions && timelineDateRevisions.length > 0;
-  const latestDate = hasDateRevisions
-    ? timelineDateRevisions[timelineDateRevisions.length - 1].date
-    : date;
 
-  return latestDate;
+  return hasDateRevisions ? timelineDateRevisions[timelineDateRevisions.length - 1].date : date;
 };
 
 export const getPortName = (
