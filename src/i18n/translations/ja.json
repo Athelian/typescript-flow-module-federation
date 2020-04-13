@@ -1071,6 +1071,7 @@
   "common.project": "プロジェクト",
   "modules.TaskTemplates.template": "タスクテンプレート",
   "modules.projectTemplate.noTemplateFound": "テンプレートがありません",
+  "modules.RelationMaps.label.addFollowers": "ADD FOLLOWERS",
   "modules.RelationMaps.label.ActiveOrArchive": "進行中/終了",
   "modules.RelationMaps.label.addTags": "タグ追加",
   "modules.RelationMaps.label.clone": "複製",

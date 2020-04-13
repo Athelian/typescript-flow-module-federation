@@ -1071,6 +1071,7 @@
   "common.project": "工程",
   "modules.TaskTemplates.template": "模板",
   "modules.projectTemplate.noTemplateFound": "未找到模板",
+  "modules.RelationMaps.label.addFollowers": "ADD FOLLOWERS",
   "modules.RelationMaps.label.ActiveOrArchive": "变更状态",
   "modules.RelationMaps.label.addTags": "添加标签",
   "modules.RelationMaps.label.clone": "复制",

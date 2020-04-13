@@ -170,6 +170,12 @@ export default function Actions({ targets }: Props) {
                     }}
                   >
                     <Icon icon="STAFF" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addFollowers"
+                        defaultMessage="ADD FOLLOWERS"
+                      />
+                    </ActionLabel>
                   </ActionButton>
                   <ActionButton
                     onClick={() => {
@@ -466,6 +472,12 @@ export default function Actions({ targets }: Props) {
                     }}
                   >
                     <Icon icon="STAFF" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addFollowers"
+                        defaultMessage="ADD FOLLOWERS"
+                      />
+                    </ActionLabel>
                   </ActionButton>
                   <ActionButton
                     onClick={() => {
@@ -534,6 +546,12 @@ export default function Actions({ targets }: Props) {
                     }}
                   >
                     <Icon icon="STAFF" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addFollowers"
+                        defaultMessage="ADD FOLLOWERS"
+                      />
+                    </ActionLabel>
                   </ActionButton>
                   <ActionButton
                     onClick={() => {
@@ -863,6 +881,12 @@ export default function Actions({ targets }: Props) {
                     }}
                   >
                     <Icon icon="STAFF" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addFollowers"
+                        defaultMessage="ADD FOLLOWERS"
+                      />
+                    </ActionLabel>
                   </ActionButton>
                   <ActionButton
                     onClick={() => {

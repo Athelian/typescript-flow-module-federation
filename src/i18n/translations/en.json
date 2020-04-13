@@ -1071,6 +1071,7 @@
   "common.project": "Project",
   "modules.TaskTemplates.template": "TEMPLATE",
   "modules.projectTemplate.noTemplateFound": "No template found",
+  "modules.RelationMaps.label.addFollowers": "ADD FOLLOWERS",
   "modules.RelationMaps.label.ActiveOrArchive": "ACTIVE/ARCHIVE",
   "modules.RelationMaps.label.addTags": "ADD TAGS",
   "modules.RelationMaps.label.clone": "CLONE",
