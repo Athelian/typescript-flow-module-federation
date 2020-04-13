@@ -75,12 +75,10 @@ export default function ContainerCard({
           <Blackout />
         )}
 
-        {canViewTotalVolume ? (
+        {canViewTotalVolume && (
           <Label width="75px">
             <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
           </Label>
-        ) : (
-          <Blackout />
         )}
       </div>
 
