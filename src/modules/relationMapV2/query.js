@@ -148,6 +148,9 @@ const containerEntityCardFragment = gql`
         id
       }
     }
+    totalVolume {
+      ...metricFragment
+    }
   }
 `;
 

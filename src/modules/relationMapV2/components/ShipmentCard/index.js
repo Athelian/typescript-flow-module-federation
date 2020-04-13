@@ -265,11 +265,9 @@ export default function ShipmentCard({
           </Display>
         </div>
 
-        {canViewTotalVolume && (
-          <Label>
-            <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
-          </Label>
-        )}
+        <Label>
+          <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
+        </Label>
       </div>
 
       <div className={BottomRowWrapperStyle}>

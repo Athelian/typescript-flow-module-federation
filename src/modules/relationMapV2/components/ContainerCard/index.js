@@ -10,7 +10,6 @@ import FormattedNumber from 'components/FormattedNumber';
 import { Display, Blackout, Label } from 'components/Form';
 import { FullValueTooltip } from 'components/Tooltip';
 import CardActions from 'modules/relationMapV2/components/CardActions';
-import { findSummary } from 'modules/container/form/components/ContainerSection/ContainerSummary/helper';
 import {
   ContainerCardWrapperStyle,
   TopRowWrapperStyle,
@@ -43,6 +42,7 @@ export default function ContainerCard({
     warehouse,
     warehouseArrivalAgreedDate,
     warehouseArrivalActualDate,
+    totalVolume,
   } = container;
 
   const warehouseArrival = warehouseArrivalActualDate || warehouseArrivalAgreedDate;
@@ -53,8 +53,6 @@ export default function ContainerCard({
   const canViewTotalVolume = true;
   const canViewWarehouse = true;
   const canViewWarehouseArrival = true;
-
-  const { totalVolume } = findSummary(container);
 
   return (
     <div className={ContainerCardWrapperStyle}>
@@ -75,11 +73,9 @@ export default function ContainerCard({
           <Blackout />
         )}
 
-        {canViewTotalVolume && (
-          <Label>
-            <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
-          </Label>
-        )}
+        <Label>
+          <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
+        </Label>
       </div>
 
       <div className={BottomRowWrapperStyle}>
