@@ -22,11 +22,11 @@ function containerSorter(sorts: Array<ColumnSort>) {
           result = setDirection(dateSort(a.updatedAt, b.updatedAt), sort.direction);
           break;
         case 'no':
-          result = setDirection(stringSort(a?.no ?? '', b?.no ?? ''), sort.direction);
+          result = setDirection(stringSort(a?.no ?? null, b?.no ?? null), sort.direction);
           break;
         case 'containerType':
           result = setDirection(
-            stringSort(a?.containerType ?? '', b?.containerType ?? ''),
+            stringSort(a?.containerType ?? null, b?.containerType ?? null),
             sort.direction
           );
           break;
@@ -62,7 +62,10 @@ function containerSorter(sorts: Array<ColumnSort>) {
           break;
         }
         case 'yardName':
-          result = setDirection(stringSort(a?.yardName ?? '', b?.yardName ?? ''), sort.direction);
+          result = setDirection(
+            stringSort(a?.yardName ?? null, b?.yardName ?? null),
+            sort.direction
+          );
           break;
         case 'departureDate':
           result = setDirection(
