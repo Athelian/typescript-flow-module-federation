@@ -7,6 +7,7 @@ import {
   setDirection,
   stringSort,
 } from 'components/Sheet/SheetState/sorter';
+import { calculateDueDate } from 'utils/date';
 
 function containerSorter(sorts: Array<ColumnSort>) {
   return (a: Object, b: Object): number => {
@@ -31,34 +32,41 @@ function containerSorter(sorts: Array<ColumnSort>) {
           break;
         case 'warehouseArrivalAgreedDate':
           result = setDirection(
-            dateSort(
-              a?.warehouseArrivalAgreedDate ?? new Date(),
-              b?.warehouseArrivalAgreedDate ?? new Date()
-            ),
+            dateSort(a?.warehouseArrivalAgreedDate ?? null, b?.warehouseArrivalAgreedDate ?? null),
             sort.direction
           );
           break;
         case 'warehouseArrivalActualDate':
           result = setDirection(
-            dateSort(
-              a?.warehouseArrivalActualDate ?? new Date(),
-              b?.warehouseArrivalActualDate ?? new Date()
-            ),
+            dateSort(a?.warehouseArrivalActualDate ?? null, b?.warehouseArrivalActualDate ?? null),
             sort.direction
           );
           break;
         case 'freeTimeStartDate':
           result = setDirection(
-            dateSort(a?.freeTimeStartDate ?? new Date(), b?.freeTimeStartDate ?? new Date()),
+            dateSort(a?.freeTimeStartDate ?? null, b?.freeTimeStartDate ?? null),
             sort.direction
           );
           break;
+        case 'dueDate': {
+          const freeTimeA = a?.freeTimeStartDate?.value ?? null;
+          const freeTimeB = b?.freeTimeStartDate?.value ?? null;
+
+          result = setDirection(
+            dateSort(
+              freeTimeA ? calculateDueDate(freeTimeA, a?.freeTimeDuration) : null,
+              freeTimeB ? calculateDueDate(freeTimeB, b?.freeTimeDuration) : null
+            ),
+            sort.direction
+          );
+          break;
+        }
         case 'yardName':
           result = setDirection(stringSort(a?.yardName ?? '', b?.yardName ?? ''), sort.direction);
           break;
         case 'departureDate':
           result = setDirection(
-            dateSort(a?.departureDate ?? new Date(), b?.departureDate ?? new Date()),
+            dateSort(a?.departureDate ?? null, b?.departureDate ?? null),
             sort.direction
           );
           break;

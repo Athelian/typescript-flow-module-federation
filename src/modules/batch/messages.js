@@ -146,6 +146,10 @@ export default defineMessages({
     id: 'components.BatchItem.productSerial',
     defaultMessage: 'Product Serial',
   },
+  containerFreeTimeDueDate: {
+    id: 'components.BatchItem.containerFreeTimeDueDate',
+    defaultMessage: 'Free time due date',
+  },
   shipmentLoadPort: {
     id: 'components.BatchItem.shipmentLoadPort',
     defaultMessage: 'Load Port',
