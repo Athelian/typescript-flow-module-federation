@@ -51,8 +51,8 @@ export default function AddFollowers({ onSuccess }: Props) {
             const forwarders = entity.forwarders.filter(
               forwarder => !flatPartnerIds.includes(forwarder.id)
             );
-            flatPartnerIds.concat(forwarders.map(forwader => forwader.id));
             forwarders.forEach(forwarder => {
+              flatPartnerIds.push(forwarder.id);
               partnerNameMap.set(forwarder.id, forwarder.name);
             });
           }
@@ -207,6 +207,7 @@ export default function AddFollowers({ onSuccess }: Props) {
         selected={[]}
         onSelect={onSetFollowers}
         onCancel={onCancel}
+        isProcessing={isProcessing}
         organizationIds={sharedPartnerIds}
       />
     </SlideView>

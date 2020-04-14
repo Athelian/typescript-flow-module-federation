@@ -21,12 +21,19 @@ import {
 
 type Props = {|
   selected: Array<User>,
+  isProcessing?: boolean,
   onSelect: (values: Array<User>) => void,
   onCancel: () => void,
   organizationIds: Array<string>,
 |};
 
-const StaffSelector = ({ selected = [], onCancel, onSelect, organizationIds = [] }: Props) => {
+const StaffSelector = ({
+  selected = [],
+  isProcessing = false,
+  onCancel,
+  onSelect,
+  organizationIds = [],
+}: Props) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', organizationIds },
     { updatedAt: 'DESCENDING' }
@@ -70,6 +77,7 @@ const StaffSelector = ({ selected = [], onCancel, onSelect, organizationIds = []
                 onSelect(value);
                 onCancel();
               }}
+              isLoading={isProcessing}
             />
           </SlideViewNavBar>
 
