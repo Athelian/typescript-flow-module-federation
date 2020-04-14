@@ -65,43 +65,51 @@ export default function({
           name: 'blNo',
           group: 'shipment',
         },
-        'shipment.cargoReady.date': {
+        'shipment.cargoReady.latestDate': {
           name: 'cargoReady',
           group: 'shipment',
         },
-        'shipment.voyage.0.departure.date': {
+        'shipment.voyage.0.departurePort': {
+          name: 'loadPort',
+          group: 'shipment',
+        },
+        'shipment.voyage.0.departure.latestDate': {
           name: 'loadPortDeparture',
           group: 'shipment',
         },
-        'shipment.voyage.0.firstTransitArrival.date': {
+        'shipment.voyage.0.firstTransitArrival.latestDate': {
           name: 'firstTransitPortArrival',
           group: 'shipment',
         },
-        'shipment.voyage.1.firstTransitDeparture.date': {
+        'shipment.voyage.1.firstTransitDeparture.latestDate': {
           name: 'firstTransitPortDeparture',
           group: 'shipment',
         },
-        'shipment.voyage.1.secondTransitArrival.date': {
+        'shipment.voyage.1.secondTransitArrival.latestDate': {
           name: 'secondTransitPortArrival',
           group: 'shipment',
         },
-        'shipment.voyage.2.secondTransitDeparture.date': {
+        'shipment.voyage.2.secondTransitDeparture.latestDate': {
           name: 'secondTransitPortDeparture',
           group: 'shipment',
         },
-        'shipment.voyage.2.arrival.date': {
+        'shipment.voyage.2.arrivalPort': {
+          name: 'dischargePort',
+          group: 'shipment',
+        },
+        'shipment.voyage.2.arrival.latestDate': {
           name: 'dischargePortArrival',
           group: 'shipment',
         },
-        'shipment.containerGroup.customClearance.date': {
+        'shipment.containerGroup.customClearance.latestDate': {
           name: 'customClearance',
           group: 'shipment',
         },
-        'shipment.containerGroup.warehouseArrival.date': {
+        'shipment.containerGroup.warehouseArrival.latestDate': {
           name: 'warehouseArrival',
           group: 'shipment',
         },
-        'shipment.containerGroup.deliveryReady.date': {
+        'shipment.containerGroup.deliveryReady.latestDate': {
           name: 'deliveryReady',
           group: 'shipment',
         },
@@ -144,6 +152,11 @@ export default function({
         'container.freeTimeStartDate': {
           local: true,
           name: 'freeTimeStartDate',
+          group: 'container',
+        },
+        'container.dueDate': {
+          local: true,
+          name: 'dueDate',
           group: 'container',
         },
         'container.yardName': {

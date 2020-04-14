@@ -5,6 +5,7 @@ import { type Tag as TagType } from 'modules/tags/type.js.flow';
 import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
 import Icon from 'components/Icon';
+import { FullValueTooltip } from 'components/Tooltip';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
@@ -53,9 +54,11 @@ const TagCard = ({ tag, actions, ...rest }: Props) => {
     <BaseCard icon="TAG" color="TAG" actions={actions} {...rest}>
       {/* $FlowFixMe Flow typed is not updated yet */}
       <Link className={TagCardWrapperStyle} to={`/tags/${encodeId(tag.id)}`}>
-        <div className={TagWrapperStyle}>
-          <Tag tag={tag} />
-        </div>
+        <FullValueTooltip message={tag.name}>
+          <div className={TagWrapperStyle}>
+            <Tag tag={tag} />
+          </div>
+        </FullValueTooltip>
         <div className={TagDescriptionWrapperStyle}>
           {description}
           <div className={TagDescriptionFadeStyle} />

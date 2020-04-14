@@ -57,11 +57,15 @@ export const sheetShipmentFragment = gql`
         vesselCode
         departurePort {
           seaport
+          seaportName
           airport
+          airportName
         }
         arrivalPort {
           seaport
+          seaportName
           airport
+          airportName
         }
         departure {
           ...sheetTimelineDateFragment

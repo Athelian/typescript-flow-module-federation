@@ -22,10 +22,17 @@ export default function usePortalSlot(name: string = 'generic'): HTMLDivElement 
 
   React.useEffect(() => {
     const root = getPortalRoot();
-    if (slotRef.current) root.appendChild(slotRef.current);
+    const child = slotRef.current;
+    if (!child) {
+      return () => {};
+    }
+
+    root.appendChild(child);
 
     return () => {
-      if (slotRef.current) root.removeChild(slotRef.current);
+      if (root.contains(child)) {
+        root.removeChild(child);
+      }
     };
   }, []);
 

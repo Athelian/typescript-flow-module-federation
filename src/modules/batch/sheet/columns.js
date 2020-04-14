@@ -113,6 +113,12 @@ export default function({
     ),
     ...containerColumns({
       fieldDefinitions: containerFieldDefinitions,
+      sorts: {
+        'container.dueDate': {
+          name: 'containerFreeTimeDueDate',
+          group: 'batch',
+        },
+      },
     }).filter(
       c =>
         ![
@@ -126,6 +132,24 @@ export default function({
     ),
     ...shipmentColumns({
       fieldDefinitions: shipmentFieldDefinitions,
+      sorts: {
+        'shipment.voyage.0.departurePort': {
+          name: 'shipmentLoadPort',
+          group: 'batch',
+        },
+        'shipment.voyage.0.departure.latestDate': {
+          name: 'shipmentLoadPortDeparture',
+          group: 'batch',
+        },
+        'shipment.voyage.2.arrivalPort': {
+          name: 'shipmentDischargePort',
+          group: 'batch',
+        },
+        'shipment.voyage.2.arrival.latestDate': {
+          name: 'shipmentDischargePortArrival',
+          group: 'batch',
+        },
+      },
     }).filter(
       c =>
         ![

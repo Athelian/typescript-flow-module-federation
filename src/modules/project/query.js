@@ -36,8 +36,20 @@ export const projectExportQuery = gql`
 `;
 
 export const projectsExportQuery = gql`
-  query projectsExport($filterBy: ProjectFilterInput, $sortBy: ProjectSortInput, $templateId: ID!) {
-    projectsExport(filterBy: $filterBy, sortBy: $sortBy, templateId: $templateId) {
+  query projectsExport(
+    $templateId: ID!
+    $filterBy: ProjectFilterInput
+    $sortBy: ProjectSortInput
+    $localSortBy: [GenericSortInput!]
+    $columns: [String!]
+  ) {
+    projectsExport(
+      templateId: $templateId
+      columns: $columns
+      filterBy: $filterBy
+      sortBy: $sortBy
+      localSortBy: $localSortBy
+    ) {
       ... on Export {
         id
       }

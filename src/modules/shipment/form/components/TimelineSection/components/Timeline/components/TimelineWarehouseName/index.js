@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { FullValueTooltip } from 'components/Tooltip';
 import {
   TimelineWarehouseNameWrapperStyle,
   TimelineWarehouseNameStyle,
@@ -28,7 +29,9 @@ const TimelineWarehouseName = ({ name, vertical, containers = [] }: Props) => {
   const haveContainer = containers && containers.length > 0;
   return (
     <div className={TimelineWarehouseNameWrapperStyle(vertical, haveContainer)}>
-      <div className={TimelineWarehouseNameStyle(vertical)}>{name}</div>
+      <FullValueTooltip message={name ?? ''}>
+        <div className={TimelineWarehouseNameStyle(vertical)}>{name}</div>
+      </FullValueTooltip>
       {warehouses.length > 0 && (
         <div className={TimelineWarehouseNameBadgeStyle(vertical)}>+{warehouses.length}</div>
       )}

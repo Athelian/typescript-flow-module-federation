@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import FormattedDate from 'components/FormattedDate';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
-import { Tooltip } from 'components/Tooltip';
+import { Tooltip, FullValueTooltip } from 'components/Tooltip';
 import { calculatePercentage } from 'utils/ui';
 import { differenceInCalendarDays } from 'utils/date';
 import MilestoneDueDateToolTip from '../MilestoneDueDateToolTip';
@@ -44,7 +44,9 @@ const MilestoneTimelineItem = ({ milestone }: Props) => {
 
   return (
     <div className={TimelineItemStyle}>
-      <div className={MilestoneNameStyle}>{name}</div>
+      <FullValueTooltip message={name}>
+        <div className={MilestoneNameStyle}>{name}</div>
+      </FullValueTooltip>
 
       <div className={ProgressBarStyle}>
         <div className={BarStyle(calculatePercentage(total, completedOrSkippedCount))} />

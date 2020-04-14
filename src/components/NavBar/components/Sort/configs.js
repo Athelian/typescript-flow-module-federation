@@ -67,6 +67,11 @@ export const BatchSortConfig: Array<SortConfig> = [
   { message: batchMessages.deliveredAt, field: 'deliveredAt' },
   { message: batchMessages.expiredAt, field: 'expiredAt' },
   { message: batchMessages.desiredAt, field: 'desiredAt' },
+  { message: batchMessages.containerFreeTimeDueDate, field: 'containerFreeTimeDueDate' },
+  { message: batchMessages.shipmentLoadPort, field: 'shipmentLoadPort' },
+  { message: batchMessages.shipmentLoadPortDeparture, field: 'shipmentLoadPortDeparture' },
+  { message: batchMessages.shipmentDischargePort, field: 'shipmentDischargePort' },
+  { message: batchMessages.shipmentDischargePortArrival, field: 'shipmentDischargePortArrival' },
 ];
 
 export const ShipmentSortConfig: Array<SortConfig> = [
@@ -76,11 +81,13 @@ export const ShipmentSortConfig: Array<SortConfig> = [
   { message: shipmentMessages.blNo, field: 'blNo' },
   { message: shipmentMessages.vesselName, field: 'vesselName' },
   { message: shipmentMessages.cargoReady, field: 'cargoReady' },
+  { message: shipmentMessages.loadPort, field: 'loadPort' },
   { message: shipmentMessages.loadPortDeparture, field: 'loadPortDeparture' },
   { message: shipmentMessages.firstTransitPortArrival, field: 'firstTransitPortArrival' },
   { message: shipmentMessages.firstTransitPortDeparture, field: 'firstTransitPortDeparture' },
   { message: shipmentMessages.secondTransitPortArrival, field: 'secondTransitPortArrival' },
   { message: shipmentMessages.secondTransitPortDeparture, field: 'secondTransitPortDeparture' },
+  { message: shipmentMessages.dischargePort, field: 'dischargePort' },
   { message: shipmentMessages.dischargePortArrival, field: 'dischargePortArrival' },
   { message: shipmentMessages.customClearance, field: 'customClearance' },
   { message: shipmentMessages.warehouseArrival, field: 'warehouseArrival' },

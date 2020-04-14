@@ -2,6 +2,7 @@
 import * as React from 'react';
 import type { Port, TransportType } from 'generated/graphql';
 import { getPortName } from 'utils/shipment';
+import { FullValueTooltip } from 'components/Tooltip';
 import { TimelinePortNameWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -32,9 +33,11 @@ const TimelinePort = ({ port, transportType, vertical }: Props) => {
   }
 
   return (
-    <div className={TimelinePortNameWrapperStyle(vertical)}>
-      {getPortName(transportTypeEnum, correctPort)}
-    </div>
+    <FullValueTooltip message={getPortName(transportTypeEnum, correctPort)}>
+      <div className={TimelinePortNameWrapperStyle(vertical)}>
+        {getPortName(transportTypeEnum, correctPort)}
+      </div>
+    </FullValueTooltip>
   );
 };
 

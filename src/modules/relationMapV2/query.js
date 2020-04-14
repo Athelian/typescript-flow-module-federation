@@ -1,5 +1,11 @@
 import gql from 'graphql-tag';
-import { tagFragment, taskCountFragment, ownedByFragment, forbiddenFragment } from 'graphql';
+import {
+  tagFragment,
+  taskCountFragment,
+  ownedByFragment,
+  metricFragment,
+  forbiddenFragment,
+} from 'graphql';
 
 const timelineDateFragment = gql`
   fragment timelineDateFragment on TimelineDate {
@@ -17,6 +23,13 @@ const shipmentEntityCardFragment = gql`
     orderItemCount
     batchCount
     containerCount
+    totalVolumeOverride {
+      ...metricFragment
+    }
+    totalVolumeOverriding
+    totalVolume {
+      ...metricFragment
+    }
     ... on Followed {
       notificationUnseenCount
     }
@@ -134,6 +147,9 @@ const containerEntityCardFragment = gql`
       ... on Shipment {
         id
       }
+    }
+    totalVolume {
+      ...metricFragment
     }
   }
 `;
@@ -358,6 +374,7 @@ export const orderFocusedListQuery = gql`
   ${itemEntityCardFragment}
   ${orderEntityCardFragment}
   ${tagFragment}
+  ${metricFragment}
   ${taskCountFragment}
   ${ownedByFragment}
   ${timelineDateFragment}
@@ -421,6 +438,7 @@ export const shipmentFocusedListQuery = gql`
   ${itemEntityCardFragment}
   ${orderEntityCardFragment}
   ${tagFragment}
+  ${metricFragment}
   ${taskCountFragment}
   ${ownedByFragment}
   ${timelineDateFragment}

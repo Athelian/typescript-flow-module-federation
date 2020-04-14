@@ -7,6 +7,8 @@ import {
   numberSort,
   stringSort,
 } from 'components/Sheet/SheetState/sorter';
+import { calculateDueDate } from 'utils/date';
+import { getLatestDate } from 'utils/shipment';
 
 function orderItemSorter(sorts: Array<ColumnSort>) {
   return (a: Object, b: Object): number => {
@@ -81,33 +83,33 @@ function batchSorter(sorts: Array<ColumnSort>) {
           break;
         case 'containerCreatedAt':
           result = setDirection(
-            dateSort(a.container?.createdAt ?? new Date(), b.container?.createdAt ?? new Date()),
+            dateSort(a.container?.createdAt ?? null, b.container?.createdAt ?? null),
             sort.direction
           );
           break;
         case 'containerUpdatedAt':
           result = setDirection(
-            dateSort(a.container?.updatedAt ?? new Date(), b.container?.updatedAt ?? new Date()),
+            dateSort(a.container?.updatedAt ?? null, b.container?.updatedAt ?? null),
             sort.direction
           );
           break;
         case 'containerNo':
           result = setDirection(
-            stringSort(a.container?.no ?? '', b.container?.no ?? ''),
+            stringSort(a.container?.no ?? null, b.container?.no ?? null),
             sort.direction
           );
           break;
         case 'containerContainerType':
           result = setDirection(
-            stringSort(a.container?.containerType ?? '', b.container?.containerType ?? ''),
+            stringSort(a.container?.containerType ?? null, b.container?.containerType ?? null),
             sort.direction
           );
           break;
         case 'containerWarehouseArrivalAgreedDate':
           result = setDirection(
             dateSort(
-              a.container?.warehouseArrivalAgreedDate ?? new Date(),
-              b.container?.warehouseArrivalAgreedDate ?? new Date()
+              a.container?.warehouseArrivalAgreedDate ?? null,
+              b.container?.warehouseArrivalAgreedDate ?? null
             ),
             sort.direction
           );
@@ -115,8 +117,8 @@ function batchSorter(sorts: Array<ColumnSort>) {
         case 'containerWarehouseArrivalActualDate':
           result = setDirection(
             dateSort(
-              a.container?.warehouseArrivalActualDate ?? new Date(),
-              b.container?.warehouseArrivalActualDate ?? new Date()
+              a.container?.warehouseArrivalActualDate ?? null,
+              b.container?.warehouseArrivalActualDate ?? null
             ),
             sort.direction
           );
@@ -124,90 +126,152 @@ function batchSorter(sorts: Array<ColumnSort>) {
         case 'containerFreeTimeStartDate':
           result = setDirection(
             dateSort(
-              a.container?.freeTimeStartDate ?? new Date(),
-              b.container?.freeTimeStartDate ?? new Date()
+              a.container?.freeTimeStartDate ?? null,
+              b.container?.freeTimeStartDate ?? null
             ),
             sort.direction
           );
           break;
+        case 'containerDueDate': {
+          const freeTimeA = a.container?.freeTimeStartDate?.value ?? null;
+          const freeTimeB = b.container?.freeTimeStartDate?.value ?? null;
+
+          result = setDirection(
+            dateSort(
+              freeTimeA ? calculateDueDate(freeTimeA, a.container?.freeTimeDuration) : null,
+              freeTimeB ? calculateDueDate(freeTimeB, b.container?.freeTimeDuration) : null
+            ),
+            sort.direction
+          );
+          break;
+        }
         case 'containerYardName':
           result = setDirection(
-            stringSort(a.container?.yardName ?? '', b.container?.yardName ?? ''),
+            stringSort(a.container?.yardName ?? null, b.container?.yardName ?? null),
             sort.direction
           );
           break;
         case 'containerDepartureDate':
           result = setDirection(
-            dateSort(
-              a.container?.departureDate ?? new Date(),
-              b.container?.departureDate ?? new Date()
-            ),
+            dateSort(a.container?.departureDate ?? null, b.container?.departureDate ?? null),
             sort.direction
           );
           break;
         case 'shipmentCreatedAt':
           result = setDirection(
-            dateSort(a.shipment?.createdAt ?? new Date(), b.shipment?.createdAt ?? new Date()),
+            dateSort(a.shipment?.createdAt ?? null, b.shipment?.createdAt ?? null),
             sort.direction
           );
           break;
         case 'shipmentUpdatedAt':
           result = setDirection(
-            dateSort(a.shipment?.updatedAt ?? new Date(), b.shipment?.updatedAt ?? new Date()),
+            dateSort(a.shipment?.updatedAt ?? null, b.shipment?.updatedAt ?? null),
             sort.direction
           );
           break;
         case 'shipmentNo':
           result = setDirection(
-            stringSort(a.shipment?.no ?? '', b.shipment?.no ?? ''),
+            stringSort(a.shipment?.no ?? null, b.shipment?.no ?? null),
             sort.direction
           );
           break;
         case 'shipmentBlNo':
           result = setDirection(
-            stringSort(a.shipment?.blNo ?? '', b.shipment?.blNo ?? ''),
+            stringSort(a.shipment?.blNo ?? null, b.shipment?.blNo ?? null),
             sort.direction
           );
           break;
         case 'shipmentBlDate':
           result = setDirection(
-            dateSort(a.shipment?.blDate ?? new Date(), b.shipment?.blDate ?? new Date()),
+            dateSort(a.shipment?.blDate ?? null, b.shipment?.blDate ?? null),
             sort.direction
           );
           break;
         case 'shipmentBookingNo':
           result = setDirection(
-            stringSort(a.shipment?.bookingNo ?? '', b.shipment?.bookingNo ?? ''),
+            stringSort(a.shipment?.bookingNo ?? null, b.shipment?.bookingNo ?? null),
             sort.direction
           );
           break;
         case 'shipmentBookingDate':
           result = setDirection(
-            dateSort(a.shipment?.bookingDate ?? new Date(), b.shipment?.bookingDate ?? new Date()),
+            dateSort(a.shipment?.bookingDate ?? null, b.shipment?.bookingDate ?? null),
             sort.direction
           );
           break;
         case 'shipmentInvoiceNo':
           result = setDirection(
-            stringSort(a.shipment?.invoiceNo ?? '', b.shipment?.invoiceNo ?? ''),
+            stringSort(a.shipment?.invoiceNo ?? null, b.shipment?.invoiceNo ?? null),
             sort.direction
           );
           break;
         case 'shipmentContractNo':
           result = setDirection(
-            stringSort(a.shipment?.contractNo ?? '', b.shipment?.contractNo ?? ''),
+            stringSort(a.shipment?.contractNo ?? null, b.shipment?.contractNo ?? null),
             sort.direction
           );
           break;
         case 'shipmentCarrier':
           result = setDirection(
-            stringSort(a.shipment?.carrier ?? '', b.shipment?.carrier ?? ''),
+            stringSort(a.shipment?.carrier ?? null, b.shipment?.carrier ?? null),
             sort.direction
           );
           break;
         case 'shipmentNumOfVoyages':
           result = setDirection(
             numberSort(a.shipment?.voyages?.length ?? 0, b.shipment?.voyages?.length ?? 0),
+            sort.direction
+          );
+          break;
+        case 'shipmentLoadPort':
+          result = setDirection(
+            stringSort(
+              a.shipment?.voyages?.[0]?.departurePort?.seaportName ??
+                a.shipment?.voyages?.[0]?.departurePort?.airportName ??
+                '',
+              b.shipment?.voyages?.[0]?.departurePort?.seaportName ??
+                a.shipment?.voyages?.[0]?.departurePort?.airportName ??
+                ''
+            ),
+            sort.direction
+          );
+          break;
+        case 'shipmentLoadPortDeparture':
+          result = setDirection(
+            dateSort(
+              getLatestDate(a.shipment?.voyages?.[0]?.departure) || new Date(),
+              getLatestDate(b.shipment?.voyages?.[0]?.departure) || new Date()
+            ),
+            sort.direction
+          );
+          break;
+        case 'shipmentDischargePort':
+          result = setDirection(
+            stringSort(
+              a.shipment?.voyages?.[(a.shipment?.voyages?.length ?? 0) - 1]?.arrivalPort
+                ?.seaportName ??
+                a.shipment?.voyages?.[(a.shipment?.voyages?.length ?? 0) - 1]?.arrivalPort
+                  ?.airportName ??
+                '',
+              b.shipment?.voyages?.[(b.shipment?.voyages?.length ?? 0) - 1]?.arrivalPort
+                ?.seaportName ??
+                b.shipment?.voyages?.[(b.shipment?.voyages?.length ?? 0) - 1]?.arrivalPort
+                  ?.airportName ??
+                ''
+            ),
+            sort.direction
+          );
+          break;
+        case 'shipmentDischargePortArrival':
+          result = setDirection(
+            dateSort(
+              getLatestDate(
+                a.shipment?.voyages?.[(a.shipment?.voyages?.length ?? 0) - 1]?.arrival
+              ) || new Date(),
+              getLatestDate(
+                b.shipment?.voyages?.[(b.shipment?.voyages?.length ?? 0) - 1]?.arrival
+              ) || new Date()
+            ),
             sort.direction
           );
           break;

@@ -14,6 +14,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import RelateEntity from 'components/RelateEntity';
 import { Label, Display } from 'components/Form';
+import { FullValueTooltip } from 'components/Tooltip';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { calculateDueDate } from 'utils/date';
 import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
@@ -120,9 +121,11 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
         </div>
 
         <div className={InfoPartWrapperStyle}>
-          <div className={InputStyle}>
-            <Display align="left">{no}</Display>
-          </div>
+          <FullValueTooltip message={no}>
+            <div className={InputStyle}>
+              <Display align="left">{no}</Display>
+            </div>
+          </FullValueTooltip>
 
           <div className={ContainerTypeWrapperStyle}>
             <Display align="left">{CONTAINER_TYPE_MAP[containerType]}</Display>
@@ -162,7 +165,13 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
                       : ''
                   }
                   entity="WAREHOUSE"
-                  value={warehouse && warehouse.name}
+                  value={
+                    warehouse && (
+                      <FullValueTooltip message={warehouse.name}>
+                        <span>{warehouse.name}</span>
+                      </FullValueTooltip>
+                    )
+                  }
                 />
               )}
             </PartnerPermissionsWrapper>
@@ -232,7 +241,11 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
               <Icon icon="IMPORTER" />
             </div>
             <div className={ContainerImporterStyle}>
-              {shipment && shipment.importer && shipment.importer.name}
+              {shipment && shipment.importer && (
+                <FullValueTooltip message={shipment.importer.name}>
+                  <span>{shipment.importer.name}</span>
+                </FullValueTooltip>
+              )}
             </div>
           </div>
           <div className={TagsWrapperStyle}>

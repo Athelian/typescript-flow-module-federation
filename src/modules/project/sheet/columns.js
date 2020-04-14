@@ -22,6 +22,7 @@ export const ProjectSheetColumnGroups = ['PROJECT', 'MILESTONE_TASKS'];
 export const projectColumns: Array<ColumnConfig> = [
   {
     key: 'project.created',
+    exportKey: ['project.createdAt', 'project.createdBy'],
     title: <FormattedMessage {...projectMessages.createdAt} />,
     icon: 'PROJECT',
     color: colors.PROJECT,
@@ -33,6 +34,7 @@ export const projectColumns: Array<ColumnConfig> = [
   },
   {
     key: 'project.updated',
+    exportKey: ['project.updatedAt', 'project.updatedBy'],
     title: <FormattedMessage {...projectMessages.updatedAt} />,
     icon: 'PROJECT',
     color: colors.PROJECT,
@@ -92,6 +94,7 @@ export const projectColumns: Array<ColumnConfig> = [
 export const milestoneColumns = (milestoneIdx: number | '#'): Array<ColumnConfig> => [
   {
     key: `milestones.${milestoneIdx}.created`,
+    exportKey: [`milestones.${milestoneIdx}.createdAt`, `milestones.${milestoneIdx}.createdBy`],
     title: <FormattedMessage {...milestoneMessages.createdAt} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
@@ -99,6 +102,7 @@ export const milestoneColumns = (milestoneIdx: number | '#'): Array<ColumnConfig
   },
   {
     key: `milestones.${milestoneIdx}.updated`,
+    exportKey: [`milestones.${milestoneIdx}.updatedAt`, `milestones.${milestoneIdx}.updatedBy`],
     title: <FormattedMessage {...milestoneMessages.updatedAt} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
@@ -134,6 +138,7 @@ export const milestoneColumns = (milestoneIdx: number | '#'): Array<ColumnConfig
   },
   {
     key: `milestones.${milestoneIdx}.status`,
+    exportKey: [`milestones.${milestoneIdx}.completedAt`, `milestones.${milestoneIdx}.completedBy`],
     title: <FormattedMessage {...milestoneMessages.status} />,
     icon: 'MILESTONE_TASK',
     color: colors.MILESTONE,
@@ -162,6 +167,10 @@ export const taskColumns = (
 ): Array<ColumnConfig> => [
   {
     key: `milestones.${milestoneIdx}.tasks.${taskIdx}.created`,
+    exportKey: [
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.createdAt`,
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.createdBy`,
+    ],
     title: <FormattedMessage {...taskMessages.createdAt} />,
     icon: 'MILESTONE_TASK',
     color: colors.TASK,
@@ -169,6 +178,10 @@ export const taskColumns = (
   },
   {
     key: `milestones.${milestoneIdx}.tasks.${taskIdx}.updated`,
+    exportKey: [
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.updatedAt`,
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.updatedBy`,
+    ],
     title: <FormattedMessage {...taskMessages.updatedAt} />,
     icon: 'MILESTONE_TASK',
     color: colors.TASK,
@@ -204,6 +217,14 @@ export const taskColumns = (
   },
   {
     key: `milestones.${milestoneIdx}.tasks.${taskIdx}.status`,
+    exportKey: [
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.completedAt`,
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.completedBy`,
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.inProgressAt`,
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.inProgressBy`,
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.skippedAt`,
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.skippedBy`,
+    ],
     title: <FormattedMessage {...taskMessages.status} />,
     icon: 'MILESTONE_TASK',
     color: colors.TASK,
@@ -225,6 +246,12 @@ export const taskColumns = (
   },
   {
     key: `milestones.${milestoneIdx}.tasks.${taskIdx}.approvalStatus`,
+    exportKey: [
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.approvedAt`,
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.approvedBy`,
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.rejectedAt`,
+      `milestones.${milestoneIdx}.tasks.${taskIdx}.rejectedBy`,
+    ],
     title: <FormattedMessage {...taskMessages.approvalStatus} />,
     icon: 'MILESTONE_TASK',
     color: colors.TASK,

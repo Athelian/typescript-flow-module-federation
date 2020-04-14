@@ -189,8 +189,11 @@ export const containerByIDQuery = gql`
                   ...sheetCustomizableFragment
                 }
                 productProvider {
+                  ...sheetProductProviderFragment
+                  ...sheetModelFragment
+                  ...sheetOwnedFragment
+                  ...sheetCustomizableFragment
                   ... on ProductProvider {
-                    id
                     product {
                       ...sheetProductFragment
                       ...sheetModelFragment

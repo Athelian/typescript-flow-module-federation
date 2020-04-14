@@ -1096,6 +1096,13 @@ export const FileFilterConfig: Array<FilterConfig> = [
     message: fileMessages.hasEntity,
     defaultValue: false,
   },
+  {
+    entity: 'DOCUMENT',
+    field: 'tagIds',
+    type: 'file_tags',
+    message: fileMessages.tags,
+    defaultValue: [],
+  },
 ];
 
 export const ProjectFilterConfig: Array<FilterConfig> = [

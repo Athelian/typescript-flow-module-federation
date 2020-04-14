@@ -84,6 +84,9 @@ export default function ShipmentCard({
     voyages = [{}],
     containerGroups = [{}],
     containers = [],
+    totalVolume,
+    totalVolumeOverriding,
+    totalVolumeOverride,
   } = shipment || {};
 
   const [localShipmentPoint, setLocalShipmentPoint] = React.useState(
@@ -230,6 +233,9 @@ export default function ShipmentCard({
   const canViewTimeline = true;
   const canViewDate = true;
   const canViewTasks = true;
+  const canViewTotalVolume = true;
+
+  const totalVol = totalVolumeOverriding ? totalVolumeOverride : totalVolume;
 
   return (
     <div className={ShipmentCardWrapperStyle(selectors.isShipmentFocus)}>
@@ -258,6 +264,10 @@ export default function ShipmentCard({
             {place}
           </Display>
         </div>
+
+        <Label>
+          <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
+        </Label>
       </div>
 
       <div className={BottomRowWrapperStyle}>
@@ -349,6 +359,10 @@ export default function ShipmentCard({
             <Blackout width={selectors.isShipmentFocus ? '240px' : '130px'} />
           )}
         </div>
+
+        <Display blackout={!canViewTotalVolume}>
+          {totalVol && <FormattedNumber value={totalVol.value} suffix={totalVol.metric} />}
+        </Display>
 
         <TaskRing blackout={!canViewTasks} {...todo} />
       </div>

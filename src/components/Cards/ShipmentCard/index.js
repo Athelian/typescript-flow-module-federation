@@ -10,7 +10,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
-import { Tooltip } from 'components/Tooltip';
+import { Tooltip, FullValueTooltip } from 'components/Tooltip';
 import { CONTAINER_TYPE_ITEMS, CONTAINER_TYPE_MAP } from 'modules/container/constants';
 import { getUniqueExporters } from 'utils/shipment';
 import BaseCard from '../BaseCard';
@@ -130,7 +130,9 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
                   <FormattedMessage id="modules.Shipments.unbooked" defaultMessage="Unbooked" />
                 )}
               </div>
-              <div className={ShipmentNoStyle}>{no}</div>
+              <FullValueTooltip message={no}>
+                <div className={ShipmentNoStyle}>{no}</div>
+              </FullValueTooltip>
             </div>
             <div className={ShipmentBLStyle}>{blNo}</div>
           </div>
@@ -141,24 +143,30 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
                 {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
               </div>
 
-              <div className={ShipmentImporterWrapperStyle}>
-                <div className={ShipmentImporterIconStyle}>
-                  <Icon icon="IMPORTER" />
-                </div>
-                <div className={ShipmentImporterStyle}>{importer && importer.name}</div>
-              </div>
-
-              <div className={ShipmentExporterWrapperStyle}>
-                <div className={ShipmentExporterIconStyle}>
-                  <Icon icon="EXPORTER" />
-                </div>
-                <div className={ShipmentExporterStyle(remainingExporterCount)}>{exporterName}</div>
-                {remainingExporterCount !== 0 && (
-                  <div className={RemainingExporterCountStyle}>
-                    +<FormattedNumber value={remainingExporterCount} />
+              <FullValueTooltip message={importer && importer.name}>
+                <div className={ShipmentImporterWrapperStyle}>
+                  <div className={ShipmentImporterIconStyle}>
+                    <Icon icon="IMPORTER" />
                   </div>
-                )}
-              </div>
+                  <div className={ShipmentImporterStyle}>{importer && importer.name}</div>
+                </div>
+              </FullValueTooltip>
+
+              <FullValueTooltip message={exporterName}>
+                <div className={ShipmentExporterWrapperStyle}>
+                  <div className={ShipmentExporterIconStyle}>
+                    <Icon icon="EXPORTER" />
+                  </div>
+                  <div className={ShipmentExporterStyle(remainingExporterCount)}>
+                    {exporterName}
+                  </div>
+                  {remainingExporterCount !== 0 && (
+                    <div className={RemainingExporterCountStyle}>
+                      +<FormattedNumber value={remainingExporterCount} />
+                    </div>
+                  )}
+                </div>
+              </FullValueTooltip>
             </div>
 
             <div className={ShipmentDataWrapperStyle}>
@@ -166,13 +174,21 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
                 <Label>
                   <FormattedMessage id="components.cards.lastVessel" defaultMessage="LAST VESSEL" />
                 </Label>
-                <div className={ShipmentBadgeStyle('60px')}>
-                  {getByPathWithDefault(
-                    <FormattedMessage id="components.cards.na" defaultMessage="N/A" />,
+                <FullValueTooltip
+                  message={getByPathWithDefault(
+                    '',
                     `${(voyages || []).length - 1}.vesselName`,
                     voyages
                   )}
-                </div>
+                >
+                  <div className={ShipmentBadgeStyle('60px')}>
+                    {getByPathWithDefault(
+                      <FormattedMessage id="components.cards.na" defaultMessage="N/A" />,
+                      `${(voyages || []).length - 1}.vesselName`,
+                      voyages
+                    )}
+                  </div>
+                </FullValueTooltip>
               </div>
 
               <div className={ShipmentBadgeWrapperStyle}>
