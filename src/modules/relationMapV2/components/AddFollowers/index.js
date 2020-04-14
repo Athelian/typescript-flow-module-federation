@@ -105,6 +105,10 @@ export default function AddFollowers({ onSuccess }: Props) {
 
   const onSetFollowers = newFollowers => {
     if (data) {
+      dispatch({
+        type: 'FOLLOWERS_START',
+        payload: {},
+      });
       const dataEntityTypeKey = source === ORDER ? 'ordersByIDs' : 'shipmentsByIDs';
       const payloadEntityTypeKey: string = source === ORDER ? 'orders' : 'shipments';
       updateEntities({
@@ -127,20 +131,24 @@ export default function AddFollowers({ onSuccess }: Props) {
             },
           })),
         },
+        onCompleted: () => {
+          if (onSuccess) {
+            onSuccess(ids);
+          }
+          dispatch({
+            type: 'FOLLOWERS_END',
+            payload: {},
+          });
+        },
       });
-
-      if (onSuccess) {
-        onSuccess(ids);
-      }
     }
   };
 
-  const isLoading = isProcessing || loading;
   if (isShowDialog || loading) {
     return (
       <ActionDialog
         isOpen={isOpen && isShowDialog}
-        isProcessing={isProcessing || loading}
+        isProcessing={loading}
         onCancel={onCancel}
         title={
           <FormattedMessage
@@ -149,7 +157,7 @@ export default function AddFollowers({ onSuccess }: Props) {
           />
         }
         dialogMessage={
-          !isLoading &&
+          !loading &&
           excludedPartnerNames.length && (
             <>
               <FormattedMessage
@@ -169,7 +177,7 @@ export default function AddFollowers({ onSuccess }: Props) {
           )
         }
         dialogSubMessage={
-          !isLoading && (
+          !loading && (
             <FormattedMessage
               id="modules.RelationMap.addFollowers.subMessage"
               defaultMessage="Continue to select followers to add?"

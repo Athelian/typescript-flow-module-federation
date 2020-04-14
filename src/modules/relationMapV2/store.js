@@ -808,6 +808,7 @@ function orderReducer(
       | 'SPLIT_CLOSE'
       | 'FOLLOWERS'
       | 'FOLLOWERS_START'
+      | 'FOLLOWERS_END'
       | 'FOLLOWERS_CLOSE'
       | 'STATUS'
       | 'STATUS_START'
@@ -1334,8 +1335,15 @@ function orderReducer(
       return update(state, {
         followers: {
           isOpen: { $set: true },
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'FOLLOWERS_END': {
+      return update(state, {
+        followers: {
+          isOpen: { $set: true },
           isProcessing: { $set: false },
-          ids: { $set: action.payload?.ids ?? [] },
         },
       });
     }
