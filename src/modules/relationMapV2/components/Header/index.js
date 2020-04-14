@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import type { IntlShape } from 'react-intl';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, MessageDescriptor } from 'react-intl';
 import { Label } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import { useViewerHasPermissions } from 'contexts/Permissions';
@@ -21,11 +21,9 @@ import {
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import { SHIPMENT_CREATE } from 'modules/permission/constants/shipment';
 import Icon from 'components/Icon';
-import orderMessages from 'modules/order/messages';
 import orderItemMessages from 'modules/orderItem/messages';
 import batchMessages from 'modules/batch/messages';
 import containerMessages from 'modules/container/messages';
-import shipmentMessages from 'modules/shipment/messages';
 import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import {
@@ -35,7 +33,7 @@ import {
   GlobalShipmentPoint,
   FocusedView,
 } from 'modules/relationMapV2/store';
-import { SortInput } from 'components/NavBar';
+import { OrderSortConfig, ShipmentSortConfig, SortInput } from 'components/NavBar';
 import {
   EntitiesNavbarWrapperStyle,
   EntityNavbarWrapperStyle,
@@ -64,6 +62,16 @@ function currentSort(
   return fields[0];
 }
 
+function convertSortConfig(
+  intl: IntlShape,
+  configs: Array<{ message: MessageDescriptor, field: string }>
+): Array<{ title: string | React.Node, value: string }> {
+  return configs.map(config => ({
+    title: intl.formatMessage(config.message),
+    value: config.field,
+  }));
+}
+
 const Header = ({ intl }: Props) => {
   const { state, dispatch, selectors } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
@@ -72,17 +80,7 @@ const Header = ({ intl }: Props) => {
   const clientSorts = ClientSorts.useContainer();
   const { globalShipmentPoint, setGlobalShipmentPoint } = GlobalShipmentPoint.useContainer();
   const hasPermissions = useViewerHasPermissions();
-  const orderSort = [
-    { title: intl.formatMessage(orderMessages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(orderMessages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(orderMessages.poSort), value: 'poNo' },
-    { title: intl.formatMessage(orderMessages.piSort), value: 'piNo' },
-    { title: intl.formatMessage(orderMessages.date), value: 'issuedAt' },
-    { title: intl.formatMessage(orderMessages.exporterName), value: 'exporterName' },
-    { title: intl.formatMessage(orderMessages.currency), value: 'currency' },
-    { title: intl.formatMessage(orderMessages.incoterm), value: 'incoterm' },
-    { title: intl.formatMessage(orderMessages.deliveryPlace), value: 'deliveryPlace' },
-  ];
+  const orderSort = convertSortConfig(intl, OrderSortConfig);
   const itemSort = [
     { title: intl.formatMessage(orderItemMessages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(orderItemMessages.createdAt), value: 'createdAt' },
@@ -117,47 +115,7 @@ const Header = ({ intl }: Props) => {
       value: 'warehouseArrivalAgreedDate',
     },
   ];
-  const shipmentSort = [
-    { title: intl.formatMessage(shipmentMessages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(shipmentMessages.createdAt), value: 'createdAt' },
-    { title: intl.formatMessage(shipmentMessages.shipmentId), value: 'no' },
-    { title: intl.formatMessage(shipmentMessages.blNo), value: 'blNo' },
-    { title: intl.formatMessage(shipmentMessages.vesselName), value: 'vesselName' },
-    { title: intl.formatMessage(shipmentMessages.cargoReady), value: 'cargoReady' },
-    {
-      title: intl.formatMessage(shipmentMessages.loadPortDeparture),
-      value: 'loadPortDeparture',
-    },
-    {
-      title: intl.formatMessage(shipmentMessages.firstTransitPortArrival),
-      value: 'firstTransitPortArrival',
-    },
-    {
-      title: intl.formatMessage(shipmentMessages.firstTransitPortDeparture),
-      value: 'firstTransitPortDeparture',
-    },
-    {
-      title: intl.formatMessage(shipmentMessages.secondTransitPortArrival),
-      value: 'secondTransitPortArrival',
-    },
-    {
-      title: intl.formatMessage(shipmentMessages.secondTransitPortDeparture),
-      value: 'secondTransitPortDeparture',
-    },
-    {
-      title: intl.formatMessage(shipmentMessages.dischargePortArrival),
-      value: 'dischargePortArrival',
-    },
-    {
-      title: intl.formatMessage(shipmentMessages.customClearance),
-      value: 'customClearance',
-    },
-    { title: intl.formatMessage(shipmentMessages.warehouseArrival), value: 'warehouseArrival' },
-    {
-      title: intl.formatMessage(shipmentMessages.deliveryReady),
-      value: 'deliveryReady',
-    },
-  ];
+  const shipmentSort = convertSortConfig(intl, ShipmentSortConfig);
 
   const orderCount = Object.keys(entities.orders || {}).length;
   const itemCount = Object.keys(entities.orderItems || {}).length;
