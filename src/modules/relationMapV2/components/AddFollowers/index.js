@@ -96,7 +96,7 @@ export default function AddFollowers({ onSuccess }: Props) {
       type: 'FOLLOWERS_CLOSE',
       payload: {},
     });
-    setIsShowDialog(true);
+    setIsShowDialog(!!excludedPartnerNames.length);
   };
 
   const onStart = () => {
