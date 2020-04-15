@@ -1982,17 +1982,6 @@
     "@graphql-toolkit/schema-merging" "0.9.7"
     tslib "1.10.0"
 
-"@graphql-codegen/flow-operations@1.12.2":
-  version "1.12.2"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/flow-operations/-/flow-operations-1.12.2.tgz#8237c7ded708f2c1f3d0efd61f4a69829109866e"
-  integrity sha512-PdHUfRUg35mh6l8/vir1ngKoR8D6ZaFBZXHK4eRQniGduq5vE48rx5Vpi9QGMV54cNem/rgtpjGoKc0ghI1CxA==
-  dependencies:
-    "@graphql-codegen/flow" "1.12.2"
-    "@graphql-codegen/plugin-helpers" "1.12.2"
-    "@graphql-codegen/visitor-plugin-common" "1.12.2"
-    auto-bind "4.0.0"
-    tslib "1.10.0"
-
 "@graphql-codegen/flow@1.12.2":
   version "1.12.2"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/flow/-/flow-1.12.2.tgz#0a473504ba290a0b96a20de2b586d74f94adc5d1"
@@ -2009,14 +1998,6 @@
   integrity sha512-z93B1X8M8I99rONv2PQbA74vQ/oceQ2qxZ4bRE3Uq+FrPT2AS/l/WplHNUkG1z06d53xjRWOQjD+ph43AJvkUQ==
   dependencies:
     "@graphql-codegen/plugin-helpers" "1.12.2"
-
-"@graphql-codegen/introspection@^1.12.2":
-  version "1.12.2"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/introspection/-/introspection-1.12.2.tgz#4a9adac083e1554a257bbd6359631c53bfc92581"
-  integrity sha512-YMQIn1R2CxYZLkxkW6fUxqfTBr2WC3Cimp6/0oEcSyLA/W1scVuDw/IUeU5Iu4CEmz8IaqPSjSMEN+8l95wKlA==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "1.12.2"
-    tslib "1.10.0"
 
 "@graphql-codegen/plugin-helpers@1.12.2":
   version "1.12.2"
