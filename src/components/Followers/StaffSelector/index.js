@@ -18,6 +18,7 @@ import {
   UserFilterConfig,
   UserSortConfig,
 } from 'components/NavBar';
+import { OverlayStyle } from './style';
 
 type Props = {|
   selected: Array<User>,
@@ -82,13 +83,18 @@ const StaffSelector = ({
           </SlideViewNavBar>
 
           <Content>
-            <StaffGridView
-              hasMore={hasMore}
-              isLoading={loading}
-              onLoadMore={loadMore}
-              items={nodes}
-              renderItem={item => <StaffCard key={item.id} staff={item} {...getItemProps(item)} />}
-            />
+            <>
+              {isProcessing && <div className={OverlayStyle} />}
+              <StaffGridView
+                hasMore={hasMore}
+                isLoading={loading}
+                onLoadMore={loadMore}
+                items={nodes}
+                renderItem={item => (
+                  <StaffCard key={item.id} staff={item} {...getItemProps(item)} />
+                )}
+              />
+            </>
           </Content>
         </SlideViewLayout>
       )}
