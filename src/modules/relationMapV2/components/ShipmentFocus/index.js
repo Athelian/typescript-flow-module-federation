@@ -42,6 +42,7 @@ import CloneEntities from '../CloneEntities';
 import InlineCreateContainer from '../InlineCreateContainer';
 import DeleteContainerConfirm from '../DeleteContainerConfirm';
 import DeleteConfirm from '../DeleteConfirm';
+import AddFollowers from '../AddFollowers';
 import RemoveBatchConfirm from '../RemoveBatchConfirm';
 import DeleteBatchConfirm from '../DeleteBatchConfirm';
 import DeleteBatchesConfirm from '../DeleteBatchesConfirm';
@@ -296,6 +297,7 @@ export default function ShipmentFocus() {
                       );
                     }}
                   />
+                  <AddFollowers />
                   <DeleteConfirm
                     onSuccess={({ orderItemIds, containerIds }) => {
                       const orderIds = [];

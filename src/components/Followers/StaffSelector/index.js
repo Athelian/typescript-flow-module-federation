@@ -18,15 +18,23 @@ import {
   UserFilterConfig,
   UserSortConfig,
 } from 'components/NavBar';
+import { OverlayStyle } from './style';
 
 type Props = {|
   selected: Array<User>,
+  isProcessing?: boolean,
   onSelect: (values: Array<User>) => void,
   onCancel: () => void,
   organizationIds: Array<string>,
 |};
 
-const StaffSelector = ({ selected = [], onCancel, onSelect, organizationIds = [] }: Props) => {
+const StaffSelector = ({
+  selected = [],
+  isProcessing = false,
+  onCancel,
+  onSelect,
+  organizationIds = [],
+}: Props) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', organizationIds },
     { updatedAt: 'DESCENDING' }
@@ -68,19 +76,24 @@ const StaffSelector = ({ selected = [], onCancel, onSelect, organizationIds = []
               disabled={!dirty}
               onClick={() => {
                 onSelect(value);
-                onCancel();
               }}
+              isLoading={isProcessing}
             />
           </SlideViewNavBar>
 
           <Content>
-            <StaffGridView
-              hasMore={hasMore}
-              isLoading={loading}
-              onLoadMore={loadMore}
-              items={nodes}
-              renderItem={item => <StaffCard key={item.id} staff={item} {...getItemProps(item)} />}
-            />
+            <>
+              {isProcessing && <div className={OverlayStyle} />}
+              <StaffGridView
+                hasMore={hasMore}
+                isLoading={loading}
+                onLoadMore={loadMore}
+                items={nodes}
+                renderItem={item => (
+                  <StaffCard key={item.id} staff={item} {...getItemProps(item)} />
+                )}
+              />
+            </>
           </Content>
         </SlideViewLayout>
       )}
