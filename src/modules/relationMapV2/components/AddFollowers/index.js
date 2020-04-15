@@ -23,9 +23,6 @@ export default function AddFollowers({ onSuccess }: Props) {
   const { dispatch, state } = FocusedView.useContainer();
   const { isProcessing, isOpen, source, ids } = state.followers;
 
-  const entitiesMutation = source === ORDER ? updateOrdersMutation : updateShipmentMutation;
-  const [updateEntities] = useMutation(entitiesMutation);
-
   const entitiesQuery = source === ORDER ? ordersByIDsQuery : shipmentsByIDsQuery;
   const { data, loading } = useQuery(entitiesQuery, {
     onCompleted: () => {
@@ -91,7 +88,7 @@ export default function AddFollowers({ onSuccess }: Props) {
     },
   });
 
-  const onCancel = () => {
+  const onClose = () => {
     dispatch({
       type: 'FOLLOWERS_CLOSE',
       payload: {},
@@ -102,6 +99,16 @@ export default function AddFollowers({ onSuccess }: Props) {
   const onStart = () => {
     setIsShowDialog(false);
   };
+
+  const entitiesMutation = source === ORDER ? updateOrdersMutation : updateShipmentMutation;
+  const [updateEntities] = useMutation(entitiesMutation, {
+    onCompleted: () => {
+      if (onSuccess) {
+        onSuccess(ids);
+      }
+      onClose();
+    },
+  });
 
   const onSetFollowers = newFollowers => {
     if (data) {
@@ -131,15 +138,6 @@ export default function AddFollowers({ onSuccess }: Props) {
             },
           })),
         },
-        onCompleted: () => {
-          if (onSuccess) {
-            onSuccess(ids);
-          }
-          dispatch({
-            type: 'FOLLOWERS_END',
-            payload: {},
-          });
-        },
       });
     }
   };
@@ -149,7 +147,7 @@ export default function AddFollowers({ onSuccess }: Props) {
       <ActionDialog
         isOpen={isOpen && isShowDialog}
         isProcessing={loading}
-        onCancel={onCancel}
+        onCancel={onClose}
         title={
           <FormattedMessage
             id="modules.RelationMap.addFollowers.title"
@@ -206,7 +204,7 @@ export default function AddFollowers({ onSuccess }: Props) {
   return (
     <SlideView
       isOpen={isOpen}
-      onRequestClose={onCancel}
+      onRequestClose={onClose}
       shouldConfirm={() => {
         return !!document.querySelector('#resetBtn');
       }}
@@ -214,7 +212,7 @@ export default function AddFollowers({ onSuccess }: Props) {
       <StaffSelector
         selected={[]}
         onSelect={onSetFollowers}
-        onCancel={onCancel}
+        onCancel={onClose}
         isProcessing={isProcessing}
         organizationIds={sharedPartnerIds}
       />

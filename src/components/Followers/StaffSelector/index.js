@@ -76,7 +76,6 @@ const StaffSelector = ({
               disabled={!dirty}
               onClick={() => {
                 onSelect(value);
-                onCancel();
               }}
               isLoading={isProcessing}
             />
