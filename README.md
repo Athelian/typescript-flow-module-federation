@@ -278,10 +278,8 @@ src/generated
 ```
 
 ```sh
-#1. Generate typings for apollo client
+# Generate typings for apollo client and Download latest schema from our graphql server
 yarn gql-gen
-#2. Download latest schema from our graphql server
-npx graphql-cli get-schema
 ```
 
 ### Configuration
