@@ -4,12 +4,13 @@ documents: 'src/graphql/**/*.js'
 generates:
   src/generated/graphql.js:
     plugins:
-      - 'flow'
-      - 'flow-operations'
-      - 'fragment-matcher'
+      - flow
   src/generated/graphql.schema.json:
     plugins:
-      - 'introspection'
+      - introspection
   src/generated/fragmentTypes.json:
     plugins:
       - fragment-matcher
+  src/generated/schema.graphql:
+    plugins:
+      - schema-ast
