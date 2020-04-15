@@ -395,6 +395,7 @@ export const orderFullFocusDetailQuery = gql`
   ${itemEntityCardFragment}
   ${orderEntityCardFragment}
   ${tagFragment}
+  ${metricFragment}
   ${taskCountFragment}
   ${ownedByFragment}
   ${timelineDateFragment}
@@ -459,6 +460,7 @@ export const shipmentFullFocusDetailQuery = gql`
   ${itemEntityCardFragment}
   ${orderEntityCardFragment}
   ${tagFragment}
+  ${metricFragment}
   ${taskCountFragment}
   ${ownedByFragment}
   ${timelineDateFragment}
