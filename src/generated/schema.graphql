@@ -1,5 +1,13 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Apr 01 2020 15:22:07 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Apr 15 2020 12:09:17 GMT+0900 (Japan Standard Time)
+
+input AddShipmentPackageHoldInput {
+  version: Int!
+  shipmentId: ID!
+  packageId: ID!
+  productId: ID!
+  quantity: Float!
+}
 
 input AddShipmentPackageInput {
   version: Int!
@@ -26692,7 +26700,6 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   packageSize: Size
   packageCapacity: Float
   tags: [TagPayload!]!
-  notificationUnseenCount: Int!
   customFields: CustomFields!
   memo: String
   sort: Int!
@@ -26793,6 +26800,11 @@ input BatchSortInput {
   deliveredAt: SortOrder
   expiredAt: SortOrder
   desiredAt: SortOrder
+  containerFreeTimeDueDate: SortOrder
+  shipmentLoadPort: SortOrder
+  shipmentLoadPortDeparture: SortOrder
+  shipmentDischargePort: SortOrder
+  shipmentDischargePortArrival: SortOrder
 }
 
 input BatchUpdateInput {
@@ -26911,7 +26923,6 @@ type Container implements Model & Owned & Tagged & Sortable & Customizable & Mem
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
-  notificationUnseenCount: Int!
   sort: Int!
   customFields: CustomFields!
   memo: String
@@ -27038,6 +27049,7 @@ input ContainerSortInput {
   warehouseName: SortOrder
   warehouseArrivalActualDate: SortOrder
   warehouseArrivalAgreedDate: SortOrder
+  freeTimeDueDate: SortOrder
 }
 
 type ContainerTypeCount {
@@ -28461,7 +28473,7 @@ type EntityValue {
   entity: EntityPayload
 }
 
-union Event = ShipmentBookedDraftStartedEvent | ShipmentShipperAppointedEventType | ShipmentConsigneeAppointedEventType | ShipmentIncotermsSetEventType | ShipmentBookingNumberSetEventType | ShipmentProductsCurrencySetEventType | ShipmentProductAddedEventType | ShipmentPackageAddedEventType
+union Event = ShipmentBookedDraftStartedEvent | ShipmentShipperAppointedEvent | ShipmentConsigneeAppointedEvent | ShipmentIncotermsSetEvent | ShipmentBookingNumberSetEvent | ShipmentProductsCurrencySetEvent | ShipmentProductNameSetEvent | ShipmentProductQuantitySetEvent | ShipmentProductUnitPriceSetEvent | ShipmentProductUnitNetWeightSetEvent | ShipmentPackageNumberSetEvent | ShipmentPackageDescriptionSetEvent | ShipmentPackageGrossWeightSetEvent | ShipmentPackageNetWeightSetEvent | ShipmentProductAddedEvent | ShipmentPackageAddedEvent | ShipmentPackageHoldAddedEvent | ShipmentProductRemovedEvent | ShipmentPackageRemovedEvent | ShipmentPackageHoldRemovedEvent
 
 interface EventInterface {
   id: ID!
@@ -29954,8 +29966,20 @@ type Mutation {
   shipmentSetIncoterms(input: SetShipmentIncotermsInput!): CommandResponsePayload!
   shipmentSetBookingNumber(input: SetShipmentBookingNumberInput!): CommandResponsePayload!
   shipmentSetProductsCurrency(input: SetShipmentProductsCurrencyInput!): CommandResponsePayload!
+  shipmentSetProductName(input: SetShipmentProductNameInput!): CommandResponsePayload!
+  shipmentSetProductQuantity(input: SetShipmentProductQuantityInput!): CommandResponsePayload!
+  shipmentSetProductUnitPrice(input: SetShipmentProductUnitPriceInput!): CommandResponsePayload!
+  shipmentSetProductUnitNetWeight(input: SetShipmentProductUnitNetWeightInput!): CommandResponsePayload!
+  shipmentSetPackageNumber(input: SetShipmentPackageNumberInput!): CommandResponsePayload!
+  shipmentSetPackageDescription(input: SetShipmentPackageDescriptionInput!): CommandResponsePayload!
+  shipmentSetPackageGrossWeight(input: SetShipmentPackageGrossWeightInput!): CommandResponsePayload!
+  shipmentSetPackageNetWeight(input: SetShipmentPackageNetWeightInput!): CommandResponsePayload!
   shipmentAddProduct(input: AddShipmentProductInput!): CommandResponsePayload!
   shipmentAddPackage(input: AddShipmentPackageInput!): CommandResponsePayload!
+  shipmentAddPackageHold(input: AddShipmentPackageHoldInput!): CommandResponsePayload!
+  shipmentRemoveProduct(input: RemoveShipmentProductInput!): CommandResponsePayload!
+  shipmentRemovePackage(input: RemoveShipmentPackageInput!): CommandResponsePayload!
+  shipmentRemovePackageHold(input: RemoveShipmentPackageHoldInput!): CommandResponsePayload!
 }
 
 type NotFound {
@@ -30088,14 +30112,8 @@ enum NotificationType {
   """order_create"""
   order_create
 
-  """order_update"""
-  order_update
-
   """order_archived"""
   order_archived
-
-  """order_unarchived"""
-  order_unarchived
 
   """order_create_item"""
   order_create_item
@@ -30105,15 +30123,6 @@ enum NotificationType {
 
   """batch_create"""
   batch_create
-
-  """batch_update"""
-  batch_update
-
-  """batch_archived"""
-  batch_archived
-
-  """batch_unarchived"""
-  batch_unarchived
 
   """batch_update_quantity"""
   batch_update_quantity
@@ -30304,7 +30313,6 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Custo
   ownedBy: OrganizationPayload!
   sort: Int!
   tags: [TagPayload!]!
-  notificationUnseenCount: Int!
   files: [FilePayload!]!
   customFields: CustomFields!
   memo: String
@@ -31272,6 +31280,25 @@ type Reference {
   id: ID!
   type: String!
   service: String!
+}
+
+input RemoveShipmentPackageHoldInput {
+  version: Int!
+  shipmentId: ID!
+  packageId: ID!
+  productId: ID!
+}
+
+input RemoveShipmentPackageInput {
+  version: Int!
+  shipmentId: ID!
+  packageId: ID!
+}
+
+input RemoveShipmentProductInput {
+  version: Int!
+  shipmentId: ID!
+  productId: ID!
 }
 
 input RequestResetPasswordInput {
@@ -86882,10 +86909,66 @@ input SetShipmentIncotermsInput {
   incoterms: Incoterm!
 }
 
+input SetShipmentPackageDescriptionInput {
+  version: Int!
+  shipmentId: ID!
+  packageId: ID!
+  description: String
+}
+
+input SetShipmentPackageGrossWeightInput {
+  version: Int!
+  shipmentId: ID!
+  packageId: ID!
+  grossWeight: String
+}
+
+input SetShipmentPackageNetWeightInput {
+  version: Int!
+  shipmentId: ID!
+  packageId: ID!
+  netWeight: String
+}
+
+input SetShipmentPackageNumberInput {
+  version: Int!
+  shipmentId: ID!
+  packageId: ID!
+  number: String!
+}
+
+input SetShipmentProductNameInput {
+  version: Int!
+  shipmentId: ID!
+  productId: ID!
+  name: String!
+}
+
+input SetShipmentProductQuantityInput {
+  version: Int!
+  shipmentId: ID!
+  productId: ID!
+  quantity: Float
+}
+
 input SetShipmentProductsCurrencyInput {
   version: Int!
   shipmentId: ID!
   productsCurrency: Currency!
+}
+
+input SetShipmentProductUnitNetWeightInput {
+  version: Int!
+  shipmentId: ID!
+  productId: ID!
+  unitNetWeight: Float
+}
+
+input SetShipmentProductUnitPriceInput {
+  version: Int!
+  shipmentId: ID!
+  productId: ID!
+  unitPrice: Float
 }
 
 type Shipment implements Model & Owned & Tagged & Followed & Supervised & Documented & Customizable & Memorizable {
@@ -87035,7 +87118,7 @@ type ShipmentBookedDraftStartedEvent implements ShipmentEventInterface & EventIn
   user: UserPayload
 }
 
-type ShipmentBookingNumberSetEventType implements ShipmentEventInterface & EventInterface {
+type ShipmentBookingNumberSetEvent implements ShipmentEventInterface & EventInterface {
   bookingNumber: String!
   shipmentAggregate: ShipmentAggregatePayload!
   id: ID!
@@ -87045,7 +87128,7 @@ type ShipmentBookingNumberSetEventType implements ShipmentEventInterface & Event
   user: UserPayload
 }
 
-type ShipmentConsigneeAppointedEventType implements ShipmentEventInterface & EventInterface {
+type ShipmentConsigneeAppointedEvent implements ShipmentEventInterface & EventInterface {
   consignee: OrganizationPayload!
   shipmentAggregate: ShipmentAggregatePayload!
   id: ID!
@@ -87219,7 +87302,7 @@ input ShipmentFilterInput {
   productProviderOrigin: Country
 }
 
-type ShipmentIncotermsSetEventType implements ShipmentEventInterface & EventInterface {
+type ShipmentIncotermsSetEvent implements ShipmentEventInterface & EventInterface {
   incoterms: Incoterm!
   shipmentAggregate: ShipmentAggregatePayload!
   id: ID!
@@ -87238,9 +87321,31 @@ type ShipmentPackage {
   holds: [ShipmentPackageHold!]!
 }
 
-type ShipmentPackageAddedEventType implements ShipmentEventInterface & EventInterface {
+type ShipmentPackageAddedEvent implements ShipmentEventInterface & EventInterface {
   packageId: ID!
   number: String!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentPackageDescriptionSetEvent implements ShipmentEventInterface & EventInterface {
+  packageId: ID!
+  description: String
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentPackageGrossWeightSetEvent implements ShipmentEventInterface & EventInterface {
+  packageId: ID!
+  grossWeight: Float
   shipmentAggregate: ShipmentAggregatePayload!
   id: ID!
   version: Int!
@@ -87254,6 +87359,29 @@ type ShipmentPackageHold {
   quantity: Float!
 }
 
+type ShipmentPackageHoldAddedEvent implements ShipmentEventInterface & EventInterface {
+  packageId: ID!
+  productId: ID!
+  quantity: Float!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentPackageHoldRemovedEvent implements ShipmentEventInterface & EventInterface {
+  packageId: ID!
+  productId: ID!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
 type ShipmentPackageList {
   id: ID!
   version: Int!
@@ -87263,6 +87391,38 @@ type ShipmentPackageList {
 }
 
 union ShipmentPackageListPayload = ShipmentPackageList | BadRequest | Forbidden | NotFound
+
+type ShipmentPackageNetWeightSetEvent implements ShipmentEventInterface & EventInterface {
+  packageId: ID!
+  netWeight: Float
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentPackageNumberSetEvent implements ShipmentEventInterface & EventInterface {
+  packageId: ID!
+  number: String!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentPackageRemovedEvent implements ShipmentEventInterface & EventInterface {
+  packageId: ID!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
 
 union ShipmentPayload = Shipment | BadRequest | Forbidden | NotFound
 
@@ -87284,7 +87444,7 @@ type ShipmentProduct {
   quantity: Float
 }
 
-type ShipmentProductAddedEventType implements ShipmentEventInterface & EventInterface {
+type ShipmentProductAddedEvent implements ShipmentEventInterface & EventInterface {
   productId: ID!
   name: String!
   shipmentAggregate: ShipmentAggregatePayload!
@@ -87295,7 +87455,39 @@ type ShipmentProductAddedEventType implements ShipmentEventInterface & EventInte
   user: UserPayload
 }
 
-type ShipmentProductsCurrencySetEventType implements ShipmentEventInterface & EventInterface {
+type ShipmentProductNameSetEvent implements ShipmentEventInterface & EventInterface {
+  productId: ID!
+  name: String!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentProductQuantitySetEvent implements ShipmentEventInterface & EventInterface {
+  productId: ID!
+  quantity: Float
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentProductRemovedEvent implements ShipmentEventInterface & EventInterface {
+  productId: ID!
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentProductsCurrencySetEvent implements ShipmentEventInterface & EventInterface {
   productsCurrency: Currency!
   shipmentAggregate: ShipmentAggregatePayload!
   id: ID!
@@ -87305,7 +87497,29 @@ type ShipmentProductsCurrencySetEventType implements ShipmentEventInterface & Ev
   user: UserPayload
 }
 
-type ShipmentShipperAppointedEventType implements ShipmentEventInterface & EventInterface {
+type ShipmentProductUnitNetWeightSetEvent implements ShipmentEventInterface & EventInterface {
+  productId: ID!
+  unitNetWeight: Float
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentProductUnitPriceSetEvent implements ShipmentEventInterface & EventInterface {
+  productId: ID!
+  unitPrice: Float
+  shipmentAggregate: ShipmentAggregatePayload!
+  id: ID!
+  version: Int!
+  time: DateTime!
+  organization: OrganizationPayload!
+  user: UserPayload
+}
+
+type ShipmentShipperAppointedEvent implements ShipmentEventInterface & EventInterface {
   shipper: OrganizationPayload!
   shipmentAggregate: ShipmentAggregatePayload!
   id: ID!
@@ -87321,11 +87535,13 @@ input ShipmentSortInput {
   no: SortOrder
   blNo: SortOrder
   cargoReady: SortOrder
+  loadPort: SortOrder
   loadPortDeparture: SortOrder
   firstTransitPortArrival: SortOrder
   firstTransitPortDeparture: SortOrder
   secondTransitPortArrival: SortOrder
   secondTransitPortDeparture: SortOrder
+  dischargePort: SortOrder
   dischargePortArrival: SortOrder
   vesselName: SortOrder
   customClearance: SortOrder
