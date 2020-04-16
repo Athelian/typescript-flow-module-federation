@@ -100,6 +100,7 @@ export const ContainerSortConfig: Array<SortConfig> = [
   { message: containerMessages.warehouseName, field: 'warehouseName' },
   { message: containerMessages.warehouseArrivalActualDate, field: 'warehouseArrivalActualDate' },
   { message: containerMessages.warehouseArrivalAgreedDate, field: 'warehouseArrivalAgreedDate' },
+  { message: containerMessages.dueDate, field: 'freeTimeDueDate' },
 ];
 
 export const WarehouseSortConfig: Array<SortConfig> = [
