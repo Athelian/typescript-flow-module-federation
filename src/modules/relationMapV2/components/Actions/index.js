@@ -161,6 +161,26 @@ export default function Actions({ targets }: Props) {
                     onClick={() => {
                       setCurrentMenu(null);
                       dispatch({
+                        type: 'FOLLOWERS',
+                        payload: {
+                          source: SHIPMENT,
+                          ids: shipmentIds,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="STAFF" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addFollowers"
+                        defaultMessage="ADD FOLLOWERS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
                         type: 'STATUS',
                         payload: {
                           source: SHIPMENT,
@@ -443,6 +463,26 @@ export default function Actions({ targets }: Props) {
                     onClick={() => {
                       setCurrentMenu(null);
                       dispatch({
+                        type: 'FOLLOWERS',
+                        payload: {
+                          source: ORDER,
+                          ids: orderIds,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="STAFF" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addFollowers"
+                        defaultMessage="ADD FOLLOWERS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
                         type: 'STATUS',
                         payload: {
                           source: ORDER,
@@ -493,6 +533,26 @@ export default function Actions({ targets }: Props) {
                 <Icon icon="ORDER" />
 
                 <ActionSubMenu isCollapsed={currentMenu !== ORDER}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'FOLLOWERS',
+                        payload: {
+                          source: ORDER,
+                          ids: orderIds,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="STAFF" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addFollowers"
+                        defaultMessage="ADD FOLLOWERS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
                   <ActionButton
                     onClick={() => {
                       setCurrentMenu(null);
@@ -808,6 +868,26 @@ export default function Actions({ targets }: Props) {
               >
                 <Icon icon="SHIPMENT" />
                 <ActionSubMenu isCollapsed={currentMenu !== SHIPMENT}>
+                  <ActionButton
+                    onClick={() => {
+                      setCurrentMenu(null);
+                      dispatch({
+                        type: 'FOLLOWERS',
+                        payload: {
+                          source: SHIPMENT,
+                          ids: shipmentIds,
+                        },
+                      });
+                    }}
+                  >
+                    <Icon icon="STAFF" />
+                    <ActionLabel>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.addFollowers"
+                        defaultMessage="ADD FOLLOWERS"
+                      />
+                    </ActionLabel>
+                  </ActionButton>
                   <ActionButton
                     onClick={() => {
                       setCurrentMenu(null);

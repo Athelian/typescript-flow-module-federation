@@ -716,6 +716,12 @@ const initialState: State = {
     isOpen: false,
     isProcessing: false,
   },
+  followers: {
+    source: ORDER,
+    ids: [],
+    isOpen: false,
+    isProcessing: false,
+  },
   status: {
     source: ORDER,
     isOpen: false,
@@ -800,6 +806,9 @@ function orderReducer(
       | 'SPLIT_START'
       | 'SPLIT_END'
       | 'SPLIT_CLOSE'
+      | 'FOLLOWERS'
+      | 'FOLLOWERS_START'
+      | 'FOLLOWERS_CLOSE'
       | 'STATUS'
       | 'STATUS_START'
       | 'STATUS_END'
@@ -1306,6 +1315,32 @@ function orderReducer(
     case 'AUTO_FILL_CLOSE': {
       return update(state, {
         autoFill: {
+          isOpen: { $set: false },
+          isProcessing: { $set: false },
+        },
+      });
+    }
+    case 'FOLLOWERS': {
+      return update(state, {
+        followers: {
+          isOpen: { $set: true },
+          isProcessing: { $set: false },
+          source: { $set: action.payload?.source ?? '' },
+          ids: { $set: action.payload?.ids ?? [] },
+        },
+      });
+    }
+    case 'FOLLOWERS_START': {
+      return update(state, {
+        followers: {
+          isOpen: { $set: true },
+          isProcessing: { $set: true },
+        },
+      });
+    }
+    case 'FOLLOWERS_CLOSE': {
+      return update(state, {
+        followers: {
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },

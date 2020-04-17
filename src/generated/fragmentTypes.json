@@ -51,10 +51,10 @@
             "name": "ProductProviderPackage"
           },
           {
-            "name": "Event"
+            "name": "TimelineEvent"
           },
           {
-            "name": "Comment"
+            "name": "TimelineComment"
           },
           {
             "name": "Task"
@@ -79,15 +79,6 @@
           },
           {
             "name": "Shipment"
-          },
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "Integration"
           },
           {
             "name": "TimelineDate"
@@ -124,6 +115,12 @@
           },
           {
             "name": "Partner"
+          },
+          {
+            "name": "Integration"
+          },
+          {
+            "name": "IntegrationConfiguration"
           },
           {
             "name": "ExportTemplate"
@@ -166,6 +163,9 @@
           },
           {
             "name": "ProjectTemplate"
+          },
+          {
+            "name": "Partner"
           }
         ]
       },
@@ -213,10 +213,10 @@
             "name": "ProductProviderPackage"
           },
           {
-            "name": "Event"
+            "name": "TimelineEvent"
           },
           {
-            "name": "Comment"
+            "name": "TimelineComment"
           },
           {
             "name": "Task"
@@ -241,15 +241,6 @@
           },
           {
             "name": "Shipment"
-          },
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "Integration"
           },
           {
             "name": "TimelineDate"
@@ -277,6 +268,12 @@
           },
           {
             "name": "MaskEdit"
+          },
+          {
+            "name": "Integration"
+          },
+          {
+            "name": "IntegrationConfiguration"
           }
         ]
       },
@@ -459,6 +456,9 @@
             "name": "FieldValue"
           },
           {
+            "name": "ShipmentAggregate"
+          },
+          {
             "name": "BadRequest"
           },
           {
@@ -477,12 +477,6 @@
             "name": "Product"
           },
           {
-            "name": "Batch"
-          },
-          {
-            "name": "OrderItem"
-          },
-          {
             "name": "Order"
           },
           {
@@ -490,9 +484,6 @@
           },
           {
             "name": "Warehouse"
-          },
-          {
-            "name": "Container"
           }
         ]
       },
@@ -544,6 +535,9 @@
           },
           {
             "name": "Warehouse"
+          },
+          {
+            "name": "Container"
           }
         ]
       },
@@ -741,13 +735,10 @@
         "name": "Paginated",
         "possibleTypes": [
           {
-            "name": "EntryPaginatedList"
+            "name": "TimelineEntryPaginatedList"
           },
           {
             "name": "BatchPayloadPaginatedSearch"
-          },
-          {
-            "name": "IntegrationLinkPayloadPaginatedList"
           },
           {
             "name": "OrderPayloadPaginatedSearch"
@@ -814,18 +805,21 @@
           },
           {
             "name": "RolePayloadPaginatedList"
+          },
+          {
+            "name": "ShipmentAggregatePayloadPaginatedSearch"
           }
         ]
       },
       {
         "kind": "UNION",
-        "name": "Entry",
+        "name": "TimelineEntry",
         "possibleTypes": [
           {
-            "name": "Event"
+            "name": "TimelineEvent"
           },
           {
-            "name": "Comment"
+            "name": "TimelineComment"
           },
           {
             "name": "BadRequest"
@@ -994,69 +988,6 @@
         "possibleTypes": [
           {
             "name": "Shipment"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "INTERFACE",
-        "name": "Integrated",
-        "possibleTypes": [
-          {
-            "name": "Shipment"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationLinkPayload",
-        "possibleTypes": [
-          {
-            "name": "IntegrationLink"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationConfigurationPayload",
-        "possibleTypes": [
-          {
-            "name": "IntegrationConfiguration"
-          },
-          {
-            "name": "BadRequest"
-          },
-          {
-            "name": "Forbidden"
-          },
-          {
-            "name": "NotFound"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "IntegrationPayload",
-        "possibleTypes": [
-          {
-            "name": "Integration"
           },
           {
             "name": "BadRequest"
@@ -1251,6 +1182,24 @@
       },
       {
         "kind": "UNION",
+        "name": "ShipmentPackageListPayload",
+        "possibleTypes": [
+          {
+            "name": "ShipmentPackageList"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
         "name": "PartnerPayload",
         "possibleTypes": [
           {
@@ -1323,6 +1272,42 @@
       },
       {
         "kind": "UNION",
+        "name": "IntegrationPayload",
+        "possibleTypes": [
+          {
+            "name": "Integration"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationConfigurationPayload",
+        "possibleTypes": [
+          {
+            "name": "IntegrationConfiguration"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
         "name": "ExportTemplatePayload",
         "possibleTypes": [
           {
@@ -1363,6 +1348,24 @@
         "possibleTypes": [
           {
             "name": "Focus"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ShipmentAggregatePayload",
+        "possibleTypes": [
+          {
+            "name": "ShipmentAggregate"
           },
           {
             "name": "BadRequest"
@@ -1464,10 +1467,10 @@
       },
       {
         "kind": "UNION",
-        "name": "CommentPayload",
+        "name": "TimelineCommentPayload",
         "possibleTypes": [
           {
-            "name": "Comment"
+            "name": "TimelineComment"
           },
           {
             "name": "BadRequest"
@@ -1513,6 +1516,222 @@
           },
           {
             "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "CommandResponsePayload",
+        "possibleTypes": [
+          {
+            "name": "CommandResponse"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "Event",
+        "possibleTypes": [
+          {
+            "name": "ShipmentBookedDraftStartedEvent"
+          },
+          {
+            "name": "ShipmentShipperAppointedEvent"
+          },
+          {
+            "name": "ShipmentConsigneeAppointedEvent"
+          },
+          {
+            "name": "ShipmentIncotermsSetEvent"
+          },
+          {
+            "name": "ShipmentBookingNumberSetEvent"
+          },
+          {
+            "name": "ShipmentProductsCurrencySetEvent"
+          },
+          {
+            "name": "ShipmentProductNameSetEvent"
+          },
+          {
+            "name": "ShipmentProductQuantitySetEvent"
+          },
+          {
+            "name": "ShipmentProductUnitPriceSetEvent"
+          },
+          {
+            "name": "ShipmentProductUnitNetWeightSetEvent"
+          },
+          {
+            "name": "ShipmentPackageNumberSetEvent"
+          },
+          {
+            "name": "ShipmentPackageDescriptionSetEvent"
+          },
+          {
+            "name": "ShipmentPackageGrossWeightSetEvent"
+          },
+          {
+            "name": "ShipmentPackageNetWeightSetEvent"
+          },
+          {
+            "name": "ShipmentProductAddedEvent"
+          },
+          {
+            "name": "ShipmentPackageAddedEvent"
+          },
+          {
+            "name": "ShipmentPackageHoldAddedEvent"
+          },
+          {
+            "name": "ShipmentProductRemovedEvent"
+          },
+          {
+            "name": "ShipmentPackageRemovedEvent"
+          },
+          {
+            "name": "ShipmentPackageHoldRemovedEvent"
+          }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "ShipmentEventInterface",
+        "possibleTypes": [
+          {
+            "name": "ShipmentBookedDraftStartedEvent"
+          },
+          {
+            "name": "ShipmentShipperAppointedEvent"
+          },
+          {
+            "name": "ShipmentConsigneeAppointedEvent"
+          },
+          {
+            "name": "ShipmentIncotermsSetEvent"
+          },
+          {
+            "name": "ShipmentBookingNumberSetEvent"
+          },
+          {
+            "name": "ShipmentProductsCurrencySetEvent"
+          },
+          {
+            "name": "ShipmentProductNameSetEvent"
+          },
+          {
+            "name": "ShipmentProductQuantitySetEvent"
+          },
+          {
+            "name": "ShipmentProductUnitPriceSetEvent"
+          },
+          {
+            "name": "ShipmentProductUnitNetWeightSetEvent"
+          },
+          {
+            "name": "ShipmentPackageNumberSetEvent"
+          },
+          {
+            "name": "ShipmentPackageDescriptionSetEvent"
+          },
+          {
+            "name": "ShipmentPackageGrossWeightSetEvent"
+          },
+          {
+            "name": "ShipmentPackageNetWeightSetEvent"
+          },
+          {
+            "name": "ShipmentProductAddedEvent"
+          },
+          {
+            "name": "ShipmentPackageAddedEvent"
+          },
+          {
+            "name": "ShipmentPackageHoldAddedEvent"
+          },
+          {
+            "name": "ShipmentProductRemovedEvent"
+          },
+          {
+            "name": "ShipmentPackageRemovedEvent"
+          },
+          {
+            "name": "ShipmentPackageHoldRemovedEvent"
+          }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "EventInterface",
+        "possibleTypes": [
+          {
+            "name": "ShipmentBookedDraftStartedEvent"
+          },
+          {
+            "name": "ShipmentShipperAppointedEvent"
+          },
+          {
+            "name": "ShipmentConsigneeAppointedEvent"
+          },
+          {
+            "name": "ShipmentIncotermsSetEvent"
+          },
+          {
+            "name": "ShipmentBookingNumberSetEvent"
+          },
+          {
+            "name": "ShipmentProductsCurrencySetEvent"
+          },
+          {
+            "name": "ShipmentProductNameSetEvent"
+          },
+          {
+            "name": "ShipmentProductQuantitySetEvent"
+          },
+          {
+            "name": "ShipmentProductUnitPriceSetEvent"
+          },
+          {
+            "name": "ShipmentProductUnitNetWeightSetEvent"
+          },
+          {
+            "name": "ShipmentPackageNumberSetEvent"
+          },
+          {
+            "name": "ShipmentPackageDescriptionSetEvent"
+          },
+          {
+            "name": "ShipmentPackageGrossWeightSetEvent"
+          },
+          {
+            "name": "ShipmentPackageNetWeightSetEvent"
+          },
+          {
+            "name": "ShipmentProductAddedEvent"
+          },
+          {
+            "name": "ShipmentPackageAddedEvent"
+          },
+          {
+            "name": "ShipmentPackageHoldAddedEvent"
+          },
+          {
+            "name": "ShipmentProductRemovedEvent"
+          },
+          {
+            "name": "ShipmentPackageRemovedEvent"
+          },
+          {
+            "name": "ShipmentPackageHoldRemovedEvent"
           }
         ]
       },

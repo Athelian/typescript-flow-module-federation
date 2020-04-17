@@ -120,7 +120,10 @@ const Followers = ({
       <SlideView isOpen={isStaffSelectorOpen} onRequestClose={() => setStaffSelectorOpen(false)}>
         <StaffSelector
           selected={followers}
-          onSelect={setFollowers}
+          onSelect={value => {
+            setFollowers(value);
+            setStaffSelectorOpen(false);
+          }}
           onCancel={() => setStaffSelectorOpen(false)}
           organizationIds={organizationIds}
         />
