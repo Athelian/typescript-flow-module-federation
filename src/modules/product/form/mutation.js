@@ -107,12 +107,12 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
   ...parseGenericField(
     'janCode',
     getByPathWithDefault(null, 'janCode', originalValues),
-    newValues.janCode
+    newValues.janCode || null
   ),
   ...parseGenericField(
     'hsCode',
     getByPathWithDefault(null, 'hsCode', originalValues),
-    newValues.hsCode
+    newValues.hsCode || null
   ),
   ...parseGenericField(
     'material',
