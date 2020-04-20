@@ -60,7 +60,10 @@ export default function normalizeSheetShipmentInput(
             updatedAt,
             updatedBy,
             ...rest
-          }) => rest
+          }) => ({
+            ...rest,
+            tagIds: tags.map(tag => tag.id),
+          })
         ),
       };
     case 'totalVolume':

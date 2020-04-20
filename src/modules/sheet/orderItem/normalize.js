@@ -34,7 +34,7 @@ export default function normalizeSheetOrderItemInput(
             __typename,
             entity: e,
             ownedBy,
-            tags,
+            tags = [],
             path,
             uploading,
             progress,
@@ -49,7 +49,10 @@ export default function normalizeSheetOrderItemInput(
             updatedAt,
             updatedBy,
             ...rest
-          }) => rest
+          }) => ({
+            ...rest,
+            tagIds: tags.map(tag => tag.id),
+          })
         ),
       };
     case 'todo':
