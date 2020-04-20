@@ -40,7 +40,10 @@ export default function normalizeSheetOrderInput(
             updatedAt,
             updatedBy,
             ...rest
-          }) => rest
+          }) => ({
+            ...rest,
+            tagIds: tags.map(tag => tag.id),
+          })
         ),
       };
     case 'tags':
