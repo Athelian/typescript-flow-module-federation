@@ -439,7 +439,7 @@ export default function transformSheetShipment({
       type: 'number',
       ...transformComputedField(basePath, shipment, 'totalContainers', root => {
         const currentShipment = getShipmentFromRoot(root);
-        return (currentShipment?.container ?? []).length;
+        return (currentShipment?.containers ?? []).length;
       }),
     },
     {
