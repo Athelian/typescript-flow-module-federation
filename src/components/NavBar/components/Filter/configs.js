@@ -133,6 +133,13 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'ORDER',
+    field: 'followerIds',
+    type: 'users',
+    message: orderMessages.followers,
+    defaultValue: [],
+  },
+  {
+    entity: 'ORDER',
     field: 'tagIds',
     type: 'order_tags',
     message: orderMessages.tags,
@@ -740,6 +747,13 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
     type: 'date_range',
     message: shipmentMessages.updatedAt,
     defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'SHIPMENT',
+    field: 'followerIds',
+    type: 'users',
+    message: shipmentMessages.followers,
+    defaultValue: [],
   },
   {
     entity: 'SHIPMENT',
