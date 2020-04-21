@@ -130,9 +130,13 @@ const TagOptions = ({
     return () => document.removeEventListener('wheel', listener, opts);
   }, [closeMenu]);
 
-  const tags = (loading ? [] : data?.tags?.nodes ?? []).filter(
-    tag => !isForbidden(tag) && !isNotFound(tag)
-  );
+  const tags = (loading ? [] : data?.tags?.nodes ?? [])
+    .filter(tag => !isForbidden(tag) && !isNotFound(tag))
+    .sort((a, b) => {
+      if (a.name < b.name) return -1;
+      if (a.name > b.name) return 1;
+      return 0;
+    });
   const height = Math.min(tags.length * 30, 200);
 
   return (
