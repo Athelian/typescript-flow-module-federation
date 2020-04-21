@@ -23,6 +23,7 @@ export type RenderInputProps = {
   selectedItems: Array<Item>,
   getInputProps: Object => Object,
   remove: Item => void,
+  onChange: Function,
 };
 
 type Props = {

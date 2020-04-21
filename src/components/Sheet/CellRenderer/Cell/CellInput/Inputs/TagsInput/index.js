@@ -1,7 +1,16 @@
 // @flow
 import * as React from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import * as ReactDOM from 'react-dom';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  type DraggableProvided,
+  type DraggableStateSnapshot,
+} from 'react-beautiful-dnd';
+import usePortalSlot from 'hooks/usePortalSlot';
 import BaseTagsInput from 'components/Inputs/TagsInput';
+import type { Tag as TagType } from 'generated/graphql';
 import type { RenderInputProps } from 'components/Inputs/TagsInput';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -13,6 +22,39 @@ import {
   TagsInputWrapperStyle,
   DroppableWrapperStyle,
 } from './style';
+
+type DraggableTagRendererProps = {
+  tag: TagType,
+  remove: Function,
+  provided: DraggableProvided,
+  snapshot: DraggableStateSnapshot,
+};
+
+const DraggableTagRenderer = ({ tag, remove, provided, snapshot }: DraggableTagRendererProps) => {
+  const slot = usePortalSlot('dragging_tag');
+
+  const result = (
+    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+      <Tag
+        tag={tag}
+        suffix={
+          <button
+            type="button"
+            className={RemoveButtonStyle}
+            onClick={event => {
+              event.stopPropagation();
+              remove(tag);
+            }}
+          >
+            <Icon icon="CLEAR" />
+          </button>
+        }
+      />
+    </div>
+  );
+
+  return snapshot.isDragging ? ReactDOM.createPortal(result, slot) : result;
+};
 
 const TagInputRenderer = ({
   disabled,
@@ -54,28 +96,13 @@ const TagInputRenderer = ({
                 .filter(item => !isForbidden(item) && !isNotFound(item))
                 .map((tag, index) => (
                   <Draggable key={tag.id} draggableId={tag.id} index={index}>
-                    {provided => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <Tag
-                          tag={tag}
-                          suffix={
-                            <button
-                              type="button"
-                              className={RemoveButtonStyle}
-                              onClick={event => {
-                                event.stopPropagation();
-                                remove(tag);
-                              }}
-                            >
-                              <Icon icon="CLEAR" />
-                            </button>
-                          }
-                        />
-                      </div>
+                    {(provided, snapshot) => (
+                      <DraggableTagRenderer
+                        tag={tag}
+                        remove={remove}
+                        provided={provided}
+                        snapshot={snapshot}
+                      />
                     )}
                   </Draggable>
                 ))}
