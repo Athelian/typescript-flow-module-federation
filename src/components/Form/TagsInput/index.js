@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Downshift from 'downshift';
 import matchSorter from 'match-sorter';
 import TagListProvider from 'providers/TagListProvider';
@@ -10,7 +11,13 @@ import { DefaultStyle } from 'components/Form';
 import type { Tag as TagType } from 'components/Tag/type.js.flow';
 import TagSelectOptions from 'components/Form/Inputs/Styles/TagSelectOptions';
 import { isForbidden, isNotFound } from 'utils/data';
-import { WrapperStyle, SelectionWrapperStyle, InputStyle, RemoveStyle } from './style';
+import {
+  WrapperStyle,
+  SelectionWrapperStyle,
+  InputStyle,
+  RemoveStyle,
+  DroppableWrapperStyle,
+} from './style';
 
 type OptionalProps = {
   width: string,
@@ -182,29 +189,64 @@ export default class TagsInput extends React.Component<Props, State> {
                     openMenu();
                   }}
                 >
-                  {values &&
-                    (values || [])
-                      .filter(item => !isForbidden(item) && !isNotFound(item))
-                      .map(tag => (
-                        <Tag
-                          key={tag.id}
-                          tag={tag}
-                          suffix={
-                            editable.remove && (
-                              <button
-                                type="button"
-                                className={RemoveStyle}
-                                onClick={event => {
-                                  event.stopPropagation();
-                                  onClickRemove(tag);
-                                }}
-                              >
-                                <Icon icon="CLEAR" />
-                              </button>
-                            )
-                          }
-                        />
-                      ))}
+                  <DragDropContext
+                    onDragEnd={(result: any) => {
+                      if (!result.destination) {
+                        return;
+                      }
+                      const sourceIndex = result.source.index;
+                      const destinationIndex = result.destination.index;
+
+                      const reorderedColumns = [...values];
+                      const [removed] = reorderedColumns.splice(sourceIndex, 1);
+                      reorderedColumns.splice(destinationIndex, 0, removed);
+
+                      this.handleChange(reorderedColumns);
+                    }}
+                  >
+                    <Droppable droppableId="droppable" direction="horizontal">
+                      {dropProvided => (
+                        <div
+                          ref={dropProvided.innerRef}
+                          {...dropProvided.droppableProps}
+                          className={DroppableWrapperStyle}
+                        >
+                          {(values ?? [])
+                            .filter(item => !isForbidden(item) && !isNotFound(item))
+                            .map((tag, index) => (
+                              <Draggable key={tag.id} draggableId={tag.id} index={index}>
+                                {provided => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
+                                    <Tag
+                                      tag={tag}
+                                      suffix={
+                                        editable.remove && (
+                                          <button
+                                            type="button"
+                                            className={RemoveStyle}
+                                            onClick={event => {
+                                              event.stopPropagation();
+                                              onClickRemove(tag);
+                                            }}
+                                          >
+                                            <Icon icon="CLEAR" />
+                                          </button>
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+
                   <input
                     {...getInputProps({
                       ref: ref => {

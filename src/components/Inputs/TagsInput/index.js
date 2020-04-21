@@ -237,6 +237,7 @@ const TagsInput = ({
             isOpen,
             disabled,
             selectedItems: value,
+            onChange,
             remove: tag => {
               handleRemove(tag);
               if (internalInputRef.current) {

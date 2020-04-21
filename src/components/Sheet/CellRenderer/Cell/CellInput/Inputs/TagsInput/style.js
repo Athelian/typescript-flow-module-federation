@@ -57,3 +57,11 @@ export const TagsSelectStyle = css`
     }
   }
 `;
+
+export const DroppableWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  & > div {
+    margin-right: 5px;
+  }
+`;
