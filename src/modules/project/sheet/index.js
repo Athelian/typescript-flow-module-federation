@@ -81,19 +81,7 @@ const ProjectSheetModule = () => {
           {({ getGroupProps }) => (
             <>
               <ColumnsGroup {...getGroupProps('PROJECT')} />
-              {(() => {
-                // TODO: bypass the flow error from custom group
-                const { columns: milestoneColumns, icon, onChange } = (getGroupProps(
-                  'MILESTONES'
-                ): any);
-                return (
-                  <MilestoneTaskColumnsConfigGroup
-                    columns={milestoneColumns}
-                    icon={icon}
-                    onChange={onChange}
-                  />
-                );
-              })()}
+              <MilestoneTaskColumnsConfigGroup {...getGroupProps('MILESTONES')} />
             </>
           )}
         </ColumnsConfig>
