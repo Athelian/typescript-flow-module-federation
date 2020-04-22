@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import type { FilePayload } from 'generated/graphql';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
-import { computeIcon, getFileExtension } from 'components/Form/DocumentsUpload/helpers';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import {
   CellDisplayWrapperStyle,
@@ -36,6 +35,32 @@ const DocumentsInputImpl = ({
       e.stopPropagation();
       e.preventDefault();
     }
+  };
+
+  const renderDocuments = (documents: Array<any>) => {
+    const documentTypeMap = new Map();
+    const documentTypeCounts = [];
+
+    documents.forEach(document => {
+      const count = documentTypeMap.get(document.type);
+      if (count) {
+        documentTypeMap.set(document.type, count + 1);
+      } else {
+        documentTypeMap.set(document.type, 1);
+      }
+    });
+
+    documentTypeMap.forEach((count, type) => {
+      if (count) {
+        documentTypeCounts.push(`${count} ${type}`);
+      }
+    });
+
+    return (
+      <span style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+        {documentTypeCounts.join(', ')}
+      </span>
+    );
   };
 
   return (
@@ -70,14 +95,7 @@ const DocumentsInputImpl = ({
           </div>
         </div>
 
-        {(filesValue || []).map((document, index) => {
-          const { icon, color } = computeIcon(getFileExtension(document?.name ?? ''));
-          return (
-            <div className={DocumentIconStyle(color)} key={`${document?.name}-${index + 0}`}>
-              <Icon icon={icon} />
-            </div>
-          );
-        })}
+        {renderDocuments(filesValue || [])}
       </button>
 
       <DocumentsInputDialog
