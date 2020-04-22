@@ -59,6 +59,7 @@ import {
   UserTags,
   FileTags,
 } from './Inputs/Tags';
+import { ShipmentTagsWithOperator } from './Inputs/TagsWithOperator';
 import {
   ActionsStyle,
   ActiveStyle,
@@ -112,6 +113,7 @@ const inputs = {
   order_item_tags: OrderItemTags,
   batch_tags: BatchTags,
   shipment_tags: ShipmentTags,
+  shipment_tags_with_operator: ShipmentTagsWithOperator,
   container_tags: ContainerTags,
   project_tags: ProjectTags,
   task_tags: TaskTags,

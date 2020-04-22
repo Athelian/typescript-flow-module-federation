@@ -757,9 +757,16 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'SHIPMENT',
-    field: 'tagIds',
-    type: 'shipment_tags',
+    field: 'tagIdsWithOperator',
+    type: 'shipment_tags_with_operator',
     message: shipmentMessages.tags,
+    defaultValue: { operator: 'AND', ids: [] },
+  },
+  {
+    entity: 'SHIPMENT',
+    field: 'notTagIds',
+    type: 'shipment_tags',
+    message: shipmentMessages.tagsWithout,
     defaultValue: [],
   },
   {
