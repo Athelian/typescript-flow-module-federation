@@ -10,12 +10,7 @@ import {
   DisplayContentStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
 import DocumentsInputDialog from './DocumentsInputDialog';
-import {
-  DocumentsInputWrapperStyle,
-  DocumentCountWrapperStyle,
-  DocumentIconStyle,
-  DocumentTypesStyle,
-} from './style';
+import { DocumentsInputWrapperStyle, DocumentIconStyle } from './style';
 
 type Props = {
   ...InputProps<Array<FilePayload>>,
@@ -61,7 +56,7 @@ const DocumentsInputImpl = ({
       }
     });
 
-    return <span className={DocumentTypesStyle}>{documentTypeCounts.join(', ')}</span>;
+    return <>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{documentTypeCounts.join(', ')}</>;
   };
 
   return (
@@ -76,31 +71,29 @@ const DocumentsInputImpl = ({
           <Icon icon="DOCUMENT" />
         </div>
 
-        <div className={DocumentCountWrapperStyle}>
-          <div className={CellDisplayWrapperStyle}>
-            <span className={DisplayContentStyle}>
-              <>
-                {(filesValue || []).length === 1 ? (
-                  <FormattedMessage
-                    id="modules.sheet.doc"
-                    defaultMessage="{numOfDocuments} Doc"
-                    values={{
-                      numOfDocuments: <FormattedNumber value={(filesValue || []).length} />,
-                    }}
-                  />
-                ) : (
-                  <FormattedMessage
-                    id="modules.sheet.docs"
-                    defaultMessage="{numOfDocuments} Docs"
-                    values={{
-                      numOfDocuments: <FormattedNumber value={(filesValue || []).length} />,
-                    }}
-                  />
-                )}
-              </>
-              {renderDocuments(filesValue || [])}
-            </span>
-          </div>
+        <div className={CellDisplayWrapperStyle}>
+          <span className={DisplayContentStyle}>
+            <>
+              {(filesValue || []).length === 1 ? (
+                <FormattedMessage
+                  id="modules.sheet.doc"
+                  defaultMessage="{numOfDocuments} Doc"
+                  values={{
+                    numOfDocuments: <FormattedNumber value={(filesValue || []).length} />,
+                  }}
+                />
+              ) : (
+                <FormattedMessage
+                  id="modules.sheet.docs"
+                  defaultMessage="{numOfDocuments} Docs"
+                  values={{
+                    numOfDocuments: <FormattedNumber value={(filesValue || []).length} />,
+                  }}
+                />
+              )}
+            </>
+            {renderDocuments(filesValue || [])}
+          </span>
         </div>
       </button>
 
