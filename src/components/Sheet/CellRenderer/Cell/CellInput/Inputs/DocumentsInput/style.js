@@ -13,7 +13,9 @@ export const DocumentsInputWrapperStyle: string = css`
 `;
 
 export const DocumentCountWrapperStyle: string = css`
-  width: 65px;
+  white-space: 'nowrap';
+  text-overflow: 'ellipsis';
+  overflow: 'hidden';
   flex-shrink: 0;
 `;
 
@@ -22,6 +24,10 @@ export const DocumentIconStyle = (color: string): string => css`
   width: 20px;
   text-align: center;
   flex-shrink: 0;
+`;
+
+export const DocumentTypesStyle: string = css`
+  margin-left: 15px;
 `;
 
 export const DocumentsDialogWrapperStyle: string = css`
