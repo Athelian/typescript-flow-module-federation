@@ -79,3 +79,11 @@ export const ItemStyle = (highlighted: boolean): string => css`
   width: 100%;
   flex-shrink: 0;
 `;
+
+export const DroppableWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  & > div {
+    margin-right: 5px;
+  }
+`;
