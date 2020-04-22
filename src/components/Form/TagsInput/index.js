@@ -242,6 +242,7 @@ export default class TagsInput extends React.Component<Props, State> {
                                 )}
                               </Draggable>
                             ))}
+                          {dropProvided.placeholder}
                         </div>
                       )}
                     </Droppable>

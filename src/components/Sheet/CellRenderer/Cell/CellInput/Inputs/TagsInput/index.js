@@ -106,6 +106,7 @@ const TagInputRenderer = ({
                     )}
                   </Draggable>
                 ))}
+              {dropProvided.placeholder}
             </div>
           )}
         </Droppable>
