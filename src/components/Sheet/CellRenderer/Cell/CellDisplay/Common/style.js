@@ -3,6 +3,7 @@ import { css } from 'react-emotion';
 import { colors, fontSizes, presets } from 'styles/common';
 
 export const CellDisplayWrapperStyle: string = css`
+  min-width: 0;
   height: 100%;
   display: flex;
   align-items: center;
@@ -14,4 +15,5 @@ export const DisplayContentStyle: string = css`
   ${presets.ELLIPSIS};
   color: ${colors.BLACK};
   font-weight: bold;
+  text-align: left;
 `;
