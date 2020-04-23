@@ -452,14 +452,14 @@ function setColumnsCache(key: string, columns: Array<ColumnConfig>) {
   } = computeMilestoneTaskColumnsTemplate(columns);
 
   setCache(SHEET_COLUMN_KEY_PREFIX, key, {
-    projectColumns: columns.reduce((cache, col) => ({ ...cache, [col.key]: col.hidden }), {}),
+    projectColumns: columns.reduce((cache, col) => ({ ...cache, [col.key]: !!col.hidden }), {}),
     milestoneColumns: milestoneColumnsTemplate.reduce(
-      (cache, col) => ({ ...cache, [col.key]: col.hidden }),
+      (cache, col) => ({ ...cache, [col.key]: !!col.hidden }),
       {}
     ),
     milestoneCount,
     taskColumns: taskColumnsTemplate.reduce(
-      (cache, col) => ({ ...cache, [col.key]: col.hidden }),
+      (cache, col) => ({ ...cache, [col.key]: !!col.hidden }),
       {}
     ),
     taskCount,
