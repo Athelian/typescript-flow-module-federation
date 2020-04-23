@@ -49,27 +49,6 @@ const DocumentsInputImpl = ({
     OrderItem: {
       Document: intl.formatMessage(orderMessages.fileTypeDocument),
     },
-    Milestone: {
-      Document: intl.formatMessage(orderMessages.fileTypeDocument),
-    },
-    ProductProvider: {
-      ProductSpec: intl.formatMessage({
-        id: 'modules.provider.fileType.productSpec',
-        defaultMessage: 'Product Specification',
-      }),
-      ProductAnalysisCert: intl.formatMessage({
-        id: 'modules.provider.fileType.productAnalysisCert',
-        defaultMessage: 'Product Analysis Certificate',
-      }),
-      ProductOriginCert: intl.formatMessage({
-        id: 'modules.provider.fileType.productOriginCert',
-        defaultMessage: 'Product Origin Certificate',
-      }),
-      Document: intl.formatMessage({
-        id: 'modules.provider.fileType.document',
-        defaultMessage: 'Miscellaneous',
-      }),
-    },
     Shipment: {
       ShipmentBl: intl.formatMessage(shipmentMessages.bl),
       ShipmentInvoice: intl.formatMessage(shipmentMessages.invoice),
