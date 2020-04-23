@@ -38,4 +38,8 @@ export default defineMessages({
     id: 'modules.Documents.tags',
     defaultMessage: 'Tags',
   },
+  tagsWithout: {
+    id: 'modules.Documents.tagsWithout',
+    defaultMessage: 'Tags without',
+  },
 });

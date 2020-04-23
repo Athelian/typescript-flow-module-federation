@@ -2,12 +2,13 @@
 import * as React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { FormattedMessage } from 'react-intl';
-import { Label, TagsInput } from 'components/Form';
+import { Label, RadioInput, TagsInput } from 'components/Form';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
 import { tagsByIDsQuery } from './query';
+import { OperatorWrapperStyle } from './style';
 
 type ImplProps = {
   ...FilterInputProps<{
@@ -28,26 +29,22 @@ const TagsImpl = ({ value, readonly, onChange, tagType }: ImplProps) => {
     <>
       <Label height="30px">
         <FormattedMessage {...messages.tags} />
-        <label>
-          <input
-            name={`tags-operator-${tagType}`}
-            type="radio"
-            value="AND"
-            checked={value.operator === 'AND'}
-            onChange={() => onChange({ ...value, operator: 'AND' })}
-          />
-          AND
-        </label>
-        <label>
-          <input
-            name={`tags-operator-${tagType}`}
-            type="radio"
-            value="OR"
-            checked={value.operator === 'OR'}
-            onChange={() => onChange({ ...value, operator: 'OR' })}
-          />
-          OR
-        </label>
+        <div className={OperatorWrapperStyle}>
+          <RadioInput
+            onToggle={() => onChange({ ...value, operator: 'AND' })}
+            editable
+            selected={value.operator === 'AND'}
+          >
+            AND
+          </RadioInput>
+          <RadioInput
+            onToggle={() => onChange({ ...value, operator: 'OR' })}
+            editable
+            selected={value.operator === 'OR'}
+          >
+            OR
+          </RadioInput>
+        </div>
       </Label>
 
       <TagsInput
@@ -80,6 +77,11 @@ const TagsWithOperator = (tagType: string) => ({
   ids: Array<string>,
 }>) => <TagsImpl value={value} readonly={readonly} onChange={onChange} tagType={tagType} />;
 
+export const ProductTagsWithOperator = TagsWithOperator('Product');
+export const OrderTagsWithOperator = TagsWithOperator('Order');
+export const BatchTagsWithOperator = TagsWithOperator('Batch');
 export const ShipmentTagsWithOperator = TagsWithOperator('Shipment');
+export const ProjectTagsWithOperator = TagsWithOperator('Project');
+export const FileTagsWithOperator = TagsWithOperator('File');
 
 export default TagsWithOperator;

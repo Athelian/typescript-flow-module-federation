@@ -59,7 +59,14 @@ import {
   UserTags,
   FileTags,
 } from './Inputs/Tags';
-import { ShipmentTagsWithOperator } from './Inputs/TagsWithOperator';
+import {
+  ProductTagsWithOperator,
+  OrderTagsWithOperator,
+  BatchTagsWithOperator,
+  ShipmentTagsWithOperator,
+  ProjectTagsWithOperator,
+  FileTagsWithOperator,
+} from './Inputs/TagsWithOperator';
 import {
   ActionsStyle,
   ActiveStyle,
@@ -113,7 +120,12 @@ const inputs = {
   order_item_tags: OrderItemTags,
   batch_tags: BatchTags,
   shipment_tags: ShipmentTags,
+  product_tags_with_operator: ProductTagsWithOperator,
+  order_tags_with_operator: OrderTagsWithOperator,
+  batch_tags_with_operator: BatchTagsWithOperator,
   shipment_tags_with_operator: ShipmentTagsWithOperator,
+  project_tags_with_operator: ProjectTagsWithOperator,
+  file_tags_with_operator: FileTagsWithOperator,
   container_tags: ContainerTags,
   project_tags: ProjectTags,
   task_tags: TaskTags,
