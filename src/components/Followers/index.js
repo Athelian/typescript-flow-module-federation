@@ -27,6 +27,7 @@ type Props = {|
   editable: boolean,
   height?: number,
   borderColor?: string,
+  tooltipMessage?: React$Node,
 |};
 
 const Followers = ({
@@ -36,6 +37,12 @@ const Followers = ({
   editable = false,
   height = 30,
   borderColor = 'GRAY_SUPER_LIGHT',
+  tooltipMessage = (
+    <FormattedMessage
+      id="components.followers.tooltip"
+      defaultMessage="Followers will receive notifications based on their notification preferences"
+    />
+  ),
 }: Props) => {
   const [isStaffSelectorOpen, setStaffSelectorOpen] = React.useState(false);
 
@@ -43,79 +50,70 @@ const Followers = ({
 
   return (
     <>
-      <Tooltip
-        message={
-          <FormattedMessage
-            id="components.followers.tooltip"
-            defaultMessage="Followers will receive notifications based on their notification preferences"
-          />
-        }
-        delay={[1000, 200]}
+      <button
+        className={FollowersWrapperStyle(editable, height)}
+        onClick={() => {
+          if (editable) {
+            setStaffSelectorOpen(true);
+          }
+        }}
+        type="button"
       >
-        <button
-          className={FollowersWrapperStyle(editable, height)}
-          onClick={() => {
-            if (editable) {
-              setStaffSelectorOpen(true);
-            }
-          }}
-          type="button"
-        >
-          <Label width="min-content">
-            <FormattedMessage id="components.followers.followers" defaultMessage="Followers" />
-          </Label>
+        <Tooltip message={tooltipMessage} delay={[1000, 200]}>
+          <span>
+            <Label width="min-content">
+              <FormattedMessage id="components.followers.followers" defaultMessage="Followers" />
+            </Label>
+          </span>
+        </Tooltip>
 
-          {numOfFollowers === 0 ? (
-            <>
-              {editable ? (
-                <div className={PlusButtonStyle}>
-                  <Icon icon="ADD" />
-                </div>
-              ) : (
-                <Display width="min-content">
-                  <FormattedMessage id="components.cards.na" />
-                </Display>
-              )}
-            </>
-          ) : (
-            <>
-              {numOfFollowers > MAX_FOLLOWERS_SHOWN ? (
-                <div className={StackedAvatarsWrapperStyle(MAX_FOLLOWERS_SHOWN)}>
-                  {followers.slice(0, MAX_FOLLOWERS_SHOWN).map((follower, index) => (
-                    <div
-                      className={StackedAvatarWrapperStyle(index, borderColor)}
-                      key={follower?.id}
-                    >
-                      <UserAvatar
-                        firstName={follower?.firstName}
-                        lastName={follower?.lastName}
-                        width="20px"
-                        height="20px"
-                      />
-                    </div>
-                  ))}
-                  <div className={StackedMoreStyle(MAX_FOLLOWERS_SHOWN, borderColor)}>
-                    +{numOfFollowers - MAX_FOLLOWERS_SHOWN}
+        {numOfFollowers === 0 ? (
+          <>
+            {editable ? (
+              <div className={PlusButtonStyle}>
+                <Icon icon="ADD" />
+              </div>
+            ) : (
+              <Display width="min-content">
+                <FormattedMessage id="components.cards.na" />
+              </Display>
+            )}
+          </>
+        ) : (
+          <>
+            {numOfFollowers > MAX_FOLLOWERS_SHOWN ? (
+              <div className={StackedAvatarsWrapperStyle(MAX_FOLLOWERS_SHOWN)}>
+                {followers.slice(0, MAX_FOLLOWERS_SHOWN).map((follower, index) => (
+                  <div className={StackedAvatarWrapperStyle(index, borderColor)} key={follower?.id}>
+                    <UserAvatar
+                      firstName={follower?.firstName}
+                      lastName={follower?.lastName}
+                      width="20px"
+                      height="20px"
+                    />
                   </div>
+                ))}
+                <div className={StackedMoreStyle(MAX_FOLLOWERS_SHOWN, borderColor)}>
+                  +{numOfFollowers - MAX_FOLLOWERS_SHOWN}
                 </div>
-              ) : (
-                <div className={AvatarsWrapperStyle}>
-                  {followers.map(follower => (
-                    <div className={AvatarWrapperStyle(borderColor)} key={follower?.id}>
-                      <UserAvatar
-                        firstName={follower?.firstName}
-                        lastName={follower?.lastName}
-                        width="20px"
-                        height="20px"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </button>
-      </Tooltip>
+              </div>
+            ) : (
+              <div className={AvatarsWrapperStyle}>
+                {followers.map(follower => (
+                  <div className={AvatarWrapperStyle(borderColor)} key={follower?.id}>
+                    <UserAvatar
+                      firstName={follower?.firstName}
+                      lastName={follower?.lastName}
+                      width="20px"
+                      height="20px"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </button>
 
       <SlideView isOpen={isStaffSelectorOpen} onRequestClose={() => setStaffSelectorOpen(false)}>
         <StaffSelector

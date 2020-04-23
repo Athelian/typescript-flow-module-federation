@@ -12,11 +12,6 @@ export const DocumentsInputWrapperStyle: string = css`
   cursor: pointer;
 `;
 
-export const DocumentCountWrapperStyle: string = css`
-  width: 65px;
-  flex-shrink: 0;
-`;
-
 export const DocumentIconStyle = (color: string): string => css`
   color: ${colors[color]};
   width: 20px;

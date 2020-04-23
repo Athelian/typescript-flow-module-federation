@@ -338,6 +338,10 @@ export default defineMessages({
     id: 'modules.Orders.tags',
     defaultMessage: 'TAGS',
   },
+  tagsWithout: {
+    id: 'modules.Orders.tagsWithout',
+    defaultMessage: 'TAGS WITHOUT',
+  },
   shipmentPending: {
     id: 'modules.Orders.shipment.pending',
     defaultMessage: 'Before Cargo Ready',

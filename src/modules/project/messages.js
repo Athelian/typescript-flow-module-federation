@@ -26,6 +26,10 @@ export default defineMessages({
     id: 'modules.Projects.tags',
     defaultMessage: 'Tags',
   },
+  tagsWithout: {
+    id: 'modules.Projects.tagsWithout',
+    defaultMessage: 'Tags without',
+  },
   logs: {
     id: 'modules.Projects.logs',
     defaultMessage: 'Logs',

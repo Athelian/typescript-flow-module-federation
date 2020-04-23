@@ -18,6 +18,10 @@ export default defineMessages({
     id: 'modules.Shipments.tags',
     defaultMessage: 'TAGS',
   },
+  tagsWithout: {
+    id: 'modules.Shipments.tagsWithout',
+    defaultMessage: 'TAGS WITHOUT',
+  },
   carrier: {
     id: 'modules.Shipments.carrier',
     defaultMessage: 'CARRIER',

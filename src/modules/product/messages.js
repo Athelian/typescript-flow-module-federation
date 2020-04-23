@@ -26,6 +26,10 @@ export default defineMessages({
     id: 'modules.Products.tags',
     defaultMessage: 'TAGS',
   },
+  tagsWithout: {
+    id: 'modules.Products.tagsWithout',
+    defaultMessage: 'TAGS WITHOUT',
+  },
   quantity: {
     id: 'modules.Products.quantity',
     defaultMessage: 'UNIT QUANTITY',

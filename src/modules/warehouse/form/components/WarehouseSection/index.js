@@ -70,6 +70,12 @@ const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {
                 setFollowers={value => setFieldValue('followers', value)}
                 organizationIds={[]}
                 editable={hasPermission([WAREHOUSE_UPDATE, WAREHOUSE_SET_FOLLOWERS])}
+                tooltipMessage={
+                  <FormattedMessage
+                    id="modules.Warehouse.followersTooltip"
+                    defaultMessage="Followers will receive notifications based on their notification preferences. They will also receive notifications about the Containers or Shipments this Warehouse is being used in"
+                  />
+                }
               />
               {!isNew && !isClone && (
                 <>

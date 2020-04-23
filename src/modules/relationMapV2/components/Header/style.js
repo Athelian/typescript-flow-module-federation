@@ -93,6 +93,7 @@ export const CreateNewButtonStyle: string = css`
   background-color: rgba(255, 255, 255, 0.3);
   justify-content: space-between;
   padding: 0 5px;
+  ${presets.ELLIPSIS};
 `;
 
 export const SelectAllButtonStyle = css`

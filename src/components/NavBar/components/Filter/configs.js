@@ -40,9 +40,16 @@ export const ProductFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'PRODUCT',
-    field: 'tagIds',
-    type: 'product_tags',
+    field: 'tagIdsWithOperator',
+    type: 'product_tags_with_operator',
     message: productMessages.tags,
+    defaultValue: { operator: 'AND', ids: [] },
+  },
+  {
+    entity: 'PRODUCT',
+    field: 'notTagIds',
+    type: 'product_tags',
+    message: productMessages.tagsWithout,
     defaultValue: [],
   },
 ];
@@ -71,9 +78,16 @@ export const ProductProviderFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'END PRODUCT',
-    field: 'tagIds',
-    type: 'product_tags',
+    field: 'tagIdsWithOperator',
+    type: 'product_tags_with_operator',
     message: productMessages.tags,
+    defaultValue: { operator: 'AND', ids: [] },
+  },
+  {
+    entity: 'END PRODUCT',
+    field: 'notTagIds',
+    type: 'product_tags',
+    message: productMessages.tagsWithout,
     defaultValue: [],
   },
   {
@@ -133,9 +147,23 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'ORDER',
-    field: 'tagIds',
-    type: 'order_tags',
+    field: 'followerIds',
+    type: 'users',
+    message: orderMessages.followers,
+    defaultValue: [],
+  },
+  {
+    entity: 'ORDER',
+    field: 'tagIdsWithOperator',
+    type: 'order_tags_with_operator',
     message: orderMessages.tags,
+    defaultValue: { operator: 'AND', ids: [] },
+  },
+  {
+    entity: 'ORDER',
+    field: 'notTagIds',
+    type: 'order_tags',
+    message: orderMessages.tagsWithout,
     defaultValue: [],
   },
   {
@@ -501,9 +529,16 @@ export const BatchFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'BATCH',
-    field: 'tagIds',
-    type: 'batch_tags',
+    field: 'tagIdsWithOperator',
+    type: 'batch_tags_with_operator',
     message: batchMessages.tags,
+    defaultValue: { operator: 'AND', ids: [] },
+  },
+  {
+    entity: 'BATCH',
+    field: 'notTagIds',
+    type: 'batch_tags',
+    message: batchMessages.tagsWithout,
     defaultValue: [],
   },
   {
@@ -743,9 +778,23 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'SHIPMENT',
-    field: 'tagIds',
-    type: 'shipment_tags',
+    field: 'followerIds',
+    type: 'users',
+    message: shipmentMessages.followers,
+    defaultValue: [],
+  },
+  {
+    entity: 'SHIPMENT',
+    field: 'tagIdsWithOperator',
+    type: 'shipment_tags_with_operator',
     message: shipmentMessages.tags,
+    defaultValue: { operator: 'AND', ids: [] },
+  },
+  {
+    entity: 'SHIPMENT',
+    field: 'notTagIds',
+    type: 'shipment_tags',
+    message: shipmentMessages.tagsWithout,
     defaultValue: [],
   },
   {
@@ -1097,10 +1146,17 @@ export const FileFilterConfig: Array<FilterConfig> = [
     defaultValue: false,
   },
   {
-    entity: 'DOCUMENT',
-    field: 'tagIds',
-    type: 'file_tags',
+    entity: 'FILE',
+    field: 'tagIdsWithOperator',
+    type: 'file_tags_with_operator',
     message: fileMessages.tags,
+    defaultValue: { operator: 'AND', ids: [] },
+  },
+  {
+    entity: 'FILE',
+    field: 'notTagIds',
+    type: 'file_tags',
+    message: fileMessages.tagsWithout,
     defaultValue: [],
   },
 ];
@@ -1129,9 +1185,16 @@ export const ProjectFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'PROJECT',
-    field: 'tagIds',
-    type: 'project_tags',
+    field: 'tagIdsWithOperator',
+    type: 'project_tags_with_operator',
     message: projectMessages.tags,
+    defaultValue: { operator: 'AND', ids: [] },
+  },
+  {
+    entity: 'PROJECT',
+    field: 'notTagIds',
+    type: 'project_tags',
+    message: projectMessages.tagsWithout,
     defaultValue: [],
   },
 ];
