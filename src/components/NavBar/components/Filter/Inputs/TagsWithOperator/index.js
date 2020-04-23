@@ -28,8 +28,8 @@ const TagsImpl = ({ value, readonly, onChange, tagType }: ImplProps) => {
   return (
     <>
       <Label height="30px">
-        <FormattedMessage {...messages.tags} />
         <div className={OperatorWrapperStyle}>
+          <FormattedMessage {...messages.tags} />
           <RadioInput
             onToggle={() => onChange({ ...value, operator: 'AND' })}
             editable

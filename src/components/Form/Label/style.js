@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, fontSizes, transitions, layout } from 'styles/common';
+import { presets, colors, fontSizes, transitions } from 'styles/common';
 
 type LabelWrapperType = {
   align: 'left' | 'right' | 'center',
@@ -10,7 +10,6 @@ type LabelWrapperType = {
 };
 
 export const LabelWrapperStyle = ({ align, height, width, color }: LabelWrapperType): string => css`
-  ${layout.HORIZONTAL};
   width: ${width};
   height: ${height};
   max-height: ${height};
