@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import type { FilePayload } from 'generated/graphql';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
@@ -9,6 +9,8 @@ import {
   CellDisplayWrapperStyle,
   DisplayContentStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
+import orderMessages from 'modules/order/messages';
+import shipmentMessages from 'modules/shipment/messages';
 import DocumentsInputDialog from './DocumentsInputDialog';
 import { DocumentsInputWrapperStyle, DocumentIconStyle } from './style';
 
@@ -27,6 +29,7 @@ const DocumentsInputImpl = ({
   entityType,
 }: Props) => {
   const [filesValue, setFilesValue] = React.useState(value);
+  const intl = useIntl();
 
   React.useEffect(() => setFilesValue(value), [value]);
 
@@ -35,6 +38,50 @@ const DocumentsInputImpl = ({
       e.stopPropagation();
       e.preventDefault();
     }
+  };
+
+  const documentTypeMessageMap = {
+    Order: {
+      OrderPo: intl.formatMessage(orderMessages.fileTypeOrderPO),
+      OrderPi: intl.formatMessage(orderMessages.fileTypeOrderPI),
+      Document: intl.formatMessage(orderMessages.fileTypeDocument),
+    },
+    OrderItem: {
+      Document: intl.formatMessage(orderMessages.fileTypeDocument),
+    },
+    Milestone: {
+      Document: intl.formatMessage(orderMessages.fileTypeDocument),
+    },
+    ProductProvider: {
+      ProductSpec: intl.formatMessage({
+        id: 'modules.provider.fileType.productSpec',
+        defaultMessage: 'Product Specification',
+      }),
+      ProductAnalysisCert: intl.formatMessage({
+        id: 'modules.provider.fileType.productAnalysisCert',
+        defaultMessage: 'Product Analysis Certificate',
+      }),
+      ProductOriginCert: intl.formatMessage({
+        id: 'modules.provider.fileType.productOriginCert',
+        defaultMessage: 'Product Origin Certificate',
+      }),
+      Document: intl.formatMessage({
+        id: 'modules.provider.fileType.document',
+        defaultMessage: 'Miscellaneous',
+      }),
+    },
+    Shipment: {
+      ShipmentBl: intl.formatMessage(shipmentMessages.bl),
+      ShipmentInvoice: intl.formatMessage(shipmentMessages.invoice),
+      ShipmentPackingList: intl.formatMessage(shipmentMessages.packingList),
+      ShipmentImportDeclaration: intl.formatMessage(shipmentMessages.importDeclaration),
+      ShipmentInspectionApplication: intl.formatMessage(shipmentMessages.inspectionApplication),
+      ShipmentWarehouseArrivalReport: intl.formatMessage(shipmentMessages.warehouseArrivalReport),
+      ShipmentWarehouseInspectionReport: intl.formatMessage(
+        shipmentMessages.warehouseInspectionReport
+      ),
+      Document: intl.formatMessage(orderMessages.fileTypeDocument),
+    },
   };
 
   const renderDocuments = (documents: Array<any>) => {
@@ -51,8 +98,11 @@ const DocumentsInputImpl = ({
     });
 
     documentTypeMap.forEach((count, type) => {
+      const typeMessage =
+        (documentTypeMessageMap[entityType] && documentTypeMessageMap[entityType][type]) ||
+        intl.formatMessage(orderMessages.fileTypeDocument);
       if (count) {
-        documentTypeCounts.push(`${count} ${type}`);
+        documentTypeCounts.push(`${intl.formatNumber(count)} ${typeMessage}`);
       }
     });
 
