@@ -98,6 +98,10 @@ export default defineMessages({
     id: 'components.BatchItem.tags',
     defaultMessage: 'TAGS',
   },
+  tagsWithout: {
+    id: 'components.BatchItem.tagsWithout',
+    defaultMessage: 'TAGS WITHOUT',
+  },
   poNo: {
     id: 'components.BatchItem.poNo',
     defaultMessage: 'PO No.',
