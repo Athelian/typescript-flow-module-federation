@@ -81,7 +81,7 @@ const ProjectSheetModule = () => {
           {({ getGroupProps }) => (
             <>
               <ColumnsGroup {...getGroupProps('PROJECT')} />
-              <MilestoneTaskColumnsConfigGroup {...getGroupProps('MILESTONES')} />
+              <MilestoneTaskColumnsConfigGroup {...(getGroupProps('MILESTONES'): any)} />
             </>
           )}
         </ColumnsConfig>
