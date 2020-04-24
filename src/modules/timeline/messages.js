@@ -147,6 +147,14 @@ export default defineMessages({
     id: 'modules.timeline.addedAndRemovedInChargesChild',
     defaultMessage: `{user} has unassigned {removed} and assigned {added} to {child}`,
   },
+  reviseDateChild: {
+    id: 'modules.timeline.reviseDateChild',
+    defaultMessage: '{user} has revised date of {child} to {date} because of {reviseType}',
+  },
+  unReviseDateChild: {
+    id: 'modules.timeline.unReviseDateChild',
+    defaultMessage: '{user} has un-revised a {reviseType} date of {child}',
+  },
   // OTHER
   message: {
     id: 'modules.timeline.message',
