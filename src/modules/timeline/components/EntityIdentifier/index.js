@@ -10,7 +10,17 @@ type Props = {
 };
 
 const EntityIdentifier = ({ log }: Props) => {
-  const entityType = log.parameters.entity_type.string.toUpperCase();
+  let entityType = log.parameters.entity_type.string.toUpperCase();
+  switch (entityType) {
+    case 'VOYAGE':
+    case 'CONTAINER_GROUP':
+    case 'TIMELINE_DATE':
+    case 'TIMELINE_DATE_REVISION':
+      entityType = 'SHIPMENT';
+      break;
+    default:
+      break;
+  }
 
   return (
     <span className={IdentifierStyle(colors[entityType])}>
