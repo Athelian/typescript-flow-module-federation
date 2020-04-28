@@ -1,5 +1,6 @@
 // @flow
 import type { OrderItemPayload, BatchPayload } from 'generated/graphql';
+import { isForbidden, isNotFound } from './data';
 import { uuid } from './id';
 import { getBatchLatestQuantity } from './batch';
 
@@ -49,12 +50,26 @@ export const getItemQuantityChartData = ({
 
 // TODO: clean up this way
 export const spreadOrderItem = (item: Object): Object => {
-  if (!item) {
-    return {
-      orderItem: null,
+  const forbidden = isForbidden(item);
+  const notFound = isNotFound(item);
+
+  if (!item || forbidden || notFound) {
+    const nullRelated = {
       productProvider: null,
       product: null,
       order: null,
+    };
+
+    if (forbidden || notFound) {
+      return {
+        orderItem: item,
+        ...nullRelated,
+      };
+    }
+
+    return {
+      orderItem: null,
+      ...nullRelated,
     };
   }
 

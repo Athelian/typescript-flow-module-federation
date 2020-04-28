@@ -79,7 +79,7 @@ const OrderItemGridView = ({
         />
       }
     >
-      {items.map(renderItem)}
+      {[{ __typename: 'NotFound' }, ...items].map(renderItem)}
     </GridView>
   );
 };
