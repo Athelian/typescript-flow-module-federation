@@ -1,22 +1,22 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import FormattedName from 'components/FormattedName';
 import Tag from 'components/Tag';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import User from './components/User';
 import {
   ARCHIVED,
   CREATE,
-  IN_CHARGES,
   TAGS,
   FORWARDERS,
   UNARCHIVED,
   UPDATE_FIELD,
+  REVISE_DATE,
+  UN_REVISE_DATE,
 } from './constants';
 import type { LogItem } from './types';
 import EntityIdentifier from './components/EntityIdentifier';
-import { Value, ValueWrapper } from './components/Value';
+import { Value } from './components/Value';
 import Field from './components/Field';
 import messages from './messages';
 
@@ -209,62 +209,31 @@ export const ForwardersFormatter = (log: LogItem): * => {
   return <FormattedMessage {...message} values={values} />;
 };
 
-export const InChargesFormatter = (log: LogItem): * => {
-  const added = getByPathWithDefault([], 'parameters.added.values', log);
-  const removed = getByPathWithDefault([], 'parameters.removed.values', log);
+export const ReviseDateFormatter = (log: LogItem): * => {
+  return (
+    <FormattedMessage
+      {...messages.reviseDateChild}
+      values={{
+        user: <User user={log.createdBy} />,
+        child: <EntityIdentifier log={log} />,
+        date: <Value value={log.parameters.date} />,
+        reviseType: <Value value={log.parameters.revise_type} />,
+      }}
+    />
+  );
+};
 
-  let message = null;
-  let values = {
-    user: <User user={log.createdBy} />,
-    added: (
-      <>
-        {added.map(v => (
-          <React.Fragment key={getByPath('entity.id', v)}>
-            <ValueWrapper>
-              <FormattedName firstName={v.entity.firstName} lastName={v.entity.lastName} />
-            </ValueWrapper>{' '}
-          </React.Fragment>
-        ))}
-      </>
-    ),
-    removed: (
-      <>
-        {removed.map(v => (
-          <React.Fragment key={getByPath('entity.id', v)}>
-            <ValueWrapper>
-              <FormattedName firstName={v.entity.firstName} lastName={v.entity.lastName} />
-            </ValueWrapper>{' '}
-          </React.Fragment>
-        ))}
-      </>
-    ),
-  };
-
-  if (log.entityType !== log.parentEntityType) {
-    values = {
-      ...values,
-      child: <EntityIdentifier log={log} />,
-    };
-  }
-
-  if (added.length > 0 && removed.length > 0) {
-    message =
-      log.entityType !== log.parentEntityType
-        ? messages.addedAndRemovedInChargesChild
-        : messages.addedAndRemovedInCharges;
-  } else if (added.length > 0) {
-    message =
-      log.entityType !== log.parentEntityType
-        ? messages.addedInChargesChild
-        : messages.addedInCharges;
-  } else {
-    message =
-      log.entityType !== log.parentEntityType
-        ? messages.removedInChargesChild
-        : messages.removedInCharges;
-  }
-
-  return <FormattedMessage {...message} values={values} />;
+export const UnReviseDateFormatter = (log: LogItem): * => {
+  return (
+    <FormattedMessage
+      {...messages.unReviseDateChild}
+      values={{
+        user: <User user={log.createdBy} />,
+        child: <EntityIdentifier log={log} />,
+        reviseType: <Value value={log.parameters.revise_type} />,
+      }}
+    />
+  );
 };
 
 const DefaultFormatters = {
@@ -274,7 +243,8 @@ const DefaultFormatters = {
   [UNARCHIVED]: UnarchivedFormatter,
   [TAGS]: TagsFormatter,
   [FORWARDERS]: ForwardersFormatter,
-  [IN_CHARGES]: InChargesFormatter,
+  [REVISE_DATE]: ReviseDateFormatter,
+  [UN_REVISE_DATE]: UnReviseDateFormatter,
 };
 
 export default DefaultFormatters;
