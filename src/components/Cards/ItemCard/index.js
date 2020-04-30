@@ -115,7 +115,7 @@ const configDefault = {
   hideOrder: false,
 };
 
-let cardHeight = 287;
+let cardHeight = 358;
 
 const ItemCard = ({
   orderItem,
@@ -175,7 +175,7 @@ const ItemCard = ({
   const mergedNavigable = { ...navigableDefault, ...navigable };
   const mergedConfig = { ...configDefault, ...config };
 
-  if (!mergedConfig.hideOrder) cardHeight += 71;
+  if (!mergedConfig.hideOrder) cardHeight -= 71;
 
   return (
     <BaseCard
