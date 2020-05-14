@@ -96,10 +96,30 @@ export default function({
         ].includes(c.key)
     ),
     ...productColumns({
+      sorts: {
+        'product.name': {
+          name: 'productName',
+          group: 'batch',
+        },
+        'product.serial': {
+          name: 'productSerial',
+          group: 'batch',
+        },
+      },
       fieldDefinitions: productFieldDefinitions,
     }),
     ...productProviderColumns({}),
     ...orderColumns({
+      sorts: {
+        'order.poNo': {
+          name: 'poNo',
+          group: 'batch',
+        },
+        'order.exporter': {
+          name: 'orderExporter',
+          group: 'batch',
+        },
+      },
       fieldDefinitions: orderFieldDefinitions,
     }).filter(
       c =>
@@ -118,6 +138,10 @@ export default function({
           name: 'containerFreeTimeDueDate',
           group: 'batch',
         },
+        'container.warehouseArrivalAgreedDate': {
+          name: 'containerWarehouseAgreedArrivalDate',
+          group: 'batch',
+        },
       },
     }).filter(
       c =>
@@ -133,6 +157,10 @@ export default function({
     ...shipmentColumns({
       fieldDefinitions: shipmentFieldDefinitions,
       sorts: {
+        'shipment.no': {
+          name: 'shipmentNo',
+          group: 'batch',
+        },
         'shipment.voyage.0.departurePort': {
           name: 'shipmentLoadPort',
           group: 'batch',

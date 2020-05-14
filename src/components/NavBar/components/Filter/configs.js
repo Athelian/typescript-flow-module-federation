@@ -618,6 +618,13 @@ export const BatchFilterConfig: Array<FilterConfig> = [
     message: batchMessages.shipment,
     defaultValue: [],
   },
+  {
+    entity: 'SHIPMENT',
+    field: 'shipmentFollowerIds',
+    type: 'users',
+    message: batchMessages.followers,
+    defaultValue: [],
+  },
 ];
 
 export const ShipmentFilterConfig: Array<FilterConfig> = [
