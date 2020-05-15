@@ -1,6 +1,8 @@
 // @flow
-import { parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
+import { parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
+import { calculateVolume } from 'utils/batch';
+import { defaultVolumeMetric } from 'utils/metric';
 
 export default function normalizeSheetBatchInput(
   batch: Object,
@@ -38,6 +40,12 @@ export default function normalizeSheetBatchInput(
     case 'packageSize':
       return {
         packageSize: newValue ? removeTypename(newValue) : null,
+        packageVolume: batch?.packageVolume?.auto
+          ? calculateVolume(
+              batch?.packageVolume?.value ?? { value: 0, metric: defaultVolumeMetric },
+              newValue
+            )
+          : undefined,
       };
     case 'tags':
       return {
