@@ -1,6 +1,8 @@
 // @flow
-import { parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
+import { parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
+import { calculateVolume, calculatePackageQuantity, findActiveQuantityField } from 'utils/batch';
+import { defaultVolumeMetric } from 'utils/metric';
 
 export default function normalizeSheetBatchInput(
   batch: Object,
@@ -16,6 +18,34 @@ export default function normalizeSheetBatchInput(
       return {
         [(field: string)]: newValue ? new Date(newValue) : null,
       };
+    case 'quantity':
+    case 'producedQuantity':
+    case 'preShippedQuantity':
+    case 'shippedQuantity':
+    case 'postShippedQuantity':
+    case 'deliveredQuantity': {
+      const updatedBatch = { ...batch, [(field: string)]: newValue };
+      if (
+        findActiveQuantityField(updatedBatch) === (field: string) ||
+        findActiveQuantityField(batch) === (field: string)
+      ) {
+        return {
+          [(field: string)]: newValue,
+          packageQuantity: batch?.packageQuantity?.auto
+            ? calculatePackageQuantity({ ...batch, [(field: string)]: newValue })
+            : undefined,
+        };
+      }
+      return { [(field: string)]: newValue };
+    }
+    case 'packageCapacity': {
+      return {
+        packageCapacity: newValue,
+        packageQuantity: batch?.packageQuantity?.auto
+          ? calculatePackageQuantity({ ...batch, packageCapacity: newValue })
+          : undefined,
+      };
+    }
     case 'packageQuantity': {
       const { auto: autoCalculatePackageQuantity = false, value: packageQuantity = 0 } =
         newValue || {};
@@ -38,6 +68,12 @@ export default function normalizeSheetBatchInput(
     case 'packageSize':
       return {
         packageSize: newValue ? removeTypename(newValue) : null,
+        packageVolume: batch?.packageVolume?.auto
+          ? calculateVolume(
+              batch?.packageVolume?.value ?? { value: 0, metric: defaultVolumeMetric },
+              newValue
+            )
+          : undefined,
       };
     case 'tags':
       return {
