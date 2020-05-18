@@ -239,7 +239,7 @@ export default function containerColumns({
     ...populateColumns(columns, exportKeys, sorts),
     ...fieldDefinitions.map(fieldDefinition => ({
       key: `container.customField.${fieldDefinition.id}`,
-      exportKey: `order.customFields.${fieldDefinition.id}`,
+      exportKey: `container.customFields.${fieldDefinition.id}`,
       title: fieldDefinition.name,
       icon: 'CONTAINER',
       color: colors.CONTAINER,

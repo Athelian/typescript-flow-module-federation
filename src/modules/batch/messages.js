@@ -154,6 +154,14 @@ export default defineMessages({
     id: 'components.BatchItem.containerFreeTimeDueDate',
     defaultMessage: 'Container Due Date',
   },
+  containerWarehouseAgreedArrivalDate: {
+    id: 'components.BatchItem.containerWarehouseAgreedArrivalDate',
+    defaultMessage: 'Container Warehouse Agreed Arrival Date',
+  },
+  shipmentNo: {
+    id: 'components.BatchItem.shipmentNo',
+    defaultMessage: 'Shipment No.',
+  },
   shipmentLoadPort: {
     id: 'components.BatchItem.shipmentLoadPort',
     defaultMessage: 'Load Port',
