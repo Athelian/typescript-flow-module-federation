@@ -26,8 +26,8 @@ export default function normalizeSheetBatchInput(
     case 'deliveredQuantity': {
       const updatedBatch = { ...batch, [(field: string)]: newValue };
       if (
-        findActiveQuantityField(updatedBatch) === field ||
-        findActiveQuantityField(batch) === field
+        findActiveQuantityField(updatedBatch) === (field: string) ||
+        findActiveQuantityField(batch) === (field: string)
       ) {
         return {
           [(field: string)]: newValue,
