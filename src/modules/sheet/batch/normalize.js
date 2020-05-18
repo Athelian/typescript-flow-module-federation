@@ -1,7 +1,7 @@
 // @flow
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 import { parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
-import { calculateVolume } from 'utils/batch';
+import { calculateVolume, calculatePackageQuantity, findActiveQuantityField } from 'utils/batch';
 import { defaultVolumeMetric } from 'utils/metric';
 
 export default function normalizeSheetBatchInput(
@@ -18,6 +18,34 @@ export default function normalizeSheetBatchInput(
       return {
         [(field: string)]: newValue ? new Date(newValue) : null,
       };
+    case 'quantity':
+    case 'producedQuantity':
+    case 'preShippedQuantity':
+    case 'shippedQuantity':
+    case 'postShippedQuantity':
+    case 'deliveredQuantity': {
+      const updatedBatch = { ...batch, [field]: newValue };
+      if (
+        findActiveQuantityField(updatedBatch) === field ||
+        findActiveQuantityField(batch) === field
+      ) {
+        return {
+          [field]: newValue,
+          packageQuantity: batch?.packageQuantity?.auto
+            ? calculatePackageQuantity({ ...batch, [field]: newValue })
+            : undefined,
+        };
+      }
+      return { [field]: newValue };
+    }
+    case 'packageCapacity': {
+      return {
+        packageCapacity: newValue,
+        packageQuantity: batch?.packageQuantity?.auto
+          ? calculatePackageQuantity({ ...batch, packageCapacity: newValue })
+          : undefined,
+      };
+    }
     case 'packageQuantity': {
       const { auto: autoCalculatePackageQuantity = false, value: packageQuantity = 0 } =
         newValue || {};
