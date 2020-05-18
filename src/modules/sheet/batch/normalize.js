@@ -36,7 +36,7 @@ export default function normalizeSheetBatchInput(
             : undefined,
         };
       }
-      return { [field]: newValue };
+      return { [(field: string)]: newValue };
     }
     case 'packageCapacity': {
       return {
