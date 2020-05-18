@@ -24,15 +24,15 @@ export default function normalizeSheetBatchInput(
     case 'shippedQuantity':
     case 'postShippedQuantity':
     case 'deliveredQuantity': {
-      const updatedBatch = { ...batch, [field]: newValue };
+      const updatedBatch = { ...batch, [(field: string)]: newValue };
       if (
         findActiveQuantityField(updatedBatch) === field ||
         findActiveQuantityField(batch) === field
       ) {
         return {
-          [field]: newValue,
+          [(field: string)]: newValue,
           packageQuantity: batch?.packageQuantity?.auto
-            ? calculatePackageQuantity({ ...batch, [field]: newValue })
+            ? calculatePackageQuantity({ ...batch, [(field: string)]: newValue })
             : undefined,
         };
       }
