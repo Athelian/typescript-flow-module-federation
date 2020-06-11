@@ -378,10 +378,12 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     id,
     orderItems,
     getRelatedBy,
+    newOrderItemIDs,
   }: {|
     id: string,
     orderItems: Array<Object>,
     getRelatedBy: Function,
+    newOrderItemIDs: Array<string>,
   |}): Array<string> => {
     if (!orderItemsSort.current[id]) {
       orderItemsSort.current[id] = sortOrderItemBy(orderItems, filterAndSort.orderItem.sort)
@@ -408,9 +410,16 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     });
 
     orderItems.forEach(item => {
-      if (!ids.includes(item?.id) && item?.id) {
-        const itemId = item?.id;
-        ids.push(itemId);
+      const itemId = item?.id;
+
+      if (itemId && !ids.includes(itemId)) {
+        // If it is new item, place at top of array
+        if (newOrderItemIDs.includes(itemId)) {
+          ids.unshift(itemId);
+        } else {
+          ids.push(itemId);
+        }
+
         const relatedIds = getRelatedBy('orderItem', itemId);
         relatedIds.forEach(currentId => {
           if (!ids.includes(currentId) && !validIds.includes(currentId)) {
@@ -513,6 +522,7 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
 
     batches.forEach(batch => {
       const batchId = batch?.id;
+
       if (batchId && !ids.includes(batchId)) {
         // If it is new batch, place at top of array
         if (newBatchIDs.includes(batchId)) {
@@ -768,6 +778,7 @@ const initialState: State = {
   newOrders: [],
   newShipments: [],
   newBatchIDs: [],
+  newOrderItemIDs: [],
 };
 
 function orderReducer(
@@ -1509,6 +1520,16 @@ function orderReducer(
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },
+        ...(action.payload.orderItems?.length > 0
+          ? {
+              newOrderItemIDs: {
+                $set: [
+                  ...action.payload.orderItems.map(orderItem => orderItem.id),
+                  ...state.newOrderItemIDs,
+                ],
+              },
+            }
+          : {}),
       });
     }
     default:

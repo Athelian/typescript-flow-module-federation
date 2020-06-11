@@ -209,6 +209,7 @@ export default function OrderFocus() {
                 getBatchesSortByItemId,
                 getRelatedBy,
                 newBatchIDs: state.newBatchIDs,
+                newOrderItemIDs: state.newOrderItemIDs,
               });
               const rowCount = ordersData.length;
               const isItemLoaded = (index: number) =>
@@ -355,25 +356,6 @@ export default function OrderFocus() {
                             entity: 'orderItem',
                           }))
                         );
-                        const originalItems = (entities.orders?.[orderId]?.orderItems ?? []).map(
-                          itemId => entities.orderItems?.[itemId]
-                        );
-                        const itemList = getItemsSortByOrderId({
-                          getRelatedBy,
-                          id: orderId,
-                          orderItems: originalItems,
-                        });
-                        const lastItemId = itemList[itemList.length - 1];
-                        const indexPosition = ordersData.findIndex((row: Array<any>) => {
-                          const [, itemCell, , , ,] = row;
-                          return Number(itemCell.cell?.data?.id) === Number(lastItemId);
-                        });
-                        const batches = entities.orderItems?.[lastItemId]?.batches ?? [];
-                        scrollToRow({
-                          position: indexPosition + batches.length - 1,
-                          id: lastItemId,
-                          type: ORDER_ITEM,
-                        });
                         window.requestIdleCallback(
                           () => {
                             dispatch({
