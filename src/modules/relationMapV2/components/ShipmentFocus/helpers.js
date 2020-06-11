@@ -68,6 +68,7 @@ export const shipmentCoordinates = memoize(
     getBatchesSortByContainerId,
     getRelatedBy,
     newBatchIDs,
+    newContainerIDs,
   }: {
     isExpand: boolean,
     shipment: Object,
@@ -76,6 +77,7 @@ export const shipmentCoordinates = memoize(
     getBatchesSortByContainerId: Function,
     getRelatedBy: Function,
     newBatchIDs: Array<string>,
+    newContainerIDs: Array<string>,
   }): Array<?CellRender> => {
     const containerCount = shipment?.containerCount ?? 0;
     const batchCount = shipment?.batchCount ?? 0;
@@ -232,6 +234,7 @@ export const shipmentCoordinates = memoize(
         id: shipment.id,
         containers,
         getRelatedBy,
+        newContainerIDs,
       })
         .map(containerId => containers.find(container => container?.id === containerId))
         .filter(Boolean);

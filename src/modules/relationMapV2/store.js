@@ -436,10 +436,12 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     id,
     containers,
     getRelatedBy,
+    newContainerIDs,
   }: {|
     id: string,
     containers: Array<Object>,
     getRelatedBy: Function,
+    newContainerIDs: Array<string>,
   |}): Array<string> => {
     if (!containersSort.current[id]) {
       containersSort.current[id] = sortContainerBy(containers, filterAndSort.container.sort)
@@ -466,9 +468,16 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     });
 
     containers.forEach(container => {
-      if (!ids.includes(container?.id) && container?.id) {
-        const containerId = container?.id;
-        ids.push(containerId);
+      const containerId = container?.id;
+
+      if (containerId && !ids.includes(containerId)) {
+        // If it is new item, place at top of array
+        if (newContainerIDs.includes(containerId)) {
+          ids.unshift(containerId);
+        } else {
+          ids.push(containerId);
+        }
+
         const relatedIds = getRelatedBy('container', containerId);
         relatedIds.forEach(currentId => {
           if (!ids.includes(currentId) && !validIds.includes(currentId)) {
@@ -779,6 +788,7 @@ const initialState: State = {
   newShipments: [],
   newBatchIDs: [],
   newOrderItemIDs: [],
+  newContainerIDs: [],
 };
 
 function orderReducer(
@@ -1198,6 +1208,13 @@ function orderReducer(
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },
+        ...(action.payload.container?.id
+          ? {
+              newContainerIDs: {
+                $set: [action.payload.container.id, ...state.newContainerIDs],
+              },
+            }
+          : {}),
       });
     case 'DELETE_CONTAINER_START': {
       return update(state, {

@@ -1655,6 +1655,7 @@ function DuplicateShipmentCell({
     id: shipmentId,
     containers: originalContainers,
     getRelatedBy,
+    newContainerIDs: state.newContainerIDs,
   });
   const containerList = [];
   if (containers.length !== originalContainers.length) {

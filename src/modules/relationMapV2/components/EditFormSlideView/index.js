@@ -462,12 +462,6 @@ const EditFormSlideView = ({ onClose }: Props) => {
                       entity: 'container',
                     },
                   ]);
-                  dispatch({
-                    type: 'NEW_CONTAINER',
-                    payload: {
-                      containerId: container.containerCreate.id,
-                    },
-                  });
                   onClose({
                     moveToTop: true,
                     id: container.containerCreate.id,
@@ -475,7 +469,9 @@ const EditFormSlideView = ({ onClose }: Props) => {
                   });
                   dispatch({
                     type: 'MOVE_BATCH_END',
-                    payload: {},
+                    payload: {
+                      container: container.containerCreate,
+                    },
                   });
                 }}
               />

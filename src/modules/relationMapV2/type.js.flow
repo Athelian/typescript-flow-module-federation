@@ -172,4 +172,5 @@ export type State = {|
   newShipments: Array<string>,
   newBatchIDs: Array<string>,
   newOrderItemIDs: Array<string>,
+  newContainerIDs: Array<string>,
 |};
