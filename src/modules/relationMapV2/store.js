@@ -1,6 +1,6 @@
 // @flow
 /* eslint-disable no-param-reassign */
-import type { Hit, Order, Shipment, Batch, OrderItem } from 'generated/graphql';
+import type { Hit, Order, Shipment, Batch, OrderItem, Container } from 'generated/graphql';
 import { useState, useRef, useEffect, useCallback, useReducer } from 'react';
 import { createContainer } from 'unstated-next';
 import update from 'immutability-helper';
@@ -891,6 +891,8 @@ function orderReducer(
       orderItemUpdate?: OrderItem,
       mapping?: Object,
       source?: string,
+      container?: Container,
+      orderItems?: Array<OrderItem>,
       [string]: mixed,
     },
   }
