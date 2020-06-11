@@ -72,12 +72,14 @@ export const orderCoordinates = memoize(
     getItemsSortByOrderId,
     getBatchesSortByItemId,
     getRelatedBy,
+    newBatchIDs,
   }: {
     isExpand: boolean,
     order: Object,
     getItemsSortByOrderId: Function,
     getBatchesSortByItemId: Function,
     getRelatedBy: Function,
+    newBatchIDs: Array<string>,
   }): Array<?CellRender> => {
     const orderItems = order?.orderItems ?? [];
     const orderItemCount = order?.orderItemCount ?? 0;
@@ -168,7 +170,12 @@ export const orderCoordinates = memoize(
       itemsList.forEach((item, index) => {
         const batches = item?.batches ?? [];
         if (batches.length) {
-          const batchesList = getBatchesSortByItemId({ id: item.id, batches, getRelatedBy })
+          const batchesList = getBatchesSortByItemId({
+            id: item.id,
+            batches,
+            getRelatedBy,
+            newBatchIDs,
+          })
             .map(batchId => batches.find(batchItem => batchItem?.id === batchId))
             .filter(Boolean);
           batchesList.forEach((batch, position) => {

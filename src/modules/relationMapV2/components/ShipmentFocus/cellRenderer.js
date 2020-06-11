@@ -1639,6 +1639,7 @@ function DuplicateShipmentCell({
     id: shipment.id,
     batches: batchesWithoutContainers,
     getRelatedBy,
+    newBatchIDs: state.newBatchIDs,
   }).filter(Boolean);
 
   let targetBatchOnPoolPosition = -1;
@@ -1753,6 +1754,7 @@ function DuplicateContainerCell({
     id: containerId,
     batches: originalBatches,
     getRelatedBy,
+    newBatchIDs: state.newBatchIDs,
   });
 
   let foundPosition = -1;

@@ -1874,6 +1874,7 @@ function DuplicateOrderItemCell({ data, beforeConnector, afterConnector }: CellP
     id: itemId,
     batches: originalBatches,
     getRelatedBy,
+    newBatchIDs: state.newBatchIDs,
   }).filter(batchId => originalBatches.find(batch => batch?.id === batchId));
 
   let foundPosition = -1;
