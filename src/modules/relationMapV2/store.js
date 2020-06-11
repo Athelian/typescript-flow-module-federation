@@ -1208,7 +1208,7 @@ function orderReducer(
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },
-        ...(action.payload?.container?.id
+        ...(action?.payload?.container?.id
           ? {
               newContainerIDs: {
                 $set: [action.payload.container.id, ...state.newContainerIDs],
@@ -1537,11 +1537,11 @@ function orderReducer(
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },
-        ...((action.payload?.orderItems ?? []).length > 0
+        ...((action?.payload?.orderItems ?? []).length > 0
           ? {
               newOrderItemIDs: {
                 $set: [
-                  ...(action.payload?.orderItems ?? []).map(orderItem => orderItem.id),
+                  ...(action?.payload?.orderItems ?? []).map(orderItem => orderItem.id),
                   ...state.newOrderItemIDs,
                 ],
               },
