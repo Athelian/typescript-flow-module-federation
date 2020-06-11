@@ -18,6 +18,8 @@ const generateCells = memoize(
     getItemsSortByOrderId: Function,
     getBatchesSortByItemId: Function,
     getRelatedBy: Function,
+    newBatchIDs: Array<string>,
+    newOrderItemIDs: Array<string>,
   |}) => {
     const onClick = () => {
       if (!isExpand) {
@@ -44,6 +46,8 @@ const generateListData = memoize(
     getItemsSortByOrderId: Function,
     getBatchesSortByItemId: Function,
     getRelatedBy: Function,
+    newBatchIDs: Array<string>,
+    newOrderItemIDs: Array<string>,
   |}) => {
     const result = [
       [

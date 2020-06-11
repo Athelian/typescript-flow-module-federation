@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import type { Batch } from 'generated/graphql';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { orderItemFormQuery } from 'modules/orderItem/form/query';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
@@ -12,7 +11,7 @@ import ActionDialog, { BatchLabelIcon } from 'components/Dialog/ActionDialog';
 import { createBatchMutation } from './mutation';
 
 type Props = {|
-  onSuccess: (string, Batch) => void,
+  onSuccess: (orderId: string) => void,
 |};
 
 export default function InlineCreateBatch({ onSuccess }: Props) {
@@ -95,10 +94,7 @@ export default function InlineCreateBatch({ onSuccess }: Props) {
             batch: batchResult.data?.batchCreate ?? {},
           },
         });
-        onSuccess(
-          batchResult.data?.batchCreate?.orderItem?.order?.id,
-          batchResult.data?.batchCreate
-        );
+        onSuccess(batchResult.data?.batchCreate?.orderItem?.order?.id);
         onSetBadges([{ entity: 'batch', id: batchResult.data?.batchCreate?.id, type: 'newItem' }]);
       } else if (batchResult.error) {
         dispatch({

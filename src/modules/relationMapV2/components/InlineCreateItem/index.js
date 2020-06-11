@@ -68,19 +68,18 @@ export default function InlineCreateBatch({ onSuccess }: Props) {
                   },
                 })
               )
-            )
-              .then(result =>
-                onSuccess(
-                  orderId,
-                  result.map(item => item?.data?.orderItemCreate)
-                )
-              )
-              .catch(() => {
-                dispatch({
-                  type: 'CREATE_ITEM_END',
-                  payload: {},
-                });
+            ).then(result => {
+              dispatch({
+                type: 'CREATE_ITEM_END',
+                payload: {
+                  orderItems: result.map(item => item?.data?.orderItemCreate),
+                },
               });
+              onSuccess(
+                orderId,
+                result.map(item => item?.data?.orderItemCreate)
+              );
+            });
           }}
           onCancel={() =>
             dispatch({

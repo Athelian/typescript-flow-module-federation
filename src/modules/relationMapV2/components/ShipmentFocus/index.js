@@ -222,6 +222,8 @@ export default function ShipmentFocus() {
                 getBatchesSortByShipmentId,
                 getBatchesSortByContainerId,
                 getRelatedBy,
+                newBatchIDs: state.newBatchIDs,
+                newContainerIDs: state.newContainerIDs,
               });
               const rowCount = shipmentsData.length;
               const isItemLoaded = (index: number) =>
