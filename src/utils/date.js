@@ -35,7 +35,14 @@ export const isValidDate = (date: Date | string): boolean => !!date && isValid(n
 
 export const formatToDateInput = (date: string): string =>
   isValid(new Date(date))
-    ? format(new Date(date.replace(/-/g, '/').replace(/T.+/, '')), 'yyyy-MM-dd')
+    ? format(
+        new Date(
+          parseInt(date.substring(0, 4), 10),
+          parseInt(date.substring(5, 7), 10) - 1,
+          parseInt(date.substring(8, 10), 10)
+        ),
+        'yyyy-MM-dd'
+      )
     : '';
 
 export const formatToDateTimeInput = (time: string): string =>
