@@ -1,6 +1,6 @@
 // @flow
 /* eslint-disable no-param-reassign */
-import type { Hit, Order, Shipment, Batch, OrderItem } from 'generated/graphql';
+import type { Hit, Order, Shipment, Batch, OrderItem, Container } from 'generated/graphql';
 import { useState, useRef, useEffect, useCallback, useReducer } from 'react';
 import { createContainer } from 'unstated-next';
 import update from 'immutability-helper';
@@ -378,10 +378,12 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     id,
     orderItems,
     getRelatedBy,
+    newOrderItemIDs,
   }: {|
     id: string,
     orderItems: Array<Object>,
     getRelatedBy: Function,
+    newOrderItemIDs: Array<string>,
   |}): Array<string> => {
     if (!orderItemsSort.current[id]) {
       orderItemsSort.current[id] = sortOrderItemBy(orderItems, filterAndSort.orderItem.sort)
@@ -408,9 +410,16 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     });
 
     orderItems.forEach(item => {
-      if (!ids.includes(item?.id) && item?.id) {
-        const itemId = item?.id;
-        ids.push(itemId);
+      const itemId = item?.id;
+
+      if (itemId && !ids.includes(itemId)) {
+        // If it is new item, place at top of array
+        if (newOrderItemIDs.includes(itemId)) {
+          ids.unshift(itemId);
+        } else {
+          ids.push(itemId);
+        }
+
         const relatedIds = getRelatedBy('orderItem', itemId);
         relatedIds.forEach(currentId => {
           if (!ids.includes(currentId) && !validIds.includes(currentId)) {
@@ -427,10 +436,12 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     id,
     containers,
     getRelatedBy,
+    newContainerIDs,
   }: {|
     id: string,
     containers: Array<Object>,
     getRelatedBy: Function,
+    newContainerIDs: Array<string>,
   |}): Array<string> => {
     if (!containersSort.current[id]) {
       containersSort.current[id] = sortContainerBy(containers, filterAndSort.container.sort)
@@ -457,9 +468,16 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     });
 
     containers.forEach(container => {
-      if (!ids.includes(container?.id) && container?.id) {
-        const containerId = container?.id;
-        ids.push(containerId);
+      const containerId = container?.id;
+
+      if (containerId && !ids.includes(containerId)) {
+        // If it is new item, place at top of array
+        if (newContainerIDs.includes(containerId)) {
+          ids.unshift(containerId);
+        } else {
+          ids.push(containerId);
+        }
+
         const relatedIds = getRelatedBy('container', containerId);
         relatedIds.forEach(currentId => {
           if (!ids.includes(currentId) && !validIds.includes(currentId)) {
@@ -477,13 +495,16 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     type,
     batches,
     getRelatedBy,
+    newBatchIDs,
   }: {|
     id: string,
     type: string,
     batches: Array<Object>,
     getRelatedBy: Function,
+    newBatchIDs: Array<string>,
   |}): Array<string> => {
     const sortId = `${id}-${type}`;
+
     if (!batchesSort.current?.[sortId]) {
       batchesSort.current[sortId] = sortBatchBy(batches, filterAndSort.batch.sort)
         .map((batch: Object) => batch?.id ?? '')
@@ -499,6 +520,7 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     const ids = [];
     validIds.forEach(batchId => {
       ids.push(batchId);
+
       const relatedIds = getRelatedBy('batch', batchId);
       relatedIds.forEach(currentId => {
         if (!ids.includes(currentId) && !validIds.includes(currentId)) {
@@ -508,9 +530,16 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     });
 
     batches.forEach(batch => {
-      if (!ids.includes(batch?.id) && batch?.id) {
-        const batchId = batch?.id;
-        ids.push(batchId);
+      const batchId = batch?.id;
+
+      if (batchId && !ids.includes(batchId)) {
+        // If it is new batch, place at top of array
+        if (newBatchIDs.includes(batchId)) {
+          ids.unshift(batchId);
+        } else {
+          ids.push(batchId);
+        }
+
         const relatedIds = getRelatedBy('batch', batchId);
         relatedIds.forEach(currentId => {
           if (!ids.includes(currentId) && !validIds.includes(currentId)) {
@@ -527,16 +556,19 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     id,
     batches,
     getRelatedBy,
+    newBatchIDs,
   }: {|
     id: string,
     batches: Array<Object>,
     getRelatedBy: Function,
+    newBatchIDs: Array<string>,
   |}): Array<string> => {
     return getBatchesSortBy({
       id,
       batches,
       getRelatedBy,
       type: ORDER_ITEM,
+      newBatchIDs,
     });
   };
 
@@ -544,16 +576,19 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     id,
     batches,
     getRelatedBy,
+    newBatchIDs,
   }: {|
     id: string,
     batches: Array<Object>,
     getRelatedBy: Function,
+    newBatchIDs: Array<string>,
   |}): Array<string> => {
     return getBatchesSortBy({
       id,
       batches,
       getRelatedBy,
       type: SHIPMENT,
+      newBatchIDs,
     });
   };
 
@@ -561,16 +596,19 @@ function useClientSorts(viewer: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') {
     id,
     batches,
     getRelatedBy,
+    newBatchIDs,
   }: {|
     id: string,
     batches: Array<Object>,
     getRelatedBy: Function,
+    newBatchIDs: Array<string>,
   |}): Array<string> => {
     return getBatchesSortBy({
       id,
       batches,
       getRelatedBy,
       type: CONTAINER,
+      newBatchIDs,
     });
   };
 
@@ -748,6 +786,9 @@ const initialState: State = {
   },
   newOrders: [],
   newShipments: [],
+  newBatchIDs: [],
+  newOrderItemIDs: [],
+  newContainerIDs: [],
 };
 
 function orderReducer(
@@ -850,6 +891,8 @@ function orderReducer(
       orderItemUpdate?: OrderItem,
       mapping?: Object,
       source?: string,
+      container?: Container,
+      orderItems?: Array<OrderItem>,
       [string]: mixed,
     },
   }
@@ -1167,6 +1210,13 @@ function orderReducer(
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },
+        ...(action?.payload?.container?.id
+          ? {
+              newContainerIDs: {
+                $set: [action.payload.container.id, ...state.newContainerIDs],
+              },
+            }
+          : {}),
       });
     case 'DELETE_CONTAINER_START': {
       return update(state, {
@@ -1195,6 +1245,13 @@ function orderReducer(
             },
           },
         },
+        ...(action.payload.batch?.id
+          ? {
+              newBatchIDs: {
+                $set: [action.payload.batch.id, ...state.newBatchIDs],
+              },
+            }
+          : {}),
       });
     }
     case 'CREATE_CONTAINER_START': {
@@ -1482,6 +1539,16 @@ function orderReducer(
           isOpen: { $set: false },
           isProcessing: { $set: false },
         },
+        ...((action?.payload?.orderItems ?? []).length > 0
+          ? {
+              newOrderItemIDs: {
+                $set: [
+                  ...(action?.payload?.orderItems ?? []).map(orderItem => orderItem.id),
+                  ...state.newOrderItemIDs,
+                ],
+              },
+            }
+          : {}),
       });
     }
     default:
@@ -1491,6 +1558,7 @@ function orderReducer(
 
 function useFocusView(viewer: 'Order' | 'Shipment') {
   const [state, dispatch] = useReducer(orderReducer, { ...initialState, viewer });
+
   return {
     state,
     selectors: {

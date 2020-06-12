@@ -1788,7 +1788,12 @@ function DuplicateOrderCell({
   const itemPosition = data?.itemPosition ?? 0;
   const batchPosition = data?.batchPosition ?? 0;
   const originalItems = order?.orderItems ?? [];
-  const items = getItemsSortByOrderId({ id: orderId, orderItems: originalItems, getRelatedBy });
+  const items = getItemsSortByOrderId({
+    id: orderId,
+    orderItems: originalItems,
+    getRelatedBy,
+    newOrderItemIDs: state.newOrderItemIDs,
+  });
   const itemList = [];
   if (items.length !== originalItems.length) {
     items.forEach(itemId => {
@@ -1874,6 +1879,7 @@ function DuplicateOrderItemCell({ data, beforeConnector, afterConnector }: CellP
     id: itemId,
     batches: originalBatches,
     getRelatedBy,
+    newBatchIDs: state.newBatchIDs,
   }).filter(batchId => originalBatches.find(batch => batch?.id === batchId));
 
   let foundPosition = -1;

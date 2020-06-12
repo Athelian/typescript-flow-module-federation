@@ -37,7 +37,18 @@ export const formatToDateInput = (date: string): string =>
   isValid(new Date(date)) ? format(new Date(date), 'yyyy-MM-dd') : '';
 
 export const formatToDateTimeInput = (time: string): string =>
-  isValid(new Date(time)) ? format(new Date(time), "yyyy-MM-dd'T'HH:mm") : '';
+  isValid(new Date(time))
+    ? format(
+        new Date(
+          parseInt(time.substring(0, 4), 10),
+          parseInt(time.substring(5, 7), 10) - 1,
+          parseInt(time.substring(8, 10), 10),
+          parseInt(time.substring(11, 13), 10),
+          parseInt(time.substring(14, 16), 10)
+        ),
+        "yyyy-MM-dd'T'HH:mm"
+      )
+    : '';
 
 export const formatToGraphql = (date: Date): string => format(date, "yyyy-MM-dd'T'HH:mm:ssxxx");
 

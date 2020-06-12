@@ -72,12 +72,16 @@ export const orderCoordinates = memoize(
     getItemsSortByOrderId,
     getBatchesSortByItemId,
     getRelatedBy,
+    newBatchIDs,
+    newOrderItemIDs,
   }: {
     isExpand: boolean,
     order: Object,
     getItemsSortByOrderId: Function,
     getBatchesSortByItemId: Function,
     getRelatedBy: Function,
+    newBatchIDs: Array<string>,
+    newOrderItemIDs: Array<string>,
   }): Array<?CellRender> => {
     const orderItems = order?.orderItems ?? [];
     const orderItemCount = order?.orderItemCount ?? 0;
@@ -161,14 +165,24 @@ export const orderCoordinates = memoize(
       : [];
 
     if (orderItemCount > 0) {
-      const itemsList = getItemsSortByOrderId({ id: order.id, orderItems, getRelatedBy })
+      const itemsList = getItemsSortByOrderId({
+        id: order.id,
+        orderItems,
+        getRelatedBy,
+        newOrderItemIDs,
+      })
         .map(itemId => orderItems.find(orderItem => orderItem?.id === itemId))
         .filter(Boolean);
 
       itemsList.forEach((item, index) => {
         const batches = item?.batches ?? [];
         if (batches.length) {
-          const batchesList = getBatchesSortByItemId({ id: item.id, batches, getRelatedBy })
+          const batchesList = getBatchesSortByItemId({
+            id: item.id,
+            batches,
+            getRelatedBy,
+            newBatchIDs,
+          })
             .map(batchId => batches.find(batchItem => batchItem?.id === batchId))
             .filter(Boolean);
           batchesList.forEach((batch, position) => {

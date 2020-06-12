@@ -208,6 +208,8 @@ export default function OrderFocus() {
                 getItemsSortByOrderId,
                 getBatchesSortByItemId,
                 getRelatedBy,
+                newBatchIDs: state.newBatchIDs,
+                newOrderItemIDs: state.newOrderItemIDs,
               });
               const rowCount = ordersData.length;
               const isItemLoaded = (index: number) =>
@@ -354,25 +356,6 @@ export default function OrderFocus() {
                             entity: 'orderItem',
                           }))
                         );
-                        const originalItems = (entities.orders?.[orderId]?.orderItems ?? []).map(
-                          itemId => entities.orderItems?.[itemId]
-                        );
-                        const itemList = getItemsSortByOrderId({
-                          getRelatedBy,
-                          id: orderId,
-                          orderItems: originalItems,
-                        });
-                        const lastItemId = itemList[itemList.length - 1];
-                        const indexPosition = ordersData.findIndex((row: Array<any>) => {
-                          const [, itemCell, , , ,] = row;
-                          return Number(itemCell.cell?.data?.id) === Number(lastItemId);
-                        });
-                        const batches = entities.orderItems?.[lastItemId]?.batches ?? [];
-                        scrollToRow({
-                          position: indexPosition + batches.length - 1,
-                          id: lastItemId,
-                          type: ORDER_ITEM,
-                        });
                         window.requestIdleCallback(
                           () => {
                             dispatch({
@@ -470,51 +453,21 @@ export default function OrderFocus() {
                     />
                   )}
                   <InlineCreateBatch
-                    onSuccess={(orderId, batch) => {
+                    onSuccess={orderId => {
                       if (orderId) {
                         queryOrdersDetail([orderId]);
-                        const node = document.querySelector(`#${BATCH}-${batch?.id}`);
-                        if (node) {
-                          // on UI, found the DOM, then try to scroll the center position
-                          scrollIntoView(node, {
-                            behavior: 'smooth',
-                            scrollMode: 'if-needed',
-                          });
-                        } else {
-                          // need to find the position base on the order and batch
-                          // then use the react-window to navigate to the row
-                          // try to get from sort first, if not there, then try to use from entities
-                          const originalBatches = ( // $FlowIgnore this doesn't support yet
-                            entities.orderItems?.[batch?.orderItem?.id ?? '']?.batches ?? []
-                          ).map(batchId => entities.batches?.[batchId]);
-                          const batchList = getBatchesSortByItemId({
-                            // $FlowIgnore this doesn't support yet
-                            id: batch?.orderItem?.id,
-                            batches: originalBatches,
-                            getRelatedBy,
-                          });
-                          const lastBatchId = batchList[batchList.length - 1];
-                          const indexPosition = ordersData.findIndex((row: Array<any>) => {
-                            const [, , batchCell, , ,] = row;
-                            return Number(batchCell.cell?.data?.id) === Number(lastBatchId);
-                          });
-                          scrollToRow({
-                            position: indexPosition,
-                            id: lastBatchId,
-                            type: BATCH,
-                          });
-                          window.requestIdleCallback(
-                            () => {
-                              dispatch({
-                                type: 'CREATE_BATCH_CLOSE',
-                                payload: {},
-                              });
-                            },
-                            {
-                              timeout: 250,
-                            }
-                          );
-                        }
+
+                        window.requestIdleCallback(
+                          () => {
+                            dispatch({
+                              type: 'CREATE_BATCH_CLOSE',
+                              payload: {},
+                            });
+                          },
+                          {
+                            timeout: 250,
+                          }
+                        );
                       }
                     }}
                   />
