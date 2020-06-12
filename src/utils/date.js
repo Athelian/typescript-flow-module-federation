@@ -34,10 +34,14 @@ export {
 export const isValidDate = (date: Date | string): boolean => !!date && isValid(new Date(date));
 
 export const formatToDateInput = (date: string): string =>
-  isValid(new Date(date)) ? format(new Date(date), 'yyyy-MM-dd') : '';
+  isValid(new Date(date))
+    ? format(new Date(date.replace(/-/g, '/').replace(/T.+/, '')), 'yyyy-MM-dd')
+    : '';
 
 export const formatToDateTimeInput = (time: string): string =>
-  isValid(new Date(time)) ? format(new Date(time), "yyyy-MM-dd'T'HH:mm") : '';
+  isValid(new Date(time))
+    ? format(new Date(time.replace(/-/g, '/').replace(/T.+/, '')), "yyyy-MM-dd'T'HH:mm")
+    : '';
 
 export const formatToGraphql = (date: Date): string => format(date, "yyyy-MM-dd'T'HH:mm:ssxxx");
 
