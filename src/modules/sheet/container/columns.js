@@ -200,6 +200,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
+    key: 'container.loadingRate',
+    title: <FormattedMessage {...containerMessages.loadingRate} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'container.logs',
     title: <FormattedMessage {...containerMessages.logs} />,
     icon: 'CONTAINER',

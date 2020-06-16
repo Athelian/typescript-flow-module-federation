@@ -138,4 +138,8 @@ export default defineMessages({
     id: 'modules.container.maxVolume',
     defaultMessage: 'Max Volume',
   },
+  loadingRate: {
+    id: 'modules.container.loadingRate',
+    defaultMessage: 'Loading Rate',
+  },
 });
