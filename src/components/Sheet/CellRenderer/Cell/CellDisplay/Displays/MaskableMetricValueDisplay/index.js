@@ -21,7 +21,7 @@ const MaskableMetricValueDisplay = ({
     <div className={CellDisplayWrapperStyle}>
       <Tooltip message={extra.message}>
         <span className={DisplayContentStyle}>
-          <FormattedMessage {...messages.invalidMetricValue} />
+          {extra.display || <FormattedMessage {...messages.invalidMetricValue} />}
         </span>
       </Tooltip>
     </div>
