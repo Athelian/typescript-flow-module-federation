@@ -382,7 +382,7 @@ export default function transformSheetShipment({
       columnKey: 'shipment.totalPrice',
       type: 'maskable_metric_value',
       extra: {
-        message: (
+        tooltipMessage: (
           <FormattedMessage
             id="modules.Shipments.totalPriceInvalidMessage"
             defaultMessage="Cannot compute this field because this Shipment contains Cargo with different Currencies"
@@ -390,10 +390,6 @@ export default function transformSheetShipment({
         ),
       },
       ...transformComputedField(basePath, shipment, 'totalPrice', root => {
-        const totalPrice = getBatchesFromRoot(root).reduce(
-          (total, batch) => total + getBatchLatestQuantity(batch) * batch.orderItem.price.value,
-          0
-        );
         const currencies = getBatchesFromRoot(root).reduce(
           (list, batch) => list.add(batch.orderItem.price.metric),
           new Set()
@@ -404,6 +400,11 @@ export default function transformSheetShipment({
         }
 
         if (currencies.size === 1) {
+          const totalPrice = getBatchesFromRoot(root).reduce(
+            (total, batch) => total + getBatchLatestQuantity(batch) * batch.orderItem.price.value,
+            0
+          );
+
           return { value: totalPrice, metric: Array.from(currencies)[0] };
         }
 
