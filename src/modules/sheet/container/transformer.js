@@ -7,6 +7,7 @@ import { convertVolume, convertWeight } from 'utils/metric';
 import { getLatestDate } from 'utils/shipment';
 import type { FieldDefinition } from 'types';
 import { calculatePackageQuantity, calculateVolume, getBatchLatestQuantity } from 'utils/batch';
+import { getMaxVolume } from 'utils/container';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   transformComputedField,
@@ -126,6 +127,27 @@ export default function transformSheetContainer({
         hasPermission =>
           hasPermission(CONTAINER_UPDATE) || hasPermission(CONTAINER_SET_CONTAINER_TYPE)
       ),
+    },
+    {
+      columnKey: 'container.maxVolume',
+      type: 'maskable_metric_value',
+      extra: {
+        tooltipMessage: <FormattedMessage id="module.container.maxVolumeTooltip" />,
+        displayMessage: <FormattedMessage id="components.cards.na" />,
+      },
+      ...transformComputedField(basePath, container, 'maxVolume', root => {
+        const currentContainer = getContainerFromRoot(root);
+        const maxVolumeValue = getMaxVolume(currentContainer?.containerType);
+
+        if (maxVolumeValue) {
+          return {
+            value: maxVolumeValue,
+            metric: 'm³',
+          };
+        }
+
+        return null;
+      }),
     },
     {
       columnKey: 'container.containerOption',
@@ -306,7 +328,7 @@ export default function transformSheetContainer({
       columnKey: 'container.totalPrice',
       type: 'maskable_metric_value',
       extra: {
-        message: (
+        tooltipMessage: (
           <FormattedMessage
             id="modules.container.totalPriceUnavailable"
             defaultMessage="Cannot calculate due to mixed currencies"
@@ -316,10 +338,6 @@ export default function transformSheetContainer({
       ...transformComputedField(basePath, container, 'totalPrice', root => {
         const currentContainer = getContainerFromRoot(root);
 
-        const totalPrice = (currentContainer?.batches ?? []).reduce(
-          (total, batch) => total + getBatchLatestQuantity(batch) * batch.orderItem.price.value,
-          0
-        );
         const currencies = (currentContainer?.batches ?? []).reduce(
           (list, batch) => list.add(batch.orderItem.price.metric),
           new Set()
@@ -330,6 +348,11 @@ export default function transformSheetContainer({
         }
 
         if (currencies.size === 1) {
+          const totalPrice = (currentContainer?.batches ?? []).reduce(
+            (total, batch) => total + getBatchLatestQuantity(batch) * batch.orderItem.price.value,
+            0
+          );
+
           return { value: totalPrice, metric: Array.from(currencies)[0] };
         }
 
@@ -421,6 +444,27 @@ export default function transformSheetContainer({
           }, 0),
           metric: 'm³',
         };
+      }),
+    },
+    {
+      columnKey: 'container.loadingRate',
+      type: 'maskable_metric_value',
+      extra: {
+        tooltipMessage: <FormattedMessage id="module.container.loadingRateTooltip" />,
+        displayMessage: <FormattedMessage id="components.cards.na" />,
+      },
+      ...transformComputedField(basePath, container, 'loadingRate', root => {
+        const currentContainer = getContainerFromRoot(root);
+        const maxVolumeValue = getMaxVolume(currentContainer?.containerType);
+
+        if (maxVolumeValue) {
+          return {
+            value: (currentContainer?.totalVolume?.value ?? 0 / maxVolumeValue) * 100,
+            metric: '%',
+          };
+        }
+
+        return null;
       }),
     },
     {

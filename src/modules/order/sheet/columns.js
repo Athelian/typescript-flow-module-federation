@@ -247,6 +247,7 @@ export default function({
           'container.totalPackages',
           'container.totalWeight',
           'container.totalVolume',
+          'container.loadingRate',
         ].includes(c.key)
     ),
     ...shipmentColumns({

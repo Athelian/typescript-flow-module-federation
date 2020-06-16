@@ -8,8 +8,10 @@ import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { Display, Blackout, Label } from 'components/Form';
-import { FullValueTooltip } from 'components/Tooltip';
+import { FullValueTooltip, Tooltip } from 'components/Tooltip';
+import Divider from 'components/Divider';
 import CardActions from 'modules/relationMapV2/components/CardActions';
+import { getMaxVolume } from 'utils/container';
 import {
   ContainerCardWrapperStyle,
   TopRowWrapperStyle,
@@ -43,9 +45,12 @@ export default function ContainerCard({
     warehouseArrivalAgreedDate,
     warehouseArrivalActualDate,
     totalVolume,
+    containerType,
   } = container;
 
   const warehouseArrival = warehouseArrivalActualDate || warehouseArrivalAgreedDate;
+
+  const maxVolumeValue = getMaxVolume(containerType);
 
   // TODO: Replace with real permissions
   const canViewNo = true;
@@ -53,6 +58,7 @@ export default function ContainerCard({
   const canViewTotalVolume = true;
   const canViewWarehouse = true;
   const canViewWarehouseArrival = true;
+  const canViewLoadingRate = true;
 
   return (
     <div className={ContainerCardWrapperStyle}>
@@ -75,6 +81,10 @@ export default function ContainerCard({
 
         <Label>
           <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
+        </Label>
+
+        <Label>
+          <FormattedMessage id="components.cards.loadingRate" defaultMessage="Loading %" />
         </Label>
       </div>
 
@@ -100,6 +110,43 @@ export default function ContainerCard({
 
         <Display blackout={!canViewTotalVolume}>
           {totalVolume && <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />}
+        </Display>
+
+        <Display blackout={!canViewLoadingRate}>
+          <Tooltip
+            message={
+              maxVolumeValue ? (
+                <>
+                  <FormattedMessage
+                    id="module.container.loadingRateCalculation"
+                    defaultMessage="(Total Volume / Max Volume) * 100%"
+                  />
+                  <Divider />
+                  <FormattedMessage
+                    id="module.container.loadingRateCalculationValues"
+                    defaultMessage="({totalVolume}m³ / {maxVolume}m³) * 100%"
+                    values={{
+                      totalVolume: totalVolume.value,
+                      maxVolume: maxVolumeValue,
+                    }}
+                  />
+                </>
+              ) : (
+                <FormattedMessage
+                  id="module.container.loadingRateTooltip"
+                  defaultMessage="Please choose a Container Type in order to calculate this value"
+                />
+              )
+            }
+          >
+            <span>
+              {maxVolumeValue ? (
+                <FormattedNumber value={(totalVolume.value / maxVolumeValue) * 100} suffix="%" />
+              ) : (
+                <FormattedMessage id="components.cards.na" />
+              )}
+            </span>
+          </Tooltip>
         </Display>
       </div>
 

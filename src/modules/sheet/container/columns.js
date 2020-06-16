@@ -45,6 +45,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Select,
   },
   {
+    key: 'container.maxVolume',
+    title: <FormattedMessage {...containerMessages.maxVolume} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'container.containerOption',
     title: <FormattedMessage {...containerMessages.containerOption} />,
     icon: 'CONTAINER',
@@ -188,6 +195,13 @@ const columns: Array<ColumnConfig> = [
   {
     key: 'container.totalVolume',
     title: <FormattedMessage {...containerMessages.totalVolume} />,
+    icon: 'CONTAINER',
+    color: colors.CONTAINER,
+    width: ColumnWidths.Default,
+  },
+  {
+    key: 'container.loadingRate',
+    title: <FormattedMessage {...containerMessages.loadingRate} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
     width: ColumnWidths.Default,

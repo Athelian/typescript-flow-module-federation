@@ -140,6 +140,7 @@ const containerEntityCardFragment = gql`
     }
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate
+    containerType
     ownedBy {
       ...ownedByFragment
     }

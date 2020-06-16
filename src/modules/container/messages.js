@@ -134,4 +134,12 @@ export default defineMessages({
     id: 'modules.container.freeTimeOverdue',
     defaultMessage: 'Free time overdue',
   },
+  maxVolume: {
+    id: 'modules.container.maxVolume',
+    defaultMessage: 'Max Volume',
+  },
+  loadingRate: {
+    id: 'modules.container.loadingRate',
+    defaultMessage: 'Loading Rate',
+  },
 });
