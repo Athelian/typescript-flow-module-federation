@@ -14,11 +14,13 @@ import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import RelateEntity from 'components/RelateEntity';
 import { Label, Display } from 'components/Form';
-import { FullValueTooltip } from 'components/Tooltip';
+import { FullValueTooltip, Tooltip } from 'components/Tooltip';
+import Divider from 'components/Divider';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { calculateDueDate } from 'utils/date';
 import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
 import { CONTAINER_TYPE_MAP } from 'modules/container/constants';
+import { getMaxVolume } from 'utils/container';
 import BaseCard from '../BaseCard';
 import {
   CardWrapperStyle,
@@ -97,6 +99,8 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
     container
   );
 
+  const maxVolumeValue = getMaxVolume(containerType);
+
   return (
     <BaseCard
       icon="CONTAINER"
@@ -140,6 +144,51 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
               {totalVolume && (
                 <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
               )}
+            </Display>
+          </div>
+
+          <div className={LabelInputStyle}>
+            <Label>
+              <FormattedMessage id="components.cards.loadingRate" defaultMessage="Loading %" />
+            </Label>
+            <Display>
+              <Tooltip
+                message={
+                  maxVolumeValue ? (
+                    <>
+                      <FormattedMessage
+                        id="module.container.loadingRateCalculation"
+                        defaultMessage="(Total Volume / Max Volume) * 100%"
+                      />
+                      <Divider />
+                      <FormattedMessage
+                        id="module.container.loadingRateCalculationValues"
+                        defaultMessage="({totalVolume}m³ / {maxVolume}m³) * 100%"
+                        values={{
+                          totalVolume: totalVolume.value,
+                          maxVolume: maxVolumeValue,
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <FormattedMessage
+                      id="module.container.loadingRateTooltip"
+                      defaultMessage="Please choose a Container Type in order to calculate this value"
+                    />
+                  )
+                }
+              >
+                <span>
+                  {maxVolumeValue ? (
+                    <FormattedNumber
+                      value={(totalVolume.value / maxVolumeValue) * 100}
+                      suffix="%"
+                    />
+                  ) : (
+                    <FormattedMessage id="components.cards.na" />
+                  )}
+                </span>
+              </Tooltip>
             </Display>
           </div>
 
@@ -261,7 +310,7 @@ ContainerCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ContainerCard, 'container', {
   width: '195px',
-  height: '448px',
+  height: '473px',
   entityIcon: 'CONTAINER',
   entityColor: 'CONTAINER',
 });

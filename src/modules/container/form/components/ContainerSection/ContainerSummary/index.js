@@ -120,12 +120,12 @@ export default function ContainerSummary() {
                           <>
                             <FormattedMessage
                               id="module.container.loadingRateCalculation"
-                              defaultMessage="Total Volume / Max Volume"
+                              defaultMessage="(Total Volume / Max Volume) * 100%"
                             />
                             <Divider />
                             <FormattedMessage
                               id="module.container.loadingRateCalculationValues"
-                              defaultMessage="{totalVolume}m³ / {maxVolume}m³"
+                              defaultMessage="({totalVolume}m³ / {maxVolume}m³) * 100%"
                               values={{
                                 totalVolume: totalVolume.value,
                                 maxVolume: maxVolumeValue,
@@ -142,7 +142,10 @@ export default function ContainerSummary() {
                     >
                       <span>
                         {maxVolumeValue ? (
-                          <FormattedNumber value={totalVolume.value / maxVolumeValue} suffix="m³" />
+                          <FormattedNumber
+                            value={(totalVolume.value / maxVolumeValue) * 100}
+                            suffix="%"
+                          />
                         ) : (
                           <FormattedMessage id="components.cards.na" />
                         )}
