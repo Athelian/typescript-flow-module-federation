@@ -6,6 +6,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { isNullOrUndefined, getByPathWithDefault, getByPath } from 'utils/fp';
 import FormattedDate from 'components/FormattedDate';
+import FormattedNumber from 'components/FormattedNumber';
 import { Tooltip } from 'components/Tooltip';
 import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import {
@@ -239,7 +240,7 @@ const ContainerSection = ({ container }: Props) => {
                       input={
                         <Display>
                           {maxVolumeValue ? (
-                            `${maxVolumeValue} m³`
+                            <FormattedNumber value={maxVolumeValue} suffix="m³" />
                           ) : (
                             <Tooltip
                               message={
