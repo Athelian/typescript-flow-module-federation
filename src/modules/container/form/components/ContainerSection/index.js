@@ -6,6 +6,8 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { isNullOrUndefined, getByPathWithDefault, getByPath } from 'utils/fp';
 import FormattedDate from 'components/FormattedDate';
+import FormattedNumber from 'components/FormattedNumber';
+import { Tooltip } from 'components/Tooltip';
 import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import {
   CONTAINER_UPDATE,
@@ -59,6 +61,7 @@ import { TAG_LIST } from 'modules/permission/constants/tag';
 import { getLatestDate } from 'utils/shipment';
 import { startOfToday, differenceInCalendarDays, calculateDueDate } from 'utils/date';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
+import { getMaxVolume } from 'utils/container';
 import ContainerSummary from './ContainerSummary';
 import {
   ContainerSectionWrapperStyle,
@@ -170,6 +173,8 @@ const ContainerSection = ({ container }: Props) => {
               !isNullOrUndefined(values.departureDateApprovedAt)
             );
 
+            const maxVolumeValue = getMaxVolume(values.containerType);
+
             return (
               <>
                 <div className={MainFieldsWrapperStyle}>
@@ -222,6 +227,37 @@ const ContainerSection = ({ container }: Props) => {
                         />
                       )}
                     </FormField>
+
+                    <FieldItem
+                      label={
+                        <Label>
+                          <FormattedMessage
+                            id="module.container.maxVolume"
+                            defaultMessage="Max Volume"
+                          />
+                        </Label>
+                      }
+                      input={
+                        <Display>
+                          {maxVolumeValue ? (
+                            <FormattedNumber value={maxVolumeValue} suffix="m³" />
+                          ) : (
+                            <Tooltip
+                              message={
+                                <FormattedMessage
+                                  id="module.container.maxVolumeTooltip"
+                                  defaultMessage="Please choose a Container Type to automatically get the appropriate Max Volume"
+                                />
+                              }
+                            >
+                              <span>
+                                <FormattedMessage id="components.cards.na" />
+                              </span>
+                            </Tooltip>
+                          )}
+                        </Display>
+                      }
+                    />
 
                     <FormField
                       name="containerOption"

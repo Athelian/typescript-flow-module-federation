@@ -13,7 +13,9 @@ import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
 import { Tooltip } from 'components/Tooltip';
+import Divider from 'components/Divider';
 import { isNullOrUndefined } from 'utils/fp';
+import { getMaxVolume } from 'utils/container';
 import { findSummary } from './helper';
 
 export default function ContainerSummary() {
@@ -31,6 +33,9 @@ export default function ContainerSummary() {
           totalWeight,
           totalPrice,
         } = findSummary(values);
+
+        const maxVolumeValue = getMaxVolume(values.containerType);
+
         return (
           <>
             <GridColumn>
@@ -95,6 +100,54 @@ export default function ContainerSummary() {
                     {totalVolume && (
                       <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
                     )}
+                  </Display>
+                }
+              />
+              <FieldItem
+                label={
+                  <Label>
+                    <FormattedMessage
+                      id="modules.container.loadingRate"
+                      defaultMessage="Loading Rate"
+                    />
+                  </Label>
+                }
+                input={
+                  <Display>
+                    <Tooltip
+                      message={
+                        maxVolumeValue ? (
+                          <>
+                            <FormattedMessage
+                              id="module.container.loadingRateCalculation"
+                              defaultMessage="Total Volume / Max Volume"
+                            />
+                            <Divider />
+                            <FormattedMessage
+                              id="module.container.loadingRateCalculationValues"
+                              defaultMessage="{totalVolume}m³ / {maxVolume}m³"
+                              values={{
+                                totalVolume: totalVolume.value,
+                                maxVolume: maxVolumeValue,
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <FormattedMessage
+                            id="module.container.loadingRateTooltip"
+                            defaultMessage="Please choose a Container Type in order to calculate this value"
+                          />
+                        )
+                      }
+                    >
+                      <span>
+                        {maxVolumeValue ? (
+                          <FormattedNumber value={totalVolume.value / maxVolumeValue} suffix="m³" />
+                        ) : (
+                          <FormattedMessage id="components.cards.na" />
+                        )}
+                      </span>
+                    </Tooltip>
                   </Display>
                 }
               />
