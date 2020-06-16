@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import type { Container } from 'generated/graphql';
 import { useMutation } from '@apollo/react-hooks';
 import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import { generateContainer } from 'utils/container';
@@ -11,7 +10,7 @@ import ActionDialog, { ContainerLabelIcon } from 'components/Dialog/ActionDialog
 import { createContainerMutation } from './mutation';
 
 type Props = {|
-  onSuccess: (string, Container) => void,
+  onSuccess: (shipmentId: string) => void,
 |};
 
 export default function InlineCreateContainer({ onSuccess }: Props) {
@@ -23,7 +22,7 @@ export default function InlineCreateContainer({ onSuccess }: Props) {
     type,
     detail: { entity },
   } = state.containerActions;
-  const [createContainer, { loading }] = useMutation(createContainerMutation);
+  const [createContainer, containerResult] = useMutation(createContainerMutation);
   const shipmentId = entity.id;
   const isContainerCreation = type === 'createContainer';
   const shipment = mapping.entities?.shipments?.[shipmentId];
@@ -51,7 +50,7 @@ export default function InlineCreateContainer({ onSuccess }: Props) {
   };
 
   React.useEffect(() => {
-    if (isOpen && shipmentId && isContainerCreation && !isProcessing && !loading) {
+    if (isOpen && isContainerCreation && !isProcessing && !containerResult.loading) {
       dispatch({
         type: 'CREATE_CONTAINER_START',
         payload: {},
@@ -60,41 +59,48 @@ export default function InlineCreateContainer({ onSuccess }: Props) {
         variables: {
           input,
         },
-      })
-        .then(containerResult => {
-          dispatch({
-            type: 'CREATE_CONTAINER_END',
-            payload: {
-              container: containerResult.data?.containerCreate ?? {},
-            },
-          });
-          onSuccess(
-            // $FlowFixMe Flow typed is not updated yet
-            containerResult.data?.containerCreate?.shipment?.id,
-            containerResult.data?.containerCreate
-          );
-          onSetBadges([
-            { entity: 'container', id: containerResult.data?.containerCreate?.id, type: 'newItem' },
-          ]);
-        })
-        .catch(() => {
-          dispatch({
-            type: 'CREATE_CONTAINER_END',
-            payload: {},
-          });
-        });
+      });
     }
   }, [
     createContainer,
     dispatch,
-    loading,
+    containerResult,
     input,
+    isContainerCreation,
+    isOpen,
+    isProcessing,
+  ]);
+
+  React.useEffect(() => {
+    if (isProcessing && isOpen && isContainerCreation) {
+      if (containerResult.data) {
+        dispatch({
+          type: 'CREATE_CONTAINER_END',
+          payload: {
+            container: containerResult.data?.containerCreate ?? {},
+          },
+        });
+        onSuccess(containerResult.data?.containerCreate?.shipment?.id);
+        onSetBadges([
+          { entity: 'container', id: containerResult.data?.containerCreate?.id, type: 'newItem' },
+        ]);
+      } else if (containerResult.error) {
+        dispatch({
+          type: 'CREATE_CONTAINER_END',
+          payload: {
+            error: containerResult.error,
+          },
+        });
+      }
+    }
+  }, [
+    dispatch,
+    containerResult,
     isContainerCreation,
     isOpen,
     isProcessing,
     onSetBadges,
     onSuccess,
-    shipmentId,
   ]);
 
   return (

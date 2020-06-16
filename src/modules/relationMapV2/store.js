@@ -1273,6 +1273,13 @@ function orderReducer(
             },
           },
         },
+        ...(action.payload.container?.id
+          ? {
+              newContainerIDs: {
+                $set: [action.payload.container.id, ...state.newContainerIDs],
+              },
+            }
+          : {}),
       });
     }
     case 'MOVE_BATCH_CLOSE':
