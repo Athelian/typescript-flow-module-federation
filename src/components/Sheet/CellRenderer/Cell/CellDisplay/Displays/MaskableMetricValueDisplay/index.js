@@ -14,14 +14,14 @@ import messages from 'components/Sheet/messages';
 const MaskableMetricValueDisplay = ({
   value,
   extra,
-}: DisplayProps<MetricValue | null, { message: React.Node }>) =>
+}: DisplayProps<MetricValue | null, { tooltipMessage: React.Node, displayMessage?: React.Node }>) =>
   value ? (
     <MetricValueDisplay value={value} entity={null} extra={null} />
   ) : (
     <div className={CellDisplayWrapperStyle}>
-      <Tooltip message={extra.message}>
+      <Tooltip message={extra.tooltipMessage}>
         <span className={DisplayContentStyle}>
-          {extra.display || <FormattedMessage {...messages.invalidMetricValue} />}
+          {extra.displayMessage || <FormattedMessage {...messages.invalidMetricValue} />}
         </span>
       </Tooltip>
     </div>

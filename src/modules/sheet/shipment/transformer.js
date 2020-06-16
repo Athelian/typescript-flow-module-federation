@@ -382,7 +382,7 @@ export default function transformSheetShipment({
       columnKey: 'shipment.totalPrice',
       type: 'maskable_metric_value',
       extra: {
-        message: (
+        tooltipMessage: (
           <FormattedMessage
             id="modules.Shipments.totalPriceInvalidMessage"
             defaultMessage="Cannot compute this field because this Shipment contains Cargo with different Currencies"

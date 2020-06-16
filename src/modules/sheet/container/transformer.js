@@ -132,12 +132,12 @@ export default function transformSheetContainer({
       columnKey: 'container.maxVolume',
       type: 'maskable_metric_value',
       extra: {
-        message: <FormattedMessage id="module.container.maxVolumeTooltip" />,
-        display: <FormattedMessage id="components.cards.na" />,
+        tooltipMessage: <FormattedMessage id="module.container.maxVolumeTooltip" />,
+        displayMessage: <FormattedMessage id="components.cards.na" />,
       },
       ...transformComputedField(basePath, container, 'maxVolume', root => {
         const currentContainer = getContainerFromRoot(root);
-        const maxVolumeValue = getMaxVolume(currentContainer.containerType);
+        const maxVolumeValue = getMaxVolume(currentContainer?.containerType);
 
         if (maxVolumeValue) {
           return {
@@ -328,7 +328,7 @@ export default function transformSheetContainer({
       columnKey: 'container.totalPrice',
       type: 'maskable_metric_value',
       extra: {
-        message: (
+        tooltipMessage: (
           <FormattedMessage
             id="modules.container.totalPriceUnavailable"
             defaultMessage="Cannot calculate due to mixed currencies"
