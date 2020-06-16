@@ -447,6 +447,27 @@ export default function transformSheetContainer({
       }),
     },
     {
+      columnKey: 'container.loadingRate',
+      type: 'maskable_metric_value',
+      extra: {
+        tooltipMessage: <FormattedMessage id="module.container.loadingRateTooltip" />,
+        displayMessage: <FormattedMessage id="components.cards.na" />,
+      },
+      ...transformComputedField(basePath, container, 'loadingRate', root => {
+        const currentContainer = getContainerFromRoot(root);
+        const maxVolumeValue = getMaxVolume(currentContainer?.containerType);
+
+        if (maxVolumeValue) {
+          return {
+            value: (currentContainer?.totalVolume?.value ?? 0 / maxVolumeValue) * 100,
+            metric: '%',
+          };
+        }
+
+        return null;
+      }),
+    },
+    {
       columnKey: 'container.logs',
       type: 'container_logs',
       ...transformValueField(basePath, container, 'id', () => true),
