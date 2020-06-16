@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import type { Container } from 'generated/graphql';
 import { useMutation } from '@apollo/react-hooks';
 import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import { generateContainer } from 'utils/container';
@@ -11,7 +10,7 @@ import ActionDialog, { ContainerLabelIcon } from 'components/Dialog/ActionDialog
 import { createContainerMutation } from './mutation';
 
 type Props = {|
-  onSuccess: (string, Container) => void,
+  onSuccess: (shipmentId: string) => void,
 |};
 
 export default function InlineCreateContainer({ onSuccess }: Props) {
@@ -68,11 +67,7 @@ export default function InlineCreateContainer({ onSuccess }: Props) {
               container: containerResult.data?.containerCreate ?? {},
             },
           });
-          onSuccess(
-            // $FlowFixMe Flow typed is not updated yet
-            containerResult.data?.containerCreate?.shipment?.id,
-            containerResult.data?.containerCreate
-          );
+          onSuccess(containerResult.data?.containerCreate?.shipment?.id);
           onSetBadges([
             { entity: 'container', id: containerResult.data?.containerCreate?.id, type: 'newItem' },
           ]);

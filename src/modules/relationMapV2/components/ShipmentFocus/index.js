@@ -467,30 +467,21 @@ export default function ShipmentFocus() {
                     }}
                   />
                   <InlineCreateContainer
-                    onSuccess={(shipmentId, container) => {
+                    onSuccess={shipmentId => {
                       if (shipmentId) {
                         queryShipmentsDetail([shipmentId]);
-                        const node = document.querySelector(`#${CONTAINER}-${container?.id}`);
-                        if (node) {
-                          // on UI, found the DOM, then try to scroll the center position
-                          scrollIntoView(node, {
-                            behavior: 'smooth',
-                            scrollMode: 'if-needed',
-                          });
-                        } else {
-                          // TODO: scroll to the position
-                          window.requestIdleCallback(
-                            () => {
-                              dispatch({
-                                type: 'CREATE_CONTAINER_CLOSE',
-                                payload: {},
-                              });
-                            },
-                            {
-                              timeout: 250,
-                            }
-                          );
-                        }
+
+                        window.requestIdleCallback(
+                          () => {
+                            dispatch({
+                              type: 'CREATE_CONTAINER_CLOSE',
+                              payload: {},
+                            });
+                          },
+                          {
+                            timeout: 250,
+                          }
+                        );
                       }
                     }}
                   />
