@@ -1,18 +1,18 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 // @flow
 import * as React from 'react';
+import { HuePicker } from 'react-color';
 import Downshift from 'downshift';
-import randomcolor from 'randomcolor';
-import { colors } from 'styles/common';
+import Icon from 'components/Icon';
+import ColorPicker from './ColorPicker';
 import {
   WrapperStyle,
   ColorPreviewStyle,
-  DropdownWrapper,
-  RandomizeButtonStyle,
+  DropdownWrapperStyle,
+  ColorPickerWrapperStyle,
   ColorPresetsWrapperStyle,
   PresetStyle,
-} from 'components/Form/ColorInput/style';
-import Icon from 'components/Icon';
+} from './style';
 
 type Props = {|
   onChange: Object => void,
@@ -28,13 +28,27 @@ const defaultProps = {
 };
 
 const COLOR_PRESETS = [
-  colors.TEAL,
-  colors.BLUE,
-  colors.GRAY_DARK,
-  colors.RED,
-  colors.ORANGE,
-  colors.YELLOW,
-  colors.PURPLE,
+  '#FFFFFF',
+  '#808080',
+  '#000000',
+  '#F44E3B',
+  '#D33115',
+  '#9F0500',
+  '#FE9200',
+  '#E27300',
+  '#C45100',
+  '#FCDC00',
+  '#FCC400',
+  '#FB9E00',
+  '#A4DD00',
+  '#68BC00',
+  '#194D33',
+  '#73D8FF',
+  '#009CE0',
+  '#0062B1',
+  '#AEA1FF',
+  '#7B64FF',
+  '#653294',
 ];
 
 class ColorInput extends React.Component<Props> {
@@ -78,17 +92,8 @@ class ColorInput extends React.Component<Props> {
               <Icon icon="COLOR" />
             </button>
             {isOpen && (
-              <div className={DropdownWrapper}>
+              <div className={DropdownWrapperStyle}>
                 <div className={ColorPresetsWrapperStyle}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      this.handleChange(randomcolor());
-                    }}
-                    className={RandomizeButtonStyle}
-                  >
-                    <Icon icon="SYNC" />
-                  </button>
                   {COLOR_PRESETS.map(color => (
                     <button
                       type="button"
@@ -100,6 +105,16 @@ class ColorInput extends React.Component<Props> {
                     />
                   ))}
                 </div>
+
+                <div className={ColorPickerWrapperStyle}>
+                  <ColorPicker color={value} onChange={color => this.handleChange(color.hex)} />
+                </div>
+
+                <HuePicker
+                  color={value}
+                  onChange={color => this.handleChange(color.hex)}
+                  width="200px"
+                />
               </div>
             )}
           </div>
