@@ -44,6 +44,7 @@ import {
   parseApprovalField,
   parseDefaultIndexField,
   parseCustomFieldsField,
+  parseDatetimeField,
 } from 'utils/data';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 
@@ -125,7 +126,7 @@ export const prepareParsedContainerInput = ({
       getByPathWithDefault(null, 'containerOption', originalValues),
       newValues.containerOption
     ),
-    ...parseDateField(
+    ...parseDatetimeField(
       'warehouseArrivalAgreedDate',
       getByPathWithDefault(null, 'warehouseArrivalAgreedDate', originalValues),
       newValues.warehouseArrivalAgreedDate
@@ -149,7 +150,7 @@ export const prepareParsedContainerInput = ({
         approvedAt: newValues.warehouseArrivalAgreedDateApprovedAt,
       }
     ),
-    ...parseDateField(
+    ...parseDatetimeField(
       'warehouseArrivalActualDate',
       getByPathWithDefault(null, 'warehouseArrivalActualDate', originalValues),
       newValues.warehouseArrivalActualDate

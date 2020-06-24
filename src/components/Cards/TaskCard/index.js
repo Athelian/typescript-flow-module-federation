@@ -5,7 +5,7 @@ import { ObjectValue } from 'react-values';
 import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
 import { getParentInfo } from 'utils/task';
-import { formatToGraphql, startOfToday, isBefore } from 'utils/date';
+import { formatDateToGraphql, startOfToday, isBefore } from 'utils/date';
 import { isNotFound, isForbidden } from 'utils/data';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
@@ -471,7 +471,7 @@ const TaskCard = ({
                                           saveOnBlur({
                                             ...task,
                                             approvedBy: user,
-                                            approvedAt: formatToGraphql(startOfToday()),
+                                            approvedAt: formatDateToGraphql(startOfToday()),
                                             rejectedBy: null,
                                             rejectedAt: null,
                                           })
@@ -482,7 +482,7 @@ const TaskCard = ({
                                             approvedBy: null,
                                             approvedAt: null,
                                             rejectedBy: user,
-                                            rejectedAt: formatToGraphql(startOfToday()),
+                                            rejectedAt: formatDateToGraphql(startOfToday()),
                                           })
                                         }
                                       />
