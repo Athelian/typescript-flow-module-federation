@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { getByPath } from 'utils/fp';
-import { formatToGraphql } from 'utils/date';
+import { formatDateToGraphql } from 'utils/date';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
@@ -173,12 +173,12 @@ const TaskStatusInput = ({ task, update, editable: editableFromProps, width, sho
                   const newTask = { ...task };
                   switch (status) {
                     case 'unCompleted': {
-                      newTask.inProgressAt = formatToGraphql(new Date());
+                      newTask.inProgressAt = formatDateToGraphql(new Date());
                       newTask.inProgressBy = user;
                       break;
                     }
                     case 'inProgress': {
-                      newTask.completedAt = formatToGraphql(new Date());
+                      newTask.completedAt = formatDateToGraphql(new Date());
                       newTask.completedBy = user;
                       break;
                     }
@@ -219,7 +219,7 @@ const TaskStatusInput = ({ task, update, editable: editableFromProps, width, sho
                     newTask.inProgressAt = null;
                     newTask.inProgressBy = null;
                   }
-                  newTask.skippedAt = formatToGraphql(new Date());
+                  newTask.skippedAt = formatDateToGraphql(new Date());
                   newTask.skippedBy = user;
                   update(newTask);
                 }}

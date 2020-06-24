@@ -1,6 +1,7 @@
 // @flow
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 import { extractForbiddenId } from 'utils/data';
+import { formatDatetimeForMutation } from 'utils/date';
 
 export default function normalizeSheetContainerInput(
   container: Object,
@@ -10,6 +11,9 @@ export default function normalizeSheetContainerInput(
   switch (field) {
     case 'warehouseArrivalAgreedDate':
     case 'warehouseArrivalActualDate':
+      return {
+        [(field: string)]: newValue ? formatDatetimeForMutation(newValue) : null,
+      };
     case 'departureDate':
       return {
         [(field: string)]: newValue ? new Date(newValue) : null,

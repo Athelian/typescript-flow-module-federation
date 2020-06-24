@@ -36,21 +36,34 @@ export const isValidDate = (date: Date | string): boolean => !!date && isValid(n
 export const formatToDateInput = (date: string): string =>
   isValid(new Date(date)) ? format(new Date(date), 'yyyy-MM-dd') : '';
 
-export const formatToDateTimeInput = (time: string): string =>
-  isValid(new Date(time))
+export const formatToDateTimeInput = (date: string): string =>
+  isValid(new Date(date))
     ? format(
         new Date(
-          parseInt(time.substring(0, 4), 10),
-          parseInt(time.substring(5, 7), 10) - 1,
-          parseInt(time.substring(8, 10), 10),
-          parseInt(time.substring(11, 13), 10),
-          parseInt(time.substring(14, 16), 10)
+          parseInt(date.substring(0, 4), 10),
+          parseInt(date.substring(5, 7), 10) - 1,
+          parseInt(date.substring(8, 10), 10),
+          parseInt(date.substring(11, 13), 10),
+          parseInt(date.substring(14, 16), 10)
         ),
         "yyyy-MM-dd'T'HH:mm"
       )
     : '';
 
-export const formatToGraphql = (date: Date): string => format(date, "yyyy-MM-dd'T'HH:mm:ssxxx");
+export const formatDatetimeForMutation = (date: string): string => {
+  return format(
+    new Date(
+      parseInt(date.substring(0, 4), 10),
+      parseInt(date.substring(5, 7), 10) - 1,
+      parseInt(date.substring(8, 10), 10),
+      parseInt(date.substring(11, 13), 10),
+      parseInt(date.substring(14, 16), 10)
+    ),
+    "yyyy-MM-dd'T'HH:mm:'00Z'"
+  );
+};
+
+export const formatDateToGraphql = (date: Date): string => format(date, "yyyy-MM-dd'T'HH:mm:ssxxx");
 
 export const formatToDateLabel = (date: string): string => format(new Date(date), 'dd/MM/yyyy');
 // We need to convert to UTC timezone for backend

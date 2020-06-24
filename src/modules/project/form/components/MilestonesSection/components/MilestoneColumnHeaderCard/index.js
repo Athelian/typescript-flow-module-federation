@@ -5,7 +5,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue, NumberValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
-import { formatToGraphql, startOfToday, differenceInCalendarDays } from 'utils/date';
+import { formatDateToGraphql, startOfToday, differenceInCalendarDays } from 'utils/date';
 import { isEquals } from 'utils/fp';
 import { calculateBindingDate } from 'utils/project';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -466,7 +466,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               completedMilestone({
                                 id: milestoneId,
                                 completedBy: user,
-                                completedAt: formatToGraphql(startOfToday()),
+                                completedAt: formatDateToGraphql(startOfToday()),
                                 action: 'leaveUnChange',
                               });
                             }
@@ -500,7 +500,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             completedMilestone({
                               id: milestoneId,
                               completedBy: user,
-                              completedAt: formatToGraphql(startOfToday()),
+                              completedAt: formatDateToGraphql(startOfToday()),
                               action: 'setToSkip',
                             });
                           }}
@@ -509,7 +509,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             completedMilestone({
                               id: milestoneId,
                               completedBy: user,
-                              completedAt: formatToGraphql(startOfToday()),
+                              completedAt: formatDateToGraphql(startOfToday()),
                               action: 'setToComplete',
                             });
                           }}
@@ -519,7 +519,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             completedMilestone({
                               id: milestoneId,
                               completedBy: user,
-                              completedAt: formatToGraphql(startOfToday()),
+                              completedAt: formatDateToGraphql(startOfToday()),
                               action: 'leaveUnChange',
                             });
                           }}
