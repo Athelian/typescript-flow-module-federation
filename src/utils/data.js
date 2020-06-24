@@ -108,7 +108,7 @@ export const parseEnumField = (key: string, originalEnum: ?string, newEnum: ?str
 };
 
 // Use for Date fields. Need to parse into Date object.
-export const parseDateField = (key: string, originalDate: ?Date, newDate: ?string): Object => {
+export const parseDateField = (key: string, originalDate: ?string, newDate: ?string): Object => {
   const parsedOriginalDate = originalDate ? new Date(originalDate) : null;
   const parsedNewDate = newDate ? new Date(newDate) : null;
 
@@ -117,7 +117,11 @@ export const parseDateField = (key: string, originalDate: ?Date, newDate: ?strin
 };
 
 // Use for Datetime fields. Need to parse into Date object.
-export const parseDatetimeField = (key: string, originalDate: ?Date, newDate: ?string): Object => {
+export const parseDatetimeField = (
+  key: string,
+  originalDate: ?string,
+  newDate: ?string
+): Object => {
   const parsedOriginalDate = originalDate ? formatDatetimeForMutation(originalDate) : null;
   const parsedNewDate = newDate ? formatDatetimeForMutation(newDate) : null;
 
