@@ -492,6 +492,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                             shippedQuantity={values.totalShipped}
                             totalItems={values.orderItemCount}
                             totalBatches={values.batchCount}
+                            totalVolume={values.totalVolume}
                           />
                         )}
                       </div>
