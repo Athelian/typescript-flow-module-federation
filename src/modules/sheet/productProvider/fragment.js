@@ -12,6 +12,10 @@ export const sheetProductProviderFragment = gql`
       value: amount
       metric: currency
     }
+    files {
+      ...documentFragment
+      ...forbiddenFragment
+    }
   }
 `;
 

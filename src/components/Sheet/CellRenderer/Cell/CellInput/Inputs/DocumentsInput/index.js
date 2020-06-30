@@ -11,6 +11,7 @@ import {
 } from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
 import orderMessages from 'modules/order/messages';
 import shipmentMessages from 'modules/shipment/messages';
+import productProviderMessages from 'modules/productProvider/messages';
 import DocumentsInputDialog from './DocumentsInputDialog';
 import { DocumentsInputWrapperStyle, DocumentIconStyle } from './style';
 
@@ -59,6 +60,12 @@ const DocumentsInputImpl = ({
       ShipmentWarehouseInspectionReport: intl.formatMessage(
         shipmentMessages.warehouseInspectionReport
       ),
+      Document: intl.formatMessage(orderMessages.fileTypeDocument),
+    },
+    ProductProvider: {
+      ProductSpec: intl.formatMessage(productProviderMessages.productSpec),
+      ProductAnalysisCert: intl.formatMessage(productProviderMessages.productAnalysisCert),
+      ProductOriginCert: intl.formatMessage(productProviderMessages.productOriginCert),
       Document: intl.formatMessage(orderMessages.fileTypeDocument),
     },
   };
@@ -148,5 +155,6 @@ export default {
   Order: DocumentsInput('Order'),
   OrderItem: DocumentsInput('OrderItem'),
   Shipment: DocumentsInput('Shipment'),
+  ProductProvider: DocumentsInput('ProductProvider'),
   Milestone: DocumentsInput('Milestone'),
 };
