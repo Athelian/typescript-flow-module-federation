@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, presets, borderRadiuses, layout } from 'styles/common';
+import { colors, presets, borderRadiuses, layout, fontSizes } from 'styles/common';
 
 export const PartnerSelectorInputWrapperStyle: string = css`
   padding: 5px;
@@ -20,6 +20,15 @@ export const PartnerCardStyle: string = css`
   :focus {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
+`;
+
+export const PartnerCodeStyle: string = css`
+  ${fontSizes.SMALL};
+  line-height: 20px;
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  padding: 0 5px;
+  flex: 1;
 `;
 
 export const PlusButtonStyle: string = css`
