@@ -14,4 +14,19 @@ export default defineMessages({
     id: 'modules.ProductProviders.unitPrice',
     defaultMessage: 'UNIT PRICE',
   },
+  documents: {
+    id: 'modules.Products.sectionDocuments',
+  },
+  productSpec: {
+    id: 'modules.provider.fileType.productSpec',
+    defaultMessage: 'Product Specification',
+  },
+  productAnalysisCert: {
+    id: 'modules.provider.fileType.productAnalysisCert',
+    defaultMessage: 'Product Analysis Certificate',
+  },
+  productOriginCert: {
+    id: 'modules.provider.fileType.productOriginCert',
+    defaultMessage: 'Product Origin Certificate',
+  },
 });
