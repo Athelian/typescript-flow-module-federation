@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { type MetricValue } from 'generated/graphql';
 import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
@@ -14,6 +15,7 @@ type Props = {
   totalPrice: number,
   totalItems: number,
   totalBatches: number,
+  totalVolume: MetricValue,
 };
 
 export default function OrderSummary({
@@ -24,6 +26,7 @@ export default function OrderSummary({
   totalPrice,
   totalItems,
   totalBatches,
+  totalVolume,
 }: Props) {
   return (
     <>
@@ -82,6 +85,18 @@ export default function OrderSummary({
           input={
             <Display>
               <FormattedNumber value={totalBatches} />
+            </Display>
+          }
+        />
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage id="modules.Orders.totalVolume" defaultMessage="Total Volume" />
+            </Label>
+          }
+          input={
+            <Display>
+              <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
             </Display>
           }
         />
