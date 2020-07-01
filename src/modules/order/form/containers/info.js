@@ -28,6 +28,10 @@ const initValues: Order = {
   batchCount: 0,
   batchShippedCount: 0,
   shipmentCount: 0,
+  totalVolume: {
+    value: 0,
+    metric: 'm³',
+  },
 };
 
 export default class OrderInfoContainer extends Container<Order> {

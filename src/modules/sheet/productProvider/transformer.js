@@ -5,6 +5,7 @@ import {
   PRODUCT_PROVIDER_SET_NAME,
   PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_SET_UNIT_PRICE,
+  PRODUCT_PROVIDER_SET_DOCUMENTS,
 } from 'modules/permission/constants/product';
 
 type Props = {|
@@ -47,6 +48,17 @@ export default function transformSheetProductProvider({
         'unitPrice',
         hasPermission =>
           hasPermission(PRODUCT_PROVIDER_UPDATE) || hasPermission(PRODUCT_PROVIDER_SET_UNIT_PRICE)
+      ),
+    },
+    {
+      columnKey: 'productProvider.files',
+      type: 'product_provider_documents',
+      ...transformValueField(
+        basePath,
+        productProvider,
+        'files',
+        hasPermission =>
+          hasPermission(PRODUCT_PROVIDER_UPDATE) || hasPermission(PRODUCT_PROVIDER_SET_DOCUMENTS)
       ),
     },
   ];

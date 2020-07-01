@@ -30,6 +30,13 @@ const columns: Array<ColumnConfig> = [
     color: colors.PRODUCT_PROVIDER,
     width: ColumnWidths.Default,
   },
+  {
+    key: 'productProvider.files',
+    title: <FormattedMessage {...messages.documents} />,
+    icon: 'PRODUCT_PROVIDER',
+    color: colors.PRODUCT_PROVIDER,
+    width: ColumnWidths.Default,
+  },
 ];
 
 const exportKeys = {

@@ -1,5 +1,5 @@
 // @flow
-import { getBatchLatestQuantity } from 'utils/batch';
+import { getBatchLatestQuantity, findVolume } from 'utils/batch';
 
 export const calculateBatchesFromOrder = ({
   batchCount,
@@ -22,6 +22,10 @@ export const getQuantityForOrderSummary = (orderItems: Array<Object>) => {
   let totalPrice = 0;
   let totalItems = 0;
   let totalBatches = 0;
+  const totalVolume = {
+    value: 0,
+    metric: 'm³',
+  };
 
   if (orderItems) {
     totalItems = orderItems.length;
@@ -36,8 +40,11 @@ export const getQuantityForOrderSummary = (orderItems: Array<Object>) => {
         totalBatches += item.batches.length;
         item.batches.forEach(batch => {
           const latestQuantity = getBatchLatestQuantity(batch);
+          const volumeValue = findVolume(batch);
 
           batchedQuantity += latestQuantity;
+          totalVolume.value += volumeValue;
+
           if (batch.shipment) {
             shippedQuantity += latestQuantity;
           }
@@ -53,5 +60,6 @@ export const getQuantityForOrderSummary = (orderItems: Array<Object>) => {
     totalPrice,
     totalItems,
     totalBatches,
+    totalVolume,
   };
 };

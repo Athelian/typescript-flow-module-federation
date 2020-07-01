@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { getBatchLatestQuantity } from 'utils/batch';
+import { convertVolume } from 'utils/metric';
 import type { FieldDefinition } from 'types';
 import type { CellAction, CellValue } from 'components/Sheet/SheetState/types';
 import {
@@ -289,6 +290,30 @@ export default function transformSheetOrder({
             0
           ),
           metric: root.currency,
+        };
+      }),
+    },
+    {
+      columnKey: 'order.totalVolume',
+      type: 'metric_value',
+      ...transformComputedField(basePath, order, 'totalVolume', root => {
+        const currentOrder = getOrderFromRoot(root);
+        return {
+          value: (currentOrder?.orderItems ?? []).reduce(
+            (totalVolumeValue, orderItem) =>
+              totalVolumeValue +
+              (orderItem?.batches ?? []).reduce((totalBatchVolumeValue, batch) => {
+                const packageVolume = batch?.packageVolume?.value ?? { value: 0, metric: 'm³' };
+                const packageQuantity = batch?.packageQuantity?.value ?? 0;
+
+                return (
+                  totalBatchVolumeValue +
+                  packageQuantity * convertVolume(packageVolume.value, packageVolume.metric, 'm³')
+                );
+              }, 0),
+            0
+          ),
+          metric: 'm³',
         };
       }),
     },

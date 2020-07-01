@@ -18,6 +18,34 @@ export default function normalizeSheetProductProviderInput(
           currency: newValue.metric,
         },
       };
+    case 'files':
+      return {
+        files: newValue.map(
+          ({
+            __typename,
+            entity: e,
+            ownedBy,
+            tags,
+            path,
+            uploading,
+            progress,
+            size,
+            isNew,
+            createdAt,
+            order,
+            orderItem,
+            shipment,
+            productProvider: pp,
+            milestone,
+            updatedAt,
+            updatedBy,
+            ...rest
+          }) => ({
+            ...rest,
+            tagIds: tags.map(tag => tag.id),
+          })
+        ),
+      };
     case 'mask':
       return {
         customFields: {

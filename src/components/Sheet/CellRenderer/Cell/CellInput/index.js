@@ -97,6 +97,7 @@ const inputs = {
   order_item_documents: DocumentsInput.OrderItem,
   shipment_documents: DocumentsInput.Shipment,
   milestone_documents: DocumentsInput.Milestone,
+  product_provider_documents: DocumentsInput.ProductProvider,
   // Tags
   product_tags: TagsInput.Product,
   order_tags: TagsInput.Order,

@@ -7,7 +7,12 @@ import Icon from 'components/Icon';
 import { Display } from 'components/Form';
 import CornerIcon from 'components/CornerIcon';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
-import { PartnerSelectorInputWrapperStyle, PartnerCardStyle, PlusButtonStyle } from './style';
+import {
+  PartnerSelectorInputWrapperStyle,
+  PartnerCardStyle,
+  PartnerCodeStyle,
+  PlusButtonStyle,
+} from './style';
 
 type ExtraProps = {|
   partnerTypes: Array<string>,
@@ -32,12 +37,15 @@ const PartnerSelectorInput = ({
     }
   };
 
+  const name = value?.partner?.name || value?.name || value?.organization?.name || '';
+  const code = value?.partner?.code || '';
+
   return (
     <div className={PartnerSelectorInputWrapperStyle} onBlur={handleBlur}>
       {value ? (
         <button disabled={readonly} type="button" onClick={forceFocus} className={PartnerCardStyle}>
-          <Display height="20px">{value.name}</Display>
-
+          <Display height="20px">{name}</Display>
+          <div className={PartnerCodeStyle}>{code}</div>
           <CornerIcon icon="PARTNER" color={colors.PARTNER} />
         </button>
       ) : (

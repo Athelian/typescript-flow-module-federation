@@ -151,6 +151,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Default,
   },
   {
+    key: 'order.totalVolume',
+    title: <FormattedMessage {...orderMessages.totalVolume} />,
+    icon: 'ORDER',
+    color: colors.ORDER,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'order.files',
     title: <FormattedMessage {...orderMessages.sectionDocuments} />,
     icon: 'ORDER',
