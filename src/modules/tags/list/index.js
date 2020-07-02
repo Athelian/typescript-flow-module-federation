@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Query } from 'react-apollo';
+import { useQuery } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import emitter from 'utils/emitter';
@@ -16,37 +16,37 @@ type Props = {
 };
 
 const TagList = ({ ...filtersAndSort }: Props) => {
+  const { loading, data, fetchMore, error, refetch: _refetch } = useQuery(tagsQuery, {
+    variables: {
+      page: 1,
+      ...filtersAndSort,
+    },
+    fetchPolicy: 'network-only',
+  });
+
+  const refetch = React.useCallback(() => {
+    setTimeout(() => _refetch(), 0);
+  }, [_refetch]);
+
+  if (error) {
+    return error.message;
+  }
+
+  const nextPage = getByPathWithDefault(1, `tags.page`, data) + 1;
+  const totalPage = getByPathWithDefault(1, `tags.totalPage`, data);
+  const hasMore = nextPage <= totalPage;
+
+  emitter.once('DELETE_TAG', () => {
+    refetch();
+  });
+
   return (
-    <Query
-      query={tagsQuery}
-      variables={{
-        page: 1,
-        ...filtersAndSort,
-      }}
-      fetchPolicy="network-only"
-    >
-      {({ loading, data, fetchMore, error, refetch }) => {
-        if (error) {
-          return error.message;
-        }
-        const nextPage = getByPathWithDefault(1, `tags.page`, data) + 1;
-        const totalPage = getByPathWithDefault(1, `tags.totalPage`, data);
-        const hasMore = nextPage <= totalPage;
-
-        emitter.once('DELETE_TAG', () => {
-          refetch();
-        });
-
-        return (
-          <TagGridView
-            items={getByPathWithDefault([], 'tags.nodes', data)}
-            onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'tags')}
-            hasMore={hasMore}
-            isLoading={loading}
-          />
-        );
-      }}
-    </Query>
+    <TagGridView
+      items={getByPathWithDefault([], 'tags.nodes', data)}
+      onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'tags')}
+      hasMore={hasMore}
+      isLoading={loading}
+    />
   );
 };
 
