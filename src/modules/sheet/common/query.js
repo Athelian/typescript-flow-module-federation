@@ -84,6 +84,7 @@ export const filesByIDsQuery = gql`
   ${documentFragment}
   ${tagFragment}
   ${ownedByFragment}
+  ${forbiddenFragment}
 `;
 
 export const maskByIDQuery = gql`
