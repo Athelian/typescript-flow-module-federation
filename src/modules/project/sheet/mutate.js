@@ -69,7 +69,29 @@ function normalizedInput(
         case 'files':
           return {
             files: value.map(
-              ({ __typename, entity: e, path, uploading, progress, size, ...rest }) => rest
+              ({
+                __typename,
+                entity: e,
+                ownedBy,
+                tags,
+                path,
+                uploading,
+                progress,
+                size,
+                isNew,
+                createdAt,
+                order: o,
+                orderItem,
+                shipment,
+                productProvider,
+                milestone,
+                updatedAt,
+                updatedBy,
+                ...rest
+              }) => ({
+                ...rest,
+                tagIds: tags.map(tag => tag.id),
+              })
             ),
           };
         default:
