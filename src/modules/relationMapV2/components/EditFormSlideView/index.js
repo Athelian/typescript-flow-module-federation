@@ -502,10 +502,20 @@ const EditFormSlideView = ({ onClose }: Props) => {
                 orderId: result.orderCreate.id,
               },
             });
-            onClose({
-              moveToTop: true,
-              id: result.orderCreate.id,
-              type: ORDER,
+            onClose(
+              {
+                moveToTop: true,
+                id: result.orderCreate.id,
+                type: ORDER,
+              },
+              true
+            );
+            dispatch({
+              type: 'EDIT',
+              payload: {
+                type: ORDER,
+                selectedId: result.orderCreate.id,
+              },
             });
           }}
           onCancel={onClose}
@@ -536,10 +546,20 @@ const EditFormSlideView = ({ onClose }: Props) => {
                 shipmentId: result.shipmentCreate.id,
               },
             });
-            onClose({
-              moveToTop: true,
-              id: result.shipmentCreate.id,
-              type: SHIPMENT,
+            onClose(
+              {
+                moveToTop: true,
+                id: result.shipmentCreate.id,
+                type: SHIPMENT,
+              },
+              true
+            );
+            dispatch({
+              type: 'EDIT',
+              payload: {
+                type: SHIPMENT,
+                selectedId: result.shipmentCreate.id,
+              },
             });
           }}
           onCancel={onClose}

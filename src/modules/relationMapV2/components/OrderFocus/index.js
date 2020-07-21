@@ -705,7 +705,7 @@ export default function OrderFocus() {
                     }}
                   />
                   <EditFormSlideView
-                    onClose={result => {
+                    onClose={(result, dontClose) => {
                       if (state.edit.type === ORDER) {
                         queryOrdersDetail([state.edit.selectedId]);
                       } else if (state.edit.orderId) {
@@ -721,13 +721,15 @@ export default function OrderFocus() {
                           type: result?.type ?? '',
                         });
                       }
-                      dispatch({
-                        type: 'EDIT',
-                        payload: {
-                          type: '',
-                          selectedId: '',
-                        },
-                      });
+                      if (!dontClose) {
+                        dispatch({
+                          type: 'EDIT',
+                          payload: {
+                            type: '',
+                            selectedId: '',
+                          },
+                        });
+                      }
                     }}
                   />
                   {orders.length > 0 ? (
