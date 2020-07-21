@@ -42,7 +42,7 @@ type Props = {|
       id: string,
       type: string,
     },
-    dontClose: boolean
+    dontClose?: boolean
   ) => void,
 |};
 
