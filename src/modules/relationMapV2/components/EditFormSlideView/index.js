@@ -41,7 +41,8 @@ type Props = {|
       moveToTop: boolean,
       id: string,
       type: string,
-    }
+    },
+    dontClose: boolean
   ) => void,
 |};
 
