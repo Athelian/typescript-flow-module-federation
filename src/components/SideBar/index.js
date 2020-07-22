@@ -60,13 +60,11 @@ const menu: Array<MenuConfig> = [
         label: <FormattedMessage {...messages.map} />,
         icon: 'MAP',
         path: 'map',
-        beta: true,
       },
       {
         label: <FormattedMessage {...messages.table} />,
         icon: 'TABLE',
         path: 'table',
-        beta: true,
       },
       {
         label: <FormattedMessage {...messages.cards} />,
@@ -98,7 +96,6 @@ const menu: Array<MenuConfig> = [
         label: <FormattedMessage {...messages.table} />,
         icon: 'TABLE',
         path: 'table',
-        beta: true,
       },
       {
         label: <FormattedMessage {...messages.cards} />,
@@ -117,13 +114,11 @@ const menu: Array<MenuConfig> = [
         label: <FormattedMessage {...messages.map} />,
         icon: 'MAP',
         path: 'map',
-        beta: true,
       },
       {
         label: <FormattedMessage {...messages.table} />,
         icon: 'TABLE',
         path: 'table',
-        beta: true,
       },
       {
         label: <FormattedMessage {...messages.cards} />,
@@ -168,7 +163,6 @@ const menu: Array<MenuConfig> = [
         label: <FormattedMessage {...messages.table} />,
         icon: 'TABLE',
         path: 'table',
-        beta: true,
         permitted: hasPermissions => hasPermissions(PROJECT_LIST),
       },
       {

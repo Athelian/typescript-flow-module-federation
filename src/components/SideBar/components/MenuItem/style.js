@@ -39,6 +39,7 @@ export const IconStyle: string = css`
   justify-content: center;
   flex-shrink: 0;
   margin: 0 5px 0 0;
+  ${transitions.MAIN};
   & > .fa-angle-right {
     margin: 0 10px 0 auto;
     ${transitions.MAIN};
