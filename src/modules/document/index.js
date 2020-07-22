@@ -10,6 +10,7 @@ const DocumentListModuleWrapper = withForbidden(DocumentListModule, DOCUMENT_LIS
 
 const DocumentApp = () => (
   <Router>
+    {/* $FlowFixMe Flow typed is not updated yet */}
     <Redirect path="/" from="/" to="/document/cards" noThrow />
     <DocumentListModuleWrapper path="/cards" />
     <DocumentFormModule path=":documentId" />

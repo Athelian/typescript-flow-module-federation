@@ -11,6 +11,7 @@ const TagModuleListWrapper = withForbidden(TagListModule, TAG_LIST);
 
 const TagApp = () => (
   <Router>
+    {/* $FlowFixMe Flow typed is not updated yet */}
     <Redirect path="/" from="/" to="/tags/cards" noThrow />
     <TagModuleListWrapper path="/cards" />
     <TagFormModuleCreationWrapper path="new" />

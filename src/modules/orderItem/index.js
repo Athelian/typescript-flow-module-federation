@@ -26,6 +26,7 @@ const OrderItemModuleListWrapper = withForbidden(OrderItemListModule, ORDER_ITEM
 const OrderItemApp = () => (
   <Provider>
     <Router>
+      {/* $FlowFixMe Flow typed is not updated yet */}
       <Redirect path="/" from="/" to="/order-item/cards" noThrow />
       <OrderItemModuleListWrapper path="/cards" />
       <OrderItemFormModuleCreationWrapper path="new" />

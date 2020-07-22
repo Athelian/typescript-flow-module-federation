@@ -12,6 +12,7 @@ const TaskModuleListWrapper = withForbidden(TaskListModule, TASK_LIST);
 const TaskApp = () => (
   <Provider>
     <Router>
+      {/* $FlowFixMe Flow typed is not updated yet */}
       <Redirect path="/" from="/" to="/task/cards" noThrow />
       <TaskModuleListWrapper path="/cards" />
       <TaskFormModule path=":taskId" />

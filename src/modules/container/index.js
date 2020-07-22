@@ -13,6 +13,7 @@ const ContainerModuleListWrapper = withForbidden(ContainerListModule, CONTAINER_
 const ContainerModule = () => {
   return (
     <Router>
+      {/* $FlowFixMe Flow typed is not updated yet */}
       <Redirect path="/" from="/" to="/container/cards" noThrow />
       <ContainerModuleListWrapper path="/cards" />
       <ContainerFormModuleWrapper path=":containerId" />
