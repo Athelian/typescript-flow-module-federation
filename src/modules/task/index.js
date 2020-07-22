@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Provider } from 'unstated';
-import { Router } from '@reach/router';
+import { Router, Redirect } from '@reach/router';
 import withForbidden from 'hoc/withForbidden';
 import { TASK_LIST } from 'modules/permission/constants/task';
 import TaskListModule from './index.list';
@@ -12,7 +12,9 @@ const TaskModuleListWrapper = withForbidden(TaskListModule, TASK_LIST);
 const TaskApp = () => (
   <Provider>
     <Router>
-      <TaskModuleListWrapper path="/" />
+      {/* $FlowFixMe Flow typed is not updated yet */}
+      <Redirect path="/" from="/" to="/task/cards" noThrow />
+      <TaskModuleListWrapper path="/cards" />
       <TaskFormModule path=":taskId" />
     </Router>
   </Provider>

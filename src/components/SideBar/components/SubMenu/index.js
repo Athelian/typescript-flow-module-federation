@@ -10,8 +10,8 @@ import {
   SubMenuItemStyle,
   ChevronButtonStyle,
   SubMenuBodyStyle,
+  IconStyle,
 } from './style';
-import { IconStyle } from '../MenuItem/style';
 
 type Props = {
   hasActiveChild: boolean,
