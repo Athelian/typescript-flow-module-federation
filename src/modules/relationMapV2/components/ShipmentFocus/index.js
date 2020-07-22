@@ -284,7 +284,6 @@ export default function ShipmentFocus() {
                         });
                       }
                       if (!dontClose) {
-                        console.warn('hello');
                         window.requestIdleCallback(
                           () => {
                             dispatch({
