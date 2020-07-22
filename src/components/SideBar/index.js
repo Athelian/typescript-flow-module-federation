@@ -80,6 +80,13 @@ const menu: Array<MenuConfig> = [
     icon: 'ORDER_ITEM',
     path: 'order-item',
     permitted: hasPermissions => hasPermissions(ORDER_ITEMS_LIST),
+    submenu: [
+      {
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
+      },
+    ],
   },
   {
     label: <FormattedMessage {...messages.batch} />,
@@ -130,12 +137,26 @@ const menu: Array<MenuConfig> = [
     icon: 'CONTAINER',
     path: 'container',
     permitted: hasPermissions => hasPermissions(CONTAINER_LIST),
+    submenu: [
+      {
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
+      },
+    ],
   },
   {
     label: <FormattedMessage {...messages.product} />,
     icon: 'PRODUCT',
     path: 'product',
     permitted: hasPermissions => hasPermissions(PRODUCT_LIST),
+    submenu: [
+      {
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
+      },
+    ],
   },
   {
     label: <FormattedMessage {...messages.project} />,
@@ -162,12 +183,26 @@ const menu: Array<MenuConfig> = [
     icon: 'TASK',
     path: 'task',
     permitted: hasPermissions => hasPermissions(TASK_LIST),
+    submenu: [
+      {
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
+      },
+    ],
   },
   {
     label: <FormattedMessage {...messages.documents} />,
     icon: 'DOCUMENT',
     path: 'document',
     permitted: hasPermissions => hasPermissions(DOCUMENT_LIST),
+    submenu: [
+      {
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
+      },
+    ],
   },
   {
     label: <FormattedMessage {...messages.network} />,
@@ -241,6 +276,13 @@ const menu: Array<MenuConfig> = [
     icon: 'TAG',
     path: 'tags',
     permitted: hasPermissions => hasPermissions(TAG_LIST),
+    submenu: [
+      {
+        label: <FormattedMessage {...messages.cards} />,
+        icon: 'CARDS',
+        path: 'cards',
+      },
+    ],
   },
 ];
 

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Router } from '@reach/router';
+import { Router, Redirect } from '@reach/router';
 import withForbidden from 'hoc/withForbidden';
 import { DOCUMENT_LIST } from 'modules/permission/constants/file';
 import DocumentListModule from './index.list';
@@ -10,7 +10,8 @@ const DocumentListModuleWrapper = withForbidden(DocumentListModule, DOCUMENT_LIS
 
 const DocumentApp = () => (
   <Router>
-    <DocumentListModuleWrapper path="/" />
+    <Redirect path="/" from="/" to="/document/cards" noThrow />
+    <DocumentListModuleWrapper path="/cards" />
     <DocumentFormModule path=":documentId" />
   </Router>
 );

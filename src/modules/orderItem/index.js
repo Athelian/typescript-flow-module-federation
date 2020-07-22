@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Provider } from 'unstated';
-import { Router } from '@reach/router';
+import { Router, Redirect } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
 import {
@@ -26,7 +26,8 @@ const OrderItemModuleListWrapper = withForbidden(OrderItemListModule, ORDER_ITEM
 const OrderItemApp = () => (
   <Provider>
     <Router>
-      <OrderItemModuleListWrapper path="/" />
+      <Redirect path="/" from="/" to="/order-item/cards" noThrow />
+      <OrderItemModuleListWrapper path="/cards" />
       <OrderItemFormModuleCreationWrapper path="new" />
       <OrderItemFormModuleCreationWrapper path="clone/:orderItemId" />
       <OrderItemFormDetailModuleWrapper path=":orderItemId" />
