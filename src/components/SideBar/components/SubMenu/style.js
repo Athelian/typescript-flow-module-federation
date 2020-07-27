@@ -5,6 +5,7 @@ import { transitions, fontSizes, colors, presets, borderRadiuses } from 'styles/
 export const SubMenuWrapperStyle: string = css`
   overflow: hidden;
   min-height: min-content;
+  flex-shrink: 0;
 `;
 
 export const SubMenuItemWrapperStyle = (
@@ -53,6 +54,7 @@ export const ChevronButtonStyle = (isExpanded: boolean, hasActiveChild: boolean)
   flex-shrink: 0;
   ${isExpanded && 'transform: rotate(180deg)'};
   margin: 5px;
+  ${hasActiveChild && `opacity: 0.25`};
   ${!hasActiveChild &&
     `
     &:hover {
@@ -67,4 +69,22 @@ export const SubMenuBodyStyle = (isExpanded: boolean, menuItemCount: number): st
   flex-direction: column;
   background: rgba(0, 0, 0, 0.1);
   ${transitions.EXPAND};
+  box-shadow: 5px 0 0 0 rgba(0, 0, 0, 0.2) inset;
+`;
+
+export const IconStyle: string = css`
+  display: flex;
+  width: 40px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0 5px 0 0;
+  & > .fa-angle-right {
+    margin: 0 10px 0 auto;
+    ${transitions.MAIN};
+    &.active {
+      transform: rotate(90deg);
+    }
+  }
 `;

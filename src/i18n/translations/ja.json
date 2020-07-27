@@ -287,7 +287,7 @@
   "modules.SideBar.table": "一覧シート",
   "modules.SideBar.documents": "書類",
   "modules.SideBar.cards": "カードリスト",
-  "modules.SideBar.map": "リレーションマップ",
+  "modules.SideBar.map": "マップ",
   "components.form.confirmLeaveMessage": "本当にこの画面を閉じますか？画面を閉じると変更は保存されません。",
   "components.taskRing.tasks": "タスク",
   "components.taskRing.completed": "完了",

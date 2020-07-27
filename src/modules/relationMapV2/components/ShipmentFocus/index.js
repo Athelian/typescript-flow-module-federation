@@ -261,7 +261,7 @@ export default function ShipmentFocus() {
               return (
                 <>
                   <EditFormSlideView
-                    onClose={result => {
+                    onClose={(result, dontClose) => {
                       if (state.edit.type === SHIPMENT) {
                         queryShipmentsDetail([state.edit.selectedId]);
                       } else if (state.edit.shipmentId) {
@@ -283,20 +283,22 @@ export default function ShipmentFocus() {
                           type: result?.type ?? '',
                         });
                       }
-                      window.requestIdleCallback(
-                        () => {
-                          dispatch({
-                            type: 'EDIT',
-                            payload: {
-                              type: '',
-                              selectedId: '',
-                            },
-                          });
-                        },
-                        {
-                          timeout: 250,
-                        }
-                      );
+                      if (!dontClose) {
+                        window.requestIdleCallback(
+                          () => {
+                            dispatch({
+                              type: 'EDIT',
+                              payload: {
+                                type: '',
+                                selectedId: '',
+                              },
+                            });
+                          },
+                          {
+                            timeout: 250,
+                          }
+                        );
+                      }
                     }}
                   />
                   <AddFollowers />

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Router } from '@reach/router';
+import { Router, Redirect } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
 import { CONTAINER_LIST } from 'modules/permission/constants/container';
@@ -13,7 +13,9 @@ const ContainerModuleListWrapper = withForbidden(ContainerListModule, CONTAINER_
 const ContainerModule = () => {
   return (
     <Router>
-      <ContainerModuleListWrapper path="/" />
+      {/* $FlowFixMe Flow typed is not updated yet */}
+      <Redirect path="/" from="/" to="/container/cards" noThrow />
+      <ContainerModuleListWrapper path="/cards" />
       <ContainerFormModuleWrapper path=":containerId" />
     </Router>
   );
