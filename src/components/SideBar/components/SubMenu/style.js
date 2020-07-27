@@ -5,6 +5,7 @@ import { transitions, fontSizes, colors, presets, borderRadiuses } from 'styles/
 export const SubMenuWrapperStyle: string = css`
   overflow: hidden;
   min-height: min-content;
+  flex-shrink: 0;
 `;
 
 export const SubMenuItemWrapperStyle = (
