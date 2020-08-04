@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Label, DateInput, DefaultStyle } from 'components/Form';
 import useUser from 'hooks/useUser';
-import { formatDateInputToDateTimezone } from 'utils/date';
+import { formatDateInputToDateObjectWithTimezone } from 'utils/date';
 import type { FilterInputProps } from '../../types';
 import messages from '../../messages';
 
@@ -26,7 +26,7 @@ const DateRange = ({
             onChange({
               ...value,
               after: e.target.value
-                ? formatDateInputToDateTimezone(e.target.value, user.timezone)
+                ? formatDateInputToDateObjectWithTimezone(e.target.value, user.timezone)
                 : null,
             });
           }}
@@ -44,7 +44,7 @@ const DateRange = ({
             onChange({
               ...value,
               before: e.target.value
-                ? formatDateInputToDateTimezone(e.target.value, user.timezone)
+                ? formatDateInputToDateObjectWithTimezone(e.target.value, user.timezone)
                 : null,
             });
           }}
