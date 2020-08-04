@@ -34,7 +34,7 @@ export {
 export const isValidDate = (date: ?(Date | string)): boolean => !!date && isValid(new Date(date));
 
 export const formatDateInputToDateObject = (date: ?string): Date | null =>
-  isValidDate(date)
+  !!date && isValidDate(date)
     ? new Date(
         parseInt(date.substring(0, 4), 10),
         parseInt(date.substring(5, 7), 10) - 1,
@@ -46,7 +46,7 @@ export const formatDateInputToDateObjectWithTimezone = (
   date: ?string,
   timeZone: string
 ): Date | null =>
-  isValidDate(date) ? zonedTimeToUtc(formatDateInputToDateObject(date), timeZone) : null;
+  !!date && isValidDate(date) ? zonedTimeToUtc(formatDateInputToDateObject(date), timeZone) : null;
 
 export const formatToDateInput = (date: string): string =>
   isValid(new Date(date)) ? format(new Date(date), 'yyyy-MM-dd') : '';
