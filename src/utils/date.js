@@ -33,7 +33,7 @@ export {
 
 export const isValidDate = (date: Date | string): boolean => !!date && isValid(new Date(date));
 
-export const parseToDateObject = (date: ?string): Date =>
+export const parseToDateObject = (date: ?string): Date | null =>
   date
     ? new Date(
         parseInt(date.substring(0, 4), 10),
