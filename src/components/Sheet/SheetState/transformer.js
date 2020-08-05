@@ -2,13 +2,13 @@
 import type { CellAction } from 'components/Sheet/SheetState/types';
 
 export const transformField = (
-  entity: Object | null,
+  entity?: Object | null,
   path: string,
   field: string,
   value: any,
   permissions: ((string) => boolean) => boolean = () => true
 ) => {
-  if (entity === null) {
+  if (entity === null || entity === undefined) {
     return {
       entity: null,
       data: null,
