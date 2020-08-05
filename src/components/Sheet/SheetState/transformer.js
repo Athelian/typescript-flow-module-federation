@@ -2,7 +2,7 @@
 import type { CellAction } from 'components/Sheet/SheetState/types';
 
 export const transformField = (
-  entity: Object | null | undefined,
+  entity?: Object | null,
   path: string,
   field: string,
   value: any,
