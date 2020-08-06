@@ -4,7 +4,6 @@ import { diff } from 'deep-object-diff';
 import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda';
 import logger from 'utils/logger';
 import {
-  isDateObject,
   formatDatetimeInputToDateObjectWithTimezone,
   formatDateObjectWithTimezoneForMutation,
 } from './date';
@@ -130,23 +129,15 @@ export const parseDatetimeField = (
   let parsedNewDate = null;
 
   if (originalDate) {
-    if (isDateObject(originalDate)) {
-      parsedOriginalDate = formatDateObjectWithTimezoneForMutation(originalDate);
-    } else {
-      parsedOriginalDate = formatDateObjectWithTimezoneForMutation(
-        formatDatetimeInputToDateObjectWithTimezone(originalDate)
-      );
-    }
+    parsedOriginalDate = formatDateObjectWithTimezoneForMutation(
+      formatDatetimeInputToDateObjectWithTimezone(originalDate)
+    );
   }
 
   if (newDate) {
-    if (isDateObject(newDate)) {
-      parsedNewDate = formatDateObjectWithTimezoneForMutation(newDate);
-    } else {
-      parsedNewDate = formatDateObjectWithTimezoneForMutation(
-        formatDatetimeInputToDateObjectWithTimezone(newDate)
-      );
-    }
+    parsedNewDate = formatDateObjectWithTimezoneForMutation(
+      formatDatetimeInputToDateObjectWithTimezone(newDate)
+    );
   }
 
   if (!isEquals(parsedOriginalDate, parsedNewDate)) return { [key]: parsedNewDate };
