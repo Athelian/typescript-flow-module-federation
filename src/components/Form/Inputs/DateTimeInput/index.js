@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { injectIntl, type IntlShape } from 'react-intl';
 import { Display } from 'components/Form';
-import { formatToDateTimeInput } from 'utils/date';
+import { formatToDateTimeInput, formatDatetimeInputToDateObjectWithTimezone } from 'utils/date';
+import useUser from 'hooks/useUser';
 import FormattedDate from 'components/FormattedDate';
 import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type';
 import { isNullOrUndefined } from 'utils/fp';
@@ -24,10 +25,18 @@ const DateTimeInput = ({
   onBlur,
   ...rest
 }: Props) => {
+  const { user } = useUser();
+
   const handleBlur = e => {
     e.target.value = e.target.value ? formatToDateTimeInput(e.target.value) : '';
     if (onBlur) {
-      onBlur(e);
+      onBlur({
+        ...e,
+        target: {
+          ...e.target,
+          value: formatDatetimeInputToDateObjectWithTimezone(e.target.value, user.timezone),
+        },
+      });
     }
   };
 

@@ -33,20 +33,42 @@ export {
 
 export const isValidDate = (date: ?(Date | string)): boolean => !!date && isValid(new Date(date));
 
-export const formatDateInputToDateObject = (date: ?string): Date | null =>
-  !!date && isValidDate(date)
-    ? new Date(
-        parseInt(date.substring(0, 4), 10),
-        parseInt(date.substring(5, 7), 10) - 1,
-        parseInt(date.substring(8, 10), 10)
-      )
-    : null;
+export const isDateObject = (date: any): boolean => date instanceof Date;
 
 export const formatDateInputToDateObjectWithTimezone = (
   date: ?string,
   timeZone: string
 ): Date | null =>
-  !!date && isValidDate(date) ? zonedTimeToUtc(formatDateInputToDateObject(date), timeZone) : null;
+  !!date && isValidDate(date)
+    ? zonedTimeToUtc(
+        new Date(
+          parseInt(date.substring(0, 4), 10),
+          parseInt(date.substring(5, 7), 10) - 1,
+          parseInt(date.substring(8, 10), 10)
+        ),
+        timeZone
+      )
+    : null;
+
+export const formatDatetimeInputToDateObjectWithTimezone = (
+  date: ?string,
+  timeZone: string
+): Date | null =>
+  !!date && isValidDate(date)
+    ? zonedTimeToUtc(
+        new Date(
+          parseInt(date.substring(0, 4), 10),
+          parseInt(date.substring(5, 7), 10) - 1,
+          parseInt(date.substring(8, 10), 10),
+          parseInt(date.substring(11, 13), 10),
+          parseInt(date.substring(14, 16), 10)
+        ),
+        timeZone
+      )
+    : null;
+
+export const formatDateObjectWithTimezoneForMutation = (date: ?Date): string | null =>
+  !!date && isValidDate(date) ? format(date, "yyyy-MM-dd'T'HH:mmxxx") : null;
 
 export const formatToDateInput = (date: string): string =>
   isValid(new Date(date)) ? format(new Date(date), 'yyyy-MM-dd') : '';
