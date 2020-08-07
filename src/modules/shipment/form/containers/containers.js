@@ -44,7 +44,7 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     hasCalledContainerApiYet: boolean = false,
     timezone: string
   ) => {
-    const parsedContainers = containers.map((container): ContainerPayload => ({
+    const parsedContainers: Array<ContainerPayload> = containers.map(container => ({
       ...container,
       ...(isNullOrUndefined(container.warehouseArrivalAgreedDate)
         ? {}
