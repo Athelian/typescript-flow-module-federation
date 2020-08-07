@@ -83,6 +83,7 @@ export default function FormTooltip({
                 <>
                   <div className={OldValueStyle}>
                     {isDateObject(changedValues.oldValue) ? (
+                      // $FlowIgnore
                       <FormattedDate value={changedValues.oldValue} />
                     ) : (
                       changedValues.oldValue
@@ -93,6 +94,7 @@ export default function FormTooltip({
                   </div>
                   <div className={NewValueStyle}>
                     {isDateObject(changedValues.newValue) ? (
+                      // $FlowIgnore
                       <FormattedDate value={changedValues.newValue} />
                     ) : (
                       changedValues.newValue
