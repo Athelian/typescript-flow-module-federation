@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { isEquals } from 'utils/fp';
-import { isValidDate } from 'utils/date';
+import { isDateObject } from 'utils/date';
 import FormattedDate from 'components/FormattedDate';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
@@ -82,8 +82,8 @@ export default function FormTooltip({
               {showChanged && (
                 <>
                   <div className={OldValueStyle}>
-                    {isValidDate(changedValues.oldValue) ? (
-                      <FormattedDate value={changedValues.oldValue || ''} />
+                    {isDateObject(changedValues.oldValue) ? (
+                      <FormattedDate value={changedValues.oldValue} />
                     ) : (
                       changedValues.oldValue
                     )}
@@ -92,8 +92,8 @@ export default function FormTooltip({
                     <Icon icon="ARROW_DOWN" />
                   </div>
                   <div className={NewValueStyle}>
-                    {isValidDate(changedValues.newValue) ? (
-                      <FormattedDate value={changedValues.newValue || ''} />
+                    {isDateObject(changedValues.newValue) ? (
+                      <FormattedDate value={changedValues.newValue} />
                     ) : (
                       changedValues.newValue
                     )}
