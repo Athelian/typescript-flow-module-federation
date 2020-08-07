@@ -128,7 +128,7 @@ export const prepareParsedContainerInput = ({
     ),
     ...parseDatetimeField(
       'warehouseArrivalAgreedDate',
-      getByPathWithDefault(null, 'warehouseArrivalAgreedDate', originalValues),
+      originalValues?.warehouseArrivalAgreedDate ?? null,
       newValues.warehouseArrivalAgreedDate
     ),
     ...parseApprovalField(
@@ -152,7 +152,7 @@ export const prepareParsedContainerInput = ({
     ),
     ...parseDatetimeField(
       'warehouseArrivalActualDate',
-      getByPathWithDefault(null, 'warehouseArrivalActualDate', originalValues),
+      originalValues?.warehouseArrivalActualDate ?? null,
       newValues.warehouseArrivalActualDate
     ),
     ...parseApprovalField(

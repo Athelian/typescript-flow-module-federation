@@ -3,7 +3,8 @@ import type { ContainerPayload, OrganizationPayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cloneDeep, set } from 'lodash';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import { isEquals } from 'utils/fp';
+import { isEquals, isNullOrUndefined } from 'utils/fp';
+import { formatUTCDateToDateObjectWithTimezone } from 'utils/date';
 
 type ContainersState = {|
   containers: Array<ContainerPayload>,
@@ -40,10 +41,32 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
 
   initDetailValues = (
     containers: Array<ContainerPayload>,
-    hasCalledContainerApiYet: boolean = false
+    hasCalledContainerApiYet: boolean = false,
+    timezone: string
   ) => {
-    this.setState({ containers, hasCalledContainerApiYet });
-    this.originalValues = { containers, hasCalledContainerApiYet };
+    const parsedContainers: Array<ContainerPayload> = containers.map(
+      ({ warehouseArrivalAgreedDate, warehouseArrivalActualDate, ...rest }) => ({
+        ...(isNullOrUndefined(warehouseArrivalAgreedDate)
+          ? {}
+          : {
+              warehouseArrivalAgreedDate: formatUTCDateToDateObjectWithTimezone(
+                warehouseArrivalAgreedDate,
+                timezone
+              ),
+            }),
+        ...(isNullOrUndefined(warehouseArrivalActualDate)
+          ? {}
+          : {
+              warehouseArrivalActualDate: formatUTCDateToDateObjectWithTimezone(
+                warehouseArrivalActualDate,
+                timezone
+              ),
+            }),
+        ...rest,
+      })
+    );
+    this.setState({ containers: parsedContainers, hasCalledContainerApiYet });
+    this.originalValues = { containers: parsedContainers, hasCalledContainerApiYet };
   };
 
   // On change Importer, clean up followers and batches

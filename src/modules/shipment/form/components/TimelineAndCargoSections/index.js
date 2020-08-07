@@ -11,6 +11,7 @@ import {
 import { SectionWrapper } from 'components/Form';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
+import { UserConsumer } from 'contexts/Viewer';
 import TimelineSection from '../TimelineSection';
 import CargoSection from '../CargoSection';
 import { shipmentFormTimelineAndCargoQuery } from './query';
@@ -50,55 +51,66 @@ const TimelineAndCargoSections = (props: Props) => {
     exporterId,
   } = props;
   return (
-    <Subscribe
-      to={[ShipmentTimelineContainer, ShipmentBatchesContainer, ShipmentContainersContainer]}
-    >
-      {(timelineContainer, batchesContainer, containersContainer) => (
-        <QueryPlaceHolder
-          className={PlaceHolderWrapperStyle}
-          PlaceHolder={CustomPlaceHolder}
-          query={shipmentFormTimelineAndCargoQuery}
-          entityId={entityId}
-          isLoading={isLoading}
-          onCompleted={result => {
-            if (timelineContainer.state.hasCalledTimelineApiYet) return;
-            const cargoReady = getByPathWithDefault({}, 'shipment.cargoReady', result);
-            const voyages = getByPathWithDefault([], 'shipment.voyages', result);
-            const containerGroups = getByPathWithDefault([{}], 'shipment.containerGroups', result);
-            timelineContainer.initDetailValues(
-              {
-                cargoReady,
-                voyages,
-                containerGroups,
-              },
-              true
-            );
-
-            const batches = getByPathWithDefault([], 'shipment.batches', result);
-            batchesContainer.initDetailValues(batches, true);
-            const containers = getByPathWithDefault([], 'shipment.containers', result);
-            containersContainer.initDetailValues(containers, true);
-          }}
+    <UserConsumer>
+      {({ user }) => (
+        <Subscribe
+          to={[ShipmentTimelineContainer, ShipmentBatchesContainer, ShipmentContainersContainer]}
         >
-          {() => {
-            return (
-              <>
-                <SectionWrapper id="shipment_timelineSection">
-                  <TimelineSection isNew={isNew} isTaskReadyForBinding={isTaskReadyForBinding} />
-                </SectionWrapper>
-                <SectionWrapper id="shipment_cargoSection">
-                  <CargoSection
-                    shipmentIsArchived={shipmentIsArchived}
-                    importerId={importerId}
-                    exporterId={exporterId}
-                  />
-                </SectionWrapper>
-              </>
-            );
-          }}
-        </QueryPlaceHolder>
+          {(timelineContainer, batchesContainer, containersContainer) => (
+            <QueryPlaceHolder
+              className={PlaceHolderWrapperStyle}
+              PlaceHolder={CustomPlaceHolder}
+              query={shipmentFormTimelineAndCargoQuery}
+              entityId={entityId}
+              isLoading={isLoading}
+              onCompleted={result => {
+                if (timelineContainer.state.hasCalledTimelineApiYet) return;
+                const cargoReady = getByPathWithDefault({}, 'shipment.cargoReady', result);
+                const voyages = getByPathWithDefault([], 'shipment.voyages', result);
+                const containerGroups = getByPathWithDefault(
+                  [{}],
+                  'shipment.containerGroups',
+                  result
+                );
+                timelineContainer.initDetailValues(
+                  {
+                    cargoReady,
+                    voyages,
+                    containerGroups,
+                  },
+                  true
+                );
+
+                const batches = getByPathWithDefault([], 'shipment.batches', result);
+                batchesContainer.initDetailValues(batches, true);
+                const containers = getByPathWithDefault([], 'shipment.containers', result);
+                containersContainer.initDetailValues(containers, true, user.timezone);
+              }}
+            >
+              {() => {
+                return (
+                  <>
+                    <SectionWrapper id="shipment_timelineSection">
+                      <TimelineSection
+                        isNew={isNew}
+                        isTaskReadyForBinding={isTaskReadyForBinding}
+                      />
+                    </SectionWrapper>
+                    <SectionWrapper id="shipment_cargoSection">
+                      <CargoSection
+                        shipmentIsArchived={shipmentIsArchived}
+                        importerId={importerId}
+                        exporterId={exporterId}
+                      />
+                    </SectionWrapper>
+                  </>
+                );
+              }}
+            </QueryPlaceHolder>
+          )}
+        </Subscribe>
       )}
-    </Subscribe>
+    </UserConsumer>
   );
 };
 export default TimelineAndCargoSections;
