@@ -365,6 +365,11 @@ class ShipmentFormModule extends React.PureComponent<Props> {
               {...mutationKey}
             >
               {(saveShipment, { loading: isLoading, error: apiError }) => {
+                const { types = [] } = organization;
+                const isImporter = types.includes('Importer');
+                const isExporter = types.includes('Exporter');
+                const isForwarder = types.includes('Forwarder');
+
                 return (
                   <CurrentLayout>
                     <CurrentNavBar>
@@ -625,83 +630,73 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                       {apiError && <p>Error: Please try again.</p>}
                       {this.isNew() || !shipmentId ? (
                         <>
-                          {() => {
-                            const { types = [] } = organization;
-                            const isImporter = types.includes('Importer');
-                            const isExporter = types.includes('Exporter');
-                            const isForwarder = types.includes('Forwarder');
-                            return (
-                              <>
-                                <ShipmentForm
-                                  shipment={{}}
-                                  isNew
-                                  loading={false}
-                                  initDataForSlideView={initDataForSlideView}
-                                />
-                                <Subscribe
-                                  to={[
-                                    ShipmentInfoContainer,
-                                    ShipmentTagsContainer,
-                                    ShipmentTransportTypeContainer,
-                                    ShipmentTimelineContainer,
-                                    ShipmentBatchesContainer,
-                                    ShipmentContainersContainer,
-                                    ShipmentFilesContainer,
-                                    ShipmentTasksContainer,
-                                  ]}
-                                >
-                                  {(
-                                    shipmentInfoContainer,
-                                    shipmentTagsContainer,
-                                    shipmentTransportTypeContainer,
-                                    shipmentTimelineContainer,
-                                    shipmentBatchesContainer,
-                                    shipmentContainersContainer,
-                                    shipmentFilesContainer,
-                                    shipmentTasksContainer
-                                  ) =>
-                                    this.onFormReady(
-                                      {
-                                        shipmentInfoContainer,
-                                        shipmentTagsContainer,
-                                        shipmentTransportTypeContainer,
-                                        shipmentTimelineContainer,
-                                        shipmentBatchesContainer,
-                                        shipmentContainersContainer,
-                                        shipmentFilesContainer,
-                                        shipmentTasksContainer,
-                                      },
-                                      {
-                                        id: uuid(),
-                                        importer: isImporter ? organization : null,
-                                        exporter: isExporter ? organization : null,
-                                        forwarders: isForwarder ? [organization] : [],
-                                        booked: false,
-                                        customFields: {
-                                          mask: null,
-                                          fieldValues: [],
-                                        },
-                                        cargoReady: {},
-                                        containerGroups: [{}],
-                                        voyages: [{}],
-                                        tags: [],
-                                        followers: [{ ...user, organization }],
-                                        todo: {
-                                          tasks: [],
-                                          taskTemplate: null,
-                                        },
-                                        files: [],
-                                        containers: [],
-                                        batches: [],
-                                        ...initDataForSlideView,
-                                      },
-                                      user.timezone
-                                    )
-                                  }
-                                </Subscribe>
-                              </>
-                            );
-                          }}
+                          <ShipmentForm
+                            shipment={{}}
+                            isNew
+                            loading={false}
+                            initDataForSlideView={initDataForSlideView}
+                          />
+                          <Subscribe
+                            to={[
+                              ShipmentInfoContainer,
+                              ShipmentTagsContainer,
+                              ShipmentTransportTypeContainer,
+                              ShipmentTimelineContainer,
+                              ShipmentBatchesContainer,
+                              ShipmentContainersContainer,
+                              ShipmentFilesContainer,
+                              ShipmentTasksContainer,
+                            ]}
+                          >
+                            {(
+                              shipmentInfoContainer,
+                              shipmentTagsContainer,
+                              shipmentTransportTypeContainer,
+                              shipmentTimelineContainer,
+                              shipmentBatchesContainer,
+                              shipmentContainersContainer,
+                              shipmentFilesContainer,
+                              shipmentTasksContainer
+                            ) =>
+                              this.onFormReady(
+                                {
+                                  shipmentInfoContainer,
+                                  shipmentTagsContainer,
+                                  shipmentTransportTypeContainer,
+                                  shipmentTimelineContainer,
+                                  shipmentBatchesContainer,
+                                  shipmentContainersContainer,
+                                  shipmentFilesContainer,
+                                  shipmentTasksContainer,
+                                },
+                                {
+                                  id: uuid(),
+                                  importer: isImporter ? organization : null,
+                                  exporter: isExporter ? organization : null,
+                                  forwarders: isForwarder ? [organization] : [],
+                                  booked: false,
+                                  customFields: {
+                                    mask: null,
+                                    fieldValues: [],
+                                  },
+                                  cargoReady: {},
+                                  containerGroups: [{}],
+                                  voyages: [{}],
+                                  tags: [],
+                                  followers: [{ ...user, organization }],
+                                  todo: {
+                                    tasks: [],
+                                    taskTemplate: null,
+                                  },
+                                  files: [],
+                                  containers: [],
+                                  batches: [],
+                                  ...initDataForSlideView,
+                                },
+                                user.timezone
+                              )
+                            }
+                          </Subscribe>
                         </>
                       ) : (
                         <QueryFormV2
