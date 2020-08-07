@@ -31,7 +31,7 @@ export {
   isValid,
 };
 
-export const isValidDate = (date: ?(Date | string)): boolean => !!date && isValid(new Date(date));
+export const isValidDate = (date: any): boolean => !!date && isValid(new Date(date));
 
 export const isDateObject = (date: any): boolean => date instanceof Date;
 

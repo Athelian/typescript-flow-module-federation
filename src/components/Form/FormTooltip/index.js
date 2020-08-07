@@ -83,7 +83,7 @@ export default function FormTooltip({
                 <>
                   <div className={OldValueStyle}>
                     {isValidDate(changedValues.oldValue) ? (
-                      <FormattedDate value={changedValues.oldValue} />
+                      <FormattedDate value={changedValues.oldValue || ''} />
                     ) : (
                       changedValues.oldValue
                     )}
@@ -93,7 +93,7 @@ export default function FormTooltip({
                   </div>
                   <div className={NewValueStyle}>
                     {isValidDate(changedValues.newValue) ? (
-                      <FormattedDate value={changedValues.newValue} />
+                      <FormattedDate value={changedValues.newValue || ''} />
                     ) : (
                       changedValues.newValue
                     )}
