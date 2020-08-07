@@ -14,7 +14,7 @@ import {
   addWeeks,
   addMonths,
 } from 'date-fns';
-import { zonedTimeToUtc } from 'date-fns-tz';
+import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
 
 export {
   min as earliest,
@@ -50,6 +50,7 @@ export const formatDateInputToDateObjectWithTimezone = (
       )
     : null;
 
+// (2020-01-01T12:12, +09:00) => Date Object with Timezone
 export const formatDatetimeInputToDateObjectWithTimezone = (
   date: ?string,
   timeZone: string
@@ -66,6 +67,30 @@ export const formatDatetimeInputToDateObjectWithTimezone = (
         timeZone
       )
     : null;
+
+// (Date Object with Timezone, +09:00) => 2020-01-01T12:12
+export const formatDateObjectWithTimezoneToDatetimeInput = (
+  date: ?Date,
+  timezone: string
+): string =>
+  !!date && isValid(new Date(date))
+    ? format(zonedTimeToUtc(date, timezone), "yyyy-MM-dd'T'HH:mm")
+    : '';
+
+export const formatUTCDateToDateObjectWithTimezone = (
+  date: ?string,
+  timezone: string
+): Date | null => {
+  if (!!date && isValidDate(date)) {
+    if (date.substring(date.length - 1, date.length) === 'Z') {
+      console.warn('ZZZ', date, utcToZonedTime(date, timezone));
+      return utcToZonedTime(date, timezone);
+    }
+    console.warn(date, new Date(date));
+    return new Date(date);
+  }
+  return null;
+};
 
 export const formatDateObjectWithTimezoneForMutation = (date: ?Date): string | null =>
   !!date && isValidDate(date) ? format(date, "yyyy-MM-dd'T'HH:mmxxx") : null;

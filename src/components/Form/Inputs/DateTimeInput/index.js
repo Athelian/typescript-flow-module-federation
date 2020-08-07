@@ -2,7 +2,11 @@
 import * as React from 'react';
 import { injectIntl, type IntlShape } from 'react-intl';
 import { Display } from 'components/Form';
-import { formatToDateTimeInput, formatDatetimeInputToDateObjectWithTimezone } from 'utils/date';
+import {
+  formatToDateTimeInput,
+  formatDateObjectWithTimezoneToDatetimeInput,
+  formatDatetimeInputToDateObjectWithTimezone,
+} from 'utils/date';
 import useUser from 'hooks/useUser';
 import FormattedDate from 'components/FormattedDate';
 import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type';
@@ -47,7 +51,7 @@ const DateTimeInput = ({
   ) : (
     <input
       ref={inputRef}
-      value={value ? formatToDateTimeInput(value) : ''}
+      value={formatDateObjectWithTimezoneToDatetimeInput(value, user.timezone)}
       style={{ textAlign: align }}
       placeholder={
         isNullOrUndefined(placeholder)

@@ -1,12 +1,9 @@
 // @flow
 import type { Task, MetricValue } from 'generated/graphql';
 import { diff } from 'deep-object-diff';
-import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda';
+import { is, pipe, when, either, map, reject, isNil, isEmpty, omit, has } from 'ramda';
 import logger from 'utils/logger';
-import {
-  formatDatetimeInputToDateObjectWithTimezone,
-  formatDateObjectWithTimezoneForMutation,
-} from './date';
+import { formatDateObjectWithTimezoneForMutation, isDateObject } from './date';
 import { defaultDistanceMetric } from './metric';
 import { isEquals, getByPathWithDefault, getByPath } from './fp';
 
@@ -19,7 +16,7 @@ export const replaceUndefined: Function = when(
 );
 
 export const removeNulls: Function = when(
-  either(is(Array), is(Object)),
+  value => is(Array, value) || (is(Object, value) && !isDateObject(value)),
   pipe(
     reject(isNil),
     map(a => removeNulls(a))
@@ -27,7 +24,7 @@ export const removeNulls: Function = when(
 );
 
 export const removeEmpty: Function = when(
-  either(is(Array), is(Object)),
+  value => is(Array, value) || (is(Object, value) && !isDateObject(value)),
   pipe(
     reject(isEmpty),
     map(a => removeEmpty(a))
@@ -43,9 +40,9 @@ export const replaceEmptyString: Function = when(
 );
 
 export const removeTypename: Function = when(
-  either(is(Array), is(Object)),
+  value => is(Array, value) || (is(Object, value) && !isDateObject(value)),
   pipe(
-    x => (is(Object, x) && !is(Array, x) ? omit(['__typename'], x) : x),
+    x => (is(Object, x) && !is(Array, x) && has('__typename', x) ? omit(['__typename'], x) : x),
     map(a => removeTypename(a))
   )
 );
@@ -120,25 +117,9 @@ export const parseDateField = (key: string, originalDate: ?string, newDate: ?str
 };
 
 // Use for Datetime fields. Need to parse into Date object.
-export const parseDatetimeField = (
-  key: string,
-  originalDate: ?(string | Date),
-  newDate: ?(string | Date)
-): Object => {
-  let parsedOriginalDate = null;
-  let parsedNewDate = null;
-
-  if (originalDate) {
-    parsedOriginalDate = formatDateObjectWithTimezoneForMutation(
-      formatDatetimeInputToDateObjectWithTimezone(originalDate)
-    );
-  }
-
-  if (newDate) {
-    parsedNewDate = formatDateObjectWithTimezoneForMutation(
-      formatDatetimeInputToDateObjectWithTimezone(newDate)
-    );
-  }
+export const parseDatetimeField = (key: string, originalDate: ?Date, newDate: ?Date): Object => {
+  const parsedOriginalDate = formatDateObjectWithTimezoneForMutation(originalDate);
+  const parsedNewDate = formatDateObjectWithTimezoneForMutation(newDate);
 
   if (!isEquals(parsedOriginalDate, parsedNewDate)) return { [key]: parsedNewDate };
   return {};

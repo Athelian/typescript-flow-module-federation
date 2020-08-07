@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { isEquals } from 'utils/fp';
+import { isValidDate } from 'utils/date';
+import FormattedDate from 'components/FormattedDate';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import TooltipIcon from './TooltipIcon';
@@ -79,11 +81,23 @@ export default function FormTooltip({
 
               {showChanged && (
                 <>
-                  <div className={OldValueStyle}>{changedValues.oldValue}</div>
+                  <div className={OldValueStyle}>
+                    {isValidDate(changedValues.oldValue) ? (
+                      <FormattedDate value={changedValues.oldValue} />
+                    ) : (
+                      changedValues.oldValue
+                    )}
+                  </div>
                   <div className={ArrowDownStyle}>
                     <Icon icon="ARROW_DOWN" />
                   </div>
-                  <div className={NewValueStyle}>{changedValues.newValue}</div>
+                  <div className={NewValueStyle}>
+                    {isValidDate(changedValues.newValue) ? (
+                      <FormattedDate value={changedValues.newValue} />
+                    ) : (
+                      changedValues.newValue
+                    )}
+                  </div>
                   {infoMessage && <div className={DividerStyle} />}
                 </>
               )}

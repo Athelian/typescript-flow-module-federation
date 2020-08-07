@@ -107,6 +107,13 @@ class BaseFormField extends React.Component<Props, State> {
       });
     }
 
+    if (event?.currentTarget?.type === 'datetime-local') {
+      value = event?.target?.value;
+      this.setState({
+        value,
+      });
+    }
+
     const {
       name,
       validationOnBlur,
