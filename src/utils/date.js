@@ -83,10 +83,8 @@ export const formatUTCDateToDateObjectWithTimezone = (
 ): Date | null => {
   if (!!date && isValidDate(date)) {
     if (date.substring(date.length - 1, date.length) === 'Z') {
-      console.warn('ZZZ', date, utcToZonedTime(date, timezone));
       return utcToZonedTime(date, timezone);
     }
-    console.warn(date, new Date(date));
     return new Date(date);
   }
   return null;
