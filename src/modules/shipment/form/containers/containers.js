@@ -44,25 +44,27 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     hasCalledContainerApiYet: boolean = false,
     timezone: string
   ) => {
-    const parsedContainers: Array<ContainerPayload> = containers.map(container => ({
-      ...container,
-      ...(isNullOrUndefined(container.warehouseArrivalAgreedDate)
-        ? {}
-        : {
-            warehouseArrivalAgreedDate: formatUTCDateToDateObjectWithTimezone(
-              container.warehouseArrivalAgreedDate,
-              timezone
-            ),
-          }),
-      ...(isNullOrUndefined(container.warehouseArrivalActualDate)
-        ? {}
-        : {
-            warehouseArrivalActualDate: formatUTCDateToDateObjectWithTimezone(
-              container.warehouseArrivalActualDate,
-              timezone
-            ),
-          }),
-    }));
+    const parsedContainers: Array<ContainerPayload> = containers.map(
+      ({ warehouseArrivalAgreedDate, warehouseArrivalActualDate, ...rest }) => ({
+        ...(isNullOrUndefined(warehouseArrivalAgreedDate)
+          ? {}
+          : {
+              warehouseArrivalAgreedDate: formatUTCDateToDateObjectWithTimezone(
+                warehouseArrivalAgreedDate,
+                timezone
+              ),
+            }),
+        ...(isNullOrUndefined(warehouseArrivalActualDate)
+          ? {}
+          : {
+              warehouseArrivalActualDate: formatUTCDateToDateObjectWithTimezone(
+                warehouseArrivalActualDate,
+                timezone
+              ),
+            }),
+        ...rest,
+      })
+    );
     this.setState({ containers: parsedContainers, hasCalledContainerApiYet });
     this.originalValues = { containers: parsedContainers, hasCalledContainerApiYet };
   };
