@@ -27,6 +27,7 @@ type Props = {|
   container: Object,
   onSave: Function,
   isNew: boolean,
+  timezone: string,
 |};
 
 const formContainer = new FormContainer();
@@ -35,9 +36,9 @@ const batchesContainer = new ContainerBatchesContainer();
 
 class ContainerFormInSlide extends React.Component<Props> {
   componentDidMount() {
-    const { container } = this.props;
+    const { container, timezone } = this.props;
     const { batches = [], representativeBatch, ...info } = container;
-    infoContainer.initDetailValues(info);
+    infoContainer.initDetailValues(info, timezone);
     batchesContainer.initDetailValues({ batches, representativeBatch });
   }
 
