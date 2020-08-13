@@ -2,10 +2,11 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FocusedView } from 'modules/relationMapV2/store';
+import type { UserPayload } from 'generated/graphql';
 import { useHasPermissions } from 'contexts/Permissions';
 import { CONTAINER_DELETE, CONTAINER_FORM } from 'modules/permission/constants/container';
 import Tag from 'components/Tag';
-import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import FormattedNumber from 'components/FormattedNumber';
 import { Display, Blackout, Label } from 'components/Form';
 import { FullValueTooltip, Tooltip } from 'components/Tooltip';
@@ -25,6 +26,7 @@ type Props = {|
   onViewForm: Event => void,
   onDeleteContainer?: Event => void,
   organizationId: string,
+  user: UserPayload,
 |};
 
 export default function ContainerCard({
@@ -32,6 +34,7 @@ export default function ContainerCard({
   onViewForm,
   onDeleteContainer,
   organizationId,
+  user,
 }: Props) {
   const { selectors } = FocusedView.useContainer();
   const hasPermissions = useHasPermissions(organizationId);
@@ -105,7 +108,7 @@ export default function ContainerCard({
         </div>
 
         <Display blackout={!canViewWarehouseArrival}>
-          <FormattedDate value={warehouseArrival} mode="datetime" />
+          <FormattedDateTZ value={warehouseArrival} user={user} />
         </Display>
 
         <Display blackout={!canViewTotalVolume}>

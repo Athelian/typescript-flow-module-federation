@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { spreadOrderItem } from 'utils/item';
+import type { UserPayload } from 'generated/graphql';
 import { OrderCard, ItemCard, BatchCard, ContainerCard, ShipmentCard } from 'components/Cards';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { ORDER_FORM } from 'modules/permission/constants/order';
@@ -140,11 +141,12 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
             defaultMessage="No containers found"
           />
         ),
-        renderItems: (items: Array<Object>) => {
+        renderItems: (items: Array<Object>, user: UserPayload) => {
           return (items.map(item => (
             <ContainerCard
               key={item.id}
               container={item}
+              user={user}
               onClick={() => navigate(`/container/${encodeId(item.id)}`)}
             />
           )): Array<React.Node>);

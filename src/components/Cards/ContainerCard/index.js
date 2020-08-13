@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import type { ContainerPayload } from 'generated/graphql';
+import type { ContainerPayload, UserPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
 import { defaultVolumeMetric } from 'utils/metric';
@@ -12,6 +12,7 @@ import ProductImage from 'components/ProductImage';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import RelateEntity from 'components/RelateEntity';
 import { Label, Display } from 'components/Form';
 import { FullValueTooltip, Tooltip } from 'components/Tooltip';
@@ -48,13 +49,14 @@ import {
 type Props = {|
   container: ContainerPayload,
   onClick?: Function,
+  user: UserPayload,
 |};
 
 const defaultProps = {
   onClick: () => {},
 };
 
-const ContainerCard = ({ container, onClick, ...rest }: Props) => {
+const ContainerCard = ({ container, onClick, user, ...rest }: Props) => {
   const archived = getByPathWithDefault(false, 'archived', container);
   const containerType = getByPathWithDefault('', 'containerType', container);
   const containerOption = getByPathWithDefault('', 'containerOption', container);
@@ -236,7 +238,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
           </div>
           <div className={InputIconStyle}>
             <Display align="left">
-              <FormattedDate value={warehouseArrivalAgreedDate} mode="datetime" />
+              <FormattedDateTZ value={warehouseArrivalAgreedDate} user={user} />
             </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalAgreedDateApprovedBy)}>
               <Icon icon="CHECKED" />
@@ -253,7 +255,7 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
           </div>
           <div className={InputIconStyle}>
             <Display align="left">
-              <FormattedDate value={warehouseArrivalActualDate} mode="datetime" />
+              <FormattedDateTZ value={warehouseArrivalActualDate} user={user} />
             </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalActualDateApprovedBy)}>
               <Icon icon="CHECKED" />

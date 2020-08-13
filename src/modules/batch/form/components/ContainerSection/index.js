@@ -8,6 +8,7 @@ import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader, SectionWrapper } from 'components/Form';
 import { HIDE, NAVIGABLE, READONLY } from 'modules/batch/constants';
 import type { ContainerConfigType } from 'modules/batch/type';
+import { UserConsumer } from 'contexts/Viewer';
 import {
   ContainerSectionWrapperStyle,
   ContainerSectionBodyStyle,
@@ -25,37 +26,42 @@ function ContainerSection({ container, containerConfig }: Props) {
   }
 
   return (
-    <SectionWrapper id="batch_containerSection">
-      <SectionHeader
-        icon="CONTAINER"
-        title={<FormattedMessage id="modules.Batches.container" defaultMessage="CONTAINER" />}
-      />
-      <div className={ContainerSectionWrapperStyle}>
-        <SectionNavBar>
-          <div id="sortsandfilterswip" />
-        </SectionNavBar>
-        <div className={ContainerSectionBodyStyle}>
-          {container ? (
-            <ContainerCard
-              container={container}
-              readOnly={containerConfig === READONLY}
-              onClick={() => {
-                if (containerConfig === NAVIGABLE) {
-                  navigate(`/container/${encodeId(container.id)}`);
-                }
-              }}
-            />
-          ) : (
-            <div className={EmptyMessageStyle}>
-              <FormattedMessage
-                id="modules.Batches.noContainerFound"
-                defaultMessage="No container found"
-              />
+    <UserConsumer>
+      {({ user }) => (
+        <SectionWrapper id="batch_containerSection">
+          <SectionHeader
+            icon="CONTAINER"
+            title={<FormattedMessage id="modules.Batches.container" defaultMessage="CONTAINER" />}
+          />
+          <div className={ContainerSectionWrapperStyle}>
+            <SectionNavBar>
+              <div id="sortsandfilterswip" />
+            </SectionNavBar>
+            <div className={ContainerSectionBodyStyle}>
+              {container ? (
+                <ContainerCard
+                  container={container}
+                  user={user}
+                  readOnly={containerConfig === READONLY}
+                  onClick={() => {
+                    if (containerConfig === NAVIGABLE) {
+                      navigate(`/container/${encodeId(container.id)}`);
+                    }
+                  }}
+                />
+              ) : (
+                <div className={EmptyMessageStyle}>
+                  <FormattedMessage
+                    id="modules.Batches.noContainerFound"
+                    defaultMessage="No container found"
+                  />
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </div>
-    </SectionWrapper>
+          </div>
+        </SectionWrapper>
+      )}
+    </UserConsumer>
   );
 }
 

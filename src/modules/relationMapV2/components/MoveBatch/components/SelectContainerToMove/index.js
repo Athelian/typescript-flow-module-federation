@@ -6,6 +6,7 @@ import useFilterSort from 'hooks/useFilterSort';
 import loadMore from 'utils/loadMore';
 import { useEntityHasPermissions } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
+import type { UserPayload } from 'generated/graphql';
 import {
   ContainerFilterConfig,
   ContainerSortConfig,
@@ -24,6 +25,7 @@ import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
 import { BATCH } from 'modules/relationMapV2/constants';
 import ValidationCardOverlay from 'components/ValidationCardOverlay';
+import { UserConsumer } from 'contexts/Viewer';
 import { OverlayStyle } from './style';
 import { containerListQuery } from './query';
 import { moveBatchesToContainer } from './mutation';
@@ -36,10 +38,12 @@ function ContainerRenderer({
   container,
   selected,
   setSelected,
+  user,
 }: {
   container: Object,
   selected: ?Object,
   setSelected: (?Object) => void,
+  user: UserPayload,
 }) {
   const { state, selectors } = FocusedView.useContainer();
   const { mapping } = Entities.useContainer();
@@ -98,6 +102,7 @@ function ContainerRenderer({
     <ValidationCardOverlay invalidMessage={msg()}>
       <ContainerCard
         container={container}
+        user={user}
         selectable={container.id === selected?.id}
         selected={container.id === selected?.id}
         onClick={() => {
@@ -182,20 +187,27 @@ function SelectContainerToMove({ onSuccess }: Props) {
                 return (
                   <>
                     {isProcessing && <div className={OverlayStyle} />}
-                    <ContainerGridView
-                      items={data?.containers?.nodes ?? []}
-                      onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'containers')}
-                      hasMore={hasMore}
-                      isLoading={loading}
-                      renderItem={container => (
-                        <ContainerRenderer
-                          key={container?.id}
-                          selected={selected}
-                          setSelected={setSelected}
-                          container={container}
+                    <UserConsumer>
+                      {({ user }) => (
+                        <ContainerGridView
+                          items={data?.containers?.nodes ?? []}
+                          onLoadMore={() =>
+                            loadMore({ fetchMore, data }, queryVariables, 'containers')
+                          }
+                          hasMore={hasMore}
+                          isLoading={loading}
+                          renderItem={container => (
+                            <ContainerRenderer
+                              key={container?.id}
+                              selected={selected}
+                              setSelected={setSelected}
+                              container={container}
+                              user={user}
+                            />
+                          )}
                         />
                       )}
-                    />
+                    </UserConsumer>
                   </>
                 );
               }}

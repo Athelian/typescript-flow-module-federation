@@ -39,12 +39,11 @@ export const isDateObject = (date: any): boolean => date instanceof Date;
 // ex. (2020-01-01T11:01:00Z) => 2020-01-01T11:01:00
 // When send in UTC datetime,
 // it will NOT convert and simply return the datetime with no Z suffix
-export const removeZSuffix = (date: ?string): string | null => {
+export const removeZSuffix = (date: string): string => {
   if (date && date.charAt(date.length - 1) === 'Z') {
     return date.substring(0, date.length - 1);
   }
-
-  return null;
+  return date;
 };
 
 // ex. (+09:00) => -09:00
