@@ -42,7 +42,14 @@ export const getRelatedQuery = (relatedType: RelatedType) => {
   }
 };
 
-export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Function) => {
+export const getRelatedConfig = (
+  relatedType: RelatedType,
+  hasPermission: Function
+): ({
+  itemWidth: string,
+  emptyMessage: React.Node,
+  renderItems: (items: Array<Object>, user: UserPayload) => any,
+}) => {
   switch (relatedType) {
     case 'orders':
       return {

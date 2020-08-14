@@ -17,7 +17,7 @@ function getDateFormat(language: string) {
 }
 
 type Props = {
-  value: ?string | ?Date,
+  value: ?string,
   user: UserPayload,
 };
 
