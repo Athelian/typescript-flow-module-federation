@@ -1458,6 +1458,7 @@ function ContainerSummaryCell({
 }: CellProps & { shipment: ?ShipmentPayload, isExpand: boolean, onClick: Function }) {
   const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
+  const { user } = useUser();
   const containerCount = shipment?.containerCount ?? 0;
   const batchCount = shipment?.batchCount ?? 0;
   const batchIds = (shipment?.batches ?? []).map(batch => batch?.id).filter(Boolean);
@@ -1505,6 +1506,7 @@ function ContainerSummaryCell({
             <CellWrapper isExpandedHeading={isExpand}>
               <ContainerHeading
                 containers={containers}
+                user={user}
                 hasSelectedChildren={isTargetedAnyContainers}
                 hasFilterHits={isMatched}
                 isExpanded={isExpand}
