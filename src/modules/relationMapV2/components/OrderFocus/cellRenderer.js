@@ -1581,6 +1581,7 @@ function ContainerSummaryCell({
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
   const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
+  const { user } = useUser();
   const containerCount = order?.containerCount ?? 0;
   const orderItems = order?.orderItems ?? [];
   const batchIds = flatten(
@@ -1638,6 +1639,7 @@ function ContainerSummaryCell({
             <CellWrapper isExpandedHeading={isExpand}>
               <ContainerHeading
                 containers={data?.containers || []}
+                user={user}
                 hasSelectedChildren={isTargetedAnyContainers}
                 hasFilterHits={isMatched}
                 isExpanded={isExpand}

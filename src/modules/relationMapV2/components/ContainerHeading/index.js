@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FocusedView } from 'modules/relationMapV2/store';
-import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
+import type { UserPayload } from 'generated/graphql';
 import { Display, Label } from 'components/Form';
 import { CONTAINER, CONTAINER_WIDTH } from 'modules/relationMapV2/constants';
 import { isBefore, isAfter, differenceInMinutes } from 'utils/date';
@@ -44,6 +45,7 @@ type Props = {|
   onClick: Function,
   total: number,
   onSelectAll: Function,
+  user: UserPayload,
 |};
 
 export default function ContainerHeading({
@@ -54,6 +56,7 @@ export default function ContainerHeading({
   onClick,
   total,
   onSelectAll,
+  user,
 }: Props) {
   const { oldestDelivery, newestDelivery } = getContainerDateRanges(containers);
 
@@ -82,7 +85,7 @@ export default function ContainerHeading({
 
           <div className={DatesWrapperStyle}>
             <Display blackout={!canViewDelivery}>
-              <FormattedDate value={oldestDelivery} mode="datetime" />
+              <FormattedDateTZ value={oldestDelivery} user={user} />
             </Display>
 
             {canViewDelivery &&
@@ -92,7 +95,7 @@ export default function ContainerHeading({
                 <>
                   <div className={DashStyle}>-</div>
                   <Display>
-                    <FormattedDate value={newestDelivery} mode="datetime" />
+                    <FormattedDateTZ value={newestDelivery} user={user} />
                   </Display>
                 </>
               )}
