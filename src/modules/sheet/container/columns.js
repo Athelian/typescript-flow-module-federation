@@ -63,7 +63,7 @@ const columns: Array<ColumnConfig> = [
     title: <FormattedMessage {...containerMessages.warehouseArrivalAgreedDate} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: ColumnWidths.Date,
+    width: ColumnWidths.Datetime,
   },
   {
     key: 'container.warehouseArrivalAgreedDateApproved',
@@ -78,7 +78,7 @@ const columns: Array<ColumnConfig> = [
     title: <FormattedMessage {...containerMessages.warehouseArrivalActualDate} />,
     icon: 'CONTAINER',
     color: colors.CONTAINER,
-    width: ColumnWidths.Date,
+    width: ColumnWidths.Datetime,
   },
   {
     key: 'container.warehouseArrivalActualDateApproved',
