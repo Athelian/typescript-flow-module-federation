@@ -9,7 +9,7 @@ import {
   InputStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 
-const DatetimeInput = ({ value, onChange, readonly }: InputProps<Date | string>) => {
+const DatetimeInput = ({ value, onChange, readonly }: InputProps<string>) => {
   const { user } = useUser();
 
   return (
