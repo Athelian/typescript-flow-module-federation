@@ -4,7 +4,7 @@ import { Container } from 'unstated';
 import { cloneDeep, set } from 'lodash';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals, isNullOrUndefined } from 'utils/fp';
-import { formatUTCDateToDateObjectWithTimezone } from 'utils/date';
+import { formatDatetimeQueryToDatetimeWithTimezone } from 'utils/date';
 
 type ContainersState = {|
   containers: Array<ContainerPayload>,
@@ -49,7 +49,7 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
         ...(isNullOrUndefined(warehouseArrivalAgreedDate)
           ? {}
           : {
-              warehouseArrivalAgreedDate: formatUTCDateToDateObjectWithTimezone(
+              warehouseArrivalAgreedDate: formatDatetimeQueryToDatetimeWithTimezone(
                 warehouseArrivalAgreedDate,
                 timezone
               ),
@@ -57,7 +57,7 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
         ...(isNullOrUndefined(warehouseArrivalActualDate)
           ? {}
           : {
-              warehouseArrivalActualDate: formatUTCDateToDateObjectWithTimezone(
+              warehouseArrivalActualDate: formatDatetimeQueryToDatetimeWithTimezone(
                 warehouseArrivalActualDate,
                 timezone
               ),

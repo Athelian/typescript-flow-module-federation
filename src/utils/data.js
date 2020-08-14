@@ -3,7 +3,7 @@ import type { Task, MetricValue } from 'generated/graphql';
 import { diff } from 'deep-object-diff';
 import { is, pipe, when, either, map, reject, isNil, isEmpty, omit, has } from 'ramda';
 import logger from 'utils/logger';
-import { formatDateObjectWithTimezoneForMutation, isDateObject } from './date';
+import { isDateObject } from './date';
 import { defaultDistanceMetric } from './metric';
 import { isEquals, getByPathWithDefault, getByPath } from './fp';
 
@@ -117,9 +117,13 @@ export const parseDateField = (key: string, originalDate: ?string, newDate: ?str
 };
 
 // Use for Datetime fields. Need to parse into Date object.
-export const parseDatetimeField = (key: string, originalDate: ?Date, newDate: ?Date): Object => {
-  const parsedOriginalDate = formatDateObjectWithTimezoneForMutation(originalDate);
-  const parsedNewDate = formatDateObjectWithTimezoneForMutation(newDate);
+export const parseDatetimeField = (
+  key: string,
+  originalDate: ?string,
+  newDate: ?string
+): Object => {
+  const parsedOriginalDate = originalDate || null;
+  const parsedNewDate = newDate || null;
 
   if (!isEquals(parsedOriginalDate, parsedNewDate)) return { [key]: parsedNewDate };
   return {};

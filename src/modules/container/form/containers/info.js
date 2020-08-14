@@ -2,7 +2,7 @@
 import type { ContainerPayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
-import { formatUTCDateToDateObjectWithTimezone } from 'utils/date';
+import { formatDatetimeQueryToDatetimeWithTimezone } from 'utils/date';
 import { isEquals, isNullOrUndefined } from 'utils/fp';
 import { removeNulls, cleanFalsyAndTypeName, extractForbiddenId } from 'utils/data';
 
@@ -81,7 +81,7 @@ export default class ContainerInfoContainer extends Container<ContainerPayload> 
       ...(isNullOrUndefined(warehouseArrivalAgreedDate)
         ? {}
         : {
-            warehouseArrivalAgreedDate: formatUTCDateToDateObjectWithTimezone(
+            warehouseArrivalAgreedDate: formatDatetimeQueryToDatetimeWithTimezone(
               warehouseArrivalAgreedDate,
               timezone
             ),
@@ -89,7 +89,7 @@ export default class ContainerInfoContainer extends Container<ContainerPayload> 
       ...(isNullOrUndefined(warehouseArrivalActualDate)
         ? {}
         : {
-            warehouseArrivalActualDate: formatUTCDateToDateObjectWithTimezone(
+            warehouseArrivalActualDate: formatDatetimeQueryToDatetimeWithTimezone(
               warehouseArrivalActualDate,
               timezone
             ),

@@ -19,6 +19,7 @@ import { Display } from 'components/Form';
 import Selector from 'components/Selector';
 import useFilterSort from 'hooks/useFilterSort';
 import useQueryList from 'hooks/useQueryList';
+import { UserConsumer } from 'contexts/Viewer';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
 import Ids, { type SelectorProps } from '../Common/Ids';
@@ -58,22 +59,27 @@ const ContainerSelector = ({ open, onClose, selected, setSelected }: SelectorPro
             </SlideViewNavBar>
 
             <Content>
-              <GridView
-                onLoadMore={loadMore}
-                hasMore={hasMore}
-                isLoading={loading}
-                isEmpty={nodes.length === 0}
-                emptyMessage={null}
-                itemWidth="195px"
-              >
-                {nodes.map(container => (
-                  <ContainerCard
-                    key={container?.id}
-                    container={container}
-                    {...getItemProps(container)}
-                  />
-                ))}
-              </GridView>
+              <UserConsumer>
+                {({ user }) => (
+                  <GridView
+                    onLoadMore={loadMore}
+                    hasMore={hasMore}
+                    isLoading={loading}
+                    isEmpty={nodes.length === 0}
+                    emptyMessage={null}
+                    itemWidth="195px"
+                  >
+                    {nodes.map(container => (
+                      <ContainerCard
+                        key={container?.id}
+                        container={container}
+                        user={user}
+                        {...getItemProps(container)}
+                      />
+                    ))}
+                  </GridView>
+                )}
+              </UserConsumer>
             </Content>
           </SlideViewLayout>
         )}
