@@ -22,6 +22,7 @@ import {
   CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
 } from 'modules/permission/constants/container';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
+import { UserConsumer } from 'contexts/Viewer';
 import { generateContainer } from 'utils/container';
 import { getLatestDate } from 'utils/shipment';
 import SlideView from 'components/SlideView';
@@ -543,44 +544,49 @@ function ContainersArea({
                                     </>
                                   )}
                                 </BooleanValue>
-                                <SlideView
-                                  isOpen={isOpenContainerForm}
-                                  onRequestClose={() => toggleContainerForm(false)}
-                                  shouldConfirm={() => {
-                                    const button = document.getElementById(
-                                      'container_form_save_button'
-                                    );
-                                    return button;
-                                  }}
-                                >
-                                  {isOpenContainerForm && (
-                                    <ContainerFormInSlide
-                                      isNew={!container.updatedAt}
-                                      container={{
-                                        ...container,
-                                        shipment: container.shipment
-                                          ? { ...container.shipment, ...shipmentInfo }
-                                          : shipmentInfo,
+                                <UserConsumer>
+                                  {({ user }) => (
+                                    <SlideView
+                                      isOpen={isOpenContainerForm}
+                                      onRequestClose={() => toggleContainerForm(false)}
+                                      shouldConfirm={() => {
+                                        const button = document.getElementById(
+                                          'container_form_save_button'
+                                        );
+                                        return button;
                                       }}
-                                      onSave={newContainer => {
-                                        const { batches: newBatches } = newContainer;
-                                        setBatchesState('batches', [
-                                          ...batches.filter(
-                                            ({ container: batchContainer }) =>
-                                              isNullOrUndefined(batchContainer) ||
-                                              batchContainer.id !== container.id
-                                          ),
-                                          ...newBatches.map(batch => ({
-                                            ...batch,
-                                            container: newContainer,
-                                          })),
-                                        ]);
-                                        setDeepFieldValue(`containers.${index}`, newContainer);
-                                        toggleContainerForm(false);
-                                      }}
-                                    />
+                                    >
+                                      {isOpenContainerForm && (
+                                        <ContainerFormInSlide
+                                          isNew={!container.updatedAt}
+                                          container={{
+                                            ...container,
+                                            shipment: container.shipment
+                                              ? { ...container.shipment, ...shipmentInfo }
+                                              : shipmentInfo,
+                                          }}
+                                          onSave={newContainer => {
+                                            const { batches: newBatches } = newContainer;
+                                            setBatchesState('batches', [
+                                              ...batches.filter(
+                                                ({ container: batchContainer }) =>
+                                                  isNullOrUndefined(batchContainer) ||
+                                                  batchContainer.id !== container.id
+                                              ),
+                                              ...newBatches.map(batch => ({
+                                                ...batch,
+                                                container: newContainer,
+                                              })),
+                                            ]);
+                                            setDeepFieldValue(`containers.${index}`, newContainer);
+                                            toggleContainerForm(false);
+                                          }}
+                                          timezone={user.timezone}
+                                        />
+                                      )}
+                                    </SlideView>
                                   )}
-                                </SlideView>
+                                </UserConsumer>
                               </>
                             )}
                           </BooleanValue>

@@ -48,6 +48,9 @@ export const allCustomFieldDefinitionsQuery = gql`
     shipmentCustomFields: fieldDefinitions(entityType: Shipment) {
       ...fieldDefinitionFragment
     }
+    containerCustomFields: fieldDefinitions(entityType: Container) {
+      ...fieldDefinitionFragment
+    }
     productCustomFields: fieldDefinitions(entityType: Product) {
       ...fieldDefinitionFragment
     }

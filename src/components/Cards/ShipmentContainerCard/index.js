@@ -391,27 +391,19 @@ const ShipmentContainerCard = ({
                 <FormField
                   name={`container.${id}.warehouseArrivalAgreedDate`}
                   initValue={warehouseArrivalAgreedDate}
+                  setFieldValue={(name: string, value: any) => {
+                    update({ ...container, warehouseArrivalAgreedDate: value });
+                  }}
                 >
                   {({ name: fieldName, ...inputHandlers }) => (
                     <DateTimeInputFactory
+                      {...inputHandlers}
                       inputWidth="165px"
                       inputHeight="20px"
                       inputAlign="left"
                       name={fieldName}
                       editable={editable.warehouseArrivalAgreedDate}
                       hideTooltip
-                      {...{
-                        ...inputHandlers,
-                        onBlur: evt => {
-                          inputHandlers.onBlur(evt);
-                          update({
-                            ...container,
-                            warehouseArrivalAgreedDate: inputHandlers.value
-                              ? inputHandlers.value
-                              : null,
-                          });
-                        },
-                      }}
                     />
                   )}
                 </FormField>
@@ -475,27 +467,19 @@ const ShipmentContainerCard = ({
                 <FormField
                   name={`container.${id}.warehouseArrivalActualDate`}
                   initValue={warehouseArrivalActualDate}
+                  setFieldValue={(name: string, value: any) => {
+                    update({ ...container, warehouseArrivalActualDate: value });
+                  }}
                 >
                   {({ name: fieldName, ...inputHandlers }) => (
                     <DateTimeInputFactory
+                      {...inputHandlers}
                       inputWidth="165px"
                       inputHeight="20px"
                       inputAlign="left"
                       name={fieldName}
                       editable={editable.warehouseArrivalActualDate}
                       hideTooltip
-                      {...{
-                        ...inputHandlers,
-                        onBlur: evt => {
-                          inputHandlers.onBlur(evt);
-                          update({
-                            ...container,
-                            warehouseArrivalActualDate: inputHandlers.value
-                              ? inputHandlers.value
-                              : null,
-                          });
-                        },
-                      }}
                     />
                   )}
                 </FormField>

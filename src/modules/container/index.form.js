@@ -19,6 +19,7 @@ import SlideView from 'components/SlideView';
 import Timeline from 'modules/timeline/components/Timeline';
 import { QueryForm } from 'components/common';
 import { removeTypename } from 'utils/data';
+import { UserConsumer } from 'contexts/Viewer';
 import { containerFormQuery } from './form/query';
 import { updateContainerMutation, prepareParsedContainerInput } from './form/mutation';
 import { ContainerInfoContainer, ContainerBatchesContainer } from './form/containers';
@@ -112,10 +113,11 @@ class ContainerFormModule extends React.Component<Props> {
       containerInfoContainer,
       containerBatchesContainer,
     }: { containerInfoContainer: Object, containerBatchesContainer: Object },
-    container: Object
+    container: Object,
+    timezone: string
   ) => {
     const { batches = [], representativeBatch, ...info } = container;
-    containerInfoContainer.initDetailValues(info);
+    containerInfoContainer.initDetailValues(info, timezone);
     containerBatchesContainer.initDetailValues({ batches, representativeBatch });
     return null;
   };
@@ -125,7 +127,8 @@ class ContainerFormModule extends React.Component<Props> {
       containerInfoContainer,
       containerBatchesContainer,
     }: { containerInfoContainer: Object, containerBatchesContainer: Object },
-    container: Object
+    container: Object,
+    timezone: string
   ) => {
     const hasInitialStateYet =
       containerInfoContainer.state.id || Object.keys(container).length === 0;
@@ -136,7 +139,8 @@ class ContainerFormModule extends React.Component<Props> {
         containerInfoContainer,
         containerBatchesContainer,
       },
-      container
+      container,
+      timezone
     );
     return null;
   };
@@ -152,178 +156,190 @@ class ContainerFormModule extends React.Component<Props> {
     const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
     const CurrentLayout = isSlideView ? SlideViewLayout : React.Fragment;
     return (
-      <Provider inject={[formContainer]}>
-        <Mutation
-          mutation={updateContainerMutation}
-          onCompleted={this.onMutationCompleted}
-          {...mutationKey}
-        >
-          {(saveContainer, { loading, error }) => (
-            <CurrentLayout>
-              <CurrentNavBar>
-                <EntityIcon icon="CONTAINER" color="CONTAINER" />
-                <JumpToSection>
-                  <SectionTabs
-                    link="container_containerSection"
-                    label={
-                      <FormattedMessage
-                        id="modules.container.container"
-                        defaultMessage="CONTAINER"
+      <UserConsumer>
+        {({ user }) => (
+          <Provider inject={[formContainer]}>
+            <Mutation
+              mutation={updateContainerMutation}
+              onCompleted={this.onMutationCompleted}
+              {...mutationKey}
+            >
+              {(saveContainer, { loading, error }) => (
+                <CurrentLayout>
+                  <CurrentNavBar>
+                    <EntityIcon icon="CONTAINER" color="CONTAINER" />
+                    <JumpToSection>
+                      <SectionTabs
+                        link="container_containerSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.container.container"
+                            defaultMessage="CONTAINER"
+                          />
+                        }
+                        icon="CONTAINER"
                       />
-                    }
-                    icon="CONTAINER"
-                  />
-                  <SectionTabs
-                    link="container_shipmentSection"
-                    label={
-                      <FormattedMessage id="modules.container.shipment" defaultMessage="SHIPMENT" />
-                    }
-                    icon="SHIPMENT"
-                  />
-                  <SectionTabs
-                    link="container_batchesSection"
-                    label={
-                      <FormattedMessage id="modules.container.batches" defaultMessage="BATCHES" />
-                    }
-                    icon="BATCH"
-                  />
-                  <SectionTabs
-                    link="container_ordersSection"
-                    label={
-                      <FormattedMessage id="modules.container.orders" defaultMessage="ORDERS" />
-                    }
-                    icon="ORDER"
-                  />
-                </JumpToSection>
-                <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
-                  {(containerInfoContainer, containerBatchesContainer) => (
-                    <>
-                      <BooleanValue>
-                        {({ value: isOpen, set: toggleLogs }) => (
-                          <>
-                            <LogsButton
-                              entityType="container"
-                              entityId={containerId}
-                              onClick={() => toggleLogs(true)}
-                            />
-                            <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
-                              <SlideViewLayout>
-                                {containerId && isOpen && (
-                                  <>
-                                    <SlideViewNavBar>
-                                      <EntityIcon icon="LOGS" color="LOGS" />
-                                    </SlideViewNavBar>
-
-                                    <Content>
-                                      <Timeline
-                                        query={containerTimelineQuery}
-                                        queryField="container"
-                                        variables={{
-                                          id: decodeId(containerId),
-                                        }}
-                                        entity={{
-                                          containerId: decodeId(containerId),
-                                        }}
-                                        users={containerInfoContainer.state.shipment.followers}
-                                      />
-                                    </Content>
-                                  </>
-                                )}
-                              </SlideViewLayout>
-                            </SlideView>
-                          </>
-                        )}
-                      </BooleanValue>
-
-                      {containerId &&
-                        !containerInfoContainer.isDirty() &&
-                        !containerBatchesContainer.isDirty() && (
-                          <ExportButton
-                            type="Container"
-                            exportQuery={containerExportQuery}
-                            variables={{ id: decodeId(containerId) }}
+                      <SectionTabs
+                        link="container_shipmentSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.container.shipment"
+                            defaultMessage="SHIPMENT"
                           />
-                        )}
-
-                      {(containerInfoContainer.isDirty() ||
-                        containerBatchesContainer.isDirty()) && (
+                        }
+                        icon="SHIPMENT"
+                      />
+                      <SectionTabs
+                        link="container_batchesSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.container.batches"
+                            defaultMessage="BATCHES"
+                          />
+                        }
+                        icon="BATCH"
+                      />
+                      <SectionTabs
+                        link="container_ordersSection"
+                        label={
+                          <FormattedMessage id="modules.container.orders" defaultMessage="ORDERS" />
+                        }
+                        icon="ORDER"
+                      />
+                    </JumpToSection>
+                    <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
+                      {(containerInfoContainer, containerBatchesContainer) => (
                         <>
-                          <ResetFormButton
-                            onClick={() =>
-                              this.onReset(
-                                { containerInfoContainer, containerBatchesContainer },
-                                formContainer
-                              )
-                            }
-                          />
-                          <SaveFormButton
-                            id="container_form_save_button"
-                            disabled={
-                              !formContainer.isReady(
-                                {
-                                  ...containerInfoContainer.state,
-                                  ...containerBatchesContainer.state,
-                                },
-                                validator
-                              )
-                            }
-                            isLoading={loading}
-                            onClick={() =>
-                              this.onSave(
-                                {
-                                  ...containerInfoContainer.originalValues,
-                                  ...containerBatchesContainer.originalValues,
-                                },
-                                containerBatchesContainer.existingBatches,
-                                {
-                                  ...containerInfoContainer.state,
-                                  ...containerBatchesContainer.state,
-                                },
-                                saveContainer,
-                                updateContainer => {
-                                  this.initAllValues(
+                          <BooleanValue>
+                            {({ value: isOpen, set: toggleLogs }) => (
+                              <>
+                                <LogsButton
+                                  entityType="container"
+                                  entityId={containerId}
+                                  onClick={() => toggleLogs(true)}
+                                />
+                                <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
+                                  <SlideViewLayout>
+                                    {containerId && isOpen && (
+                                      <>
+                                        <SlideViewNavBar>
+                                          <EntityIcon icon="LOGS" color="LOGS" />
+                                        </SlideViewNavBar>
+
+                                        <Content>
+                                          <Timeline
+                                            query={containerTimelineQuery}
+                                            queryField="container"
+                                            variables={{
+                                              id: decodeId(containerId),
+                                            }}
+                                            entity={{
+                                              containerId: decodeId(containerId),
+                                            }}
+                                            users={containerInfoContainer.state.shipment.followers}
+                                          />
+                                        </Content>
+                                      </>
+                                    )}
+                                  </SlideViewLayout>
+                                </SlideView>
+                              </>
+                            )}
+                          </BooleanValue>
+
+                          {containerId &&
+                            !containerInfoContainer.isDirty() &&
+                            !containerBatchesContainer.isDirty() && (
+                              <ExportButton
+                                type="Container"
+                                exportQuery={containerExportQuery}
+                                variables={{ id: decodeId(containerId) }}
+                              />
+                            )}
+
+                          {(containerInfoContainer.isDirty() ||
+                            containerBatchesContainer.isDirty()) && (
+                            <>
+                              <ResetFormButton
+                                onClick={() =>
+                                  this.onReset(
                                     { containerInfoContainer, containerBatchesContainer },
-                                    updateContainer
-                                  );
-                                  formContainer.onReset();
-                                },
-                                formContainer.onErrors
-                              )
-                            }
-                          />
+                                    formContainer
+                                  )
+                                }
+                              />
+                              <SaveFormButton
+                                id="container_form_save_button"
+                                disabled={
+                                  !formContainer.isReady(
+                                    {
+                                      ...containerInfoContainer.state,
+                                      ...containerBatchesContainer.state,
+                                    },
+                                    validator
+                                  )
+                                }
+                                isLoading={loading}
+                                onClick={() =>
+                                  this.onSave(
+                                    {
+                                      ...containerInfoContainer.originalValues,
+                                      ...containerBatchesContainer.originalValues,
+                                    },
+                                    containerBatchesContainer.existingBatches,
+                                    {
+                                      ...containerInfoContainer.state,
+                                      ...containerBatchesContainer.state,
+                                    },
+                                    saveContainer,
+                                    updateContainer => {
+                                      this.initAllValues(
+                                        { containerInfoContainer, containerBatchesContainer },
+                                        updateContainer,
+                                        user.timezone
+                                      );
+                                      formContainer.onReset();
+                                    },
+                                    formContainer.onErrors
+                                  )
+                                }
+                              />
+                            </>
+                          )}
                         </>
                       )}
-                    </>
-                  )}
-                </Subscribe>
-              </CurrentNavBar>
-              <Content>
-                {error && <p>Error: Please try again.</p>}
-                <QueryForm
-                  query={containerFormQuery}
-                  entityId={containerId}
-                  entityType="container"
-                  render={container => {
-                    return (
-                      <>
-                        <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
-                          {(containerInfoContainer, containerBatchesContainer) =>
-                            this.onFormReady(
-                              { containerInfoContainer, containerBatchesContainer },
-                              container
-                            )
-                          }
-                        </Subscribe>
-                        <ContainerForm container={container} />
-                      </>
-                    );
-                  }}
-                />
-              </Content>
-            </CurrentLayout>
-          )}
-        </Mutation>
-      </Provider>
+                    </Subscribe>
+                  </CurrentNavBar>
+                  <Content>
+                    {error && <p>Error: Please try again.</p>}
+                    <QueryForm
+                      query={containerFormQuery}
+                      entityId={containerId}
+                      entityType="container"
+                      render={container => {
+                        return (
+                          <>
+                            <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
+                              {(containerInfoContainer, containerBatchesContainer) =>
+                                this.onFormReady(
+                                  { containerInfoContainer, containerBatchesContainer },
+                                  container,
+                                  user.timezone
+                                )
+                              }
+                            </Subscribe>
+                            <ContainerForm container={container} />
+                          </>
+                        );
+                      }}
+                    />
+                  </Content>
+                </CurrentLayout>
+              )}
+            </Mutation>
+          </Provider>
+        )}
+      </UserConsumer>
     );
   }
 }

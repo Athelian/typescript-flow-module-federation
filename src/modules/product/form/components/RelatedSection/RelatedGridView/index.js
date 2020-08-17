@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import usePermission from 'hooks/usePermission';
+import { UserConsumer } from 'contexts/Viewer';
 import { type RelatedType, getRelatedConfig } from '../helpers';
 
 type Props = {
@@ -25,19 +26,23 @@ const RelatedGridView = ({
   const { itemWidth, renderItems } = getRelatedConfig(relatedType, hasPermission);
 
   return (
-    <GridView
-      onLoadMore={onLoadMore}
-      hasMore={hasMore}
-      isLoading={isLoading}
-      itemWidth={itemWidth}
-      isEmpty={items.length === 0}
-      padding="30px 0"
-      emptyMessage={
-        <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
-      }
-    >
-      {renderItems(items)}
-    </GridView>
+    <UserConsumer>
+      {({ user }) => (
+        <GridView
+          onLoadMore={onLoadMore}
+          hasMore={hasMore}
+          isLoading={isLoading}
+          itemWidth={itemWidth}
+          isEmpty={items.length === 0}
+          padding="30px 0"
+          emptyMessage={
+            <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
+          }
+        >
+          {renderItems(items, user)}
+        </GridView>
+      )}
+    </UserConsumer>
   );
 };
 

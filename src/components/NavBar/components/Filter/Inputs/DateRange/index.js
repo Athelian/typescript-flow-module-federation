@@ -2,6 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Label, DateInput, DefaultStyle } from 'components/Form';
+import useUser from 'hooks/useUser';
+import { formatDateInputToDateObjectWithTimezone } from 'utils/date';
 import type { FilterInputProps } from '../../types';
 import messages from '../../messages';
 
@@ -10,6 +12,8 @@ const DateRange = ({
   readonly,
   onChange,
 }: FilterInputProps<{ after: Date | null, before: Date | null }>) => {
+  const { user } = useUser();
+
   return (
     <>
       <Label height="30px">
@@ -19,7 +23,12 @@ const DateRange = ({
         <DateInput
           value={value.after}
           onChange={e => {
-            onChange({ ...value, after: e.target.value ? new Date(e.target.value) : null });
+            onChange({
+              ...value,
+              after: e.target.value
+                ? formatDateInputToDateObjectWithTimezone(e.target.value, user.timezone)
+                : null,
+            });
           }}
           readOnly={readonly}
         />
@@ -32,7 +41,12 @@ const DateRange = ({
         <DateInput
           value={value.before}
           onChange={e => {
-            onChange({ ...value, before: e.target.value ? new Date(e.target.value) : null });
+            onChange({
+              ...value,
+              before: e.target.value
+                ? formatDateInputToDateObjectWithTimezone(e.target.value, user.timezone)
+                : null,
+            });
           }}
           readOnly={readonly}
         />

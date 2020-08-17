@@ -8,6 +8,7 @@ import { uuid } from 'utils/id';
 import { useEntityHasPermissions, useHasPermissions } from 'contexts/Permissions';
 import LoadingIcon from 'components/LoadingIcon';
 import BaseCard from 'components/Cards';
+import useUser from 'hooks/useUser';
 import {
   ORDER,
   ORDER_ITEM,
@@ -704,6 +705,7 @@ function ContainerCell({
   const { state, dispatch } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { entities } = mapping;
+  const { user } = useUser();
   const { matches } = Hits.useContainer();
   const containerId = data?.id;
   const container = entities?.containers?.[containerId] ?? { id: containerId };
@@ -913,6 +915,7 @@ function ContainerCell({
             <ContainerCard
               organizationId={data?.ownedBy?.id}
               container={data}
+              user={user}
               onViewForm={evt => {
                 evt.stopPropagation();
                 dispatch({
@@ -1455,6 +1458,7 @@ function ContainerSummaryCell({
 }: CellProps & { shipment: ?ShipmentPayload, isExpand: boolean, onClick: Function }) {
   const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
+  const { user } = useUser();
   const containerCount = shipment?.containerCount ?? 0;
   const batchCount = shipment?.batchCount ?? 0;
   const batchIds = (shipment?.batches ?? []).map(batch => batch?.id).filter(Boolean);
@@ -1502,6 +1506,7 @@ function ContainerSummaryCell({
             <CellWrapper isExpandedHeading={isExpand}>
               <ContainerHeading
                 containers={containers}
+                user={user}
                 hasSelectedChildren={isTargetedAnyContainers}
                 hasFilterHits={isMatched}
                 isExpanded={isExpand}

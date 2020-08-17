@@ -7,6 +7,7 @@ import useQueryList from 'hooks/useQueryList';
 import { useEntityHasPermissions } from 'contexts/Permissions';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import type { UserPayload } from 'generated/graphql';
 import type { ActionComponentProps } from 'components/Sheet/SheetAction/types';
 import {
   EntityIcon,
@@ -22,6 +23,7 @@ import { ContainerCard } from 'components/Cards';
 import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
 import Selector from 'components/Selector';
+import useUser from 'hooks/useUser';
 import { executeActionMutation, useSheetActionDialog } from 'components/Sheet/SheetAction';
 import ValidationCardOverlay from 'components/ValidationCardOverlay';
 import { OverlayStyle } from './style';
@@ -41,6 +43,7 @@ type ImplProps = {|
 
 type ValidatedOrderCardProps = {|
   container: Object,
+  user: UserPayload,
   containerId: string,
   importerId: string,
   exporterId: string,
@@ -49,6 +52,7 @@ type ValidatedOrderCardProps = {|
 
 const ValidatedContainerCard = ({
   container,
+  user,
   containerId,
   importerId,
   exporterId,
@@ -94,7 +98,7 @@ const ValidatedContainerCard = ({
 
   return (
     <ValidationCardOverlay invalidMessage={invalidMessage}>
-      <ContainerCard container={container} {...itemProps} />
+      <ContainerCard container={container} user={user} {...itemProps} />
     </ValidationCardOverlay>
   );
 };
@@ -108,6 +112,7 @@ const BatchMoveToExistingContainerActionImpl = ({
   getExporterId,
 }: ImplProps) => {
   const [isOpen, close] = useSheetActionDialog(onDone);
+  const { user } = useUser();
   const [batchUpdate, { loading: isProcessing, called }] = useMutation(
     batchMoveToExistingContainerActionMutation
   );
@@ -187,6 +192,7 @@ const BatchMoveToExistingContainerActionImpl = ({
                   <ValidatedContainerCard
                     key={container.id}
                     container={container}
+                    user={user}
                     containerId={containerId}
                     importerId={importerId}
                     exporterId={exporterId}

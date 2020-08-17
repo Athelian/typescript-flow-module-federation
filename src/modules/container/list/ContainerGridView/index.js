@@ -8,9 +8,11 @@ import { ContainerCard } from 'components/Cards';
 import messages from 'modules/container/messages';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { CONTAINER_FORM } from 'modules/permission/constants/container';
+import { UserConsumer } from 'contexts/Viewer';
+import type { UserPayload } from 'generated/graphql';
 
 type OptionalProps = {
-  renderItem?: (item: Object) => React.Node,
+  renderItem?: (item: Object, user: UserPayload) => React.Node,
 };
 
 type Props = OptionalProps & {
@@ -20,7 +22,7 @@ type Props = OptionalProps & {
   isLoading: boolean,
 };
 
-const defaultRenderItem = (item: Object) => (
+const defaultRenderItem = (item: Object, user: UserPayload) => (
   <PartnerPermissionsWrapper key={item.id} data={item}>
     {permissions => (
       <ContainerCard
@@ -30,6 +32,7 @@ const defaultRenderItem = (item: Object) => (
             navigate(`/container/${encodeId(item.id)}`);
           }
         }}
+        user={user}
       />
     )}
   </PartnerPermissionsWrapper>
@@ -47,16 +50,20 @@ const ContainerGridView = ({
   renderItem = defaultRenderItem,
 }: Props) => {
   return (
-    <GridView
-      onLoadMore={onLoadMore}
-      hasMore={hasMore}
-      isLoading={isLoading}
-      itemWidth="195px"
-      isEmpty={items.length === 0}
-      emptyMessage={<FormattedMessage {...messages.noContainerFound} />}
-    >
-      {items.map(renderItem)}
-    </GridView>
+    <UserConsumer>
+      {({ user }) => (
+        <GridView
+          onLoadMore={onLoadMore}
+          hasMore={hasMore}
+          isLoading={isLoading}
+          itemWidth="195px"
+          isEmpty={items.length === 0}
+          emptyMessage={<FormattedMessage {...messages.noContainerFound} />}
+        >
+          {items.map(item => renderItem(item, user))}
+        </GridView>
+      )}
+    </UserConsumer>
   );
 };
 
