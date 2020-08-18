@@ -52,7 +52,7 @@ export const formatDateInputToDateObjectWithTimezone = (
     : null;
 
 export const hasTimezone = (date: ?string): boolean => {
-  return date && (date.includes('-') || date.includes('+'));
+  return !!(date && (date.includes('-') || date.includes('+')));
 };
 
 // ex. (2020-01-01T11:01:00Z) => 2020-01-01T11:01:00
