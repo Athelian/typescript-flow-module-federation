@@ -36,6 +36,25 @@ export const isValidDate = (date: any): boolean => !!date && isValid(new Date(da
 
 export const isDateObject = (date: any): boolean => date instanceof Date;
 
+export const formatDateInputToDateObjectWithTimezone = (
+  date: ?string,
+  timezone: string
+): Date | null =>
+  !!date && isValidDate(date)
+    ? zonedTimeToUtc(
+        new Date(
+          parseInt(date.substring(0, 4), 10),
+          parseInt(date.substring(5, 7), 10) - 1,
+          parseInt(date.substring(8, 10), 10)
+        ),
+        timezone
+      )
+    : null;
+
+export const hasTimezone = (date: ?string): boolean => {
+  return date && (date.includes('-') || date.includes('+'));
+};
+
 // ex. (2020-01-01T11:01:00Z) => 2020-01-01T11:01:00
 // When send in UTC datetime,
 // it will NOT convert and simply return the datetime with no Z suffix
@@ -82,21 +101,6 @@ export const addTimezone = (date: ?string, timezone: string): string => {
 
   return '';
 };
-
-export const formatDateInputToDateObjectWithTimezone = (
-  date: ?string,
-  timezone: string
-): Date | null =>
-  !!date && isValidDate(date)
-    ? zonedTimeToUtc(
-        new Date(
-          parseInt(date.substring(0, 4), 10),
-          parseInt(date.substring(5, 7), 10) - 1,
-          parseInt(date.substring(8, 10), 10)
-        ),
-        timezone
-      )
-    : null;
 
 // ex. (2020-01-01T11:01, +09:00) => 2020-01-01T02:01+09:00
 // When send in value from datetime input and user's timezone,

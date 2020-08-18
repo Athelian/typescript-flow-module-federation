@@ -1,10 +1,10 @@
 // @flow
-import * as React from 'react';
+import React, { useCallback } from 'react';
 import { injectIntl, type IntlShape } from 'react-intl';
 import { Display } from 'components/Form';
-import { formatToDateTimeInput, addTimezone, removeTimezone } from 'utils/date';
+import { addTimezone, removeTimezone, formatDatetimeWithTimezoneToUTCDatetime } from 'utils/date';
 import useUser from 'hooks/useUser';
-import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type';
 import { isNullOrUndefined } from 'utils/fp';
 import messages from 'components/Form/Inputs/messages';
@@ -27,22 +27,24 @@ const DateTimeInput = ({
 }: Props) => {
   const { user } = useUser();
 
-  const handleBlur = e => {
-    e.target.value = e.target.value ? formatToDateTimeInput(e.target.value) : '';
-    if (onBlur) {
-      onBlur({
-        ...e,
-        target: {
-          ...e.target,
-          value: addTimezone(e.target.value, user.timezone),
-        },
-      });
-    }
-  };
+  const handleBlur = useCallback(
+    e => {
+      if (onBlur) {
+        onBlur({
+          ...e,
+          target: {
+            ...e.target,
+            value: addTimezone(e.target.value, user.timezone),
+          },
+        });
+      }
+    },
+    [onBlur, user.timezone]
+  );
 
   return readOnly ? (
     <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
-      <FormattedDate value={value} mode="datetime" />
+      <FormattedDateTZ value={formatDatetimeWithTimezoneToUTCDatetime(value)} user={user} />
     </Display>
   ) : (
     <input
