@@ -74,7 +74,7 @@ import {
   StatusLabelStyle,
 } from './style';
 
-const renderFreeTime = (date: ?Date, approved: boolean) => {
+const renderFreeTime = (date: ?string, approved: boolean) => {
   if (date) {
     const freeTime = calculateFreeTime(date);
     let freeTimeColor;
