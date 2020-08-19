@@ -36,6 +36,7 @@ type Props = LabelProps &
         off: React.Node | string,
       },
     },
+    handleTimezone?: boolean,
   };
 
 const defaultProps = {
@@ -50,6 +51,7 @@ const defaultProps = {
   vertical: false,
   showExtraToggle: false,
   toggled: false,
+  handleTimezone: false,
 };
 
 const DateInputFactory = ({
@@ -85,6 +87,7 @@ const DateInputFactory = ({
   toggled,
   onToggle,
   toggleMessages,
+  handleTimezone,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
@@ -118,6 +121,7 @@ const DateInputFactory = ({
     onFocus,
     align: inputAlign,
     required,
+    handleTimezone,
     ...(inputColor
       ? {
           color: colors[inputColor],

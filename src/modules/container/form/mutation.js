@@ -37,7 +37,6 @@ import {
   parseGenericField,
   parseEnumField,
   parseMemoField,
-  parseDateField,
   parseArrayOfIdsField,
   parseParentIdField,
   parseArrayOfChildrenField,
@@ -174,9 +173,9 @@ export const prepareParsedContainerInput = ({
         approvedAt: newValues.warehouseArrivalActualDateApprovedAt,
       }
     ),
-    ...parseDateField(
+    ...parseDatetimeField(
       'freeTimeStartDate',
-      getByPathWithDefault(null, 'freeTimeStartDate', originalValues),
+      originalValues?.freeTimeStartDate ?? null,
       newValues.freeTimeStartDate
     ),
     ...parseGenericField(
@@ -194,9 +193,9 @@ export const prepareParsedContainerInput = ({
       getByPathWithDefault(null, 'yardName', originalValues),
       newValues.yardName
     ),
-    ...parseDateField(
+    ...parseDatetimeField(
       'departureDate',
-      getByPathWithDefault(null, 'departureDate', originalValues),
+      originalValues?.departureDate ?? null,
       newValues.departureDate
     ),
     ...parseApprovalField(

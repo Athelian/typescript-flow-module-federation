@@ -85,7 +85,7 @@ export default function ContainerHeading({
 
           <div className={DatesWrapperStyle}>
             <Display blackout={!canViewDelivery}>
-              <FormattedDateTZ value={oldestDelivery} user={user} />
+              <FormattedDateTZ value={oldestDelivery} user={user} showTime />
             </Display>
 
             {canViewDelivery &&
@@ -95,7 +95,7 @@ export default function ContainerHeading({
                 <>
                   <div className={DashStyle}>-</div>
                   <Display>
-                    <FormattedDateTZ value={newestDelivery} user={user} />
+                    <FormattedDateTZ value={newestDelivery} user={user} showTime />
                   </Display>
                 </>
               )}
