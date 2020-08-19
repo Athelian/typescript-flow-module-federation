@@ -51,10 +51,6 @@ export const formatDateInputToDateObjectWithTimezone = (
       )
     : null;
 
-export const hasTimezone = (date: ?string): boolean => {
-  return !!(date && (date.includes('-') || date.includes('+')));
-};
-
 // ex. (2020-01-01T11:01:00Z) => 2020-01-01T11:01:00
 // When send in UTC datetime,
 // it will NOT convert and simply return the datetime with no Z suffix
@@ -79,10 +75,26 @@ export const switchTimezoneSign = (timezone: string): string => {
 // ex. (2020-01-01T11:01+09:00) => 2020-01-01T11:01
 // When send in datetime with timezone suffix,
 // it will NOT convert and simply return the datetime with no timezone suffix
-export const removeTimezone = (date: ?string): string => {
+export const removeTimezone = (date: ?string, removeTime?: boolean): string => {
   if (date) {
-    const result = date.substring(0, 16);
+    const hasTimezone =
+      (date.charAt(date.length - 6) === '-' || date.charAt(date.length - 6) === '+') &&
+      date.charAt(date.length - 3) === ':';
 
+    if (!hasTimezone) {
+      return date;
+    }
+
+    if (removeTime) {
+      const hasTime = date.charAt(date.length - 12) === 'T' && date.charAt(date.length - 9) === ':';
+
+      if (hasTime) {
+        const result = date.substring(0, date.length - 12);
+        return result;
+      }
+    }
+
+    const result = date.substring(0, date.length - 6);
     return result;
   }
 
@@ -92,9 +104,9 @@ export const removeTimezone = (date: ?string): string => {
 // ex. (2020-01-01T11:01, +09:00) => 2020-01-01T11:01+09:00
 // When send in datetime value and timezone,
 // it will NOT convert and simply return the datetime with timezone suffix
-export const addTimezone = (date: ?string, timezone: string): string => {
+export const addTimezone = (date: ?string, timezone: string, addTime?: boolean): string => {
   if (date) {
-    const result = date.concat(timezone);
+    const result = date.concat(addTime ? 'T00:00' : '').concat(timezone);
 
     return result;
   }

@@ -194,9 +194,9 @@ export const prepareParsedContainerInput = ({
       getByPathWithDefault(null, 'yardName', originalValues),
       newValues.yardName
     ),
-    ...parseDateField(
+    ...parseDatetimeField(
       'departureDate',
-      getByPathWithDefault(null, 'departureDate', originalValues),
+      originalValues?.departureDate ?? null,
       newValues.departureDate
     ),
     ...parseApprovalField(

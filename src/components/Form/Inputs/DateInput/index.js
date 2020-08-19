@@ -7,7 +7,6 @@ import {
   isValidDate,
   addTimezone,
   removeTimezone,
-  hasTimezone,
   formatDatetimeWithTimezoneToUTCDatetime,
 } from 'utils/date';
 import useUser from 'hooks/useUser';
@@ -22,6 +21,7 @@ type Props = {|
   required?: boolean,
   intl: IntlShape,
   color?: string,
+  handleTimezone?: boolean,
 |};
 
 const DateInput = ({
@@ -39,11 +39,10 @@ const DateInput = ({
   onChange,
   onBlur,
   onFocus,
+  handleTimezone,
   ...rest
 }: Props) => {
   const { user } = useUser();
-
-  const isTimezoneValue = React.useMemo(() => hasTimezone(value), [value]);
 
   const handleBlur2 = React.useCallback(
     e => {
@@ -52,7 +51,7 @@ const DateInput = ({
           ...e,
           target: {
             ...e.target,
-            value: addTimezone(e.target.value, user.timezone),
+            value: addTimezone(e.target.value, user.timezone, true),
           },
         });
       }
@@ -89,7 +88,7 @@ const DateInput = ({
     }
   };
 
-  if (isTimezoneValue) {
+  if (handleTimezone) {
     return readOnly ? (
       <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
         <FormattedDateTZ value={formatDatetimeWithTimezoneToUTCDatetime(value)} user={user} />
@@ -97,7 +96,7 @@ const DateInput = ({
     ) : (
       <input
         ref={inputRef}
-        value={removeTimezone(value)}
+        value={removeTimezone(value, true)}
         style={{ textAlign: align, color }}
         placeholder={
           isNullOrUndefined(placeholder)

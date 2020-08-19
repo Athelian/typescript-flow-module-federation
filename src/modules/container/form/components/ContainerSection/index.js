@@ -546,6 +546,7 @@ const ContainerSection = ({ container }: Props) => {
                               />
                             }
                             editable={allowUpdate || hasPermission(CONTAINER_SET_DEPARTURE_DATE)}
+                            handleTimezone
                           />
                         )}
                       </FormField>

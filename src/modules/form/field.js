@@ -107,7 +107,7 @@ class BaseFormField extends React.Component<Props, State> {
       });
     }
 
-    if (event?.currentTarget?.type === 'datetime-local') {
+    if (event?.currentTarget?.type === 'datetime-local' || event?.currentTarget?.type === 'date') {
       value = event?.target?.value;
       this.setState({
         value,

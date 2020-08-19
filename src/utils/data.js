@@ -116,7 +116,7 @@ export const parseDateField = (key: string, originalDate: ?string, newDate: ?str
   return {};
 };
 
-// Use for Datetime fields. Need to parse into Date object.
+// Use for Datetime fields.
 export const parseDatetimeField = (
   key: string,
   originalDate: ?string,
