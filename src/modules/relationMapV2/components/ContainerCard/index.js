@@ -108,7 +108,7 @@ export default function ContainerCard({
         </div>
 
         <Display blackout={!canViewWarehouseArrival}>
-          <FormattedDateTZ value={warehouseArrival} user={user} />
+          <FormattedDateTZ value={warehouseArrival} user={user} showTime />
         </Display>
 
         <Display blackout={!canViewTotalVolume}>

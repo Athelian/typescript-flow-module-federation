@@ -37,7 +37,6 @@ import {
   parseGenericField,
   parseEnumField,
   parseMemoField,
-  parseDateField,
   parseArrayOfIdsField,
   parseParentIdField,
   parseArrayOfChildrenField,
@@ -174,9 +173,9 @@ export const prepareParsedContainerInput = ({
         approvedAt: newValues.warehouseArrivalActualDateApprovedAt,
       }
     ),
-    ...parseDateField(
+    ...parseDatetimeField(
       'freeTimeStartDate',
-      getByPathWithDefault(null, 'freeTimeStartDate', originalValues),
+      originalValues?.freeTimeStartDate ?? null,
       newValues.freeTimeStartDate
     ),
     ...parseGenericField(

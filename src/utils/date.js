@@ -203,6 +203,18 @@ export const formatDatetimeQueryToDatetimeWithTimezone = (
   return null;
 };
 
+export const initDatetimeToContainer = (
+  date: ?string,
+  fieldName: string,
+  timezone: string
+): Object => {
+  return date
+    ? {
+        [fieldName]: formatDatetimeQueryToDatetimeWithTimezone(date, timezone),
+      }
+    : {};
+};
+
 export const formatDateObjectWithTimezoneForMutation = (date: ?Date): string | null =>
   !!date && isValidDate(date) ? format(date, "yyyy-MM-dd'T'HH:mmxxx") : null;
 
@@ -313,5 +325,23 @@ export const calculateNewDate = ({
   });
 };
 
-export const calculateDueDate = (freeTimeStartDate: string, freeTimeDuration: number = 0) =>
-  addDays(new Date(freeTimeStartDate), freeTimeDuration);
+// freeTimeStartDate = Datetime with timezone format
+// returns UTC format with the freeTimeDuration added to it
+export const calculateDueDate = (
+  freeTimeStartDate: string,
+  freeTimeDuration: number = 0
+): string => {
+  const dateObj = moment.utc(freeTimeStartDate).add(freeTimeDuration, 'days');
+
+  const result = dateObj.format('YYYY-MM-DDTHH:mm:ss').concat('Z');
+
+  return result;
+};
+
+export const calculateFreeTime = (dueDate: string): number => {
+  const dateObj = moment.utc(dueDate);
+
+  const result = dateObj.diff(moment.utc(), 'days');
+
+  return result;
+};

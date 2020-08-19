@@ -2,7 +2,7 @@
 import type { ContainerPayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
-import { formatDatetimeQueryToDatetimeWithTimezone } from 'utils/date';
+import { initDatetimeToContainer } from 'utils/date';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsyAndTypeName, extractForbiddenId } from 'utils/data';
 
@@ -80,30 +80,22 @@ export default class ContainerInfoContainer extends Container<ContainerPayload> 
       warehouseArrivalAgreedDate,
       warehouseArrivalActualDate,
       departureDate,
+      freeTimeStartDate,
       ...rest
     } = values;
     const info = {
-      ...(warehouseArrivalAgreedDate
-        ? {
-            warehouseArrivalAgreedDate: formatDatetimeQueryToDatetimeWithTimezone(
-              warehouseArrivalAgreedDate,
-              timezone
-            ),
-          }
-        : {}),
-      ...(warehouseArrivalActualDate
-        ? {
-            warehouseArrivalActualDate: formatDatetimeQueryToDatetimeWithTimezone(
-              warehouseArrivalActualDate,
-              timezone
-            ),
-          }
-        : {}),
-      ...(departureDate
-        ? {
-            departureDate: formatDatetimeQueryToDatetimeWithTimezone(departureDate, timezone),
-          }
-        : {}),
+      ...initDatetimeToContainer(
+        warehouseArrivalAgreedDate,
+        'warehouseArrivalAgreedDate',
+        timezone
+      ),
+      ...initDatetimeToContainer(
+        warehouseArrivalActualDate,
+        'warehouseArrivalActualDate',
+        timezone
+      ),
+      ...initDatetimeToContainer(freeTimeStartDate, 'freeTimeStartDate', timezone),
+      ...initDatetimeToContainer(departureDate, 'departureDate', timezone),
       ...rest,
     };
 

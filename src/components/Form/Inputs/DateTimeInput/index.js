@@ -44,7 +44,11 @@ const DateTimeInput = ({
 
   return readOnly ? (
     <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
-      <FormattedDateTZ value={formatDatetimeWithTimezoneToUTCDatetime(value)} user={user} />
+      <FormattedDateTZ
+        value={formatDatetimeWithTimezoneToUTCDatetime(value)}
+        user={user}
+        showTime
+      />
     </Display>
   ) : (
     <input
