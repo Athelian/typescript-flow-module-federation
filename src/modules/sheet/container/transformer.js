@@ -230,7 +230,7 @@ export default function transformSheetContainer({
     },
     {
       columnKey: 'container.freeTimeStartDate',
-      type: 'date_toggle',
+      type: 'date_toggle_tz',
       computed: root => {
         const currentContainer = getContainerFromRoot(root);
         const currentShipment = getShipmentFromRoot(root);
@@ -264,7 +264,7 @@ export default function transformSheetContainer({
     },
     {
       columnKey: 'container.dueDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformComputedField(basePath, container, 'dueDate', root => {
         const currentContainer = getContainerFromRoot(root);
         const freeTimeStartDate = currentContainer?.freeTimeStartDate?.value;
@@ -287,7 +287,7 @@ export default function transformSheetContainer({
     },
     {
       columnKey: 'container.departureDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         basePath,
         container,
