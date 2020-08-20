@@ -35,9 +35,11 @@ type Props = {
 
 // Expects value in UTC pattern
 export default function FormattedDateTZ({ value, user, showTime = false }: Props) {
-  if (!value) return <FormattedMessage id="components.cards.na" defaultMessage="N/A" />;
-
-  return moment
-    .utc(removeZSuffix(value).concat(switchTimezoneSign(user.timezone)))
-    .format(getDateFormat(user.language, showTime));
+  return !value ? (
+    <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
+  ) : (
+    moment
+      .utc(removeZSuffix(value).concat(switchTimezoneSign(user.timezone)))
+      .format(getDateFormat(user.language, showTime))
+  );
 }
