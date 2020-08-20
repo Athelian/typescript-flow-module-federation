@@ -25,6 +25,7 @@ const DateToggleInputTZ = (props: InputProps<{ value: ?string, auto: boolean }, 
             readOnlyWidth="100%"
             readOnlyHeight="30px"
             onChange={e => onChange(addTimezone(e.target.value, user.timezone, true))}
+            handleTimezone
           />
         </div>
       )}
