@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import useUser from 'hooks/useUser';
-import { formatDatetimeQueryToDatetimeWithTimezone, addTimezone } from 'utils/date';
+import { formatDatetimeQueryToDatetimeWithTimezone, addTimezone, removeTimezone } from 'utils/date';
 import BaseDateInput from 'components/Form/Inputs/DateInput';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import ComputableInput from 'components/Sheet/CellRenderer/Cell/CellInput/Common/ComputableInput';
@@ -19,7 +19,10 @@ const DateToggleInputTZ = (props: InputProps<{ value: ?string, auto: boolean }, 
       input={({ onChange, readonly, value }) => (
         <div className={AutocalculateInputWrapperStyle(readonly || (props?.value?.auto ?? false))}>
           <BaseDateInput
-            value={formatDatetimeQueryToDatetimeWithTimezone(value, user.timezone)}
+            value={removeTimezone(
+              formatDatetimeQueryToDatetimeWithTimezone(value, user.timezone),
+              true
+            )}
             className={InputStyle}
             readOnly={readonly || (props?.value?.auto ?? false)}
             readOnlyWidth="100%"

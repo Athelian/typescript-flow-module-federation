@@ -4,7 +4,7 @@ import type { ColumnConfig, ColumnSortConfig } from 'components/Sheet/SheetState
 
 export const ColumnWidths = {
   Default: 200,
-  Date: 130,
+  Date: 140,
   Datetime: 190,
   DateUser: 110,
   DateRevisions: 1125,

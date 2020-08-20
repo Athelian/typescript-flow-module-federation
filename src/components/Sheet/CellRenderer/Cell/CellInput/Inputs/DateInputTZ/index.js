@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import useUser from 'hooks/useUser';
-import { formatDatetimeQueryToDatetimeWithTimezone, addTimezone } from 'utils/date';
+import { formatDatetimeQueryToDatetimeWithTimezone, removeTimezone, addTimezone } from 'utils/date';
 import BaseDateInput from 'components/Form/Inputs/DateInput';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import {
@@ -16,8 +16,10 @@ const DateInputTZ = ({ value, onChange, readonly }: InputProps<?string>) => {
     <div className={CellInputWrapperStyle}>
       <BaseDateInput
         className={InputStyle}
-        value={formatDatetimeQueryToDatetimeWithTimezone(value, user.timezone)}
-        name="value"
+        value={removeTimezone(
+          formatDatetimeQueryToDatetimeWithTimezone(value, user.timezone),
+          true
+        )}
         readOnly={readonly}
         readOnlyWidth="100%"
         readOnlyHeight="30px"
