@@ -8,7 +8,7 @@ import {
   DisplayContentStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
 
-const DateDisplayTZ = ({ value }: DisplayProps<Date | string | null>) => {
+const DateDisplayTZ = ({ value }: DisplayProps<?string>) => {
   const { user } = useUser();
 
   return (
