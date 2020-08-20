@@ -10,7 +10,7 @@ import {
   AutocalculateInputWrapperStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellInput/Common/style';
 
-const DateToggleInputTZ = (props: InputProps<{ value: ?string, auto: boolean }, Date | string>) => {
+const DateToggleInputTZ = (props: InputProps<{ value: ?string, auto: boolean }, string>) => {
   const { user } = useUser();
 
   return (
