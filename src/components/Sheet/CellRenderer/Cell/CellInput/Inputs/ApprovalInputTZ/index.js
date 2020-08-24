@@ -21,7 +21,7 @@ const ApprovalInputTZ = ({
   value,
   readonly,
   onChange,
-}: InputProps<{ user: ?User, date: ?(string | Date) }>) => {
+}: InputProps<{ user: ?User, date: ?string }>) => {
   const { user } = useUser();
 
   return (
