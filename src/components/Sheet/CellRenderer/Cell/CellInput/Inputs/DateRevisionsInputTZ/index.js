@@ -12,7 +12,7 @@ import {
   formatDatetimeQueryToDatetimeWithTimezone,
   removeTimezone,
   addTimezone,
-  newDate,
+  newDateTZ,
 } from 'utils/date';
 import type { InputProps } from 'components/Sheet/CellRenderer/Cell/CellInput/types';
 import {
@@ -75,7 +75,7 @@ const DateRevisionsInput = ({
   };
 
   const handleAdd = () => {
-    onChange([...(value || []), { type: 'Other', date: newDate(user.timezone) }]);
+    onChange([...(value || []), { type: 'Other', date: newDateTZ(user.timezone) }]);
   };
 
   return (

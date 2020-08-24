@@ -51,8 +51,18 @@ export const formatDateInputToDateObjectWithTimezone = (
       )
     : null;
 
+// Return today's date in UTC format
+export const newDateUTC = (): string => {
+  const date = moment()
+    .utc()
+    .format('YYYY-MM-DD')
+    .concat(`T00:00:00Z`);
+
+  return date;
+};
+
 // Return today's date in datetime format with timezone
-export const newDate = (timezone: string): string => {
+export const newDateTZ = (timezone: string): string => {
   const date = moment()
     .utc()
     .format('YYYY-MM-DD')
@@ -208,6 +218,22 @@ export const formatDatetimeQueryToDatetimeWithTimezone = (
     }
     // UTC date with no offset
     return formatUTCDatetimeToDatetimeWithTimezone(date, timezone);
+  }
+
+  return null;
+};
+
+// ex. (2020-01-01T11:01:00Z or 2020-01-01T11:01+09:00) => 2020-01-01T11:01:00Z
+// When send in either a UTC date or date with timezone suffix,
+// it will determine which type was sent and trigger the format function specific to that type
+export const formatDatetimeQueryToUTCDatetime = (date: ?string): string | null => {
+  if (date) {
+    // Date with offset
+    if (date.charAt(date.length - 6) === '+' || date.charAt(date.length - 6) === '-') {
+      return formatDatetimeWithTimezoneToUTCDatetime(date);
+    }
+    // UTC date with no offset
+    return date;
   }
 
   return null;

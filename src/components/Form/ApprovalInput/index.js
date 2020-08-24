@@ -17,7 +17,7 @@ import {
 } from './style';
 
 type OptionalProps = {
-  approvedAt: ?(string | Date),
+  approvedAt: ?string,
   approvedBy: ?UserAvatarType,
   onApprove: Object => void,
   onUnapprove: () => void,
