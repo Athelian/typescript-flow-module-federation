@@ -96,6 +96,7 @@ const DischargePortArrival = (props: Props) => {
           approvedBy={timelineDate && timelineDate.approvedBy}
           setFieldValue={setFieldDeepValue}
           approvable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_APPROVE_TIMELINE_DATE])}
+          handleTimezone
         />
         <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
           <div className={AddDateButtonWrapperStyle}>

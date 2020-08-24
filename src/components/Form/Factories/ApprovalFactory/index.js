@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Label, ApprovalInput, FieldItem } from 'components/Form';
 import { type UserAvatarType } from 'types';
+import { newDate } from 'utils/date';
 import { ApprovalWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -13,6 +14,7 @@ type OptionalProps = {
   setFieldValue: (name: string, value: any) => void,
   approvable: boolean,
   name: string,
+  handleTimezone?: boolean,
 };
 
 type Props = OptionalProps & {
@@ -38,6 +40,7 @@ const ApprovalFactory = ({
   setFieldValue,
   approvable,
   groupIds,
+  handleTimezone = false,
 }: Props) => {
   const approvalInputConfig = {
     groupIds,
@@ -45,13 +48,14 @@ const ApprovalFactory = ({
     approvedBy,
     onApprove: (user: UserAvatarType) => {
       setFieldValue(approvedByName, user);
-      setFieldValue(approvedAtName, new Date());
+      setFieldValue(approvedAtName, handleTimezone ? newDate(user.timezone) : new Date());
     },
     onUnapprove: () => {
       setFieldValue(approvedByName, null);
       setFieldValue(approvedAtName, null);
     },
     editable: approvable,
+    handleTimezone,
   };
 
   return (

@@ -46,7 +46,7 @@ const DateRevisionsInput = ({
   value,
   onChange,
   readonly,
-}: InputProps<Array<{ id?: string, type: string, date: string | Date }>>) => {
+}: InputProps<Array<{ id?: string, type: string, date: string }>>) => {
   const { user } = useUser();
   const { enums } = useEnum('TimelineDateRevisionType');
   const previousValue = usePrevious(value);
