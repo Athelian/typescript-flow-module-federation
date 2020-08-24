@@ -180,6 +180,7 @@ const TimelineInfoSection = (props: Props) => {
                             ])}
                             required
                             hideTooltip
+                            handleTimezone
                           />
                         )}
                       </FormField>
@@ -201,6 +202,7 @@ const TimelineInfoSection = (props: Props) => {
                   />
                 }
                 hideTooltip
+                handleTimezone
               />
             )}
           </FormField>

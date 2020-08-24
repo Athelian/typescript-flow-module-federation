@@ -3,6 +3,7 @@ import * as React from 'react';
 import { uniqBy } from 'lodash';
 import EnumProvider from 'providers/enum';
 import { getByPathWithDefault } from './fp';
+import { initDatetimeToContainer } from './date';
 
 export const getLatestDate = (timelineDate: ?Object) => {
   if (!timelineDate) return null;
@@ -63,4 +64,23 @@ export const getPort = (transportType: ?string, port: Object = {}): string => {
     }
   }
   return '';
+};
+
+export const initDatetimeToContainerForShipmentTimeline = (
+  timelinePoint: ?Object,
+  timelinePointName: string,
+  timezone: string
+): Object => {
+  return timelinePoint
+    ? {
+        [timelinePointName]: {
+          ...timelinePoint,
+          ...initDatetimeToContainer(timelinePoint.date, 'date', timezone),
+          timelineDateRevisions: (timelinePoint.timelineDateRevisions ?? []).map(revision => ({
+            ...revision,
+            ...initDatetimeToContainer(revision.date, 'date', timezone),
+          })),
+        },
+      }
+    : {};
 };

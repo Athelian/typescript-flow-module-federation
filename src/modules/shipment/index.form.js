@@ -219,7 +219,8 @@ class ShipmentFormModule extends React.PureComponent<Props> {
         voyages,
         containerGroups,
       },
-      hasCalledTimelineApiYet
+      hasCalledTimelineApiYet,
+      timezone
     );
     shipmentFilesContainer.initDetailValues(files, hasCalledFilesApiYet);
     shipmentTasksContainer.initDetailValues(todo, hasCalledTasksApiYet || todo.tasks.length > 0);
@@ -271,7 +272,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
     );
     shipmentBatchesContainer.initDetailValues([], hasCalledBatchesApiYet);
     shipmentContainersContainer.initDetailValues([], hasCalledContainerApiYet, timezone);
-    shipmentTimelineContainer.initDetailValues({}, hasCalledTimelineApiYet);
+    shipmentTimelineContainer.initDetailValues({}, hasCalledTimelineApiYet, timezone);
     shipmentFilesContainer.initDetailValues([], hasCalledFilesApiYet);
     shipmentTasksContainer.initDetailValues({ tasks: [] }, hasCalledTasksApiYet);
     shipmentTagsContainer.initDetailValues(tags);

@@ -42,7 +42,6 @@ import { getBatchesInPool } from 'modules/shipment/helpers';
 import {
   parseGenericField,
   parseMemoField,
-  parseDateField,
   parseArrayOfIdsField,
   parseParentIdField,
   parseArrayOfChildrenField,
@@ -150,10 +149,10 @@ const parseTimelineDateField = (
   if (isEquals(originalTimelineDate, newTimelineDate)) return {};
 
   const parsedNewTimelineDate = {
-    ...parseDateField(
+    ...parseDatetimeField(
       'date',
-      getByPathWithDefault(null, 'date', originalTimelineDate),
-      getByPathWithDefault(null, 'date', newTimelineDate)
+      originalTimelineDate?.date ?? null,
+      newTimelineDate?.date ?? null
     ),
     ...parseApprovalField(
       'approvedById',
@@ -172,11 +171,7 @@ const parseTimelineDateField = (
       getByPathWithDefault([], 'timelineDateRevisions', newTimelineDate),
       (oldDateRevision: ?DateRevisionType, newDateRevision: ?DateRevisionType) => ({
         ...(!oldDateRevision ? {} : { id: oldDateRevision.id }),
-        ...parseDateField(
-          'date',
-          getByPathWithDefault(null, 'date', oldDateRevision),
-          getByPathWithDefault(null, 'date', newDateRevision)
-        ),
+        ...parseDatetimeField('date', oldDateRevision?.date ?? null, newDateRevision?.date ?? null),
         ...parseEnumField(
           'type',
           getByPathWithDefault(null, 'type', oldDateRevision),
