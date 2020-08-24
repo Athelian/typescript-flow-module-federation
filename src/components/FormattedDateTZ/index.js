@@ -3,7 +3,7 @@ import * as React from 'react';
 import moment from 'moment';
 import type { UserPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
-import { removeZSuffix, switchTimezoneSign } from 'utils/date';
+import { removeZSuffix, switchTimezoneSign, formatDatetimeQueryToUTCDatetime } from 'utils/date';
 
 function getDateFormat(language: string, showTime: boolean) {
   if (showTime) {
@@ -39,7 +39,12 @@ export default function FormattedDateTZ({ value, user, showTime = false }: Props
     <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
   ) : (
     moment
-      .utc(removeZSuffix(value).concat(switchTimezoneSign(user.timezone)))
+      .utc(
+        // $FlowIgnore Flow thinks formatDatetimeQueryToUTCDatetime could return null, but it can't because we already do check for it earlier
+        removeZSuffix(formatDatetimeQueryToUTCDatetime(value)).concat(
+          switchTimezoneSign(user.timezone)
+        )
+      )
       .format(getDateFormat(user.language, showTime))
   );
 }

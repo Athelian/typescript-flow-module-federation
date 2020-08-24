@@ -238,7 +238,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.blDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         basePath,
         shipment,
@@ -268,7 +268,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.bookingDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         basePath,
         shipment,
@@ -547,7 +547,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.cargoReady.latestDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformComputedField(basePath, shipment, 'cargoReady.latestDate', root => {
         const currentShipment = getShipmentFromRoot(root);
         return getLatestDate(currentShipment?.cargoReady);
@@ -567,7 +567,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.cargoReady.date',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         `${basePath}.cargoReady`,
         shipment?.cargoReady ?? null,
@@ -577,7 +577,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.cargoReady.timelineDateRevisions',
-      type: 'date_revisions',
+      type: 'date_revisions_tz',
       ...transformValueField(
         `${basePath}.cargoReady`,
         shipment?.cargoReady ?? null,
@@ -588,7 +588,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.cargoReady.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.cargoReady`,
         shipment?.cargoReady ?? null,
@@ -613,7 +613,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.departure.latestDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformComputedField(
         `${basePath}.voyages.0.departure`,
         shipment?.voyages?.[0]?.departure ?? null,
@@ -643,7 +643,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.departure.date',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         `${basePath}.voyages.0.departure`,
         shipment?.voyages?.[0]?.departure ?? null,
@@ -653,7 +653,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.departure.timelineDateRevisions',
-      type: 'date_revisions',
+      type: 'date_revisions_tz',
       ...transformValueField(
         `${basePath}.voyages.0.departure`,
         shipment?.voyages?.[0]?.departure ?? null,
@@ -664,7 +664,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.departure.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.0.departure`,
         shipment?.voyages?.[0]?.departure ?? null,
@@ -719,7 +719,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.firstTransitArrival.latestDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformComputedField(
         `${basePath}.voyages.0.arrival`,
         shipment?.voyages?.[0]?.arrival ?? null,
@@ -749,7 +749,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.firstTransitArrival.date',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         `${basePath}.voyages.0.arrival`,
         nbOfVoyages > 1 ? shipment?.voyages?.[0]?.arrival ?? null : null,
@@ -759,7 +759,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.firstTransitArrival.timelineDateRevisions',
-      type: 'date_revisions',
+      type: 'date_revisions_tz',
       ...transformValueField(
         `${basePath}.voyages.0.arrival`,
         nbOfVoyages > 1 ? shipment?.voyages?.[0]?.arrival ?? null : null,
@@ -770,7 +770,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.firstTransitArrival.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.0.arrival`,
         nbOfVoyages > 1 ? shipment?.voyages?.[0]?.arrival ?? null : null,
@@ -781,7 +781,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.firstTransitDeparture.latestDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformComputedField(
         `${basePath}.voyages.1.departure`,
         shipment?.voyages?.[1]?.departure ?? null,
@@ -811,7 +811,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.firstTransitDeparture.date',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         `${basePath}.voyages.1.departure`,
         nbOfVoyages > 1 ? shipment?.voyages?.[1]?.departure ?? null : null,
@@ -821,7 +821,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.firstTransitDeparture.timelineDateRevisions',
-      type: 'date_revisions',
+      type: 'date_revisions_tz',
       ...transformValueField(
         `${basePath}.voyages.1.departure`,
         nbOfVoyages > 1 ? shipment?.voyages?.[1]?.departure ?? null : null,
@@ -832,7 +832,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.firstTransitDeparture.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.1.departure`,
         nbOfVoyages > 1 ? shipment?.voyages?.[1]?.departure ?? null : null,
@@ -887,7 +887,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.secondTransitArrival.latestDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformComputedField(
         `${basePath}.voyages.1.arrival`,
         nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
@@ -917,7 +917,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.secondTransitArrival.date',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         `${basePath}.voyages.1.arrival`,
         nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
@@ -927,7 +927,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.secondTransitArrival.timelineDateRevisions',
-      type: 'date_revisions',
+      type: 'date_revisions_tz',
       ...transformValueField(
         `${basePath}.voyages.1.arrival`,
         nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
@@ -938,7 +938,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.secondTransitArrival.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.1.arrival`,
         nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
@@ -949,7 +949,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.secondTransitDeparture.latestDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformComputedField(
         `${basePath}.voyages.2.departure`,
         nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
@@ -979,7 +979,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.secondTransitDeparture.date',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         `${basePath}.voyages.2.departure`,
         nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
@@ -989,7 +989,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.secondTransitDeparture.timelineDateRevisions',
-      type: 'date_revisions',
+      type: 'date_revisions_tz',
       ...transformValueField(
         `${basePath}.voyages.2.departure`,
         nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
@@ -1000,7 +1000,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.secondTransitDeparture.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.2.departure`,
         nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
@@ -1055,7 +1055,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.arrival.latestDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformComputedField(
         `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}.arrival`,
         shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
@@ -1090,7 +1090,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.arrival.date',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}.arrival`,
         shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
@@ -1100,7 +1100,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.arrival.timelineDateRevisions',
-      type: 'date_revisions',
+      type: 'date_revisions_tz',
       ...transformValueField(
         `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}.arrival`,
         shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
@@ -1111,7 +1111,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.arrival.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}.arrival`,
         shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
@@ -1122,7 +1122,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.customClearance.latestDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformComputedField(
         `${basePath}.containerGroups.0.customClearance`,
         shipment?.containerGroups?.[0]?.customClearance ?? null,
@@ -1153,7 +1153,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.customClearance.date',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         `${basePath}.containerGroups.0.customClearance`,
         shipment?.containerGroups?.[0]?.customClearance ?? null,
@@ -1163,7 +1163,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.customClearance.timelineDateRevisions',
-      type: 'date_revisions',
+      type: 'date_revisions_tz',
       ...transformValueField(
         `${basePath}.containerGroups.0.customClearance`,
         shipment?.containerGroups?.[0]?.customClearance ?? null,
@@ -1174,7 +1174,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.customClearance.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.containerGroups.0.customClearance`,
         shipment?.containerGroups?.[0]?.customClearance ?? null,
@@ -1203,7 +1203,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.latestDate',
-      type: 'date',
+      type: 'date_tz',
       hide: root => {
         const currentShipment = getShipmentFromRoot(root);
         if (currentShipment?.containers) {
@@ -1252,7 +1252,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.date',
-      type: 'date',
+      type: 'date_tz',
       hide: root => {
         const currentShipment = getShipmentFromRoot(root);
         if (currentShipment?.containers) {
@@ -1270,7 +1270,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.timelineDateRevisions',
-      type: 'date_revisions',
+      type: 'date_revisions_tz',
       hide: root => {
         const currentShipment = getShipmentFromRoot(root);
         if (currentShipment?.containers) {
@@ -1289,7 +1289,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.approved',
-      type: 'approval',
+      type: 'approval_tz',
       hide: root => {
         const currentShipment = getShipmentFromRoot(root);
         if (currentShipment?.containers) {
@@ -1308,7 +1308,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.deliveryReady.latestDate',
-      type: 'date',
+      type: 'date_tz',
       hide: root => {
         const currentShipment = getShipmentFromRoot(root);
         if (currentShipment?.containers) {
@@ -1355,7 +1355,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.deliveryReady.date',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         `${basePath}.containerGroups.0.deliveryReady`,
         shipment?.containerGroups?.[0]?.deliveryReady ?? null,
@@ -1365,7 +1365,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.deliveryReady.timelineDateRevisions',
-      type: 'date_revisions',
+      type: 'date_revisions_tz',
       ...transformValueField(
         `${basePath}.containerGroups.0.deliveryReady`,
         shipment?.containerGroups?.[0]?.deliveryReady ?? null,
@@ -1376,7 +1376,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.deliveryReady.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.containerGroups.0.deliveryReady`,
         shipment?.containerGroups?.[0]?.deliveryReady ?? null,

@@ -2,17 +2,20 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Label, ApprovalInput, FieldItem } from 'components/Form';
+import type { UserPayload } from 'generated/graphql';
 import { type UserAvatarType } from 'types';
+import { newDateUTC } from 'utils/date';
 import { ApprovalWrapperStyle } from './style';
 
 type OptionalProps = {
   approvedAtName: string,
-  approvedAt: ?(string | Date),
+  approvedAt: ?string,
   approvedByName: string,
   approvedBy: ?UserAvatarType,
   setFieldValue: (name: string, value: any) => void,
   approvable: boolean,
   name: string,
+  handleTimezone?: boolean,
 };
 
 type Props = OptionalProps & {
@@ -38,20 +41,22 @@ const ApprovalFactory = ({
   setFieldValue,
   approvable,
   groupIds,
+  handleTimezone = false,
 }: Props) => {
   const approvalInputConfig = {
     groupIds,
     approvedAt,
     approvedBy,
-    onApprove: (user: UserAvatarType) => {
+    onApprove: (user: UserPayload) => {
       setFieldValue(approvedByName, user);
-      setFieldValue(approvedAtName, new Date());
+      setFieldValue(approvedAtName, handleTimezone ? newDateUTC() : new Date());
     },
     onUnapprove: () => {
       setFieldValue(approvedByName, null);
       setFieldValue(approvedAtName, null);
     },
     editable: approvable,
+    handleTimezone,
   };
 
   return (

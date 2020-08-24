@@ -327,6 +327,7 @@ const ContainerSection = ({ container }: Props) => {
                             CONTAINER_UPDATE,
                             CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
                           ])}
+                          handleTimezone
                         />
                       </GridColumn>
 
@@ -371,6 +372,7 @@ const ContainerSection = ({ container }: Props) => {
                             CONTAINER_UPDATE,
                             CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
                           ])}
+                          handleTimezone
                         />
                       </GridColumn>
                     </GridColumn>
@@ -562,6 +564,7 @@ const ContainerSection = ({ container }: Props) => {
                         approvedBy={values.departureDateApprovedBy}
                         setFieldValue={setFieldValue}
                         approvable={allowUpdate || hasPermission(CONTAINER_APPROVE_DEPARTURE_DATE)}
+                        handleTimezone
                       />
                     </GridColumn>
                     <CustomFieldsFactory

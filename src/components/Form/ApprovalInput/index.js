@@ -1,12 +1,13 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import { UserConsumer } from 'contexts/Viewer';
 import UserAvatar from 'components/UserAvatar';
 import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import { ApproveButton } from 'components/Buttons';
 import { type UserAvatarType } from 'types';
+import useUser from 'hooks/useUser';
 import {
   ApprovalWrapperStyle,
   ApprovedByWrapperStyle,
@@ -16,12 +17,13 @@ import {
 } from './style';
 
 type OptionalProps = {
-  approvedAt: ?(string | Date),
+  approvedAt: ?string,
   approvedBy: ?UserAvatarType,
   onApprove: Object => void,
   onUnapprove: () => void,
   editable: boolean,
   name: string,
+  handleTimezone: boolean,
 };
 
 type Props = OptionalProps;
@@ -42,7 +44,10 @@ const ApprovalInput = ({
   onApprove,
   onUnapprove,
   editable,
+  handleTimezone,
 }: Props) => {
+  const { user } = useUser();
+
   return (
     <div className={ApprovalWrapperStyle}>
       {approvedAt && approvedBy && (
@@ -52,7 +57,11 @@ const ApprovalInput = ({
               <FormattedName firstName={approvedBy.firstName} lastName={approvedBy.lastName} />
             </div>
             <div className={ApprovedAtStyle}>
-              <FormattedDate value={approvedAt} />
+              {handleTimezone ? (
+                <FormattedDateTZ value={approvedAt} user={user} />
+              ) : (
+                <FormattedDate value={approvedAt} />
+              )}
             </div>
           </div>
           <UserAvatar firstName={approvedBy.firstName} lastName={approvedBy.lastName} />
@@ -69,11 +78,7 @@ const ApprovalInput = ({
         </>
       )}
       {editable && (!approvedAt || !approvedBy) && (
-        <UserConsumer>
-          {({ user }) => (
-            <ApproveButton data-testid={`${name}_approveButton`} onClick={() => onApprove(user)} />
-          )}
-        </UserConsumer>
+        <ApproveButton data-testid={`${name}_approveButton`} onClick={() => onApprove(user)} />
       )}
     </div>
   );
