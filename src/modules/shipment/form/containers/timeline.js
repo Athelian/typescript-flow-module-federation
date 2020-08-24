@@ -9,6 +9,7 @@ import { Container } from 'unstated';
 import { cloneDeep, unset, set } from 'lodash';
 import { isEquals, getByPath } from 'utils/fp';
 import { removeNulls } from 'utils/data';
+import { initDatetimeToContainerForShipmentTimeline } from 'utils/shipment';
 import emitter from 'utils/emitter';
 
 type FormState = {|
@@ -116,9 +117,38 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
       containerGroups: Array<ContainerGroupPayload>,
       voyages: Array<VoyagePayload>,
     |},
-    hasCalledTimelineApiYet: boolean = false
+    hasCalledTimelineApiYet: boolean = false,
+    timezone: string
   ) => {
-    const parsedValues = { ...initValues, ...values, hasCalledTimelineApiYet };
+    const { cargoReady, containerGroups, voyages } = values;
+    const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
+
+    const timelineValues = {
+      ...initDatetimeToContainerForShipmentTimeline(cargoReady, 'cargoReady', timezone),
+      containerGroups: [
+        {
+          ...containerGroups[0],
+          ...initDatetimeToContainerForShipmentTimeline(
+            customClearance,
+            'customClearance',
+            timezone
+          ),
+          ...initDatetimeToContainerForShipmentTimeline(
+            warehouseArrival,
+            'warehouseArrival',
+            timezone
+          ),
+          ...initDatetimeToContainerForShipmentTimeline(deliveryReady, 'deliveryReady', timezone),
+        },
+      ],
+      voyages: voyages.map(voyage => ({
+        ...voyage,
+        ...initDatetimeToContainerForShipmentTimeline(voyage.departure, 'departure', timezone),
+        ...initDatetimeToContainerForShipmentTimeline(voyage.arrival, 'arrival', timezone),
+      })),
+    };
+
+    const parsedValues = { ...initValues, ...timelineValues, hasCalledTimelineApiYet };
 
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };

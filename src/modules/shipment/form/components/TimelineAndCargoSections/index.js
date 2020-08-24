@@ -78,7 +78,8 @@ const TimelineAndCargoSections = (props: Props) => {
                     voyages,
                     containerGroups,
                   },
-                  true
+                  true,
+                  user.timezone
                 );
 
                 const batches = getByPathWithDefault([], 'shipment.batches', result);

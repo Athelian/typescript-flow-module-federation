@@ -233,6 +233,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             isNew={isNew}
                             originalValue={initialValues[name]}
                             label={<FormattedMessage {...messages.blDate} />}
+                            handleTimezone
                           />
                         )}
                       </FormField>
@@ -315,6 +316,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             isNew={isNew}
                             originalValue={initialValues[name]}
                             label={<FormattedMessage {...messages.bookingDate} />}
+                            handleTimezone
                           />
                         )}
                       </FormField>

@@ -218,6 +218,7 @@ const DischargePortArrival = (props: Props) => {
                                 }
                               },
                             }}
+                            handleTimezone
                           />
                         )}
                       </FormField>
@@ -263,6 +264,7 @@ const DischargePortArrival = (props: Props) => {
                     }
                   },
                 }}
+                handleTimezone
               />
             )}
           </FormField>

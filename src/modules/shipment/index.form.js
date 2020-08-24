@@ -203,7 +203,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
       todo = taskInitValues.todo,
       ...info
     }: Object = shipment;
-    shipmentInfoContainer.initDetailValues(info);
+    shipmentInfoContainer.initDetailValues(info, timezone);
     shipmentBatchesContainer.initDetailValues(
       batches,
       hasCalledBatchesApiYet || batches.length > 0
@@ -219,7 +219,8 @@ class ShipmentFormModule extends React.PureComponent<Props> {
         voyages,
         containerGroups,
       },
-      hasCalledTimelineApiYet
+      hasCalledTimelineApiYet,
+      timezone
     );
     shipmentFilesContainer.initDetailValues(files, hasCalledFilesApiYet);
     shipmentTasksContainer.initDetailValues(todo, hasCalledTasksApiYet || todo.tasks.length > 0);
@@ -262,13 +263,16 @@ class ShipmentFormModule extends React.PureComponent<Props> {
       hasCalledFilesApiYet = false,
       ...info
     }: Object = shipment;
-    shipmentInfoContainer.initDetailValues({
-      ...info,
-      no: `[cloned] ${no}`,
-    });
+    shipmentInfoContainer.initDetailValues(
+      {
+        ...info,
+        no: `[cloned] ${no}`,
+      },
+      timezone
+    );
     shipmentBatchesContainer.initDetailValues([], hasCalledBatchesApiYet);
     shipmentContainersContainer.initDetailValues([], hasCalledContainerApiYet, timezone);
-    shipmentTimelineContainer.initDetailValues({}, hasCalledTimelineApiYet);
+    shipmentTimelineContainer.initDetailValues({}, hasCalledTimelineApiYet, timezone);
     shipmentFilesContainer.initDetailValues([], hasCalledFilesApiYet);
     shipmentTasksContainer.initDetailValues({ tasks: [] }, hasCalledTasksApiYet);
     shipmentTagsContainer.initDetailValues(tags);
