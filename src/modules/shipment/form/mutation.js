@@ -128,13 +128,13 @@ export const updateShipmentMutation: Object = gql`
 
 type DateRevisionType = {
   id: string,
-  date: string | Date,
+  date: string,
   type: string,
   memo: ?string,
 };
 
 type TimelineDateType = {
-  date: ?(string | Date),
+  date: ?string,
   approvedBy: ?{ id: string },
   approvedAt: ?(string | Date),
   memo: ?string,
