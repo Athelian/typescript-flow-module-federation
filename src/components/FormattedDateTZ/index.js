@@ -40,6 +40,7 @@ export default function FormattedDateTZ({ value, user, showTime = false }: Props
   ) : (
     moment
       .utc(
+        // $FlowIgnore Flow thinks formatDatetimeQueryToUTCDatetime could return null, but it can't because we already do check for it earlier
         removeZSuffix(formatDatetimeQueryToUTCDatetime(value)).concat(
           switchTimezoneSign(user.timezone)
         )

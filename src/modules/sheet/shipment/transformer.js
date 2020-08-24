@@ -588,7 +588,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.cargoReady.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.cargoReady`,
         shipment?.cargoReady ?? null,
@@ -664,7 +664,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.departure.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.0.departure`,
         shipment?.voyages?.[0]?.departure ?? null,
@@ -770,7 +770,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.0.firstTransitArrival.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.0.arrival`,
         nbOfVoyages > 1 ? shipment?.voyages?.[0]?.arrival ?? null : null,
@@ -832,7 +832,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.firstTransitDeparture.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.1.departure`,
         nbOfVoyages > 1 ? shipment?.voyages?.[1]?.departure ?? null : null,
@@ -938,7 +938,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.1.secondTransitArrival.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.1.arrival`,
         nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
@@ -1000,7 +1000,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.secondTransitDeparture.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.2.departure`,
         nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
@@ -1111,7 +1111,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.voyage.2.arrival.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}.arrival`,
         shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
@@ -1174,7 +1174,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.customClearance.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.containerGroups.0.customClearance`,
         shipment?.containerGroups?.[0]?.customClearance ?? null,
@@ -1289,7 +1289,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.warehouseArrival.approved',
-      type: 'approval',
+      type: 'approval_tz',
       hide: root => {
         const currentShipment = getShipmentFromRoot(root);
         if (currentShipment?.containers) {
@@ -1376,7 +1376,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.containerGroup.deliveryReady.approved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         `${basePath}.containerGroups.0.deliveryReady`,
         shipment?.containerGroups?.[0]?.deliveryReady ?? null,

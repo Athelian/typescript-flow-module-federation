@@ -42,7 +42,7 @@ const DateRevisionTypeSelectInput = ({
   </button>
 );
 
-const DateRevisionsInput = ({
+const DateRevisionsInputTZ = ({
   value,
   onChange,
   readonly,
@@ -139,4 +139,4 @@ const DateRevisionsInput = ({
   );
 };
 
-export default DateRevisionsInput;
+export default DateRevisionsInputTZ;

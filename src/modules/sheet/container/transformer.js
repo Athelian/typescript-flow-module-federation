@@ -172,7 +172,7 @@ export default function transformSheetContainer({
     },
     {
       columnKey: 'container.warehouseArrivalAgreedDateApproved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         basePath,
         container,
@@ -194,7 +194,7 @@ export default function transformSheetContainer({
     },
     {
       columnKey: 'container.warehouseArrivalActualDateApproved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         basePath,
         container,
@@ -298,7 +298,7 @@ export default function transformSheetContainer({
     },
     {
       columnKey: 'container.departureDateApproved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         basePath,
         container,
