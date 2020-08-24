@@ -51,6 +51,16 @@ export const formatDateInputToDateObjectWithTimezone = (
       )
     : null;
 
+// Return today's date in datetime format with timezone
+export const newDate = (timezone: string): string => {
+  const date = moment()
+    .utc()
+    .format('YYYY-MM-DD')
+    .concat(`T00:00${timezone}`);
+
+  return date;
+};
+
 // ex. (2020-01-01T11:01:00Z) => 2020-01-01T11:01:00
 // When send in UTC datetime,
 // it will NOT convert and simply return the datetime with no Z suffix

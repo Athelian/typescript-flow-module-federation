@@ -39,6 +39,7 @@ import StatusDateInput from './Inputs/StatusDateInput';
 import FollowersInput from './Inputs/FollowersInput';
 import DateInputTZ from './Inputs/DateInputTZ';
 import DateToggleInputTZ from './Inputs/DateToggleInputTZ';
+import DateRevisionsInputTZ from './Inputs/DateRevisionsInputTZ';
 
 type Props = {
   value: any,
@@ -136,6 +137,7 @@ const inputs = {
   // Other
   approval: ApprovalInput,
   date_revisions: DateRevisionsInput,
+  date_revisions_tz: DateRevisionsInputTZ,
   date_binding: DateBindingInput,
   status_date: StatusDateInput,
 };

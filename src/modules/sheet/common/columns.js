@@ -7,7 +7,7 @@ export const ColumnWidths = {
   Date: 140,
   Datetime: 190,
   DateUser: 110,
-  DateRevisions: 1125,
+  DateRevisions: 600,
   Partner: 300,
   Partners: 450,
   Status: 120,
