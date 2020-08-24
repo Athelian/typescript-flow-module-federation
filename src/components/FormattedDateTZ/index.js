@@ -3,28 +3,48 @@ import * as React from 'react';
 import moment from 'moment';
 import type { UserPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
-import { removeZSuffix, switchTimezoneSign } from 'utils/date';
+import { removeZSuffix, switchTimezoneSign, formatDatetimeQueryToUTCDatetime } from 'utils/date';
 
-function getDateFormat(language: string) {
+function getDateFormat(language: string, showTime: boolean) {
+  if (showTime) {
+    switch (language) {
+      case 'en':
+        return 'MM/DD/YYYY h:mm A';
+      case 'jp':
+        return 'YYYY/M/D H:mm';
+      default:
+        return 'YYYY/M/D H:mm';
+    }
+  }
+
   switch (language) {
     case 'en':
-      return 'MM/DD/YYYY h:mm A';
+      return 'MM/DD/YYYY';
     case 'jp':
-      return 'YYYY/M/D H:mm';
+      return 'YYYY/M/D';
     default:
-      return 'YYYY/M/D H:mm';
+      return 'YYYY/M/D';
   }
 }
 
 type Props = {
   value: ?string,
   user: UserPayload,
+  showTime?: boolean,
 };
 
-export default function FormattedDateTZ({ value, user }: Props) {
-  if (!value) return <FormattedMessage id="components.cards.na" defaultMessage="N/A" />;
-
-  return moment
-    .utc(removeZSuffix(value).concat(switchTimezoneSign(user.timezone)))
-    .format(getDateFormat(user.language));
+// Expects value in UTC pattern
+export default function FormattedDateTZ({ value, user, showTime = false }: Props) {
+  return !value ? (
+    <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
+  ) : (
+    moment
+      .utc(
+        // $FlowIgnore Flow thinks formatDatetimeQueryToUTCDatetime could return null, but it can't because we already do check for it earlier
+        removeZSuffix(formatDatetimeQueryToUTCDatetime(value)).concat(
+          switchTimezoneSign(user.timezone)
+        )
+      )
+      .format(getDateFormat(user.language, showTime))
+  );
 }

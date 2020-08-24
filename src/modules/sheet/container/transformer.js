@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { addDays, differenceInCalendarDays } from 'date-fns';
-import { calculateDueDate, startOfToday } from 'utils/date';
+import { calculateDueDate, calculateFreeTime } from 'utils/date';
 import { convertVolume, convertWeight } from 'utils/metric';
 import { getLatestDate } from 'utils/shipment';
 import type { FieldDefinition } from 'types';
@@ -173,7 +172,7 @@ export default function transformSheetContainer({
     },
     {
       columnKey: 'container.warehouseArrivalAgreedDateApproved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         basePath,
         container,
@@ -195,7 +194,7 @@ export default function transformSheetContainer({
     },
     {
       columnKey: 'container.warehouseArrivalActualDateApproved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         basePath,
         container,
@@ -226,12 +225,12 @@ export default function transformSheetContainer({
           ? calculateDueDate(freeTimeStartDate, currentContainer?.freeTimeDuration)
           : null;
 
-        return dueDate ? differenceInCalendarDays(dueDate, startOfToday()) : 0;
+        return dueDate ? calculateFreeTime(dueDate) : 0;
       }),
     },
     {
       columnKey: 'container.freeTimeStartDate',
-      type: 'date_toggle',
+      type: 'date_toggle_tz',
       computed: root => {
         const currentContainer = getContainerFromRoot(root);
         const currentShipment = getShipmentFromRoot(root);
@@ -265,11 +264,15 @@ export default function transformSheetContainer({
     },
     {
       columnKey: 'container.dueDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformComputedField(basePath, container, 'dueDate', root => {
         const currentContainer = getContainerFromRoot(root);
-        const date = currentContainer?.freeTimeStartDate?.value;
-        return date ? addDays(new Date(date), currentContainer?.freeTimeDuration ?? 0) : null;
+        const freeTimeStartDate = currentContainer?.freeTimeStartDate?.value;
+        const dueDate = freeTimeStartDate
+          ? calculateDueDate(freeTimeStartDate, currentContainer?.freeTimeDuration)
+          : null;
+
+        return dueDate;
       }),
     },
     {
@@ -284,7 +287,7 @@ export default function transformSheetContainer({
     },
     {
       columnKey: 'container.departureDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         basePath,
         container,
@@ -295,7 +298,7 @@ export default function transformSheetContainer({
     },
     {
       columnKey: 'container.departureDateApproved',
-      type: 'approval',
+      type: 'approval_tz',
       ...transformValueField(
         basePath,
         container,

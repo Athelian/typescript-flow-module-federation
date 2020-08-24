@@ -8,9 +8,11 @@ export default function normalizeSheetContainerInput(
   newValue: any
 ): Object {
   switch (field) {
+    case 'warehouseArrivalAgreedDate':
+    case 'warehouseArrivalActualDate':
     case 'departureDate':
       return {
-        [(field: string)]: newValue ? new Date(newValue) : null,
+        [(field: string)]: newValue || null,
       };
     case 'tags':
       return {
@@ -29,10 +31,9 @@ export default function normalizeSheetContainerInput(
         departureDateApprovedById: newValue?.user?.id ?? null,
       };
     case 'freeTimeStartDate': {
-      const { auto: autoCalculatedFreeTimeStartDate = false, value: date = null } = newValue || {};
       return {
-        autoCalculatedFreeTimeStartDate,
-        freeTimeStartDate: date ? new Date(date) : null,
+        autoCalculatedFreeTimeStartDate: newValue?.auto ?? false,
+        freeTimeStartDate: newValue?.value || null,
       };
     }
     case 'warehouse':

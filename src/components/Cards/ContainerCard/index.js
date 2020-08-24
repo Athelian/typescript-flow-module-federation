@@ -238,7 +238,7 @@ const ContainerCard = ({ container, onClick, user, ...rest }: Props) => {
           </div>
           <div className={InputIconStyle}>
             <Display align="left">
-              <FormattedDateTZ value={warehouseArrivalAgreedDate} user={user} />
+              <FormattedDateTZ value={warehouseArrivalAgreedDate} user={user} showTime />
             </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalAgreedDateApprovedBy)}>
               <Icon icon="CHECKED" />
@@ -255,7 +255,7 @@ const ContainerCard = ({ container, onClick, user, ...rest }: Props) => {
           </div>
           <div className={InputIconStyle}>
             <Display align="left">
-              <FormattedDateTZ value={warehouseArrivalActualDate} user={user} />
+              <FormattedDateTZ value={warehouseArrivalActualDate} user={user} showTime />
             </Display>
             <div className={ApprovalIconStyle(!!warehouseArrivalActualDateApprovedBy)}>
               <Icon icon="CHECKED" />

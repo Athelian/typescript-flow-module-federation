@@ -42,7 +42,6 @@ import { getBatchesInPool } from 'modules/shipment/helpers';
 import {
   parseGenericField,
   parseMemoField,
-  parseDateField,
   parseArrayOfIdsField,
   parseParentIdField,
   parseArrayOfChildrenField,
@@ -51,6 +50,7 @@ import {
   parseEnumField,
   parseCustomFieldsField,
   parseTodoField,
+  parseDatetimeField,
 } from 'utils/data';
 
 export const createShipmentMutation: Object = gql`
@@ -128,13 +128,13 @@ export const updateShipmentMutation: Object = gql`
 
 type DateRevisionType = {
   id: string,
-  date: string | Date,
+  date: string,
   type: string,
   memo: ?string,
 };
 
 type TimelineDateType = {
-  date: ?(string | Date),
+  date: ?string,
   approvedBy: ?{ id: string },
   approvedAt: ?(string | Date),
   memo: ?string,
@@ -149,10 +149,10 @@ const parseTimelineDateField = (
   if (isEquals(originalTimelineDate, newTimelineDate)) return {};
 
   const parsedNewTimelineDate = {
-    ...parseDateField(
+    ...parseDatetimeField(
       'date',
-      getByPathWithDefault(null, 'date', originalTimelineDate),
-      getByPathWithDefault(null, 'date', newTimelineDate)
+      originalTimelineDate?.date ?? null,
+      newTimelineDate?.date ?? null
     ),
     ...parseApprovalField(
       'approvedById',
@@ -171,11 +171,7 @@ const parseTimelineDateField = (
       getByPathWithDefault([], 'timelineDateRevisions', newTimelineDate),
       (oldDateRevision: ?DateRevisionType, newDateRevision: ?DateRevisionType) => ({
         ...(!oldDateRevision ? {} : { id: oldDateRevision.id }),
-        ...parseDateField(
-          'date',
-          getByPathWithDefault(null, 'date', oldDateRevision),
-          getByPathWithDefault(null, 'date', newDateRevision)
-        ),
+        ...parseDatetimeField('date', oldDateRevision?.date ?? null, newDateRevision?.date ?? null),
         ...parseEnumField(
           'type',
           getByPathWithDefault(null, 'type', oldDateRevision),
@@ -256,11 +252,7 @@ export const prepareParsedShipmentInput = ({
       getByPathWithDefault(null, 'blNo', originalValues),
       newValues.blNo
     ),
-    ...parseDateField(
-      'blDate',
-      getByPathWithDefault(null, 'blDate', originalValues),
-      newValues.blDate
-    ),
+    ...parseDatetimeField('blDate', originalValues?.blDate ?? null, newValues.blDate),
     ...parseGenericField(
       'booked',
       getByPathWithDefault(null, 'booked', originalValues),
@@ -271,9 +263,9 @@ export const prepareParsedShipmentInput = ({
       getByPathWithDefault(null, 'bookingNo', originalValues),
       newValues.bookingNo
     ),
-    ...parseDateField(
+    ...parseDatetimeField(
       'bookingDate',
-      getByPathWithDefault(null, 'bookingDate', originalValues),
+      originalValues?.bookingDate ?? null,
       newValues.bookingDate
     ),
     ...parseGenericField(

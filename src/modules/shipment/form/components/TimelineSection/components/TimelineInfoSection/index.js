@@ -92,6 +92,7 @@ const TimelineInfoSection = (props: Props) => {
           approvedBy={approvedBy}
           setFieldValue={setFieldDeepValue}
           approvable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_APPROVE_TIMELINE_DATE])}
+          handleTimezone
         />
         <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
           <div className={AddDateButtonWrapperStyle}>
@@ -180,6 +181,7 @@ const TimelineInfoSection = (props: Props) => {
                             ])}
                             required
                             hideTooltip
+                            handleTimezone
                           />
                         )}
                       </FormField>
@@ -201,6 +203,7 @@ const TimelineInfoSection = (props: Props) => {
                   />
                 }
                 hideTooltip
+                handleTimezone
               />
             )}
           </FormField>

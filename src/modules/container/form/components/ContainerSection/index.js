@@ -5,10 +5,11 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { isNullOrUndefined, getByPathWithDefault, getByPath } from 'utils/fp';
-import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import FormattedNumber from 'components/FormattedNumber';
 import { Tooltip } from 'components/Tooltip';
 import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
+import useUser from 'hooks/useUser';
 import {
   CONTAINER_UPDATE,
   CONTAINER_SET_WAREHOUSE,
@@ -59,7 +60,7 @@ import { ContainerInfoContainer } from 'modules/container/form/containers';
 import validator from 'modules/container/form/validator';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { getLatestDate } from 'utils/shipment';
-import { startOfToday, differenceInCalendarDays, calculateDueDate } from 'utils/date';
+import { calculateFreeTime, calculateDueDate } from 'utils/date';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import { getMaxVolume } from 'utils/container';
 import ContainerSummary from './ContainerSummary';
@@ -73,9 +74,9 @@ import {
   StatusLabelStyle,
 } from './style';
 
-const renderFreeTime = (date: ?Date, approved: boolean) => {
+const renderFreeTime = (date: ?string, approved: boolean) => {
   if (date) {
-    const freeTime = differenceInCalendarDays(date, startOfToday());
+    const freeTime = calculateFreeTime(date);
     let freeTimeColor;
     if (approved) {
       freeTimeColor = 'GRAY_LIGHT';
@@ -124,6 +125,7 @@ const ContainerSection = ({ container }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
+  const { user } = useUser();
 
   const allowSetWarehouse =
     hasPermission([CONTAINER_UPDATE, CONTAINER_SET_WAREHOUSE]) && hasPermission(WAREHOUSE_LIST);
@@ -325,6 +327,7 @@ const ContainerSection = ({ container }: Props) => {
                             CONTAINER_UPDATE,
                             CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
                           ])}
+                          handleTimezone
                         />
                       </GridColumn>
 
@@ -369,6 +372,7 @@ const ContainerSection = ({ container }: Props) => {
                             CONTAINER_UPDATE,
                             CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
                           ])}
+                          handleTimezone
                         />
                       </GridColumn>
                     </GridColumn>
@@ -459,6 +463,7 @@ const ContainerSection = ({ container }: Props) => {
                             editable={
                               allowUpdate || hasPermission(CONTAINER_SET_FREE_TIME_START_DATE)
                             }
+                            handleTimezone
                           />
                         )}
                       </FormField>
@@ -495,11 +500,7 @@ const ContainerSection = ({ container }: Props) => {
                         }
                         input={
                           <Display>
-                            {dueDate ? (
-                              <FormattedDate value={dueDate} />
-                            ) : (
-                              <FormattedMessage id="modules.container.na" defaultMessage="N/A" />
-                            )}
+                            <FormattedDateTZ value={dueDate} user={user} />
                           </Display>
                         }
                       />
@@ -546,6 +547,7 @@ const ContainerSection = ({ container }: Props) => {
                               />
                             }
                             editable={allowUpdate || hasPermission(CONTAINER_SET_DEPARTURE_DATE)}
+                            handleTimezone
                           />
                         )}
                       </FormField>
@@ -562,6 +564,7 @@ const ContainerSection = ({ container }: Props) => {
                         approvedBy={values.departureDateApprovedBy}
                         setFieldValue={setFieldValue}
                         approvable={allowUpdate || hasPermission(CONTAINER_APPROVE_DEPARTURE_DATE)}
+                        handleTimezone
                       />
                     </GridColumn>
                     <CustomFieldsFactory

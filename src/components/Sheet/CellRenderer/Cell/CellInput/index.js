@@ -37,6 +37,10 @@ import MaskSelectorInput from './Inputs/MaskSelectorInput';
 import StatusSelectInput from './Inputs/StatusSelectInput';
 import StatusDateInput from './Inputs/StatusDateInput';
 import FollowersInput from './Inputs/FollowersInput';
+import DateInputTZ from './Inputs/DateInputTZ';
+import DateToggleInputTZ from './Inputs/DateToggleInputTZ';
+import DateRevisionsInputTZ from './Inputs/DateRevisionsInputTZ';
+import ApprovalInputTZ from './Inputs/ApprovalInputTZ';
 
 type Props = {
   value: any,
@@ -57,6 +61,7 @@ const inputs = {
   text: TextInput,
   number: NumberInput,
   date: DateInput,
+  date_tz: DateInputTZ,
   datetime: DatetimeInput,
   day: DayInput,
   status: StatusInput,
@@ -74,6 +79,7 @@ const inputs = {
   // Computed with toggle
   number_toggle: NumberToggleInput,
   date_toggle: DateToggleInput,
+  date_toggle_tz: DateToggleInputTZ,
   volume_toggle: MetricValueToggleInput.Volume,
   area_toggle: MetricValueToggleInput.Area,
   length_toggle: MetricValueToggleInput.Length,
@@ -131,7 +137,9 @@ const inputs = {
   shipment_tasks: TasksInput.Shipment,
   // Other
   approval: ApprovalInput,
+  approval_tz: ApprovalInputTZ,
   date_revisions: DateRevisionsInput,
+  date_revisions_tz: DateRevisionsInputTZ,
   date_binding: DateBindingInput,
   status_date: StatusDateInput,
 };

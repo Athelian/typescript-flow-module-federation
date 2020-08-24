@@ -10,6 +10,7 @@ import MaskableMetricValueDisplay from './Displays/MaskableMetricValueDisplay';
 import StatusDisplay from './Displays/StatusDisplay';
 import PartnerDisplay from './Displays/PartnerDisplay';
 import PartnersDisplay from './Displays/PartnersDisplay';
+import DateDisplayTZ from './Displays/DateDisplayTZ';
 
 type Props = {
   value: any,
@@ -25,6 +26,7 @@ const displays = {
   number: NumberDisplay,
   text: TextDisplay,
   date: DateDisplay,
+  date_tz: DateDisplayTZ,
   date_user: DateUserDisplay,
   date_difference: DateDifferenceDisplay,
   metric_value: MetricValueDisplay,

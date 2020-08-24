@@ -36,6 +36,41 @@ export const isValidDate = (date: any): boolean => !!date && isValid(new Date(da
 
 export const isDateObject = (date: any): boolean => date instanceof Date;
 
+export const formatDateInputToDateObjectWithTimezone = (
+  date: ?string,
+  timezone: string
+): Date | null =>
+  !!date && isValidDate(date)
+    ? zonedTimeToUtc(
+        new Date(
+          parseInt(date.substring(0, 4), 10),
+          parseInt(date.substring(5, 7), 10) - 1,
+          parseInt(date.substring(8, 10), 10)
+        ),
+        timezone
+      )
+    : null;
+
+// Return today's date in UTC format
+export const newDateUTC = (): string => {
+  const date = moment()
+    .utc()
+    .format('YYYY-MM-DD')
+    .concat(`T00:00:00Z`);
+
+  return date;
+};
+
+// Return today's date in datetime format with timezone
+export const newDateTZ = (timezone: string): string => {
+  const date = moment()
+    .utc()
+    .format('YYYY-MM-DD')
+    .concat(`T00:00${timezone}`);
+
+  return date;
+};
+
 // ex. (2020-01-01T11:01:00Z) => 2020-01-01T11:01:00
 // When send in UTC datetime,
 // it will NOT convert and simply return the datetime with no Z suffix
@@ -60,10 +95,26 @@ export const switchTimezoneSign = (timezone: string): string => {
 // ex. (2020-01-01T11:01+09:00) => 2020-01-01T11:01
 // When send in datetime with timezone suffix,
 // it will NOT convert and simply return the datetime with no timezone suffix
-export const removeTimezone = (date: ?string): string => {
+export const removeTimezone = (date: ?string, removeTime?: boolean): string => {
   if (date) {
-    const result = date.substring(0, 16);
+    const hasTimezone =
+      (date.charAt(date.length - 6) === '-' || date.charAt(date.length - 6) === '+') &&
+      date.charAt(date.length - 3) === ':';
 
+    if (!hasTimezone) {
+      return date;
+    }
+
+    if (removeTime) {
+      const hasTime = date.charAt(date.length - 12) === 'T' && date.charAt(date.length - 9) === ':';
+
+      if (hasTime) {
+        const result = date.substring(0, date.length - 12);
+        return result;
+      }
+    }
+
+    const result = date.substring(0, date.length - 6);
     return result;
   }
 
@@ -73,30 +124,15 @@ export const removeTimezone = (date: ?string): string => {
 // ex. (2020-01-01T11:01, +09:00) => 2020-01-01T11:01+09:00
 // When send in datetime value and timezone,
 // it will NOT convert and simply return the datetime with timezone suffix
-export const addTimezone = (date: ?string, timezone: string): string => {
+export const addTimezone = (date: ?string, timezone: string, addTime?: boolean): string => {
   if (date) {
-    const result = date.concat(timezone);
+    const result = date.concat(addTime ? 'T00:00' : '').concat(timezone);
 
     return result;
   }
 
   return '';
 };
-
-export const formatDateInputToDateObjectWithTimezone = (
-  date: ?string,
-  timezone: string
-): Date | null =>
-  !!date && isValidDate(date)
-    ? zonedTimeToUtc(
-        new Date(
-          parseInt(date.substring(0, 4), 10),
-          parseInt(date.substring(5, 7), 10) - 1,
-          parseInt(date.substring(8, 10), 10)
-        ),
-        timezone
-      )
-    : null;
 
 // ex. (2020-01-01T11:01, +09:00) => 2020-01-01T02:01+09:00
 // When send in value from datetime input and user's timezone,
@@ -185,6 +221,34 @@ export const formatDatetimeQueryToDatetimeWithTimezone = (
   }
 
   return null;
+};
+
+// ex. (2020-01-01T11:01:00Z or 2020-01-01T11:01+09:00) => 2020-01-01T11:01:00Z
+// When send in either a UTC date or date with timezone suffix,
+// it will determine which type was sent and trigger the format function specific to that type
+export const formatDatetimeQueryToUTCDatetime = (date: ?string): string | null => {
+  if (date) {
+    // Date with offset
+    if (date.charAt(date.length - 6) === '+' || date.charAt(date.length - 6) === '-') {
+      return formatDatetimeWithTimezoneToUTCDatetime(date);
+    }
+    // UTC date with no offset
+    return date;
+  }
+
+  return null;
+};
+
+export const initDatetimeToContainer = (
+  date: ?string,
+  fieldName: string,
+  timezone: string
+): Object => {
+  return date
+    ? {
+        [fieldName]: formatDatetimeQueryToDatetimeWithTimezone(date, timezone),
+      }
+    : {};
 };
 
 export const formatDateObjectWithTimezoneForMutation = (date: ?Date): string | null =>
@@ -297,5 +361,23 @@ export const calculateNewDate = ({
   });
 };
 
-export const calculateDueDate = (freeTimeStartDate: string, freeTimeDuration: number = 0) =>
-  addDays(new Date(freeTimeStartDate), freeTimeDuration);
+// freeTimeStartDate = Datetime with timezone format
+// returns UTC format with the freeTimeDuration added to it
+export const calculateDueDate = (
+  freeTimeStartDate: string,
+  freeTimeDuration: number = 0
+): string => {
+  const dateObj = moment.utc(freeTimeStartDate).add(freeTimeDuration, 'days');
+
+  const result = dateObj.format('YYYY-MM-DDTHH:mm:ss').concat('Z');
+
+  return result;
+};
+
+export const calculateFreeTime = (dueDate: string): number => {
+  const dateObj = moment.utc(dueDate);
+
+  const result = dateObj.diff(moment.utc(), 'days');
+
+  return result;
+};
