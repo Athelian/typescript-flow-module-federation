@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { uniqBy } from 'lodash';
 import EnumProvider from 'providers/enum';
+import type { TimelineDatePayload } from 'generated/graphql';
 import { getByPathWithDefault } from './fp';
 import { initDatetimeToContainer } from './date';
 
@@ -67,7 +68,7 @@ export const getPort = (transportType: ?string, port: Object = {}): string => {
 };
 
 export const initDatetimeToContainerForShipmentTimeline = (
-  timelinePoint: ?Object,
+  timelinePoint: ?TimelineDatePayload,
   timelinePointName: string,
   timezone: string
 ): Object => {
@@ -75,10 +76,10 @@ export const initDatetimeToContainerForShipmentTimeline = (
     ? {
         [timelinePointName]: {
           ...timelinePoint,
-          ...initDatetimeToContainer(timelinePoint.date, 'date', timezone),
-          timelineDateRevisions: (timelinePoint.timelineDateRevisions ?? []).map(revision => ({
+          ...initDatetimeToContainer(timelinePoint?.date ?? null, 'date', timezone),
+          timelineDateRevisions: (timelinePoint?.timelineDateRevisions ?? []).map(revision => ({
             ...revision,
-            ...initDatetimeToContainer(revision.date, 'date', timezone),
+            ...initDatetimeToContainer(revision?.date ?? null, 'date', timezone),
           })),
         },
       }
