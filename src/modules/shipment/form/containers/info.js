@@ -3,6 +3,7 @@ import { Container } from 'unstated';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 import { defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
+import { initDatetimeToContainer } from 'utils/date';
 
 type ShipmentInfoType = {
   followers: Array<{ id: string, firstName: string, lastName: string }>,
@@ -119,8 +120,17 @@ export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
     });
   };
 
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...values };
+  initDetailValues = (values: Object, timezone: string) => {
+    const { blDate, bookingDate, ...rest } = values;
+
+    const info = {
+      ...initDatetimeToContainer(blDate, 'blDate', timezone),
+      ...initDatetimeToContainer(bookingDate, 'bookingDate', timezone),
+      ...rest,
+    };
+
+    const parsedValues = { ...initValues, ...info };
+
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };
   };

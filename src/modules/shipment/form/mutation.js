@@ -51,6 +51,7 @@ import {
   parseEnumField,
   parseCustomFieldsField,
   parseTodoField,
+  parseDatetimeField,
 } from 'utils/data';
 
 export const createShipmentMutation: Object = gql`
@@ -256,11 +257,7 @@ export const prepareParsedShipmentInput = ({
       getByPathWithDefault(null, 'blNo', originalValues),
       newValues.blNo
     ),
-    ...parseDateField(
-      'blDate',
-      getByPathWithDefault(null, 'blDate', originalValues),
-      newValues.blDate
-    ),
+    ...parseDatetimeField('blDate', originalValues?.blDate ?? null, newValues.blDate),
     ...parseGenericField(
       'booked',
       getByPathWithDefault(null, 'booked', originalValues),
@@ -271,9 +268,9 @@ export const prepareParsedShipmentInput = ({
       getByPathWithDefault(null, 'bookingNo', originalValues),
       newValues.bookingNo
     ),
-    ...parseDateField(
+    ...parseDatetimeField(
       'bookingDate',
-      getByPathWithDefault(null, 'bookingDate', originalValues),
+      originalValues?.bookingDate ?? null,
       newValues.bookingDate
     ),
     ...parseGenericField(
