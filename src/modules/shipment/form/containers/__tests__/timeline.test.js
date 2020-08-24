@@ -1,4 +1,5 @@
 import faker from 'faker';
+import useUser from 'hooks/useUser';
 import Timeline, { initValues } from '../timeline';
 
 describe('shipment timeline container', () => {
@@ -20,6 +21,7 @@ describe('shipment timeline container', () => {
   });
 
   it('should reset cargo ready when change importer', async () => {
+    const { user } = useUser();
     const container = new Timeline();
     const organization = {
       id: faker.random.uuid(),
@@ -56,7 +58,8 @@ describe('shipment timeline container', () => {
         containerGroups: [containerGroup],
         voyages: [voyage],
       },
-      true
+      true,
+      user.timezone
     );
 
     expect(container.state).toEqual({
@@ -81,6 +84,7 @@ describe('shipment timeline container', () => {
   });
 
   it('should reset status and remove staff when change importer ', async () => {
+    const { user } = useUser();
     const container = new Timeline();
     const organization = {
       id: faker.random.uuid(),
@@ -166,7 +170,8 @@ describe('shipment timeline container', () => {
         containerGroups: [containerGroup],
         voyages: [voyage],
       },
-      true
+      true,
+      user.timezone
     );
 
     await container.onChangePartner(organization);
