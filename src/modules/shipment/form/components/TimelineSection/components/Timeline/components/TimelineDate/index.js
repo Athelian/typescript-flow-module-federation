@@ -5,8 +5,10 @@ import { compact } from 'lodash';
 import { differenceInCalendarDays } from 'utils/date';
 import Icon from 'components/Icon';
 import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import FormattedNumber from 'components/FormattedNumber';
 import { getLatestDate } from 'utils/shipment';
+import type { UserPayload } from 'generated/graphql';
 import {
   TimelineDateWrapperStyle,
   PrefixIconStyle,
@@ -26,10 +28,12 @@ type OptionalProps = {
   },
   color: string,
   vertical: boolean,
-  mode?: 'date' | 'date-no-year' | 'relative' | 'time' | 'datetime',
+  mode?: 'datetime',
 };
 
-type Props = OptionalProps & {};
+type Props = OptionalProps & {
+  user: UserPayload,
+};
 
 const defaultProps = {
   prefixIcon: '',
@@ -42,7 +46,7 @@ const defaultProps = {
   vertical: false,
 };
 
-const TimelineDate = ({ timelineDate, prefixIcon, mode, vertical, color }: Props) => {
+const TimelineDate = ({ timelineDate, prefixIcon, mode, vertical, color, user }: Props) => {
   const showTime = mode === 'datetime';
   const { date, timelineDateRevisions: rawRevisions, approvedAt } = timelineDate;
 
@@ -63,7 +67,11 @@ const TimelineDate = ({ timelineDate, prefixIcon, mode, vertical, color }: Props
       )}
       {shownDate ? (
         <div className={DateStyle({ color, vertical, showTime })}>
-          <FormattedDate mode={mode} value={new Date(shownDate)} />
+          {showTime ? (
+            <FormattedDate mode={mode} value={new Date(shownDate)} />
+          ) : (
+            <FormattedDateTZ value={shownDate} user={user} />
+          )}
         </div>
       ) : (
         <div className={DateStyle({ color: 'GRAY_LIGHT', vertical, showTime })}>

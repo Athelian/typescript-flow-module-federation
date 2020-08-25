@@ -15,7 +15,7 @@ import { injectUid } from 'utils/id';
 import { Tooltip } from 'components/Tooltip';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
-import { todayForDateInput } from 'utils/date';
+import { newDateTZ } from 'utils/date';
 import {
   SectionHeader,
   DischargePortArrivalAdjustmentWrapper,
@@ -109,7 +109,7 @@ const DischargePortArrival = (props: Props) => {
                       <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
                     }
                     onClick={() => {
-                      const date = (timelineDate && timelineDate.date) || todayForDateInput();
+                      const date = timelineDate?.date || newDateTZ(user.timezone);
                       setFieldDeepValue(
                         `${sourceName}.timelineDateRevisions[${timelineDateRevisions.length}]`,
                         injectUid({
@@ -117,8 +117,6 @@ const DischargePortArrival = (props: Props) => {
                           type: 'Other',
                           date,
                           memo: null,
-                          updatedAt: new Date(),
-                          updatedBy: user,
                         })
                       );
                       setShipmentContainers(
@@ -249,7 +247,6 @@ const DischargePortArrival = (props: Props) => {
                   ...inputHandlers,
                   onBlur: evt => {
                     inputHandlers.onBlur(evt);
-                    setFieldDeepValue(name, inputHandlers.value);
                     if (timelineDateRevisions.length === 0) {
                       setShipmentContainers(
                         'containers',
