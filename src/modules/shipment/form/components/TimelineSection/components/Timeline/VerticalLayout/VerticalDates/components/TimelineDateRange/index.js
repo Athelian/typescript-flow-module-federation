@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
-import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
+import type { UserPayload } from 'generated/graphql';
 import { TimelineDateWrapperStyle, LabelStyle, DateStyle, ApprovedIconStyle } from './style';
 
 type OptionalProps = {
@@ -12,7 +13,9 @@ type OptionalProps = {
   color: string,
 };
 
-type Props = OptionalProps & {};
+type Props = OptionalProps & {
+  user: UserPayload,
+};
 
 const defaultProps = {
   minDate: null,
@@ -21,7 +24,7 @@ const defaultProps = {
   color: 'BLACK',
 };
 
-const TimelineDate = ({ minDate, maxDate, approved, color }: Props) => (
+const TimelineDate = ({ minDate, maxDate, approved, color, user }: Props) => (
   <div className={TimelineDateWrapperStyle}>
     <div>
       <div className={LabelStyle}>
@@ -34,7 +37,7 @@ const TimelineDate = ({ minDate, maxDate, approved, color }: Props) => (
     <div>
       <div className={DateStyle(!!minDate, color)}>
         {minDate ? (
-          <FormattedDate value={new Date(minDate)} />
+          <FormattedDateTZ value={minDate} user={user} />
         ) : (
           <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         )}
@@ -42,7 +45,7 @@ const TimelineDate = ({ minDate, maxDate, approved, color }: Props) => (
 
       <div className={DateStyle(!!maxDate, color)}>
         {maxDate ? (
-          <FormattedDate value={new Date(maxDate)} />
+          <FormattedDateTZ value={maxDate} user={user} />
         ) : (
           <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
         )}

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
-import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import { getContainerDatesRange } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import {
   TimelineDateContainersWrapperStyle,
@@ -17,13 +17,15 @@ type OptionalProps = {
   containers: Array<Object>,
 };
 
-type Props = OptionalProps & {};
+type Props = OptionalProps & {
+  user: UserPayload,
+};
 
 const defaultProps = {
   containers: [],
 };
 
-const TimelineDateContainers = ({ containers }: Props) => {
+const TimelineDateContainers = ({ containers, user }: Props) => {
   const {
     minAgreedDate,
     maxAgreedDate,
@@ -42,13 +44,13 @@ const TimelineDateContainers = ({ containers }: Props) => {
 
         <div className={AgreedDateStyle(!!minAgreedDate)}>
           {minAgreedDate ? (
-            <FormattedDate value={new Date(minAgreedDate)} />
+            <FormattedDateTZ value={minAgreedDate} user={user} />
           ) : (
             <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
           )}
           {' - '}
           {maxAgreedDate ? (
-            <FormattedDate value={new Date(maxAgreedDate)} />
+            <FormattedDateTZ value={maxAgreedDate} user={user} />
           ) : (
             <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
           )}
@@ -66,13 +68,13 @@ const TimelineDateContainers = ({ containers }: Props) => {
 
         <div className={ActualDateStyle(!!minActualDate)}>
           {minActualDate ? (
-            <FormattedDate value={new Date(minActualDate)} />
+            <FormattedDateTZ value={minActualDate} user={user} />
           ) : (
             <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
           )}
           {' - '}
           {maxActualDate ? (
-            <FormattedDate value={new Date(maxActualDate)} />
+            <FormattedDateTZ value={maxActualDate} user={user} />
           ) : (
             <FormattedMessage id="modules.Shipments.noDate" defaultMessage="No date" />
           )}
