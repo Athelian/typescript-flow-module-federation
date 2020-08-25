@@ -16,7 +16,7 @@ import { injectUid } from 'utils/id';
 import { Tooltip } from 'components/Tooltip';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
-import { todayForDateInput } from 'utils/date';
+import { newDateTZ } from 'utils/date';
 import {
   SectionHeader,
   DefaultAdjustmentStyle,
@@ -110,10 +110,8 @@ const TimelineInfoSection = (props: Props) => {
                         injectUid({
                           isNew: true,
                           type: 'Other',
-                          date: date || todayForDateInput(),
+                          date: date || newDateTZ(user.timezone),
                           memo: null,
-                          updatedAt: new Date(),
-                          updatedBy: user,
                         })
                       );
                     }}

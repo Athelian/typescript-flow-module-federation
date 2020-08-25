@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { getContainerDatesRange } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
+import useUser from 'hooks/useUser';
 import { TimelineDate, TimelinePortName, TimelineWarehouseName } from '../../components';
 import { TimelineDateRange } from './components';
 import {
@@ -15,6 +16,7 @@ type Props = {
 };
 
 const VerticalDates = ({ shipment }: Props) => {
+  const { user } = useUser();
   const { cargoReady, voyages, containerGroups, transportType, containers } = shipment;
   const { customClearance, warehouseArrival, deliveryReady } = containerGroups[0];
   const { warehouse } = containers && containers.length > 0 ? containers[0] : containerGroups[0];
@@ -32,7 +34,7 @@ const VerticalDates = ({ shipment }: Props) => {
   return (
     <div className={VerticalDatesWrapperStyle}>
       <div className={SingularDateWrapperStyle}>
-        <TimelineDate timelineDate={cargoReady} vertical />
+        <TimelineDate timelineDate={cargoReady} user={user} vertical />
       </div>
 
       <div className={BlankGapStyle()} />
@@ -40,8 +42,13 @@ const VerticalDates = ({ shipment }: Props) => {
       <TimelinePortName port={loadPort} transportType={transportType} vertical />
 
       <div className={VoyageDatesWrapperStyle}>
-        <TimelineDate timelineDate={voyages[0].departure} prefixIcon="DEPARTURE" vertical />
-        <TimelineDate timelineDate={voyages[0].arrival} prefixIcon="ARRIVAL" vertical />
+        <TimelineDate
+          timelineDate={voyages[0].departure}
+          user={user}
+          prefixIcon="DEPARTURE"
+          vertical
+        />
+        <TimelineDate timelineDate={voyages[0].arrival} user={user} prefixIcon="ARRIVAL" vertical />
       </div>
 
       {voyages.length > 1 &&
@@ -50,8 +57,18 @@ const VerticalDates = ({ shipment }: Props) => {
             <TimelinePortName port={voyage.departurePort} transportType={transportType} vertical />
 
             <div className={VoyageDatesWrapperStyle}>
-              <TimelineDate timelineDate={voyage.departure} prefixIcon="DEPARTURE" vertical />
-              <TimelineDate timelineDate={voyage.arrival} prefixIcon="ARRIVAL" vertical />
+              <TimelineDate
+                timelineDate={voyage.departure}
+                user={user}
+                prefixIcon="DEPARTURE"
+                vertical
+              />
+              <TimelineDate
+                timelineDate={voyage.arrival}
+                user={user}
+                prefixIcon="ARRIVAL"
+                vertical
+              />
             </div>
           </React.Fragment>
         ))}
@@ -61,7 +78,7 @@ const VerticalDates = ({ shipment }: Props) => {
       <div className={BlankGapStyle()} />
 
       <div className={SingularDateWrapperStyle}>
-        <TimelineDate timelineDate={customClearance} vertical />
+        <TimelineDate timelineDate={customClearance} user={user} vertical />
       </div>
 
       <div className={BlankGapStyle()}>
@@ -70,10 +87,11 @@ const VerticalDates = ({ shipment }: Props) => {
             minDate={minAgreedDate}
             maxDate={maxAgreedDate}
             approved={agreedApproved}
+            user={user}
             color="BLUE"
           />
         ) : (
-          <TimelineDate timelineDate={warehouseArrival} vertical />
+          <TimelineDate timelineDate={warehouseArrival} user={user} vertical />
         )}
       </div>
 
@@ -85,6 +103,7 @@ const VerticalDates = ({ shipment }: Props) => {
             minDate={minActualDate}
             maxDate={maxActualDate}
             approved={actualApproved}
+            user={user}
             color="TEAL"
           />
         </div>
@@ -93,7 +112,7 @@ const VerticalDates = ({ shipment }: Props) => {
       )}
 
       <div className={SingularDateWrapperStyle}>
-        <TimelineDate timelineDate={deliveryReady} vertical />
+        <TimelineDate timelineDate={deliveryReady} user={user} vertical />
       </div>
     </div>
   );
