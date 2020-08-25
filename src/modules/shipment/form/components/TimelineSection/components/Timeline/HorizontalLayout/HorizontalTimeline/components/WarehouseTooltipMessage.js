@@ -5,7 +5,7 @@ import FormattedDate from 'components/FormattedDate';
 import { TimelineDate } from 'modules/shipment/form/components/TimelineSection/components/Timeline/components';
 import { CONTAINER_TYPE_MAP } from 'modules/container/constants';
 import { calculateDueDate } from 'utils/date';
-
+import useUser from 'hooks/useUser';
 import { TooltipTitleStyle, TooltipGirdStyle, TooltipLabelStyle } from '../style';
 
 type Props = {
@@ -13,6 +13,8 @@ type Props = {
 };
 
 export default function WarehouseIconTooltipMessage({ containers }: Props) {
+  const { user } = useUser();
+
   return (
     <div>
       <div className={TooltipTitleStyle}>
@@ -66,6 +68,7 @@ export default function WarehouseIconTooltipMessage({ containers }: Props) {
                     approvedAt: container.warehouseArrivalAgreedDateApprovedAt,
                     timelineDateRevisions: [],
                   }}
+                  user={user}
                 />
               </div>
               <div>
@@ -77,6 +80,7 @@ export default function WarehouseIconTooltipMessage({ containers }: Props) {
                     approvedAt: container.warehouseArrivalActualDateApprovedAt,
                     timelineDateRevisions: [],
                   }}
+                  user={user}
                 />
               </div>
             </Fragment>
