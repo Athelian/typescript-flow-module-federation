@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
+import type { UserPayload } from 'generated/graphql';
 import FormattedDateTZ from 'components/FormattedDateTZ';
 import { getContainerDatesRange } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import {

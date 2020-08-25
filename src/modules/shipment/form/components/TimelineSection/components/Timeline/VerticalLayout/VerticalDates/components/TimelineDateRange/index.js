@@ -7,8 +7,8 @@ import type { UserPayload } from 'generated/graphql';
 import { TimelineDateWrapperStyle, LabelStyle, DateStyle, ApprovedIconStyle } from './style';
 
 type OptionalProps = {
-  minDate: ?(string | Date),
-  maxDate: ?(string | Date),
+  minDate: ?string,
+  maxDate: ?string,
   approved: boolean,
   color: string,
 };
