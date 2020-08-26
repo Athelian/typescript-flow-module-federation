@@ -5,6 +5,7 @@ import { Provider, Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
+import { UserConsumer } from 'contexts/Viewer';
 import { showToastError } from 'utils/errors';
 import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import Timeline from 'modules/timeline/components/Timeline';
@@ -42,18 +43,26 @@ class BatchFormModule extends React.Component<Props> {
     formContainer.onReset();
   }
 
-  onFormReady = ({ batchInfoContainer, batchTasksContainer }: BatchFormState, batch: Object) => {
+  onFormReady = (
+    { batchInfoContainer, batchTasksContainer }: BatchFormState,
+    batch: Object,
+    timezone: string
+  ) => {
     const hasInitialStateYet =
       (batchInfoContainer.state.id && batchInfoContainer.state.id === batch.id) ||
       Object.keys(batch).length === 0;
     if (hasInitialStateYet) return null;
-    this.initAllValues({ batchInfoContainer, batchTasksContainer }, batch);
+    this.initAllValues({ batchInfoContainer, batchTasksContainer }, batch, timezone);
     return null;
   };
 
-  initAllValues = ({ batchInfoContainer, batchTasksContainer }: BatchFormState, batch: Object) => {
+  initAllValues = (
+    { batchInfoContainer, batchTasksContainer }: BatchFormState,
+    batch: Object,
+    timezone: string
+  ) => {
     const { todo = { tasks: [] }, ...rest } = batch;
-    batchInfoContainer.initDetailValues(rest);
+    batchInfoContainer.initDetailValues(rest, timezone);
     batchTasksContainer.initDetailValues(todo);
   };
 
@@ -96,194 +105,218 @@ class BatchFormModule extends React.Component<Props> {
       mutationKey = { key: decodeId(batchId) };
     }
     return (
-      <Provider inject={[formContainer]}>
-        <Mutation
-          mutation={updateBatchMutation}
-          onCompleted={(result: Object) => this.onMutationCompleted(result)}
-          {...mutationKey}
-        >
-          {(updateBatch, { loading, error }) => (
-            <>
-              <CurrentNavBar>
-                <EntityIcon icon="BATCH" color="BATCH" />
-                <JumpToSection>
-                  <SectionTabs
-                    link="batch_batchSection"
-                    label={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
-                    icon="BATCH"
-                  />
-                  <SectionTabs
-                    link="batch_quantitySection"
-                    label={
-                      <FormattedMessage id="modules.Batches.quantity" defaultMessage="QUANTITY" />
-                    }
-                    icon="QUANTITY_ADJUSTMENTS"
-                  />
-                  <SectionTabs
-                    link="batch_packagingSection"
-                    label={
-                      <FormattedMessage id="modules.Batches.packaging" defaultMessage="PACKAGING" />
-                    }
-                    icon="PACKAGING"
-                  />
-                  <SectionTabs
-                    link="batch_taskSection"
-                    label={<FormattedMessage id="modules.Batches.task" defaultMessage="TASK" />}
-                    icon="TASK"
-                  />
-                  <SectionTabs
-                    link="batch_shipmentSection"
-                    label={
-                      <FormattedMessage id="modules.Batches.shipment" defaultMessage="SHIPMENT" />
-                    }
-                    icon="SHIPMENT"
-                  />
-                  <SectionTabs
-                    link="batch_containerSection"
-                    label={
-                      <FormattedMessage id="modules.Batches.container" defaultMessage="CONTAINER" />
-                    }
-                    icon="CONTAINER"
-                  />
-                  <SectionTabs
-                    link="batch_orderSection"
-                    label={<FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />}
-                    icon="ORDER"
-                  />
-                </JumpToSection>
-
-                <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
-                  {(batchInfoContainer, batchTasksContainer) => (
-                    <>
-                      <BooleanValue>
-                        {({ value: isOpen, set: toggleLogs }) => (
-                          <>
-                            <LogsButton
-                              entityType="batch"
-                              entityId={batchId}
-                              onClick={() => toggleLogs(true)}
-                            />
-                            <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
-                              <SlideViewLayout>
-                                {batchId && isOpen && (
-                                  <>
-                                    <SlideViewNavBar>
-                                      <EntityIcon icon="LOGS" color="LOGS" />
-                                    </SlideViewNavBar>
-
-                                    <Content>
-                                      <Timeline
-                                        query={batchTimelineQuery}
-                                        queryField="batch"
-                                        variables={{
-                                          id: decodeId(batchId),
-                                        }}
-                                        entity={{
-                                          batchId: decodeId(batchId),
-                                        }}
-                                        users={[
-                                          ...(batchInfoContainer.state.shipment?.followers || []),
-                                          ...(batchInfoContainer.state.orderItem?.order
-                                            ?.followers || []),
-                                        ]}
-                                      />
-                                    </Content>
-                                  </>
-                                )}
-                              </SlideViewLayout>
-                            </SlideView>
-                          </>
-                        )}
-                      </BooleanValue>
-                      {(batchInfoContainer.isDirty() || batchTasksContainer.isDirty()) && (
-                        <>
-                          <ResetFormButton
-                            onClick={() => {
-                              this.initAllValues(
-                                {
-                                  batchInfoContainer,
-                                  batchTasksContainer,
-                                },
-                                {
-                                  ...batchInfoContainer.originalValues,
-                                  ...batchTasksContainer.originalValues,
-                                }
-                              );
-                              formContainer.onReset();
-                            }}
+      <UserConsumer>
+        {({ user }) => (
+          <Provider inject={[formContainer]}>
+            <Mutation
+              mutation={updateBatchMutation}
+              onCompleted={(result: Object) => this.onMutationCompleted(result)}
+              {...mutationKey}
+            >
+              {(updateBatch, { loading, error }) => (
+                <>
+                  <CurrentNavBar>
+                    <EntityIcon icon="BATCH" color="BATCH" />
+                    <JumpToSection>
+                      <SectionTabs
+                        link="batch_batchSection"
+                        label={
+                          <FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />
+                        }
+                        icon="BATCH"
+                      />
+                      <SectionTabs
+                        link="batch_quantitySection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Batches.quantity"
+                            defaultMessage="QUANTITY"
                           />
-                          <SaveFormButton
-                            id="batch_form_save_button"
-                            disabled={
-                              !formContainer.isReady(
-                                { ...batchInfoContainer.state, ...batchTasksContainer.state },
-                                validator
-                              )
-                            }
-                            isLoading={loading}
-                            onClick={() =>
-                              this.onSave(
-                                {
-                                  ...batchInfoContainer.originalValues,
-                                  ...batchTasksContainer.originalValues,
-                                },
-                                { ...batchInfoContainer.state, ...batchTasksContainer.state },
-                                updateBatch,
-                                updateData => {
+                        }
+                        icon="QUANTITY_ADJUSTMENTS"
+                      />
+                      <SectionTabs
+                        link="batch_packagingSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Batches.packaging"
+                            defaultMessage="PACKAGING"
+                          />
+                        }
+                        icon="PACKAGING"
+                      />
+                      <SectionTabs
+                        link="batch_taskSection"
+                        label={<FormattedMessage id="modules.Batches.task" defaultMessage="TASK" />}
+                        icon="TASK"
+                      />
+                      <SectionTabs
+                        link="batch_shipmentSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Batches.shipment"
+                            defaultMessage="SHIPMENT"
+                          />
+                        }
+                        icon="SHIPMENT"
+                      />
+                      <SectionTabs
+                        link="batch_containerSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Batches.container"
+                            defaultMessage="CONTAINER"
+                          />
+                        }
+                        icon="CONTAINER"
+                      />
+                      <SectionTabs
+                        link="batch_orderSection"
+                        label={
+                          <FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />
+                        }
+                        icon="ORDER"
+                      />
+                    </JumpToSection>
+
+                    <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
+                      {(batchInfoContainer, batchTasksContainer) => (
+                        <>
+                          <BooleanValue>
+                            {({ value: isOpen, set: toggleLogs }) => (
+                              <>
+                                <LogsButton
+                                  entityType="batch"
+                                  entityId={batchId}
+                                  onClick={() => toggleLogs(true)}
+                                />
+                                <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
+                                  <SlideViewLayout>
+                                    {batchId && isOpen && (
+                                      <>
+                                        <SlideViewNavBar>
+                                          <EntityIcon icon="LOGS" color="LOGS" />
+                                        </SlideViewNavBar>
+
+                                        <Content>
+                                          <Timeline
+                                            query={batchTimelineQuery}
+                                            queryField="batch"
+                                            variables={{
+                                              id: decodeId(batchId),
+                                            }}
+                                            entity={{
+                                              batchId: decodeId(batchId),
+                                            }}
+                                            users={[
+                                              ...(batchInfoContainer.state.shipment?.followers ||
+                                                []),
+                                              ...(batchInfoContainer.state.orderItem?.order
+                                                ?.followers || []),
+                                            ]}
+                                          />
+                                        </Content>
+                                      </>
+                                    )}
+                                  </SlideViewLayout>
+                                </SlideView>
+                              </>
+                            )}
+                          </BooleanValue>
+                          {(batchInfoContainer.isDirty() || batchTasksContainer.isDirty()) && (
+                            <>
+                              <ResetFormButton
+                                onClick={() => {
                                   this.initAllValues(
                                     {
                                       batchInfoContainer,
                                       batchTasksContainer,
                                     },
-                                    updateData
+                                    {
+                                      ...batchInfoContainer.originalValues,
+                                      ...batchTasksContainer.originalValues,
+                                    },
+                                    user.timezone
                                   );
                                   formContainer.onReset();
-                                },
-                                formContainer.onErrors
-                              )
-                            }
-                            data-testid="btnSaveBatch"
-                          />
+                                }}
+                              />
+                              <SaveFormButton
+                                id="batch_form_save_button"
+                                disabled={
+                                  !formContainer.isReady(
+                                    { ...batchInfoContainer.state, ...batchTasksContainer.state },
+                                    validator
+                                  )
+                                }
+                                isLoading={loading}
+                                onClick={() =>
+                                  this.onSave(
+                                    {
+                                      ...batchInfoContainer.originalValues,
+                                      ...batchTasksContainer.originalValues,
+                                    },
+                                    { ...batchInfoContainer.state, ...batchTasksContainer.state },
+                                    updateBatch,
+                                    updateData => {
+                                      this.initAllValues(
+                                        {
+                                          batchInfoContainer,
+                                          batchTasksContainer,
+                                        },
+                                        updateData,
+                                        user.timezone
+                                      );
+                                      formContainer.onReset();
+                                    },
+                                    formContainer.onErrors
+                                  )
+                                }
+                                data-testid="btnSaveBatch"
+                              />
+                            </>
+                          )}
                         </>
                       )}
-                    </>
-                  )}
-                </Subscribe>
-              </CurrentNavBar>
-              {error && <p>Error: Please try again.</p>}
-              <Content>
-                <QueryForm
-                  query={batchFormQuery}
-                  entityId={batchId}
-                  entityType="batch"
-                  render={batch => (
-                    <>
-                      <BatchForm
-                        batch={batch}
-                        itemConfig={NAVIGABLE}
-                        shipmentConfig={NAVIGABLE}
-                        containerConfig={NAVIGABLE}
-                        orderConfig={NAVIGABLE}
-                      />
-                      <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
-                        {(batchInfoContainer, batchTasksContainer) =>
-                          this.onFormReady(
-                            {
-                              batchInfoContainer,
-                              batchTasksContainer,
-                            },
-                            batch
-                          )
-                        }
-                      </Subscribe>
-                    </>
-                  )}
-                />
-              </Content>
-            </>
-          )}
-        </Mutation>
-      </Provider>
+                    </Subscribe>
+                  </CurrentNavBar>
+                  {error && <p>Error: Please try again.</p>}
+                  <Content>
+                    <QueryForm
+                      query={batchFormQuery}
+                      entityId={batchId}
+                      entityType="batch"
+                      render={batch => (
+                        <>
+                          <BatchForm
+                            batch={batch}
+                            itemConfig={NAVIGABLE}
+                            shipmentConfig={NAVIGABLE}
+                            containerConfig={NAVIGABLE}
+                            orderConfig={NAVIGABLE}
+                          />
+                          <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
+                            {(batchInfoContainer, batchTasksContainer) =>
+                              this.onFormReady(
+                                {
+                                  batchInfoContainer,
+                                  batchTasksContainer,
+                                },
+                                batch,
+                                user.timezone
+                              )
+                            }
+                          </Subscribe>
+                        </>
+                      )}
+                    />
+                  </Content>
+                </>
+              )}
+            </Mutation>
+          </Provider>
+        )}
+      </UserConsumer>
     );
   }
 }
