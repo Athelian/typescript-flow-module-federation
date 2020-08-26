@@ -159,6 +159,7 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                           originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.deliveredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE])}
+                          handleTimezone
                         />
                       )}
                     </FormField>
@@ -181,6 +182,7 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                           originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.desiredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE])}
+                          handleTimezone
                         />
                       )}
                     </FormField>
@@ -203,6 +205,7 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                           originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.expiredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_EXPIRY])}
+                          handleTimezone
                         />
                       )}
                     </FormField>
@@ -225,6 +228,7 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                           originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.producedAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_PRODUCTION_DATE])}
+                          handleTimezone
                         />
                       )}
                     </FormField>
