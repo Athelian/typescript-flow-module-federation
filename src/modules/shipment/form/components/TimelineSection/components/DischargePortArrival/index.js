@@ -201,7 +201,6 @@ const DischargePortArrival = (props: Props) => {
                               ...inputHandlers,
                               onBlur: evt => {
                                 inputHandlers.onBlur(evt);
-                                setFieldDeepValue(name, inputHandlers.value);
                                 if (index === 0) {
                                   setShipmentContainers(
                                     'containers',
