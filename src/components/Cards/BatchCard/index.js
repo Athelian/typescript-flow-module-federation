@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
-import type { Batch } from 'generated/graphql';
+import type { Batch, UserPayload } from 'generated/graphql';
 import { encodeId } from 'utils/id';
 import { getByPathWithDefault } from 'utils/fp';
 import { defaultVolumeMetric } from 'utils/metric';
@@ -13,7 +13,7 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import ProductImage from 'components/ProductImage';
 import FormattedNumber from 'components/FormattedNumber';
-import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import RelateEntity from 'components/RelateEntity';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { FieldItem, Label, Display } from 'components/Form';
@@ -51,13 +51,14 @@ import {
 type Props = {|
   batch: Batch,
   onClick?: Function,
+  user: UserPayload,
 |};
 
 const defaultProps = {
   onClick: () => {},
 };
 
-const BatchCard = ({ batch, onClick, ...rest }: Props) => {
+const BatchCard = ({ batch, onClick, user, ...rest }: Props) => {
   const {
     no,
     archived,
@@ -163,7 +164,7 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
             }
             input={
               <Display>
-                <FormattedDate value={deliveredAt} />
+                <FormattedDateTZ value={deliveredAt} user={user} />
               </Display>
             }
           />
@@ -176,7 +177,7 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
             }
             input={
               <Display>
-                <FormattedDate value={desiredAt} />
+                <FormattedDateTZ value={desiredAt} user={user} />
               </Display>
             }
           />

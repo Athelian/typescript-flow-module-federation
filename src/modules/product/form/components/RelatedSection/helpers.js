@@ -128,12 +128,13 @@ export const getRelatedConfig = (
         emptyMessage: (
           <FormattedMessage id="modules.Batches.noBatchesFound" defaultMessage="No batches found" />
         ),
-        renderItems: (items: Array<Object>) => {
+        renderItems: (items: Array<Object>, user: UserPayload) => {
           return (items.map(item => (
             <BatchCard
               key={item.id}
               batch={item}
               onClick={() => navigate(`/batch/${encodeId(item.id)}`)}
+              user={user}
             />
           )): Array<React.Node>);
         },
