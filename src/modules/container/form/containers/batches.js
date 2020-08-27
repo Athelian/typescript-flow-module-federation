@@ -95,7 +95,7 @@ export default class ContainerBatchesContainer extends Container<ContainerBatche
     { batches, representativeBatch }: ContainerBatchesContainerState,
     timezone: string
   ) => {
-    const parsedBatches = batches.map(batch => ({
+    const parsedBatches: Array<Object> = batches.map(batch => ({
       ...batch,
       ...initDatetimeToContainer(batch?.deliveredAt ?? null, 'deliveredAt', timezone),
       ...initDatetimeToContainer(batch?.desiredAt ?? null, 'desiredAt', timezone),

@@ -78,15 +78,13 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
     hasCalledBatchesApiYet: boolean = false,
     timezone: string
   ) => {
-    const parsedBatches = batches.map(
-      ({ deliveredAt, desiredAt, expiredAt, producedAt, ...rest }) => ({
-        ...rest,
-        ...initDatetimeToContainer(deliveredAt, 'deliveredAt', timezone),
-        ...initDatetimeToContainer(desiredAt, 'desiredAt', timezone),
-        ...initDatetimeToContainer(expiredAt, 'expiredAt', timezone),
-        ...initDatetimeToContainer(producedAt, 'producedAt', timezone),
-      })
-    );
+    const parsedBatches: Array<Object> = batches.map(batch => ({
+      ...batch,
+      ...initDatetimeToContainer(batch?.deliveredAt ?? null, 'deliveredAt', timezone),
+      ...initDatetimeToContainer(batch?.desiredAt ?? null, 'desiredAt', timezone),
+      ...initDatetimeToContainer(batch?.expiredAt ?? null, 'expiredAt', timezone),
+      ...initDatetimeToContainer(batch?.producedAt ?? null, 'producedAt', timezone),
+    }));
 
     this.setState({ batches: parsedBatches, hasCalledBatchesApiYet });
     this.originalValues = { batches: parsedBatches, hasCalledBatchesApiYet };
