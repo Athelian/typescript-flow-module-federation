@@ -3,6 +3,8 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
+import type { UserPayload } from 'generated/graphql';
+import useUser from 'hooks/useUser';
 import GridView from 'components/GridView';
 import { BatchCard } from 'components/Cards';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
@@ -16,7 +18,7 @@ type Props = {|
   renderItem: Function,
 |};
 
-const defaultRenderItem = (item: Object) => (
+const defaultRenderItem = (item: Object, user: UserPayload) => (
   <PartnerPermissionsWrapper data={item} key={item.id}>
     {permissions => (
       <BatchCard
@@ -26,6 +28,7 @@ const defaultRenderItem = (item: Object) => (
             navigate(`/batch/${encodeId(item.id)}`);
           }
         }}
+        user={user}
       />
     )}
   </PartnerPermissionsWrapper>
@@ -36,6 +39,7 @@ const defaultProps = {
 };
 
 const BatchGridView = (props: Props) => {
+  const { user } = useUser();
   const { items, onLoadMore, hasMore, isLoading, renderItem, ...rest } = props;
 
   return (
@@ -50,7 +54,7 @@ const BatchGridView = (props: Props) => {
       }
       {...rest}
     >
-      {items.map(renderItem)}
+      {items.map(item => renderItem(item, user))}
     </GridView>
   );
 };

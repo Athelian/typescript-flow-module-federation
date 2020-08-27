@@ -20,37 +20,24 @@ type Props = {
 };
 
 const RelatedSection = ({ intl, id }: Props) => {
-  const filtersAndSort = {
-    filterBy: {
-      productId: id,
-    },
-    sortBy: {
-      updatedAt: 'DESCENDING',
-    },
-    perPage: 10,
-    page: 1,
-  };
-
   return (
     <StringValue defaultValue="orders">
       {({ value: relatedType, set: changeRelatedType }) => {
         const query = getRelatedQuery(relatedType);
 
+        const filtersAndSort = {
+          filterBy: {
+            ...(relatedType === 'batches' ? { productIds: [id] } : { productId: id }),
+          },
+          sortBy: {
+            updatedAt: 'DESCENDING',
+          },
+          perPage: 10,
+          page: 1,
+        };
+
         return (
-          <Query
-            query={query}
-            variables={
-              relatedType === 'batches'
-                ? {
-                    ...filtersAndSort,
-                    filterBy: {
-                      productIds: [id],
-                    },
-                  }
-                : filtersAndSort
-            }
-            fetchPolicy="network-only"
-          >
+          <Query query={query} variables={filtersAndSort} fetchPolicy="network-only">
             {({ loading, data, error, fetchMore }) => {
               if (error) {
                 return error.message;

@@ -159,8 +159,8 @@ const ContainerBatchCard = ({
   const id = getByPathWithDefault('', 'id', batch);
   const no = getByPathWithDefault('', 'no', batch);
   const quantity = getByPathWithDefault(0, 'quantity', batch);
-  const deliveredAt = getByPathWithDefault('', 'deliveredAt', batch);
-  const desiredAt = getByPathWithDefault('', 'desiredAt', batch);
+  const deliveredAt = batch?.deliveredAt ?? null;
+  const desiredAt = batch?.desiredAt ?? null;
   const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
   const packageVolume = getByPathWithDefault(
     {
@@ -349,13 +349,14 @@ const ContainerBatchCard = ({
                     inputHandlers.onBlur(evt);
                     saveOnBlur({
                       ...batch,
-                      deliveredAt: inputHandlers.value ? inputHandlers.value : null,
+                      deliveredAt: evt?.target?.value || null,
                     });
                   }}
                   originalValue={deliveredAt}
                   editable={mergedEditable.deliveredAt}
                   inputWidth="120px"
                   inputHeight="20px"
+                  handleTimezone
                 />
               )}
             </FormField>
@@ -378,13 +379,14 @@ const ContainerBatchCard = ({
                     inputHandlers.onBlur(evt);
                     saveOnBlur({
                       ...batch,
-                      desiredAt: inputHandlers.value ? inputHandlers.value : null,
+                      desiredAt: evt?.target?.value || null,
                     });
                   }}
                   originalValue={desiredAt}
                   editable={mergedEditable.desiredAt}
                   inputWidth="120px"
                   inputHeight="20px"
+                  handleTimezone
                 />
               )}
             </FormField>

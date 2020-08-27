@@ -118,7 +118,7 @@ class ContainerFormModule extends React.Component<Props> {
   ) => {
     const { batches = [], representativeBatch, ...info } = container;
     containerInfoContainer.initDetailValues(info, timezone);
-    containerBatchesContainer.initDetailValues({ batches, representativeBatch });
+    containerBatchesContainer.initDetailValues({ batches, representativeBatch }, timezone);
     return null;
   };
 
