@@ -206,7 +206,8 @@ class ShipmentFormModule extends React.PureComponent<Props> {
     shipmentInfoContainer.initDetailValues(info, timezone);
     shipmentBatchesContainer.initDetailValues(
       batches,
-      hasCalledBatchesApiYet || batches.length > 0
+      hasCalledBatchesApiYet || batches.length > 0,
+      timezone
     );
     shipmentContainersContainer.initDetailValues(
       containers,
@@ -270,7 +271,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
       },
       timezone
     );
-    shipmentBatchesContainer.initDetailValues([], hasCalledBatchesApiYet);
+    shipmentBatchesContainer.initDetailValues([], hasCalledBatchesApiYet, timezone);
     shipmentContainersContainer.initDetailValues([], hasCalledContainerApiYet, timezone);
     shipmentTimelineContainer.initDetailValues({}, hasCalledTimelineApiYet, timezone);
     shipmentFilesContainer.initDetailValues([], hasCalledFilesApiYet);
