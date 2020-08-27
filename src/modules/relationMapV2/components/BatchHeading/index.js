@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FocusedView } from 'modules/relationMapV2/store';
-import FormattedDate from 'components/FormattedDate';
+import type { UserPayload } from 'generated/graphql';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import { Display, Label } from 'components/Form';
 import { BATCH, BATCH_WIDTH } from 'modules/relationMapV2/constants';
 import { isBefore, isAfter, differenceInCalendarDays } from 'utils/date';
@@ -60,6 +61,7 @@ type Props = {|
   onClick: Function,
   total: number,
   onSelectAll: Function,
+  user: UserPayload,
 |};
 
 export default function BatchHeading({
@@ -70,6 +72,7 @@ export default function BatchHeading({
   onClick,
   total,
   onSelectAll,
+  user,
 }: Props) {
   const { oldestDelivery, newestDelivery, oldestDesired, newestDesired } = getBatchDateRanges(
     batches
@@ -100,7 +103,7 @@ export default function BatchHeading({
             </Label>
 
             <Display blackout={!canViewDelivery}>
-              <FormattedDate value={oldestDelivery} />
+              <FormattedDateTZ value={oldestDelivery} user={user} />
 
               {oldestDelivery &&
                 newestDelivery &&
@@ -108,7 +111,7 @@ export default function BatchHeading({
                   0 && (
                   <>
                     {' - '}
-                    <FormattedDate value={newestDelivery} />
+                    <FormattedDateTZ value={newestDelivery} user={user} />
                   </>
                 )}
             </Display>
@@ -120,7 +123,7 @@ export default function BatchHeading({
             </Label>
 
             <Display blackout={!canViewDesired}>
-              <FormattedDate value={oldestDesired} />
+              <FormattedDateTZ value={oldestDesired} user={user} />
 
               {oldestDesired &&
                 newestDesired &&
@@ -128,7 +131,7 @@ export default function BatchHeading({
                   0 && (
                   <>
                     {' - '}
-                    <FormattedDate value={newestDesired} />
+                    <FormattedDateTZ value={newestDesired} user={user} />
                   </>
                 )}
             </Display>

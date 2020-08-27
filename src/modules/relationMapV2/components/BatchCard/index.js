@@ -1,12 +1,17 @@
 // @flow
 import * as React from 'react';
-import type { BatchPayload, ContainerPayload, ShipmentPayload } from 'generated/graphql';
+import type {
+  BatchPayload,
+  ContainerPayload,
+  ShipmentPayload,
+  UserPayload,
+} from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { differenceInCalendarDays } from 'utils/date';
 import { getLatestDate } from 'utils/shipment';
 import Tag from 'components/Tag';
 import { Tooltip, FullValueTooltip } from 'components/Tooltip';
-import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import FormattedNumber from 'components/FormattedNumber';
 import TaskRing from 'components/TaskRing';
 import { Display, Blackout, Label } from 'components/Form';
@@ -32,6 +37,7 @@ type Props = {|
   onViewForm: Event => void,
   onDeleteBatch: Event => void,
   organizationId: string,
+  user: UserPayload,
 |};
 
 const latestDate = (timelineDate: ?Object) => {
@@ -47,6 +53,7 @@ export default function BatchCard({
   onViewForm,
   onDeleteBatch,
   organizationId,
+  user,
 }: Props) {
   const hasPermissions = useHasPermissions(organizationId);
   const allowToViewForm = hasPermissions(BATCH_FORM);
@@ -83,7 +90,7 @@ export default function BatchCard({
               defaultMessage="Shipment's Latest Load Port Departure"
             />
           </div>
-          <FormattedDate value={latestLoadPortDepartureDate} />
+          <FormattedDateTZ value={latestLoadPortDepartureDate} user={user} />
 
           <div className={TooltipLabelStyle}>
             <FormattedMessage
@@ -91,7 +98,7 @@ export default function BatchCard({
               defaultMessage="Batch's Delivery Date"
             />
           </div>
-          <FormattedDate value={deliveredAt} />
+          <FormattedDateTZ value={deliveredAt} user={user} />
 
           <div className={TooltipLabelStyle}>
             <FormattedMessage id="components.cards.difference" defaultMessage="Difference" />
@@ -116,7 +123,7 @@ export default function BatchCard({
                 defaultMessage="Container's Warehouse Actual Arrival Date"
               />
             </div>
-            <FormattedDate value={warehouseArrivalActualDate} />
+            <FormattedDateTZ value={warehouseArrivalActualDate} user={user} />
 
             <div className={TooltipLabelStyle}>
               <FormattedMessage
@@ -124,7 +131,7 @@ export default function BatchCard({
                 defaultMessage="Batch's Desired Date"
               />
             </div>
-            <FormattedDate value={desiredAt} />
+            <FormattedDateTZ value={desiredAt} user={user} />
 
             <div className={TooltipLabelStyle}>
               <FormattedMessage id="components.cards.difference" defaultMessage="Difference" />
@@ -146,11 +153,11 @@ export default function BatchCard({
               defaultMessage="Shipment's Latest Warehouse Arrival Date"
             />
             <p>
-              <FormattedDate value={warehouseLatestArrivalDate} />
+              <FormattedDateTZ value={warehouseLatestArrivalDate} user={user} />
             </p>
             <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
             <p>
-              <FormattedDate value={desiredAt} />
+              <FormattedDateTZ value={desiredAt} user={user} />
             </p>
           </div>
         );
@@ -189,7 +196,7 @@ export default function BatchCard({
             {canViewDelivery ? (
               <>
                 <Display width="80px">
-                  <FormattedDate value={deliveredAt} />
+                  <FormattedDateTZ value={deliveredAt} user={user} />
                 </Display>
                 {deliveredAtDiff !== 0 && deliveredAt && (
                   <Tooltip message={deliveredAtDiffMsg}>
@@ -230,7 +237,7 @@ export default function BatchCard({
             {canViewDesired ? (
               <>
                 <Display width="80px">
-                  <FormattedDate value={desiredAt} />
+                  <FormattedDateTZ value={desiredAt} user={user} />
                 </Display>
                 {desiredAtDiff !== 0 && desiredAt && (
                   <Tooltip message={desiredAtDiffMsg}>
