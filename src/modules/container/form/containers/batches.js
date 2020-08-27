@@ -95,21 +95,19 @@ export default class ContainerBatchesContainer extends Container<ContainerBatche
     { batches, representativeBatch }: ContainerBatchesContainerState,
     timezone: string
   ) => {
-    const parsedBatches = batches.map(
-      ({ deliveredAt, desiredAt, expiredAt, producedAt, ...rest }) => ({
-        ...rest,
-        ...initDatetimeToContainer(deliveredAt, 'deliveredAt', timezone),
-        ...initDatetimeToContainer(desiredAt, 'desiredAt', timezone),
-        ...initDatetimeToContainer(expiredAt, 'expiredAt', timezone),
-        ...initDatetimeToContainer(producedAt, 'producedAt', timezone),
-      })
-    );
+    const parsedBatches = batches.map(batch => ({
+      ...batch,
+      ...initDatetimeToContainer(batch?.deliveredAt ?? null, 'deliveredAt', timezone),
+      ...initDatetimeToContainer(batch?.desiredAt ?? null, 'desiredAt', timezone),
+      ...initDatetimeToContainer(batch?.expiredAt ?? null, 'expiredAt', timezone),
+      ...initDatetimeToContainer(batch?.producedAt ?? null, 'producedAt', timezone),
+    }));
     const parsedRepresentativeBatch = {
       ...representativeBatch,
-      ...initDatetimeToContainer(representativeBatch.deliveredAt, 'deliveredAt', timezone),
-      ...initDatetimeToContainer(representativeBatch.desiredAt, 'desiredAt', timezone),
-      ...initDatetimeToContainer(representativeBatch.expiredAt, 'expiredAt', timezone),
-      ...initDatetimeToContainer(representativeBatch.producedAt, 'producedAt', timezone),
+      ...initDatetimeToContainer(representativeBatch?.deliveredAt ?? null, 'deliveredAt', timezone),
+      ...initDatetimeToContainer(representativeBatch?.desiredAt ?? null, 'desiredAt', timezone),
+      ...initDatetimeToContainer(representativeBatch?.expiredAt ?? null, 'expiredAt', timezone),
+      ...initDatetimeToContainer(representativeBatch?.producedAt ?? null, 'producedAt', timezone),
     };
 
     this.setState({ batches: parsedBatches, representativeBatch: parsedRepresentativeBatch });
