@@ -7,6 +7,7 @@ import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { SectionNavBar } from 'components/NavBar';
+import useUser from 'hooks/useUser';
 import {
   ShipmentCard,
   OrderCard,
@@ -32,6 +33,7 @@ type Props = {
 const EntitySection = ({ entity, task }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const { user } = useUser();
 
   const canViewOrderForm = hasPermission(ORDER_FORM);
   const canViewProductForm = hasPermission(PRODUCT_FORM);
@@ -146,6 +148,7 @@ const EntitySection = ({ entity, task }: Props) => {
             <BatchCard
               batch={task.batch}
               onClick={() => navigate(`/batch/${encodeId(task.batch.id)}`)}
+              user={user}
             />
           )}
 

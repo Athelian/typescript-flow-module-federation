@@ -3,6 +3,7 @@ import type { BatchPayload, ContainerPayload, OrganizationPayload } from 'genera
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import { isEquals } from 'utils/fp';
+import { initDatetimeToContainer } from 'utils/date';
 
 type BatchFormState = {|
   batches: Array<BatchPayload>,
@@ -72,10 +73,22 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
     );
   };
 
-  initDetailValues = (batches: Array<BatchPayload>, hasCalledBatchesApiYet: boolean = false) => {
-    this.setState({ batches, hasCalledBatchesApiYet });
-    this.originalValues = { batches, hasCalledBatchesApiYet };
-    this.existingBatches = batches;
+  initDetailValues = (
+    batches: Array<BatchPayload>,
+    hasCalledBatchesApiYet: boolean = false,
+    timezone: string
+  ) => {
+    const parsedBatches: Array<Object> = batches.map(batch => ({
+      ...batch,
+      ...initDatetimeToContainer(batch?.deliveredAt ?? null, 'deliveredAt', timezone),
+      ...initDatetimeToContainer(batch?.desiredAt ?? null, 'desiredAt', timezone),
+      ...initDatetimeToContainer(batch?.expiredAt ?? null, 'expiredAt', timezone),
+      ...initDatetimeToContainer(batch?.producedAt ?? null, 'producedAt', timezone),
+    }));
+
+    this.setState({ batches: parsedBatches, hasCalledBatchesApiYet });
+    this.originalValues = { batches: parsedBatches, hasCalledBatchesApiYet };
+    this.existingBatches = parsedBatches;
   };
 
   changeMainExporter = (prevExporter: ?OrganizationPayload, exporter: ?OrganizationPayload) => {

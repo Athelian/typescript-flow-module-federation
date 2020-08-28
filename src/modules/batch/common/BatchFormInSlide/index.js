@@ -18,6 +18,7 @@ import SaveFormButton from 'components/SaveFormButton';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import { batchTimelineQuery } from 'modules/batch/form/query';
 import validator from 'modules/batch/form/validator';
+import useUser from 'hooks/useUser';
 import { READONLY } from 'modules/batch/constants';
 import type {
   ItemConfigType,
@@ -47,6 +48,7 @@ const formContainer = new FormContainer();
 
 const BatchFormInSlide = ({ batch, isNew, onSave, ...rest }: Props) => {
   const [notificationSeeByEntities] = useMutation(notificationSeeByEntitiesMutation);
+  const { user } = useUser();
 
   useEffect(() => {
     // mark as read notification on close
@@ -198,7 +200,7 @@ const BatchFormInSlide = ({ batch, isNew, onSave, ...rest }: Props) => {
                   batch={batch}
                   onFormReady={() => {
                     const { todo, ...info } = batch;
-                    batchInfoContainer.initDetailValues(info);
+                    batchInfoContainer.initDetailValues(info, user.timezone);
                     batchTasksContainer.initDetailValues(todo);
                   }}
                   {...rest}

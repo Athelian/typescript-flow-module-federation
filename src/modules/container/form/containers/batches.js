@@ -3,6 +3,7 @@ import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
 import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
+import { initDatetimeToContainer } from 'utils/date';
 import { isEquals } from 'utils/fp';
 
 type ContainerBatchesContainerState = {
@@ -90,9 +91,30 @@ export default class ContainerBatchesContainer extends Container<ContainerBatche
     );
   };
 
-  initDetailValues = ({ batches, representativeBatch }: ContainerBatchesContainerState) => {
-    this.setState({ batches, representativeBatch });
-    this.originalValues = { batches, representativeBatch };
-    this.existingBatches = batches;
+  initDetailValues = (
+    { batches, representativeBatch }: ContainerBatchesContainerState,
+    timezone: string
+  ) => {
+    const parsedBatches: Array<Object> = batches.map(batch => ({
+      ...batch,
+      ...initDatetimeToContainer(batch?.deliveredAt ?? null, 'deliveredAt', timezone),
+      ...initDatetimeToContainer(batch?.desiredAt ?? null, 'desiredAt', timezone),
+      ...initDatetimeToContainer(batch?.expiredAt ?? null, 'expiredAt', timezone),
+      ...initDatetimeToContainer(batch?.producedAt ?? null, 'producedAt', timezone),
+    }));
+    const parsedRepresentativeBatch = {
+      ...representativeBatch,
+      ...initDatetimeToContainer(representativeBatch?.deliveredAt ?? null, 'deliveredAt', timezone),
+      ...initDatetimeToContainer(representativeBatch?.desiredAt ?? null, 'desiredAt', timezone),
+      ...initDatetimeToContainer(representativeBatch?.expiredAt ?? null, 'expiredAt', timezone),
+      ...initDatetimeToContainer(representativeBatch?.producedAt ?? null, 'producedAt', timezone),
+    };
+
+    this.setState({ batches: parsedBatches, representativeBatch: parsedRepresentativeBatch });
+    this.originalValues = {
+      batches: parsedBatches,
+      representativeBatch: parsedRepresentativeBatch,
+    };
+    this.existingBatches = parsedBatches;
   };
 }

@@ -443,6 +443,7 @@ function BatchCell({
   const { state, dispatch, selectors } = FocusedView.useContainer();
   const { mapping, badge } = Entities.useContainer();
   const { matches } = Hits.useContainer();
+  const { user } = useUser();
   const batchId = data?.id;
   const batchIds = selectors.targetedBatchIds();
   const isTargetedBatch = selectors.isTargeted(batchId, BATCH);
@@ -615,6 +616,7 @@ function BatchCell({
             showBadge={data?.notificationUnseenCount > 0}
           >
             <BatchCard
+              user={user}
               organizationId={data?.ownedBy?.id}
               batch={data}
               container={entities.containers?.[data?.container?.id]}
@@ -1370,6 +1372,7 @@ function BatchSummaryCell({
 }: CellProps & { shipment: ?ShipmentPayload, isExpand: boolean, onClick: Function }) {
   const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
+  const { user } = useUser();
   const batches = shipment?.batches ?? [];
   const orderItemIds = batches.map(batch => batch.orderItem?.id).filter(Boolean);
   const batchIds = batches.map(batch => batch.id).filter(Boolean);
@@ -1408,6 +1411,7 @@ function BatchSummaryCell({
       {batchCount ? (
         <CellWrapper isExpandedHeading={isExpand}>
           <BatchHeading
+            user={user}
             batches={batches}
             hasSelectedChildren={isTargetedAnyBatches}
             hasFilterHits={isMatched}

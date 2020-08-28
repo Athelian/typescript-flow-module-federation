@@ -33,7 +33,7 @@ import {
 import {
   parseGenericField,
   parseMemoField,
-  parseDateField,
+  parseDatetimeField,
   parseArrayOfIdsField,
   parseParentIdField,
   parseCustomFieldsField,
@@ -133,26 +133,14 @@ export const prepareParsedBatchInput = (
       getByPathWithDefault(null, 'deliveredQuantity', originalValues),
       newValues.deliveredQuantity
     ),
-    ...parseDateField(
+    ...parseDatetimeField(
       'deliveredAt',
-      getByPathWithDefault(null, 'deliveredAt', originalValues),
+      originalValues?.deliveredAt ?? null,
       newValues.deliveredAt
     ),
-    ...parseDateField(
-      'desiredAt',
-      getByPathWithDefault(null, 'desiredAt', originalValues),
-      newValues.desiredAt
-    ),
-    ...parseDateField(
-      'expiredAt',
-      getByPathWithDefault(null, 'expiredAt', originalValues),
-      newValues.expiredAt
-    ),
-    ...parseDateField(
-      'producedAt',
-      getByPathWithDefault(null, 'producedAt', originalValues),
-      newValues.producedAt
-    ),
+    ...parseDatetimeField('desiredAt', originalValues?.desiredAt ?? null, newValues.desiredAt),
+    ...parseDatetimeField('expiredAt', originalValues?.expiredAt ?? null, newValues.expiredAt),
+    ...parseDatetimeField('producedAt', originalValues?.producedAt ?? null, newValues.producedAt),
     ...parseCustomFieldsField(
       'customFields',
       getByPathWithDefault(null, 'customFields', originalValues),

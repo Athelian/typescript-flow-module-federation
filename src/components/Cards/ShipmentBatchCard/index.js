@@ -377,10 +377,11 @@ const ShipmentBatchCard = ({
                       inputHandlers.onBlur(evt);
                       saveOnBlur({
                         ...batch,
-                        deliveredAt: inputHandlers.value ? inputHandlers.value : null,
+                        deliveredAt: evt?.target?.value || null,
                       });
                     },
                   }}
+                  handleTimezone
                 />
               )}
             </FormField>
@@ -409,10 +410,11 @@ const ShipmentBatchCard = ({
                       inputHandlers.onBlur(evt);
                       saveOnBlur({
                         ...batch,
-                        desiredAt: inputHandlers.value ? inputHandlers.value : null,
+                        desiredAt: evt?.target?.value || null,
                       });
                     },
                   }}
+                  handleTimezone
                 />
               )}
             </FormField>

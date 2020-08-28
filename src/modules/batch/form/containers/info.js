@@ -4,6 +4,7 @@ import { Container } from 'unstated';
 import update from 'immutability-helper';
 import { set, cloneDeep } from 'lodash';
 import { getByPath, isEquals } from 'utils/fp';
+import { initDatetimeToContainer } from 'utils/date';
 import { cleanFalsyAndTypeName, extractForbiddenId } from 'utils/data';
 import { calculatePackageQuantity, calculateVolume } from 'utils/batch';
 import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
@@ -64,11 +65,25 @@ export default class BatchInfoContainer extends Container<Batch> {
     this.setState(this.originalValues);
   };
 
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...values };
-    const parsedTags = [...parsedValues.tags.map(tag => extractForbiddenId(tag))];
-    this.setState({ ...parsedValues, tags: parsedTags });
-    this.originalValues = { ...parsedValues, tags: parsedTags };
+  initDetailValues = (values: Object, timezone: string) => {
+    const { deliveredAt, desiredAt, expiredAt, producedAt, tags, ...rest } = values;
+
+    const info = {
+      ...initDatetimeToContainer(deliveredAt, 'deliveredAt', timezone),
+      ...initDatetimeToContainer(desiredAt, 'desiredAt', timezone),
+      ...initDatetimeToContainer(expiredAt, 'expiredAt', timezone),
+      ...initDatetimeToContainer(producedAt, 'producedAt', timezone),
+      ...rest,
+    };
+
+    const parsedValues = {
+      ...initValues,
+      ...info,
+      tags: [...tags.map(tag => extractForbiddenId(tag))],
+    };
+
+    this.setState(parsedValues);
+    this.originalValues = { ...parsedValues };
   };
 
   setFieldValue = (name: string, value: mixed) => {
