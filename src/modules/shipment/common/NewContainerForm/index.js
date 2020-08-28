@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
+import type { UserPayload } from 'generated/graphql';
 import { isEquals } from 'utils/fp';
 import { showToastError } from 'utils/errors';
 import ContainerForm from 'modules/container/form';
@@ -26,6 +27,7 @@ type Props = {|
   intl: IntlShape,
   onSuccessCallback: ?Function,
   shipmentId: string,
+  user: UserPayload,
 |};
 
 const formContainer = new FormContainer();
@@ -41,10 +43,10 @@ type CreateContainerResponse = {|
 
 class NewContainerForm extends React.Component<Props> {
   componentDidMount() {
-    const { container } = this.props;
+    const { container, user } = this.props;
     const { batches = [], representativeBatch, ...info } = container;
-    infoContainer.initDetailValues(info);
-    batchesContainer.initDetailValues({ batches, representativeBatch });
+    infoContainer.initDetailValues(info, user.timezone);
+    batchesContainer.initDetailValues({ batches, representativeBatch }, user.timezone);
   }
 
   shouldComponentUpdate(nextProps: Props) {
