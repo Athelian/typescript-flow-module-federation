@@ -31,8 +31,8 @@ import {
   BATCH_SET_TASKS,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
-import { differenceInCalendarDays } from 'date-fns';
 import { getLatestDate } from 'utils/shipment';
+import { calculateDateDifferenceInDays } from 'utils/date';
 
 type Props = {|
   fieldDefinitions: Array<FieldDefinition>,
@@ -126,7 +126,7 @@ export default function transformSheetBatch({
     },
     {
       columnKey: 'batch.deliveredAt',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         basePath,
         batch,
@@ -145,12 +145,12 @@ export default function transformSheetBatch({
         const latestDeparture = getLatestDate(currentShipment?.voyages?.[0]?.departure);
         if (!deliveredAt || !latestDeparture) return null;
 
-        return differenceInCalendarDays(new Date(deliveredAt), new Date(latestDeparture));
+        return calculateDateDifferenceInDays(deliveredAt, latestDeparture);
       }),
     },
     {
       columnKey: 'batch.desiredAt',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         basePath,
         batch,
@@ -179,12 +179,12 @@ export default function transformSheetBatch({
 
         if (!desiredAt || !latestArrival) return null;
 
-        return differenceInCalendarDays(new Date(desiredAt), new Date(latestArrival));
+        return calculateDateDifferenceInDays(desiredAt, latestArrival);
       }),
     },
     {
       columnKey: 'batch.expiredAt',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         basePath,
         batch,
@@ -194,7 +194,7 @@ export default function transformSheetBatch({
     },
     {
       columnKey: 'batch.producedAt',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         basePath,
         batch,

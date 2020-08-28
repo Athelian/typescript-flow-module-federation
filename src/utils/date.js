@@ -381,3 +381,9 @@ export const calculateFreeTime = (dueDate: string): number => {
 
   return result;
 };
+
+export const calculateDateDifferenceInDays = (date1: string, date2: string): number => {
+  const result = moment.utc(date1).diff(moment.utc(date2), 'days');
+
+  return result;
+};
