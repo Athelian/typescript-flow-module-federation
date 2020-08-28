@@ -47,7 +47,7 @@ type Props = {|
 |};
 
 const EditFormSlideView = ({ onClose }: Props) => {
-  const { isExporter, isImporter, isForwarder, organization } = useUser();
+  const { user, isExporter, isImporter, isForwarder, organization } = useUser();
   const isReady = React.useRef(true);
   const { dispatch, state } = FocusedView.useContainer();
   const [fetchOrdersAndShipments, { called, loading, data = {} }] = useLazyQuery(
@@ -475,6 +475,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
                     },
                   });
                 }}
+                user={user}
               />
             );
             break;

@@ -113,7 +113,7 @@ const BatchMoveToNewContainerOnExsitShipmentActionImpl = ({
   entity,
   item,
 }: ImplProps) => {
-  const { isExporter } = useUser();
+  const { user, isExporter } = useUser();
   const [isOpen, close] = useSheetActionDialog(onDone);
   const [selected, setSelected] = React.useState(null);
   const [isShow, setIsShow] = React.useState(false);
@@ -183,6 +183,7 @@ const BatchMoveToNewContainerOnExsitShipmentActionImpl = ({
               onSuccessCallback={close}
               shipmentId={selected?.id ?? ''}
               onCancel={close}
+              user={user}
             />
           );
         })()
