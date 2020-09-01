@@ -3,6 +3,7 @@ import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { cleanFalsyAndTypeName } from 'utils/data';
+import { initDatetimeToContainer } from 'utils/date';
 
 export type State = {
   batches: Array<Object>,
@@ -25,10 +26,17 @@ export default class OrderItemBatchesContainer extends Container<State> {
     this.setState(this.originalValues);
   };
 
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...values };
-    this.setState(parsedValues);
-    this.originalValues = { ...parsedValues };
+  initDetailValues = ({ batches }: Object, timezone: string) => {
+    const parsedBatches: Array<Object> = batches.map(batch => ({
+      ...batch,
+      ...initDatetimeToContainer(batch?.deliveredAt ?? null, 'deliveredAt', timezone),
+      ...initDatetimeToContainer(batch?.desiredAt ?? null, 'desiredAt', timezone),
+      ...initDatetimeToContainer(batch?.expiredAt ?? null, 'expiredAt', timezone),
+      ...initDatetimeToContainer(batch?.producedAt ?? null, 'producedAt', timezone),
+    }));
+
+    this.setState({ batches: parsedBatches });
+    this.originalValues = { batches: parsedBatches };
   };
 
   setFieldValue = (name: string, value: mixed) => {

@@ -24,6 +24,8 @@ import { SHIPMENT_FORM, SHIPMENT_REMOVE_BATCH } from 'modules/permission/constan
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import { initDatetimeToContainer } from 'utils/date';
+import useUser from 'hooks/useUser';
 import {
   BATCH_CREATE,
   BATCH_LIST,
@@ -67,6 +69,7 @@ type Props = OptionalProps & {
 function BatchesSection({ containerIsArchived, isSlideView, importerId, exporterId }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const { user } = useUser();
   if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
 
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
@@ -165,6 +168,26 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId, exporter
                                 const selectedBatches = selected.map(selectedBatch => ({
                                   ...selectedBatch,
                                   packageQuantity: calculatePackageQuantity(selectedBatch),
+                                  ...initDatetimeToContainer(
+                                    selectedBatch?.deliveredAt ?? null,
+                                    'deliveredAt',
+                                    user.timezone
+                                  ),
+                                  ...initDatetimeToContainer(
+                                    selectedBatch?.desiredAt ?? null,
+                                    'desiredAt',
+                                    user.timezone
+                                  ),
+                                  ...initDatetimeToContainer(
+                                    selectedBatch?.expiredAt ?? null,
+                                    'expiredAt',
+                                    user.timezone
+                                  ),
+                                  ...initDatetimeToContainer(
+                                    selectedBatch?.producedAt ?? null,
+                                    'producedAt',
+                                    user.timezone
+                                  ),
                                 }));
                                 if (batches.length === 0 && selectedBatches.length > 0) {
                                   setFieldValue('representativeBatch', selectedBatches[0]);

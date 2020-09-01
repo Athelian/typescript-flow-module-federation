@@ -53,10 +53,12 @@ import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
+import useUser from 'hooks/useUser';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool, getBatchesByContainerId } from 'modules/shipment/helpers';
 import SelectShipmentBatches from 'components/SelectShipmentBatches';
 import { HIDE, NAVIGABLE } from 'modules/batch/constants';
+import { initDatetimeToContainer } from 'utils/date';
 import sortBy from './helper';
 import {
   BatchesWrapperStyle,
@@ -115,6 +117,7 @@ function BatchesArea({
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const { user } = useUser();
   const sortFields = [
     { title: intl.formatMessage(messages.sort), value: 'sort' },
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
@@ -601,6 +604,26 @@ function BatchesArea({
                                         ? { container: containers[focusedContainerIndex] }
                                         : {}),
                                       packageQuantity: calculatePackageQuantity(selectedBatch),
+                                      ...initDatetimeToContainer(
+                                        selectedBatch?.deliveredAt ?? null,
+                                        'deliveredAt',
+                                        user.timezone
+                                      ),
+                                      ...initDatetimeToContainer(
+                                        selectedBatch?.desiredAt ?? null,
+                                        'desiredAt',
+                                        user.timezone
+                                      ),
+                                      ...initDatetimeToContainer(
+                                        selectedBatch?.expiredAt ?? null,
+                                        'expiredAt',
+                                        user.timezone
+                                      ),
+                                      ...initDatetimeToContainer(
+                                        selectedBatch?.producedAt ?? null,
+                                        'producedAt',
+                                        user.timezone
+                                      ),
                                     })
                                   );
                                   if (isFocusedContainer) {
