@@ -18,6 +18,7 @@ import JumpToSection from 'components/JumpToSection';
 import validator from 'modules/orderItem/form/validator';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import ItemForm from 'modules/orderItem/form';
+import useUser from 'hooks/useUser';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
@@ -33,6 +34,7 @@ type Props = {|
 
 const formContainer = new FormContainer();
 const ItemFormInSlide = ({ orderItem, onSave, isNew }: Props) => {
+  const { user } = useUser();
   const [notificationSeeByEntities] = useMutation(notificationSeeByEntitiesMutation);
   useEffect(() => {
     return () => {
@@ -212,7 +214,7 @@ const ItemFormInSlide = ({ orderItem, onSave, isNew }: Props) => {
                       }
                     });
                     orderItemInfoContainer.initDetailValues(rest);
-                    orderItemBatchesContainer.initDetailValues({ batches });
+                    orderItemBatchesContainer.initDetailValues({ batches }, user.timezone);
                     orderItemFilesContainer.initDetailValues(files);
                     orderItemTasksContainer.initDetailValues(todo);
                     orderItemShipmentsContainer.initDetailValues({ shipments });
