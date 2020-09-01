@@ -8,6 +8,7 @@ import type {
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
+import { initDatetimeToContainer } from 'utils/date';
 import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 
 type FormState = {|
@@ -100,10 +101,25 @@ export default class OrderItemsContainer extends Container<FormState> {
     );
   };
 
-  initDetailValues = (orderItems: Array<Object>, hasCalledItemsApiYet: boolean = false) => {
-    this.setState({ orderItems, needDeletedFiles: [], hasCalledItemsApiYet });
+  initDetailValues = (
+    orderItems: Array<Object>,
+    hasCalledItemsApiYet: boolean = false,
+    timezone: string
+  ) => {
+    const parsedItems: Array<Object> = orderItems.map(item => ({
+      ...item,
+      batches: (item?.batches ?? []).map(batch => ({
+        ...batch,
+        ...initDatetimeToContainer(batch?.deliveredAt ?? null, 'deliveredAt', timezone),
+        ...initDatetimeToContainer(batch?.desiredAt ?? null, 'desiredAt', timezone),
+        ...initDatetimeToContainer(batch?.expiredAt ?? null, 'expiredAt', timezone),
+        ...initDatetimeToContainer(batch?.producedAt ?? null, 'producedAt', timezone),
+      })),
+    }));
+
+    this.setState({ orderItems: parsedItems, needDeletedFiles: [], hasCalledItemsApiYet });
     if (hasCalledItemsApiYet) {
-      this.originalValues = { orderItems, needDeletedFiles: [], hasCalledItemsApiYet };
+      this.originalValues = { orderItems: parsedItems, needDeletedFiles: [], hasCalledItemsApiYet };
     }
   };
 

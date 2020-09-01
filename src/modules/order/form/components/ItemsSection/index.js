@@ -8,6 +8,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
 import useLocalStorage from 'hooks/useLocalStorage';
+import useUser from 'hooks/useUser';
 import Icon from 'components/Icon';
 import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/containers';
 import { SectionHeader } from 'components/Form';
@@ -25,6 +26,7 @@ type Props = {
 };
 
 const ItemsSection = ({ isNew, orderIsArchived, isLoading, entityId }: Props) => {
+  const { user } = useUser();
   const [storedValue, setValue] = useLocalStorage('itemsIsExpanded', false);
   return (
     <BooleanValue value={storedValue} onChange={setValue}>
@@ -44,7 +46,11 @@ const ItemsSection = ({ isNew, orderIsArchived, isLoading, entityId }: Props) =>
               isLoading={isLoading}
               onCompleted={result => {
                 if (!hasCalledItemsApiYet) {
-                  initDetailValues(getByPathWithDefault([], 'order.orderItems', result), true);
+                  initDetailValues(
+                    getByPathWithDefault([], 'order.orderItems', result),
+                    true,
+                    user.timezone
+                  );
                 }
               }}
             >
