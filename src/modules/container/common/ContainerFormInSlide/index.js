@@ -39,7 +39,7 @@ class ContainerFormInSlide extends React.Component<Props> {
     const { container, timezone } = this.props;
     const { batches = [], representativeBatch, ...info } = container;
     infoContainer.initDetailValues(info, timezone);
-    batchesContainer.initDetailValues({ batches, representativeBatch });
+    batchesContainer.initDetailValues({ batches, representativeBatch }, timezone);
   }
 
   shouldComponentUpdate(nextProps: Props) {
