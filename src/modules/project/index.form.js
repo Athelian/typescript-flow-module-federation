@@ -409,7 +409,8 @@ class ProjectFormModule extends React.PureComponent<Props> {
                               {
                                 ...template,
                                 id: uuid(),
-                              }
+                              },
+                              user.timezone
                             );
                             return null;
                           }}
@@ -438,7 +439,8 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                     projectTagsState,
                                     projectMilestonesState,
                                   },
-                                  project
+                                  project,
+                                  user.timezone
                                 )
                               }
                             </Subscribe>
