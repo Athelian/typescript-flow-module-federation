@@ -6,10 +6,12 @@ import { Query, Mutation } from 'react-apollo';
 import { Subscribe } from 'unstated';
 import { showToastError } from 'utils/errors';
 import LoadingIcon from 'components/LoadingIcon';
+import ResetFormButton from 'components/ResetFormButton';
 import SaveFormButton from 'components/SaveFormButton';
 import { Label } from 'components/Form';
 import FieldDefinitionsForm from 'modules/metadata/components/FieldDefinitionsForm';
 import { FormContainer } from 'modules/form';
+// import { resetFormState, FormContainer } from 'modules/form';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { fieldDefinitionsQuery } from 'modules/metadata/query';
 import { updateFieldDefinitionsMutation } from 'modules/metadata/mutation';
@@ -27,7 +29,10 @@ type Props = {
 
 const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
   <Subscribe to={[FieldDefinitionsContainer, FormContainer]}>
-    {({ state, originalValues, initDetailValues, isDirty, onSuccess, ...fieldHelpers }, form) => (
+    {(
+      { state, originalValues, initDetailValues, isDirty, onSuccess, onReset, ...fieldHelpers },
+      form
+    ) => (
       <Query
         key={entityType}
         query={fieldDefinitionsQuery}
@@ -66,45 +71,52 @@ const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
                           defaultMessage="CUSTOM FIELDS"
                         />
                       </Label>
-
                       {isDirty() && (
-                        <SaveFormButton
-                          id="metadata_form_save_button"
-                          onClick={async () => {
-                            const formData = {
-                              entityType,
-                              fieldDefinitions: state.fieldDefinitions,
-                            };
-                            const input = {
-                              entityType: formData.entityType,
-                              fieldDefinitions: formData.fieldDefinitions
-                                .filter(item => item.name !== '')
-                                .map(({ id, name, isNew = false }) =>
-                                  isNew ? { name } : { id, name }
-                                ),
-                            };
-
-                            const result: any = await saveFieldDefinitions({
-                              variables: { input },
-                            });
-
-                            if (showToastError({ intl, result, entity: 'fieldDefinitions' })) {
-                              return;
-                            }
-
-                            const { data } = result;
-                            const {
-                              fieldDefinitionsUpdate: { violations },
-                            } = data;
-                            if (violations && violations.length) {
-                              form.onErrors(violations);
-                            } else {
-                              onSuccess();
+                        <>
+                          <ResetFormButton
+                            onClick={() => {
+                              onReset();
                               form.onReset();
-                            }
-                          }}
-                          isLoading={isLoading}
-                        />
+                            }}
+                          />
+                          <SaveFormButton
+                            id="metadata_form_save_button"
+                            onClick={async () => {
+                              const formData = {
+                                entityType,
+                                fieldDefinitions: state.fieldDefinitions,
+                              };
+                              const input = {
+                                entityType: formData.entityType,
+                                fieldDefinitions: formData.fieldDefinitions
+                                  .filter(item => item.name !== '')
+                                  .map(({ id, name, isNew = false }) =>
+                                    isNew ? { name } : { id, name }
+                                  ),
+                              };
+
+                              const result: any = await saveFieldDefinitions({
+                                variables: { input },
+                              });
+
+                              if (showToastError({ intl, result, entity: 'fieldDefinitions' })) {
+                                return;
+                              }
+
+                              const { data } = result;
+                              const {
+                                fieldDefinitionsUpdate: { violations },
+                              } = data;
+                              if (violations && violations.length) {
+                                form.onErrors(violations);
+                              } else {
+                                onSuccess();
+                                form.onReset();
+                              }
+                            }}
+                            isLoading={isLoading}
+                          />
+                        </>
                       )}
                     </div>
                     <div className={FieldDefinitionsBodyStyle}>
