@@ -68,7 +68,7 @@ export const projectColumns: Array<ColumnConfig> = [
     title: <FormattedMessage {...projectMessages.dueDate} />,
     icon: 'PROJECT',
     color: colors.PROJECT,
-    width: 125,
+    width: ColumnWidths.Date,
     sort: {
       name: 'dueDate',
       group: 'project',
