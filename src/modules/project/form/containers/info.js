@@ -4,6 +4,7 @@ import { set, cloneDeep } from 'lodash';
 import type { TaskCount } from 'generated/graphql';
 import { isEquals } from 'utils/fp';
 import { cleanFalsyAndTypeName } from 'utils/data';
+import { initDatetimeToContainer } from 'utils/date';
 
 export type State = {
   name: string,
@@ -39,8 +40,14 @@ export default class ProjectInfoContainer extends Container<State> {
     this.setState(this.originalValues);
   };
 
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...values };
+  initDetailValues = (values: Object, timezone: string) => {
+    const { dueDate, ...rest } = values;
+    const info = {
+      ...initDatetimeToContainer(dueDate, 'dueDate', timezone),
+      ...rest,
+    };
+    const parsedValues: Object = { ...initValues, ...info };
+
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };
   };

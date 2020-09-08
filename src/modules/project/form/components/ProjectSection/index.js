@@ -104,7 +104,7 @@ const ProjectSection = ({ isNew }: Props) => {
                             onBlur={evt => {
                               inputHandlers.onBlur(evt);
                               setTimeout(() => {
-                                emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                                emitter.emit('AUTO_DATE', name, evt?.target?.value || null);
                               }, 200);
                             }}
                             isNew={isNew}
@@ -113,6 +113,7 @@ const ProjectSection = ({ isNew }: Props) => {
                             editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_DUE_DATE])}
                             vertical
                             inputAlign="left"
+                            handleTimezone
                           />
                         )}
                       </FormField>
