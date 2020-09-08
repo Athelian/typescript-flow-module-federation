@@ -22,7 +22,7 @@ function normalizedInput(
       switch (field) {
         case 'dueDate':
           return {
-            [(field: string)]: value ? new Date(value) : null,
+            [(field: string)]: value || null,
           };
         case 'tags':
           return {

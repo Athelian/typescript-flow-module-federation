@@ -216,7 +216,7 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
     },
     {
       columnKey: 'project.dueDate',
-      type: 'date',
+      type: 'date_tz',
       ...transformValueField(
         basePath,
         project,
