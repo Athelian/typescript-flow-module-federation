@@ -34,7 +34,6 @@ export const SelectInputStyle = (isOpen: boolean): string => css`
     ${transitions.EXPAND};
     ${fontSizes.SMALL};
     color: ${isOpen ? colors.TEAL : colors.GRAY_LIGHT};
-    height: 100%;
     padding: 0 5px 0 0;
   }
   &:focus > i {
