@@ -8,6 +8,7 @@ import { showToastError } from 'utils/errors';
 import LoadingIcon from 'components/LoadingIcon';
 import ResetFormButton from 'components/ResetFormButton';
 import SaveFormButton from 'components/SaveFormButton';
+import GridRow from 'components/GridRow';
 import { Label } from 'components/Form';
 import FieldDefinitionsForm from 'modules/metadata/components/FieldDefinitionsForm';
 import { FormContainer } from 'modules/form';
@@ -71,7 +72,7 @@ const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
                         />
                       </Label>
                       {isDirty() && (
-                        <>
+                        <GridRow gap="20px">
                           <ResetFormButton
                             onClick={() => {
                               onReset();
@@ -115,7 +116,7 @@ const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
                             }}
                             isLoading={isLoading}
                           />
-                        </>
+                        </GridRow>
                       )}
                     </div>
                     <div className={FieldDefinitionsBodyStyle}>
