@@ -11,7 +11,6 @@ import SaveFormButton from 'components/SaveFormButton';
 import { Label } from 'components/Form';
 import FieldDefinitionsForm from 'modules/metadata/components/FieldDefinitionsForm';
 import { FormContainer } from 'modules/form';
-// import { resetFormState, FormContainer } from 'modules/form';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { fieldDefinitionsQuery } from 'modules/metadata/query';
 import { updateFieldDefinitionsMutation } from 'modules/metadata/mutation';
