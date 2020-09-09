@@ -58,15 +58,6 @@ const DateRevisionsInputTZ = ({
     );
   };
 
-  const handleDateChange = (index: number) => (e: SyntheticInputEvent<HTMLInputElement>) => {
-    const date = e.target.value;
-    onChange(
-      (value || []).map((v, i) =>
-        i === index ? { ...v, date: addTimezone(date, user.timezone, true) } : v
-      )
-    );
-  };
-
   const handleRemove = (index: number) => () => {
     onChange(
       (value || []).filter((v, i) => i !== index),
@@ -106,15 +97,21 @@ const DateRevisionsInputTZ = ({
               readOnly={readonly}
               readOnlyWidth="105px"
               readOnlyHeight="30px"
-              onChange={handleDateChange(index)}
+              onChange={evt => {
+                const date = addTimezone(evt.target.value, user.timezone, true);
+                onChange((value || []).map((v, i) => (i === index ? { ...v, date } : v)));
+              }}
               onBlur={evt => {
-                const lastValidDate = previousValue?.[index]?.date || evt.target.value;
                 onChange(
-                  (value || []).map((v, i) =>
-                    i === index
-                      ? { ...v, date: addTimezone(v.date || lastValidDate, user.timezone, true) }
-                      : v
-                  )
+                  (value || []).map((v, i) => {
+                    if (i === index) {
+                      return {
+                        ...v,
+                        date: v.date || previousValue?.[index]?.date || evt.target.value,
+                      };
+                    }
+                    return v;
+                  })
                 );
               }}
               required

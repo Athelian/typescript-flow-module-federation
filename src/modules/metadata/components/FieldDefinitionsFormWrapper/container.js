@@ -20,6 +20,10 @@ export default class FieldDefinitionContainer extends Container<FormState> {
   isDirty = () =>
     !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
 
+  onReset = () => {
+    this.setState(this.originalValues);
+  };
+
   onSuccess = () => {
     this.originalValues = { ...this.state };
     this.setState(this.originalValues);
