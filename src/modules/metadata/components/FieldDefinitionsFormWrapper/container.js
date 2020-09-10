@@ -17,8 +17,34 @@ export default class FieldDefinitionContainer extends Container<FormState> {
 
   originalValues = initValues;
 
+  haveValidNewDefinitions = () => {
+    const newFieldDefinitions = this.state.fieldDefinitions.filter(
+      definition => definition.isNew && !definition.isSent
+    );
+
+    // if no new field definitions then valid
+    if (!newFieldDefinitions.length) {
+      return false;
+    }
+
+    // if one of new definitions has value then valid
+    return newFieldDefinitions.some(fieldDefinition => !!fieldDefinition.name);
+  };
+
   isDirty = () => {
-    return !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
+    const stateWithoutNewDefinitions = {
+      ...this.state,
+      fieldDefinitions: this.state.fieldDefinitions.filter(
+        definition => definition.isSent || !definition.isNew
+      ),
+    };
+
+    return (
+      !isEquals(
+        cleanFalsyAndTypeName(stateWithoutNewDefinitions),
+        cleanFalsyAndTypeName(this.originalValues)
+      ) || this.haveValidNewDefinitions()
+    );
   };
 
   onReset = () => {
@@ -26,10 +52,20 @@ export default class FieldDefinitionContainer extends Container<FormState> {
   };
 
   onSuccess = () => {
-    const newValues = JSON.parse(JSON.stringify(this.state));
-    newValues.fieldDefinitions = newValues.fieldDefinitions.filter(
-      fieldDefinition => !!fieldDefinition.name
-    );
+    const newValues = { ...this.state };
+
+    newValues.fieldDefinitions = newValues.fieldDefinitions
+      .filter(fieldDefinition => !!fieldDefinition.name)
+      .map(fieldDefinition => {
+        if (fieldDefinition.isNew) {
+          return {
+            ...fieldDefinition,
+            isSent: true,
+          };
+        }
+
+        return fieldDefinition;
+      });
 
     this.originalValues = newValues;
     this.setState(this.originalValues);
