@@ -17,15 +17,21 @@ export default class FieldDefinitionContainer extends Container<FormState> {
 
   originalValues = initValues;
 
-  isDirty = () =>
-    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
+  isDirty = () => {
+    return !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
+  };
 
   onReset = () => {
     this.setState(this.originalValues);
   };
 
   onSuccess = () => {
-    this.originalValues = { ...this.state };
+    const newValues = JSON.parse(JSON.stringify(this.state));
+    newValues.fieldDefinitions = newValues.fieldDefinitions.filter(
+      fieldDefinition => !!fieldDefinition.name
+    );
+
+    this.originalValues = newValues;
     this.setState(this.originalValues);
   };
 
