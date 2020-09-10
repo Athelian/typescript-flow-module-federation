@@ -22,7 +22,7 @@ export default class FieldDefinitionContainer extends Container<FormState> {
       definition => definition.isNew && !definition.isSent
     );
 
-    // if no new field definitions then valid
+    // if no new field definition then not valid
     if (!newFieldDefinitions.length) {
       return false;
     }
@@ -57,7 +57,7 @@ export default class FieldDefinitionContainer extends Container<FormState> {
     newValues.fieldDefinitions = newValues.fieldDefinitions
       .filter(fieldDefinition => !!fieldDefinition.name)
       .map(fieldDefinition => {
-        if (fieldDefinition.isNew) {
+        if (fieldDefinition.isNew && !fieldDefinition.isSent) {
           return {
             ...fieldDefinition,
             isSent: true,
