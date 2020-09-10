@@ -30,7 +30,16 @@ type Props = {
 const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
   <Subscribe to={[FieldDefinitionsContainer, FormContainer]}>
     {(
-      { state, originalValues, initDetailValues, isDirty, onSuccess, onReset, ...fieldHelpers },
+      {
+        state,
+        originalValues,
+        initDetailValues,
+        isDirty,
+        hasChangedValues,
+        onSuccess,
+        onReset,
+        ...fieldHelpers
+      },
       form
     ) => (
       <Query
@@ -81,6 +90,7 @@ const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
                           />
                           <SaveFormButton
                             id="metadata_form_save_button"
+                            disabled={!hasChangedValues()}
                             onClick={async () => {
                               const formData = {
                                 entityType,
