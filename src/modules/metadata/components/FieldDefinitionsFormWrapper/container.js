@@ -17,6 +17,10 @@ export default class FieldDefinitionContainer extends Container<FormState> {
 
   originalValues = initValues;
 
+  isDirty = () => {
+    return !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
+  };
+
   haveValidNewDefinitions = () => {
     const newFieldDefinitions = this.state.fieldDefinitions.filter(
       definition => definition.isNew && !definition.isSent
@@ -31,7 +35,7 @@ export default class FieldDefinitionContainer extends Container<FormState> {
     return newFieldDefinitions.some(fieldDefinition => !!fieldDefinition.name);
   };
 
-  isDirty = () => {
+  hasChangedValues = () => {
     const stateWithoutNewDefinitions = {
       ...this.state,
       fieldDefinitions: this.state.fieldDefinitions.filter(
