@@ -193,6 +193,7 @@ const exportKeys = {
   'order.importer': ['order.importer', 'order.importerCode'],
   'order.exporter': ['order.exporter', 'order.exporterCode'],
   'order.totalPrice': ['order.totalPrice.amount', 'order.totalPrice.currency'],
+  'order.totalVolume': ['order.totalVolume.value', 'order.totalVolume.metric'],
   'order.todo': [
     'order.todo.taskCount.count',
     'order.todo.taskCount.remain',
