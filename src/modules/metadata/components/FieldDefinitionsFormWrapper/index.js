@@ -80,7 +80,7 @@ const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
                           defaultMessage="CUSTOM FIELDS"
                         />
                       </Label>
-                      {isDirty() && (
+                      {isDirty() && hasChangedValues() && (
                         <GridRow gap="20px">
                           <ResetFormButton
                             onClick={() => {
@@ -90,7 +90,6 @@ const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
                           />
                           <SaveFormButton
                             id="metadata_form_save_button"
-                            disabled={!hasChangedValues()}
                             onClick={async () => {
                               const formData = {
                                 entityType,
