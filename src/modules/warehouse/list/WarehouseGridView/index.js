@@ -8,6 +8,8 @@ import usePermission from 'hooks/usePermission';
 import GridView from 'components/GridView';
 import { WarehouseCard, CardAction } from 'components/Cards';
 import { encodeId } from 'utils/id';
+import { BooleanValue } from 'react-values';
+import { WarehouseActivateDialog, WarehouseArchiveDialog } from 'modules/warehouse/common/Dialog';
 
 type Props = {
   items: Array<Object>,
@@ -29,22 +31,49 @@ const defaultRenderItem = ({
   currentUserGroupId: string,
 }) => {
   const allowClone = allowCreate && item.ownedBy && currentUserGroupId === item.ownedBy.id;
+  const allowChangeStatus = allowCreate && item.ownedBy && currentUserGroupId === item.ownedBy.id;
+  // const allowChangeStatus =
+  //   permissions.includes(ORDER_UPDATE) || permissions.includes(ORDER_SET_ARCHIVED);
 
   return (
-    <WarehouseCard
-      key={item.id}
-      warehouse={item}
-      onClick={allowViewForm ? () => navigate(`/warehouse/${encodeId(item.id)}`) : null}
-      showActionsOnHover
-      actions={[
-        allowClone && (
-          <CardAction
-            icon="CLONE"
-            onClick={() => navigate(`/warehouse/clone/${encodeId(item.id)}`)}
+    <BooleanValue key={item.id}>
+      {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+        <>
+          {item.archived ? (
+            <WarehouseActivateDialog
+              onRequestClose={() => dialogToggle(false)}
+              isOpen={statusDialogIsOpen}
+              warehouse={item}
+            />
+          ) : (
+            <WarehouseArchiveDialog
+              onRequestClose={() => dialogToggle(false)}
+              isOpen={statusDialogIsOpen}
+              warehouse={item}
+            />
+          )}
+          <WarehouseCard
+            warehouse={item}
+            onClick={allowViewForm ? () => navigate(`/warehouse/${encodeId(item.id)}`) : null}
+            showActionsOnHover
+            actions={[
+              allowClone && (
+                <CardAction
+                  icon="CLONE"
+                  onClick={() => navigate(`/warehouse/clone/${encodeId(item.id)}`)}
+                />
+              ),
+              allowChangeStatus && (
+                <CardAction
+                  icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
+                  onClick={() => dialogToggle(true)}
+                />
+              ),
+            ].filter(Boolean)}
           />
-        ),
-      ].filter(Boolean)}
-    />
+        </>
+      )}
+    </BooleanValue>
   );
 };
 
