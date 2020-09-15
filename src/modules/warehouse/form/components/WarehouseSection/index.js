@@ -11,6 +11,7 @@ import {
   WAREHOUSE_UPDATE,
   WAREHOUSE_SET_CUSTOM_FIELDS,
   WAREHOUSE_SET_CUSTOM_FIELDS_MASK,
+  WAREHOUSE_SET_ARCHIVED,
   WAREHOUSE_SET_FOLLOWERS,
   WAREHOUSE_CREATE,
 } from 'modules/permission/constants/warehouse';
@@ -90,7 +91,9 @@ const WarehouseSection = ({ isNew, isClone, isLoading, warehouse }: Props) => {
                   <BooleanValue>
                     {({ value: isDialogOpen, set: dialogToggle }) => (
                       <StatusToggle
-                        readOnly={!hasPermission(WAREHOUSE_UPDATE)}
+                        readOnly={
+                          !hasPermission(WAREHOUSE_UPDATE) && !hasPermission(WAREHOUSE_SET_ARCHIVED)
+                        }
                         archived={archived}
                         openStatusDialog={() => dialogToggle(true)}
                         activateDialog={
