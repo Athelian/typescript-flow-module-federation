@@ -3,7 +3,11 @@ import * as React from 'react';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
-import { WAREHOUSE_FORM, WAREHOUSE_CREATE } from 'modules/permission/constants/warehouse';
+import {
+  WAREHOUSE_FORM,
+  WAREHOUSE_CREATE,
+  WAREHOUSE_UPDATE,
+} from 'modules/permission/constants/warehouse';
 import usePermission from 'hooks/usePermission';
 import GridView from 'components/GridView';
 import { WarehouseCard, CardAction } from 'components/Cards';
@@ -23,17 +27,17 @@ const defaultRenderItem = ({
   item,
   allowViewForm,
   allowCreate,
+  allowUpdate,
   currentUserGroupId,
 }: {
   item: Object,
   allowViewForm: boolean,
   allowCreate: boolean,
+  allowUpdate: boolean,
   currentUserGroupId: string,
 }) => {
   const allowClone = allowCreate && item.ownedBy && currentUserGroupId === item.ownedBy.id;
-  const allowChangeStatus = allowCreate && item.ownedBy && currentUserGroupId === item.ownedBy.id;
-  // const allowChangeStatus =
-  //   permissions.includes(ORDER_UPDATE) || permissions.includes(ORDER_SET_ARCHIVED);
+  const allowChangeStatus = allowUpdate && item.ownedBy && currentUserGroupId === item.ownedBy.id;
 
   return (
     <BooleanValue key={item.id}>
@@ -92,6 +96,7 @@ const WarehouseGridView = ({
   const { organization } = useUser();
   const allowViewForm = hasPermission(WAREHOUSE_FORM);
   const allowCreate = hasPermission(WAREHOUSE_CREATE);
+  const allowUpdate = hasPermission(WAREHOUSE_UPDATE);
 
   return (
     <GridView
@@ -105,7 +110,13 @@ const WarehouseGridView = ({
       }
     >
       {items.map(item =>
-        renderItem({ item, allowViewForm, allowCreate, currentUserGroupId: organization.id })
+        renderItem({
+          item,
+          allowViewForm,
+          allowCreate,
+          allowUpdate,
+          currentUserGroupId: organization.id,
+        })
       )}
     </GridView>
   );
