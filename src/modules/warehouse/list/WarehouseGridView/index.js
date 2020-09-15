@@ -7,6 +7,7 @@ import {
   WAREHOUSE_FORM,
   WAREHOUSE_CREATE,
   WAREHOUSE_UPDATE,
+  WAREHOUSE_SET_ARCHIVED,
 } from 'modules/permission/constants/warehouse';
 import usePermission from 'hooks/usePermission';
 import GridView from 'components/GridView';
@@ -27,17 +28,16 @@ const defaultRenderItem = ({
   item,
   allowViewForm,
   allowCreate,
-  allowUpdate,
+  allowChangeStatus,
   currentUserGroupId,
 }: {
   item: Object,
   allowViewForm: boolean,
   allowCreate: boolean,
-  allowUpdate: boolean,
+  allowChangeStatus: boolean,
   currentUserGroupId: string,
 }) => {
   const allowClone = allowCreate && item.ownedBy && currentUserGroupId === item.ownedBy.id;
-  const allowChangeStatus = allowUpdate && item.ownedBy && currentUserGroupId === item.ownedBy.id;
 
   return (
     <BooleanValue key={item.id}>
@@ -96,7 +96,8 @@ const WarehouseGridView = ({
   const { organization } = useUser();
   const allowViewForm = hasPermission(WAREHOUSE_FORM);
   const allowCreate = hasPermission(WAREHOUSE_CREATE);
-  const allowUpdate = hasPermission(WAREHOUSE_UPDATE);
+  const allowChangeStatus =
+    hasPermission(WAREHOUSE_UPDATE) || hasPermission(WAREHOUSE_SET_ARCHIVED);
 
   return (
     <GridView
@@ -114,7 +115,7 @@ const WarehouseGridView = ({
           item,
           allowViewForm,
           allowCreate,
-          allowUpdate,
+          allowChangeStatus,
           currentUserGroupId: organization.id,
         })
       )}
