@@ -115,7 +115,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
         } = currentMilestone;
 
         const dueDate = dueDateBinding
-          ? calculateBindingDate(projectInfoState.dueDate, dueDateInterval)
+          ? calculateBindingDate(projectInfoState.dueDate, dueDateInterval, user.timezone)
           : rawDueDate;
 
         const completedAtAndDueDateDiff =

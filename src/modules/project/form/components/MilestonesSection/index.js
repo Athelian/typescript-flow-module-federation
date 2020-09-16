@@ -10,6 +10,7 @@ import { MILESTONE_SET_TASKS } from 'modules/permission/constants/milestone';
 import { TASK_SET_MILESTONE } from 'modules/permission/constants/task';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import useUser from 'hooks/useUser';
 import useSortAndFilter from 'hooks/useSortAndFilter';
 import messages from 'modules/task/messages';
 import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/project/form/containers';
@@ -54,6 +55,7 @@ const getInitFilter = () => {
 
 function MilestonesSection({ intl }: Props) {
   const { isOwner } = usePartnerPermission();
+  const { user } = useUser();
   const { hasPermission } = usePermission(isOwner);
 
   const sortFields = [
@@ -89,9 +91,12 @@ function MilestonesSection({ intl }: Props) {
           { state: { dueDate } }
         ) => {
           const initial = createMilestoneColumnsData(milestones);
-          const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate({
-            milestones,
-          });
+          const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate(
+            {
+              milestones,
+            },
+            user.timezone
+          );
           return (
             <EstimatedCompletionDateContext.Provider value={estimatedCompletionDates}>
               <Board
