@@ -31,7 +31,7 @@ const defaultProps = {
 };
 
 const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, actions, ...rest }: Props) => {
-  const { name, ownedBy } = warehouse;
+  const { name, ownedBy, archived } = warehouse;
 
   return (
     <BaseCard
@@ -41,6 +41,7 @@ const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, actions, ...r
       selectable={selectable}
       readOnly={readOnly}
       showBadge={warehouse?.notificationUnseenCount > 0}
+      isArchived={archived}
       {...rest}
     >
       <div role="presentation" className={WarehouseCardWrapperStyle} onClick={onClick}>
