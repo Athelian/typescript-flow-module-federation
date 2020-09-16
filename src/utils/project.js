@@ -1,5 +1,6 @@
 // @flow
-import { isValid, addMonths, addWeeks, addDays, formatToDateInput } from 'utils/date';
+import moment from 'moment';
+import { formatUTCDatetimeToDatetimeWithTimezone } from 'utils/date';
 import type { Task } from 'generated/graphql';
 
 type ProjectInfo = {
@@ -10,28 +11,44 @@ type ProjectInfo = {
   }>,
 };
 
-export const calculateBindingDate = (date: string, dateInterval: Object): ?string => {
-  const baseDate = date && isValid(new Date(date)) ? new Date(date) : null;
+// baseDate = Datetime with timezone format
+// returns Datetime with timezone format with the dateInterval added to it
+export const calculateBindingDate = (
+  baseDate: string,
+  dateInterval: Object,
+  timezone: string
+): ?string => {
   if (baseDate) {
     const { months, weeks, days } = dateInterval || {};
+    const dateObj = moment.utc(baseDate);
+
     if (months) {
-      return formatToDateInput(addMonths(baseDate, months).toString());
-    }
-    if (weeks) {
-      return formatToDateInput(addWeeks(baseDate, weeks).toString());
+      dateObj.add(months, 'months');
+    } else if (weeks) {
+      dateObj.add(weeks, 'weeks');
+    } else if (days) {
+      dateObj.add(days, 'days');
     }
 
-    return formatToDateInput(addDays(baseDate, days || 0).toString());
+    return formatUTCDatetimeToDatetimeWithTimezone(
+      dateObj.format('YYYY-MM-DDTHH:mm:ss').concat('Z'),
+      timezone
+    );
   }
   return null;
 };
 
-type calculateMilestonesEstimatedCompletionDateType = ({
-  milestones: Array<Object>,
-}) => Array<string>;
-export const calculateMilestonesEstimatedCompletionDate: calculateMilestonesEstimatedCompletionDateType = ({
-  milestones = [],
-}) => {
+type calculateMilestonesEstimatedCompletionDateType = (
+  {
+    milestones: Array<Object>,
+  },
+  timezone: string
+) => Array<string>;
+
+export const calculateMilestonesEstimatedCompletionDate: calculateMilestonesEstimatedCompletionDateType = (
+  { milestones = [] },
+  timezone
+) => {
   const estimatedCompletionDates = Array(milestones.length).fill(null);
 
   milestones.forEach((milestone, index) => {
@@ -47,7 +64,8 @@ export const calculateMilestonesEstimatedCompletionDate: calculateMilestonesEsti
       const baseDate = estimatedCompletionDates[index - 1];
       estimatedCompletionDates[index] = calculateBindingDate(
         baseDate,
-        milestone.estimatedCompletionDateInterval
+        milestone.estimatedCompletionDateInterval,
+        timezone
       );
     } else {
       estimatedCompletionDates[index] = milestone.estimatedCompletionDate || null;

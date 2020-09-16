@@ -3,7 +3,6 @@ import * as React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { UserConsumer } from 'contexts/Viewer';
 import { MilestoneBaseContainer } from 'modules/milestone/form/containers';
 import validator from 'modules/milestone/form/validator';
 import { FormField } from 'modules/form';
@@ -21,6 +20,7 @@ import {
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import { todayForDateInput } from 'utils/date';
+import useUser from 'hooks/useUser';
 import { calculateMilestonesEstimatedCompletionDate } from 'utils/project';
 import usePermission from 'hooks/usePermission';
 import {
@@ -49,6 +49,7 @@ type Props = {
 
 const MilestoneSection = ({ intl }: Props) => {
   const { hasPermission } = usePermission();
+  const { user } = useUser();
   const canCreate = hasPermission(MILESTONE_CREATE);
   const canUpdate = hasPermission(MILESTONE_UPDATE);
 
@@ -66,7 +67,10 @@ const MilestoneSection = ({ intl }: Props) => {
         const { milestones = [] } = values?.project ?? {};
 
         const milestoneIndex = milestones.findIndex(item => item.id === values.id);
-        const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate({ milestones });
+        const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate(
+          { milestones },
+          user.timezone
+        );
 
         return (
           <div>
@@ -202,62 +206,58 @@ const MilestoneSection = ({ intl }: Props) => {
                   </GridColumn>
 
                   <GridColumn>
-                    <UserConsumer>
-                      {({ user }) => (
-                        <div className={StatusWrapperStyle}>
-                          <FormField name="completedBy" initValue={milestoneStatus} values={values}>
-                            {({ ...inputHandlers }) => (
-                              <span className={StatusColorStyle(completedAt)}>
-                                <SelectInputFactory
-                                  {...inputHandlers}
-                                  items={[
-                                    {
-                                      value: 'uncompleted',
-                                      label: intl.formatMessage(messages.uncompleted),
-                                    },
-                                    {
-                                      value: 'completed',
-                                      label: intl.formatMessage(messages.completed),
-                                    },
-                                  ]}
-                                  onChange={event => {
-                                    const { value: status } = event.target;
-                                    if (status === 'completed') {
-                                      setFieldValue('completedAt', todayForDateInput());
-                                      setFieldValue('completedBy', user);
-                                    } else {
-                                      setFieldValue('completedAt', null);
-                                      setFieldValue('completedBy', null);
-                                    }
-                                  }}
-                                  required
-                                  hideTooltip
-                                  vertical
-                                  label={
-                                    <FormattedMessage
-                                      id="modules.milestone.status"
-                                      defaultMessage="STATUS"
-                                    />
-                                  }
-                                  editable={
-                                    (canCreateOrUpdate || hasPermission(MILESTONE_SET_COMPLETED)) &&
-                                    !inTemplate
-                                  }
+                    <div className={StatusWrapperStyle}>
+                      <FormField name="completedBy" initValue={milestoneStatus} values={values}>
+                        {({ ...inputHandlers }) => (
+                          <span className={StatusColorStyle(completedAt)}>
+                            <SelectInputFactory
+                              {...inputHandlers}
+                              items={[
+                                {
+                                  value: 'uncompleted',
+                                  label: intl.formatMessage(messages.uncompleted),
+                                },
+                                {
+                                  value: 'completed',
+                                  label: intl.formatMessage(messages.completed),
+                                },
+                              ]}
+                              onChange={event => {
+                                const { value: status } = event.target;
+                                if (status === 'completed') {
+                                  setFieldValue('completedAt', todayForDateInput());
+                                  setFieldValue('completedBy', user);
+                                } else {
+                                  setFieldValue('completedAt', null);
+                                  setFieldValue('completedBy', null);
+                                }
+                              }}
+                              required
+                              hideTooltip
+                              vertical
+                              label={
+                                <FormattedMessage
+                                  id="modules.milestone.status"
+                                  defaultMessage="STATUS"
                                 />
-                              </span>
-                            )}
-                          </FormField>
-                          {completedBy && (
-                            <div className={CompletedAvatarStyle}>
-                              <UserAvatar
-                                firstName={completedBy.firstName}
-                                lastName={completedBy.lastName}
-                              />
-                            </div>
-                          )}
+                              }
+                              editable={
+                                (canCreateOrUpdate || hasPermission(MILESTONE_SET_COMPLETED)) &&
+                                !inTemplate
+                              }
+                            />
+                          </span>
+                        )}
+                      </FormField>
+                      {completedBy && (
+                        <div className={CompletedAvatarStyle}>
+                          <UserAvatar
+                            firstName={completedBy.firstName}
+                            lastName={completedBy.lastName}
+                          />
                         </div>
                       )}
-                    </UserConsumer>
+                    </div>
 
                     {completedAt && (
                       <FormField
