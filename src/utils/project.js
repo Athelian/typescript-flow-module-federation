@@ -38,13 +38,16 @@ export const calculateBindingDate = (
   return null;
 };
 
-type calculateMilestonesEstimatedCompletionDateType = ({
-  milestones: Array<Object>,
-}) => Array<string>;
+type calculateMilestonesEstimatedCompletionDateType = (
+  {
+    milestones: Array<Object>,
+  },
+  timezone: string
+) => Array<string>;
 
 export const calculateMilestonesEstimatedCompletionDate: calculateMilestonesEstimatedCompletionDateType = (
   { milestones = [] },
-  timezone: string
+  timezone
 ) => {
   const estimatedCompletionDates = Array(milestones.length).fill(null);
 
