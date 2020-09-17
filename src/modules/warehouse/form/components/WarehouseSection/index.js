@@ -11,9 +11,11 @@ import {
   WAREHOUSE_UPDATE,
   WAREHOUSE_SET_CUSTOM_FIELDS,
   WAREHOUSE_SET_CUSTOM_FIELDS_MASK,
+  WAREHOUSE_SET_ARCHIVED,
   WAREHOUSE_SET_FOLLOWERS,
   WAREHOUSE_CREATE,
 } from 'modules/permission/constants/warehouse';
+import { WarehouseActivateDialog, WarehouseArchiveDialog } from 'modules/warehouse/common/Dialog';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -32,6 +34,7 @@ import {
   FormTooltip,
   Label,
   SectionHeader,
+  StatusToggle,
   TextInputFactory,
   EnumSearchSelectInputFactory,
   CustomFieldsFactory,
@@ -45,14 +48,15 @@ type Props = {
   isNew: boolean,
   isClone: boolean,
   isLoading: boolean,
+  warehouse: Object,
 };
 
-const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {
+const WarehouseSection = ({ isNew, isClone, isLoading, warehouse }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const { organization } = useUser();
   const allowUpdate = hasPermission(WAREHOUSE_UPDATE);
-
+  const { archived } = warehouse;
   return (
     <Subscribe to={[WarehouseInfoContainer]}>
       {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
@@ -77,13 +81,38 @@ const WarehouseSection = ({ isNew, isClone, isLoading }: Props) => {
                   />
                 }
               />
-              {!isNew && !isClone && (
+              {!isNew && (
                 <>
-                  {hasPermission([WAREHOUSE_CREATE]) && (
+                  {!isClone && hasPermission([WAREHOUSE_CREATE]) && (
                     <CloneButton
                       onClick={() => navigate(`/warehouse/clone/${encodeId(originalValues.id)}`)}
                     />
                   )}
+                  <BooleanValue>
+                    {({ value: isDialogOpen, set: dialogToggle }) => (
+                      <StatusToggle
+                        readOnly={
+                          !hasPermission(WAREHOUSE_UPDATE) && !hasPermission(WAREHOUSE_SET_ARCHIVED)
+                        }
+                        archived={archived}
+                        openStatusDialog={() => dialogToggle(true)}
+                        activateDialog={
+                          <WarehouseActivateDialog
+                            warehouse={warehouse}
+                            isOpen={isDialogOpen && !!archived}
+                            onRequestClose={() => dialogToggle(false)}
+                          />
+                        }
+                        archiveDialog={
+                          <WarehouseArchiveDialog
+                            warehouse={warehouse}
+                            isOpen={isDialogOpen && !archived}
+                            onRequestClose={() => dialogToggle(false)}
+                          />
+                        }
+                      />
+                    )}
+                  </BooleanValue>
                 </>
               )}
             </SectionHeader>

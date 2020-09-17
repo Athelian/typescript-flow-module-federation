@@ -30,12 +30,17 @@ export default class WarehouseForm extends React.Component<Props> {
   }
 
   render() {
-    const { isNew, isClone, isLoading } = this.props;
+    const { isNew, isClone, isLoading, warehouse } = this.props;
 
     return (
       <div className={WarehouseFormWrapperStyle}>
         <SectionWrapper id="warehouse_warehouseSection">
-          <WarehouseSection isNew={isNew} isClone={isClone} isLoading={isLoading} />
+          <WarehouseSection
+            isNew={isNew}
+            isClone={isClone}
+            isLoading={isLoading}
+            warehouse={warehouse}
+          />
         </SectionWrapper>
       </div>
     );
