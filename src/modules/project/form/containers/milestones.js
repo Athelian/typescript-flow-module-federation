@@ -6,7 +6,7 @@ import type { User, Milestone, Task, FilePayload } from 'generated/graphql';
 import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
 import { uuid } from 'utils/id';
 import { calculateTasks, setToSkipTask, setToComplete, START_DATE, DUE_DATE } from 'utils/task';
-import { calculateNewDate } from 'utils/date';
+import { calculateNewDate, initDatetimeToContainer } from 'utils/date';
 
 type FormState = {
   milestones: Array<Milestone>,
@@ -166,12 +166,22 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     });
   };
 
-  initDetailValues = (milestones: Array<Milestone>, ignoreTaskIds: Array<string> = []) => {
-    this.setState({ milestones, needDeletedFiles: [], ignoreTaskIds });
-    this.originalValues = { milestones, needDeletedFiles: [], ignoreTaskIds };
-    this.originalTasks = (flatten(
-      milestones.map(item => getByPathWithDefault([], 'tasks', item))
-    ): Array<Task>);
+  initDetailValues = (
+    milestones: Array<Milestone>,
+    ignoreTaskIds: Array<string> = [],
+    timezone: string
+  ) => {
+    const parsedMilestones = milestones.map(
+      ({ dueDate, estimatedCompletionDate, completedAt, ...rest }) => ({
+        ...initDatetimeToContainer(dueDate, 'dueDate', timezone),
+        ...initDatetimeToContainer(estimatedCompletionDate, 'estimatedCompletionDate', timezone),
+        ...initDatetimeToContainer(completedAt, 'completedAt', timezone),
+        ...rest,
+      })
+    );
+    this.setState({ milestones: parsedMilestones, needDeletedFiles: [], ignoreTaskIds });
+    this.originalValues = { milestones: parsedMilestones, needDeletedFiles: [], ignoreTaskIds };
+    this.originalTasks = (flatten(milestones.map(item => item?.tasks ?? [])): Array<Task>);
     this.deleteTasks = [];
   };
 

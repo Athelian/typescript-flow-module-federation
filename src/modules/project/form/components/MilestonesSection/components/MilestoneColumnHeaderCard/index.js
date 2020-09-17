@@ -357,6 +357,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             inputWidth="130px"
                             inputHeight="20px"
                             hideTooltip
+                            handleTimezone
                           />
                         )}
                       </FormField>
@@ -397,6 +398,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               hideTooltip
                               required
                               diff={completedAtAndDueDateDiff}
+                              handleTimezone
                             />
                           )}
                         </FormField>
@@ -437,6 +439,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               inputWidth="130px"
                               inputHeight="20px"
                               hideTooltip
+                              handleTimezone
                             />
                           )}
                         </FormField>
