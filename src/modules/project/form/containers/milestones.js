@@ -153,7 +153,7 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     ignoreTaskIds: Array<string> = [],
     timezone: string
   ) => {
-    const parsedMilestones = milestones.map(
+    const parsedMilestones: Array<Milestone> = milestones.map(
       ({ dueDate, estimatedCompletionDate, completedAt, ...rest }) => ({
         ...initDatetimeToContainer(dueDate, 'dueDate', timezone),
         ...initDatetimeToContainer(estimatedCompletionDate, 'estimatedCompletionDate', timezone),
