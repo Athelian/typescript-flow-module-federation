@@ -183,7 +183,7 @@ import { OrderTasksContainer } from 'modules/order/form/containers';
 import { OrderItemTasksContainer } from 'modules/orderItem/form/containers';
 import { BatchTasksContainer } from 'modules/batch/form/containers';
 import { ShipmentTasksContainer } from 'modules/shipment/form/containers';
-import { isBefore, calculateDate, findDuration } from './date';
+import { isBefore, calculateBindingDate, findDuration } from './date';
 import { encodeId } from './id';
 import { getByPath, getByPathWithDefault } from './fp';
 import emitter from './emitter';
@@ -855,7 +855,7 @@ export const prepareApprovalStatus: prepareApprovalStatusType = ({ approvedBy, r
 };
 
 // only for milestone or project changed
-export const recalculateTaskBindingDate = (task: Object) => {
+export const recalculateTaskBindingDate = (task: Object, timezone: string) => {
   const {
     startDate,
     startDateBinding,
@@ -876,63 +876,33 @@ export const recalculateTaskBindingDate = (task: Object) => {
   if (startDateBinding === DUE_DATE) {
     // do the due date first
     if (dueDateBinding) {
-      const { months, weeks, days } = dueDateInterval || {};
       const path = mappingFields[dueDateBinding];
       if (path) {
-        newDueDate = calculateDate({
-          date: getByPath(path, task),
-          duration: findDuration({ months, weeks }),
-          offset: months || weeks || days,
-        });
+        newDueDate = calculateBindingDate(task?.[path], dueDateInterval, timezone);
       }
     }
-    const { months, weeks, days } = startDateInterval || {};
-    newStartDate = calculateDate({
-      date: newDueDate,
-      duration: findDuration({ months, weeks }),
-      offset: months || weeks || days,
-    });
+    newStartDate = calculateBindingDate(newDueDate, startDateInterval, timezone);
   } else if (dueDateBinding === START_DATE) {
     // do the start date first
     if (startDateBinding) {
-      const { months, weeks, days } = startDateInterval || {};
       const path = mappingFields[startDateBinding];
       if (path) {
-        newStartDate = calculateDate({
-          date: getByPath(path, task),
-          duration: findDuration({ months, weeks }),
-          offset: months || weeks || days,
-        });
+        newStartDate = calculateBindingDate(task?.[path], startDateInterval, timezone);
       }
     }
-    const { months, weeks, days } = dueDateInterval || {};
-    newDueDate = calculateDate({
-      date: newStartDate,
-      duration: findDuration({ months, weeks }),
-      offset: months || weeks || days,
-    });
+    newDueDate = calculateBindingDate(newStartDate, dueDateInterval, timezone);
   } else {
     if (startDateBinding) {
-      const { months, weeks, days } = startDateInterval || {};
       const path = mappingFields[startDateBinding];
       if (path) {
-        newStartDate = calculateDate({
-          date: getByPath(path, task),
-          duration: findDuration({ months, weeks }),
-          offset: months || weeks || days,
-        });
+        newStartDate = calculateBindingDate(task?.[path], startDateInterval, timezone);
       }
     }
 
     if (dueDateBinding) {
-      const { months, weeks, days } = dueDateInterval || {};
       const path = mappingFields[dueDateBinding];
       if (path) {
-        newDueDate = calculateDate({
-          date: getByPath(path, task),
-          duration: findDuration({ months, weeks }),
-          offset: months || weeks || days,
-        });
+        newDueDate = calculateBindingDate(task?.[path], dueDateInterval, timezone);
       }
     }
   }

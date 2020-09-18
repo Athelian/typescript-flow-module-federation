@@ -11,6 +11,7 @@ import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { BaseButton, NewButton } from 'components/Buttons';
 import { Tooltip } from 'components/Tooltip';
+import useUser from 'hooks/useUser';
 import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
 import { TemplateCard, GrayCard } from 'components/Cards';
@@ -41,8 +42,8 @@ type Props = {
 
 function TaskSection({ type, entityId, intl, groupIds }: Props) {
   const { isOwner } = usePartnerPermission();
+  const { user } = useUser();
   const { hasPermission } = usePermission(isOwner);
-
   const canViewProjectForm = hasPermission(PROJECT_FORM);
 
   const {
@@ -145,7 +146,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                                     milestone: value,
                                   };
 
-                                  return recalculateTaskBindingDate(latestTask);
+                                  return recalculateTaskBindingDate(latestTask, user.timezone);
                                 })
                               );
                               setFieldTouched('tasks');

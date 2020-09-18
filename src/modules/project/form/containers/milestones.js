@@ -6,8 +6,7 @@ import type { User, Milestone, Task, FilePayload } from 'generated/graphql';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { uuid } from 'utils/id';
 import { calculateTasks, setToSkipTask, setToComplete, START_DATE, DUE_DATE } from 'utils/task';
-import { initDatetimeToContainer } from 'utils/date';
-import { calculateBindingDate } from 'utils/project';
+import { initDatetimeToContainer, calculateBindingDate } from 'utils/date';
 
 type FormState = {
   milestones: Array<Milestone>,

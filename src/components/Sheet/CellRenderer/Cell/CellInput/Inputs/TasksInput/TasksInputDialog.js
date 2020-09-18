@@ -9,6 +9,7 @@ import { recalculateTaskBindingDate, getTasksPermissions } from 'utils/task';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { BaseButton, NewButton } from 'components/Buttons';
+import useUser from 'hooks/useUser';
 import { Tooltip } from 'components/Tooltip';
 import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import { DashedPlusButton, Label } from 'components/Form';
@@ -47,6 +48,7 @@ const TasksInputDialog = ({
   entityId,
   groupIds,
 }: Props) => {
+  const { user } = useUser();
   const hasPermission = useHasPermissions(ownerId);
   const {
     canViewForm,
@@ -125,7 +127,7 @@ const TasksInputDialog = ({
                                   milestone: value,
                                 };
 
-                                return recalculateTaskBindingDate(latestTask);
+                                return recalculateTaskBindingDate(latestTask, user.timezone);
                               }),
                             });
                             toggleSlide(false);

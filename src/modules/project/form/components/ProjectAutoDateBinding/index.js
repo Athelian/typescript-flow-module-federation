@@ -3,8 +3,9 @@ import * as React from 'react';
 import type { Task } from 'generated/graphql';
 import emitter from 'utils/emitter';
 import { getByPath, setIn } from 'utils/fp';
+import useUser from 'hooks/useUser';
 import { recalculateTaskBindingDate } from 'utils/task';
-import { calculateDate, findDuration } from 'utils/date';
+import { calculateBindingDate } from 'utils/date';
 
 type Props = {
   tasks: Array<Object>,
@@ -40,21 +41,17 @@ export default function ProjectAutoDateBinding({
   tasks,
   setTaskValue,
 }: Props) {
+  const { user } = useUser();
   React.useEffect(() => {
     emitter.addListener('AUTO_DATE', (field: mixed, value: mixed) => {
       updateMilestones(
         'milestones',
         milestones.map(item => {
           const { dueDateBinding, dueDateInterval } = item;
-          const { months, weeks, days } = dueDateInterval || {};
           if (dueDateBinding) {
             return {
               ...item,
-              dueDate: calculateDate({
-                date: project.dueDate,
-                duration: findDuration({ months, weeks }),
-                offset: months || weeks || days,
-              }),
+              dueDate: calculateBindingDate(project.dueDate, dueDateInterval, user.timezone),
             };
           }
           return item;
@@ -70,7 +67,7 @@ export default function ProjectAutoDateBinding({
               })
             : task;
 
-          return recalculateTaskBindingDate(latestTask);
+          return recalculateTaskBindingDate(latestTask, user.timezone);
         })
       );
     });
@@ -78,6 +75,6 @@ export default function ProjectAutoDateBinding({
     return () => {
       emitter.removeAllListeners('AUTO_DATE');
     };
-  }, [project, milestones, updateMilestones, tasks, setTaskValue]);
+  }, [project, milestones, updateMilestones, tasks, setTaskValue, user.timezone]);
   return null;
 }

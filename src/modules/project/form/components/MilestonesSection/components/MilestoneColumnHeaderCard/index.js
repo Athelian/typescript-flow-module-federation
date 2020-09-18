@@ -5,9 +5,13 @@ import { Subscribe } from 'unstated';
 import { BooleanValue, NumberValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
-import { formatDateToGraphql, startOfToday, differenceInCalendarDays } from 'utils/date';
+import {
+  formatDateToGraphql,
+  startOfToday,
+  differenceInCalendarDays,
+  calculateBindingDate,
+} from 'utils/date';
 import { isEquals } from 'utils/fp';
-import { calculateBindingDate } from 'utils/project';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import useHover from 'hooks/useHover';

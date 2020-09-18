@@ -5,9 +5,9 @@ import { type IntlShape, injectIntl, FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { ObjectValue } from 'react-values';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import { UserConsumer } from 'contexts/Viewer';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import emitter from 'utils/emitter';
+import useUser from 'hooks/useUser';
 import {
   triggerAutoBinding,
   checkEditableFromEntity,
@@ -18,7 +18,7 @@ import {
   prepareTaskStatus,
   prepareApprovalStatus,
 } from 'utils/task';
-import { isBefore, calculateDate, findDuration, todayForDateInput } from 'utils/date';
+import { isBefore, calculateBindingDate, todayForDateInput } from 'utils/date';
 import {
   SectionWrapper,
   SectionHeader,
@@ -92,6 +92,7 @@ function defaultBindingOptions(intl: IntlShape, isStartDate: boolean) {
 const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const { user } = useUser();
 
   const initDuration = {};
   let isBeforeStartDate = true;
@@ -101,11 +102,11 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
     if ((months || weeks || days) > 0) {
       isBeforeStartDate = false;
     }
-    initDuration[task.startDateBinding] = calculateDate({
-      duration: findDuration({ months, weeks }),
-      date: task.startDate,
-      offset: -(months || weeks || days),
-    });
+    initDuration[task.startDateBinding] = calculateBindingDate(
+      task.startDate,
+      task.startDateInterval,
+      user.timezone
+    );
   }
 
   if (task && task.dueDateBinding) {
@@ -113,11 +114,11 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
     if ((months || weeks || days) > 0) {
       isBeforeDueDate = false;
     }
-    initDuration[task.dueDateBinding] = calculateDate({
-      duration: findDuration({ months, weeks }),
-      date: task.dueDate,
-      offset: -(months || weeks || days),
-    });
+    initDuration[task.dueDateBinding] = calculateBindingDate(
+      task.dueDate,
+      task.dueDateInterval,
+      user.timezone
+    );
   }
 
   const parentValues = React.useRef(initDuration);
@@ -589,14 +590,9 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                           setFieldValue={(field, value) => {
                             setFieldValue(field, value);
                             if (startDateBinding && values.dueDateBinding === START_DATE) {
-                              const { weeks, months, days } = values.dueDateInterval || {};
                               setFieldValue(
                                 'dueDate',
-                                calculateDate({
-                                  date: value,
-                                  duration: findDuration({ weeks, months }),
-                                  offset: weeks || months || days,
-                                })
+                                calculateBindingDate(value, values.dueDateInterval, user.timezone)
                               );
                             }
                           }}
@@ -833,95 +829,302 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                 </FormField>
               </GridColumn>
 
-              <UserConsumer>
-                {({ user }) => (
-                  <GridColumn>
+              <GridColumn>
+                <div className={StatusWrapperStyle}>
+                  {isInTemplate ? (
+                    <>
+                      <Label height="30px">
+                        <FormattedMessage id="modules.milestone.status" defaultMessage="STATUS" />
+                      </Label>
+                      <Display color="GRAY_LIGHT">
+                        <FormattedMessage
+                          id="modules.Tasks.statusDisabled"
+                          defaultMessage="Status will be displayed here"
+                        />
+                      </Display>
+                    </>
+                  ) : (
+                    <>
+                      <FormField name="status" initValue={status} values={values}>
+                        {({ name, ...inputHandlers }) => (
+                          <span className={StatusColorStyle({ color, backgroundColor })}>
+                            <SelectInputFactory
+                              {...inputHandlers}
+                              items={[
+                                {
+                                  value: 'uncompleted',
+                                  label: intl.formatMessage(messages.uncompleted),
+                                },
+                                {
+                                  value: 'inProgress',
+                                  label: intl.formatMessage(messages.inProgress),
+                                },
+                                {
+                                  value: 'completed',
+                                  label: intl.formatMessage(messages.completed),
+                                },
+                                {
+                                  value: 'skipped',
+                                  label: intl.formatMessage(messages.skipped),
+                                },
+                              ]}
+                              onChange={event => {
+                                const { value } = event.target;
+
+                                if (value === 'completed') {
+                                  const newTask = {
+                                    ...values,
+                                    inProgressAt: values.inProgressAt || todayForDateInput(),
+                                    inProgressBy: user,
+                                    skippedAt: null,
+                                    skippedBy: null,
+                                    completedAt: todayForDateInput(),
+                                    completedBy: user,
+                                  };
+                                  setFieldValues(newTask);
+                                } else if (value === 'inProgress') {
+                                  const newTask = {
+                                    ...values,
+                                    completedAt: null,
+                                    completedBy: null,
+                                    skippedAt: null,
+                                    skippedBy: null,
+                                    inProgressAt: todayForDateInput(),
+                                    inProgressBy: user,
+                                  };
+                                  setFieldValues(newTask);
+                                } else if (value === 'skipped') {
+                                  const newTask = {
+                                    ...values,
+                                    completedAt: null,
+                                    completedBy: null,
+                                    inProgressAt: null,
+                                    inProgressBy: null,
+                                    skippedAt: todayForDateInput(),
+                                    skippedBy: user,
+                                  };
+                                  setFieldValues(newTask);
+                                } else {
+                                  setFieldValues({
+                                    ...values,
+                                    completedAt: null,
+                                    completedBy: null,
+                                    inProgressAt: null,
+                                    inProgressBy: null,
+                                    skippedAt: null,
+                                    skippedBy: null,
+                                  });
+                                }
+                              }}
+                              required
+                              hideTooltip
+                              vertical
+                              label={
+                                <FormattedMessage
+                                  id="modules.milestone.status"
+                                  defaultMessage="STATUS"
+                                />
+                              }
+                              editable={statusEditable}
+                            />
+                          </span>
+                        )}
+                      </FormField>
+                      {account && (
+                        <div className={CompletedAvatarStyle}>
+                          <UserAvatar firstName={account.firstName} lastName={account.lastName} />
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+
+                {inProgressAt && (
+                  <FormField
+                    name="inProgressAt"
+                    initValue={inProgressAt}
+                    values={values}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <DateInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        originalValue={originalValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="common.inProgressDate"
+                            defaultMessage="IN PROGRESS DATE"
+                          />
+                        }
+                        vertical
+                        required
+                        editable={editable.inProgress}
+                      />
+                    )}
+                  </FormField>
+                )}
+                {skippedAt && (
+                  <FormField
+                    name="skippedAt"
+                    initValue={skippedAt}
+                    values={values}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <DateInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        originalValue={originalValues[name]}
+                        label={
+                          <FormattedMessage id="common.skippedDate" defaultMessage="SKIPPED DATE" />
+                        }
+                        vertical
+                        required
+                        editable={editable.inProgress}
+                      />
+                    )}
+                  </FormField>
+                )}
+                {completedAt && (
+                  <FormField
+                    name="completedAt"
+                    initValue={completedAt}
+                    values={values}
+                    validator={validator}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <DateInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        originalValue={originalValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="common.completedDate"
+                            defaultMessage="COMPLETED DATE"
+                          />
+                        }
+                        vertical
+                        required
+                        editable={editable.completed}
+                      />
+                    )}
+                  </FormField>
+                )}
+                <FieldItem
+                  vertical
+                  label={
+                    <Label>
+                      <FormattedMessage id="modules.Tasks.approval" defaultMessage="APPROVAL" />
+                    </Label>
+                  }
+                  input={
+                    <ToggleInput
+                      toggled={values.approvable}
+                      onToggle={() => {
+                        if (values.approvable) {
+                          setFieldValues({
+                            approvedBy: null,
+                            approvedAt: null,
+                            rejectedBy: null,
+                            rejectedAt: null,
+                            approvers: [],
+                          });
+                        }
+                        setFieldValue('approvable', !values.approvable);
+                        setFieldTouched('approvable');
+                      }}
+                      editable={editable.approvable}
+                      align="right"
+                    >
+                      <span className={ApprovalToggleStyle(values.approvable)}>
+                        {values.approvable ? (
+                          <FormattedMessage id="common.on" defaultMessage="On" />
+                        ) : (
+                          <FormattedMessage id="common.off" defaultMessage="Off" />
+                        )}
+                      </span>
+                    </ToggleInput>
+                  }
+                />
+
+                {values.approvable && (
+                  <>
                     <div className={StatusWrapperStyle}>
                       {isInTemplate ? (
                         <>
                           <Label height="30px">
                             <FormattedMessage
-                              id="modules.milestone.status"
-                              defaultMessage="STATUS"
+                              id="modules.Tasks.approvalStatus"
+                              defaultMessage="APPROVAL STATUS"
                             />
                           </Label>
                           <Display color="GRAY_LIGHT">
                             <FormattedMessage
-                              id="modules.Tasks.statusDisabled"
-                              defaultMessage="Status will be displayed here"
+                              id="modules.Tasks.approvalDisabled"
+                              defaultMessage="Approval will be displayed here"
                             />
                           </Display>
                         </>
                       ) : (
                         <>
-                          <FormField name="status" initValue={status} values={values}>
+                          <FormField
+                            name="approvalStatus"
+                            initValue={approvalStatus}
+                            values={values}
+                          >
                             {({ name, ...inputHandlers }) => (
-                              <span className={StatusColorStyle({ color, backgroundColor })}>
+                              <span
+                                className={StatusColorStyle({
+                                  color: approvalColor,
+                                  backgroundColor: approvalBackgroundColor,
+                                })}
+                              >
                                 <SelectInputFactory
                                   {...inputHandlers}
                                   items={[
                                     {
-                                      value: 'uncompleted',
-                                      label: intl.formatMessage(messages.uncompleted),
+                                      value: 'unapproved',
+                                      label: intl.formatMessage(messages.unapproved),
                                     },
                                     {
-                                      value: 'inProgress',
-                                      label: intl.formatMessage(messages.inProgress),
+                                      value: 'approved',
+                                      label: intl.formatMessage(messages.approved),
                                     },
                                     {
-                                      value: 'completed',
-                                      label: intl.formatMessage(messages.completed),
-                                    },
-                                    {
-                                      value: 'skipped',
-                                      label: intl.formatMessage(messages.skipped),
+                                      value: 'rejected',
+                                      label: intl.formatMessage(messages.rejected),
                                     },
                                   ]}
                                   onChange={event => {
                                     const { value } = event.target;
 
-                                    if (value === 'completed') {
+                                    if (value === 'approved') {
                                       const newTask = {
                                         ...values,
-                                        inProgressAt: values.inProgressAt || todayForDateInput(),
-                                        inProgressBy: user,
-                                        skippedAt: null,
-                                        skippedBy: null,
-                                        completedAt: todayForDateInput(),
-                                        completedBy: user,
+                                        approvedBy: user,
+                                        approvedAt: todayForDateInput(),
+                                        rejectedBy: null,
+                                        rejectedAt: null,
                                       };
                                       setFieldValues(newTask);
-                                    } else if (value === 'inProgress') {
+                                    } else if (value === 'rejected') {
                                       const newTask = {
                                         ...values,
-                                        completedAt: null,
-                                        completedBy: null,
-                                        skippedAt: null,
-                                        skippedBy: null,
-                                        inProgressAt: todayForDateInput(),
-                                        inProgressBy: user,
-                                      };
-                                      setFieldValues(newTask);
-                                    } else if (value === 'skipped') {
-                                      const newTask = {
-                                        ...values,
-                                        completedAt: null,
-                                        completedBy: null,
-                                        inProgressAt: null,
-                                        inProgressBy: null,
-                                        skippedAt: todayForDateInput(),
-                                        skippedBy: user,
+                                        approvedBy: null,
+                                        approvedAt: null,
+                                        rejectedBy: user,
+                                        rejectedAt: todayForDateInput(),
                                       };
                                       setFieldValues(newTask);
                                     } else {
                                       setFieldValues({
                                         ...values,
-                                        completedAt: null,
-                                        completedBy: null,
-                                        inProgressAt: null,
-                                        inProgressBy: null,
-                                        skippedAt: null,
-                                        skippedBy: null,
+                                        approvedBy: null,
+                                        approvedAt: null,
+                                        rejectedBy: null,
+                                        rejectedAt: null,
                                       });
                                     }
                                   }}
@@ -930,20 +1133,20 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                                   vertical
                                   label={
                                     <FormattedMessage
-                                      id="modules.milestone.status"
-                                      defaultMessage="STATUS"
+                                      id="modules.milestone.approvalStatus"
+                                      defaultMessage="APPROVAL STATUS"
                                     />
                                   }
-                                  editable={statusEditable}
+                                  editable={editable.approved && editable.rejected}
                                 />
                               </span>
                             )}
                           </FormField>
-                          {account && (
+                          {approvedOrRejectedBy && (
                             <div className={CompletedAvatarStyle}>
                               <UserAvatar
-                                firstName={account.firstName}
-                                lastName={account.lastName}
+                                firstName={approvedOrRejectedBy.firstName}
+                                lastName={approvedOrRejectedBy.lastName}
                               />
                             </div>
                           )}
@@ -951,279 +1154,59 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                       )}
                     </div>
 
-                    {inProgressAt && (
+                    {approvedAt && (
                       <FormField
-                        name="inProgressAt"
-                        initValue={inProgressAt}
+                        name="approvedAt"
+                        initValue={approvedAt}
                         values={values}
                         setFieldValue={setFieldValue}
                       >
                         {({ name, ...inputHandlers }) => (
                           <DateInputFactory
                             name={name}
+                            vertical
+                            required
                             {...inputHandlers}
                             originalValue={originalValues[name]}
                             label={
                               <FormattedMessage
-                                id="common.inProgressDate"
-                                defaultMessage="IN PROGRESS DATE"
+                                id="modules.Tasks.approvedDate"
+                                defaultMessage="APPROVED DATE"
                               />
                             }
-                            vertical
-                            required
-                            editable={editable.inProgress}
+                            editable={editable.approved}
                           />
                         )}
                       </FormField>
                     )}
-                    {skippedAt && (
+                    {rejectedAt && (
                       <FormField
-                        name="skippedAt"
-                        initValue={skippedAt}
+                        name="rejectedAt"
+                        initValue={rejectedAt}
                         values={values}
                         setFieldValue={setFieldValue}
                       >
                         {({ name, ...inputHandlers }) => (
                           <DateInputFactory
                             name={name}
+                            vertical
+                            required
                             {...inputHandlers}
                             originalValue={originalValues[name]}
                             label={
                               <FormattedMessage
-                                id="common.skippedDate"
-                                defaultMessage="SKIPPED DATE"
+                                id="modules.Tasks.rejectedDate"
+                                defaultMessage="REJECTED DATE"
                               />
                             }
-                            vertical
-                            required
-                            editable={editable.inProgress}
+                            editable={editable.rejected}
                           />
                         )}
                       </FormField>
                     )}
-                    {completedAt && (
-                      <FormField
-                        name="completedAt"
-                        initValue={completedAt}
-                        values={values}
-                        validator={validator}
-                        setFieldValue={setFieldValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <DateInputFactory
-                            name={name}
-                            {...inputHandlers}
-                            originalValue={originalValues[name]}
-                            label={
-                              <FormattedMessage
-                                id="common.completedDate"
-                                defaultMessage="COMPLETED DATE"
-                              />
-                            }
-                            vertical
-                            required
-                            editable={editable.completed}
-                          />
-                        )}
-                      </FormField>
-                    )}
-                    <FieldItem
-                      vertical
-                      label={
-                        <Label>
-                          <FormattedMessage id="modules.Tasks.approval" defaultMessage="APPROVAL" />
-                        </Label>
-                      }
-                      input={
-                        <ToggleInput
-                          toggled={values.approvable}
-                          onToggle={() => {
-                            if (values.approvable) {
-                              setFieldValues({
-                                approvedBy: null,
-                                approvedAt: null,
-                                rejectedBy: null,
-                                rejectedAt: null,
-                                approvers: [],
-                              });
-                            }
-                            setFieldValue('approvable', !values.approvable);
-                            setFieldTouched('approvable');
-                          }}
-                          editable={editable.approvable}
-                          align="right"
-                        >
-                          <span className={ApprovalToggleStyle(values.approvable)}>
-                            {values.approvable ? (
-                              <FormattedMessage id="common.on" defaultMessage="On" />
-                            ) : (
-                              <FormattedMessage id="common.off" defaultMessage="Off" />
-                            )}
-                          </span>
-                        </ToggleInput>
-                      }
-                    />
-
-                    {values.approvable && (
-                      <>
-                        <div className={StatusWrapperStyle}>
-                          {isInTemplate ? (
-                            <>
-                              <Label height="30px">
-                                <FormattedMessage
-                                  id="modules.Tasks.approvalStatus"
-                                  defaultMessage="APPROVAL STATUS"
-                                />
-                              </Label>
-                              <Display color="GRAY_LIGHT">
-                                <FormattedMessage
-                                  id="modules.Tasks.approvalDisabled"
-                                  defaultMessage="Approval will be displayed here"
-                                />
-                              </Display>
-                            </>
-                          ) : (
-                            <>
-                              <FormField
-                                name="approvalStatus"
-                                initValue={approvalStatus}
-                                values={values}
-                              >
-                                {({ name, ...inputHandlers }) => (
-                                  <span
-                                    className={StatusColorStyle({
-                                      color: approvalColor,
-                                      backgroundColor: approvalBackgroundColor,
-                                    })}
-                                  >
-                                    <SelectInputFactory
-                                      {...inputHandlers}
-                                      items={[
-                                        {
-                                          value: 'unapproved',
-                                          label: intl.formatMessage(messages.unapproved),
-                                        },
-                                        {
-                                          value: 'approved',
-                                          label: intl.formatMessage(messages.approved),
-                                        },
-                                        {
-                                          value: 'rejected',
-                                          label: intl.formatMessage(messages.rejected),
-                                        },
-                                      ]}
-                                      onChange={event => {
-                                        const { value } = event.target;
-
-                                        if (value === 'approved') {
-                                          const newTask = {
-                                            ...values,
-                                            approvedBy: user,
-                                            approvedAt: todayForDateInput(),
-                                            rejectedBy: null,
-                                            rejectedAt: null,
-                                          };
-                                          setFieldValues(newTask);
-                                        } else if (value === 'rejected') {
-                                          const newTask = {
-                                            ...values,
-                                            approvedBy: null,
-                                            approvedAt: null,
-                                            rejectedBy: user,
-                                            rejectedAt: todayForDateInput(),
-                                          };
-                                          setFieldValues(newTask);
-                                        } else {
-                                          setFieldValues({
-                                            ...values,
-                                            approvedBy: null,
-                                            approvedAt: null,
-                                            rejectedBy: null,
-                                            rejectedAt: null,
-                                          });
-                                        }
-                                      }}
-                                      required
-                                      hideTooltip
-                                      vertical
-                                      label={
-                                        <FormattedMessage
-                                          id="modules.milestone.approvalStatus"
-                                          defaultMessage="APPROVAL STATUS"
-                                        />
-                                      }
-                                      editable={editable.approved && editable.rejected}
-                                    />
-                                  </span>
-                                )}
-                              </FormField>
-                              {approvedOrRejectedBy && (
-                                <div className={CompletedAvatarStyle}>
-                                  <UserAvatar
-                                    firstName={approvedOrRejectedBy.firstName}
-                                    lastName={approvedOrRejectedBy.lastName}
-                                  />
-                                </div>
-                              )}
-                            </>
-                          )}
-                        </div>
-
-                        {approvedAt && (
-                          <FormField
-                            name="approvedAt"
-                            initValue={approvedAt}
-                            values={values}
-                            setFieldValue={setFieldValue}
-                          >
-                            {({ name, ...inputHandlers }) => (
-                              <DateInputFactory
-                                name={name}
-                                vertical
-                                required
-                                {...inputHandlers}
-                                originalValue={originalValues[name]}
-                                label={
-                                  <FormattedMessage
-                                    id="modules.Tasks.approvedDate"
-                                    defaultMessage="APPROVED DATE"
-                                  />
-                                }
-                                editable={editable.approved}
-                              />
-                            )}
-                          </FormField>
-                        )}
-                        {rejectedAt && (
-                          <FormField
-                            name="rejectedAt"
-                            initValue={rejectedAt}
-                            values={values}
-                            setFieldValue={setFieldValue}
-                          >
-                            {({ name, ...inputHandlers }) => (
-                              <DateInputFactory
-                                name={name}
-                                vertical
-                                required
-                                {...inputHandlers}
-                                originalValue={originalValues[name]}
-                                label={
-                                  <FormattedMessage
-                                    id="modules.Tasks.rejectedDate"
-                                    defaultMessage="REJECTED DATE"
-                                  />
-                                }
-                                editable={editable.rejected}
-                              />
-                            )}
-                          </FormField>
-                        )}
-                      </>
-                    )}
-                  </GridColumn>
+                  </>
                 )}
-              </UserConsumer>
+              </GridColumn>
             </div>
           );
         }}
