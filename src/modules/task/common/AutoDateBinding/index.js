@@ -4,7 +4,8 @@ import type { Order, OrderItem, Shipment, Batch, Task } from 'generated/graphql'
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { START_DATE, DUE_DATE } from 'utils/task';
-import { calculateDate, findDuration } from 'utils/date';
+import { calculateBindingDate } from 'utils/date';
+import useUser from 'hooks/useUser';
 import { MappingFields as OrderMappingField } from 'modules/task/form/components/ParentEntity/components/OrderValueSpy';
 import { MappingFields as OrderItemMappingField } from 'modules/task/form/components/ParentEntity/components/OrderItemValueSpy';
 import { MappingFields as BatchMappingField } from 'modules/task/form/components/ParentEntity/components/BatchValueSpy';
@@ -46,6 +47,7 @@ const defaultMappingFields = {
 };
 
 export default function AutoDateBinding({ tasks, type, values, setTaskValue }: Props) {
+  const { user } = useUser();
   React.useEffect(() => {
     const mappingFields = {
       Order: OrderMappingField,
@@ -79,76 +81,58 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
           if (startDateBinding === DUE_DATE) {
             // do the due date first
             if (dueDateBinding) {
-              const { months, weeks, days } = dueDateInterval || {};
-
-              newDueDate = calculateDate({
-                date: mappingDate({
+              newDueDate = calculateBindingDate(
+                mappingDate({
                   field: dueDateBinding,
                   mappingFields: mappingFields[type],
                   values: latestValues,
                   task,
                 }),
-                duration: findDuration({ months, weeks }),
-                offset: months || weeks || days,
-              });
+                dueDateInterval,
+                user.timezone
+              );
             }
-            const { months, weeks, days } = startDateInterval || {};
-            newStartDate = calculateDate({
-              date: newDueDate,
-              duration: findDuration({ months, weeks }),
-              offset: months || weeks || days,
-            });
+            newStartDate = calculateBindingDate(newDueDate, startDateInterval, user.timezone);
           } else if (dueDateBinding === START_DATE) {
             // do the start date first
             if (startDateBinding) {
-              const { months, weeks, days } = startDateInterval || {};
-
-              newStartDate = calculateDate({
-                date: mappingDate({
+              newStartDate = calculateBindingDate(
+                mappingDate({
                   field: startDateBinding,
                   mappingFields: mappingFields[type],
                   values: latestValues,
                   task,
                 }),
-                duration: findDuration({ months, weeks }),
-                offset: months || weeks || days,
-              });
+                startDateInterval,
+                user.timezone
+              );
             }
-            const { months, weeks, days } = dueDateInterval || {};
-            newDueDate = calculateDate({
-              date: newStartDate,
-              duration: findDuration({ months, weeks }),
-              offset: months || weeks || days,
-            });
+            newDueDate = calculateBindingDate(newStartDate, dueDateInterval, user.timezone);
           } else {
             if (startDateBinding) {
-              const { months, weeks, days } = startDateInterval || {};
-
-              newStartDate = calculateDate({
-                date: mappingDate({
+              newStartDate = calculateBindingDate(
+                mappingDate({
                   field: startDateBinding,
                   mappingFields: mappingFields[type],
                   values: latestValues,
                   task,
                 }),
-                duration: findDuration({ months, weeks }),
-                offset: months || weeks || days,
-              });
+                startDateInterval,
+                user.timezone
+              );
             }
 
             if (dueDateBinding) {
-              const { months, weeks, days } = dueDateInterval || {};
-
-              newDueDate = calculateDate({
-                date: mappingDate({
+              newDueDate = calculateBindingDate(
+                mappingDate({
                   field: dueDateBinding,
                   mappingFields: mappingFields[type],
                   values: latestValues,
                   task,
                 }),
-                duration: findDuration({ months, weeks }),
-                offset: months || weeks || days,
-              });
+                dueDateInterval,
+                user.timezone
+              );
             }
           }
 
@@ -168,6 +152,6 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
     return () => {
       emitter.removeAllListeners('AUTO_DATE');
     };
-  }, [type, values, tasks, setTaskValue]);
+  }, [type, values, tasks, setTaskValue, user.timezone]);
   return null;
 }

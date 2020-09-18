@@ -9,7 +9,7 @@ import {
   ToggleInput,
 } from 'components/Form';
 import { FormField } from 'modules/form';
-import { calculateBindingDate } from 'utils/project';
+import { calculateBindingDate } from 'utils/date';
 import useUser from 'hooks/useUser';
 import {
   AutoDateWrapperStyle,

@@ -4,6 +4,7 @@ import client from 'apollo';
 import emitter from 'utils/emitter';
 import { getByPath } from 'utils/fp';
 import logger from 'utils/logger';
+import useUser from 'hooks/useUser';
 import { batchAutoDateQuery } from './query';
 import type { Offset, BindingField, Duration } from '../type.js.flow';
 import { autoCalculateDate, bindingRelateField } from '../autoCalculateDate';
@@ -28,6 +29,7 @@ export const MappingFields = {
 };
 
 export default function BatchValueSpy({ values, task, inParentEntityForm, setTaskValue }: Props) {
+  const { user } = useUser();
   React.useEffect(() => {
     emitter.addListener('FIND_BATCH_VALUE', (bindingData: mixed) => {
       const field = getByPath('field', bindingData);
@@ -61,12 +63,14 @@ export default function BatchValueSpy({ values, task, inParentEntityForm, setTas
           field,
           setTaskValue,
           selectedField,
+          timezone: user.timezone,
         });
         bindingRelateField({
           selectedField,
           date,
           task,
           setTaskValue,
+          timezone: user.timezone,
         });
       } else {
         logger.warn('query order data for id', client);
@@ -93,12 +97,14 @@ export default function BatchValueSpy({ values, task, inParentEntityForm, setTas
               field,
               setTaskValue,
               selectedField,
+              timezone: user.timezone,
             });
             bindingRelateField({
               selectedField,
               task,
               date,
               setTaskValue,
+              timezone: user.timezone,
             });
           });
       }

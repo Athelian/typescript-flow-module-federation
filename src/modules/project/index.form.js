@@ -177,7 +177,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
       projectTagsState.initDetailValues(tags);
     }
     if (milestones && Array.isArray(milestones) && milestones.length) {
-      projectMilestonesState.initDetailValues(milestones);
+      projectMilestonesState.initDetailValues(milestones, [], timezone);
     }
     return null;
   };

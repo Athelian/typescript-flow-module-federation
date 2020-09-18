@@ -3,10 +3,10 @@ import { omit, flatten, set, cloneDeep } from 'lodash';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import type { User, Milestone, Task, FilePayload } from 'generated/graphql';
-import { isEquals, getByPathWithDefault, getByPath } from 'utils/fp';
+import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { uuid } from 'utils/id';
 import { calculateTasks, setToSkipTask, setToComplete, START_DATE, DUE_DATE } from 'utils/task';
-import { calculateNewDate } from 'utils/date';
+import { initDatetimeToContainer, calculateBindingDate } from 'utils/date';
 
 type FormState = {
   milestones: Array<Milestone>,
@@ -20,7 +20,7 @@ export const initValues: FormState = {
   ignoreTaskIds: [],
 };
 
-const generateTask = (task: Object) => {
+const generateTask = (task: Object, timezone: string) => {
   const defaultMappingFields = {
     MilestoneDueDate: 'milestone.dueDate',
   };
@@ -42,16 +42,10 @@ const generateTask = (task: Object) => {
     if (dueDateBinding) {
       const path = defaultMappingFields[dueDateBinding];
       if (path) {
-        newDueDate = calculateNewDate({
-          date: getByPath(path, task),
-          dateInterval: dueDateInterval,
-        });
+        newDueDate = calculateBindingDate(task?.[path], dueDateInterval, timezone);
       }
     }
-    newStartDate = calculateNewDate({
-      date: newDueDate,
-      dateInterval: startDateInterval,
-    });
+    newStartDate = calculateBindingDate(newDueDate, startDateInterval, timezone);
 
     return {
       ...task,
@@ -65,17 +59,11 @@ const generateTask = (task: Object) => {
     if (startDateBinding) {
       const path = defaultMappingFields[startDateBinding];
       if (path) {
-        newStartDate = calculateNewDate({
-          date: getByPath(path, task),
-          dateInterval: startDateInterval,
-        });
+        newStartDate = calculateBindingDate(task?.[path], startDateInterval, timezone);
       }
     }
 
-    newDueDate = calculateNewDate({
-      date: newStartDate,
-      dateInterval: dueDateInterval,
-    });
+    newDueDate = calculateBindingDate(newStartDate, dueDateInterval, timezone);
     return {
       ...task,
       startDate: newStartDate,
@@ -86,20 +74,14 @@ const generateTask = (task: Object) => {
   if (startDateBinding) {
     const path = defaultMappingFields[startDateBinding];
     if (path) {
-      newStartDate = calculateNewDate({
-        date: getByPath(path, task),
-        dateInterval: startDateInterval,
-      });
+      newStartDate = calculateBindingDate(task?.[path], startDateInterval, timezone);
     }
   }
 
   if (dueDateBinding) {
     const path = defaultMappingFields[dueDateBinding];
     if (path) {
-      newDueDate = calculateNewDate({
-        date: getByPath(path, task),
-        dateInterval: dueDateInterval,
-      });
+      newDueDate = calculateBindingDate(task?.[path], dueDateInterval, timezone);
     }
   }
 
@@ -166,12 +148,22 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     });
   };
 
-  initDetailValues = (milestones: Array<Milestone>, ignoreTaskIds: Array<string> = []) => {
-    this.setState({ milestones, needDeletedFiles: [], ignoreTaskIds });
-    this.originalValues = { milestones, needDeletedFiles: [], ignoreTaskIds };
-    this.originalTasks = (flatten(
-      milestones.map(item => getByPathWithDefault([], 'tasks', item))
-    ): Array<Task>);
+  initDetailValues = (
+    milestones: Array<Milestone>,
+    ignoreTaskIds: Array<string> = [],
+    timezone: string
+  ) => {
+    const parsedMilestones: Array<Milestone> = milestones.map(
+      ({ dueDate, estimatedCompletionDate, completedAt, ...rest }) => ({
+        ...initDatetimeToContainer(dueDate, 'dueDate', timezone),
+        ...initDatetimeToContainer(estimatedCompletionDate, 'estimatedCompletionDate', timezone),
+        ...initDatetimeToContainer(completedAt, 'completedAt', timezone),
+        ...rest,
+      })
+    );
+    this.setState({ milestones: parsedMilestones, needDeletedFiles: [], ignoreTaskIds });
+    this.originalValues = { milestones: parsedMilestones, needDeletedFiles: [], ignoreTaskIds };
+    this.originalTasks = (flatten(milestones.map(item => item?.tasks ?? [])): Array<Task>);
     this.deleteTasks = [];
   };
 
@@ -408,7 +400,7 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     }));
   };
 
-  changeMilestones = (columns: Object) => {
+  changeMilestones = (columns: Object, timezone: string) => {
     const ordering = Object.keys(columns);
     this.setState(prevState => ({
       milestones: ordering.map(id => {
@@ -416,10 +408,13 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
         return {
           ...milestone,
           tasks: columns[id].map((task, milestoneSort) => {
-            const { milestone: unused, ...rest } = generateTask({
-              ...task,
-              milestone,
-            });
+            const { milestone: unused, ...rest } = generateTask(
+              {
+                ...task,
+                milestone,
+              },
+              timezone
+            );
             return {
               ...rest,
               milestoneSort,

@@ -1,7 +1,6 @@
 // @flow
-import moment from 'moment';
-import { formatUTCDatetimeToDatetimeWithTimezone } from 'utils/date';
 import type { Task } from 'generated/graphql';
+import { calculateBindingDate } from './date';
 
 type ProjectInfo = {
   dueDate: ?Date,
@@ -9,33 +8,6 @@ type ProjectInfo = {
     id: string,
     dueDate: ?Date,
   }>,
-};
-
-// baseDate = Datetime with timezone format
-// returns Datetime with timezone format with the dateInterval added to it
-export const calculateBindingDate = (
-  baseDate: string,
-  dateInterval: Object,
-  timezone: string
-): ?string => {
-  if (baseDate) {
-    const { months, weeks, days } = dateInterval || {};
-    const dateObj = moment.utc(baseDate);
-
-    if (months) {
-      dateObj.add(months, 'months');
-    } else if (weeks) {
-      dateObj.add(weeks, 'weeks');
-    } else if (days) {
-      dateObj.add(days, 'days');
-    }
-
-    return formatUTCDatetimeToDatetimeWithTimezone(
-      dateObj.format('YYYY-MM-DDTHH:mm:ss').concat('Z'),
-      timezone
-    );
-  }
-  return null;
 };
 
 type calculateMilestonesEstimatedCompletionDateType = (
