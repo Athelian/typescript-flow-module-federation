@@ -42,18 +42,10 @@ const generateTask = (task: Object, timezone: string) => {
     if (dueDateBinding) {
       const path = defaultMappingFields[dueDateBinding];
       if (path) {
-        newDueDate = calculateBindingDate({
-          date: task?.[path],
-          dateInterval: dueDateInterval,
-          timezone,
-        });
+        newDueDate = calculateBindingDate(task?.[path], dueDateInterval, timezone);
       }
     }
-    newStartDate = calculateBindingDate({
-      date: newDueDate,
-      dateInterval: startDateInterval,
-      timezone,
-    });
+    newStartDate = calculateBindingDate(newDueDate, startDateInterval, timezone);
 
     return {
       ...task,
@@ -67,19 +59,11 @@ const generateTask = (task: Object, timezone: string) => {
     if (startDateBinding) {
       const path = defaultMappingFields[startDateBinding];
       if (path) {
-        newStartDate = calculateBindingDate({
-          date: task?.[path],
-          dateInterval: startDateInterval,
-          timezone,
-        });
+        newStartDate = calculateBindingDate(task?.[path], startDateInterval, timezone);
       }
     }
 
-    newDueDate = calculateBindingDate({
-      date: newStartDate,
-      dateInterval: dueDateInterval,
-      timezone,
-    });
+    newDueDate = calculateBindingDate(newStartDate, dueDateInterval, timezone);
     return {
       ...task,
       startDate: newStartDate,
@@ -90,22 +74,14 @@ const generateTask = (task: Object, timezone: string) => {
   if (startDateBinding) {
     const path = defaultMappingFields[startDateBinding];
     if (path) {
-      newStartDate = calculateBindingDate({
-        date: task?.[path],
-        dateInterval: startDateInterval,
-        timezone,
-      });
+      newStartDate = calculateBindingDate(task?.[path], startDateInterval, timezone);
     }
   }
 
   if (dueDateBinding) {
     const path = defaultMappingFields[dueDateBinding];
     if (path) {
-      newDueDate = calculateBindingDate({
-        date: task?.[path],
-        dateInterval: dueDateInterval,
-        timezone,
-      });
+      newDueDate = calculateBindingDate(task?.[path], dueDateInterval, timezone);
     }
   }
 

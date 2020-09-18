@@ -28,7 +28,7 @@ type Props = {|
   projectInfo: ProjectInfo,
   ordered: Object,
   onChangeOrdering: (Array<string>) => void,
-  onChangeColumns: MilestoneMap => void,
+  onChangeColumns: (MilestoneMap, string) => void,
   onChangeTask: ({ milestoneId: string, taskId: string, task: Task }) => void,
   onRemoveTask: ({ milestoneId: string, taskId: string, isDelete: boolean }) => void,
   editable: {
