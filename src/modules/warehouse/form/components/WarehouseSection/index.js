@@ -327,11 +327,19 @@ const WarehouseSection = ({ isNew, isClone, isLoading, warehouse }: Props) => {
                               {opened && (
                                 <SelectPartners
                                   partnerTypes={[]}
-                                  selected={values.organizations}
+                                  selected={values.organizations.map(org => org?.partner)}
                                   onCancel={() => slideToggle(false)}
                                   onSelect={selected => {
+                                    const assembledOrgs = selected.map(
+                                      ({ organization: org, ...partner }) => ({
+                                        ...org,
+                                        partner: {
+                                          ...partner,
+                                        },
+                                      })
+                                    );
                                     slideToggle(false);
-                                    setFieldValue('organizations', selected);
+                                    setFieldValue('organizations', assembledOrgs);
                                   }}
                                 />
                               )}
