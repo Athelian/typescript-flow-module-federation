@@ -19,7 +19,7 @@ import {
   Label,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
-import { todayForDateInput } from 'utils/date';
+import { newDateTZ } from 'utils/date';
 import useUser from 'hooks/useUser';
 import { calculateMilestonesEstimatedCompletionDate } from 'utils/project';
 import usePermission from 'hooks/usePermission';
@@ -225,7 +225,7 @@ const MilestoneSection = ({ intl }: Props) => {
                               onChange={event => {
                                 const { value: status } = event.target;
                                 if (status === 'completed') {
-                                  setFieldValue('completedAt', todayForDateInput());
+                                  setFieldValue('completedAt', newDateTZ(user.timezone));
                                   setFieldValue('completedBy', user);
                                 } else {
                                   setFieldValue('completedAt', null);
@@ -281,6 +281,7 @@ const MilestoneSection = ({ intl }: Props) => {
                             vertical
                             required
                             editable={canCreateOrUpdate}
+                            handleTimezone
                           />
                         )}
                       </FormField>

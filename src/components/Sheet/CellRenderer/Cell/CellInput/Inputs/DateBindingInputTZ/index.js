@@ -22,7 +22,7 @@ import {
 type DateBinding = {
   binding: ?(TaskDateBinding | MilestoneDateBinding),
   interval: ?IntervalInput,
-  date: ?(string | Date),
+  date: ?string,
 };
 
 type Binding = {
