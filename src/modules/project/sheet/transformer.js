@@ -321,7 +321,7 @@ function transformMilestone(
     },
     {
       columnKey: `milestones.${milestoneIdx}.dueDate`,
-      type: 'date_binding',
+      type: 'date_binding_tz',
       computed: () => [
         {
           value: MilestoneDateBindingValues.ProjectDueDate,
@@ -339,7 +339,7 @@ function transformMilestone(
     },
     {
       columnKey: `milestones.${milestoneIdx}.estimatedCompletionDate`,
-      type: 'date_binding',
+      type: 'date_binding_tz',
       computed: () => [
         {
           value: MilestoneDateBindingValues.MilestoneCompleteDate,
@@ -382,7 +382,7 @@ function transformMilestone(
     },
     {
       columnKey: `milestones.${milestoneIdx}.statusDate`,
-      type: 'status_date',
+      type: 'status_date_tz',
       hide: project => {
         const currentMilestone = getCurrentMilestone(milestone.id, project);
         return currentMilestone.status === 'uncompleted';
