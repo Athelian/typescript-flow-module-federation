@@ -30,7 +30,16 @@ type Props = {
 const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
   <Subscribe to={[FieldDefinitionsContainer, FormContainer]}>
     {(
-      { state, originalValues, initDetailValues, isDirty, onSuccess, onReset, ...fieldHelpers },
+      {
+        state,
+        originalValues,
+        initDetailValues,
+        isDirty,
+        hasChangedValues,
+        onSuccess,
+        onReset,
+        ...fieldHelpers
+      },
       form
     ) => (
       <Query
@@ -71,7 +80,7 @@ const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
                           defaultMessage="CUSTOM FIELDS"
                         />
                       </Label>
-                      {isDirty() && (
+                      {isDirty() && hasChangedValues() && (
                         <GridRow gap="20px">
                           <ResetFormButton
                             onClick={() => {

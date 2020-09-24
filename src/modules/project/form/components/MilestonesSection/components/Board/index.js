@@ -5,6 +5,7 @@ import type { Task } from 'generated/graphql';
 import type { DropResult, DroppableProvided } from 'react-beautiful-dnd';
 import { ProjectMilestonesContainer } from 'modules/project/form/containers';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { UserConsumer } from 'contexts/Viewer';
 import { injectProjectAndMilestoneDueDate } from 'utils/project';
 import MilestoneColumn from '../MilestoneColumn';
 import NewButtonColumn from '../NewButtonColumn';
@@ -27,7 +28,7 @@ type Props = {|
   projectInfo: ProjectInfo,
   ordered: Object,
   onChangeOrdering: (Array<string>) => void,
-  onChangeColumns: MilestoneMap => void,
+  onChangeColumns: (MilestoneMap, string) => void,
   onChangeTask: ({ milestoneId: string, taskId: string, task: Task }) => void,
   onRemoveTask: ({ milestoneId: string, taskId: string, isDelete: boolean }) => void,
   editable: {
@@ -82,7 +83,7 @@ const reorderMilestoneMap = ({ milestoneMap, source, destination }: Object): Obj
 export default class Board extends Component<Props> {
   boardRef: ?HTMLElement;
 
-  onDragEnd = (result: DropResult) => {
+  onDragEnd = (result: DropResult, timezone: string) => {
     const {
       ordered: prevOrdered,
       columns: prevColumns,
@@ -104,7 +105,7 @@ export default class Board extends Component<Props> {
         ...prevColumns,
         [result.source.droppableId]: withTaskRemoved,
       };
-      onChangeColumns(columns);
+      onChangeColumns(columns, timezone);
       return;
     }
 
@@ -136,7 +137,7 @@ export default class Board extends Component<Props> {
       destination,
     });
 
-    onChangeColumns(data.milestoneMap);
+    onChangeColumns(data.milestoneMap, timezone);
   };
 
   render() {
@@ -197,6 +198,14 @@ export default class Board extends Component<Props> {
       </Droppable>
     );
 
-    return <DragDropContext onDragEnd={this.onDragEnd}>{board}</DragDropContext>;
+    return (
+      <UserConsumer>
+        {({ user }) => (
+          <DragDropContext onDragEnd={result => this.onDragEnd(result, user.timezone)}>
+            {board}
+          </DragDropContext>
+        )}
+      </UserConsumer>
+    );
   }
 }

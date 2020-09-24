@@ -3,11 +3,18 @@ import * as React from 'react';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
-import { WAREHOUSE_FORM, WAREHOUSE_CREATE } from 'modules/permission/constants/warehouse';
+import {
+  WAREHOUSE_FORM,
+  WAREHOUSE_CREATE,
+  WAREHOUSE_UPDATE,
+  WAREHOUSE_SET_ARCHIVED,
+} from 'modules/permission/constants/warehouse';
 import usePermission from 'hooks/usePermission';
 import GridView from 'components/GridView';
 import { WarehouseCard, CardAction } from 'components/Cards';
 import { encodeId } from 'utils/id';
+import { BooleanValue } from 'react-values';
+import { WarehouseActivateDialog, WarehouseArchiveDialog } from 'modules/warehouse/common/Dialog';
 
 type Props = {
   items: Array<Object>,
@@ -21,30 +28,56 @@ const defaultRenderItem = ({
   item,
   allowViewForm,
   allowCreate,
+  allowChangeStatus,
   currentUserGroupId,
 }: {
   item: Object,
   allowViewForm: boolean,
   allowCreate: boolean,
+  allowChangeStatus: boolean,
   currentUserGroupId: string,
 }) => {
   const allowClone = allowCreate && item.ownedBy && currentUserGroupId === item.ownedBy.id;
 
   return (
-    <WarehouseCard
-      key={item.id}
-      warehouse={item}
-      onClick={allowViewForm ? () => navigate(`/warehouse/${encodeId(item.id)}`) : null}
-      showActionsOnHover
-      actions={[
-        allowClone && (
-          <CardAction
-            icon="CLONE"
-            onClick={() => navigate(`/warehouse/clone/${encodeId(item.id)}`)}
+    <BooleanValue key={item.id}>
+      {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+        <>
+          {item.archived ? (
+            <WarehouseActivateDialog
+              onRequestClose={() => dialogToggle(false)}
+              isOpen={statusDialogIsOpen}
+              warehouse={item}
+            />
+          ) : (
+            <WarehouseArchiveDialog
+              onRequestClose={() => dialogToggle(false)}
+              isOpen={statusDialogIsOpen}
+              warehouse={item}
+            />
+          )}
+          <WarehouseCard
+            warehouse={item}
+            onClick={allowViewForm ? () => navigate(`/warehouse/${encodeId(item.id)}`) : null}
+            showActionsOnHover
+            actions={[
+              allowClone && (
+                <CardAction
+                  icon="CLONE"
+                  onClick={() => navigate(`/warehouse/clone/${encodeId(item.id)}`)}
+                />
+              ),
+              allowChangeStatus && (
+                <CardAction
+                  icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
+                  onClick={() => dialogToggle(true)}
+                />
+              ),
+            ].filter(Boolean)}
           />
-        ),
-      ].filter(Boolean)}
-    />
+        </>
+      )}
+    </BooleanValue>
   );
 };
 
@@ -63,6 +96,8 @@ const WarehouseGridView = ({
   const { organization } = useUser();
   const allowViewForm = hasPermission(WAREHOUSE_FORM);
   const allowCreate = hasPermission(WAREHOUSE_CREATE);
+  const allowChangeStatus =
+    hasPermission(WAREHOUSE_UPDATE) || hasPermission(WAREHOUSE_SET_ARCHIVED);
 
   return (
     <GridView
@@ -76,7 +111,13 @@ const WarehouseGridView = ({
       }
     >
       {items.map(item =>
-        renderItem({ item, allowViewForm, allowCreate, currentUserGroupId: organization.id })
+        renderItem({
+          item,
+          allowViewForm,
+          allowCreate,
+          allowChangeStatus,
+          currentUserGroupId: organization.id,
+        })
       )}
     </GridView>
   );

@@ -3,6 +3,7 @@ import * as React from 'react';
 import emitter from 'utils/emitter';
 import { getByPath } from 'utils/fp';
 import logger from 'utils/logger';
+import useUser from 'hooks/useUser';
 import { mappingDate } from '../mappingDate';
 import { autoCalculateDate, bindingRelateField } from '../autoCalculateDate';
 import type { Offset, BindingField, Duration } from '../type.js.flow';
@@ -22,6 +23,7 @@ export const MappingFields = {
 };
 
 export default function ProductValueSpy({ values, task, inParentEntityForm, setTaskValue }: Props) {
+  const { user } = useUser();
   React.useEffect(() => {
     emitter.addListener('FIND_PRODUCT_VALUE', (bindingData: mixed) => {
       const field = getByPath('field', bindingData);
@@ -54,12 +56,14 @@ export default function ProductValueSpy({ values, task, inParentEntityForm, setT
         field,
         setTaskValue,
         selectedField,
+        timezone: user.timezone,
       });
       bindingRelateField({
         selectedField,
         date,
         task,
         setTaskValue,
+        timezone: user.timezone,
       });
     });
 

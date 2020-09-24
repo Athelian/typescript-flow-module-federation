@@ -5,6 +5,7 @@ import emitter from 'utils/emitter';
 import { getByPath } from 'utils/fp';
 import logger from 'utils/logger';
 import { decodeId } from 'utils/id';
+import useUser from 'hooks/useUser';
 import { orderItemAutoDateQuery } from './query';
 import { mappingDate } from '../mappingDate';
 import { autoCalculateDate, bindingRelateField } from '../autoCalculateDate';
@@ -28,6 +29,7 @@ export const MappingFields = {
 };
 
 export default function OrderItemValueSpy({ entity, values, task, location, setTaskValue }: Props) {
+  const { user } = useUser();
   React.useEffect(() => {
     emitter.addListener('FIND_ORDERITEM_VALUE', (bindingData: mixed) => {
       const field = getByPath('field', bindingData);
@@ -92,12 +94,14 @@ export default function OrderItemValueSpy({ entity, values, task, location, setT
               field,
               setTaskValue,
               selectedField,
+              timezone: user.timezone,
             });
             bindingRelateField({
               selectedField,
               task,
               date,
               setTaskValue,
+              timezone: user.timezone,
             });
           });
       } else {
@@ -109,12 +113,14 @@ export default function OrderItemValueSpy({ entity, values, task, location, setT
           field,
           setTaskValue,
           selectedField,
+          timezone: user.timezone,
         });
         bindingRelateField({
           selectedField,
           date,
           task,
           setTaskValue,
+          timezone: user.timezone,
         });
       }
     });

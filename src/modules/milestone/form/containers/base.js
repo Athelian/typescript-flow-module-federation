@@ -2,6 +2,7 @@
 import { Container } from 'unstated';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
+import { initDatetimeToContainer } from 'utils/date';
 
 type FormState = {
   name: string,
@@ -44,8 +45,16 @@ export default class MilestoneStateContainer extends Container<FormState> {
     });
   };
 
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...values };
+  initDetailValues = (values: Object, timezone: string) => {
+    const { dueDate, estimatedCompletionDate, completedAt, ...rest } = values;
+    const info = {
+      ...initDatetimeToContainer(dueDate, 'dueDate', timezone),
+      ...initDatetimeToContainer(estimatedCompletionDate, 'estimatedCompletionDate', timezone),
+      ...initDatetimeToContainer(completedAt, 'completedAt', timezone),
+      ...rest,
+    };
+
+    const parsedValues = { ...initValues, ...info };
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };
   };

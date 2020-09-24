@@ -12,7 +12,7 @@ export const mappingDate = ({
   task: Task,
   values: Order | Batch,
   mappingFields: Object,
-}): ?(string | Date) => {
+}): ?string => {
   const path = mappingFields[field] || 'N/A';
   if (field.includes('DueDate') || field.includes('StartDate')) {
     return getByPath(path, task);

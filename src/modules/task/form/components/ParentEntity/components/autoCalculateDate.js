@@ -1,6 +1,6 @@
 // @flow
 import { START_DATE, DUE_DATE } from 'utils/task';
-import { calculateDate, findDuration } from 'utils/date';
+import { calculateBindingDate } from 'utils/date';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import type { Task } from 'generated/graphql';
@@ -13,24 +13,26 @@ export function autoCalculateDate({
   field,
   setTaskValue,
   selectedField,
+  timezone,
 }: {|
   autoDateDuration: Duration,
-  date: ?(string | Date),
+  date: ?string,
   autoDateOffset: Offset,
   field: string,
   setTaskValue: Function,
   selectedField: string,
+  timezone: string,
 |}) {
   let result = date;
+
   if (autoDateDuration) {
-    result = calculateDate({
-      date,
-      duration: autoDateDuration.metric,
-      offset:
+    const dateInterval = {
+      [(autoDateDuration.metric: string)]:
         autoDateOffset === 'after'
           ? Math.abs(autoDateDuration.value)
           : -Math.abs(autoDateDuration.value),
-    });
+    };
+    result = calculateBindingDate(date, dateInterval, timezone);
   }
   if (![START_DATE, DUE_DATE].includes(field)) {
     logger.warn({
@@ -52,36 +54,22 @@ export function bindingRelateField({
   task,
   setTaskValue,
   date,
+  timezone,
 }: {|
   selectedField: BindingField,
   task: Task,
   setTaskValue: Function,
-  date: ?(string | Date),
+  date: ?string,
+  timezone: string,
 |}) {
   if (selectedField === 'startDate') {
     if (task.dueDateBinding === START_DATE) {
-      const { weeks, months, days } = task.dueDateInterval || {};
-      setTaskValue(
-        'dueDate',
-        calculateDate({
-          date,
-          duration: findDuration({ weeks, months }),
-          offset: weeks || months || days,
-        })
-      );
+      setTaskValue('dueDate', calculateBindingDate(date, task.dueDateInterval, timezone));
     }
   }
   if (selectedField === 'dueDate') {
     if (task.startDateBinding === DUE_DATE) {
-      const { weeks, months, days } = task.startDateInterval || {};
-      setTaskValue(
-        'startDate',
-        calculateDate({
-          date,
-          duration: findDuration({ weeks, months }),
-          offset: weeks || months || days,
-        })
-      );
+      setTaskValue('startDate', calculateBindingDate(date, task.startDateInterval, timezone));
     }
   }
 }

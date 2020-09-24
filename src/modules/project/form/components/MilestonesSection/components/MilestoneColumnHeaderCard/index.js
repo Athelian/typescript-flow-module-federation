@@ -5,9 +5,13 @@ import { Subscribe } from 'unstated';
 import { BooleanValue, NumberValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
-import { formatDateToGraphql, startOfToday, differenceInCalendarDays } from 'utils/date';
+import {
+  formatDateToGraphql,
+  startOfToday,
+  differenceInCalendarDays,
+  calculateBindingDate,
+} from 'utils/date';
 import { isEquals } from 'utils/fp';
-import { calculateBindingDate } from 'utils/project';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import useHover from 'hooks/useHover';
@@ -115,7 +119,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
         } = currentMilestone;
 
         const dueDate = dueDateBinding
-          ? calculateBindingDate(projectInfoState.dueDate, dueDateInterval)
+          ? calculateBindingDate(projectInfoState.dueDate, dueDateInterval, user.timezone)
           : rawDueDate;
 
         const completedAtAndDueDateDiff =
@@ -357,6 +361,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                             inputWidth="130px"
                             inputHeight="20px"
                             hideTooltip
+                            handleTimezone
                           />
                         )}
                       </FormField>
@@ -397,6 +402,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               hideTooltip
                               required
                               diff={completedAtAndDueDateDiff}
+                              handleTimezone
                             />
                           )}
                         </FormField>
@@ -437,6 +443,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               inputWidth="130px"
                               inputHeight="20px"
                               hideTooltip
+                              handleTimezone
                             />
                           )}
                         </FormField>

@@ -9,7 +9,8 @@ import {
   ToggleInput,
 } from 'components/Form';
 import { FormField } from 'modules/form';
-import { calculateBindingDate } from 'utils/project';
+import { calculateBindingDate } from 'utils/date';
+import useUser from 'hooks/useUser';
 import {
   AutoDateWrapperStyle,
   DateBindingSignWrapperStyle,
@@ -54,6 +55,7 @@ const DateBindingInput = ({
   bindingEditable,
 }: Props) => {
   const [dateBindingSign, setDateBindingSign] = React.useState('before');
+  const { user } = useUser();
 
   let bound = false;
   let dateBindingValue = 0;
@@ -62,7 +64,7 @@ const DateBindingInput = ({
 
   if (values[dateBinding]) {
     bound = true;
-    date = calculateBindingDate(baseDate, values[dateInterval]);
+    date = calculateBindingDate(baseDate, values[dateInterval], user.timezone);
 
     const { months, weeks, days } = values[dateInterval] || {};
     if (months) {
@@ -104,7 +106,7 @@ const DateBindingInput = ({
               setFieldValue(dateInterval, {
                 days: 0,
               });
-              setFieldValue(dateName, calculateBindingDate(baseDate, { days: 0 }));
+              setFieldValue(dateName, calculateBindingDate(baseDate, { days: 0 }, user.timezone));
               setDateBindingSign('before');
             }
           }}
@@ -130,6 +132,7 @@ const DateBindingInput = ({
             originalValue={originalValues[name]}
             editable={manualEditable && !bound}
             hideTooltip={bound}
+            handleTimezone
           />
         )}
       </FormField>
@@ -149,7 +152,10 @@ const DateBindingInput = ({
                 setFieldValue(dateInterval, {
                   [metric]: realValue,
                 });
-                setFieldValue(dateName, calculateBindingDate(baseDate, { [metric]: realValue }));
+                setFieldValue(
+                  dateName,
+                  calculateBindingDate(baseDate, { [metric]: realValue }, user.timezone)
+                );
               }}
             >
               {({ name, ...inputHandlers }) => (
@@ -183,7 +189,7 @@ const DateBindingInput = ({
                   /* $FlowFixMe This comment suppresses an error found when
                    * upgrading Flow to v0.111.0. To view the error, delete this
                    * comment and run Flow. */
-                  calculateBindingDate(baseDate, { [dateBindingMetric]: realValue })
+                  calculateBindingDate(baseDate, { [dateBindingMetric]: realValue }, user.timezone)
                 );
                 setDateBindingSign(value);
               }}

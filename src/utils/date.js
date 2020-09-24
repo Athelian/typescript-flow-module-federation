@@ -299,37 +299,6 @@ export const startOfToday = (): Date => zonedTimeToUtc(startOfDay(new Date()), u
 export const todayForDateInput = (): string =>
   formatToDateInput(zonedTimeToUtc(startOfDay(new Date()), utcTimeZone));
 
-// --- date binding utils ---
-const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z";
-export const calculateDate = ({
-  date: selectedDate,
-  duration,
-  offset = 0,
-}: {
-  date: ?Date | ?string,
-  duration: 'days' | 'weeks' | 'months',
-  offset: number,
-}) => {
-  if (!selectedDate) return null;
-
-  const date = new Date(selectedDate);
-
-  if (!isValid(date)) {
-    return null;
-  }
-
-  switch (duration) {
-    case 'weeks':
-      return format(startOfDay(addWeeks(date, offset)), DATE_FORMAT);
-
-    case 'months':
-      return format(startOfDay(addMonths(date, offset)), DATE_FORMAT);
-
-    default:
-      return format(startOfDay(addDays(date, offset)), DATE_FORMAT);
-  }
-};
-
 export const findDuration = ({
   months,
   weeks,
@@ -344,21 +313,6 @@ export const findDuration = ({
     duration = 'weeks';
   }
   return duration;
-};
-
-export const calculateNewDate = ({
-  date,
-  dateInterval,
-}: {
-  date: ?string,
-  dateInterval?: Object,
-}) => {
-  const { months, weeks, days } = dateInterval || {};
-  return calculateDate({
-    date,
-    duration: findDuration({ months, weeks }),
-    offset: months || weeks || days,
-  });
 };
 
 // freeTimeStartDate = Datetime with timezone format
@@ -386,4 +340,31 @@ export const calculateDateDifferenceInDays = (date1: string, date2: string): num
   const result = moment.utc(date1).diff(moment.utc(date2), 'days');
 
   return result;
+};
+
+// baseDate = Datetime with timezone format
+// returns Datetime with timezone format with the dateInterval added to it
+export const calculateBindingDate = (
+  baseDate: ?string,
+  dateInterval: Object,
+  timezone: string
+): ?string => {
+  if (baseDate) {
+    const { months, weeks, days } = dateInterval || {};
+    const dateObj = moment.utc(baseDate);
+
+    if (months) {
+      dateObj.add(months, 'months');
+    } else if (weeks) {
+      dateObj.add(weeks, 'weeks');
+    } else if (days) {
+      dateObj.add(days, 'days');
+    }
+
+    return formatUTCDatetimeToDatetimeWithTimezone(
+      dateObj.format('YYYY-MM-DDTHH:mm:ss').concat('Z'),
+      timezone
+    );
+  }
+  return null;
 };

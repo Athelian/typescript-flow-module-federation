@@ -1,6 +1,6 @@
 // @flow
-import { isValid, addMonths, addWeeks, addDays, formatToDateInput } from 'utils/date';
 import type { Task } from 'generated/graphql';
+import { calculateBindingDate } from './date';
 
 type ProjectInfo = {
   dueDate: ?Date,
@@ -10,28 +10,17 @@ type ProjectInfo = {
   }>,
 };
 
-export const calculateBindingDate = (date: string, dateInterval: Object): ?string => {
-  const baseDate = date && isValid(new Date(date)) ? new Date(date) : null;
-  if (baseDate) {
-    const { months, weeks, days } = dateInterval || {};
-    if (months) {
-      return formatToDateInput(addMonths(baseDate, months).toString());
-    }
-    if (weeks) {
-      return formatToDateInput(addWeeks(baseDate, weeks).toString());
-    }
+type calculateMilestonesEstimatedCompletionDateType = (
+  {
+    milestones: Array<Object>,
+  },
+  timezone: string
+) => Array<string>;
 
-    return formatToDateInput(addDays(baseDate, days || 0).toString());
-  }
-  return null;
-};
-
-type calculateMilestonesEstimatedCompletionDateType = ({
-  milestones: Array<Object>,
-}) => Array<string>;
-export const calculateMilestonesEstimatedCompletionDate: calculateMilestonesEstimatedCompletionDateType = ({
-  milestones = [],
-}) => {
+export const calculateMilestonesEstimatedCompletionDate: calculateMilestonesEstimatedCompletionDateType = (
+  { milestones = [] },
+  timezone
+) => {
   const estimatedCompletionDates = Array(milestones.length).fill(null);
 
   milestones.forEach((milestone, index) => {
@@ -47,7 +36,8 @@ export const calculateMilestonesEstimatedCompletionDate: calculateMilestonesEsti
       const baseDate = estimatedCompletionDates[index - 1];
       estimatedCompletionDates[index] = calculateBindingDate(
         baseDate,
-        milestone.estimatedCompletionDateInterval
+        milestone.estimatedCompletionDateInterval,
+        timezone
       );
     } else {
       estimatedCompletionDates[index] = milestone.estimatedCompletionDate || null;

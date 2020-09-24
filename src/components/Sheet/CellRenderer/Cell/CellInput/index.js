@@ -41,6 +41,8 @@ import DateInputTZ from './Inputs/DateInputTZ';
 import DateToggleInputTZ from './Inputs/DateToggleInputTZ';
 import DateRevisionsInputTZ from './Inputs/DateRevisionsInputTZ';
 import ApprovalInputTZ from './Inputs/ApprovalInputTZ';
+import DateBindingInputTZ from './Inputs/DateBindingInputTZ';
+import StatusDateInputTZ from './Inputs/StatusDateInputTZ';
 
 type Props = {
   value: any,
@@ -141,7 +143,9 @@ const inputs = {
   date_revisions: DateRevisionsInput,
   date_revisions_tz: DateRevisionsInputTZ,
   date_binding: DateBindingInput,
+  date_binding_tz: DateBindingInputTZ,
   status_date: StatusDateInput,
+  status_date_tz: StatusDateInputTZ,
 };
 
 const CellInput = ({

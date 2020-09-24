@@ -61,5 +61,6 @@ export const warehouseCardFragment = gql`
         name
       }
     }
+    archived
   }
 `;

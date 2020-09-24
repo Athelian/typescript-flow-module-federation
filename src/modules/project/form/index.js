@@ -5,8 +5,10 @@ import memoize from 'memoize-one';
 import { flattenDeep } from 'lodash';
 import { Subscribe } from 'unstated';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
-import { calculateBindingDate, injectProjectAndMilestoneDueDate } from 'utils/project';
+import { calculateBindingDate } from 'utils/date';
+import { injectProjectAndMilestoneDueDate } from 'utils/project';
 import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/project/form/containers';
+import { UserConsumer } from 'contexts/Viewer';
 import ProjectSection from './components/ProjectSection';
 import MilestonesSection from './components/MilestonesSection';
 import ProjectAutoDateBinding from './components/ProjectAutoDateBinding';
@@ -30,7 +32,7 @@ const defaultProps = {
   project: {},
 };
 
-const generateTasks = memoize((milestones: Array<Milestone>, info: Object) => {
+const generateTasks = memoize((milestones: Array<Milestone>, info: Object, timezone: string) => {
   return flattenDeep(
     milestones.map(milestone =>
       injectProjectAndMilestoneDueDate({
@@ -44,7 +46,7 @@ const generateTasks = memoize((milestones: Array<Milestone>, info: Object) => {
             return {
               id: item.id,
               dueDate: dueDateBinding
-                ? calculateBindingDate(projectDueDate, dueDateInterval)
+                ? calculateBindingDate(projectDueDate, dueDateInterval, timezone)
                 : dueDate,
             };
           }),
@@ -66,22 +68,29 @@ export default class ProjectForm extends React.Component<Props> {
     const { isNew, isClone, project, loading } = this.props;
 
     return (
-      <div className={ProjectFormWrapperStyle}>
-        <ProjectSection project={project} isNew={isNew} isClone={isClone} isLoading={loading} />
-        <MilestonesSection />
-        {/* FIXME: project form is normal from, project > milestone > task, don't need this. if have time, refactor */}
-        <Subscribe to={[ProjectInfoContainer, ProjectMilestonesContainer]}>
-          {({ state: latestProject }, { state: { milestones }, setFieldValue, updateTasks }) => (
-            <ProjectAutoDateBinding
-              project={latestProject}
-              milestones={milestones}
-              updateMilestones={setFieldValue}
-              tasks={generateTasks(milestones, latestProject)}
-              setTaskValue={updateTasks}
-            />
-          )}
-        </Subscribe>
-      </div>
+      <UserConsumer>
+        {({ user }) => (
+          <div className={ProjectFormWrapperStyle}>
+            <ProjectSection project={project} isNew={isNew} isClone={isClone} isLoading={loading} />
+            <MilestonesSection />
+            {/* FIXME: project form is normal from, project > milestone > task, don't need this. if have time, refactor */}
+            <Subscribe to={[ProjectInfoContainer, ProjectMilestonesContainer]}>
+              {(
+                { state: latestProject },
+                { state: { milestones }, setFieldValue, updateTasks }
+              ) => (
+                <ProjectAutoDateBinding
+                  project={latestProject}
+                  milestones={milestones}
+                  updateMilestones={setFieldValue}
+                  tasks={generateTasks(milestones, latestProject, user.timezone)}
+                  setTaskValue={updateTasks}
+                />
+              )}
+            </Subscribe>
+          </div>
+        )}
+      </UserConsumer>
     );
   }
 }
