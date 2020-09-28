@@ -70,7 +70,7 @@ export default function OrderItemCard({
     <div className={ItemCardWrapperStyle}>
       <div className={TopRowWrapperStyle}>
         <Display blackout={!canViewNo}>
-          <FullValueTooltip message={productName}>
+          <FullValueTooltip message={no}>
             <span>{no}</span>
           </FullValueTooltip>
         </Display>
