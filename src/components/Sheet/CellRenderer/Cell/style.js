@@ -16,6 +16,7 @@ export const CellStyle = (focus: boolean, readonly: boolean, disabled: boolean) 
     height: 100%;
     ${focus && 'z-index: 1'};
     background-color: ${backgroundColor};
+    overflow: hidden;
   `;
 };
 
