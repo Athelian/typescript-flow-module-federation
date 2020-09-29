@@ -1,5 +1,5 @@
 // @flow
-import { differenceInCalendarDays } from 'utils/date';
+import { calculateDateDifferenceInDays } from 'utils/date';
 
 export const calculatePercentage = (total: number, completed: number) => {
   if (total) {
@@ -12,7 +12,7 @@ export const calculatePercentage = (total: number, completed: number) => {
 
 export const diffDueDate = ({ dueDate, date }: { dueDate: ?string, date: ?string }) => {
   if (dueDate && date) {
-    const diffDate = differenceInCalendarDays(new Date(date), new Date(dueDate));
+    const diffDate = calculateDateDifferenceInDays(date, dueDate);
     if (diffDate > 0) {
       return { value: `+${diffDate}`, color: 'RED' };
     }
