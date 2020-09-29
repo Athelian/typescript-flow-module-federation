@@ -1,12 +1,13 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import FormattedDate from 'components/FormattedDate';
+import type { UserPayload } from 'generated/graphql';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import { Tooltip, FullValueTooltip } from 'components/Tooltip';
 import { calculatePercentage } from 'utils/ui';
-import { differenceInCalendarDays } from 'utils/date';
+import { calculateDateDifferenceInDays } from 'utils/date';
 import MilestoneDueDateToolTip from '../MilestoneDueDateToolTip';
 import {
   TimelineItemStyle,
@@ -26,9 +27,10 @@ import {
 
 type Props = {
   milestone: Object,
+  user: UserPayload,
 };
 
-const MilestoneTimelineItem = ({ milestone }: Props) => {
+const MilestoneTimelineItem = ({ milestone, user }: Props) => {
   const { name, dueDate, estimatedCompletionDate, completedAt, tasks = [] } = milestone;
 
   const isCompleted = completedAt;
@@ -37,9 +39,9 @@ const MilestoneTimelineItem = ({ milestone }: Props) => {
 
   let dueDateDiff = 0;
   if (dueDate && completedAt) {
-    dueDateDiff = differenceInCalendarDays(new Date(completedAt), new Date(dueDate));
+    dueDateDiff = calculateDateDifferenceInDays(completedAt, dueDate);
   } else if (dueDate && estimatedCompletionDate) {
-    dueDateDiff = differenceInCalendarDays(new Date(estimatedCompletionDate), new Date(dueDate));
+    dueDateDiff = calculateDateDifferenceInDays(estimatedCompletionDate, dueDate);
   }
 
   return (
@@ -71,6 +73,7 @@ const MilestoneTimelineItem = ({ milestone }: Props) => {
             dueDate={dueDate}
             estDate={estimatedCompletionDate}
             completedAt={completedAt}
+            user={user}
           />
         }
       >
@@ -82,7 +85,7 @@ const MilestoneTimelineItem = ({ milestone }: Props) => {
 
             <div className={MilestoneDateStyle(dueDate)}>
               {dueDate ? (
-                <FormattedDate value={dueDate} />
+                <FormattedDateTZ value={dueDate} user={user} />
               ) : (
                 <FormattedMessage id="component.cards.na" defaultMessage="N/A" />
               )}
@@ -100,11 +103,11 @@ const MilestoneTimelineItem = ({ milestone }: Props) => {
 
             <div className={MilestoneDateStyle(completedAt || estimatedCompletionDate)}>
               {isCompleted ? (
-                <FormattedDate value={completedAt} />
+                <FormattedDateTZ value={completedAt} user={user} />
               ) : (
                 <>
                   {estimatedCompletionDate ? (
-                    <FormattedDate value={estimatedCompletionDate} />
+                    <FormattedDateTZ value={estimatedCompletionDate} user={user} />
                   ) : (
                     <FormattedMessage id="component.cards.na" defaultMessage="N/A" />
                   )}

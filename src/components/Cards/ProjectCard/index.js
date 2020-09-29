@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage, FormattedDate } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import { Display, Label } from 'components/Form';
+import useUser from 'hooks/useUser';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import { Tooltip, FullValueTooltip } from 'components/Tooltip';
-import { differenceInCalendarDays } from 'utils/date';
+import { calculateDateDifferenceInDays } from 'utils/date';
 import ProjectDueDateDiffToolTip from './components/ProjectDueDateDiffToolTip';
 import MilestoneTimelineItem from './components/MilestoneTimelineItem';
 import BaseCard from '../BaseCard';
@@ -30,19 +32,17 @@ type Props = {|
 |};
 
 const ProjectCard = ({ project, onClick, ...rest }: Props) => {
+  const { user } = useUser();
   const { name, dueDate, tags = [], milestones = [] } = project;
 
   const lastMilestone = milestones[milestones.length - 1];
   let lastMilestoneDiff = 0;
   if (dueDate && lastMilestone.completedAt) {
-    lastMilestoneDiff = differenceInCalendarDays(
-      new Date(lastMilestone.completedAt),
-      new Date(dueDate)
-    );
+    lastMilestoneDiff = calculateDateDifferenceInDays(lastMilestone.completedAt, dueDate);
   } else if (dueDate && lastMilestone.estimatedCompletionDate) {
-    lastMilestoneDiff = differenceInCalendarDays(
-      new Date(lastMilestone.estimatedCompletionDate),
-      new Date(dueDate)
+    lastMilestoneDiff = calculateDateDifferenceInDays(
+      lastMilestone.estimatedCompletionDate,
+      dueDate
     );
   }
 
@@ -69,7 +69,7 @@ const ProjectCard = ({ project, onClick, ...rest }: Props) => {
 
             <Display width="80px" height="20px">
               {dueDate ? (
-                <FormattedDate value={dueDate} />
+                <FormattedDateTZ value={dueDate} user={user} />
               ) : (
                 <FormattedMessage id="component.cards.na" defaultMessage="N/A" />
               )}
@@ -108,7 +108,7 @@ const ProjectCard = ({ project, onClick, ...rest }: Props) => {
 
         <div className={ProjectCardBodyStyle(milestones.length)}>
           {milestones.map(milestone => (
-            <MilestoneTimelineItem key={milestone.id} milestone={milestone} />
+            <MilestoneTimelineItem key={milestone.id} milestone={milestone} user={user} />
           ))}
         </div>
       </div>

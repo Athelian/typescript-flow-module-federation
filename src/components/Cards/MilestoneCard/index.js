@@ -2,11 +2,12 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Display, FieldItem, Label } from 'components/Form';
-import FormattedDate from 'components/FormattedDate';
+import FormattedDateTZ from 'components/FormattedDateTZ';
 import FormattedNumber from 'components/FormattedNumber';
 import TaskStatusChart from 'components/TaskStatusChart';
 import Icon from 'components/Icon';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import useUser from 'hooks/useUser';
 import BaseCard from '../BaseCard';
 import {
   MilestoneCardStyle,
@@ -34,6 +35,7 @@ type Props = {|
 |};
 
 const MilestoneCard = ({ milestone, ...rest }: Props) => {
+  const { user } = useUser();
   const { name, dueDate, taskCount = {}, completedAt } = milestone;
   const { count, remain, inProgress, skipped, completed, delayed } = taskCount;
 
@@ -53,7 +55,7 @@ const MilestoneCard = ({ milestone, ...rest }: Props) => {
             }
             input={
               <Display>
-                <FormattedDate value={dueDate} />
+                <FormattedDateTZ value={dueDate} user={user} />
               </Display>
             }
           />
