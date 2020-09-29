@@ -18,7 +18,7 @@ import {
   MilestoneStatusIconStyle,
 } from './style';
 
-type Props = {
+type Props = {|
   milestone: {
     name: string,
     dueDate: string,
@@ -32,7 +32,7 @@ type Props = {
     },
     completedAt: string,
   },
-};
+|};
 
 const MilestoneCard = ({ milestone, ...rest }: Props) => {
   const { user } = useUser();
