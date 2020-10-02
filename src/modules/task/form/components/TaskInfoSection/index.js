@@ -18,7 +18,11 @@ import {
   prepareTaskStatus,
   prepareApprovalStatus,
 } from 'utils/task';
-import { isBefore, calculateBindingDate, todayForDateInput } from 'utils/date';
+import {
+  calculateDateDifferenceInDaysFromToday,
+  calculateBindingDate,
+  todayForDateInput,
+} from 'utils/date';
 import {
   SectionWrapper,
   SectionHeader,
@@ -373,7 +377,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                               name={name}
                               inputColor={
                                 values.dueDate &&
-                                isBefore(new Date(values.dueDate), new Date()) &&
+                                calculateDateDifferenceInDaysFromToday(values.dueDate) < 0 &&
                                 isCompleted
                                   ? 'RED'
                                   : 'BLACK'
@@ -395,6 +399,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                               originalValue={originalValues[name]}
                               editable={editable.dueDate && !dueDateBinding}
                               hideTooltip={dueDateBinding}
+                              handleTimezone
                             />
                           )}
                         </FormField>
@@ -617,6 +622,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                               originalValue={originalValues[name]}
                               editable={editable.startDate && !startDateBinding}
                               hideTooltip={startDateBinding}
+                              handleTimezone
                             />
                           )}
                         </FormField>

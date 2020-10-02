@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { calculateDueDate, calculateFreeTime } from 'utils/date';
+import { calculateDueDate, calculateDateDifferenceInDaysFromToday } from 'utils/date';
 import { convertVolume, convertWeight } from 'utils/metric';
 import { getLatestDate } from 'utils/shipment';
 import type { FieldDefinition } from 'types';
@@ -225,7 +225,7 @@ export default function transformSheetContainer({
           ? calculateDueDate(freeTimeStartDate, currentContainer?.freeTimeDuration)
           : null;
 
-        return dueDate ? calculateFreeTime(dueDate) : 0;
+        return dueDate ? calculateDateDifferenceInDaysFromToday(dueDate) : 0;
       }),
     },
     {

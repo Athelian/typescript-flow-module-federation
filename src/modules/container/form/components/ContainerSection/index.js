@@ -60,7 +60,7 @@ import { ContainerInfoContainer } from 'modules/container/form/containers';
 import validator from 'modules/container/form/validator';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { getLatestDate } from 'utils/shipment';
-import { calculateFreeTime, calculateDueDate } from 'utils/date';
+import { calculateDateDifferenceInDaysFromToday, calculateDueDate } from 'utils/date';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import { getMaxVolume } from 'utils/container';
 import ContainerSummary from './ContainerSummary';
@@ -76,7 +76,7 @@ import {
 
 const renderFreeTime = (date: ?string, approved: boolean) => {
   if (date) {
-    const freeTime = calculateFreeTime(date);
+    const freeTime = calculateDateDifferenceInDaysFromToday(date);
     let freeTimeColor;
     if (approved) {
       freeTimeColor = 'GRAY_LIGHT';
