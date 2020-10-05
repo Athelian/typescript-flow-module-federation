@@ -326,7 +326,7 @@ const parseDateFieldForTask = (key: string, originalTask: ?Task, newTask: Task):
   }
 
   return {
-    ...parseDateField(key, getByPathWithDefault(null, key, originalTask), newTask[key]),
+    ...parseDatetimeField(key, originalTask?.[key] ?? null, newTask[key]),
   };
 };
 
@@ -367,31 +367,19 @@ export const parseTaskField = (
       getByPathWithDefault(null, 'inProgressBy', originalTask),
       newTask.inProgressBy
     ),
-    ...parseDateField(
-      'inProgressAt',
-      getByPathWithDefault(null, 'inProgressAt', originalTask),
-      newTask.inProgressAt
-    ),
+    ...parseDatetimeField('inProgressAt', originalTask?.inProgressAt ?? null, newTask.inProgressAt),
     ...parseParentIdField(
       'completedById',
       getByPathWithDefault(null, 'completedBy', originalTask),
       newTask.completedBy
     ),
-    ...parseDateField(
-      'completedAt',
-      getByPathWithDefault(null, 'completedAt', originalTask),
-      newTask.completedAt
-    ),
+    ...parseDatetimeField('completedAt', originalTask?.completedAt ?? null, newTask.completedAt),
     ...parseParentIdField(
       'skippedById',
       getByPathWithDefault(null, 'skippedBy', originalTask),
       newTask.skippedBy
     ),
-    ...parseDateField(
-      'skippedAt',
-      getByPathWithDefault(null, 'skippedAt', originalTask),
-      newTask.skippedAt
-    ),
+    ...parseDatetimeField('skippedAt', originalTask?.skippedAt ?? null, newTask.skippedAt),
     ...parseGenericField(
       'approvable',
       getByPathWithDefault(null, 'approvable', originalTask),
@@ -407,21 +395,13 @@ export const parseTaskField = (
       getByPathWithDefault(null, 'approvedBy', originalTask),
       newTask.approvedBy
     ),
-    ...parseDateField(
-      'approvedAt',
-      getByPathWithDefault(null, 'approvedAt', originalTask),
-      newTask.approvedAt
-    ),
+    ...parseDatetimeField('approvedAt', originalTask?.approvedAt ?? null, newTask.approvedAt),
     ...parseParentIdField(
       'rejectedById',
       getByPathWithDefault(null, 'rejectedBy', originalTask),
       newTask.rejectedBy
     ),
-    ...parseDateField(
-      'rejectedAt',
-      getByPathWithDefault(null, 'rejectedAt', originalTask),
-      newTask.rejectedAt
-    ),
+    ...parseDatetimeField('rejectedAt', originalTask?.rejectedAt ?? null, newTask.rejectedAt),
     ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalTask), newTask.memo),
     ...parseMemoField(
       'description',
