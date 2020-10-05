@@ -59,6 +59,7 @@ export default class TaskContainer extends Container<Task> {
       completedAt,
       rejectedAt,
       approvedAt,
+      skippedAt,
       ...rest
     } = values;
     const info = {
@@ -68,6 +69,7 @@ export default class TaskContainer extends Container<Task> {
       ...initDatetimeToContainer(completedAt, 'completedAt', timezone),
       ...initDatetimeToContainer(rejectedAt, 'rejectedAt', timezone),
       ...initDatetimeToContainer(approvedAt, 'approvedAt', timezone),
+      ...initDatetimeToContainer(skippedAt, 'skippedAt', timezone),
       ...rest,
     };
 
