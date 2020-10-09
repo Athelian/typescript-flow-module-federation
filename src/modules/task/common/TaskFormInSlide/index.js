@@ -17,6 +17,7 @@ import validator from 'modules/task/form/validator';
 import TaskContainer from 'modules/task/form/container';
 import TaskForm from 'modules/task/form';
 import { taskTimelineQuery } from 'modules/task/query';
+import useUser from 'hooks/useUser';
 
 type Props = {|
   task: Object,
@@ -41,6 +42,7 @@ const TaskFormInSlide = ({
   isInProject,
   isInTemplate,
 }: Props) => {
+  const { user } = useUser();
   useEffect(() => {
     return () => formContainer.onReset();
   });
@@ -136,7 +138,7 @@ const TaskFormInSlide = ({
                   isInProject={isInProject}
                   isInTemplate={isInTemplate}
                   inParentEntityForm={inParentEntityForm}
-                  onFormReady={() => taskContainer.initDetailValues(task)}
+                  onFormReady={() => taskContainer.initDetailValues(task, user.timezone)}
                 />
               </Content>
             </SlideViewLayout>

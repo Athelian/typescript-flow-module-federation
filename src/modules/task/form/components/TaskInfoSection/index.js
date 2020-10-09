@@ -18,7 +18,11 @@ import {
   prepareTaskStatus,
   prepareApprovalStatus,
 } from 'utils/task';
-import { isBefore, calculateBindingDate, todayForDateInput } from 'utils/date';
+import {
+  calculateDateDifferenceInDaysFromToday,
+  calculateBindingDate,
+  newDateTZ,
+} from 'utils/date';
 import {
   SectionWrapper,
   SectionHeader,
@@ -373,7 +377,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                               name={name}
                               inputColor={
                                 values.dueDate &&
-                                isBefore(new Date(values.dueDate), new Date()) &&
+                                calculateDateDifferenceInDaysFromToday(values.dueDate) < 0 &&
                                 isCompleted
                                   ? 'RED'
                                   : 'BLACK'
@@ -395,6 +399,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                               originalValue={originalValues[name]}
                               editable={editable.dueDate && !dueDateBinding}
                               hideTooltip={dueDateBinding}
+                              handleTimezone
                             />
                           )}
                         </FormField>
@@ -617,6 +622,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                               originalValue={originalValues[name]}
                               editable={editable.startDate && !startDateBinding}
                               hideTooltip={startDateBinding}
+                              handleTimezone
                             />
                           )}
                         </FormField>
@@ -874,11 +880,11 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                                 if (value === 'completed') {
                                   const newTask = {
                                     ...values,
-                                    inProgressAt: values.inProgressAt || todayForDateInput(),
+                                    inProgressAt: values.inProgressAt || newDateTZ(user.timezone),
                                     inProgressBy: user,
                                     skippedAt: null,
                                     skippedBy: null,
-                                    completedAt: todayForDateInput(),
+                                    completedAt: newDateTZ(user.timezone),
                                     completedBy: user,
                                   };
                                   setFieldValues(newTask);
@@ -889,7 +895,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                                     completedBy: null,
                                     skippedAt: null,
                                     skippedBy: null,
-                                    inProgressAt: todayForDateInput(),
+                                    inProgressAt: newDateTZ(user.timezone),
                                     inProgressBy: user,
                                   };
                                   setFieldValues(newTask);
@@ -900,7 +906,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                                     completedBy: null,
                                     inProgressAt: null,
                                     inProgressBy: null,
-                                    skippedAt: todayForDateInput(),
+                                    skippedAt: newDateTZ(user.timezone),
                                     skippedBy: user,
                                   };
                                   setFieldValues(newTask);
@@ -960,6 +966,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                         vertical
                         required
                         editable={editable.inProgress}
+                        handleTimezone
                       />
                     )}
                   </FormField>
@@ -982,6 +989,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                         vertical
                         required
                         editable={editable.inProgress}
+                        handleTimezone
                       />
                     )}
                   </FormField>
@@ -1008,6 +1016,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                         vertical
                         required
                         editable={editable.completed}
+                        handleTimezone
                       />
                     )}
                   </FormField>
@@ -1104,7 +1113,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                                       const newTask = {
                                         ...values,
                                         approvedBy: user,
-                                        approvedAt: todayForDateInput(),
+                                        approvedAt: newDateTZ(user.timezone),
                                         rejectedBy: null,
                                         rejectedAt: null,
                                       };
@@ -1115,7 +1124,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                                         approvedBy: null,
                                         approvedAt: null,
                                         rejectedBy: user,
-                                        rejectedAt: todayForDateInput(),
+                                        rejectedAt: newDateTZ(user.timezone),
                                       };
                                       setFieldValues(newTask);
                                     } else {
@@ -1175,6 +1184,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                               />
                             }
                             editable={editable.approved}
+                            handleTimezone
                           />
                         )}
                       </FormField>
@@ -1200,6 +1210,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                               />
                             }
                             editable={editable.rejected}
+                            handleTimezone
                           />
                         )}
                       </FormField>

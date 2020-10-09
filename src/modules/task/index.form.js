@@ -20,6 +20,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
 import Timeline from 'modules/timeline/components/Timeline';
+import { UserConsumer } from 'contexts/Viewer';
 import { taskFormQuery } from './form/query';
 import TaskForm from './form';
 import TaskContainer from './form/container';
@@ -86,141 +87,156 @@ class TaskFormModule extends React.Component<Props> {
     }
 
     return (
-      <Provider>
-        <Mutation
-          mutation={updateTaskMutation}
-          onCompleted={this.onMutationCompleted}
-          {...mutationKey}
-        >
-          {(saveTask, { loading: isLoading, error }) => (
-            <Subscribe to={[TaskContainer, FormContainer]}>
-              {({ initDetailValues, originalValues, state, isDirty }, form) => {
-                return (
-                  <>
-                    <NavBar>
-                      <EntityIcon icon="TASK" color="TASK" />
-                      <JumpToSection>
-                        <SectionTabs
-                          link="task_task_section"
-                          label={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
-                          icon="TASK"
-                        />
-                        <SectionTabs
-                          link="task_project_section"
-                          label={
-                            <FormattedMessage id="modules.task.project" defaultMessage="PROJECT" />
-                          }
-                          icon="PROJECT"
-                        />
-                        <SectionTabs
-                          link="task_entity_section"
-                          label={
-                            <FormattedMessage id="modules.task.related" defaultMessage="RELATED" />
-                          }
-                          icon="RELATED"
-                        />
-                      </JumpToSection>
-
-                      <BooleanValue>
-                        {({ value: opened, set: slideToggle }) => (
-                          <>
-                            <LogsButton
-                              entityType="task"
-                              entityId={taskId}
-                              onClick={() => slideToggle(true)}
+      <UserConsumer>
+        {({ user }) => (
+          <Provider>
+            <Mutation
+              mutation={updateTaskMutation}
+              onCompleted={this.onMutationCompleted}
+              {...mutationKey}
+            >
+              {(saveTask, { loading: isLoading, error }) => (
+                <Subscribe to={[TaskContainer, FormContainer]}>
+                  {({ initDetailValues, originalValues, state, isDirty }, form) => {
+                    return (
+                      <>
+                        <NavBar>
+                          <EntityIcon icon="TASK" color="TASK" />
+                          <JumpToSection>
+                            <SectionTabs
+                              link="task_task_section"
+                              label={
+                                <FormattedMessage id="modules.task.task" defaultMessage="TASK" />
+                              }
+                              icon="TASK"
                             />
-                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                              <SlideViewLayout>
-                                {taskId && opened && (
-                                  <>
-                                    <SlideViewNavBar>
-                                      <EntityIcon icon="LOGS" color="LOGS" />
-                                    </SlideViewNavBar>
+                            <SectionTabs
+                              link="task_project_section"
+                              label={
+                                <FormattedMessage
+                                  id="modules.task.project"
+                                  defaultMessage="PROJECT"
+                                />
+                              }
+                              icon="PROJECT"
+                            />
+                            <SectionTabs
+                              link="task_entity_section"
+                              label={
+                                <FormattedMessage
+                                  id="modules.task.related"
+                                  defaultMessage="RELATED"
+                                />
+                              }
+                              icon="RELATED"
+                            />
+                          </JumpToSection>
 
-                                    <Content>
-                                      <Timeline
-                                        query={taskTimelineQuery}
-                                        queryField="task"
-                                        variables={{
-                                          id: decodeId(taskId),
-                                        }}
-                                        entity={{
-                                          taskId: decodeId(taskId),
-                                        }}
-                                        users={[]}
-                                      />
-                                    </Content>
-                                  </>
-                                )}
-                              </SlideViewLayout>
-                            </SlideView>
-                          </>
-                        )}
-                      </BooleanValue>
+                          <BooleanValue>
+                            {({ value: opened, set: slideToggle }) => (
+                              <>
+                                <LogsButton
+                                  entityType="task"
+                                  entityId={taskId}
+                                  onClick={() => slideToggle(true)}
+                                />
+                                <SlideView
+                                  isOpen={opened}
+                                  onRequestClose={() => slideToggle(false)}
+                                >
+                                  <SlideViewLayout>
+                                    {taskId && opened && (
+                                      <>
+                                        <SlideViewNavBar>
+                                          <EntityIcon icon="LOGS" color="LOGS" />
+                                        </SlideViewNavBar>
 
-                      {isDirty() && (
-                        <>
-                          <ResetFormButton
-                            onClick={() =>
-                              this.onReset(
-                                {
-                                  initDetailValues,
-                                  originalValues,
-                                },
-                                form.onReset
-                              )
-                            }
+                                        <Content>
+                                          <Timeline
+                                            query={taskTimelineQuery}
+                                            queryField="task"
+                                            variables={{
+                                              id: decodeId(taskId),
+                                            }}
+                                            entity={{
+                                              taskId: decodeId(taskId),
+                                            }}
+                                            users={[]}
+                                          />
+                                        </Content>
+                                      </>
+                                    )}
+                                  </SlideViewLayout>
+                                </SlideView>
+                              </>
+                            )}
+                          </BooleanValue>
+
+                          {isDirty() && (
+                            <>
+                              <ResetFormButton
+                                onClick={() =>
+                                  this.onReset(
+                                    {
+                                      initDetailValues,
+                                      originalValues,
+                                    },
+                                    form.onReset
+                                  )
+                                }
+                              />
+                              <SaveFormButton
+                                id="task_form_save_button"
+                                disabled={!form.isReady(state, validator)}
+                                isLoading={isLoading}
+                                onClick={() =>
+                                  this.onSave(
+                                    { originalValues, state },
+                                    saveTask,
+                                    responseData => {
+                                      initDetailValues(responseData, user.timezone);
+                                      form.onReset();
+                                    },
+                                    form.onErrors
+                                  )
+                                }
+                              />
+                            </>
+                          )}
+                          {taskId && !isDirty() && (
+                            <ExportButton
+                              type="Task"
+                              exportQuery={taskExportQuery}
+                              variables={{ id: decodeId(taskId) }}
+                            />
+                          )}
+                        </NavBar>
+                        <Content>
+                          {error && <p>Error: Please try again.</p>}
+                          <QueryForm
+                            query={taskFormQuery}
+                            entityId={taskId}
+                            entityType="task"
+                            render={task => (
+                              <TaskForm
+                                inParentEntityForm={false}
+                                groupIds={parseGroupIds(task)}
+                                entity={task.entity}
+                                task={task}
+                                onFormReady={() => initDetailValues(task, user.timezone)}
+                              />
+                            )}
                           />
-                          <SaveFormButton
-                            id="task_form_save_button"
-                            disabled={!form.isReady(state, validator)}
-                            isLoading={isLoading}
-                            onClick={() =>
-                              this.onSave(
-                                { originalValues, state },
-                                saveTask,
-                                responseData => {
-                                  initDetailValues(responseData);
-                                  form.onReset();
-                                },
-                                form.onErrors
-                              )
-                            }
-                          />
-                        </>
-                      )}
-                      {taskId && !isDirty() && (
-                        <ExportButton
-                          type="Task"
-                          exportQuery={taskExportQuery}
-                          variables={{ id: decodeId(taskId) }}
-                        />
-                      )}
-                    </NavBar>
-                    <Content>
-                      {error && <p>Error: Please try again.</p>}
-                      <QueryForm
-                        query={taskFormQuery}
-                        entityId={taskId}
-                        entityType="task"
-                        render={task => (
-                          <TaskForm
-                            inParentEntityForm={false}
-                            groupIds={parseGroupIds(task)}
-                            entity={task.entity}
-                            task={task}
-                            onFormReady={() => initDetailValues(task)}
-                          />
-                        )}
-                      />
-                    </Content>
-                  </>
-                );
-              }}
-            </Subscribe>
-          )}
-        </Mutation>
-      </Provider>
+                        </Content>
+                      </>
+                    );
+                  }}
+                </Subscribe>
+              )}
+            </Mutation>
+          </Provider>
+        )}
+      </UserConsumer>
     );
   }
 }

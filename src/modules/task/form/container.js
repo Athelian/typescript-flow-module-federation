@@ -3,6 +3,7 @@ import type { Task } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cleanFalsyAndTypeName, extractForbiddenId } from 'utils/data';
 import { isEquals } from 'utils/fp';
+import { initDatetimeToContainer } from 'utils/date';
 
 export const initValues: Task = {
   name: null,
@@ -50,8 +51,30 @@ export default class TaskContainer extends Container<Task> {
     this.setState(values);
   };
 
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...values };
+  initDetailValues = (values: Object, timezone: string) => {
+    const {
+      startDate,
+      dueDate,
+      inProgressAt,
+      completedAt,
+      rejectedAt,
+      approvedAt,
+      skippedAt,
+      ...rest
+    } = values;
+    const info = {
+      ...initDatetimeToContainer(startDate, 'startDate', timezone),
+      ...initDatetimeToContainer(dueDate, 'dueDate', timezone),
+      ...initDatetimeToContainer(inProgressAt, 'inProgressAt', timezone),
+      ...initDatetimeToContainer(completedAt, 'completedAt', timezone),
+      ...initDatetimeToContainer(rejectedAt, 'rejectedAt', timezone),
+      ...initDatetimeToContainer(approvedAt, 'approvedAt', timezone),
+      ...initDatetimeToContainer(skippedAt, 'skippedAt', timezone),
+      ...rest,
+    };
+
+    const parsedValues = { ...initValues, ...info };
+
     const parsedTags = [...parsedValues.tags.map(tag => extractForbiddenId(tag))];
     this.setState({ ...parsedValues, tags: parsedTags });
     this.originalValues = { ...parsedValues, tags: parsedTags };
