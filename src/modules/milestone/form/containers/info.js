@@ -26,7 +26,7 @@ const initValues = {
   estimatedCompletionDateBinding: null,
 };
 
-export default class MilestoneStateContainer extends Container<FormState> {
+export default class MilestoneInfoContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;

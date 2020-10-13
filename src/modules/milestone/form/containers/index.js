@@ -1,5 +1,5 @@
 // @flow
-import MilestoneBaseContainer from './base';
+import MilestoneInfoContainer from './info';
 import MilestoneFilesContainer from './files';
 
-export { MilestoneBaseContainer, MilestoneFilesContainer };
+export { MilestoneInfoContainer, MilestoneFilesContainer };

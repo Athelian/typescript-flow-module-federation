@@ -10,7 +10,7 @@ import { decodeId } from 'utils/id';
 import { ExportButton } from 'components/Buttons';
 import ResetFormButton from 'components/ResetFormButton';
 import SaveFormButton from 'components/SaveFormButton';
-import { FormContainer, resetFormState } from 'modules/form';
+import { FormContainer } from 'modules/form';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
@@ -56,18 +56,6 @@ class ContainerFormModule extends React.Component<Props> {
   componentWillUnmount() {
     formContainer.onReset();
   }
-
-  onReset = (
-    {
-      containerInfoContainer,
-      containerBatchesContainer,
-    }: { containerInfoContainer: Object, containerBatchesContainer: Object },
-    form: Object
-  ) => {
-    resetFormState(containerInfoContainer);
-    resetFormState(containerBatchesContainer);
-    form.onReset();
-  };
 
   onSave = async (
     originalValues: Object,
@@ -143,6 +131,25 @@ class ContainerFormModule extends React.Component<Props> {
       timezone
     );
     return null;
+  };
+
+  onReset = (
+    {
+      containerInfoContainer,
+      containerBatchesContainer,
+    }: { containerInfoContainer: Object, containerBatchesContainer: Object },
+    form: Object,
+    timezone: string
+  ) => {
+    this.initAllValues(
+      {
+        containerInfoContainer,
+        containerBatchesContainer,
+      },
+      { ...containerInfoContainer.originalValues, ...containerBatchesContainer.originalValues },
+      timezone
+    );
+    form.onReset();
   };
 
   onMutationCompleted = (result: UpdateContainerResponse) => {
@@ -264,7 +271,8 @@ class ContainerFormModule extends React.Component<Props> {
                                 onClick={() =>
                                   this.onReset(
                                     { containerInfoContainer, containerBatchesContainer },
-                                    formContainer
+                                    formContainer,
+                                    user.timezone
                                   )
                                 }
                               />
