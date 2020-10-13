@@ -29,7 +29,7 @@ export default class MilestoneFilesContainer extends Container<FormState> {
     this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
   };
 
-  initDetailValues = (values: object) => {
+  initDetailValues = (values: Object) => {
     const parsedFiles = [...(values?.files ?? []).map(file => extractForbiddenId(file))];
     this.setState({ files: parsedFiles });
     this.originalValues = { files: parsedFiles };
