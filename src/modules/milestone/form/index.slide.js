@@ -10,12 +10,12 @@ import ResetFormButton from 'components/ResetFormButton';
 import SaveFormButton from 'components/SaveFormButton';
 import useUser from 'hooks/useUser';
 import { isNullOrUndefined } from 'utils/fp';
-import { FormContainer, resetFormState } from 'modules/form';
+import { FormContainer } from 'modules/form';
 import { FormContext } from './context';
 import MilestoneSection from './components/MilestoneSection';
 import DocumentsSection from './components/DocumentsSection';
 import validator from './validator';
-import { MilestoneBaseContainer, MilestoneFilesContainer } from './containers';
+import { MilestoneFilesContainer, MilestoneInfoContainer } from './containers';
 import { FormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -41,19 +41,19 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
       }}
     >
       <Provider>
-        <Subscribe to={[MilestoneBaseContainer, MilestoneFilesContainer]}>
-          {({ state, initDetailValues }, filesContainer) => {
-            const { files = [], ...rest } = milestone;
-            if (isNullOrUndefined(state.id)) {
-              initDetailValues(rest, user.timezone);
-              filesContainer.initDetailValues(files);
+        <Subscribe to={[MilestoneInfoContainer, MilestoneFilesContainer]}>
+          {(infoContainer, filesContainer) => {
+            const { files = [], ...info } = milestone;
+            if (isNullOrUndefined(infoContainer.state.id)) {
+              infoContainer.initDetailValues(info, user.timezone);
+              filesContainer.initDetailValues({ files });
             }
             return null;
           }}
         </Subscribe>
 
         <SlideViewLayout>
-          <Subscribe to={[FormContainer, MilestoneBaseContainer, MilestoneFilesContainer]}>
+          <Subscribe to={[FormContainer, MilestoneInfoContainer, MilestoneFilesContainer]}>
             {(formContainer, milestoneStateContainer, filesContainer) => {
               return (
                 <SlideViewNavBar>
@@ -75,8 +75,11 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
                     <>
                       <ResetFormButton
                         onClick={() => {
-                          resetFormState(milestoneStateContainer);
-                          resetFormState(filesContainer, 'files');
+                          milestoneStateContainer.initDetailValues(
+                            milestoneStateContainer.originalValues,
+                            user.timezone
+                          );
+                          filesContainer.initDetailValues(filesContainer.originalValues);
                           formContainer.onReset();
                         }}
                       />

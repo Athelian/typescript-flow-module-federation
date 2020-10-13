@@ -13,7 +13,7 @@ const initValues: FormState = {
   files: [],
 };
 
-export default class OrderItemFilesContainer extends Container<FormState> {
+export default class MilestoneFilesContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;
@@ -29,8 +29,8 @@ export default class OrderItemFilesContainer extends Container<FormState> {
     this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
   };
 
-  initDetailValues = (files: Array<FilePayload>) => {
-    const parsedFiles = [...files.map(file => extractForbiddenId(file))];
+  initDetailValues = (values: object) => {
+    const parsedFiles = [...(values?.files ?? []).map(file => extractForbiddenId(file))];
     this.setState({ files: parsedFiles });
     this.originalValues = { files: parsedFiles };
   };
