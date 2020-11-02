@@ -89,7 +89,7 @@ const DocumentModule = () => {
           variables: {
             file,
             input: {
-              status: 'Draft',
+              status: 'Approved',
               type: 'Document',
               orphan: false,
             },
