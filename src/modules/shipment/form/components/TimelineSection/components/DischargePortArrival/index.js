@@ -15,7 +15,7 @@ import { injectUid } from 'utils/id';
 import { Tooltip } from 'components/Tooltip';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
-import { newDateTZ } from 'utils/date';
+import { newDateTZ, addTimezone } from 'utils/date';
 import {
   SectionHeader,
   DischargePortArrivalAdjustmentWrapper,
@@ -208,7 +208,11 @@ const DischargePortArrival = (props: Props) => {
                                       container.autoCalculatedFreeTimeStartDate
                                         ? {
                                             ...container,
-                                            freeTimeStartDate: inputHandlers.value,
+                                            freeTimeStartDate: addTimezone(
+                                              inputHandlers.value,
+                                              user.timezone,
+                                              true
+                                            ),
                                           }
                                         : container
                                     )
@@ -253,7 +257,11 @@ const DischargePortArrival = (props: Props) => {
                           container.autoCalculatedFreeTimeStartDate
                             ? {
                                 ...container,
-                                freeTimeStartDate: inputHandlers.value,
+                                freeTimeStartDate: addTimezone(
+                                  inputHandlers.value,
+                                  user.timezone,
+                                  true
+                                ),
                               }
                             : container
                         )
