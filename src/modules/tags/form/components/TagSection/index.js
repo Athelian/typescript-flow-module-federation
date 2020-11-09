@@ -40,6 +40,7 @@ import {
   EntityIconStyle,
 } from './style';
 
+import messages from './messages';
 import data from './tagOptionData';
 
 type Props = {
@@ -275,10 +276,7 @@ const TagSection = ({ isNew, tag }: Props) => {
                                           <Icon icon={checkboxData.iconName} />
                                         </div>
                                         <Label>
-                                          <FormattedMessage
-                                            id={checkboxData.messageId}
-                                            defaultMessage={checkboxData.defaultMessage}
-                                          />
+                                          <FormattedMessage {...messages[checkboxData.messageId]} />
                                         </Label>
                                       </button>
                                     </div>
