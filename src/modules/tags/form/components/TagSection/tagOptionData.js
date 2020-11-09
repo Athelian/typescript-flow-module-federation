@@ -1,0 +1,81 @@
+const data = [
+  {
+    key: 'Order',
+    testId: 'orderRadio',
+    iconName: 'ORDER',
+    messageId: 'modules.Tags.order',
+    defaultMessage: 'ORDER',
+  },
+  {
+    key: 'OrderItem',
+    testId: '',
+    iconName: 'ORDER_ITEM',
+    messageId: 'modules.Tags.orderItem',
+    defaultMessage: 'ORDER ITEM',
+  },
+  {
+    key: 'Batch',
+    testId: '',
+    iconName: 'BATCH',
+    messageId: 'modules.Tags.batch',
+    defaultMessage: 'BATCH',
+  },
+  {
+    key: 'Shipment',
+    testId: '',
+    iconName: 'SHIPMENT',
+    messageId: 'modules.Tags.shipment',
+    defaultMessage: 'SHIPMENT',
+  },
+  {
+    key: 'Product',
+    testId: '',
+    iconName: 'PRODUCT',
+    messageId: 'modules.Tags.product',
+    defaultMessage: 'PRODUCT',
+  },
+  {
+    key: 'User',
+    testId: '',
+    iconName: 'STAFF',
+    messageId: 'modules.Tags.staff',
+    defaultMessage: 'STAFF',
+  },
+  {
+    key: 'Container',
+    testId: '',
+    iconName: 'CONTAINER',
+    messageId: 'modules.Tags.container',
+    defaultMessage: 'CONTAINER',
+  },
+  {
+    key: 'Task',
+    testId: '',
+    iconName: 'TASK',
+    messageId: 'modules.Tags.task',
+    defaultMessage: 'TASK',
+  },
+  {
+    key: 'Project',
+    testId: '',
+    iconName: 'PROJECT',
+    messageId: 'modules.Tags.project',
+    defaultMessage: 'PROJECT',
+  },
+  {
+    key: 'File',
+    testId: '',
+    iconName: 'DOCUMENT',
+    messageId: 'modules.Tags.document',
+    defaultMessage: 'DOCUMENT',
+  },
+  {
+    key: 'Partner',
+    testId: '',
+    iconName: 'PARTNER',
+    messageId: 'modules.Tags.partner',
+    defaultMessage: 'Partner',
+  },
+];
+
+export default data;
