@@ -248,6 +248,18 @@ export default function({
         ].includes(c.key)
     ),
     ...productColumns({
+      sorts: {
+        'product.name': {
+          local: true,
+          name: 'productName',
+          group: 'batch',
+        },
+        'product.serial': {
+          local: true,
+          name: 'productSerial',
+          group: 'batch',
+        },
+      },
       fieldDefinitions: productFieldDefinitions,
     }),
     ...productProviderColumns({}),

@@ -125,6 +125,24 @@ function batchSorter(sorts: Array<ColumnSort>, underContainer: boolean = false) 
         case 'packageQuantity':
           result = setDirection(numberSort(a.packageQuantity, b.packageQuantity), sort.direction);
           break;
+        case 'productName':
+          result = setDirection(
+            stringSort(
+              a?.orderItem?.productProvider?.product?.name ?? null,
+              b?.orderItem?.productProvider?.product?.name ?? null
+            ),
+            sort.direction
+          );
+          break;
+        case 'productSerial':
+          result = setDirection(
+            stringSort(
+              a?.orderItem?.productProvider?.serial ?? null,
+              b?.orderItem?.productProvider?.product?.serial ?? null
+            ),
+            sort.direction
+          );
+          break;
         default:
           break;
       }
