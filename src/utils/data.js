@@ -136,7 +136,7 @@ export const parseArrayOfIdsField = (
   newArray: Array<Object>
 ): Object => {
   const originalArrayOfIds = (originalArray || []).map(({ id }) => id);
-  const newArrayOfIds = newArray.map(({ id }) => id);
+  const newArrayOfIds = newArray ? newArray.map(({ id }) => id) : [];
 
   if (!isEquals(originalArrayOfIds, newArrayOfIds)) return { [key]: newArrayOfIds };
   return {};
