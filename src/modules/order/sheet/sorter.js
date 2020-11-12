@@ -45,24 +45,6 @@ function orderItemSorter(sorts: Array<ColumnSort>) {
         case 'remainingShippedQuantity':
           result = setDirection(numberSort(a[sort.name], b[sort.name]), sort.direction);
           break;
-        case 'productName':
-          result = setDirection(
-            stringSort(
-              a?.productProvider?.product?.name ?? null,
-              b?.productProvider?.product?.name ?? null
-            ),
-            sort.direction
-          );
-          break;
-        case 'productSerial':
-          result = setDirection(
-            stringSort(
-              a?.productProvider?.product?.serial ?? null,
-              b?.productProvider?.product?.serial ?? null
-            ),
-            sort.direction
-          );
-          break;
         default:
           break;
       }

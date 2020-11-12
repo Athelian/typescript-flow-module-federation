@@ -137,7 +137,7 @@ function batchSorter(sorts: Array<ColumnSort>, underContainer: boolean = false) 
         case 'productSerial':
           result = setDirection(
             stringSort(
-              a?.orderItem?.productProvider?.serial ?? null,
+              a?.orderItem?.productProvider?.product?.serial ?? null,
               b?.orderItem?.productProvider?.product?.serial ?? null
             ),
             sort.direction
