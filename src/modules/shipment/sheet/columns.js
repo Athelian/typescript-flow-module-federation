@@ -251,12 +251,12 @@ export default function({
       sorts: {
         'product.name': {
           local: true,
-          name: 'productName',
+          name: 'productProvider.product.name',
           group: 'batch',
         },
         'product.serial': {
           local: true,
-          name: 'productSerial',
+          name: 'productProvider.product.serial',
           group: 'batch',
         },
       },

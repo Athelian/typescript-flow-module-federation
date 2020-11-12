@@ -125,7 +125,7 @@ function batchSorter(sorts: Array<ColumnSort>, underContainer: boolean = false) 
         case 'packageQuantity':
           result = setDirection(numberSort(a.packageQuantity, b.packageQuantity), sort.direction);
           break;
-        case 'productName':
+        case 'productProvider.product.name':
           result = setDirection(
             stringSort(
               a?.orderItem?.productProvider?.product?.name ?? null,
@@ -134,7 +134,7 @@ function batchSorter(sorts: Array<ColumnSort>, underContainer: boolean = false) 
             sort.direction
           );
           break;
-        case 'productSerial':
+        case 'productProvider.product.serial':
           result = setDirection(
             stringSort(
               a?.orderItem?.productProvider?.product?.serial ?? null,
