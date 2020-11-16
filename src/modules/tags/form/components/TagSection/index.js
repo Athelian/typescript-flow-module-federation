@@ -21,7 +21,7 @@ import {
   FieldItem,
   Label,
   FormTooltip,
-  RadioInput,
+  CheckboxInput,
   TextInput,
   TextInputFactory,
   TextAreaInputFactory,
@@ -29,6 +29,7 @@ import {
 
 import GridColumn from 'components/GridColumn';
 import {
+  CheckboxWrapperStyle,
   TagSectionWrapperStyle,
   PreviewTagWrapperStyle,
   DescriptionLabelWrapperStyle,
@@ -38,6 +39,9 @@ import {
   EntityTypeStyle,
   EntityIconStyle,
 } from './style';
+
+import messages from './messages';
+import data from './tagOptionData';
 
 type Props = {
   isNew: boolean,
@@ -246,231 +250,38 @@ const TagSection = ({ isNew, tag }: Props) => {
                             }
                             input={
                               <div className={EntityTypesWrapperStyle}>
-                                <RadioInput
-                                  data-testid="orderRadio"
-                                  selected={entityTypes.includes('Order')}
-                                  onToggle={() => {
-                                    toggleSelectType('Order');
-                                    touchEntityTypes();
-                                  }}
-                                  editable={allowCreateOrUpdate}
-                                >
-                                  <div className={EntityTypeStyle}>
-                                    <div className={EntityIconStyle('ORDER')}>
-                                      <Icon icon="ORDER" />
-                                    </div>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.Tags.order"
-                                        defaultMessage="ORDER"
+                                <>
+                                  {data.map(checkboxData => (
+                                    <div key={checkboxData.key} className={CheckboxWrapperStyle}>
+                                      <CheckboxInput
+                                        data-testid={checkboxData.testId || ''}
+                                        checked={entityTypes.includes(checkboxData.key)}
+                                        onToggle={() => {
+                                          toggleSelectType(checkboxData.key);
+                                          touchEntityTypes();
+                                        }}
+                                        editable={allowCreateOrUpdate}
                                       />
-                                    </Label>
-                                  </div>
-                                </RadioInput>
-                                <RadioInput
-                                  selected={entityTypes.includes('OrderItem')}
-                                  onToggle={() => {
-                                    toggleSelectType('OrderItem');
-                                    touchEntityTypes();
-                                  }}
-                                  editable={allowCreateOrUpdate}
-                                >
-                                  <div className={EntityTypeStyle}>
-                                    <div className={EntityIconStyle('ORDER_ITEM')}>
-                                      <Icon icon="ORDER_ITEM" />
+                                      <button
+                                        className={EntityTypeStyle}
+                                        onClick={e => {
+                                          e.stopPropagation();
+                                          e.preventDefault();
+                                          toggleSelectType(checkboxData.key);
+                                          touchEntityTypes();
+                                        }}
+                                        type="button"
+                                      >
+                                        <div className={EntityIconStyle(checkboxData.iconName)}>
+                                          <Icon icon={checkboxData.iconName} />
+                                        </div>
+                                        <Label>
+                                          <FormattedMessage {...messages[checkboxData.messageId]} />
+                                        </Label>
+                                      </button>
                                     </div>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.Tags.orderItem"
-                                        defaultMessage="ORDER ITEM"
-                                      />
-                                    </Label>
-                                  </div>
-                                </RadioInput>
-                                <RadioInput
-                                  selected={entityTypes.includes('Batch')}
-                                  onToggle={() => {
-                                    toggleSelectType('Batch');
-                                    touchEntityTypes();
-                                  }}
-                                  editable={allowCreateOrUpdate}
-                                >
-                                  <div className={EntityTypeStyle}>
-                                    <div className={EntityIconStyle('BATCH')}>
-                                      <Icon icon="BATCH" />
-                                    </div>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.Tags.batch"
-                                        defaultMessage="BATCH"
-                                      />
-                                    </Label>
-                                  </div>
-                                </RadioInput>
-
-                                <RadioInput
-                                  selected={entityTypes.includes('Shipment')}
-                                  onToggle={() => {
-                                    toggleSelectType('Shipment');
-                                    touchEntityTypes();
-                                  }}
-                                  editable={allowCreateOrUpdate}
-                                >
-                                  <div className={EntityTypeStyle}>
-                                    <div className={EntityIconStyle('SHIPMENT')}>
-                                      <Icon icon="SHIPMENT" />
-                                    </div>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.Tags.shipment"
-                                        defaultMessage="SHIPMENT"
-                                      />
-                                    </Label>
-                                  </div>
-                                </RadioInput>
-                                <RadioInput
-                                  selected={entityTypes.includes('Product')}
-                                  onToggle={() => {
-                                    toggleSelectType('Product');
-                                    touchEntityTypes();
-                                  }}
-                                  editable={allowCreateOrUpdate}
-                                >
-                                  <div className={EntityTypeStyle}>
-                                    <div className={EntityIconStyle('PRODUCT')}>
-                                      <Icon icon="PRODUCT" />
-                                    </div>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.Tags.product"
-                                        defaultMessage="PRODUCT"
-                                      />
-                                    </Label>
-                                  </div>
-                                </RadioInput>
-
-                                <RadioInput
-                                  selected={entityTypes.includes('User')}
-                                  onToggle={() => {
-                                    toggleSelectType('User');
-                                    touchEntityTypes();
-                                  }}
-                                  editable={allowCreateOrUpdate}
-                                >
-                                  <div className={EntityTypeStyle}>
-                                    <div className={EntityIconStyle('STAFF')}>
-                                      <Icon icon="STAFF" />
-                                    </div>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.Tags.staff"
-                                        defaultMessage="STAFF"
-                                      />
-                                    </Label>
-                                  </div>
-                                </RadioInput>
-
-                                <RadioInput
-                                  selected={entityTypes.includes('Container')}
-                                  onToggle={() => {
-                                    toggleSelectType('Container');
-                                    touchEntityTypes();
-                                  }}
-                                  editable={allowCreateOrUpdate}
-                                >
-                                  <div className={EntityTypeStyle}>
-                                    <div className={EntityIconStyle('CONTAINER')}>
-                                      <Icon icon="CONTAINER" />
-                                    </div>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.Tags.container"
-                                        defaultMessage="CONTAINER"
-                                      />
-                                    </Label>
-                                  </div>
-                                </RadioInput>
-                                <RadioInput
-                                  selected={entityTypes.includes('Task')}
-                                  onToggle={() => {
-                                    toggleSelectType('Task');
-                                    touchEntityTypes();
-                                  }}
-                                  editable={allowCreateOrUpdate}
-                                >
-                                  <div className={EntityTypeStyle}>
-                                    <div className={EntityIconStyle('TASK')}>
-                                      <Icon icon="TASK" />
-                                    </div>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.Tags.task"
-                                        defaultMessage="TASK"
-                                      />
-                                    </Label>
-                                  </div>
-                                </RadioInput>
-
-                                <RadioInput
-                                  selected={entityTypes.includes('Project')}
-                                  onToggle={() => {
-                                    toggleSelectType('Project');
-                                    touchEntityTypes();
-                                  }}
-                                  editable={allowCreateOrUpdate}
-                                >
-                                  <div className={EntityTypeStyle}>
-                                    <div className={EntityIconStyle('PROJECT')}>
-                                      <Icon icon="PROJECT" />
-                                    </div>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.Tags.project"
-                                        defaultMessage="PROJECT"
-                                      />
-                                    </Label>
-                                  </div>
-                                </RadioInput>
-                                <RadioInput
-                                  selected={entityTypes.includes('File')}
-                                  onToggle={() => {
-                                    toggleSelectType('File');
-                                    touchEntityTypes();
-                                  }}
-                                  editable={allowCreateOrUpdate}
-                                >
-                                  <div className={EntityTypeStyle}>
-                                    <div className={EntityIconStyle('DOCUMENT')}>
-                                      <Icon icon="DOCUMENT" />
-                                    </div>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.Tags.document"
-                                        defaultMessage="Document"
-                                      />
-                                    </Label>
-                                  </div>
-                                </RadioInput>
-                                <RadioInput
-                                  selected={entityTypes.includes('Partner')}
-                                  onToggle={() => {
-                                    toggleSelectType('Partner');
-                                    touchEntityTypes();
-                                  }}
-                                  editable={allowCreateOrUpdate}
-                                >
-                                  <div className={EntityTypeStyle}>
-                                    <div className={EntityIconStyle('PARTNER')}>
-                                      <Icon icon="PARTNER" />
-                                    </div>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.Tags.partner"
-                                        defaultMessage="Partner"
-                                      />
-                                    </Label>
-                                  </div>
-                                </RadioInput>
+                                  ))}
+                                </>
                               </div>
                             }
                           />
