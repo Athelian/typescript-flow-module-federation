@@ -528,7 +528,7 @@
   "modules.Import.errors": "{count}个发现错误。",
   "modules.Import.noErrors": "没有发现任何错误。",
   "modules.Import.error": "单元格{location}上的数据为错误：{error}",
-  "modules.login.forgotPassword": "忘记密码",
+  "modules.login.forgotPassword": "忘记密码?",
   "modules.Login.error": "无效的用户名/密码",
   "modules.Login.validation.email": "请输入有效的电子邮件地址",
   "modules.Login.validation.required": "必需",
