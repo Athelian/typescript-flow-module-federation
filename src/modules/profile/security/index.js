@@ -142,7 +142,7 @@ export default function Security() {
           title={
             <FormattedMessage
               id="modules.profile.forgotPassword"
-              defaultMessage="FORGOT PASSWORD"
+              defaultMessage="FORGOT PASSWORD?"
             />
           }
         />
