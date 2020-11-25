@@ -528,7 +528,7 @@
   "modules.Import.errors": "{count}つのエラーが検出されました",
   "modules.Import.noErrors": "エラーは見つかりませんでした",
   "modules.Import.error": "{location}セルのデータに以下のエラーが検出されました: {error}",
-  "modules.login.forgotPassword": "パスワードをお忘れの場合",
+  "modules.login.forgotPassword": "パスワードをお忘れの場合?",
   "modules.Login.error": "メールアドレスまたはパスワードが無効です",
   "modules.Login.validation.email": "有効なメールアドレスを記入して下さい。",
   "modules.Login.validation.required": "必須",

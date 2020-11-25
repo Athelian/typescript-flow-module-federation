@@ -74,6 +74,18 @@ export default function({
       fieldDefinitions: orderFieldDefinitions,
     }),
     ...productColumns({
+      sorts: {
+        'product.name': {
+          local: true,
+          name: 'productProvider.product.name',
+          group: 'orderItem',
+        },
+        'product.serial': {
+          local: true,
+          name: 'productProvider.product.serial',
+          group: 'orderItem',
+        },
+      },
       fieldDefinitions: productFieldDefinitions,
     }),
     ...productProviderColumns({}),

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, borderRadiuses, layout } from 'styles/common';
+import { presets, colors, borderRadiuses, layout, fontSizes } from 'styles/common';
 
 export const TagSectionWrapperStyle: string = css`
   ${presets.BOX};
@@ -41,6 +41,10 @@ export const EntityTypeStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
   align-items: center;
+  margin-left: 10px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const EntityIconStyle = (color: string) => css`
@@ -54,4 +58,19 @@ export const EntityIconStyle = (color: string) => css`
   width: 20px;
   flex-shrink: 0;
   font-size: 11px;
+`;
+
+export const CheckboxWrapperStyle = css`
+  ${layout.HORIZONTAL};
+
+  & > span {
+    margin-left: 10px;
+    ${fontSizes.MAIN};
+    ${presets.ELLIPSIS};
+    color: ${colors.BLACK};
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 5px;
+  }
 `;
