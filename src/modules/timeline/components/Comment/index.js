@@ -16,7 +16,6 @@ import Icon from 'components/Icon';
 import { commentDeleteMutation, commentUpdateMutation } from 'modules/timeline/mutation';
 import type { CommentItem } from 'modules/timeline/types';
 import messages from 'modules/timeline/messages';
-import { colors, borderRadiuses } from 'styles/common';
 import {
   MentionsInputStyle,
   MentionStyle,
@@ -44,10 +43,7 @@ type Props = {|
   users: Array<UserPayload>,
 |};
 
-const MentionStyleCopy: string = `
-  background-color: ${colors.TEAL};
-  opacity: 0.25;
-  ${borderRadiuses.MAIN};
+const MentionStyleAddon: string = `
   position: absolute;
   top: 0;
   left: 0;
@@ -63,7 +59,7 @@ function parseUserMention(content: string, users: Array<UserPayload>) {
         txt = replaceString(
           txt,
           `@[${user.firstName} ${user.lastName}](${user.id})`,
-          `<strong style="position: relative">@${user.firstName} ${user.lastName}<span style="${MentionStyleCopy}"></span></strong>`
+          `<strong style="position: relative">@${user.firstName} ${user.lastName}<span class="${MentionStyle}" style="${MentionStyleAddon}"></span></strong>`
         );
       }
     });
