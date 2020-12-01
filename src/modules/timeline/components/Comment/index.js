@@ -7,6 +7,7 @@ import { StringValue } from 'react-values';
 import replaceString from 'replace-string';
 import { clone } from 'ramda';
 import { MentionsInput, Mention } from 'react-mentions';
+import DOMPurify from 'dompurify';
 import type { DocumentNode } from 'graphql/language/ast';
 import { DefaultStyle, TextAreaInput } from 'components/Form/Inputs';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -42,6 +43,14 @@ type Props = {|
   users: Array<UserPayload>,
 |};
 
+const MentionStyleAddon: string = `
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`;
+
 function parseUserMention(content: string, users: Array<UserPayload>) {
   if (users.length) {
     let txt = content;
@@ -50,11 +59,11 @@ function parseUserMention(content: string, users: Array<UserPayload>) {
         txt = replaceString(
           txt,
           `@[${user.firstName} ${user.lastName}](${user.id})`,
-          `@${user.firstName} ${user.lastName}`
+          `<strong style="position: relative">@${user.firstName} ${user.lastName}<span class="${MentionStyle}" style="${MentionStyleAddon}"></span></strong>`
         );
       }
     });
-    return txt;
+    return DOMPurify.sanitize(txt);
   }
 
   return content;
@@ -253,7 +262,8 @@ const Comment = ({ comment, query, queryField, variables, users }: Props) => {
             </>
           ) : (
             <>
-              {parseUserMention(comment.content, users)}{' '}
+              {/* eslint-disable-next-line */}
+              <div dangerouslySetInnerHTML={{ __html: parseUserMention(comment.content, users) }} />
               {comment.createdAt.getTime() !== comment.updatedAt.getTime() && (
                 <span className={EditedStyle}>
                   (
