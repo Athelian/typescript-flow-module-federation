@@ -263,7 +263,6 @@ const Comment = ({ comment, query, queryField, variables, users }: Props) => {
           ) : (
             <>
               <div dangerouslySetInnerHTML={{ __html: parseUserMention(comment.content, users) }} />
-              {/* {parseUserMention(comment.content, users)}{' '} */}
               {comment.createdAt.getTime() !== comment.updatedAt.getTime() && (
                 <span className={EditedStyle}>
                   (
