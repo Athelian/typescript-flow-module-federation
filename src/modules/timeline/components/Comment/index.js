@@ -262,6 +262,7 @@ const Comment = ({ comment, query, queryField, variables, users }: Props) => {
             </>
           ) : (
             <>
+              {/* eslint-disable-next-line */}
               <div dangerouslySetInnerHTML={{ __html: parseUserMention(comment.content, users) }} />
               {comment.createdAt.getTime() !== comment.updatedAt.getTime() && (
                 <span className={EditedStyle}>
