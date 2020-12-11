@@ -111,7 +111,6 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
   const [timer, setTimer] = React.useState('instant');
   const { data, loading, error, refetch } = useQuery(notificationPreferencesQuery, {
     onCompleted: result => {
-      console.log('result is ', result);
       setEmailNotificationsEnabled(result?.viewer?.notificationPreferences?.allowedEmail ?? false);
       setPreferences(result?.viewer?.notificationPreferences?.notifications ?? []);
       setTimer(
