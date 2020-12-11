@@ -768,6 +768,7 @@ const exportKeys = {
     'shipment.todo.taskCount.skipped',
     'shipment.todo.taskCount.delayed',
   ],
+  'shipment.totalVolume': ['shipment.totalVolume.value', 'shipment.totalVolume.metric'],
 };
 
 export default function shipmentColumns({
