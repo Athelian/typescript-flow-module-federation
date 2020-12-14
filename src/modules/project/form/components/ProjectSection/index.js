@@ -14,6 +14,7 @@ import validator from 'modules/project/form/validator';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import GridRow from 'components/GridRow';
+import { BooleanValue } from 'react-values';
 import {
   FieldItem,
   Label,
@@ -22,6 +23,7 @@ import {
   TextAreaInputFactory,
   DateInputFactory,
   Display,
+  ToggleInput,
 } from 'components/Form';
 import FormattedDate from 'components/FormattedDate';
 import {
@@ -117,7 +119,6 @@ const ProjectSection = ({ isNew }: Props) => {
                           />
                         )}
                       </FormField>
-
                       <Subscribe to={[ProjectMilestonesContainer]}>
                         {({ lastMilestoneDueDate }) => (
                           <FieldItem
@@ -135,6 +136,23 @@ const ProjectSection = ({ isNew }: Props) => {
                           />
                         )}
                       </Subscribe>
+                      <BooleanValue value={!!values.archived}>
+                        {({ value: isArchived, set: setArchivedToggle }) => {
+                          return (
+                            <ToggleInput
+                              toggled={isArchived}
+                              onToggle={() => {
+                                setArchivedToggle(!isArchived);
+                                setFieldValue('archived', !isArchived);
+                              }}
+                            >
+                              <Label>
+                                <FormattedMessage {...messages.archived} />
+                              </Label>
+                            </ToggleInput>
+                          );
+                        }}
+                      </BooleanValue>
                     </GridRow>
 
                     <div className={DescriptionTagsWrapperStyle}>

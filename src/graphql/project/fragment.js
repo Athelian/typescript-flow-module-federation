@@ -75,6 +75,7 @@ export const projectFormQueryFragment = gql`
     name
     description
     dueDate
+    archived
     taskCount {
       ...taskCountFragment
     }

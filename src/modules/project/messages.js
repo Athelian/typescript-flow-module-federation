@@ -18,6 +18,10 @@ export default defineMessages({
     id: 'modules.Projects.dueDate',
     defaultMessage: 'Due Date',
   },
+  archived: {
+    id: 'modules.Projects.archived',
+    defaultMessage: 'Archived',
+  },
   lastMilestoneDueDate: {
     id: 'modules.Projects.lastMilestoneDueDate',
     defaultMessage: 'Last Milestone Due Date',
