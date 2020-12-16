@@ -1079,6 +1079,8 @@
   "modules.Projects.sheet.projectSticky": "Project",
   "modules.Projects.sheet.milestoneSticky": "Milestone {milestone}",
   "modules.Projects.sheet.taskSticky": "Task {task} of milestone {milestone}",
+  "modules.Projects.form.activateDialog.confirmMsg": "Are you sure you want to activate this {project}?",
+  "modules.Projects.form.archiveDialog.confirmMsg": "Are you sure you want to archive this {project}?",
   "modules.projectTemplate.milestones": "milestones",
   "modules.projectTemplate.dueDate": "Due Date",
   "common.datePlaceholder": "yyyy/mm/dd",

@@ -22,6 +22,14 @@ export default defineMessages({
     id: 'modules.Projects.archived',
     defaultMessage: 'Archived',
   },
+  activateDialog: {
+    id: 'modules.Projects.form.activateDialog.confirmMsg',
+    defaultMessage: 'Are you sure you want to activate this {project}?',
+  },
+  archiveDialog: {
+    id: 'modules.Projects.form.archiveDialog.confirmMsg',
+    defaultMessage: 'Are you sure you want to activate this {project}?',
+  },
   lastMilestoneDueDate: {
     id: 'modules.Projects.lastMilestoneDueDate',
     defaultMessage: 'Last Milestone Due Date',
