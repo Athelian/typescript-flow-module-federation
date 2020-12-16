@@ -12,8 +12,8 @@ import {
 
 type Props = {
   item: Object,
-  allowDelete: Boolean,
-  allowChangeStatus: Boolean,
+  allowDelete: boolean,
+  allowChangeStatus: boolean,
 };
 
 const ProjectGridItem = ({ item, allowDelete, allowChangeStatus }: Props) => {
