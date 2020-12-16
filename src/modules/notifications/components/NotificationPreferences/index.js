@@ -378,6 +378,7 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
               preferences={preferencesByType({
                 preferences,
                 entity: 'shipment',
+                ignoreKeys: ['shipment_update'],
               })}
               onChange={togglePreference}
             />
