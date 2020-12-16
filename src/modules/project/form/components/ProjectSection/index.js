@@ -23,7 +23,7 @@ import {
   TextAreaInputFactory,
   DateInputFactory,
   Display,
-  ToggleInput,
+  StatusToggle,
 } from 'components/Form';
 import FormattedDate from 'components/FormattedDate';
 import {
@@ -32,8 +32,10 @@ import {
   PROJECT_SET_DESCRIPTION,
   PROJECT_SET_DUE_DATE,
   PROJECT_SET_TAGS,
+  PROJECT_SET_ARCHIVED,
 } from 'modules/permission/constants/project';
 import { TAG_LIST } from 'modules/permission/constants/tag';
+import { ProjectActivateDialog, ProjectArchiveDialog } from 'modules/project/common/Dialog';
 import messages from 'modules/project/messages';
 import {
   ProjectSectionWrapperStyle,
@@ -54,10 +56,11 @@ type Props = {
   isNew: boolean,
   project: Object,
 };
-const ProjectSection = ({ isNew }: Props) => {
+const ProjectSection = ({ isNew, project }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const [isExpanded, setIsExpanded] = React.useState(true);
+  const { archived = false } = project || {};
 
   return (
     <>
@@ -136,22 +139,30 @@ const ProjectSection = ({ isNew }: Props) => {
                           />
                         )}
                       </Subscribe>
-                      <BooleanValue value={!!values.archived}>
-                        {({ value: isArchived, set: setArchivedToggle }) => {
-                          return (
-                            <ToggleInput
-                              toggled={isArchived}
-                              onToggle={() => {
-                                setArchivedToggle(!isArchived);
-                                setFieldValue('archived', !isArchived);
-                              }}
-                            >
-                              <Label>
-                                <FormattedMessage {...messages.archived} />
-                              </Label>
-                            </ToggleInput>
-                          );
-                        }}
+                      <BooleanValue>
+                        {({ value: isDialogOpen, set: dialogToggle }) => (
+                          <StatusToggle
+                            readOnly={
+                              !hasPermission(PROJECT_UPDATE) && !hasPermission(PROJECT_SET_ARCHIVED)
+                            }
+                            archived={archived}
+                            openStatusDialog={() => dialogToggle(true)}
+                            activateDialog={
+                              <ProjectActivateDialog
+                                project={project}
+                                isOpen={isDialogOpen && !!archived}
+                                onRequestClose={() => dialogToggle(false)}
+                              />
+                            }
+                            archiveDialog={
+                              <ProjectArchiveDialog
+                                project={project}
+                                isOpen={isDialogOpen && !archived}
+                                onRequestClose={() => dialogToggle(false)}
+                              />
+                            }
+                          />
+                        )}
                       </BooleanValue>
                     </GridRow>
 
