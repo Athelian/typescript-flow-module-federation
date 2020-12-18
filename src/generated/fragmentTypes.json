@@ -477,6 +477,9 @@
             "name": "Product"
           },
           {
+            "name": "Project"
+          },
+          {
             "name": "Order"
           },
           {
@@ -1572,6 +1575,15 @@
             "name": "ShipmentProductUnitNetWeightSetEvent"
           },
           {
+            "name": "ShipmentProductDescriptionSetEvent"
+          },
+          {
+            "name": "ShipmentProductCountryOfOriginSetEvent"
+          },
+          {
+            "name": "ShipmentProductHSCodeSetEvent"
+          },
+          {
             "name": "ShipmentPackageNumberSetEvent"
           },
           {
@@ -1638,6 +1650,15 @@
             "name": "ShipmentProductUnitNetWeightSetEvent"
           },
           {
+            "name": "ShipmentProductDescriptionSetEvent"
+          },
+          {
+            "name": "ShipmentProductCountryOfOriginSetEvent"
+          },
+          {
+            "name": "ShipmentProductHSCodeSetEvent"
+          },
+          {
             "name": "ShipmentPackageNumberSetEvent"
           },
           {
@@ -1702,6 +1723,15 @@
           },
           {
             "name": "ShipmentProductUnitNetWeightSetEvent"
+          },
+          {
+            "name": "ShipmentProductDescriptionSetEvent"
+          },
+          {
+            "name": "ShipmentProductCountryOfOriginSetEvent"
+          },
+          {
+            "name": "ShipmentProductHSCodeSetEvent"
           },
           {
             "name": "ShipmentPackageNumberSetEvent"
