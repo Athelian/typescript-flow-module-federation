@@ -15,6 +15,7 @@ const projectSheetFragment = gql`
     name
     description
     dueDate
+    archived
     tags {
       ...tagFragment
       ...forbiddenFragment
