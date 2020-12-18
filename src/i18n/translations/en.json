@@ -1059,6 +1059,7 @@
   "modules.Projects.approved": "Approved",
   "modules.Projects.unapproved": "Unapproved",
   "modules.Projects.archived": "Archived",
+  "modules.Projects.status": "Status",
   "modules.project.newFromTemplate": "FROM TEMPLATE",
   "modules.Project.deleteProject.deleting": "Deleting {projectLabel} ...",
   "modules.Project.deleteProject.message1": "Are you sure you want to delete this {projectLabel}?",

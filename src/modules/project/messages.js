@@ -22,6 +22,10 @@ export default defineMessages({
     id: 'modules.Projects.archived',
     defaultMessage: 'Archived',
   },
+  status: {
+    id: 'modules.Projects.status',
+    defaultMessage: 'Status',
+  },
   activateDialog: {
     id: 'modules.Projects.form.activateDialog.confirmMsg',
     defaultMessage: 'Are you sure you want to activate this {project}?',

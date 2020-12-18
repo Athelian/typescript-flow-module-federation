@@ -47,7 +47,7 @@ export const projectColumns: Array<ColumnConfig> = [
   },
   {
     key: 'project.archived',
-    title: <FormattedMessage {...projectMessages.archived} />,
+    title: <FormattedMessage {...projectMessages.status} />,
     icon: 'PROJECT',
     color: colors.PROJECT,
     width: ColumnWidths.Status,
