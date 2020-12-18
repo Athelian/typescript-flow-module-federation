@@ -46,13 +46,14 @@ export const DescriptionTagsWrapperStyle: string = css`
 
 export const DescriptionWrapperStyle: string = css`
   width: 420px;
+  padding-bottom: 20px;
 `;
 
 export const TagsWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
-  padding: 0 0 0 20px;
-  grid-template-columns: calc(100vw - 900px);
+  padding: 0 0 10px 0;
+  grid-template-columns: 420px;
 `;
 
 export const MilestonesTimelineWrapperStyle: string = css`

@@ -14,6 +14,7 @@ import validator from 'modules/project/form/validator';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import GridRow from 'components/GridRow';
+import GridColumn from 'components/GridColumn';
 import { BooleanValue } from 'react-values';
 import {
   FieldItem,
@@ -72,158 +73,169 @@ const ProjectSection = ({ isNew, project }: Props) => {
               <>
                 <div className={MainSectionWrapperStyle}>
                   <div className={ProjectInfoWrapperStyle}>
-                    <GridRow>
-                      <FormField
-                        name="name"
-                        initValue={values.name}
-                        values={values}
-                        validator={validator}
-                        setFieldValue={setFieldValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <TextInputFactory
-                            name={name}
-                            {...inputHandlers}
-                            isNew={isNew}
-                            required
-                            originalValue={initialValues[name]}
-                            label={<FormattedMessage {...messages.name} />}
-                            editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_NAME])}
-                            vertical
-                            inputAlign="left"
-                          />
-                        )}
-                      </FormField>
-
-                      <FormField
-                        name="dueDate"
-                        initValue={values.dueDate}
-                        values={values}
-                        validator={validator}
-                        setFieldValue={setFieldValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <DateInputFactory
-                            name={name}
-                            {...inputHandlers}
-                            onBlur={evt => {
-                              inputHandlers.onBlur(evt);
-                              setTimeout(() => {
-                                emitter.emit('AUTO_DATE', name, evt?.target?.value || null);
-                              }, 200);
-                            }}
-                            isNew={isNew}
-                            originalValue={initialValues[name]}
-                            label={<FormattedMessage {...messages.dueDate} />}
-                            editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_DUE_DATE])}
-                            vertical
-                            inputAlign="left"
-                            handleTimezone
-                          />
-                        )}
-                      </FormField>
-                      <Subscribe to={[ProjectMilestonesContainer]}>
-                        {({ lastMilestoneDueDate }) => (
-                          <FieldItem
-                            vertical
-                            label={
-                              <Label height="30px">
-                                <FormattedMessage {...messages.lastMilestoneDueDate} />
-                              </Label>
-                            }
-                            input={
-                              <Display height="30px" align="left" width="200px">
-                                <FormattedDate value={lastMilestoneDueDate()} />
-                              </Display>
-                            }
-                          />
-                        )}
-                      </Subscribe>
-                      <BooleanValue>
-                        {({ value: isDialogOpen, set: dialogToggle }) => (
-                          <StatusToggle
-                            readOnly={
-                              !hasPermission(PROJECT_UPDATE) && !hasPermission(PROJECT_SET_ARCHIVED)
-                            }
-                            archived={archived}
-                            openStatusDialog={() => dialogToggle(true)}
-                            activateDialog={
-                              <ProjectActivateDialog
-                                project={project}
-                                isOpen={isDialogOpen && !!archived}
-                                onRequestClose={() => dialogToggle(false)}
-                              />
-                            }
-                            archiveDialog={
-                              <ProjectArchiveDialog
-                                project={project}
-                                isOpen={isDialogOpen && !archived}
-                                onRequestClose={() => dialogToggle(false)}
-                              />
-                            }
-                          />
-                        )}
-                      </BooleanValue>
-                    </GridRow>
-
-                    <div className={DescriptionTagsWrapperStyle}>
-                      <div className={DescriptionWrapperStyle}>
+                    <GridRow gap="40px">
+                      <GridColumn>
                         <FormField
-                          name="description"
-                          initValue={values.description}
+                          name="name"
+                          initValue={values.name}
                           values={values}
                           validator={validator}
                           setFieldValue={setFieldValue}
                         >
                           {({ name, ...inputHandlers }) => (
-                            <TextAreaInputFactory
+                            <TextInputFactory
                               name={name}
                               {...inputHandlers}
                               isNew={isNew}
+                              required
                               originalValue={initialValues[name]}
-                              label={<FormattedMessage {...messages.description} />}
-                              editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_DESCRIPTION])}
-                              vertical
-                              inputWidth="420px"
-                              inputHeight="80px"
+                              label={<FormattedMessage {...messages.name} />}
+                              editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_NAME])}
+                              inputAlign="left"
                             />
                           )}
                         </FormField>
-                      </div>
-
-                      <Subscribe to={[ProjectTagsContainer]}>
-                        {({ state: { tags }, setFieldValue: changeTags }) => (
-                          <div className={TagsWrapperStyle}>
-                            <Label height="30px">
-                              <FormattedMessage {...messages.tags} />
-                            </Label>
-
-                            <TagsInput
-                              id="tags"
-                              name="tags"
-                              tagType="Project"
-                              values={tags}
-                              onChange={value => {
-                                changeTags('tags', value);
+                        <FormField
+                          name="dueDate"
+                          initValue={values.dueDate}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              onBlur={evt => {
+                                inputHandlers.onBlur(evt);
+                                setTimeout(() => {
+                                  emitter.emit('AUTO_DATE', name, evt?.target?.value || null);
+                                }, 200);
                               }}
-                              onClickRemove={value => {
-                                changeTags(
-                                  'tags',
-                                  tags.filter(({ id }) => id !== value.id)
-                                );
-                              }}
-                              editable={{
-                                set:
-                                  hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]) &&
-                                  hasPermission(TAG_LIST),
-                                remove: hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]),
-                              }}
-                              width="100%"
+                              isNew={isNew}
+                              originalValue={initialValues[name]}
+                              label={<FormattedMessage {...messages.dueDate} />}
+                              editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_DUE_DATE])}
+                              inputAlign="left"
+                              handleTimezone
                             />
-                          </div>
-                        )}
-                      </Subscribe>
-                    </div>
+                          )}
+                        </FormField>
+                        {/* TODO: placeholder for custom fields */}
+                        {/* <CustomFieldsFactory
+                          entityType="Order"
+                          customFields={values.customFields}
+                          setFieldValue={setFieldValue}
+                          editable={{ 
+                            values: hasPermission([ORDER_UPDATE, ORDER_SET_CUSTOM_FIELDS]),
+                            mask: hasPermission([ORDER_UPDATE, ORDER_SET_CUSTOM_FIELDS_MASK]),
+                          }}
+                        /> */}
+
+                        <Subscribe to={[ProjectMilestonesContainer]}>
+                          {({ lastMilestoneDueDate }) => (
+                            <FieldItem
+                              label={
+                                <Label height="30px">
+                                  <FormattedMessage {...messages.lastMilestoneDueDate} />
+                                </Label>
+                              }
+                              input={
+                                <Display height="30px" align="left" width="200px">
+                                  <FormattedDate value={lastMilestoneDueDate()} />
+                                </Display>
+                              }
+                            />
+                          )}
+                        </Subscribe>
+                        <div className={DescriptionTagsWrapperStyle}>
+                          <Subscribe to={[ProjectTagsContainer]}>
+                            {({ state: { tags }, setFieldValue: changeTags }) => (
+                              <div className={TagsWrapperStyle}>
+                                <Label height="30px">
+                                  <FormattedMessage {...messages.tags} />
+                                </Label>
+                                <TagsInput
+                                  id="tags"
+                                  name="tags"
+                                  tagType="Project"
+                                  values={tags}
+                                  onChange={value => {
+                                    changeTags('tags', value);
+                                  }}
+                                  onClickRemove={value => {
+                                    changeTags(
+                                      'tags',
+                                      tags.filter(({ id }) => id !== value.id)
+                                    );
+                                  }}
+                                  editable={{
+                                    set:
+                                      hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]) &&
+                                      hasPermission(TAG_LIST),
+                                    remove: hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]),
+                                  }}
+                                  width="100%"
+                                />
+                              </div>
+                            )}
+                          </Subscribe>
+                        </div>
+                        <div className={DescriptionWrapperStyle}>
+                          <FormField
+                            name="description"
+                            initValue={values.description}
+                            values={values}
+                            validator={validator}
+                            setFieldValue={setFieldValue}
+                          >
+                            {({ name, ...inputHandlers }) => (
+                              <TextAreaInputFactory
+                                name={name}
+                                {...inputHandlers}
+                                isNew={isNew}
+                                originalValue={initialValues[name]}
+                                label={<FormattedMessage {...messages.description} />}
+                                editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_DESCRIPTION])}
+                                vertical
+                                inputWidth="420px"
+                                inputHeight="80px"
+                              />
+                            )}
+                          </FormField>
+                        </div>
+                      </GridColumn>
+                      <GridColumn>
+                        <div>
+                          <BooleanValue>
+                            {({ value: isDialogOpen, set: dialogToggle }) => (
+                              <StatusToggle
+                                readOnly={
+                                  !hasPermission(PROJECT_UPDATE) &&
+                                  !hasPermission(PROJECT_SET_ARCHIVED)
+                                }
+                                archived={archived}
+                                openStatusDialog={() => dialogToggle(true)}
+                                activateDialog={
+                                  <ProjectActivateDialog
+                                    project={project}
+                                    isOpen={isDialogOpen && !!archived}
+                                    onRequestClose={() => dialogToggle(false)}
+                                  />
+                                }
+                                archiveDialog={
+                                  <ProjectArchiveDialog
+                                    project={project}
+                                    isOpen={isDialogOpen && !archived}
+                                    onRequestClose={() => dialogToggle(false)}
+                                  />
+                                }
+                              />
+                            )}
+                          </BooleanValue>
+                        </div>
+                      </GridColumn>
+                    </GridRow>
                   </div>
 
                   <div className={MilestonesTimelineWrapperStyle}>
