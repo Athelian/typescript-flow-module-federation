@@ -207,7 +207,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                       </GridColumn>
                       <GridColumn>
                         <div>
-                          {isNew && (
+                          {!isNew && (
                             <BooleanValue>
                               {({ value: isDialogOpen, set: dialogToggle }) => (
                                 <StatusToggle
