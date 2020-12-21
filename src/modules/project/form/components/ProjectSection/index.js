@@ -207,32 +207,34 @@ const ProjectSection = ({ isNew, project }: Props) => {
                       </GridColumn>
                       <GridColumn>
                         <div>
-                          <BooleanValue>
-                            {({ value: isDialogOpen, set: dialogToggle }) => (
-                              <StatusToggle
-                                readOnly={
-                                  !hasPermission(PROJECT_UPDATE) &&
-                                  !hasPermission(PROJECT_SET_ARCHIVED)
-                                }
-                                archived={archived}
-                                openStatusDialog={() => dialogToggle(true)}
-                                activateDialog={
-                                  <ProjectActivateDialog
-                                    project={project}
-                                    isOpen={isDialogOpen && !!archived}
-                                    onRequestClose={() => dialogToggle(false)}
-                                  />
-                                }
-                                archiveDialog={
-                                  <ProjectArchiveDialog
-                                    project={project}
-                                    isOpen={isDialogOpen && !archived}
-                                    onRequestClose={() => dialogToggle(false)}
-                                  />
-                                }
-                              />
-                            )}
-                          </BooleanValue>
+                          {isNew && (
+                            <BooleanValue>
+                              {({ value: isDialogOpen, set: dialogToggle }) => (
+                                <StatusToggle
+                                  readOnly={
+                                    !hasPermission(PROJECT_UPDATE) &&
+                                    !hasPermission(PROJECT_SET_ARCHIVED)
+                                  }
+                                  archived={archived}
+                                  openStatusDialog={() => dialogToggle(true)}
+                                  activateDialog={
+                                    <ProjectActivateDialog
+                                      project={project}
+                                      isOpen={isDialogOpen && !!archived}
+                                      onRequestClose={() => dialogToggle(false)}
+                                    />
+                                  }
+                                  archiveDialog={
+                                    <ProjectArchiveDialog
+                                      project={project}
+                                      isOpen={isDialogOpen && !archived}
+                                      onRequestClose={() => dialogToggle(false)}
+                                    />
+                                  }
+                                />
+                              )}
+                            </BooleanValue>
+                          )}
                         </div>
                       </GridColumn>
                     </GridRow>
