@@ -50,7 +50,7 @@ const ProjectSheetModule = () => {
     setSortBy,
   } = useSheet({
     itemsQuery: projectsQuery,
-    initialFilterBy: { query: '', archived: false },
+    initialFilterBy: { query: '' },
     initialSortBy: { updatedAt: 'DESCENDING' },
     sorter,
     getItems,

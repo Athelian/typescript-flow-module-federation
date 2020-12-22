@@ -24,7 +24,7 @@ import { projectsExportQuery } from './query';
 
 const ProjectListModule = () => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
-    { query: '', archived: false },
+    { query: '' },
     { updatedAt: 'DESCENDING' },
     'project_cards'
   );
