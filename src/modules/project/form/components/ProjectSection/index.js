@@ -41,10 +41,12 @@ import {
   PROJECT_SET_DUE_DATE,
   PROJECT_SET_TAGS,
   PROJECT_SET_ARCHIVED,
+  PROJECT_SET_FOLLOWERS,
 } from 'modules/permission/constants/project';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { ProjectActivateDialog, ProjectArchiveDialog } from 'modules/project/common/Dialog';
 import messages from 'modules/project/messages';
+import Followers from 'components/Followers';
 import {
   ProjectSectionWrapperStyle,
   MainSectionWrapperStyle,
@@ -217,7 +219,16 @@ const ProjectSection = ({ isNew, project }: Props) => {
                         </div>
                       </GridColumn>
                       <GridColumn>
-                        <div>
+                        <GridRow>
+                          <Followers
+                            followers={values?.followers ?? []}
+                            setFollowers={value => setFieldValue('followers', value)}
+                            organizationIds={[values?.importer?.id, values?.exporter?.id].filter(
+                              Boolean
+                            )}
+                            editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_FOLLOWERS])}
+                          />
+
                           {!isNew && (
                             <BooleanValue>
                               {({ value: isDialogOpen, set: dialogToggle }) => (
@@ -246,7 +257,8 @@ const ProjectSection = ({ isNew, project }: Props) => {
                               )}
                             </BooleanValue>
                           )}
-                        </div>
+                        </GridRow>
+
                         {/* owner field */}
                         {ownedBy && (
                           <FieldItem

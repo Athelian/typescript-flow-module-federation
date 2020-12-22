@@ -10,3 +10,4 @@ export const PROJECT_SET_DESCRIPTION = 'task.projects.setDescription';
 export const PROJECT_SET_TAGS = 'task.projects.setTags';
 export const PROJECT_SET_MILESTONES = 'task.projects.setMilestones';
 export const PROJECT_SET_ARCHIVED = 'task.projects.setArchived';
+export const PROJECT_SET_FOLLOWERS = 'task.projects.setFollowers';
