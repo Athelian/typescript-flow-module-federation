@@ -292,9 +292,7 @@ const TaskCard = ({
                     inputHandlers.onBlur(evt);
                     saveOnBlur({
                       ...task,
-                      dueDate: inputHandlers.value
-                        ? formatDateToGraphql(new Date(inputHandlers.value))
-                        : null,
+                      dueDate: inputHandlers.value || null,
                     });
                     setTimeout(() => {
                       emitter.emit('AUTO_DATE');
@@ -306,6 +304,7 @@ const TaskCard = ({
                   name={fieldName}
                   isNew={false}
                   hideTooltip
+                  handleTimezone
                   inputColor={
                     dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
                       ? 'RED'
@@ -350,9 +349,7 @@ const TaskCard = ({
                       inputHandlers.onBlur(evt);
                       saveOnBlur({
                         ...task,
-                        startDate: inputHandlers.value
-                          ? formatDateToGraphql(new Date(inputHandlers.value))
-                          : null,
+                        startDate: inputHandlers.value || null,
                       });
                       setTimeout(() => {
                         emitter.emit('AUTO_DATE');
@@ -363,6 +360,7 @@ const TaskCard = ({
                     inputHeight="20px"
                     name={fieldName}
                     isNew={false}
+                    handleTimezone
                     hideTooltip
                   />
                 );
