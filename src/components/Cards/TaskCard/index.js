@@ -292,7 +292,9 @@ const TaskCard = ({
                     inputHandlers.onBlur(evt);
                     saveOnBlur({
                       ...task,
-                      dueDate: inputHandlers.value || null,
+                      dueDate: inputHandlers.value
+                        ? formatDateToGraphql(new Date(inputHandlers.value))
+                        : null,
                     });
                     setTimeout(() => {
                       emitter.emit('AUTO_DATE');
@@ -304,7 +306,6 @@ const TaskCard = ({
                   name={fieldName}
                   isNew={false}
                   hideTooltip
-                  handleTimezone
                   inputColor={
                     dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
                       ? 'RED'
@@ -341,30 +342,29 @@ const TaskCard = ({
             </Display>
           ) : (
             <FormField name={`task.${id}.startDate`} initValue={startDate} values={values}>
-              {({ name: fieldName, ...inputHandlers }) => {
-                return (
-                  <DateInputFactory
-                    {...inputHandlers}
-                    onBlur={evt => {
-                      inputHandlers.onBlur(evt);
-                      saveOnBlur({
-                        ...task,
-                        startDate: inputHandlers.value || null,
-                      });
-                      setTimeout(() => {
-                        emitter.emit('AUTO_DATE');
-                      }, 200);
-                    }}
-                    editable={editable.startDate && !startDateBinding}
-                    inputWidth="120px"
-                    inputHeight="20px"
-                    name={fieldName}
-                    isNew={false}
-                    handleTimezone
-                    hideTooltip
-                  />
-                );
-              }}
+              {({ name: fieldName, ...inputHandlers }) => (
+                <DateInputFactory
+                  {...inputHandlers}
+                  onBlur={evt => {
+                    inputHandlers.onBlur(evt);
+                    saveOnBlur({
+                      ...task,
+                      startDate: inputHandlers.value
+                        ? formatDateToGraphql(new Date(inputHandlers.value))
+                        : null,
+                    });
+                    setTimeout(() => {
+                      emitter.emit('AUTO_DATE');
+                    }, 200);
+                  }}
+                  editable={editable.startDate && !startDateBinding}
+                  inputWidth="120px"
+                  inputHeight="20px"
+                  name={fieldName}
+                  isNew={false}
+                  hideTooltip
+                />
+              )}
             </FormField>
           )}
 
