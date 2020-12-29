@@ -90,7 +90,7 @@ function MilestonesSection({ intl }: Props) {
           },
           { state: { dueDate } }
         ) => {
-          const initial = createMilestoneColumnsData(milestones);
+          const tasksByMilestoneId = createMilestoneColumnsData(milestones);
           const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate(
             {
               milestones,
@@ -106,8 +106,8 @@ function MilestonesSection({ intl }: Props) {
                 }}
                 allowDragAndDrop={filterAndSort.sort.field === 'default'}
                 manualSort={filterAndSort.sort}
-                columns={initial}
-                ordered={Object.keys(initial)}
+                columns={tasksByMilestoneId}
+                ordered={Object.keys(tasksByMilestoneId)}
                 onChangeOrdering={changeMilestoneOrdering}
                 onChangeColumns={changeMilestones}
                 onChangeTask={updateTask}
