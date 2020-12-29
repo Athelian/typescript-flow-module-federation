@@ -105,13 +105,17 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
     'tasks',
     originalValues?.tasks ?? [],
     newValues.tasks ?? [],
-    (task: ?Object, newTask: Object) => ({
-      ...(task ? { id: task.id } : {}),
-      ...prepareParsedTaskInput(
-        !task ? (originalValues?.originalTasks ?? []).find(item => item.id === newTask.id) : task,
-        newTask
-      ),
-    })
+    (task: ?Object, newTask: Object) => {
+      console.log('[debug] task array object is');
+      console.log('[debug] newTask object is ', newTask);
+      return {
+        ...(task ? { id: task.id } : {}),
+        ...prepareParsedTaskInput(
+          !task ? (originalValues?.originalTasks ?? []).find(item => item.id === newTask.id) : task,
+          newTask
+        ),
+      };
+    }
   ),
   ...parseFilesField('files', originalValues?.files ?? [], newValues.files),
 });

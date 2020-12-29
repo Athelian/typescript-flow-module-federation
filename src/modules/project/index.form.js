@@ -23,7 +23,7 @@ import SaveFormButton from 'components/SaveFormButton';
 import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { decodeId, encodeId, uuid } from 'utils/id';
-import { removeTypename } from 'utils/data';
+import { removeTypename, isForbidden } from 'utils/data';
 import { projectExportQuery, projectTimelineQuery } from './query';
 import ProjectForm from './form';
 import validator from './form/validator';
@@ -91,6 +91,27 @@ class ProjectFormModule extends React.PureComponent<Props> {
     ).then(logger.warn);
   };
 
+  // temp ids were added to the tasks of the project as it
+  // was required on draggable library
+  // rerunning this to remove the temp variables
+  removeTempValues = form => {
+    const newForm = JSON.parse(JSON.stringify(form));
+
+    newForm.milestones = form.milestones.map(milestone => {
+      milestone.tasks = milestone.tasks.map(task => {
+        // eslint-disable-line no-param-reassign
+        if (isForbidden(task)) {
+          return { __typename: 'Forbidden' };
+        }
+        return task;
+      });
+
+      return milestone;
+    });
+
+    return form;
+  };
+
   onSave = async (
     originalValues: Object,
     formData: Object,
@@ -100,15 +121,23 @@ class ProjectFormModule extends React.PureComponent<Props> {
     onSuccess: Object => void,
     onErrors: Function = () => {}
   ) => {
+    console.log('[debug] project on save');
+    console.log('[debug] original values', originalValues);
+    console.log('[debug] formData is ', formData);
     const { projectId, intl, onSuccessCallback } = this.props;
     const isNew = this.isNew();
+
+    console.log('[debug] new originalValues', this.removeTempValues(originalValues));
+    console.log('[debug] new form data', this.removeTempValues(formData));
 
     const input = prepareParsedProjectInput(
       isNew ? { originalTasks: originalValues.originalTasks } : removeTypename(originalValues),
       removeTypename(formData)
     );
 
-    if (this.isNew()) {
+    console.log('[debug] params passed to backend', input);
+
+    if (isNew) {
       const { data } = await saveProject({ variables: { input } });
       if (!data) return;
 

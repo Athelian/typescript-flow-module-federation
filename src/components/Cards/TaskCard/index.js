@@ -140,6 +140,8 @@ const TaskCard = ({
     dueDateBinding,
   } = task;
 
+  // TODO: reference stuff
+  // if no task then return a blank card?
   let milestone;
   if (isNotFound(task.milestone)) {
     milestone = null;

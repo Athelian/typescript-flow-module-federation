@@ -26,7 +26,7 @@ type ProjectInfo = {
 type Props = {|
   columns: Object,
   projectInfo: ProjectInfo,
-  ordered: Object,
+  ordered: Object, // the order of the milestones in the board [boardId1, boardId2, boardId3]
   onChangeOrdering: (Array<string>) => void,
   onChangeColumns: (MilestoneMap, string) => void,
   onChangeTask: ({ milestoneId: string, taskId: string, task: Task }) => void,
@@ -80,10 +80,12 @@ const reorderMilestoneMap = ({ milestoneMap, source, destination }: Object): Obj
   };
 };
 
+// BOARD
 export default class Board extends Component<Props> {
   boardRef: ?HTMLElement;
 
   onDragEnd = (result: DropResult, timezone: string) => {
+    console.log('[debug] drag end start');
     const {
       ordered: prevOrdered,
       columns: prevColumns,
@@ -108,20 +110,23 @@ export default class Board extends Component<Props> {
       onChangeColumns(columns, timezone);
       return;
     }
-
+    console.log('[debug]', 1);
     // dropped nowhere
     if (!result.destination) {
       return;
     }
+    console.log('[debug]', 2);
 
     const { source } = result;
     const { destination } = result;
+    console.log('[debug]', 3);
 
     // did not move anywhere - can bail early
     if (source.droppableId === destination.droppableId && source.index === destination.index) {
       return;
     }
 
+    console.log('[debug]', 4);
     // reordering column
     if (result.type === 'COLUMN') {
       const ordered: string[] = reorder(prevOrdered, source.index, destination.index);
@@ -130,12 +135,14 @@ export default class Board extends Component<Props> {
 
       return;
     }
+    console.log('[debug]', 5);
 
     const data = reorderMilestoneMap({
       milestoneMap: prevColumns,
       source,
       destination,
     });
+    console.log(6);
 
     onChangeColumns(data.milestoneMap, timezone);
   };
@@ -166,25 +173,30 @@ export default class Board extends Component<Props> {
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
-            {ordered.map((key: string, index: number) => (
-              <MilestoneColumn
-                allowDragColumns={editable.milestoneColumnEditable}
-                allowDragRows={editable.milestoneRowEditable}
-                isDragDisabled={!allowDragAndDrop}
-                isDropDisabled={!allowDragAndDrop}
-                key={key}
-                index={index}
-                id={key}
-                tasks={injectProjectAndMilestoneDueDate({
-                  projectInfo,
-                  milestoneId: key,
-                  tasks: columns[key],
-                })}
-                manualSort={manualSort}
-                onChangeTask={onChangeTask}
-                onRemoveTask={onRemoveTask}
-              />
-            ))}
+            {ordered.map((key: string, index: number) => {
+              const tasks = injectProjectAndMilestoneDueDate({
+                projectInfo,
+                milestoneId: key,
+                tasks: columns[key],
+              });
+              console.log('[debug] <Board> tasks are', tasks);
+
+              return (
+                <MilestoneColumn
+                  allowDragColumns={editable.milestoneColumnEditable}
+                  allowDragRows={editable.milestoneRowEditable}
+                  isDragDisabled={!allowDragAndDrop}
+                  isDropDisabled={!allowDragAndDrop}
+                  key={key}
+                  index={index}
+                  id={key}
+                  tasks={tasks}
+                  manualSort={manualSort}
+                  onChangeTask={onChangeTask}
+                  onRemoveTask={onRemoveTask}
+                />
+              );
+            })}
             {provided.placeholder}
             {editable.milestoneColumnEditable && (
               <Subscribe to={[ProjectMilestonesContainer]}>

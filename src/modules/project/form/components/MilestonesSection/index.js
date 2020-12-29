@@ -17,6 +17,8 @@ import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/projec
 import FilterToolBar from 'components/common/FilterToolBar';
 import { calculateMilestonesEstimatedCompletionDate } from 'utils/project';
 import { EstimatedCompletionDateContext } from 'modules/project/form/helpers';
+import { uuid } from 'utils/id';
+import { isForbidden } from 'utils/data';
 import Board from './components/Board';
 import { NavbarStyle } from './style';
 
@@ -25,13 +27,22 @@ type MilestoneMap = {
 };
 
 const createMilestoneColumnsData = memoize((milestones: Array<Object>) => {
-  return milestones.reduce(
-    (previous: MilestoneMap, milestone: Milestone) => ({
+  return milestones.reduce((previous: MilestoneMap, milestone: Milestone) => {
+    // forbidden items dont have an id
+    // we add a dummy id as draggable library requires an id
+    const validatedTasks = milestone.tasks.map(task => {
+      if (isForbidden(task)) {
+        task.id = uuid(); // eslint-disable-line no-param-reassign
+      }
+
+      return task;
+    });
+
+    return {
       ...previous,
-      [milestone.id]: milestone.tasks || [],
-    }),
-    {}
-  );
+      [milestone.id]: validatedTasks,
+    };
+  }, {});
 });
 
 type Props = {
@@ -67,6 +78,7 @@ function MilestonesSection({ intl }: Props) {
     { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
     { title: intl.formatMessage(messages.entity), value: 'entity' },
   ];
+
   const { filterAndSort, onChangeFilter } = useSortAndFilter(getInitFilter());
   return (
     <>
@@ -91,6 +103,7 @@ function MilestonesSection({ intl }: Props) {
           { state: { dueDate } }
         ) => {
           const tasksByMilestoneId = createMilestoneColumnsData(milestones);
+          console.log('[debug] tasks by milestoneId', tasksByMilestoneId);
           const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate(
             {
               milestones,

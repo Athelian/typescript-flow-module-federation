@@ -27,7 +27,7 @@ type Props = {|
 
 function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
   return (
-    <PartnerPermissionsWrapper data={task} key={task.id}>
+    <PartnerPermissionsWrapper data={task}>
       {(permissions, isOwner) => (
         <BooleanValue>
           {({ value: isOpen, set: toggleTaskForm }) => (
@@ -38,6 +38,8 @@ function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
               >
+                {/* possible fix to add forbidden is to put a ternary here??? */}
+                {/* since TaskCard is hoc'ed by withForbidden. have a way to make use of it */}
                 <TaskCard
                   hideProjectInfo
                   entity={{

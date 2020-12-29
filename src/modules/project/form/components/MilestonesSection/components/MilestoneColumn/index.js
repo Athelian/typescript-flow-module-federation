@@ -41,31 +41,36 @@ export default function MilestoneColumn({
 }: Props) {
   return (
     <Draggable draggableId={id} index={index} isDragDisabled={!allowDragColumns}>
-      {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-        <div
-          className={MilestoneColumnWrapperStyle}
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-        >
-          <MilestoneColumnHeaderCard
-            milestoneId={id}
-            isDragging={snapshot.isDragging}
-            provided={provided}
-          />
-          <TaskList
-            listId={id}
-            onChangeTask={onChangeTask}
-            onRemoveTask={onRemoveTask}
-            isDropDisabled={isDropDisabled}
-            isDragDisabled={isDragDisabled || !allowDragRows}
-            listType="TASK"
-            style={{
-              backgroundColor: snapshot.isDragging ? colors.TEAL : null,
-            }}
-            tasks={sortBy(tasks, manualSort)}
-          />
-        </div>
-      )}
+      {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
+        const sortedTasks = sortBy(tasks, manualSort);
+        console.log('[debug] <MilestoneColumn> sorted tasks are', sortedTasks);
+
+        return (
+          <div
+            className={MilestoneColumnWrapperStyle}
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+          >
+            <MilestoneColumnHeaderCard
+              milestoneId={id}
+              isDragging={snapshot.isDragging}
+              provided={provided}
+            />
+            <TaskList
+              listId={id}
+              onChangeTask={onChangeTask}
+              onRemoveTask={onRemoveTask}
+              isDropDisabled={isDropDisabled}
+              isDragDisabled={isDragDisabled || !allowDragRows}
+              listType="TASK"
+              style={{
+                backgroundColor: snapshot.isDragging ? colors.TEAL : null,
+              }}
+              tasks={sortedTasks}
+            />
+          </div>
+        );
+      }}
     </Draggable>
   );
 }
