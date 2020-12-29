@@ -98,8 +98,8 @@ class ProjectFormModule extends React.PureComponent<Props> {
     const newForm = JSON.parse(JSON.stringify(form));
 
     newForm.milestones = form.milestones.map(milestone => {
+      // eslint-disable-next-line
       milestone.tasks = milestone.tasks.map(task => {
-        // eslint-disable-line no-param-reassign
         if (isForbidden(task)) {
           return { __typename: 'Forbidden' };
         }
