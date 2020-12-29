@@ -33,7 +33,7 @@ type Props = {|
 
 const ProjectCard = ({ project, onClick, ...rest }: Props) => {
   const { user } = useUser();
-  const { name, dueDate, tags = [], milestones = [] } = project;
+  const { name, dueDate, tags = [], milestones = [], archived = false } = project;
 
   const lastMilestone = milestones[milestones.length - 1];
   let lastMilestoneDiff = 0;
@@ -52,6 +52,7 @@ const ProjectCard = ({ project, onClick, ...rest }: Props) => {
       icon="PROJECT"
       color="PROJECT"
       onClick={onClick}
+      isArchived={archived}
       {...rest}
     >
       <div className={ProjectCardStyle}>
