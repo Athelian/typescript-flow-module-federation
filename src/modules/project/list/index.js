@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
+import emitter from 'utils/emitter';
 import { Query } from 'react-apollo';
+import apolloClient from 'apollo';
 import logger from 'utils/logger';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
@@ -15,6 +17,12 @@ type Props = {
 };
 
 const ProjectList = ({ ...filtersAndSort }: Props) => {
+  React.useEffect(() => {
+    emitter.once('CHANGE_PROJECT_STATUS', () => {
+      apolloClient.reFetchObservableQueries();
+    });
+  });
+
   return (
     <Query
       query={projectListQuery}

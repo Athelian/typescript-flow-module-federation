@@ -157,6 +157,7 @@ export const prepareParsedProjectInput = (
   ...parseGenericField('name', originalValues?.name ?? null, newValues.name),
   ...parseMemoField('description', originalValues?.description ?? null, newValues.description),
   ...parseDateField('dueDate', originalValues?.dueDate ?? null, newValues.dueDate),
+  ...parseGenericField('archived', originalValues?.archived ?? false, newValues.archived),
   ...parseArrayOfIdsField('tagIds', originalValues?.tags ?? [], newValues.tags),
   ...parseArrayOfChildrenField(
     'milestones',

@@ -11,6 +11,7 @@ export type State = {
   description?: string,
   dueDate?: Date,
   taskCount: TaskCount,
+  archived?: boolean,
 };
 
 export const initValues = {

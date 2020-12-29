@@ -9,6 +9,7 @@ import ActionDialog, {
   MilestonesLabelIcon,
   TasksLabelIcon,
 } from 'components/Dialog/ActionDialog';
+import emitter from 'utils/emitter';
 import { deleteProjectMutation } from './mutation';
 
 type Props = {|
@@ -18,7 +19,7 @@ type Props = {|
   onCancel: () => void,
 |};
 
-const DeleteProjectDialog = ({ onSuccess, onCancel, entity, isOpen }: Props) => {
+const ProjectDeleteDialog = ({ onSuccess, onCancel, entity, isOpen }: Props) => {
   const [deleteProject, { loading: isProcessing }] = useMutation(deleteProjectMutation);
 
   const onConfirm = () => {
@@ -28,6 +29,7 @@ const DeleteProjectDialog = ({ onSuccess, onCancel, entity, isOpen }: Props) => 
       },
     })
       .then(() => {
+        emitter.emit('CHANGE_PROJECT_STATUS', entity.id);
         onSuccess(entity.id);
       })
       .catch(() => {});
@@ -84,4 +86,4 @@ const DeleteProjectDialog = ({ onSuccess, onCancel, entity, isOpen }: Props) => 
   );
 };
 
-export default DeleteProjectDialog;
+export default ProjectDeleteDialog;

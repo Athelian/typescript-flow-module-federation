@@ -1,13 +1,14 @@
 // @flow
 import React from 'react';
-import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
-import { navigate } from '@reach/router';
-import { encodeId } from 'utils/id';
+import {
+  PROJECT_UPDATE,
+  PROJECT_DELETE,
+  PROJECT_SET_ARCHIVED,
+} from 'modules/permission/constants/project';
+import usePermission from 'hooks/usePermission';
 import GridView from 'components/GridView';
-import ProjectCard from 'components/Cards/ProjectCard';
-import { CardAction } from 'components/Cards/BaseCard';
-import DeleteProjectDialog from './DeleteProjectDialog';
+import ProjectGridItem from '../ProjectGridItem';
 
 type Props = {
   items: Array<Object>,
@@ -17,7 +18,9 @@ type Props = {
 };
 
 const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
-  const [deletedIds, setDeletedIds] = React.useState([]);
+  const { hasPermission } = usePermission();
+  const allowDelete = hasPermission(PROJECT_DELETE);
+  const allowChangeStatus = hasPermission(PROJECT_UPDATE) || hasPermission(PROJECT_SET_ARCHIVED);
 
   return (
     <GridView
@@ -30,41 +33,14 @@ const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
       }
       itemWidth="645px"
     >
-      {items.map(item =>
-        deletedIds.some(deletedId => deletedId === item.id) ? null : (
-          <BooleanValue key={item.id}>
-            {({ value: isDeleteDialogOpen, set: setDeleteDialogOpen }) => (
-              <>
-                <ProjectCard
-                  project={item}
-                  onClick={() => navigate(`/project/${encodeId(item.id)}`)}
-                  actions={[
-                    <CardAction
-                      icon="REMOVE"
-                      hoverColor="RED"
-                      onClick={evt => {
-                        evt.stopPropagation();
-                        setDeleteDialogOpen(true);
-                      }}
-                    />,
-                  ]}
-                  showActionsOnHover
-                />
-
-                <DeleteProjectDialog
-                  isOpen={isDeleteDialogOpen}
-                  onCancel={() => setDeleteDialogOpen(false)}
-                  entity={item}
-                  onSuccess={(id: string) => {
-                    setDeleteDialogOpen(false);
-                    setDeletedIds([...deletedIds, id]);
-                  }}
-                />
-              </>
-            )}
-          </BooleanValue>
-        )
-      )}
+      {items.map(item => (
+        <ProjectGridItem
+          key={item.id}
+          item={item}
+          allowDelete={allowDelete}
+          allowChangeStatus={allowChangeStatus}
+        />
+      ))}
     </GridView>
   );
 };
