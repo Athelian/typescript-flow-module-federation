@@ -32,6 +32,7 @@ export const projectCardFragment = gql`
     name
     description
     dueDate
+    archived
     milestones {
       ...milestoneInProjectCardFragment
     }
@@ -75,6 +76,7 @@ export const projectFormQueryFragment = gql`
     name
     description
     dueDate
+    archived
     taskCount {
       ...taskCountFragment
     }

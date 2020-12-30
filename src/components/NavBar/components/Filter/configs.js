@@ -1171,6 +1171,13 @@ export const FileFilterConfig: Array<FilterConfig> = [
 export const ProjectFilterConfig: Array<FilterConfig> = [
   {
     entity: 'PROJECT',
+    field: 'archived',
+    type: 'archived',
+    message: projectMessages.archived,
+    defaultValue: false,
+  },
+  {
+    entity: 'PROJECT',
     field: 'createdAt',
     type: 'date_range',
     message: projectMessages.createdAt,

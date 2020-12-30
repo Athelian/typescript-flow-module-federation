@@ -9,3 +9,4 @@ export const PROJECT_SET_DUE_DATE = 'task.projects.setDueDate';
 export const PROJECT_SET_DESCRIPTION = 'task.projects.setDescription';
 export const PROJECT_SET_TAGS = 'task.projects.setTags';
 export const PROJECT_SET_MILESTONES = 'task.projects.setMilestones';
+export const PROJECT_SET_ARCHIVED = 'task.projects.setArchived';

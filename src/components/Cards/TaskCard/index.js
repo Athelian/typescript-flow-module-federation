@@ -292,7 +292,9 @@ const TaskCard = ({
                     inputHandlers.onBlur(evt);
                     saveOnBlur({
                       ...task,
-                      dueDate: inputHandlers.value || null,
+                      dueDate: inputHandlers.value
+                        ? formatDateToGraphql(new Date(inputHandlers.value))
+                        : null,
                     });
                     setTimeout(() => {
                       emitter.emit('AUTO_DATE');
@@ -347,7 +349,9 @@ const TaskCard = ({
                     inputHandlers.onBlur(evt);
                     saveOnBlur({
                       ...task,
-                      startDate: inputHandlers.value ? inputHandlers.value : null,
+                      startDate: inputHandlers.value
+                        ? formatDateToGraphql(new Date(inputHandlers.value))
+                        : null,
                     });
                     setTimeout(() => {
                       emitter.emit('AUTO_DATE');

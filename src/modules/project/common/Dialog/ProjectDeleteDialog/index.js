@@ -18,7 +18,7 @@ type Props = {|
   onCancel: () => void,
 |};
 
-const DeleteProjectDialog = ({ onSuccess, onCancel, entity, isOpen }: Props) => {
+const ProjectDeleteDialog = ({ onSuccess, onCancel, entity, isOpen }: Props) => {
   const [deleteProject, { loading: isProcessing }] = useMutation(deleteProjectMutation);
 
   const onConfirm = () => {
@@ -84,4 +84,4 @@ const DeleteProjectDialog = ({ onSuccess, onCancel, entity, isOpen }: Props) => 
   );
 };
 
-export default DeleteProjectDialog;
+export default ProjectDeleteDialog;
