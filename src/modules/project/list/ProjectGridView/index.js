@@ -19,8 +19,13 @@ type Props = {
 
 const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
   const { hasPermission } = usePermission();
+  const [deletedIds, setDeletedIds] = React.useState([]);
   const allowDelete = hasPermission(PROJECT_DELETE);
   const allowChangeStatus = hasPermission(PROJECT_UPDATE) || hasPermission(PROJECT_SET_ARCHIVED);
+
+  const onDeleteItemSuccess = React.useCallback((deletedProjectId: string) => {
+    setDeletedIds(_deletedIds => [..._deletedIds, deletedProjectId]);
+  }, []);
 
   return (
     <GridView
@@ -33,14 +38,17 @@ const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
       }
       itemWidth="645px"
     >
-      {items.map(item => (
-        <ProjectGridItem
-          key={item.id}
-          item={item}
-          allowDelete={allowDelete}
-          allowChangeStatus={allowChangeStatus}
-        />
-      ))}
+      {items
+        .filter(item => !deletedIds.some(deletedId => deletedId === item.id))
+        .map(item => (
+          <ProjectGridItem
+            key={item.id}
+            item={item}
+            onDeleteItemSuccess={onDeleteItemSuccess}
+            allowDelete={allowDelete}
+            allowChangeStatus={allowChangeStatus}
+          />
+        ))}
     </GridView>
   );
 };

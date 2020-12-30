@@ -12,11 +12,12 @@ import {
 
 type Props = {
   item: Object,
+  onDeleteItemSuccess: () => void,
   allowDelete: boolean,
   allowChangeStatus: boolean,
 };
 
-const ProjectGridItem = ({ item, allowDelete, allowChangeStatus }: Props) => {
+const ProjectGridItem = ({ item, onDeleteItemSuccess, allowDelete, allowChangeStatus }: Props) => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [isStatusDialogOpen, setStatusDialogOpen] = React.useState(false);
 
@@ -28,6 +29,7 @@ const ProjectGridItem = ({ item, allowDelete, allowChangeStatus }: Props) => {
         entity={item}
         onSuccess={() => {
           setDeleteDialogOpen(false);
+          onDeleteItemSuccess(item.id);
         }}
       />
 
