@@ -12,7 +12,7 @@ import {
 
 type Props = {
   item: Object,
-  onDeleteItemSuccess: () => void,
+  onDeleteItemSuccess: (deletedProjectId: string) => void,
   allowDelete: boolean,
   allowChangeStatus: boolean,
 };
