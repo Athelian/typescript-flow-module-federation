@@ -2,6 +2,7 @@
 import * as React from 'react';
 import type { Partner } from 'generated/graphql';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
+import Tag from 'components/Tag';
 import Icon from 'components/Icon';
 import { FullValueTooltip } from 'components/Tooltip';
 import withForbiddenCard from 'hoc/withForbiddenCard';
@@ -14,6 +15,7 @@ import {
   PartnerTypesWrapperStyle,
   PartnerTypeStyle,
   PartnerCodeStyle,
+  PartnerTagsWrapperStyle,
 } from './style';
 
 type Props = {|
@@ -35,6 +37,7 @@ const PartnerCard = ({ partner, onClick, size, selectable, ...rest }: Props) => 
   const actions = selectable ? [] : [];
   const types = partner?.partner?.types || partner?.types || [];
   const partnerName = partner?.partner?.name || partner?.name || partner?.organization?.name;
+  const tags = partner?.tags || [];
 
   return (
     <BaseCard actions={actions} icon="PARTNER" color="PARTNER" selectable={selectable} {...rest}>
@@ -62,6 +65,9 @@ const PartnerCard = ({ partner, onClick, size, selectable, ...rest }: Props) => 
               <Icon icon="WAREHOUSER" />
             </div>
           </div>
+        </div>
+        <div className={PartnerTagsWrapperStyle}>
+          {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
         </div>
       </div>
     </BaseCard>

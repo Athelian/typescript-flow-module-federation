@@ -35,6 +35,9 @@ export const partnerCardFragment = gql`
     name
     code
     types
+    tags {
+      ...tagFragment
+    }
     organization {
       ... on Organization {
         id
