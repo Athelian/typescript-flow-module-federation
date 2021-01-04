@@ -32,17 +32,19 @@ const TagListProvider = ({ children, tagType, queryString }: Props) => {
     };
   }, [debouncedQueryString, getTags]);
 
+  const tagData = data ? getByPathWithDefault([], `tags.nodes`, data) : [];
+
   // if loading, return last data to not show an empty list
   if (loading) {
     return children({
-      data: data ? getByPathWithDefault([], `tags.nodes`, data) : [],
+      data: tagData,
       loading,
     });
   }
 
   // if not loading, return new data
   return children({
-    data: !loading && data ? getByPathWithDefault([], `tags.nodes`, data) : [],
+    data: tagData,
     loading,
   });
 };
