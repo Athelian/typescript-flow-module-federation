@@ -5,6 +5,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { shipmentFormTimelineAndCargoQuery } from 'modules/shipment/form/components/TimelineAndCargoSections/query';
+import useUser from 'hooks/useUser';
 
 type Props = {|
   isNew: boolean,
@@ -33,6 +34,7 @@ export default function CleanUpShipment({
   const [queryShipmentDetail, { data, called, loading }] = useLazyQuery(
     shipmentFormTimelineAndCargoQuery
   );
+  const { user } = useUser();
 
   const changeDataRef = React.useRef<ChangeData | null>(null);
 
@@ -41,11 +43,11 @@ export default function CleanUpShipment({
       const containers = data?.shipment?.containers ?? [];
       const batches = data?.shipment?.batches ?? [];
       if (!containersContainer.state.hasCalledContainerApiYet) {
-        containersContainer.initDetailValues(containers, true);
+        containersContainer.initDetailValues(containers, true, user.timezone);
       }
 
       if (!batchesContainer.state.hasCalledBatchesApiYet) {
-        batchesContainer.initDetailValues(batches, true);
+        batchesContainer.initDetailValues(batches, true, user.timezone);
       }
 
       const { action, payload } = changeDataRef.current ?? { action: '', payload: {} };
@@ -65,7 +67,7 @@ export default function CleanUpShipment({
           break;
       }
     }
-  }, [batchesContainer, called, containersContainer, data, loading]);
+  }, [batchesContainer, called, containersContainer, data, loading, user]);
 
   React.useEffect(() => {
     emitter.addListener('CLEAN_SHIPMENTS', changeData => {
