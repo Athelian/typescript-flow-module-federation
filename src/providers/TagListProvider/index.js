@@ -17,14 +17,17 @@ const TagListProvider = ({ children, tagType, queryString }: Props) => {
   const isMounted = React.useRef(true);
   const debouncedQueryString = useDebounce(queryString, 200);
 
-  const variables = {
+  let variables = {
     page: 1,
     perPage: 100,
     entityTypes: [tagType],
   };
 
   if (debouncedQueryString) {
-    variables.query = debouncedQueryString || '';
+    variables = {
+      ...variables,
+      query: debouncedQueryString || '',
+    };
   }
 
   const [getTags, { data, loading }] = useLazyQuery(tagsQuery, {
