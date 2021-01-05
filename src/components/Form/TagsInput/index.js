@@ -280,7 +280,7 @@ export default class TagsInput extends React.Component<Props, State> {
                   />
                 </div>
                 {isOpen && (
-                  <TagListProvider tagType={tagType}>
+                  <TagListProvider queryString={inputValue} tagType={tagType}>
                     {({ data: tags }) => (
                       <TagSelectOptions
                         getItemProps={getItemProps}
