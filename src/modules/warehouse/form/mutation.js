@@ -12,6 +12,7 @@ import {
   partnerCardFragment,
   badRequestFragment,
   forbiddenFragment,
+  tagFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -54,6 +55,7 @@ export const updateWarehouseMutation = gql`
   ${partnerCardFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
+  ${tagFragment}
 `;
 
 export const prepareParsedWarehouseInput = (
