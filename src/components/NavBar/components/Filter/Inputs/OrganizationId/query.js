@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { partnerCardFragment } from 'graphql';
+import { partnerCardFragment, tagFragment } from 'graphql';
 
 export const partnersQuery = gql`
   query partnersQuery(
@@ -31,6 +31,7 @@ export const partnersQuery = gql`
   }
 
   ${partnerCardFragment}
+  ${tagFragment}
 `;
 
 export const organizationQuery = gql`
