@@ -102,6 +102,9 @@ export const projectFormQueryFragment = gql`
         }
       }
     }
+    followers {
+      ...userAvatarFragment
+    }
     milestones {
       ... on Milestone {
         id

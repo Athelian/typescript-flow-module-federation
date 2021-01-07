@@ -82,6 +82,14 @@ const ProjectSection = ({ isNew, project }: Props) => {
 
             const ownedBy = values?.ownedBy?.name || '';
 
+            const otherOrganizationIds = values?.organizations
+              ? values?.organizations.map(organization => organization.id)
+              : [];
+
+            const relatedOrganizationIds = [values?.ownedBy?.id]
+              .concat(otherOrganizationIds)
+              .filter(Boolean);
+
             return (
               <>
                 <div className={MainSectionWrapperStyle}>
@@ -223,9 +231,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                           <Followers
                             followers={values?.followers ?? []}
                             setFollowers={value => setFieldValue('followers', value)}
-                            organizationIds={[values?.importer?.id, values?.exporter?.id].filter(
-                              Boolean
-                            )}
+                            organizationIds={relatedOrganizationIds}
                             editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_FOLLOWERS])}
                           />
 
