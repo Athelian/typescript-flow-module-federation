@@ -168,6 +168,7 @@ export const prepareParsedProjectInput = (
     originalValues?.organizations ?? [],
     newValues.organizations
   ),
+  ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
   ...parseArrayOfChildrenField(
     'milestones',
     originalValues?.milestones ?? [],
