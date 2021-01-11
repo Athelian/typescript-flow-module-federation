@@ -148,6 +148,7 @@ export const projectFormQueryFragment = gql`
       }
     }
   }
+
   ${partnerCardFragment}
   ${ownedByFragment}
   ${tagFragment}
