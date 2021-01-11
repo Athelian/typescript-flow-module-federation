@@ -89,7 +89,7 @@ const OrderGridView = ({
   isLoading,
   renderItem = defaultRenderItem,
 }: Props): React.Node => {
-  console.log('[debug]', 'order items are ', items);
+  // console.log('[debug]', 'order items are ', items);
   return (
     <GridView
       onLoadMore={onLoadMore}

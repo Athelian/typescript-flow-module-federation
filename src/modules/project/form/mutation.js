@@ -106,8 +106,8 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
     originalValues?.tasks ?? [],
     newValues.tasks ?? [],
     (task: ?Object, newTask: Object) => {
-      console.log('[debug] task array object is');
-      console.log('[debug] newTask object is ', newTask);
+      // console.log('[debug] task array object is');
+      // console.log('[debug] newTask object is ', newTask);
       return {
         ...(task ? { id: task.id } : {}),
         ...prepareParsedTaskInput(

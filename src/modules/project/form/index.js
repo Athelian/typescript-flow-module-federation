@@ -77,6 +77,7 @@ export default class ProjectForm extends React.Component<Props> {
             <ProjectSection project={project} isNew={isNew} isClone={isClone} isLoading={loading} />
             <MilestonesSection />
             {/* FIXME: project form is normal from, project > milestone > task, don't need this. if have time, refactor */}
+            {/* what does this do?!?!?! */}
             {/* <Subscribe to={[ProjectInfoContainer, ProjectMilestonesContainer]}>
               {(
                 { state: latestProject },

@@ -256,6 +256,7 @@ export const checkEditableFromEntity = (
   tags: boolean,
   milestone: boolean,
 } => {
+  // console.log('[debug] type is ', type);
   switch (type) {
     case 'Order':
       return {
@@ -510,6 +511,10 @@ export const checkEditableFromEntity = (
         ]),
       };
     default:
+      // console.log('[debug] hasPermission([TASK_UPDATE])',hasPermission([TASK_UPDATE]));
+      // console.log('[debug] hasPermission([SHIPMENT_TASK_UPDATE])', hasPermission([SHIPMENT_TASK_UPDATE]));
+      // console.log('[debug] hasPermission([SHIPMENT_TASK_SET_MILESTONE])' , hasPermission([SHIPMENT_TASK_SET_MILESTONE]));
+
       return {
         name: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_NAME]),
         startDate: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_START_DATE]),

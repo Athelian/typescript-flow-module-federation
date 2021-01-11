@@ -103,7 +103,7 @@ function MilestonesSection({ intl }: Props) {
           { state: { dueDate } }
         ) => {
           const tasksByMilestoneId = createMilestoneColumnsData(milestones);
-          console.log('[debug] tasks by milestoneId', tasksByMilestoneId);
+          // console.log('[debug] tasks by milestoneId', tasksByMilestoneId);
           const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate(
             {
               milestones,

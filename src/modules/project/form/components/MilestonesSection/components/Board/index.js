@@ -85,7 +85,7 @@ export default class Board extends Component<Props> {
   boardRef: ?HTMLElement;
 
   onDragEnd = (result: DropResult, timezone: string) => {
-    console.log('[debug] drag end start');
+    // console.log('[debug] drag end start');
     const {
       ordered: prevOrdered,
       columns: prevColumns,
@@ -110,39 +110,33 @@ export default class Board extends Component<Props> {
       onChangeColumns(columns, timezone);
       return;
     }
-    console.log('[debug]', 1);
+
     // dropped nowhere
     if (!result.destination) {
       return;
     }
-    console.log('[debug]', 2);
-
     const { source } = result;
     const { destination } = result;
-    console.log('[debug]', 3);
 
     // did not move anywhere - can bail early
     if (source.droppableId === destination.droppableId && source.index === destination.index) {
       return;
     }
 
-    console.log('[debug]', 4);
     // reordering column
     if (result.type === 'COLUMN') {
       const ordered: string[] = reorder(prevOrdered, source.index, destination.index);
 
       onChangeOrdering(ordered);
-
       return;
     }
-    console.log('[debug]', 5);
 
     const data = reorderMilestoneMap({
       milestoneMap: prevColumns,
       source,
       destination,
     });
-    console.log(6);
+    // console.log(6);
 
     onChangeColumns(data.milestoneMap, timezone);
   };
@@ -179,7 +173,7 @@ export default class Board extends Component<Props> {
                 milestoneId: key,
                 tasks: columns[key],
               });
-              console.log('[debug] <Board> tasks are', tasks);
+              // console.log('[debug] <Board> tasks are', tasks);
 
               return (
                 <MilestoneColumn

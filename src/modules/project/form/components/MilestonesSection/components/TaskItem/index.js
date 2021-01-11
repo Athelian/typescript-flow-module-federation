@@ -26,6 +26,7 @@ type Props = {|
 |};
 
 function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
+  // console.log('[debug] task owner is ', task?.ownedBy);
   return (
     <PartnerPermissionsWrapper data={task}>
       {(permissions, isOwner) => (

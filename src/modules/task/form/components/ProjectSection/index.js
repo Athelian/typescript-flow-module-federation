@@ -46,7 +46,7 @@ const ProjectSection = ({ parentEntity }: Props) => {
 
             const hasCircleBindingError = !circleValidator.isValidSync(values);
             const editable = checkEditableFromEntity(entity, hasPermission);
-
+            // console.log('[debug] ');
             return (
               <BooleanValue>
                 {({ value: opened, set: toggleSlide }) => (

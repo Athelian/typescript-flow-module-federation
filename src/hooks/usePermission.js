@@ -17,6 +17,7 @@ const usePermission = (isOwner: boolean = true) => {
 
   const hasPermissionPartner = useCallback(
     (checkPermission: string | Array<string>) => {
+      // console.log('[debug] partnerPermissions ', partnerPermissions);
       if (Array.isArray(checkPermission)) {
         return intersection(partnerPermissions, checkPermission).length > 0;
       }
@@ -24,6 +25,8 @@ const usePermission = (isOwner: boolean = true) => {
     },
     [partnerPermissions]
   );
+
+  // console.log('isOwner', isOwner);
 
   return {
     hasPermission: isOwner ? hasPermissionViewer : hasPermissionPartner,
