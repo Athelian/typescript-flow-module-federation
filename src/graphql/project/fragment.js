@@ -6,7 +6,7 @@ import {
   userAvatarFragment,
   documentFragment,
 } from 'graphql/common/fragment';
-import { partnerCardFragment } from 'graphql';
+import { partnerCardFragment } from 'graphql/partner/fragment';
 import { forbiddenFragment } from 'graphql/errors/fragment';
 import { taskCountFragment, taskFormInProjectFragment } from 'graphql/task/fragment';
 
