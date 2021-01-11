@@ -4,6 +4,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { orderFormItemsQuery } from 'modules/order/form/components/ItemsSection/query';
+import useUser from 'hooks/useUser';
 
 type Props = {|
   isNew: boolean,
@@ -17,6 +18,7 @@ type ChangeData = {|
 
 export default function CleanUpOrder({ isNew, orderId, orderItemsContainer }: Props) {
   const [queryOrderDetail, { data, called, loading }] = useLazyQuery(orderFormItemsQuery);
+  const { user } = useUser();
 
   const changeDataRef = React.useRef<ChangeData | null>(null);
 
@@ -24,7 +26,7 @@ export default function CleanUpOrder({ isNew, orderId, orderItemsContainer }: Pr
     if (called && !loading) {
       const orderItems = data?.order?.orderItems ?? [];
       if (!orderItemsContainer.state.hasCalledItemsApiYet) {
-        orderItemsContainer.initDetailValues(orderItems, true);
+        orderItemsContainer.initDetailValues(orderItems, true, user.timezone);
       }
 
       const { action } = changeDataRef.current ?? { action: '', payload: {} };
@@ -39,7 +41,7 @@ export default function CleanUpOrder({ isNew, orderId, orderItemsContainer }: Pr
           break;
       }
     }
-  }, [orderItemsContainer, called, data, loading]);
+  }, [orderItemsContainer, called, data, loading, user]);
 
   React.useEffect(() => {
     emitter.addListener('CLEAN_ORDERS', changeData => {
