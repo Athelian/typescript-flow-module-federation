@@ -34,6 +34,9 @@ export const projectCardFragment = gql`
     description
     dueDate
     archived
+    ownedBy {
+      ...ownedByFragment
+    }
     milestones {
       ...milestoneInProjectCardFragment
     }

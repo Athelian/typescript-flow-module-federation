@@ -31,6 +31,7 @@ export const projectFormQuery = gql`
   }
 
   ${projectFormQueryFragment}
+  ${partnerCardFragment}
   ${taskCountFragment}
   ${tagFragment}
   ${userAvatarFragment}
@@ -50,7 +51,6 @@ export const projectFormQuery = gql`
   ${sizeFragment}
   ${productProviderPackagingFragment}
   ${ownedByFragment}
-  ${partnerCardFragment}
 `;
 
 export default projectFormQuery;
