@@ -1077,7 +1077,7 @@
   "modules.Projects.description": "Description",
   "modules.Projects.diffBetweenLastMilestoneAndProjectDueDate": " days difference between Project Due Date and Last Milestone Due Date",
   "modules.Projects.followers": "Followers",
-  "modules.Projects.owner": "Owner",
+  "modules.Projects.owner": "OWNER",
   "modules.Projects.sharedPartners": "SHARED PARTNERS",
   "modules.Projects.sharedPartners.tooltip": "You can choose up to 4 Partners. This will grant them access to this project.",
   "modules.Projects.sheet.repeat": "Repeat",
