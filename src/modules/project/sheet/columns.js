@@ -53,6 +53,13 @@ export const projectColumns: Array<ColumnConfig> = [
     width: ColumnWidths.Status,
   },
   {
+    key: 'project.ownedBy',
+    title: <FormattedMessage {...projectMessages.owner} />,
+    icon: 'PROJECT',
+    color: colors.PROJECT,
+    width: ColumnWidths.Default,
+  },
+  {
     key: 'project.name',
     title: <FormattedMessage {...projectMessages.name} />,
     icon: 'PROJECT',

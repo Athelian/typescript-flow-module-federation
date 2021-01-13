@@ -206,6 +206,11 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
       ),
     },
     {
+      columnKey: 'project.ownedBy',
+      type: 'text',
+      ...transformReadonlyField(basePath, project, 'ownedBy.name', project?.ownedBy?.name ?? null),
+    },
+    {
       columnKey: 'project.archived',
       type: 'status',
       ...transformValueField(

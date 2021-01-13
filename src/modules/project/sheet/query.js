@@ -31,6 +31,7 @@ const projectSheetFragment = gql`
     ownedBy {
       ... on Organization {
         id
+        name
       }
     }
   }
