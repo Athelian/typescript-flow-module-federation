@@ -11,3 +11,4 @@ export const PROJECT_SET_TAGS = 'task.projects.setTags';
 export const PROJECT_SET_MILESTONES = 'task.projects.setMilestones';
 export const PROJECT_SET_ARCHIVED = 'task.projects.setArchived';
 export const PROJECT_SET_FOLLOWERS = 'task.projects.setFollowers';
+export const PROJECT_SET_ORGANIZATIONS = 'task.projects.setOrganizations';
