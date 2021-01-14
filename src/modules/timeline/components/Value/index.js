@@ -38,8 +38,11 @@ const FormattedValue = ({ value }: Props) => {
       return `(${value.size.length.value} ${value.size.length.metric} x ${value.size.width.value} ${value.size.width.metric} x ${value.size.height.value} ${value.size.height.metric})`;
     case 'Values':
       return value.values
-        .map((v, i) => <FormattedValue key={JSON.stringify({ i, v })} value={v} />)
+        .map(val => FormattedValue({ value: val }))
+        .filter(Boolean)
         .join(', ');
+    case 'EntityValue':
+      return value?.entity?.name || '';
     default:
       return null;
   }
