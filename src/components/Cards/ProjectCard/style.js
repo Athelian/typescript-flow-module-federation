@@ -43,6 +43,7 @@ export const OwnerTextStyle: string = css`
 export const ProjectDueDateStyle: string = css`
   display: flex;
   width: 165px;
+  margin: auto;
 `;
 
 export const DiffDateStyle = (diff: number): string => css`

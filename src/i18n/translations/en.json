@@ -79,6 +79,7 @@
   "components.cards.unapproved": "Unapproved",
   "components.cards.datePlaceholder": "yyyy/mm/dd",
   "components.cards.startDate": "START",
+  "components.cards.deletedUser": "[ Deleted ]",
   "modules.Tasks.statusDisabled": "Status will be displayed here",
   "modules.Tasks.approvalDisabled": "Approval will be displayed here",
   "modules.Tasks.unapproved": "UNAPPROVED",
