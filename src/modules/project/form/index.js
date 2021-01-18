@@ -1,20 +1,17 @@
 // @flow
 import * as React from 'react';
-// import type { Milestone } from 'generated/graphql';
-// import memoize from 'memoize-one';
-// import { flattenDeep } from 'lodash';
-// import { Subscribe } from 'unstated';
-import {
-  isEquals,
-  // getByPathWithDefault
-} from 'utils/fp';
-// import { calculateBindingDate } from 'utils/date';
-// import { injectProjectAndMilestoneDueDate } from 'utils/project';
-// import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/project/form/containers';
+import type { Milestone } from 'generated/graphql';
+import memoize from 'memoize-one';
+import { flattenDeep } from 'lodash';
+import { Subscribe } from 'unstated';
+import { isEquals, getByPathWithDefault } from 'utils/fp';
+import { calculateBindingDate } from 'utils/date';
+import { injectProjectAndMilestoneDueDate } from 'utils/project';
+import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/project/form/containers';
 import { UserConsumer } from 'contexts/Viewer';
 import ProjectSection from './components/ProjectSection';
 import MilestonesSection from './components/MilestonesSection';
-// import ProjectAutoDateBinding from './components/ProjectAutoDateBinding';
+import ProjectAutoDateBinding from './components/ProjectAutoDateBinding';
 import { ProjectFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -35,29 +32,29 @@ const defaultProps = {
   project: {},
 };
 
-// const generateTasks = memoize((milestones: Array<Milestone>, info: Object, timezone: string) => {
-//   return flattenDeep(
-//     milestones.map(milestone =>
-//       injectProjectAndMilestoneDueDate({
-//         milestoneId: milestone.id,
-//         tasks: getByPathWithDefault([], 'tasks', milestone),
-//         projectInfo: {
-//           ...info,
-//           milestones: milestones.map(item => {
-//             const { dueDate: projectDueDate } = info;
-//             const { dueDate, dueDateBinding, dueDateInterval } = item;
-//             return {
-//               id: item.id,
-//               dueDate: dueDateBinding
-//                 ? calculateBindingDate(projectDueDate, dueDateInterval, timezone)
-//                 : dueDate,
-//             };
-//           }),
-//         },
-//       })
-//     )
-//   );
-// });
+const generateTasks = memoize((milestones: Array<Milestone>, info: Object, timezone: string) => {
+  return flattenDeep(
+    milestones.map(milestone =>
+      injectProjectAndMilestoneDueDate({
+        milestoneId: milestone.id,
+        tasks: getByPathWithDefault([], 'tasks', milestone),
+        projectInfo: {
+          ...info,
+          milestones: milestones.map(item => {
+            const { dueDate: projectDueDate } = info;
+            const { dueDate, dueDateBinding, dueDateInterval } = item;
+            return {
+              id: item.id,
+              dueDate: dueDateBinding
+                ? calculateBindingDate(projectDueDate, dueDateInterval, timezone)
+                : dueDate,
+            };
+          }),
+        },
+      })
+    )
+  );
+});
 
 export default class ProjectForm extends React.Component<Props> {
   static defaultProps = defaultProps;
@@ -72,13 +69,12 @@ export default class ProjectForm extends React.Component<Props> {
 
     return (
       <UserConsumer>
-        {() => (
+        {user => (
           <div className={ProjectFormWrapperStyle}>
             <ProjectSection project={project} isNew={isNew} isClone={isClone} isLoading={loading} />
             <MilestonesSection />
             {/* FIXME: project form is normal from, project > milestone > task, don't need this. if have time, refactor */}
-            {/* what does this do?!?!?! */}
-            {/* <Subscribe to={[ProjectInfoContainer, ProjectMilestonesContainer]}>
+            <Subscribe to={[ProjectInfoContainer, ProjectMilestonesContainer]}>
               {(
                 { state: latestProject },
                 { state: { milestones }, setFieldValue, updateTasks }
@@ -91,7 +87,7 @@ export default class ProjectForm extends React.Component<Props> {
                   setTaskValue={updateTasks}
                 />
               )}
-            </Subscribe> */}
+            </Subscribe>
           </div>
         )}
       </UserConsumer>

@@ -80,7 +80,6 @@ const reorderMilestoneMap = ({ milestoneMap, source, destination }: Object): Obj
   };
 };
 
-// BOARD
 export default class Board extends Component<Props> {
   boardRef: ?HTMLElement;
 
@@ -114,6 +113,7 @@ export default class Board extends Component<Props> {
     if (!result.destination) {
       return;
     }
+
     const { source } = result;
     const { destination } = result;
 
@@ -127,6 +127,7 @@ export default class Board extends Component<Props> {
       const ordered: string[] = reorder(prevOrdered, source.index, destination.index);
 
       onChangeOrdering(ordered);
+
       return;
     }
 
@@ -165,29 +166,25 @@ export default class Board extends Component<Props> {
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
-            {ordered.map((key: string, index: number) => {
-              const tasks = injectProjectAndMilestoneDueDate({
-                projectInfo,
-                milestoneId: key,
-                tasks: columns[key],
-              });
-
-              return (
-                <MilestoneColumn
-                  allowDragColumns={editable.milestoneColumnEditable}
-                  allowDragRows={editable.milestoneRowEditable}
-                  isDragDisabled={!allowDragAndDrop}
-                  isDropDisabled={!allowDragAndDrop}
-                  key={key}
-                  index={index}
-                  id={key}
-                  tasks={tasks}
-                  manualSort={manualSort}
-                  onChangeTask={onChangeTask}
-                  onRemoveTask={onRemoveTask}
-                />
-              );
-            })}
+            {ordered.map((key: string, index: number) => (
+              <MilestoneColumn
+                allowDragColumns={editable.milestoneColumnEditable}
+                allowDragRows={editable.milestoneRowEditable}
+                isDragDisabled={!allowDragAndDrop}
+                isDropDisabled={!allowDragAndDrop}
+                key={key}
+                index={index}
+                id={key}
+                tasks={injectProjectAndMilestoneDueDate({
+                  projectInfo,
+                  milestoneId: key,
+                  tasks: columns[key],
+                })}
+                manualSort={manualSort}
+                onChangeTask={onChangeTask}
+                onRemoveTask={onRemoveTask}
+              />
+            ))}
             {provided.placeholder}
             {editable.milestoneColumnEditable && (
               <Subscribe to={[ProjectMilestonesContainer]}>

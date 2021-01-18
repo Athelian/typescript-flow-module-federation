@@ -8,7 +8,6 @@ import type {
 } from 'react-beautiful-dnd';
 import type { Task } from 'generated/graphql';
 import { isForbidden } from 'utils/data';
-// import { uuid } from 'utils/id';
 import { MilestoneTaskListBodyStyle } from './style';
 import TaskItem from '../TaskItem';
 
