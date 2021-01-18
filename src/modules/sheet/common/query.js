@@ -107,5 +107,6 @@ export const taskByIDQuery = gql`
   ${taskWithoutParentInfoFragment}
   ${milestoneCardFragment}
   ${projectCardFragment}
+  ${ownedByFragment}
   ${forbiddenFragment}
 `;
