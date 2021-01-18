@@ -69,7 +69,7 @@ export default class ProjectForm extends React.Component<Props> {
 
     return (
       <UserConsumer>
-        {user => (
+        {({ user }) => (
           <div className={ProjectFormWrapperStyle}>
             <ProjectSection project={project} isNew={isNew} isClone={isClone} isLoading={loading} />
             <MilestonesSection />
