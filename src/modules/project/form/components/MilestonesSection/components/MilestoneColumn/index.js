@@ -43,7 +43,6 @@ export default function MilestoneColumn({
     <Draggable draggableId={id} index={index} isDragDisabled={!allowDragColumns}>
       {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
         const sortedTasks = sortBy(tasks, manualSort);
-        // console.log('[debug] <MilestoneColumn> sorted tasks are', sortedTasks);
 
         return (
           <div

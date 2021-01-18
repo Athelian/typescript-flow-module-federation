@@ -85,7 +85,6 @@ export default class Board extends Component<Props> {
   boardRef: ?HTMLElement;
 
   onDragEnd = (result: DropResult, timezone: string) => {
-    // console.log('[debug] drag end start');
     const {
       ordered: prevOrdered,
       columns: prevColumns,
@@ -136,7 +135,6 @@ export default class Board extends Component<Props> {
       source,
       destination,
     });
-    // console.log(6);
 
     onChangeColumns(data.milestoneMap, timezone);
   };
@@ -173,7 +171,6 @@ export default class Board extends Component<Props> {
                 milestoneId: key,
                 tasks: columns[key],
               });
-              // console.log('[debug] <Board> tasks are', tasks);
 
               return (
                 <MilestoneColumn

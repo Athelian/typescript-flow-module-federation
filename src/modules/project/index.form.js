@@ -121,21 +121,13 @@ class ProjectFormModule extends React.PureComponent<Props> {
     onSuccess: Object => void,
     onErrors: Function = () => {}
   ) => {
-    // console.log('[debug] project on save');
-    // console.log('[debug] original values', originalValues);
-    // console.log('[debug] formData is ', formData);
     const { projectId, intl, onSuccessCallback } = this.props;
     const isNew = this.isNew();
-
-    // console.log('[debug] new originalValues', this.removeTempValues(originalValues));
-    // console.log('[debug] new form data', this.removeTempValues(formData));
 
     const input = prepareParsedProjectInput(
       isNew ? { originalTasks: originalValues.originalTasks } : removeTypename(originalValues),
       removeTypename(formData)
     );
-
-    // console.log('[debug] params passed to backend', input);
 
     if (isNew) {
       const { data } = await saveProject({ variables: { input } });
