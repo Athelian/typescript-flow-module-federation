@@ -138,7 +138,7 @@ function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
                             saveButtonMessage={
                               <FormattedMessage id="modules.task.apply" defaultMessage="APPLY" />
                             }
-                            entityOwnerId={entityOwnerId}
+                            parentEntityId={entityOwnerId}
                             onSelect={value => {
                               setFieldValue(
                                 'todo.tasks',
