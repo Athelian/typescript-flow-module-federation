@@ -409,6 +409,25 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
               })}
               onChange={togglePreference}
             />
+
+            <PreferenceSetting
+              icon="LOGS"
+              preferences={[
+                ...preferencesByType({
+                  preferences,
+                  entity: 'project',
+                }),
+                ...preferencesByType({
+                  preferences,
+                  entity: 'milestone',
+                }),
+                ...preferencesByType({
+                  preferences,
+                  entity: 'task',
+                }),
+              ]}
+              onChange={togglePreference}
+            />
           </>
         )}
       </div>
