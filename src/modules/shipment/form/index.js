@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
+import useUser from 'hooks/useUser';
 import scrollIntoView from 'utils/scrollIntoView';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { SectionWrapper } from 'components/Form';
@@ -31,10 +32,17 @@ type Props = {|
   initDataForSlideView?: Object,
 |};
 
-class ShipmentForm extends React.Component<Props> {
-  componentDidMount() {
-    const { anchor } = this.props;
+const ShipmentForm = ({
+  isNew,
+  isClone,
+  shipment,
+  loading,
+  initDataForSlideView,
+  anchor,
+}: Props) => {
+  const { organization } = useUser();
 
+  React.useEffect(() => {
     if (anchor) {
       // wait for the element is rendering on DOM
       const sectionId = 'shipment_timelineSection';
@@ -50,94 +58,92 @@ class ShipmentForm extends React.Component<Props> {
       };
       requestAnimationFrame(retryFindElement);
     }
-  }
+  }, [anchor]);
 
-  render() {
-    const { isNew, isClone, shipment, loading, initDataForSlideView } = this.props;
-    return (
-      <div className={ShipmentFormWrapperStyle}>
-        <SectionWrapper id="shipment_shipmentSection">
-          <ShipmentSection
-            shipment={shipment}
-            isLoading={loading}
+  return (
+    <div className={ShipmentFormWrapperStyle}>
+      <SectionWrapper id="shipment_shipmentSection">
+        <ShipmentSection
+          shipment={shipment}
+          isLoading={loading}
+          isNew={Boolean(isNew)}
+          isClone={Boolean(isClone)}
+          initDataForSlideView={initDataForSlideView}
+        />
+      </SectionWrapper>
+
+      <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
+        {(taskContainer, infoContainer) => (
+          <TimelineAndCargoSections
+            exporterId={getByPath('exporter.id', infoContainer.state)}
+            importerId={getByPathWithDefault('', 'importer.id', infoContainer.state)}
+            shipmentIsArchived={shipment.archived}
+            isTaskReadyForBinding={taskContainer.state.hasCalledTasksApiYet}
             isNew={Boolean(isNew)}
-            isClone={Boolean(isClone)}
-            initDataForSlideView={initDataForSlideView}
-          />
-        </SectionWrapper>
-
-        <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
-          {(taskContainer, infoContainer) => (
-            <TimelineAndCargoSections
-              exporterId={getByPath('exporter.id', infoContainer.state)}
-              importerId={getByPathWithDefault('', 'importer.id', infoContainer.state)}
-              shipmentIsArchived={shipment.archived}
-              isTaskReadyForBinding={taskContainer.state.hasCalledTasksApiYet}
-              isNew={Boolean(isNew)}
-              entityId={!isClone && shipment.id ? shipment.id : ''}
-              isLoading={loading}
-            />
-          )}
-        </Subscribe>
-
-        <SectionWrapper id="shipment_documentsSection">
-          <DocumentsSection
             entityId={!isClone && shipment.id ? shipment.id : ''}
             isLoading={loading}
           />
-        </SectionWrapper>
-        <SectionWrapper id="shipment_taskSection">
-          <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
-            {({ initDetailValues }, { state: { importer, exporter } }) => (
-              <ShipmentTasksSection
-                groupIds={[getByPath('id', importer), getByPath('id', exporter)].filter(Boolean)}
-                initValues={initDetailValues}
-                isLoading={loading}
-                entityId={!isClone && shipment.id ? shipment.id : ''}
-              />
-            )}
-          </Subscribe>
-        </SectionWrapper>
+        )}
+      </Subscribe>
 
-        <Subscribe to={[ShipmentBatchesContainer]}>
-          {({ state: { batches, hasCalledBatchesApiYet } }) => (
-            <OrdersSection isReady={hasCalledBatchesApiYet || isNew || isClone} batches={batches} />
+      <SectionWrapper id="shipment_documentsSection">
+        <DocumentsSection
+          entityId={!isClone && shipment.id ? shipment.id : ''}
+          isLoading={loading}
+        />
+      </SectionWrapper>
+      <SectionWrapper id="shipment_taskSection">
+        <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
+          {({ initDetailValues }, { state: { importer, exporter } }) => (
+            <ShipmentTasksSection
+              groupIds={[getByPath('id', importer), getByPath('id', exporter)].filter(Boolean)}
+              initValues={initDetailValues}
+              isLoading={loading}
+              entityId={!isClone && shipment.id ? shipment.id : ''}
+              entityOwnerId={!isClone && shipment.id ? shipment?.ownedBy?.id : organization.id}
+            />
           )}
         </Subscribe>
+      </SectionWrapper>
 
-        <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}>
-          {(
-            {
-              state: {
-                todo: { tasks },
-              },
-              setFieldValue,
+      <Subscribe to={[ShipmentBatchesContainer]}>
+        {({ state: { batches, hasCalledBatchesApiYet } }) => (
+          <OrdersSection isReady={hasCalledBatchesApiYet || isNew || isClone} batches={batches} />
+        )}
+      </Subscribe>
+
+      <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}>
+        {(
+          {
+            state: {
+              todo: { tasks },
             },
-            { state: info },
-            { state: timeline }
-          ) => (
-            <AutoDateBinding
-              type="Shipment"
-              values={{ ...info, ...timeline }}
-              tasks={tasks}
-              setTaskValue={setFieldValue}
-            />
-          )}
-        </Subscribe>
+            setFieldValue,
+          },
+          { state: info },
+          { state: timeline }
+        ) => (
+          <AutoDateBinding
+            type="Shipment"
+            values={{ ...info, ...timeline }}
+            tasks={tasks}
+            setTaskValue={setFieldValue}
+          />
+        )}
+      </Subscribe>
 
-        <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
-          {(batchesContainer, containersContainer) => (
-            <CleanUpShipment
-              isNew={isNew || !!isClone}
-              shipmentId={shipment?.id}
-              containersContainer={containersContainer}
-              batchesContainer={batchesContainer}
-            />
-          )}
-        </Subscribe>
-      </div>
-    );
-  }
-}
+      <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
+        {(batchesContainer, containersContainer) => (
+          <CleanUpShipment
+            isNew={isNew || !!isClone}
+            shipmentId={shipment?.id}
+            containersContainer={containersContainer}
+            batchesContainer={batchesContainer}
+          />
+        )}
+      </Subscribe>
+    </div>
+  );
+};
 
 export default ShipmentForm;
