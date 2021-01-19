@@ -69,6 +69,7 @@ export default class BatchForm extends React.Component<Props> {
               getByPath('orderItem.order.exporter.id', batch),
             ].filter(Boolean)}
             entityId={batch.id}
+            entityOwnerId={batch.ownedBy.id}
             type="Batch"
           />
           <ShipmentSection shipment={batch.shipment} shipmentConfig={shipmentConfig} />
