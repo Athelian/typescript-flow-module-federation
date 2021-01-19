@@ -10,11 +10,18 @@ import { orderFormTasksQuery } from './query';
 type Props = {
   isLoading: boolean,
   entityId: string,
+  entityOwnerId: string,
   groupIds: Array<string>,
   initValues: (Object, boolean) => void,
 };
 
-export default function OrderTasksSection({ isLoading, entityId, groupIds, initValues }: Props) {
+export default function OrderTasksSection({
+  isLoading,
+  entityId,
+  entityOwnerId,
+  groupIds,
+  initValues,
+}: Props) {
   return (
     <QueryPlaceHolder
       PlaceHolder={() => <ListCardPlaceHolder height={613} />}
@@ -27,7 +34,14 @@ export default function OrderTasksSection({ isLoading, entityId, groupIds, initV
       }}
     >
       {() => {
-        return <TaskSection groupIds={groupIds} entityId={entityId} type="Order" />;
+        return (
+          <TaskSection
+            groupIds={groupIds}
+            entityId={entityId}
+            entityOwnerId={entityOwnerId}
+            type="Order"
+          />
+        );
       }}
     </QueryPlaceHolder>
   );

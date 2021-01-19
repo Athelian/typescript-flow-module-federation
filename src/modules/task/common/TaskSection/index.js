@@ -37,10 +37,11 @@ type Props = {
   type: CompatibleEntityTypes,
   intl: IntlShape,
   entityId: string,
+  entityOwnerId: string,
   groupIds: Array<string>,
 };
 
-function TaskSection({ type, entityId, intl, groupIds }: Props) {
+function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
   const { isOwner } = usePartnerPermission();
   const { user } = useUser();
   const { hasPermission } = usePermission(isOwner);
@@ -137,6 +138,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                             saveButtonMessage={
                               <FormattedMessage id="modules.task.apply" defaultMessage="APPLY" />
                             }
+                            entityOwnerId={entityOwnerId}
                             onSelect={value => {
                               setFieldValue(
                                 'todo.tasks',
