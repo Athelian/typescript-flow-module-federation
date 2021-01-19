@@ -19,43 +19,43 @@ type Props = {|
   isInProject?: boolean,
 |};
 
-export default class TaskForm extends React.Component<Props> {
-  componentDidMount() {
-    const { onFormReady } = this.props;
+const TaskForm = ({
+  task,
+  entity,
+  onFormReady,
+  parentEntity,
+  inParentEntityForm,
+  isInTemplate,
+  isInProject,
+}: Props) => {
+  React.useEffect(() => {
+    if (onFormReady) {
+      onFormReady();
+    }
+  }, [onFormReady]);
 
-    if (onFormReady) onFormReady();
-  }
+  return (
+    <div className={TaskFormWrapperStyle}>
+      <TaskInfoSection
+        isInTemplate={isInTemplate}
+        isInProject={isInProject}
+        parentEntity={parentEntity}
+        task={task}
+      />
 
-  shouldComponentUpdate(nextProp: Props) {
-    const { task } = this.props;
+      {!isInTemplate && !isInProject && (
+        <ProjectSection parentEntity={entity?.__typename} parentEntityId={task?.ownedBy?.id} />
+      )}
 
-    return !isEquals(task, nextProp.task);
-  }
+      {!isInTemplate && !inParentEntityForm && <EntitySection task={task} entity={entity} />}
 
-  render() {
-    const {
-      task,
-      entity,
-      parentEntity,
-      isInTemplate,
-      isInProject,
-      inParentEntityForm,
-    } = this.props;
-    return (
-      <div className={TaskFormWrapperStyle}>
-        <TaskInfoSection
-          isInTemplate={isInTemplate}
-          isInProject={isInProject}
-          parentEntity={parentEntity}
-          task={task}
-        />
+      <ParentEntity inParentEntityForm={inParentEntityForm} entity={entity} />
+    </div>
+  );
+};
 
-        {!isInTemplate && !isInProject && <ProjectSection parentEntity={entity?.__typename} />}
+const memoCheck = (prev: any, next: any): boolean => {
+  return isEquals(prev.task, next.task);
+};
 
-        {!isInTemplate && !inParentEntityForm && <EntitySection task={task} entity={entity} />}
-
-        <ParentEntity inParentEntityForm={inParentEntityForm} entity={entity} />
-      </div>
-    );
-  }
-}
+export default React.memo<Props>(TaskForm, memoCheck);
