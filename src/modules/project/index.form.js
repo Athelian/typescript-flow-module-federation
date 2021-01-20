@@ -23,7 +23,7 @@ import SaveFormButton from 'components/SaveFormButton';
 import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { decodeId, encodeId, uuid } from 'utils/id';
-import { removeTypename, isForbidden } from 'utils/data';
+import { removeTypename } from 'utils/data';
 import { projectExportQuery, projectTimelineQuery } from './query';
 import ProjectForm from './form';
 import validator from './form/validator';
@@ -91,27 +91,6 @@ class ProjectFormModule extends React.PureComponent<Props> {
     ).then(logger.warn);
   };
 
-  // temp ids were added to the tasks of the project as it
-  // was required on draggable library
-  // rerunning this to remove the temp variables
-  removeTempValues = form => {
-    const newForm = JSON.parse(JSON.stringify(form));
-
-    newForm.milestones = form.milestones.map(milestone => {
-      // eslint-disable-next-line
-      milestone.tasks = milestone.tasks.map(task => {
-        if (isForbidden(task)) {
-          return { __typename: 'Forbidden' };
-        }
-        return task;
-      });
-
-      return milestone;
-    });
-
-    return form;
-  };
-
   onSave = async (
     originalValues: Object,
     formData: Object,
@@ -129,7 +108,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
       removeTypename(formData)
     );
 
-    if (isNew) {
+    if (this.isNew()) {
       const { data } = await saveProject({ variables: { input } });
       if (!data) return;
 

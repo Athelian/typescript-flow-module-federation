@@ -54,22 +54,6 @@ export default defineMessages({
     id: 'modules.Projects.description',
     defaultMessage: 'Description',
   },
-  followers: {
-    id: 'modules.Projects.followers',
-    defaultMessage: 'Followers',
-  },
-  owner: {
-    id: 'modules.Projects.owner',
-    defaultMessage: 'Owner',
-  },
-  sharedPartners: {
-    id: 'modules.Projects.sharedPartners',
-    defaultMessage: 'SHARED PARTNERS',
-  },
-  sharedPartnersTooltip: {
-    id: 'modules.Projects.sharedPartners.tooltip',
-    defaultMessage: 'You can choose up to 4 Partners. This will grant them access to this project.',
-  },
   diffBetweenLastMilestoneAndProjectDueDate: {
     id: 'modules.Projects.diffBetweenLastMilestoneAndProjectDueDate',
     defaultMessage: ' days difference between Project Due Date and Last Milestone Due Date',
