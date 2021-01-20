@@ -41,7 +41,11 @@ import {
   MILESTONE_DOWNLOAD_DOCUMENTS,
   MILESTONE_DOCUMENT_DELETE,
 } from 'modules/permission/constants/milestone';
-import { DOCUMENT_FORM, DOCUMENT_DELETE } from 'modules/permission/constants/file';
+import {
+  DOCUMENT_FORM,
+  DOCUMENT_DELETE,
+  DOCUMENT_DOWNLOAD,
+} from 'modules/permission/constants/file';
 import { getParentInfo } from 'utils/task';
 import { deleteFileMutation } from './mutation';
 
@@ -81,13 +85,16 @@ const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => 
           project: hasPermission(PROJECT_FORM),
         };
         const downloadPermissions = {
-          order: hasPermission(ORDER_DOWNLOAD_DOCUMENTS),
-          orderItem: hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS),
-          shipment: hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS),
-          product: hasPermission(PRODUCT_DOWNLOAD_DOCUMENTS),
-          productProvider: hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS),
-          project: hasPermission(MILESTONE_DOWNLOAD_DOCUMENTS),
+          order: hasPermission(ORDER_DOWNLOAD_DOCUMENTS) || hasPermission(DOCUMENT_DOWNLOAD),
+          orderItem:
+            hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS) || hasPermission(DOCUMENT_DOWNLOAD),
+          shipment: hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS) || hasPermission(DOCUMENT_DOWNLOAD),
+          product: hasPermission(PRODUCT_DOWNLOAD_DOCUMENTS) || hasPermission(DOCUMENT_DOWNLOAD),
+          productProvider:
+            hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS) || hasPermission(DOCUMENT_DOWNLOAD),
+          project: hasPermission(MILESTONE_DOWNLOAD_DOCUMENTS) || hasPermission(DOCUMENT_DOWNLOAD),
         };
+
         const deletePermissions = {
           order: hasPermission(ORDER_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
           orderItem: hasPermission(ORDER_ITEMS_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
