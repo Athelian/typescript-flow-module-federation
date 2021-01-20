@@ -1,7 +1,6 @@
-/* eslint-disable */
 // @flow
 import * as React from 'react';
-import { Query, useQuery } from 'react-apollo';
+import { Query } from 'react-apollo';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { BooleanValue, ObjectValue } from 'react-values';
@@ -23,7 +22,6 @@ import useUser from 'hooks/useUser';
 import SelectMilestone from './SelectMilestone';
 import { selectProjectQuery } from './query';
 import { ItemWrapperStyle, MilestoneWrapperStyle, MilestoneNameStyle } from './style';
-import { SelectProjectAndMilestoneContent } from './components';
 
 type OptionalProps = {
   cacheKey: string,
@@ -85,10 +83,10 @@ const SelectProjectAndMilestone = ({
   const defaultVariables = React.useMemo(() => {
     const ownerQuery = JSON.parse(JSON.stringify(projectsDefaultQueryVariables));
 
-    ownerQuery.filter.ownerId = parentEntityId ? parentEntityId : user.id;
+    ownerQuery.filter.ownerId = parentEntityId || user.id;
 
     return ownerQuery;
-  }, [parentEntityId]);
+  }, [parentEntityId, user.id]);
 
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(defaultVariables, cacheKey);
 
