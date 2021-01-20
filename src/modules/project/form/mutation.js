@@ -105,15 +105,13 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
     'tasks',
     originalValues?.tasks ?? [],
     newValues.tasks ?? [],
-    (task: ?Object, newTask: Object) => {
-      return {
-        ...(task ? { id: task.id } : {}),
-        ...prepareParsedTaskInput(
-          !task ? (originalValues?.originalTasks ?? []).find(item => item.id === newTask.id) : task,
-          newTask
-        ),
-      };
-    }
+    (task: ?Object, newTask: Object) => ({
+      ...(task ? { id: task.id } : {}),
+      ...prepareParsedTaskInput(
+        !task ? (originalValues?.originalTasks ?? []).find(item => item.id === newTask.id) : task,
+        newTask
+      ),
+    })
   ),
   ...parseFilesField('files', originalValues?.files ?? [], newValues.files),
 });
@@ -161,12 +159,6 @@ export const prepareParsedProjectInput = (
   ...parseDateField('dueDate', originalValues?.dueDate ?? null, newValues.dueDate),
   ...parseGenericField('archived', originalValues?.archived ?? false, newValues.archived),
   ...parseArrayOfIdsField('tagIds', originalValues?.tags ?? [], newValues.tags),
-  ...parseArrayOfIdsField(
-    'organizationIds',
-    originalValues?.organizations ?? [],
-    newValues.organizations
-  ),
-  ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
   ...parseArrayOfChildrenField(
     'milestones',
     originalValues?.milestones ?? [],

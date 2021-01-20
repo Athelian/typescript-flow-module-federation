@@ -19,7 +19,6 @@ import {
   sizeFragment,
   productProviderPackagingFragment,
   ownedByFragment,
-  partnerCardFragment,
 } from 'graphql';
 import { projectFormQueryFragment } from 'graphql/project/fragment';
 
@@ -31,7 +30,6 @@ export const projectFormQuery = gql`
   }
 
   ${projectFormQueryFragment}
-  ${partnerCardFragment}
   ${taskCountFragment}
   ${tagFragment}
   ${userAvatarFragment}

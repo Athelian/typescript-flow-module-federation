@@ -15,9 +15,6 @@ import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
-import FormattedName from 'components/FormattedName';
-import { renderPartners } from 'modules/warehouse/form/components/WarehouseSection/helpers';
-import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { BooleanValue } from 'react-values';
 import {
   FieldItem,
@@ -28,11 +25,7 @@ import {
   DateInputFactory,
   Display,
   StatusToggle,
-  FormTooltip,
 } from 'components/Form';
-import SlideView from 'components/SlideView';
-import FormattedNumber from 'components/FormattedNumber';
-import SelectPartners from 'components/SelectPartners';
 import FormattedDate from 'components/FormattedDate';
 import {
   PROJECT_UPDATE,
@@ -41,12 +34,10 @@ import {
   PROJECT_SET_DUE_DATE,
   PROJECT_SET_TAGS,
   PROJECT_SET_ARCHIVED,
-  PROJECT_SET_FOLLOWERS,
 } from 'modules/permission/constants/project';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { ProjectActivateDialog, ProjectArchiveDialog } from 'modules/project/common/Dialog';
 import messages from 'modules/project/messages';
-import Followers from 'components/Followers';
 import {
   ProjectSectionWrapperStyle,
   MainSectionWrapperStyle,
@@ -71,7 +62,6 @@ const ProjectSection = ({ isNew, project }: Props) => {
   const { hasPermission } = usePermission(isOwner);
   const [isExpanded, setIsExpanded] = React.useState(true);
   const { archived = false } = project || {};
-  const allowUpdate = hasPermission(PROJECT_UPDATE);
 
   return (
     <>
@@ -79,17 +69,6 @@ const ProjectSection = ({ isNew, project }: Props) => {
         <Subscribe to={[ProjectInfoContainer]}>
           {({ originalValues: initialValues, state, setFieldValue }) => {
             const values = { ...initialValues, ...state };
-
-            const ownedBy = values?.ownedBy?.name || '';
-
-            const otherOrganizationIds = values?.organizations
-              ? values?.organizations.map(organization => organization.id)
-              : [];
-
-            const relatedOrganizationIds = [values?.ownedBy?.id]
-              .concat(otherOrganizationIds)
-              .filter(Boolean);
-
             return (
               <>
                 <div className={MainSectionWrapperStyle}>
@@ -227,14 +206,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                         </div>
                       </GridColumn>
                       <GridColumn>
-                        <GridRow>
-                          <Followers
-                            followers={values?.followers ?? []}
-                            setFollowers={value => setFieldValue('followers', value)}
-                            organizationIds={relatedOrganizationIds}
-                            editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_FOLLOWERS])}
-                          />
-
+                        <div>
                           {!isNew && (
                             <BooleanValue>
                               {({ value: isDialogOpen, set: dialogToggle }) => (
@@ -263,83 +235,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                               )}
                             </BooleanValue>
                           )}
-                        </GridRow>
-
-                        {/* owner field */}
-                        {ownedBy && (
-                          <FieldItem
-                            vertical
-                            label={
-                              <Label height="30px">
-                                <FormattedMessage {...messages.owner} />
-                              </Label>
-                            }
-                            input={
-                              <Display height="30px" align="left" width="200px">
-                                <FormattedName firstName={ownedBy} />
-                              </Display>
-                            }
-                          />
-                        )}
-
-                        {/* the shared partners */}
-                        <FieldItem
-                          vertical
-                          label={
-                            <Label>
-                              <FormattedMessage {...messages.sharedPartners} />
-                              {' ('}
-                              <FormattedNumber value={values.organizations?.length || 0} />)
-                            </Label>
-                          }
-                          tooltip={
-                            <FormTooltip
-                              infoMessage={<FormattedMessage {...messages.sharedPartnersTooltip} />}
-                            />
-                          }
-                          input={
-                            <BooleanValue>
-                              {({ value: opened, set: slideToggle }) => (
-                                <>
-                                  <div
-                                    onClick={
-                                      hasPermission(PARTNER_LIST) && allowUpdate
-                                        ? () => slideToggle(true)
-                                        : () => {}
-                                    }
-                                    role="presentation"
-                                  >
-                                    {renderPartners(values.organizations || [], allowUpdate)}
-                                  </div>
-                                  <SlideView
-                                    isOpen={opened}
-                                    onRequestClose={() => slideToggle(false)}
-                                  >
-                                    {opened && (
-                                      <SelectPartners
-                                        partnerTypes={[]}
-                                        selected={values.organizations.map(org => org?.partner)}
-                                        onCancel={() => slideToggle(false)}
-                                        onSelect={selected => {
-                                          const assembledOrgs = selected.map(
-                                            ({ organization: org, ...partner }) => ({
-                                              ...org,
-                                              partner: {
-                                                ...partner,
-                                              },
-                                            })
-                                          );
-                                          slideToggle(false);
-                                          setFieldValue('organizations', assembledOrgs);
-                                        }}
-                                      />
-                                    )}
-                                  </SlideView>
-                                </>
-                              )}
-                            </BooleanValue>
-                          }
-                        />
+                        </div>
                       </GridColumn>
                     </GridRow>
                   </div>

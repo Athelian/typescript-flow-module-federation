@@ -25,16 +25,8 @@ type Props = {
 const User = ({ user }: Props) => {
   let userRoleIcon = 'USER';
 
-  if (user?.roles?.some(role => role.name === 'admin')) {
+  if (user.roles.some(role => role.name === 'admin')) {
     userRoleIcon = 'MANAGER';
-  }
-
-  if (!user.firstName || !user.lastName) {
-    return (
-      <span>
-        <FormattedMessage id="components.cards.deletedUser" defaultMessage="[ Deleted ]" />
-      </span>
-    );
   }
 
   return (
@@ -54,8 +46,8 @@ const User = ({ user }: Props) => {
             <span className={NameStyle}>
               <FormattedName firstName={user.firstName} lastName={user.lastName} />
             </span>
-            <span className={GroupStyle}>{user?.organization?.name || ''}</span>
-            <span className={EmailStyle}>{user?.email || ''}</span>
+            <span className={GroupStyle}>{user.organization.name}</span>
+            <span className={EmailStyle}>{user.email}</span>
             <div className={RolesStyle}>
               <Icon icon={userRoleIcon} />
               {userRoleIcon === 'MANAGER' ? (

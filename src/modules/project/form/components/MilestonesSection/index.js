@@ -17,8 +17,6 @@ import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/projec
 import FilterToolBar from 'components/common/FilterToolBar';
 import { calculateMilestonesEstimatedCompletionDate } from 'utils/project';
 import { EstimatedCompletionDateContext } from 'modules/project/form/helpers';
-import { uuid } from 'utils/id';
-import { isForbidden } from 'utils/data';
 import Board from './components/Board';
 import { NavbarStyle } from './style';
 
@@ -27,22 +25,13 @@ type MilestoneMap = {
 };
 
 const createMilestoneColumnsData = memoize((milestones: Array<Object>) => {
-  return milestones.reduce((previous: MilestoneMap, milestone: Milestone) => {
-    // forbidden items dont have an id
-    // we add a dummy id as draggable library requires an id
-    const validatedTasks = milestone.tasks.map(task => {
-      if (isForbidden(task)) {
-        task.id = uuid(); // eslint-disable-line no-param-reassign
-      }
-
-      return task;
-    });
-
-    return {
+  return milestones.reduce(
+    (previous: MilestoneMap, milestone: Milestone) => ({
       ...previous,
-      [milestone.id]: validatedTasks,
-    };
-  }, {});
+      [milestone.id]: milestone.tasks || [],
+    }),
+    {}
+  );
 });
 
 type Props = {
@@ -78,7 +67,6 @@ function MilestonesSection({ intl }: Props) {
     { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
     { title: intl.formatMessage(messages.entity), value: 'entity' },
   ];
-
   const { filterAndSort, onChangeFilter } = useSortAndFilter(getInitFilter());
   return (
     <>
@@ -102,7 +90,7 @@ function MilestonesSection({ intl }: Props) {
           },
           { state: { dueDate } }
         ) => {
-          const tasksByMilestoneId = createMilestoneColumnsData(milestones);
+          const initial = createMilestoneColumnsData(milestones);
           const estimatedCompletionDates = calculateMilestonesEstimatedCompletionDate(
             {
               milestones,
@@ -118,8 +106,8 @@ function MilestonesSection({ intl }: Props) {
                 }}
                 allowDragAndDrop={filterAndSort.sort.field === 'default'}
                 manualSort={filterAndSort.sort}
-                columns={tasksByMilestoneId}
-                ordered={Object.keys(tasksByMilestoneId)}
+                columns={initial}
+                ordered={Object.keys(initial)}
                 onChangeOrdering={changeMilestoneOrdering}
                 onChangeColumns={changeMilestones}
                 onChangeTask={updateTask}

@@ -7,7 +7,6 @@ import {
   documentFragment,
   tagFragment,
   ownedByFragment,
-  partnerCardFragment,
 } from 'graphql';
 
 const projectSheetFragment = gql`
@@ -21,16 +20,6 @@ const projectSheetFragment = gql`
       ...tagFragment
       ...forbiddenFragment
     }
-    organizations {
-      ... on Organization {
-        id
-        name
-        types
-        partner {
-          ...partnerCardFragment
-        }
-      }
-    }
     createdAt
     updatedAt
     createdBy {
@@ -42,7 +31,6 @@ const projectSheetFragment = gql`
     ownedBy {
       ... on Organization {
         id
-        name
       }
     }
   }
@@ -276,7 +264,6 @@ export const projectsQuery = gql`
   ${documentFragment}
   ${tagFragment}
   ${ownedByFragment}
-  ${partnerCardFragment}
   ${forbiddenFragment}
 `;
 

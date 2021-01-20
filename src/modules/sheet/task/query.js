@@ -1,10 +1,5 @@
 import gql from 'graphql-tag';
-import {
-  forbiddenFragment,
-  milestoneCardFragment,
-  projectCardFragment,
-  ownedByFragment,
-} from 'graphql';
+import { forbiddenFragment, milestoneCardFragment, projectCardFragment } from 'graphql';
 
 // eslint-disable-next-line import/prefer-default-export
 export const milestoneByIDQuery = gql`
@@ -21,6 +16,5 @@ export const milestoneByIDQuery = gql`
 
   ${milestoneCardFragment}
   ${projectCardFragment}
-  ${ownedByFragment}
   ${forbiddenFragment}
 `;

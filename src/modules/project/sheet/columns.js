@@ -64,25 +64,11 @@ export const projectColumns: Array<ColumnConfig> = [
     },
   },
   {
-    key: 'project.ownedBy',
-    title: <FormattedMessage {...projectMessages.owner} />,
-    icon: 'PROJECT',
-    color: colors.PROJECT,
-    width: ColumnWidths.Default,
-  },
-  {
     key: 'project.description',
     title: <FormattedMessage {...projectMessages.description} />,
     icon: 'PROJECT',
     color: colors.PROJECT,
     width: 200,
-  },
-  {
-    key: 'project.organizations',
-    title: <FormattedMessage {...projectMessages.sharedPartners} />,
-    icon: 'PROJECT',
-    color: colors.PROJECT,
-    width: ColumnWidths.Partners,
   },
   {
     key: 'project.dueDate',
