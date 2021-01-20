@@ -405,7 +405,8 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     this.setState(prevState => ({
       milestones: ordering.map(id => {
         const milestone = prevState.milestones.find(item => item.id === id);
-        return {
+
+        const newMilestone = {
           ...milestone,
           tasks: columns[id].map((task, milestoneSort) => {
             const { milestone: unused, ...rest } = generateTask(
@@ -421,6 +422,8 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
             };
           }),
         };
+
+        return newMilestone;
       }),
     }));
   };

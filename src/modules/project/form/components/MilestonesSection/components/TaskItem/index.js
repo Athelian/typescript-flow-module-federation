@@ -27,7 +27,7 @@ type Props = {|
 
 function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
   return (
-    <PartnerPermissionsWrapper data={task} key={task.id}>
+    <PartnerPermissionsWrapper data={task}>
       {(permissions, isOwner) => (
         <BooleanValue>
           {({ value: isOpen, set: toggleTaskForm }) => (

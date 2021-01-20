@@ -7,6 +7,7 @@ import {
   notFoundFragment,
   badRequestFragment,
   forbiddenFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const projectListQuery = gql`
@@ -36,6 +37,7 @@ export const projectListQuery = gql`
     }
   }
   ${projectCardFragment}
+  ${ownedByFragment}
   ${taskCountFragment}
   ${tagFragment}
   ${notFoundFragment}
