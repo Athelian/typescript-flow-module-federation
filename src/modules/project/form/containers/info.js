@@ -41,10 +41,11 @@ export default class ProjectInfoContainer extends Container<State> {
     this.setState(this.originalValues);
   };
 
-  initDetailValues = (values: Object, timezone: string) => {
+  initDetailValues = (values: Object, defaultFollower: Object, timezone: string) => {
     const { dueDate, ...rest } = values;
     const info = {
       ...initDatetimeToContainer(dueDate, 'dueDate', timezone),
+      defaultFollower,
       ...rest,
     };
     const parsedValues: Object = { ...initValues, ...info };
@@ -63,6 +64,28 @@ export default class ProjectInfoContainer extends Container<State> {
     this.setState(prevState => {
       const newState = set(cloneDeep(prevState), path, value);
       return newState;
+    });
+  };
+
+  // On change partners, set new partners and clean up Followers
+  onChangePartners = (newPartners: Array<Object>) => {
+    this.setState(({ followers = [], organizations: oldPartners = [] }) => {
+      const removedPartners = oldPartners.filter(
+        oldPartner => !newPartners.some(newPartner => newPartner.id === oldPartner.id)
+      );
+
+      if (oldPartners.length > 0 && removedPartners.length > 0) {
+        const cleanedFollowers = followers.filter(
+          follower =>
+            !removedPartners.some(
+              removedPartner => removedPartner.id === follower?.organization?.id
+            )
+        );
+
+        return { organizations: newPartners, followers: cleanedFollowers };
+      }
+
+      return { organizations: newPartners };
     });
   };
 }
