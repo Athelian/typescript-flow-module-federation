@@ -41,10 +41,11 @@ export default class ProjectInfoContainer extends Container<State> {
     this.setState(this.originalValues);
   };
 
-  initDetailValues = (values: Object, timezone: string) => {
+  initDetailValues = (values: Object, defaultFollower: Object, timezone: string) => {
     const { dueDate, ...rest } = values;
     const info = {
       ...initDatetimeToContainer(dueDate, 'dueDate', timezone),
+      defaultFollower,
       ...rest,
     };
     const parsedValues: Object = { ...initValues, ...info };
