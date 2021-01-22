@@ -198,16 +198,12 @@ class ProjectFormModule extends React.PureComponent<Props> {
       ...info
     } = project;
 
-    projectInfoState.initDetailValues(
-      omit(
-        {
-          followers: [defaultFollower],
-          ...info,
-        },
-        ['ignoreTaskIds']
-      ),
-      timezone
-    );
+    const newProjectInfo = {
+      followers: [defaultFollower],
+      ...info,
+    };
+
+    projectInfoState.initDetailValues(omit(newProjectInfo, ['ignoreTaskIds']), timezone);
     if (tags && Array.isArray(tags) && tags.length) {
       projectTagsState.initDetailValues(tags);
     }

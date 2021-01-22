@@ -18,23 +18,21 @@ import { OrderFormWrapperStyle } from './style';
 
 type OptionalProps = {
   isNew?: boolean,
-  loading: boolean,
-  isClone: boolean,
-  order: Object,
+  loading?: boolean,
+  isClone?: boolean,
+  order?: Object,
 };
 
 type Props = OptionalProps & {};
 
-const defaultProps = {
-  isNew: false,
-  isClone: false,
-  loading: false,
-  order: {},
-};
+const defaultOrder = {};
 
-const OrderForm = (props: Props) => {
-  const { isNew, isClone, order, loading } = { ...defaultProps, ...props };
-
+const OrderForm = ({
+  isNew = false,
+  isClone = false,
+  loading = false,
+  order = defaultOrder,
+}: Props) => {
   const { organization } = useUser();
 
   return (
