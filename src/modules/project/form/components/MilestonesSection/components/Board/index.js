@@ -26,7 +26,7 @@ type ProjectInfo = {
 type Props = {|
   columns: Object,
   projectInfo: ProjectInfo,
-  ordered: Object,
+  ordered: Object, // the order of the milestones in the board [boardId1, boardId2, boardId3]
   onChangeOrdering: (Array<string>) => void,
   onChangeColumns: (MilestoneMap, string) => void,
   onChangeTask: ({ milestoneId: string, taskId: string, task: Task }) => void,

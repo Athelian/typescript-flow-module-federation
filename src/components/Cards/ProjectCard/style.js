@@ -6,19 +6,44 @@ export const ProjectCardStyle: string = css`
   display: flex;
   flex-direction: column;
   width: 645px;
-  height: 181px;
+  height: 216px;
 `;
 
 export const ProjectCardHeaderStyle: string = css`
   width: 100%;
   display: flex;
-  padding: 10px 25px 5px 5px;
+  padding: 10px 25px 5px 13px;
   align-items: center;
+`;
+
+export const ProjectCardSubHeaderStyle: string = css`
+  width: 100%;
+  display: flex;
+  padding: 0px 25px 5px 13px;
+  align-items: center;
+`;
+
+export const OwnerWrapperStyle: string = css`
+  width: 100%;
+  display: flex;
+  padding: 2px 8px 2px 4px;
+  ${fontSizes.MAIN};
+  ${borderRadiuses.MAIN};
+  text-align: center;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+`;
+
+export const OwnerTextStyle: string = css`
+  ${presets.ELLIPSIS};
+  font-weight: bold;
+  max-width: 200px;
+  color: ${colors.BLACK};
 `;
 
 export const ProjectDueDateStyle: string = css`
   display: flex;
   width: 165px;
+  margin: auto;
 `;
 
 export const DiffDateStyle = (diff: number): string => css`

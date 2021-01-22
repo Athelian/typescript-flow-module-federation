@@ -43,11 +43,16 @@ type Props = {|
 |};
 
 const ApprovedBy = ({ user }: { user: UserPayload }) => {
+  const values = {
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
+  };
+
   return (
     <FormattedMessage
       id="components.Shipments.approvedBy"
       defaultMessage="Approved by {firstName} {lastName}"
-      values={user}
+      values={values}
     />
   );
 };
