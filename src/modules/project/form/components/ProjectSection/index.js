@@ -79,7 +79,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
     <>
       <div className={ProjectSectionWrapperStyle(isExpanded)}>
         <Subscribe to={[ProjectInfoContainer]}>
-          {({ originalValues: initialValues, state, setFieldValue }) => {
+          {({ originalValues: initialValues, state, setFieldValue, onChangePartners }) => {
             const values = { ...initialValues, ...state };
 
             const ownedBy = values?.ownedBy?.name || '';
@@ -334,8 +334,8 @@ const ProjectSection = ({ isNew, project }: Props) => {
                                               },
                                             })
                                           );
+                                          onChangePartners(assembledOrgs);
                                           slideToggle(false);
-                                          setFieldValue('organizations', assembledOrgs);
                                         }}
                                       />
                                     )}
