@@ -173,7 +173,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
   };
 
   /**
-   * @param defaultFollower when creating a new form, logged in user is defalt follower
+   * @param {object} defaultFollower when creating a new form, logged in user is default follower
    */
   initAllValues = (
     { projectInfoState, projectTagsState, projectMilestonesState }: Object,

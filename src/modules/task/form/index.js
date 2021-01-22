@@ -54,8 +54,6 @@ const TaskForm = ({
   );
 };
 
-const memoCheck = (prev: any, next: any): boolean => {
-  return isEquals(prev.task, next.task);
-};
+const memoCheck = (prev: any, next: any): boolean => isEquals(prev.task, next.task);
 
 export default React.memo<Props>(TaskForm, memoCheck);
