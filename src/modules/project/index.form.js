@@ -172,9 +172,13 @@ class ProjectFormModule extends React.PureComponent<Props> {
     }
   };
 
+  /**
+   * @param defaultFollower when creating a new form, logged in user is defalt follower
+   */
   initAllValues = (
     { projectInfoState, projectTagsState, projectMilestonesState }: Object,
     project: Project | { id: string, tags?: Array<Tag>, milestones?: Array<Milestone> },
+    defaultFollower: Object,
     timezone: string
   ) => {
     const {
@@ -193,7 +197,17 @@ class ProjectFormModule extends React.PureComponent<Props> {
       ],
       ...info
     } = project;
-    projectInfoState.initDetailValues(omit(info, ['ignoreTaskIds']), timezone);
+
+    projectInfoState.initDetailValues(
+      omit(
+        {
+          followers: [defaultFollower],
+          ...info,
+        },
+        ['ignoreTaskIds']
+      ),
+      timezone
+    );
     if (tags && Array.isArray(tags) && tags.length) {
       projectTagsState.initDetailValues(tags);
     }
@@ -206,6 +220,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
   onFormReady = (
     { projectInfoState, projectTagsState, projectMilestonesState }: Object,
     project: Project | { id: string, tags?: Array<Tag>, milestones?: Array<Milestone> },
+    defaultFollower: Object,
     timezone: string
   ) => {
     const hasInitialStateYet = projectInfoState.state.id || Object.keys(project).length === 0;
@@ -217,6 +232,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
         projectMilestonesState,
       },
       project,
+      defaultFollower,
       timezone
     );
     return null;
@@ -249,7 +265,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
 
     return (
       <UserConsumer>
-        {({ user }) => (
+        {({ user, organization }) => (
           <Provider inject={[formContainer]}>
             <Mutation
               mutation={isNew ? createProjectMutation : updateProjectMutation}
@@ -334,6 +350,10 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                           ...projectTagsState.originalValues,
                                           ...projectMilestonesState.originalValues,
                                         },
+                                        {
+                                          ...user,
+                                          organization,
+                                        },
                                         user.timezone
                                       );
                                       form.onReset();
@@ -383,6 +403,10 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                               projectMilestonesState,
                                             },
                                             updateProject,
+                                            {
+                                              ...user,
+                                              organization,
+                                            },
                                             user.timezone
                                           );
                                           form.onReset();
@@ -431,6 +455,10 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                 ...template,
                                 id: uuid(),
                               },
+                              {
+                                ...user,
+                                organization,
+                              },
                               user.timezone
                             );
                             return null;
@@ -461,6 +489,11 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                     projectMilestonesState,
                                   },
                                   project,
+                                  {
+                                    ...user,
+                                    organization,
+                                  },
+
                                   user.timezone
                                 )
                               }

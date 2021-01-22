@@ -4,6 +4,7 @@ import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import useUser from 'hooks/useUser';
 import emitter from 'utils/emitter';
 import {
   ProjectInfoContainer,
@@ -72,6 +73,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
   const [isExpanded, setIsExpanded] = React.useState(true);
   const { archived = false } = project || {};
   const allowUpdate = hasPermission(PROJECT_UPDATE);
+  const { organization: userOrganization } = useUser();
 
   return (
     <>
@@ -86,7 +88,8 @@ const ProjectSection = ({ isNew, project }: Props) => {
               ? values?.organizations.map(organization => organization.id)
               : [];
 
-            const relatedOrganizationIds = [values?.ownedBy?.id]
+            // use logged in user's org if new form else use project form owner
+            const relatedOrganizationIds = [isNew ? userOrganization.id : values?.ownedBy?.id]
               .concat(otherOrganizationIds)
               .filter(Boolean);
 
@@ -318,7 +321,9 @@ const ProjectSection = ({ isNew, project }: Props) => {
                                     {opened && (
                                       <SelectPartners
                                         partnerTypes={[]}
-                                        selected={values.organizations.map(org => org?.partner)}
+                                        selected={
+                                          values.organizations?.map(org => org?.partner) || []
+                                        }
                                         onCancel={() => slideToggle(false)}
                                         onSelect={selected => {
                                           const assembledOrgs = selected.map(
