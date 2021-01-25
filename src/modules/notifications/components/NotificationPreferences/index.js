@@ -411,19 +411,22 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
             />
 
             <PreferenceSetting
-              icon="LOGS"
+              icon="PROJECT"
               preferences={[
                 ...preferencesByType({
                   preferences,
                   entity: 'project',
+                  // ignoreKeys: ['project_update'],
                 }),
                 ...preferencesByType({
                   preferences,
                   entity: 'milestone',
+                  // ignoreKeys: ['milestone_create', 'milestone_update'],
                 }),
                 ...preferencesByType({
                   preferences,
                   entity: 'task',
+                  // ignoreKeys: ['task_create', 'task_update'],
                 }),
               ]}
               onChange={togglePreference}
