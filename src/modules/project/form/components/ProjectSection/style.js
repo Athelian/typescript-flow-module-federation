@@ -12,7 +12,7 @@ import {
 
 export const ProjectSectionWrapperStyle = (isExpanded: boolean) => css`
   display: flex;
-  height: ${isExpanded ? '340px' : '0px'};
+  height: ${isExpanded ? '420px' : '0px'};
   overflow: hidden;
   width: 100%;
   max-width: 100%;
@@ -33,9 +33,7 @@ export const ProjectInfoWrapperStyle: string = css`
   ${shadows.HEADER};
   padding: 20px;
   min-width: 680px;
-  height: 240px;
-  overflow-x: hidden;
-  overflow-y: overlay;
+  overflow: overlay;
   ${scrollbars.SMALL};
 `;
 
@@ -45,7 +43,7 @@ export const DescriptionTagsWrapperStyle: string = css`
 `;
 
 export const DescriptionWrapperStyle: string = css`
-  width: 420px;
+  width: 300px;
   padding-bottom: 20px;
 `;
 
@@ -54,6 +52,10 @@ export const TagsWrapperStyle: string = css`
   grid-gap: 5px;
   padding: 0 0 10px 0;
   grid-template-columns: 420px;
+`;
+
+export const SharedPartnerWrapperStyle: string = css`
+  padding-right: 20px;
 `;
 
 export const MilestonesTimelineWrapperStyle: string = css`

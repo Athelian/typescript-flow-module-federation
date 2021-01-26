@@ -59,6 +59,7 @@ import {
   TasksInfoWrapperStyle,
   ExpandWrapperStyle,
   ProjectCardBodyStyle,
+  SharedPartnerWrapperStyle,
 } from './style';
 import TaskStatus from './components/TaskStatus';
 import MilestoneTimelineItem from '../MilestoneTimelineItem';
@@ -205,39 +206,9 @@ const ProjectSection = ({ isNew, project }: Props) => {
                             )}
                           </Subscribe>
                         </div>
-                        <div className={DescriptionWrapperStyle}>
-                          <FormField
-                            name="description"
-                            initValue={values.description}
-                            values={values}
-                            validator={validator}
-                            setFieldValue={setFieldValue}
-                          >
-                            {({ name, ...inputHandlers }) => (
-                              <TextAreaInputFactory
-                                name={name}
-                                {...inputHandlers}
-                                isNew={isNew}
-                                originalValue={initialValues[name]}
-                                label={<FormattedMessage {...messages.description} />}
-                                editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_DESCRIPTION])}
-                                vertical
-                                inputWidth="420px"
-                                inputHeight="80px"
-                              />
-                            )}
-                          </FormField>
-                        </div>
                       </GridColumn>
                       <GridColumn>
-                        <GridRow>
-                          <Followers
-                            followers={values?.followers ?? []}
-                            setFollowers={value => setFieldValue('followers', value)}
-                            organizationIds={relatedOrganizationIds}
-                            editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_FOLLOWERS])}
-                          />
-
+                        <GridRow gap="62px">
                           {!isNew && (
                             <BooleanValue>
                               {({ value: isDialogOpen, set: dialogToggle }) => (
@@ -266,6 +237,13 @@ const ProjectSection = ({ isNew, project }: Props) => {
                               )}
                             </BooleanValue>
                           )}
+
+                          <Followers
+                            followers={values?.followers ?? []}
+                            setFollowers={value => setFieldValue('followers', value)}
+                            organizationIds={relatedOrganizationIds}
+                            editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_FOLLOWERS])}
+                          />
                         </GridRow>
 
                         {/* owner field */}
@@ -285,66 +263,95 @@ const ProjectSection = ({ isNew, project }: Props) => {
                           />
                         )}
 
+                        <div className={DescriptionWrapperStyle}>
+                          <FormField
+                            name="description"
+                            initValue={values.description}
+                            values={values}
+                            validator={validator}
+                            setFieldValue={setFieldValue}
+                          >
+                            {({ name, ...inputHandlers }) => (
+                              <TextAreaInputFactory
+                                name={name}
+                                {...inputHandlers}
+                                isNew={isNew}
+                                originalValue={initialValues[name]}
+                                label={<FormattedMessage {...messages.description} />}
+                                editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_DESCRIPTION])}
+                                vertical
+                                inputWidth="300px"
+                                inputHeight="80px"
+                              />
+                            )}
+                          </FormField>
+                        </div>
+                      </GridColumn>
+                      <GridColumn>
                         {/* the shared partners */}
-                        <FieldItem
-                          vertical
-                          label={
-                            <Label>
-                              <FormattedMessage {...messages.sharedPartners} />
-                              {' ('}
-                              <FormattedNumber value={values.organizations?.length || 0} />)
-                            </Label>
-                          }
-                          tooltip={
-                            <FormTooltip
-                              infoMessage={<FormattedMessage {...messages.sharedPartnersTooltip} />}
-                            />
-                          }
-                          input={
-                            <BooleanValue>
-                              {({ value: opened, set: slideToggle }) => (
-                                <>
-                                  <div
-                                    onClick={
-                                      hasPermission(PARTNER_LIST) && allowUpdate
-                                        ? () => slideToggle(true)
-                                        : () => {}
-                                    }
-                                    role="presentation"
-                                  >
-                                    {renderPartners(values.organizations || [], allowUpdate)}
-                                  </div>
-                                  <SlideView
-                                    isOpen={opened}
-                                    onRequestClose={() => slideToggle(false)}
-                                  >
-                                    {opened && (
-                                      <SelectPartners
-                                        partnerTypes={[]}
-                                        selected={
-                                          values.organizations?.map(org => org?.partner) || []
-                                        }
-                                        onCancel={() => slideToggle(false)}
-                                        onSelect={selected => {
-                                          const assembledOrgs = selected.map(
-                                            ({ organization: org, ...partner }) => ({
-                                              ...org,
-                                              partner: {
-                                                ...partner,
-                                              },
-                                            })
-                                          );
-                                          onChangePartners(assembledOrgs);
-                                          slideToggle(false);
-                                        }}
-                                      />
-                                    )}
-                                  </SlideView>
-                                </>
-                              )}
-                            </BooleanValue>
-                          }
-                        />
+                        <div className={SharedPartnerWrapperStyle}>
+                          <FieldItem
+                            vertical
+                            label={
+                              <Label>
+                                <FormattedMessage {...messages.sharedPartners} />
+                                {' ('}
+                                <FormattedNumber value={values.organizations?.length || 0} />)
+                              </Label>
+                            }
+                            tooltip={
+                              <FormTooltip
+                                infoMessage={
+                                  <FormattedMessage {...messages.sharedPartnersTooltip} />
+                                }
+                              />
+                            }
+                            input={
+                              <BooleanValue>
+                                {({ value: opened, set: slideToggle }) => (
+                                  <>
+                                    <div
+                                      onClick={
+                                        hasPermission(PARTNER_LIST) && allowUpdate
+                                          ? () => slideToggle(true)
+                                          : () => {}
+                                      }
+                                      role="presentation"
+                                    >
+                                      {renderPartners(values.organizations || [], allowUpdate)}
+                                    </div>
+                                    <SlideView
+                                      isOpen={opened}
+                                      onRequestClose={() => slideToggle(false)}
+                                    >
+                                      {opened && (
+                                        <SelectPartners
+                                          partnerTypes={[]}
+                                          selected={
+                                            values.organizations?.map(org => org?.partner) || []
+                                          }
+                                          onCancel={() => slideToggle(false)}
+                                          onSelect={selected => {
+                                            const assembledOrgs = selected.map(
+                                              ({ organization: org, ...partner }) => ({
+                                                ...org,
+                                                partner: {
+                                                  ...partner,
+                                                },
+                                              })
+                                            );
+                                            onChangePartners(assembledOrgs);
+                                            slideToggle(false);
+                                          }}
+                                        />
+                                      )}
+                                    </SlideView>
+                                  </>
+                                )}
+                              </BooleanValue>
+                            }
+                          />
+                        </div>
                       </GridColumn>
                     </GridRow>
                   </div>
