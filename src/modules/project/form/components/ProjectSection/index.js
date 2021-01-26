@@ -249,6 +249,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                         {/* owner field */}
                         {ownedBy && (
                           <FieldItem
+                            vertical
                             label={
                               <Label height="30px">
                                 <FormattedMessage {...messages.owner} />

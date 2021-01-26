@@ -12,7 +12,7 @@ import {
 
 export const ProjectSectionWrapperStyle = (isExpanded: boolean) => css`
   display: flex;
-  height: ${isExpanded ? '340px' : '0px'};
+  height: ${isExpanded ? '420px' : '0px'};
   overflow: hidden;
   width: 100%;
   max-width: 100%;
@@ -33,7 +33,6 @@ export const ProjectInfoWrapperStyle: string = css`
   ${shadows.HEADER};
   padding: 20px;
   min-width: 680px;
-  height: 240px;
   overflow: overlay;
   ${scrollbars.SMALL};
 `;
@@ -56,7 +55,7 @@ export const TagsWrapperStyle: string = css`
 `;
 
 export const SharedPartnerWrapperStyle: string = css`
-  padding: 0 20px 20px 0;
+  padding-right: 20px;
 `;
 
 export const MilestonesTimelineWrapperStyle: string = css`
