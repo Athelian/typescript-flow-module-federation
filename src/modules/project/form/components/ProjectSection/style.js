@@ -34,8 +34,7 @@ export const ProjectInfoWrapperStyle: string = css`
   padding: 20px;
   min-width: 680px;
   height: 240px;
-  overflow-x: hidden;
-  overflow-y: overlay;
+  overflow: overlay;
   ${scrollbars.SMALL};
 `;
 
@@ -45,7 +44,7 @@ export const DescriptionTagsWrapperStyle: string = css`
 `;
 
 export const DescriptionWrapperStyle: string = css`
-  width: 420px;
+  width: 300px;
   padding-bottom: 20px;
 `;
 
@@ -54,6 +53,10 @@ export const TagsWrapperStyle: string = css`
   grid-gap: 5px;
   padding: 0 0 10px 0;
   grid-template-columns: 420px;
+`;
+
+export const SharedPartnerWrapperStyle: string = css`
+  padding: 0 20px 20px 0;
 `;
 
 export const MilestonesTimelineWrapperStyle: string = css`

@@ -76,17 +76,17 @@ const SelectProjectAndMilestone = ({
     { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
   ];
 
-  const { user } = useUser();
+  const { organization } = useUser();
 
   // we only need to select projects owned by entity owner
   // and shared to the current logged in user's org
   const defaultVariables = React.useMemo(() => {
     const ownerQuery = JSON.parse(JSON.stringify(projectsDefaultQueryVariables));
 
-    ownerQuery.filter.ownerId = parentEntityId || user.id;
+    ownerQuery.filter.ownerId = parentEntityId || organization.id;
 
     return ownerQuery;
-  }, [parentEntityId, user.id]);
+  }, [parentEntityId, organization.id]);
 
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(defaultVariables, cacheKey);
 
