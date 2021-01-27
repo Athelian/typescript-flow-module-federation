@@ -36,29 +36,26 @@ const InnerTaskList = React.memo(function InnerTaskList({
   onRemove,
   isDragDisabled,
 }: TaskListProps) {
-  // TODO: to change: remove drag drop here
-  return tasks.map((task: Task, index: number) => {
-    return (
-      <Draggable
-        key={task.id}
-        draggableId={task.id}
-        index={index}
-        isDragDisabled={isDragDisabled || isForbidden(task)}
-      >
-        {(dragProvided: DraggableProvided, dragSnapshot: DraggableStateSnapshot) => (
-          <TaskItem
-            onChange={onChange}
-            onRemove={onRemove}
-            task={task}
-            key={task.id}
-            isDragging={dragSnapshot.isDragging}
-            isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
-            provided={dragProvided}
-          />
-        )}
-      </Draggable>
-    );
-  });
+  return tasks.map((task: Task, index: number) => (
+    <Draggable
+      key={task.id}
+      draggableId={task.id}
+      index={index}
+      isDragDisabled={isDragDisabled || isForbidden(task)}
+    >
+      {(dragProvided: DraggableProvided, dragSnapshot: DraggableStateSnapshot) => (
+        <TaskItem
+          onChange={onChange}
+          onRemove={onRemove}
+          task={task}
+          key={task.id}
+          isDragging={dragSnapshot.isDragging}
+          isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
+          provided={dragProvided}
+        />
+      )}
+    </Draggable>
+  ));
 });
 
 export default function TaskList(props: Props) {
