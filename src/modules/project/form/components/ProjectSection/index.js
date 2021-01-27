@@ -17,7 +17,6 @@ import Icon from 'components/Icon';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import FormattedName from 'components/FormattedName';
-import { renderPartners } from 'modules/warehouse/form/components/WarehouseSection/helpers';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { BooleanValue } from 'react-values';
 import {
@@ -48,6 +47,7 @@ import { TAG_LIST } from 'modules/permission/constants/tag';
 import { ProjectActivateDialog, ProjectArchiveDialog } from 'modules/project/common/Dialog';
 import messages from 'modules/project/messages';
 import Followers from 'components/Followers';
+import { renderPartners } from './helpers';
 import {
   ProjectSectionWrapperStyle,
   MainSectionWrapperStyle,
