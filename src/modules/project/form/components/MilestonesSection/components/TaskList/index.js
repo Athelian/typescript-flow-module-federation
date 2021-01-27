@@ -7,6 +7,7 @@ import type {
   DraggableStateSnapshot,
 } from 'react-beautiful-dnd';
 import type { Task } from 'generated/graphql';
+import { isForbidden } from 'utils/data';
 import { MilestoneTaskListBodyStyle } from './style';
 import TaskItem from '../TaskItem';
 
@@ -36,7 +37,12 @@ const InnerTaskList = React.memo(function InnerTaskList({
   isDragDisabled,
 }: TaskListProps) {
   return tasks.map((task: Task, index: number) => (
-    <Draggable key={task.id} draggableId={task.id} index={index} isDragDisabled={isDragDisabled}>
+    <Draggable
+      key={task.id}
+      draggableId={task.id}
+      index={index}
+      isDragDisabled={isDragDisabled || isForbidden(task)}
+    >
       {(dragProvided: DraggableProvided, dragSnapshot: DraggableStateSnapshot) => (
         <TaskItem
           onChange={onChange}

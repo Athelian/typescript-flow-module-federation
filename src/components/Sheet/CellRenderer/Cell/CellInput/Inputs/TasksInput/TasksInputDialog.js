@@ -118,6 +118,7 @@ const TasksInputDialog = ({
                           saveButtonMessage={
                             <FormattedMessage id="modules.task.apply" defaultMessage="APPLY" />
                           }
+                          parentEntityId={ownerId}
                           onSelect={value => {
                             onChange({
                               taskTemplate,

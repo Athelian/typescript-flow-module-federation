@@ -10,11 +10,18 @@ import { shipmentFormTasksQuery } from './query';
 type Props = {|
   isLoading: boolean,
   entityId: string,
+  entityOwnerId: string,
   groupIds: Array<string>,
   initValues: (Object, boolean) => void,
 |};
 
-export default function ShipmentTasksSection({ isLoading, entityId, groupIds, initValues }: Props) {
+export default function ShipmentTasksSection({
+  isLoading,
+  entityId,
+  entityOwnerId,
+  groupIds,
+  initValues,
+}: Props) {
   return (
     <QueryPlaceHolder
       PlaceHolder={() => <ListCardPlaceHolder height={613} />}
@@ -26,9 +33,14 @@ export default function ShipmentTasksSection({ isLoading, entityId, groupIds, in
         initValues(todo, true);
       }}
     >
-      {() => {
-        return <TaskSection groupIds={groupIds} entityId={entityId} type="Shipment" />;
-      }}
+      {() => (
+        <TaskSection
+          groupIds={groupIds}
+          entityId={entityId}
+          entityOwnerId={entityOwnerId}
+          type="Shipment"
+        />
+      )}
     </QueryPlaceHolder>
   );
 }

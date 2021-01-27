@@ -67,7 +67,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
 
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { user } = useUser();
+  const { user, organization } = useUser();
   const [hoverRef, isHovered] = useHover();
   // uuid will return '-' so that is the way to detect the milestone is new or from API
   const isNew = milestoneId.includes('-');
@@ -573,6 +573,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                               filter={{
                                 excludeIds: excludeIds(),
                                 hasMilestoneExceptIds: excludeTaskIds(),
+                                ownerId: projectInfoState?.ownedBy?.id || organization.id,
                               }}
                               selectedTasks={tasks}
                               onSelect={selected => {

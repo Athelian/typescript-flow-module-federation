@@ -23,7 +23,7 @@ import SaveFormButton from 'components/SaveFormButton';
 import { NavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { decodeId, encodeId, uuid } from 'utils/id';
-import { removeTypename } from 'utils/data';
+import { removeTypename, isForbidden } from 'utils/data';
 import { projectExportQuery, projectTimelineQuery } from './query';
 import ProjectForm from './form';
 import validator from './form/validator';
@@ -91,6 +91,27 @@ class ProjectFormModule extends React.PureComponent<Props> {
     ).then(logger.warn);
   };
 
+  // temp ids were added to the tasks of the project as it
+  // was required on draggable library
+  // rerunning this to remove the temp variables
+  removeTempValues = form => {
+    const newForm = JSON.parse(JSON.stringify(form));
+
+    newForm.milestones = form.milestones.map(milestone => {
+      // eslint-disable-next-line
+      milestone.tasks = milestone.tasks.map(task => {
+        if (isForbidden(task)) {
+          return { __typename: 'Forbidden' };
+        }
+        return task;
+      });
+
+      return milestone;
+    });
+
+    return form;
+  };
+
   onSave = async (
     originalValues: Object,
     formData: Object,
@@ -108,7 +129,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
       removeTypename(formData)
     );
 
-    if (this.isNew()) {
+    if (isNew) {
       const { data } = await saveProject({ variables: { input } });
       if (!data) return;
 
@@ -151,9 +172,13 @@ class ProjectFormModule extends React.PureComponent<Props> {
     }
   };
 
+  /**
+   * @param {object} defaultFollower when creating a new form, logged in user is default follower
+   */
   initAllValues = (
     { projectInfoState, projectTagsState, projectMilestonesState }: Object,
     project: Project | { id: string, tags?: Array<Tag>, milestones?: Array<Milestone> },
+    defaultFollower: Object,
     timezone: string
   ) => {
     const {
@@ -172,7 +197,8 @@ class ProjectFormModule extends React.PureComponent<Props> {
       ],
       ...info
     } = project;
-    projectInfoState.initDetailValues(omit(info, ['ignoreTaskIds']), timezone);
+
+    projectInfoState.initDetailValues(omit(info, ['ignoreTaskIds']), defaultFollower, timezone);
     if (tags && Array.isArray(tags) && tags.length) {
       projectTagsState.initDetailValues(tags);
     }
@@ -185,6 +211,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
   onFormReady = (
     { projectInfoState, projectTagsState, projectMilestonesState }: Object,
     project: Project | { id: string, tags?: Array<Tag>, milestones?: Array<Milestone> },
+    defaultFollower: Object,
     timezone: string
   ) => {
     const hasInitialStateYet = projectInfoState.state.id || Object.keys(project).length === 0;
@@ -196,6 +223,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
         projectMilestonesState,
       },
       project,
+      defaultFollower,
       timezone
     );
     return null;
@@ -228,7 +256,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
 
     return (
       <UserConsumer>
-        {({ user }) => (
+        {({ user, organization }) => (
           <Provider inject={[formContainer]}>
             <Mutation
               mutation={isNew ? createProjectMutation : updateProjectMutation}
@@ -313,6 +341,10 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                           ...projectTagsState.originalValues,
                                           ...projectMilestonesState.originalValues,
                                         },
+                                        {
+                                          ...user,
+                                          organization,
+                                        },
                                         user.timezone
                                       );
                                       form.onReset();
@@ -362,6 +394,10 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                               projectMilestonesState,
                                             },
                                             updateProject,
+                                            {
+                                              ...user,
+                                              organization,
+                                            },
                                             user.timezone
                                           );
                                           form.onReset();
@@ -410,6 +446,10 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                 ...template,
                                 id: uuid(),
                               },
+                              {
+                                ...user,
+                                organization,
+                              },
                               user.timezone
                             );
                             return null;
@@ -440,6 +480,11 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                     projectMilestonesState,
                                   },
                                   project,
+                                  {
+                                    ...user,
+                                    organization,
+                                  },
+
                                   user.timezone
                                 )
                               }

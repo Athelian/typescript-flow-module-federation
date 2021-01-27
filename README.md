@@ -95,7 +95,7 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
   yarn start
   ```
 
-  start the development server.
+  Start the development server.
 
 - **build:stg**
 

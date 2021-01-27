@@ -6,6 +6,7 @@ import {
   userAvatarFragment,
   documentFragment,
 } from 'graphql/common/fragment';
+import { partnerCardFragment } from 'graphql/partner/fragment';
 import { forbiddenFragment } from 'graphql/errors/fragment';
 import { taskCountFragment, taskFormInProjectFragment } from 'graphql/task/fragment';
 
@@ -33,6 +34,9 @@ export const projectCardFragment = gql`
     description
     dueDate
     archived
+    ownedBy {
+      ...ownedByFragment
+    }
     milestones {
       ...milestoneInProjectCardFragment
     }
@@ -91,6 +95,19 @@ export const projectFormQueryFragment = gql`
       ...tagFragment
       ...forbiddenFragment
     }
+    organizations {
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
+    }
+    followers {
+      ...userAvatarFragment
+    }
     milestones {
       ... on Milestone {
         id
@@ -134,6 +151,8 @@ export const projectFormQueryFragment = gql`
       }
     }
   }
+
+  ${partnerCardFragment}
   ${ownedByFragment}
   ${tagFragment}
   ${userAvatarFragment}

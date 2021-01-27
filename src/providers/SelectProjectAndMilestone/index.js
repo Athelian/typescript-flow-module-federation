@@ -18,12 +18,14 @@ import BaseCard from 'components/Cards';
 import ProjectCard from 'components/Cards/ProjectCard';
 import messages from 'modules/project/messages';
 import useFilter from 'hooks/useFilter';
+import useUser from 'hooks/useUser';
 import SelectMilestone from './SelectMilestone';
 import { selectProjectQuery } from './query';
 import { ItemWrapperStyle, MilestoneWrapperStyle, MilestoneNameStyle } from './style';
 
 type OptionalProps = {
   cacheKey: string,
+  parentEntityId?: string,
   milestone?: Milestone,
   saveButtonMessage: Object,
 };
@@ -58,24 +60,35 @@ function resetSelection({
   });
 }
 
-function SelectProjectAndMilestone({
+const SelectProjectAndMilestone = ({
   cacheKey,
   intl,
   onCancel,
   onSelect,
   milestone,
   saveButtonMessage,
-}: Props) {
+  parentEntityId,
+}: Props) => {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     { title: intl.formatMessage(messages.name), value: 'name' },
     { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
   ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    projectsDefaultQueryVariables,
-    cacheKey
-  );
+
+  const { organization } = useUser();
+
+  // we only need to select projects owned by entity owner
+  // and shared to the current logged in user's org
+  const defaultVariables = React.useMemo(() => {
+    const ownerQuery = JSON.parse(JSON.stringify(projectsDefaultQueryVariables));
+
+    ownerQuery.filter.ownerId = parentEntityId || organization.id;
+
+    return ownerQuery;
+  }, [parentEntityId, organization.id]);
+
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(defaultVariables, cacheKey);
 
   const project = getByPath('project', milestone);
 
@@ -284,7 +297,7 @@ function SelectProjectAndMilestone({
       )}
     </ObjectValue>
   );
-}
+};
 
 SelectProjectAndMilestone.defaultProps = {
   cacheKey: 'SelectProjectAndMilestone',

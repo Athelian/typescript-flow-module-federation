@@ -19,9 +19,10 @@ import { ProjectSectionWrapperStyle, ProjectSectionStyle } from './style';
 
 type Props = {
   parentEntity?: string,
+  parentEntityId?: string,
 };
 
-const ProjectSection = ({ parentEntity }: Props) => {
+const ProjectSection = ({ parentEntity, parentEntityId }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   return (
@@ -89,6 +90,7 @@ const ProjectSection = ({ parentEntity }: Props) => {
                         <SelectProjectAndMilestone
                           cacheKey="TaskInfoSectionSelectProjectAndMilestone"
                           milestone={milestone}
+                          parentEntityId={parentEntityId}
                           onSelect={newMilestone => {
                             setFieldValues({
                               milestone: newMilestone,
