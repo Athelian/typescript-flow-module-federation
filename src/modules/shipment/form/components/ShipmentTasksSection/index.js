@@ -33,16 +33,14 @@ export default function ShipmentTasksSection({
         initValues(todo, true);
       }}
     >
-      {() => {
-        return (
-          <TaskSection
-            groupIds={groupIds}
-            entityId={entityId}
-            entityOwnerId={entityOwnerId}
-            type="Shipment"
-          />
-        );
-      }}
+      {() => (
+        <TaskSection
+          groupIds={groupIds}
+          entityId={entityId}
+          entityOwnerId={entityOwnerId}
+          type="Shipment"
+        />
+      )}
     </QueryPlaceHolder>
   );
 }
