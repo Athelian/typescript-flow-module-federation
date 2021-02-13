@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import type { FilePayload } from 'generated/graphql';
+import cs from 'clsx';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -30,6 +31,7 @@ type Props = {|
   canDownload: boolean,
   canChangeType: boolean,
   canDelete: boolean,
+  uploadWrapperStyle: string,
   isInDialog?: boolean,
 |};
 
@@ -72,6 +74,7 @@ const DocumentsUpload = ({
   canChangeType,
   canDelete,
   isInDialog = false,
+  uploadWrapperStyle,
 }: Props) => {
   const intl = useIntl();
   const [upload] = useMutation(fileUploadMutation);
@@ -197,7 +200,7 @@ const DocumentsUpload = ({
 
   const documentsBody = (
     <DndProvider backend={HTML5Backend}>
-      <div className={DocumentsUploadWrapperStyle}>
+      <div className={cs(DocumentsUploadWrapperStyle, uploadWrapperStyle)}>
         {types.map(type => {
           return (
             <DocumentTypeArea

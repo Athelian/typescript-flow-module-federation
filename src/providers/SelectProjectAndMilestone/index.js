@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Query } from 'react-apollo';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { BooleanValue, ObjectValue } from 'react-values';
+import { BooleanValue } from 'react-values';
 import type { Project, Milestone } from 'generated/graphql';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
@@ -34,6 +34,7 @@ type Props = OptionalProps & {
   onCancel: () => void,
   onSelect: (milestone: ?Milestone) => void,
   intl: IntlShape,
+  isSubContent: boolean,
 };
 
 const projectsDefaultQueryVariables = {
@@ -48,16 +49,19 @@ const projectsDefaultQueryVariables = {
 function resetSelection({
   project,
   milestone,
-  set,
+  setSelected,
 }: {
   project: ?Project,
   milestone: ?Milestone,
-  set: Function,
+  setSelected: Function,
 }) {
-  set('currentSelection', {
-    project,
-    milestone,
-  });
+  setSelected(values => ({
+    ...values,
+    currentSelection: {
+      project,
+      milestone,
+    },
+  }));
 }
 
 const SelectProjectAndMilestone = ({
@@ -68,6 +72,7 @@ const SelectProjectAndMilestone = ({
   milestone,
   saveButtonMessage,
   parentEntityId,
+  isSubContent,
 }: Props) => {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
@@ -92,210 +97,222 @@ const SelectProjectAndMilestone = ({
 
   const project = getByPath('project', milestone);
 
+  const [
+    { selectedProject, selectedMilestone, currentSelection },
+    setSelected,
+  ] = React.useState<Object>({
+    selectedProject: project,
+    selectedMilestone: milestone,
+    currentSelection: {
+      project,
+      milestone,
+    },
+  });
+
   return (
-    <ObjectValue
-      defaultValue={{
-        selectedProject: project,
-        selectedMilestone: milestone,
-        currentSelection: {
-          project,
-          milestone,
-        },
-      }}
-    >
-      {({ value: { selectedProject, selectedMilestone, currentSelection }, set }) => (
-        <SlideViewLayout>
-          <SlideViewNavBar>
-            <EntityIcon icon="PROJECT" color="PROJECT" />
-            <SortInput
-              sort={currentSort(sortFields, filterAndSort.sort)}
-              ascending={filterAndSort.sort.direction !== 'DESCENDING'}
-              fields={sortFields}
-              onChange={({ field: { value }, ascending }) =>
-                onChangeFilter({
-                  ...filterAndSort,
-                  sort: {
-                    field: value,
-                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                  },
-                })
-              }
-            />
-            <Search
-              query={filterAndSort.filter.query}
-              onChange={newQuery =>
-                onChangeFilter({
-                  ...filterAndSort,
-                  filter: { ...filterAndSort.filter, query: newQuery },
-                })
-              }
-            />
-            <CancelButton
-              onClick={() => {
-                set('selectedProject', project);
-                set('selectedMilestone', milestone);
-                onCancel();
-              }}
-            />
-            <BaseButton
-              id="save_button"
-              label={saveButtonMessage}
-              onClick={() => {
-                if (selectedMilestone) {
-                  onSelect({
-                    ...selectedMilestone,
-                    project: {
-                      ...selectedProject,
-                      milestones: selectedProject.milestones,
-                    },
-                  });
-                } else {
-                  onSelect(null);
-                }
-              }}
-              disabled={
-                getByPathWithDefault('', 'id', selectedMilestone) ===
-                getByPathWithDefault('', 'id', milestone)
-              }
-              data-testid="btnSaveSelectProjectAndMilestone"
-            />
-          </SlideViewNavBar>
+    <SlideViewLayout>
+      <SlideViewNavBar isSubNavBar={isSubContent}>
+        <EntityIcon icon="PROJECT" color="PROJECT" />
+        <SortInput
+          sort={currentSort(sortFields, filterAndSort.sort)}
+          ascending={filterAndSort.sort.direction !== 'DESCENDING'}
+          fields={sortFields}
+          onChange={({ field: { value }, ascending }) =>
+            onChangeFilter({
+              ...filterAndSort,
+              sort: {
+                field: value,
+                direction: ascending ? 'ASCENDING' : 'DESCENDING',
+              },
+            })
+          }
+        />
+        <Search
+          query={filterAndSort.filter.query}
+          onChange={newQuery =>
+            onChangeFilter({
+              ...filterAndSort,
+              filter: { ...filterAndSort.filter, query: newQuery },
+            })
+          }
+        />
+        <CancelButton
+          onClick={() => {
+            setSelected(values => ({
+              ...values,
+              selectedProject: project,
+              selectedMilestone: milestone,
+            }));
+            onCancel();
+          }}
+        />
+        <BaseButton
+          id="save_button"
+          label={saveButtonMessage}
+          onClick={() => {
+            if (selectedMilestone) {
+              onSelect({
+                ...selectedMilestone,
+                project: {
+                  ...selectedProject,
+                  milestones: selectedProject.milestones,
+                },
+              });
+            } else {
+              onSelect(null);
+            }
+          }}
+          disabled={
+            getByPathWithDefault('', 'id', selectedMilestone) ===
+            getByPathWithDefault('', 'id', milestone)
+          }
+          data-testid="btnSaveSelectProjectAndMilestone"
+        />
+      </SlideViewNavBar>
 
-          <Content>
-            <Query query={selectProjectQuery} variables={queryVariables} fetchPolicy="network-only">
-              {({ loading, data, fetchMore, error }) => {
-                if (error) {
-                  return error.message;
+      <Content hasSubNavBar={isSubContent}>
+        <Query query={selectProjectQuery} variables={queryVariables} fetchPolicy="network-only">
+          {({ loading, data, fetchMore, error }) => {
+            if (error) {
+              return error.message;
+            }
+            const nextPage = getByPathWithDefault(1, 'projects.page', data) + 1;
+            const totalPage = getByPathWithDefault(1, 'projects.totalPage', data);
+            const hasMore = nextPage <= totalPage;
+            const projects = getByPathWithDefault([], 'projects.nodes', data);
+            return (
+              <GridView
+                items={projects}
+                onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'projects')}
+                hasMore={hasMore}
+                isLoading={loading}
+                isEmpty={projects.length === 0}
+                emptyMessage={
+                  <FormattedMessage
+                    id="modules.project.noFound"
+                    defaultMessage="No projects found"
+                  />
                 }
-                const nextPage = getByPathWithDefault(1, 'projects.page', data) + 1;
-                const totalPage = getByPathWithDefault(1, 'projects.totalPage', data);
-                const hasMore = nextPage <= totalPage;
-                const projects = getByPathWithDefault([], 'projects.nodes', data);
-                return (
-                  <GridView
-                    items={projects}
-                    onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'projects')}
-                    hasMore={hasMore}
-                    isLoading={loading}
-                    isEmpty={projects.length === 0}
-                    emptyMessage={
-                      <FormattedMessage
-                        id="modules.project.noFound"
-                        defaultMessage="No projects found"
-                      />
-                    }
-                    itemWidth="645px"
-                  >
-                    {projects.map(item => {
-                      const selected =
-                        item.id === getByPathWithDefault('', 'id', selectedProject) &&
-                        selectedMilestone &&
-                        selectedMilestone.id;
+                itemWidth="645px"
+              >
+                {projects.map(item => {
+                  const selected =
+                    item.id === getByPathWithDefault('', 'id', selectedProject) &&
+                    selectedMilestone &&
+                    selectedMilestone.id;
 
-                      return (
-                        <div key={item.id} className={ItemWrapperStyle}>
-                          <BooleanValue>
-                            {({ value: isOpen, set: slideToggle }) => (
-                              <>
-                                {item.id === getByPathWithDefault('', 'id', selectedProject) &&
-                                  selectedMilestone &&
-                                  selectedMilestone.id && (
-                                    <div className={MilestoneWrapperStyle}>
-                                      <BaseCard
-                                        icon="MILESTONE"
-                                        color="MILESTONE"
-                                        selected
-                                        selectable
-                                        readOnly
-                                      >
-                                        <div className={MilestoneNameStyle}>
-                                          <Display align="left">{selectedMilestone.name}</Display>
-                                        </div>
-                                      </BaseCard>
+                  return (
+                    <div key={item.id} className={ItemWrapperStyle}>
+                      <BooleanValue>
+                        {({ value: isOpen, set: slideToggle }) => (
+                          <>
+                            {item.id === getByPathWithDefault('', 'id', selectedProject) &&
+                              selectedMilestone &&
+                              selectedMilestone.id && (
+                                <div className={MilestoneWrapperStyle}>
+                                  <BaseCard
+                                    icon="MILESTONE"
+                                    color="MILESTONE"
+                                    selected
+                                    selectable
+                                    readOnly
+                                  >
+                                    <div className={MilestoneNameStyle}>
+                                      <Display align="left">{selectedMilestone.name}</Display>
                                     </div>
-                                  )}
+                                  </BaseCard>
+                                </div>
+                              )}
 
-                                <ProjectCard
-                                  key={item.id}
-                                  project={item}
-                                  onClick={() => {
-                                    set('currentSelection', {
-                                      project: item,
-                                      milestone: null,
-                                    });
-                                    slideToggle(true);
-                                  }}
-                                  selectable
-                                  selected={selected}
-                                />
+                            <ProjectCard
+                              key={item.id}
+                              project={item}
+                              onClick={() => {
+                                setSelected(values => ({
+                                  ...values,
+                                  currentSelection: {
+                                    project: item,
+                                    milestone: null,
+                                  },
+                                }));
 
-                                {item.id ===
-                                  getByPathWithDefault('', 'project.id', currentSelection) && (
-                                  <SlideView
-                                    shouldConfirm={() => {
-                                      const button = document.getElementById(
-                                        'select_milestone_save_button'
-                                      );
-                                      return button;
-                                    }}
-                                    isOpen={isOpen}
-                                    onRequestClose={() => {
+                                slideToggle(true);
+                              }}
+                              selectable
+                              selected={selected}
+                            />
+
+                            {item.id ===
+                              getByPathWithDefault('', 'project.id', currentSelection) && (
+                              <SlideView
+                                shouldConfirm={() => {
+                                  const button = document.getElementById(
+                                    'select_milestone_save_button'
+                                  );
+                                  return button;
+                                }}
+                                isOpen={isOpen}
+                                onRequestClose={() => {
+                                  resetSelection({
+                                    project: selectedProject,
+                                    milestone: selectedMilestone,
+                                    setSelected,
+                                  });
+                                  slideToggle(false);
+                                }}
+                              >
+                                {isOpen && (
+                                  <SelectMilestone
+                                    milestones={item.milestones}
+                                    milestone={selectedMilestone}
+                                    onCancel={() => {
                                       resetSelection({
                                         project: selectedProject,
                                         milestone: selectedMilestone,
-                                        set,
+                                        setSelected,
                                       });
                                       slideToggle(false);
                                     }}
-                                  >
-                                    {isOpen && (
-                                      <SelectMilestone
-                                        milestones={item.milestones}
-                                        milestone={selectedMilestone}
-                                        onCancel={() => {
-                                          resetSelection({
-                                            project: selectedProject,
-                                            milestone: selectedMilestone,
-                                            set,
-                                          });
-                                          slideToggle(false);
-                                        }}
-                                        onSelect={newMilestone => {
-                                          if (newMilestone) {
-                                            set('selectedMilestone', newMilestone);
-                                            set('selectedProject', currentSelection.project);
-                                            set('currentSelection', {
-                                              project: currentSelection.project,
-                                              milestone: newMilestone,
-                                            });
-                                          } else {
-                                            set('selectedProject', null);
-                                            set('selectedMilestone', null);
-                                            set('currentSelection', {
-                                              project: null,
-                                              milestone: null,
-                                            });
-                                          }
-                                          slideToggle(false);
-                                        }}
-                                      />
-                                    )}
-                                  </SlideView>
+                                    onSelect={newMilestone => {
+                                      if (newMilestone) {
+                                        setSelected(values => ({
+                                          ...values,
+                                          selectedMilestone: newMilestone,
+                                          selectedProject: currentSelection.project,
+                                          currentSelection: {
+                                            project: currentSelection.project,
+                                            milestone: newMilestone,
+                                          },
+                                        }));
+                                      } else {
+                                        setSelected(values => ({
+                                          ...values,
+                                          selectedMilestone: null,
+                                          selectedProject: null,
+                                          currentSelection: {
+                                            project: null,
+                                            milestone: null,
+                                          },
+                                        }));
+                                      }
+                                      slideToggle(false);
+                                    }}
+                                  />
                                 )}
-                              </>
+                              </SlideView>
                             )}
-                          </BooleanValue>
-                        </div>
-                      );
-                    })}
-                  </GridView>
-                );
-              }}
-            </Query>
-          </Content>
-        </SlideViewLayout>
-      )}
-    </ObjectValue>
+                          </>
+                        )}
+                      </BooleanValue>
+                    </div>
+                  );
+                })}
+              </GridView>
+            );
+          }}
+        </Query>
+      </Content>
+    </SlideViewLayout>
   );
 };
 
@@ -304,6 +321,7 @@ SelectProjectAndMilestone.defaultProps = {
   saveButtonMessage: (
     <FormattedMessage id="providers.selectProjectAndMilestone.save" defaultMessage="SAVE" />
   ),
+  isSubContent: false,
 };
 
 export default injectIntl(SelectProjectAndMilestone);

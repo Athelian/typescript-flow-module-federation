@@ -1,13 +1,15 @@
 // @flow
 import * as React from 'react';
-import { NavBarWrapperStyle, SlideViewNavBarStyle } from './style';
+import cs from 'clsx';
+import { NavBarWrapperStyle, SlideViewNavBarStyle, SubNavBarWrapperStyle } from './style';
 
 type Props = {
+  isSubNavBar?: boolean,
   children: React.Node,
 };
 
-const SlideViewNavBar = ({ children }: Props) => (
-  <div className={NavBarWrapperStyle}>
+const SlideViewNavBar = ({ isSubNavBar = false, children }: Props) => (
+  <div className={cs(NavBarWrapperStyle, { [SubNavBarWrapperStyle]: isSubNavBar })}>
     <div className={SlideViewNavBarStyle}>{children}</div>
   </div>
 );

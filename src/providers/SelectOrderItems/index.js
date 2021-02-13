@@ -30,6 +30,9 @@ type OptionalProps = {
 type Props = OptionalProps & {
   onCancel: Function,
   onSelect: Function,
+  isSubContent?: boolean,
+  disableIncrement?: boolean,
+  singleSelection?: boolean,
   filter: Object,
   intl: IntlShape,
 };
@@ -47,7 +50,16 @@ function initFilterBy(filter: Object) {
   };
 }
 
-function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
+function SelectOrderItems({
+  intl,
+  cacheKey,
+  onCancel,
+  onSelect,
+  filter,
+  isSubContent,
+  disableIncrement,
+  singleSelection,
+}: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const fields = [
@@ -91,9 +103,9 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
 
   return (
     <ArrayValue>
-      {({ value: selected, push, splice, filter: arrayValueFilter }) => (
+      {({ value: selected, push, set, splice, filter: arrayValueFilter }) => (
         <SlideViewLayout>
-          <SlideViewNavBar>
+          <SlideViewNavBar isSubNavBar={isSubContent}>
             <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
             <SortInput
               sort={fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]}
@@ -121,11 +133,13 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
             <CancelButton onClick={onCancel} />
             <SaveButton
               disabled={selected.length === 0}
-              onClick={() => onSelect(removeTypename(selected))}
+              onClick={() => {
+                onSelect(removeTypename(singleSelection ? selected[0] : selected));
+              }}
             />
           </SlideViewNavBar>
 
-          <Content>
+          <Content hasSubNavBar={isSubContent}>
             <GridView
               onLoadMore={() => {
                 client
@@ -184,7 +198,7 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
 
                 return (
                   <div key={item.id} className={ItemWrapperStyle}>
-                    {isSelected && (
+                    {!disableIncrement && isSelected && (
                       <IncrementInput
                         value={selected.filter(selectedItem => selectedItem.id === item.id).length}
                         onMinus={() => splice(index, 1)}
@@ -201,7 +215,13 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
                       selectable
                       selected={isSelected}
                       onSelect={() => {
-                        if (isSelected) {
+                        if (singleSelection) {
+                          if (isSelected) {
+                            set([]);
+                          } else {
+                            set([item]);
+                          }
+                        } else if (isSelected) {
                           arrayValueFilter(({ id }) => id !== item.id);
                         } else {
                           push(item);
@@ -221,6 +241,9 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
 
 const defaultProps = {
   cacheKey: 'SelectOrderItems',
+  isSubContent: false,
+  disableIncrement: false,
+  singleSelection: false,
 };
 
 SelectOrderItems.defaultProps = defaultProps;

@@ -19,6 +19,7 @@ import {
   sizeFragment,
   badRequestFragment,
   forbiddenFragment,
+  documentFragment,
 } from 'graphql';
 import { commentFragment, eventFragment } from 'modules/timeline/query';
 
@@ -73,4 +74,56 @@ export const documentTimelineQuery = gql`
 
   ${eventFragment}
   ${commentFragment}
+`;
+
+export const orderItemFilesQuery = gql`
+  query orderItemFilesQuery($id: ID!) {
+    orderItem(id: $id) {
+      ... on OrderItem {
+        id
+        files {
+          ...documentFragment
+          ...forbiddenFragment
+        }
+      }
+    }
+  }
+
+  ${ownedByFragment}
+  ${tagFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
+`;
+
+export const productFilesQuery = gql`
+  query productFilesQuery($id: ID!) {
+    product(id: $id) {
+      ... on Product {
+        id
+        productProviders {
+          ... on ProductProvider {
+            id
+            name
+            archived
+            updatedAt
+            updatedBy {
+              ...userAvatarFragment
+            }
+            memo
+            files {
+              ...documentFragment
+              ...forbiddenFragment
+            }
+          }
+        }
+      }
+      ...forbiddenFragment
+    }
+  }
+
+  ${userAvatarFragment}
+  ${ownedByFragment}
+  ${tagFragment}
+  ${documentFragment}
+  ${forbiddenFragment}
 `;
