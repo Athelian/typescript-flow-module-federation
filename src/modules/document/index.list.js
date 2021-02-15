@@ -65,6 +65,37 @@ const DocumentModule = () => {
   const hasPermissions = useViewerHasPermissions();
   const canUpload = hasPermissions(DOCUMENT_CREATE);
 
+  const [selectedFiles, setSelectedFiles] = React.useState({});
+  const [isMultiSelect, setMultiSelect] = React.useState(false);
+  const [isParentSelectionOpen, setParentSelectionOpen] = React.useState(false);
+
+  if (isParentSelectionOpen && isMultiSelect && setMultiSelect) {
+    console.log('');
+  }
+
+  const onSelect = React.useCallback(file => {
+    if (file && file.id) {
+      setSelectedFiles(_prevIds => {
+        const newFiles = JSON.parse(JSON.stringify(_prevIds));
+        if (newFiles[file.id]) {
+          delete newFiles[file.id];
+          return newFiles;
+        }
+
+        return {
+          ...newFiles,
+          [file.id]: file,
+        };
+      });
+    }
+  }, []);
+
+  if (onSelect) {
+    console.log('');
+  }
+
+  const refetchRef = React.useRef(null);
+
   const handleChange = (event: SyntheticInputEvent<HTMLInputElement> | Array<File>) => {
     let newFiles = [];
     if (Array.isArray(event)) {
@@ -130,36 +161,6 @@ const DocumentModule = () => {
       });
   };
 
-  const [selectedFiles, setSelectedFiles] = React.useState({});
-  const [isMultiSelect, setMultiSelect] = React.useState(false);
-  const [isParentSelectionOpen, setParentSelectionOpen] = React.useState(false);
-
-  const onSelect = React.useCallback((file: Object) => {
-    if (file && file.id) {
-      setSelectedFiles(_prevIds => {
-        if (_prevIds[file.id]) {
-          const { [file.id]: _, ...rest } = _prevIds;
-          return rest;
-        }
-
-        return {
-          ..._prevIds,
-          [file.id]: file,
-        };
-      });
-    }
-  }, []);
-
-  const refetchRef = React.useRef(null);
-
-  const onSelectDone = () => {
-    setSelectedFiles({});
-    setParentSelectionOpen(false);
-    if (refetchRef.current) {
-      refetchRef.current();
-    }
-  };
-
   return (
     <Provider>
       <Content>
@@ -219,7 +220,13 @@ const DocumentModule = () => {
         <ParentDocumentSelection
           mutateOnDialogSave
           isParentSelectionOpen={isParentSelectionOpen}
-          onSelectDone={onSelectDone}
+          onSelectDone={() => {
+            setSelectedFiles({});
+            setParentSelectionOpen(false);
+            if (refetchRef.current) {
+              refetchRef.current();
+            }
+          }}
           files={selectedFiles}
           onRequestClose={() => setParentSelectionOpen(false)}
         />

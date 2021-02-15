@@ -14,7 +14,7 @@ type Props = {|
   perPage: number,
   page: number,
   uploadFiles: Array<FileInput>,
-  onSelect: Function,
+  onSelect?: Function,
   refetchRef: any,
   selectedFiles: Object,
 |};

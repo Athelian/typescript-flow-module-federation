@@ -21,6 +21,7 @@ export const TotalEntitiesStyle: string = css`
   justify-content: center;
   height: 40px;
   width: 200px;
+  z-index: 1;
   border: 4px solid ${colors.TEAL_HALF};
   ${borderRadiuses.BUTTON};
   background-color: ${colors.WHITE};

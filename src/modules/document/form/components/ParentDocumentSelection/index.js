@@ -23,7 +23,7 @@ const initFilter = {
 
 type Props = {
   isParentSelectionOpen: boolean,
-  files: Object[],
+  files: any,
   mutateOnDialogSave?: boolean,
   onRequestClose: Function,
   onSelectDone: Function,
