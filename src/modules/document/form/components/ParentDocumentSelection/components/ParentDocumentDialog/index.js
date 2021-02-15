@@ -16,7 +16,7 @@ type Props = {
   onSave: Function,
 };
 
-const formatFiles = (files: mixed) => {
+const formatFiles = (files: any) => {
   if (Array.isArray(files)) {
     return files;
   }

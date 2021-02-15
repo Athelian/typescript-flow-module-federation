@@ -9,7 +9,7 @@ type Props = {
   disabled?: boolean,
 };
 
-const ButtonFloat = ({ label, onClick, disabled = false, ...rest }: Props) => {
+const ButtonFloat = ({ label, onClick, disabled = false }: Props) => {
   return (
     <div className={SelectedEntitiesWrapperStyle}>
       <BaseButton
@@ -19,7 +19,6 @@ const ButtonFloat = ({ label, onClick, disabled = false, ...rest }: Props) => {
         disabled={disabled}
         onClick={onClick}
         data-testid="buttonFloat"
-        {...rest}
       />
     </div>
   );
