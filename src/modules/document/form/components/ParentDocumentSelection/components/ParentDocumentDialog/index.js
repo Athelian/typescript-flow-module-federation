@@ -10,21 +10,35 @@ type Props = {
   entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider' | 'Milestone',
   files: Object | [Object],
   isDialogOpen: boolean,
+  isLoading?: boolean,
   onCancel: Function,
   onRequestClose: Function,
   onSave: Function,
+};
+
+const formatFiles = (files: mixed) => {
+  if (Array.isArray(files)) {
+    return files;
+  }
+
+  if (files.id) {
+    return [files];
+  }
+
+  return Object.values(files);
 };
 
 const ParentDocumentDialog = ({
   entity,
   files,
   isDialogOpen,
+  isLoading = false,
   onCancel,
   onRequestClose,
   onSave,
 }: Props) => {
   const intl = useIntl();
-  const [dialogFiles, setDialogFiles] = React.useState(Array.isArray(files) ? files : [files]);
+  const [dialogFiles, setDialogFiles] = React.useState(formatFiles(files));
 
   React.useEffect(() => {
     const [firstType] = getFileTypesByEntity(entity, intl);
@@ -43,6 +57,7 @@ const ParentDocumentDialog = ({
       width="880px"
       onRequestClose={onRequestClose}
       onCancel={onCancel}
+      isLoading={isLoading}
       noPadding
       className={ParentDialogStyle}
       onSave={() => onSave(dialogFiles)}

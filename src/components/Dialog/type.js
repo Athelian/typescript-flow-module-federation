@@ -24,6 +24,7 @@ export type FormDialogProps = {
   onSave: () => Promise<any> | void,
   className?: string,
   width?: string,
+  noPadding?: boolean,
   children: React.Node,
 };
 

@@ -188,7 +188,6 @@ export const prepareParsedDocumentInput = (originalValues: ?Object, newValues: O
 };
 
 export const prepareParsedDocumentParentInput = (
-  originalValues: ?Object,
   newValues: Object,
   originalEntity: Object // the original unchanged entity
 ): Object => {
@@ -204,38 +203,6 @@ export const prepareParsedDocumentParentInput = (
 
   switch (newValues?.entity?.__typename) {
     case 'Milestone': {
-      /*
-        {
-          id: "123", project id
-          input: {
-            milestones: [
-              {
-                id: "bvpfh6mnrr1h18ptgqdg",
-                dueDate: "2021-01-13T15:00:00.000Z",
-                files: [
-                  {
-                    id: "asdasdsada"
-                  },
-                  {
-                    id: "",
-                    name: "3_asdasd_.jpg",
-                    type: "Document"
-                  }
-                ],
-                tasks: [
-                  { id: "123" },
-                  { id: "1234" },
-                  { id: "1235" },
-                  { id: "1236" },
-                ]
-              },
-              {id: "bvq0tpmnrr1h18ptgqeg"},
-              {id: "bvq0tpmnrr1h18ptgqef"}
-            ]
-          }
-        }
-      */
-
       const newFiles = newValues.milestone.files.map(file => {
         return {
           id: file.id,
@@ -296,22 +263,6 @@ export const prepareParsedDocumentParentInput = (
           }),
         },
       };
-      /*
-          {
-            id: "19586", // product id i think?
-            input: {
-              productProviders: [
-                {
-                  id: "20194", 
-                  files: [
-                    {id: "c0gia76nrr1vsmo9e240", type: "ProductAnalysisCert"}
-                  ]
-                }
-              ]            
-            }
-          }
-        */
-
       break;
     }
     default: {

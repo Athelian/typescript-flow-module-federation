@@ -92,24 +92,13 @@ function SelectShipments({ cacheKey, onCancel, onSelect }: Props) {
           hasMore={hasMore}
           isLoading={loading}
           renderItem={item => {
-            // TODO: fix slight delay issue? convert to hooks
             return (
               <ShipmentCard
                 key={item.id}
                 shipment={item}
                 selectable
                 selected={selectedShipment?.id === item.id}
-                // onClick={shipmentId => {
-                //   console.log('i am clicked', shipmentId);
-                // }}
                 onSelect={onSelectShipment}
-                // onSelect={() => {
-                //   if (isSelected) {
-                //     setSelectedShipment(null);
-                //   } else {
-                //     setSelectedShipment(item);
-                //   }
-                // }}
               />
             );
           }}

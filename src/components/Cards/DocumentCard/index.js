@@ -42,6 +42,7 @@ type Props = {|
   navigable?: boolean,
   onChange?: (field: string, value: mixed) => void,
   onClick?: Function,
+  onSelect?: Function,
 |};
 
 export const getFileTypesByEntity = (
@@ -152,6 +153,7 @@ const DocumentCard = ({
   downloadable,
   navigable,
   intl,
+  onSelect,
   onChange,
   onClick,
   ...rest
@@ -166,6 +168,12 @@ const DocumentCard = ({
   const fileTypeLabel = fileTypes.find(type => type.value === file?.type)?.label ?? '';
   const createdAt = file?.createdAt ?? '';
 
+  const onCardSelected = () => {
+    if (onSelect) {
+      onSelect(file);
+    }
+  };
+
   return (
     <BaseCard
       actions={actions}
@@ -173,6 +181,7 @@ const DocumentCard = ({
       icon="DOCUMENT"
       color="DOCUMENT"
       onClick={onClick}
+      onSelect={onCardSelected}
       {...rest}
     >
       <div className={DocumentCardWrapperStyle(cardHeight)}>

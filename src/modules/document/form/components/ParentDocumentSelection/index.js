@@ -3,8 +3,10 @@ import * as React from 'react';
 import { getByPathWithDefault } from 'utils/fp';
 import SlideView from 'components/SlideView';
 import useFilter from 'hooks/useFilter';
+import useDocumentParentMutation from 'modules/document/hooks/useDocumentParentMutation';
 import { SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
+import { toLowerFirst } from 'utils/string';
 import { ParentNavbarTabs, ParentDocumentDialog, ParentSelectList } from './components';
 
 const initFilter = {
@@ -22,12 +24,14 @@ const initFilter = {
 type Props = {
   isParentSelectionOpen: boolean,
   files: Object[],
+  mutateOnDialogSave?: boolean,
   onRequestClose: Function,
   onSelectDone: Function,
 };
 
 const ParentDocumentSelection = ({
   isParentSelectionOpen,
+  mutateOnDialogSave = false,
   onRequestClose,
   onSelectDone,
   files,
@@ -40,13 +44,13 @@ const ParentDocumentSelection = ({
 
   const [isDialogOpen, setDialogOpen] = React.useState(false);
 
+  const [updateParent, { loading: isParentUpdating }] = useDocumentParentMutation();
+
   const { filterAndSort, onChangeFilter } = useFilter(initFilter, `filterParentDocumentType`);
 
   const activeType = getByPathWithDefault('Order', 'filter.entityTypes.0', filterAndSort);
 
   const onParentSelected = (parent: Object) => {
-    console.log('parent is selected ', parent);
-
     setSelected(_selected => {
       return {
         ..._selected,
@@ -57,19 +61,38 @@ const ParentDocumentSelection = ({
     setDialogOpen(true);
   };
 
-  const onDialogSave = (newFiles: [Object]) => {
-    setDialogOpen(false);
+  const onDialogSave = async (newFiles: [Object]) => {
+    if (mutateOnDialogSave && selected.parent) {
+      const newEntity = {
+        entity: {
+          id: selected.parent.id,
+          __typename: activeType,
+        },
+        [toLowerFirst(activeType)]: {
+          ...selected.parent,
+          files: newFiles,
+        },
+      };
+
+      await updateParent({
+        type: activeType,
+        newState: newEntity,
+      });
+    }
+
     onSelectDone({
       ...selected,
       files: newFiles,
       activeType,
     });
 
+    // resets the selected
     setSelected({
       parentId: null,
       files: [],
-      activeType: 'Order',
     });
+
+    setDialogOpen(false);
   };
 
   return (
@@ -90,14 +113,17 @@ const ParentDocumentSelection = ({
             type={activeType}
           />
         )}
-        <ParentDocumentDialog
-          files={files}
-          isDialogOpen={isDialogOpen}
-          onRequestClose={() => setDialogOpen(false)}
-          onCancel={() => setDialogOpen(false)}
-          entity={activeType}
-          onSave={onDialogSave}
-        />
+        {isDialogOpen && (
+          <ParentDocumentDialog
+            files={files}
+            isLoading={isParentUpdating}
+            isDialogOpen={isDialogOpen}
+            onRequestClose={() => setDialogOpen(false)}
+            onCancel={() => setDialogOpen(false)}
+            entity={activeType}
+            onSave={onDialogSave}
+          />
+        )}
       </SlideViewLayout>
     </SlideView>
   );

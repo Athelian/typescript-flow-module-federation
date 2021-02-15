@@ -9,6 +9,7 @@ import { DialogStyle, ButtonContainerStyle, NoPaddingStyle } from './style';
 
 function FormDialog({
   isOpen,
+  isLoading,
   onRequestClose,
   onCancel,
   onSave,
@@ -21,8 +22,8 @@ function FormDialog({
       <div className={cs(DialogStyle, { [NoPaddingStyle]: noPadding })}>
         <div className={ButtonContainerStyle}>
           <GridRow>
-            <CancelButton onClick={onCancel} />
-            <SaveButton disabled={false} onClick={onSave} />
+            <CancelButton disabled={isLoading} onClick={onCancel} />
+            <SaveButton disabled={isLoading} isLoading={isLoading} onClick={onSave} />
           </GridRow>
         </div>
         {children}
