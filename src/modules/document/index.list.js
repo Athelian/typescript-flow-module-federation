@@ -69,10 +69,6 @@ const DocumentModule = () => {
   const [isMultiSelect, setMultiSelect] = React.useState(false);
   const [isParentSelectionOpen, setParentSelectionOpen] = React.useState(false);
 
-  if (isParentSelectionOpen && isMultiSelect && setMultiSelect) {
-    console.log('');
-  }
-
   const onSelect = React.useCallback(file => {
     if (file && file.id) {
       setSelectedFiles(_prevIds => {
@@ -89,10 +85,6 @@ const DocumentModule = () => {
       });
     }
   }, []);
-
-  if (onSelect) {
-    console.log('');
-  }
 
   const refetchRef = React.useRef(null);
 
