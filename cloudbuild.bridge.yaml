@@ -3,26 +3,27 @@
 ####################################
 name: 'Deploy Staging'
 triggers:
-- branches: ['develop']
+  - branches: ['develop']
 steps:
-- name: 'node:10-slim'
-  entrypoint: yarn
-  args: ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
-- name: 'node:10-slim'
-  entrypoint: yarn
-  args: ['build:stg']
-  env: ['ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA']
-- name: 'gcr.io/zenport-183806/firebase'
-  args: ['deploy', '--only', 'hosting:staging']
-  secretEnv: ['FIREBASE_TOKEN']
-- name: 'gcr.io/zenport-183806/firebase'
-  args: ['database:set', '/revision_staging', '--data', "\"$SHORT_SHA\"", '--confirm']
-  secretEnv: ['FIREBASE_TOKEN']
+  - name: 'node:10-slim'
+    entrypoint: yarn
+    args:
+      ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
+  - name: 'node:10-slim'
+    entrypoint: yarn
+    args: ['build:stg']
+    env: ['ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA']
+  - name: 'gcr.io/zenport-183806/firebase'
+    args: ['deploy', '--only', 'hosting:staging']
+    secretEnv: ['FIREBASE_TOKEN']
+  - name: 'gcr.io/zenport-183806/firebase'
+    args: ['database:set', '/revision_staging', '--data', '"$SHORT_SHA"', '--confirm']
+    secretEnv: ['FIREBASE_TOKEN']
 secrets:
-- kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
-  secretEnv:
-    FIREBASE_TOKEN: 'CiQABMiRS2pzGQzkQpV9nxSXoJ2JJasJwnByeP5/LkT1BvD480USVgBl1o1Vk8mKYamYIoTV+nKp3ioXT69W8uWUke0duMu48TPBE2kNHEU6lDETMssT8Mw7rPaATUsLDb69WA5MhmvpdXHz2nOavdjM9ZfWa/ZoV9Bcvp83'
-timeout: 2400s
+  - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
+    secretEnv:
+      FIREBASE_TOKEN: 'CiQABMiRS2pzGQzkQpV9nxSXoJ2JJasJwnByeP5/LkT1BvD480USVgBl1o1Vk8mKYamYIoTV+nKp3ioXT69W8uWUke0duMu48TPBE2kNHEU6lDETMssT8Mw7rPaATUsLDb69WA5MhmvpdXHz2nOavdjM9ZfWa/ZoV9Bcvp83'
+timeout: 1800s
 ---
 #########################################
 # Branch hotfixes deploy to staging-hot #
@@ -33,7 +34,8 @@ triggers:
 steps:
   - name: 'node:10-slim'
     entrypoint: yarn
-    args: ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
+    args:
+      ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
   - name: 'node:10-slim'
     entrypoint: yarn
     args: ['build:stg']
@@ -44,7 +46,7 @@ steps:
     args: ['deploy', '--only', 'hosting:staging-hot']
     secretEnv: ['FIREBASE_TOKEN']
   - name: 'gcr.io/zenport-183806/firebase'
-    args: ['database:set', '/revision_staging_hot', '--data', "\"$SHORT_SHA\"", '--confirm']
+    args: ['database:set', '/revision_staging_hot', '--data', '"$SHORT_SHA"', '--confirm']
     secretEnv: ['FIREBASE_TOKEN']
 secrets:
   - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
@@ -61,7 +63,8 @@ triggers:
 steps:
   - name: 'node:10-slim'
     entrypoint: yarn
-    args: ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
+    args:
+      ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
   - name: 'node:10-slim'
     entrypoint: yarn
     args: ['build:prod']
@@ -70,7 +73,7 @@ steps:
     args: ['deploy', '--only', 'hosting:prod']
     secretEnv: ['FIREBASE_TOKEN']
   - name: 'gcr.io/zenport-183806/firebase'
-    args: ['database:set', '/revision_production', '--data', "\"$SHORT_SHA\"", '--confirm']
+    args: ['database:set', '/revision_production', '--data', '"$SHORT_SHA"', '--confirm']
     secretEnv: ['FIREBASE_TOKEN']
 secrets:
   - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
