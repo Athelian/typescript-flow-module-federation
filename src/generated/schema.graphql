@@ -30166,6 +30166,27 @@ enum NotificationType {
 
   """file_uploaded_to_entity"""
   file_uploaded_to_entity
+
+  """project_create"""
+  project_create
+
+  """project_delete"""
+  project_delete
+
+  """project_update"""
+  project_update
+
+  """milestone_create"""
+  milestone_create
+
+  """milestone_update"""
+  milestone_update
+
+  """task_create"""
+  task_create
+
+  """task_update"""
+  task_update
 }
 
 type Order implements Model & Owned & Tagged & Followed & Supervised & Documented & Customizable & Memorizable {
@@ -88332,6 +88353,9 @@ input UserFilterInput {
   updatedAt: DateRangeInput
   organizationId: ID
   organizationIds: [ID!]
+  tagIds: [ID!]
+  tagIdsWithOperator: IdsWithOperatorInput
+  notTagIds: [ID!]
 }
 
 union UserPayload = User | BadRequest | Forbidden | NotFound
