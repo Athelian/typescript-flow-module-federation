@@ -20,11 +20,11 @@ steps:
     args: ['database:set', '/revision_staging', '--data', '"$SHORT_SHA"', '--confirm']
     secretEnv: ['FIREBASE_TOKEN']
 secrets:
-  # - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
-  - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/testkeyring/cryptoKeys/firebase-token'
+  # - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/testkeyring/cryptoKeys/firebase-token'
+  - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
     secretEnv:
-      FIREBASE_TOKEN: 'CiQAKjLYag9heOEXkyV+2/1LczLNEo4AOWWmpARIZU0CraWhx5QSkAEAIxlCYzpTudu+QIRZExou5TZrvrSKjKSqwJEMrslWMcBOUxbOw7mUkmOb/2BajUYUmU70yKg6H2bgXhAKmhsoEs2f6K3Uze6TT2zs+AU72AHcea9yGCffvhe6Sm1KBM1n055Ln1hf0yYnB7xhpu958brz/WN/W5QzX0bT6LaldUjM4fSuCyW2TMH2gXQxBLU='
-      # FIREBASE_TOKEN: 'CiQABMiRS2pzGQzkQpV9nxSXoJ2JJasJwnByeP5/LkT1BvD480USVgBl1o1Vk8mKYamYIoTV+nKp3ioXT69W8uWUke0duMu48TPBE2kNHEU6lDETMssT8Mw7rPaATUsLDb69WA5MhmvpdXHz2nOavdjM9ZfWa/ZoV9Bcvp83'
+      # FIREBASE_TOKEN: 'CiQAKjLYag9heOEXkyV+2/1LczLNEo4AOWWmpARIZU0CraWhx5QSkAEAIxlCYzpTudu+QIRZExou5TZrvrSKjKSqwJEMrslWMcBOUxbOw7mUkmOb/2BajUYUmU70yKg6H2bgXhAKmhsoEs2f6K3Uze6TT2zs+AU72AHcea9yGCffvhe6Sm1KBM1n055Ln1hf0yYnB7xhpu958brz/WN/W5QzX0bT6LaldUjM4fSuCyW2TMH2gXQxBLU='
+      FIREBASE_TOKEN: 'CiQABMiRSxFPfnwdM7ahaPi95H2ma5VUVYCgwx3zI9ZhWFOQ81oSkAEA9/U/J4HRwK9t0kLVe6F1T1W74JWV3AEPQ14N6aDa99NnGln6D3E6W+ZuSMEX1dwkUbG9UulC6Y/9swER5SzggPkAmHIKHaQnp1u1VpXoML1qMG1iRo8qCfbyJsTBfmXxYcnpkaJPwT9JAtHamX3maDhdnU2C80sVD+iys1WlL8Lm1I1xoItc0Z/E9VpIzXM='
 timeout: 2400s
 ---
 #########################################
