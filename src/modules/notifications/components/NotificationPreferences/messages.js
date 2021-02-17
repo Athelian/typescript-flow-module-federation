@@ -202,4 +202,64 @@ export default defineMessages({
     id: 'modules.Notification.preferences.shipment_update_booking_no',
     defaultMessage: 'Update booking no',
   },
+  project_create: {
+    id: 'modules.Notification.preferences.project_create',
+    defaultMessage: 'Create project',
+  },
+  project_delete: {
+    id: 'modules.Notification.preferences.project_delete',
+    defaultMessage: 'Delete project',
+  },
+  project_update: {
+    id: 'modules.Notification.preferences.project_update',
+    defaultMessage: 'Update project',
+  },
+  project_set_due_date: {
+    id: 'modules.Notification.preferences.project_set_due_date',
+    defaultMessage: 'Set project due date',
+  },
+  project_update_due_date: {
+    id: 'modules.Notification.preferences.project_update_due_date',
+    defaultMessage: 'Update project due date',
+  },
+  milestone_create: {
+    id: 'modules.Notification.preferences.milestone_create',
+    defaultMessage: 'Create milestone',
+  },
+  milestone_update: {
+    id: 'modules.Notification.preferences.milestone_update',
+    defaultMessage: 'Update milestone',
+  },
+  milestone_set_due_date: {
+    id: 'modules.Notification.preferences.milestone_set_due_date',
+    defaultMessage: 'Set milestone due date',
+  },
+  milestone_update_due_date: {
+    id: 'modules.Notification.preferences.milestone_update_due_date',
+    defaultMessage: 'Update milestone due date',
+  },
+  milestone_update_milestone_status: {
+    id: 'modules.Notification.preferences.milestone_update_milestone_status',
+    defaultMessage: 'Update milestone status',
+  },
+  task_create: {
+    id: 'modules.Notification.preferences.task_create',
+    defaultMessage: 'Create task',
+  },
+  task_update: {
+    id: 'modules.Notification.preferences.task_update',
+    defaultMessage: 'Update task',
+  },
+  task_set_due_date: {
+    id: 'modules.Notification.preferences.task_set_due_date',
+    defaultMessage: 'Set task due date',
+  },
+  task_update_due_date: {
+    id: 'modules.Notification.preferences.task_update_due_date',
+    defaultMessage: 'Update task due date',
+  },
+  task_update_milestone_status: {
+    id: 'modules.Notification.preferences.task_update_milestone_status',
+    defaultMessage: 'Update task status',
+  },
 });
