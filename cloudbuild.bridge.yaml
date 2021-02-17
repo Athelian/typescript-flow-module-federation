@@ -23,7 +23,7 @@ secrets:
   # - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
   - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/testkeyring/cryptoKeys/firebase-token'
     secretEnv:
-      FIREBASE_TOKEN: 'CiQAKjLYair/FmknqJVb7jsVUvug+q4Tiod8Je4FskE4wW32DYcSkAEA7mDPWbf1hXtBCGL4mjmDSXEdun3l7TEWH4/ooQpe/cRFoZstO5lHiZplWZAVz3zGJNsC3sN76unMeHgXuNY7hZYWPY+e2LXZzJhQdel0cEjHZt5iKIJrQY1GLnILyvUqszNQEhWihF2hA8BeZH57zLh/ULZeL4/mRrKJ/rbg94kdA84hST0p7lWL024QFbE='
+      FIREBASE_TOKEN: 'CiQAKjLYag9heOEXkyV+2/1LczLNEo4AOWWmpARIZU0CraWhx5QSkAEAIxlCYzpTudu+QIRZExou5TZrvrSKjKSqwJEMrslWMcBOUxbOw7mUkmOb/2BajUYUmU70yKg6H2bgXhAKmhsoEs2f6K3Uze6TT2zs+AU72AHcea9yGCffvhe6Sm1KBM1n055Ln1hf0yYnB7xhpu958brz/WN/W5QzX0bT6LaldUjM4fSuCyW2TMH2gXQxBLU='
       # FIREBASE_TOKEN: 'CiQABMiRS2pzGQzkQpV9nxSXoJ2JJasJwnByeP5/LkT1BvD480USVgBl1o1Vk8mKYamYIoTV+nKp3ioXT69W8uWUke0duMu48TPBE2kNHEU6lDETMssT8Mw7rPaATUsLDb69WA5MhmvpdXHz2nOavdjM9ZfWa/ZoV9Bcvp83'
 timeout: 2400s
 ---
