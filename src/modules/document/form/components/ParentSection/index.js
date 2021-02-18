@@ -15,12 +15,6 @@ import {
 } from './components';
 import ParentDocumentSelection from '../ParentDocumentSelection';
 
-type SelectDoneProps = {
-  parent: Object,
-  files: [Object],
-  activeType: string,
-};
-
 const ParentSection = () => {
   const { state, setFieldValues } = DocumentFormContainer.useContainer();
 
@@ -34,7 +28,9 @@ const ParentSection = () => {
     Milestone: <ParentMilestoneCard milestone={state?.milestone} />,
   };
 
-  const onSelectDone = ({ parent, files, activeType }: SelectDoneProps) => {
+  const onSelectDone = (props: { parent: Object, files: [Object], activeType: string }) => {
+    const { parent, files, activeType } = props;
+
     if (!parent) {
       return;
     }
