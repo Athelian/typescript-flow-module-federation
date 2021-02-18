@@ -19,9 +19,11 @@ const ParentSelectList = ({ type, ...rest }: Props) => {
     case 'ProductProvider':
       return <SelectEndProducts {...rest} />;
     case 'Milestone':
-      return <SelectProjectAndMilestone {...rest} isSubContent />;
+      return <SelectProjectAndMilestone {...rest} isSubContent hideForbidden />;
     case 'OrderItem':
-      return <SelectOrderItems {...rest} singleSelection isSubContent disableIncrement />;
+      return (
+        <SelectOrderItems {...rest} singleSelection isSubContent disableIncrement hideForbidden />
+      );
     default:
   }
 

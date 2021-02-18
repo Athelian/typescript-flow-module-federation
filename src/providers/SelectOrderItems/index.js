@@ -8,7 +8,7 @@ import { ArrayValue } from 'react-values';
 import { spreadOrderItem } from 'utils/item';
 import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault } from 'utils/fp';
-import { removeTypename } from 'utils/data';
+import { removeTypename, isForbidden, isNotFound } from 'utils/data';
 import GridView from 'components/GridView';
 import IncrementInput from 'components/IncrementInput';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
@@ -33,6 +33,7 @@ type Props = OptionalProps & {
   isSubContent?: boolean,
   disableIncrement?: boolean,
   singleSelection?: boolean,
+  hideForbidden?: boolean,
   filter: Object,
   intl: IntlShape,
 };
@@ -59,6 +60,7 @@ function SelectOrderItems({
   isSubContent,
   disableIncrement,
   singleSelection,
+  hideForbidden,
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
@@ -152,10 +154,14 @@ function SelectOrderItems({
                     },
                   })
                   .then(result => {
-                    setOrderItems([
-                      ...orderItems,
-                      ...getByPathWithDefault([], 'data.orderItems.nodes', result),
-                    ]);
+                    let newOrderItems = getByPathWithDefault([], 'data.orderItems.nodes', result);
+                    if (hideForbidden) {
+                      newOrderItems = newOrderItems.filter(
+                        newOrderItem => !isForbidden(newOrderItem) && !isNotFound(newOrderItem)
+                      );
+                    }
+
+                    setOrderItems([...orderItems, ...newOrderItems]);
                     const nextPage = getByPathWithDefault(1, 'data.orderItems.page', result) + 1;
                     const totalPage = getByPathWithDefault(1, 'data.orderItems.totalPage', result);
                     setHasMore(nextPage <= totalPage);

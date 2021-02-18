@@ -14,6 +14,7 @@ import {
 } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
+import { isForbidden, isNotFound } from 'utils/data';
 import useFilterSort from 'hooks/useFilterSort';
 import { ShipmentCard } from 'components/Cards';
 import { shipmentListQuery } from './query';
@@ -59,6 +60,12 @@ function SelectShipments({ cacheKey, onCancel, onSelect }: Props) {
     [selectedShipment]
   );
 
+  const shipments = React.useMemo(() => {
+    return getByPathWithDefault([], 'shipments.nodes', data).filter(
+      shipment => !isForbidden(shipment) && !isNotFound(shipment)
+    );
+  }, [data]);
+
   if (error) {
     return error.message;
   }
@@ -87,7 +94,7 @@ function SelectShipments({ cacheKey, onCancel, onSelect }: Props) {
 
       <Content hasSubNavBar>
         <ShipmentGridView
-          items={getByPathWithDefault([], 'shipments.nodes', data)}
+          items={shipments}
           onLoadMore={() => loadMore({ fetchMore, data }, variables, 'shipments')}
           hasMore={hasMore}
           isLoading={loading}

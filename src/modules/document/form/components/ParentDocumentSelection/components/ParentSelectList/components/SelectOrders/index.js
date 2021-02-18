@@ -13,7 +13,7 @@ import {
   OrderSortConfig,
 } from 'components/NavBar';
 import { getByPathWithDefault } from 'utils/fp';
-import { isForbidden } from 'utils/data';
+import { isForbidden, isNotFound } from 'utils/data';
 import useFilterSort from 'hooks/useFilterSort';
 import { OrderCard } from 'components/Cards';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -54,7 +54,9 @@ function SelectOrders({ cacheKey, onCancel, onSelect }: Props) {
   }, []);
 
   const orders = React.useMemo(() => {
-    return getByPathWithDefault([], 'orders.nodes', data).filter(order => !isForbidden(order));
+    return getByPathWithDefault([], 'orders.nodes', data).filter(
+      order => !isForbidden(order) && !isNotFound(order)
+    );
   }, [data]);
 
   if (error) {

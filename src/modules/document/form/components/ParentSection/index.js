@@ -31,7 +31,7 @@ const ParentSection = () => {
   const onSelectDone = (props: { parent: Object, files: [Object], activeType: string }) => {
     const { parent, files, activeType } = props;
 
-    if (!parent) {
+    if (!parent || !parent.id) {
       return;
     }
 

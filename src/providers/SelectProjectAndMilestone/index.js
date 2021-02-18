@@ -7,6 +7,7 @@ import { BooleanValue } from 'react-values';
 import type { Project, Milestone } from 'generated/graphql';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
+import { isForbidden, isNotFound } from 'utils/data';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
@@ -34,7 +35,8 @@ type Props = OptionalProps & {
   onCancel: () => void,
   onSelect: (milestone: ?Milestone) => void,
   intl: IntlShape,
-  isSubContent: boolean,
+  isSubContent?: boolean,
+  hideForbidden?: boolean,
 };
 
 const projectsDefaultQueryVariables = {
@@ -73,6 +75,7 @@ const SelectProjectAndMilestone = ({
   saveButtonMessage,
   parentEntityId,
   isSubContent,
+  hideForbidden,
 }: Props) => {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
@@ -179,7 +182,14 @@ const SelectProjectAndMilestone = ({
             const nextPage = getByPathWithDefault(1, 'projects.page', data) + 1;
             const totalPage = getByPathWithDefault(1, 'projects.totalPage', data);
             const hasMore = nextPage <= totalPage;
-            const projects = getByPathWithDefault([], 'projects.nodes', data);
+            let projects = getByPathWithDefault([], 'projects.nodes', data);
+
+            if (hideForbidden) {
+              projects = projects.filter(
+                _project => !isForbidden(_project) && !isNotFound(_project)
+              );
+            }
+
             return (
               <GridView
                 items={projects}
