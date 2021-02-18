@@ -1,12 +1,15 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
 import SlideView from 'components/SlideView';
 import useFilter from 'hooks/useFilter';
 import useDocumentParentMutation from 'modules/document/hooks/useDocumentParentMutation';
 import { SlideViewLayout, SlideViewNavBar } from 'components/Layout';
-import { EntityIcon } from 'components/NavBar';
+import { Label } from 'components/Form';
 import { toLowerFirst } from 'utils/string';
+
+import { ParentNavbarLabelStyle } from '../../style';
 import { ParentNavbarTabs, ParentDocumentDialog, ParentSelectList } from './components';
 
 const initFilter = {
@@ -99,7 +102,12 @@ const ParentDocumentSelection = ({
     <SlideView isOpen={isParentSelectionOpen} onRequestClose={onRequestClose}>
       <SlideViewLayout>
         <SlideViewNavBar>
-          <EntityIcon icon="DOCUMENT" color="DOCUMENT" subIcon="CARDS" />
+          <Label className={ParentNavbarLabelStyle}>
+            <FormattedMessage
+              id="modules.documents.navbar.label"
+              defaultMessage="SELECT DOCUMENT TYPE"
+            />
+          </Label>
           <ParentNavbarTabs
             filterAndSort={filterAndSort}
             onChangeFilter={onChangeFilter}

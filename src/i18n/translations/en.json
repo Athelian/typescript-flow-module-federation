@@ -512,6 +512,7 @@
   "modules.documents.navbar.shipments": "SHIPMENTS",
   "modules.documents.navbar.milestones": "MILESTONES",
   "modules.documents.navbar.endProducts": "END PRODUCTS",
+  "modules.documents.navbar.label": "SELECT DOCUMENT TYPE",
   "components.Documents.newDocument": "UPLOAD DOCUMENT",
   "components.Documents.selectMultiple": "SELECT MULTIPLE",
   "modules.Documents.createdAt": "Date Created",
