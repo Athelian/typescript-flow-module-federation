@@ -21525,7 +21525,21 @@ export const NotificationTypeValues = Object.freeze({
   /** container_approve_actual_date */
   ContainerApproveActualDate: 'container_approve_actual_date', 
   /** file_uploaded_to_entity */
-  FileUploadedToEntity: 'file_uploaded_to_entity'
+  FileUploadedToEntity: 'file_uploaded_to_entity', 
+  /** project_create */
+  ProjectCreate: 'project_create', 
+  /** project_delete */
+  ProjectDelete: 'project_delete', 
+  /** project_update */
+  ProjectUpdate: 'project_update', 
+  /** milestone_create */
+  MilestoneCreate: 'milestone_create', 
+  /** milestone_update */
+  MilestoneUpdate: 'milestone_update', 
+  /** task_create */
+  TaskCreate: 'task_create', 
+  /** task_update */
+  TaskUpdate: 'task_update'
 });
 
 
@@ -62247,6 +62261,9 @@ export type UserFilterInput = {|
   updatedAt?: ?DateRangeInput,
   organizationId?: ?$ElementType<Scalars, 'ID'>,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tagIdsWithOperator?: ?IdsWithOperatorInput,
+  notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type UserPayload = User | BadRequest | Forbidden | NotFound;
