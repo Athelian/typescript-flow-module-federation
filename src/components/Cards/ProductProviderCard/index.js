@@ -98,12 +98,6 @@ const ProductProviderCard = ({
     }
   }
 
-  const onSelectCard = () => {
-    if (onSelect) {
-      onSelect(productProvider);
-    }
-  };
-
   return (
     <BaseCard
       icon="PRODUCT_PROVIDER"
@@ -111,7 +105,11 @@ const ProductProviderCard = ({
       selectable={selectable}
       actions={actions.filter(Boolean)}
       isArchived={archived}
-      onSelect={onSelectCard}
+      onSelect={() => {
+        if (onSelect) {
+          onSelect(productProvider);
+        }
+      }}
       {...rest}
     >
       <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">

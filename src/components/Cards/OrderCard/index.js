@@ -54,12 +54,6 @@ const OrderCard = ({ order, actions, onClick, onSelect, ...rest }: Props) => {
     todo,
   } = order;
 
-  const onOrderSelect = () => {
-    if (onSelect) {
-      onSelect(order);
-    }
-  };
-
   return (
     <BaseCard
       showBadge={order?.notificationUnseenCount > 0}
@@ -67,7 +61,11 @@ const OrderCard = ({ order, actions, onClick, onSelect, ...rest }: Props) => {
       color="ORDER"
       actions={actions}
       isArchived={archived}
-      onSelect={onOrderSelect}
+      onSelect={() => {
+        if (onSelect) {
+          onSelect(order);
+        }
+      }}
       {...rest}
     >
       <div className={OrderCardWrapperStyle} onClick={onClick} role="presentation">

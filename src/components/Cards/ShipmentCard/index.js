@@ -111,12 +111,6 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, onSelect, ...rest
     ? totalPackageQuantityOverride
     : totalPackageQuantity;
 
-  const onShipmentSelect = () => {
-    if (onSelect) {
-      onSelect(shipment);
-    }
-  };
-
   return (
     <BaseCard
       showBadge={shipment?.notificationUnseenCount > 0}
@@ -124,7 +118,11 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, onSelect, ...rest
       color="SHIPMENT"
       actions={actions}
       isArchived={archived}
-      onSelect={onShipmentSelect}
+      onSelect={() => {
+        if (onSelect) {
+          onSelect(shipment);
+        }
+      }}
       {...rest}
     >
       <div className={ShipmentCardWrapperStyle} onClick={onClick} role="presentation">
