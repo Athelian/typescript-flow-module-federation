@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import cs from 'clsx';
+import { cx } from 'react-emotion';
 import { ContentWrapperStyle, SubNavBarContentWrapperStyle } from './style';
 
 type Props = {
@@ -16,7 +16,7 @@ const defaultProps = {
 
 const Content = ({ notCenter, hasSubNavBar = false, children }: Props) => (
   <div
-    className={cs(ContentWrapperStyle(notCenter), { [SubNavBarContentWrapperStyle]: hasSubNavBar })}
+    className={cx(ContentWrapperStyle(notCenter), { [SubNavBarContentWrapperStyle]: hasSubNavBar })}
   >
     {children}
   </div>

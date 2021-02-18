@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import type { FilePayload } from 'generated/graphql';
-import cs from 'clsx';
+import { cx } from 'react-emotion';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -200,7 +200,7 @@ const DocumentsUpload = ({
 
   const documentsBody = (
     <DndProvider backend={HTML5Backend}>
-      <div className={cs(DocumentsUploadWrapperStyle, uploadWrapperStyle)}>
+      <div className={cx(DocumentsUploadWrapperStyle, uploadWrapperStyle)}>
         {types.map(type => {
           return (
             <DocumentTypeArea
