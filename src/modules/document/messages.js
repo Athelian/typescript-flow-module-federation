@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  selectMultiple: {
+    id: 'components.Documents.selectMultiple',
+    defaultMessage: 'SELECT MULTIPLE',
+  },
   newDocument: {
     id: 'components.Documents.newDocument',
     defaultMessage: 'UPLOAD DOCUMENT',

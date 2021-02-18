@@ -177,7 +177,7 @@ const DocumentModule = () => {
             )}
             <BaseButton
               icon="CHECKED"
-              label="SELECT MULTIPLE"
+              label={<FormattedMessage {...messages.selectMultiple} />}
               backgroundColor="TEAL"
               hoverBackgroundColor="TEAL_DARK"
               onClick={() => {

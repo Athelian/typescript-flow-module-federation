@@ -23,7 +23,7 @@ const SelectedFloat = ({ selectCount, onClearClicked, showOnEmpty = false }: Pro
       <div className={TotalEntitiesStyle}>
         <Label color="TEAL" align="center">
           <FormattedNumber value={selectCount || 0} />{' '}
-          <FormattedMessage id="modules.relationalMap.selected" defaultMessage="SELECTED" />
+          <FormattedMessage id="components.float.selected" defaultMessage="SELECTED" />
         </Label>
         <button
           className={ClearTotalButtonStyle}
