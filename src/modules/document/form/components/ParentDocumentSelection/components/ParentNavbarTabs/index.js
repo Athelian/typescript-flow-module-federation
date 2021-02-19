@@ -1,18 +1,41 @@
+/* eslint-disable */
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 // import { DOCUMENT_UPDATE } from 'modules/permission/constants/file';
-import { ORDER_LIST } from 'modules/permission/constants/order';
-import { ORDER_ITEMS_LIST } from 'modules/permission/constants/orderItem';
-import { PROJECT_LIST } from 'modules/permission/constants/project';
-import { PRODUCT_PROVIDER_LIST } from 'modules/permission/constants/product';
+import {
+  ORDER_LIST,
+  ORDER_DOCUMENT_CREATE,
+  ORDER_DOCUMENT_SET_ENTITY,
+  ORDER_UPDATE,
+} from 'modules/permission/constants/order';
+import {
+  ORDER_ITEMS_LIST,
+  ORDER_ITEMS_DOCUMENT_CREATE,
+  ORDER_ITEMS_DOCUMENT_SET_ENTITY,
+  ORDER_ITEMS_UPDATE,
+} from 'modules/permission/constants/orderItem';
 import {
   SHIPMENT_LIST,
-  // SHIPMENT_DOCUMENT_SET_ENTITY,
-  // SHIPMENT_UPDATE,
+  SHIPMENT_DOCUMENT_CREATE,
+  SHIPMENT_DOCUMENT_SET_ENTITY,
+  SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
+import { PROJECT_LIST, PROJECT_UPDATE } from 'modules/permission/constants/project';
+import {
+  MILESTONE_LIST,
+  MILESTONE_UPDATE,
+  MILESTONE_DOCUMENT_CREATE,
+  MILESTONE_DOCUMENT_SET_ENTITY,
+} from 'modules/permission/constants/milestone';
+import {
+  PRODUCT_PROVIDER_LIST,
+  PRODUCT_PROVIDER_DOCUMENT_CREATE,
+  PRODUCT_PROVIDER_DOCUMENT_SET_ENTITY,
+  PRODUCT_PROVIDER_UPDATE,
+} from 'modules/permission/constants/product';
 
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 
@@ -25,17 +48,30 @@ type Props = {
 const ParentNavbarTabs = ({ filterAndSort, onChangeFilter, activeType }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  // console.log('isOwner', isOwner);
-  // console.log('SHIPMENT_UPDATE', hasPermission(SHIPMENT_UPDATE));
-  // console.log('SHIPMENT_DOCUMENT_SET_ENTITY', hasPermission(SHIPMENT_DOCUMENT_SET_ENTITY));
-  // console.log('DOCUMENT_UPDATE', hasPermission(DOCUMENT_UPDATE));
 
   const canViewList = {
-    orders: hasPermission(ORDER_LIST),
-    orderItems: hasPermission(ORDER_ITEMS_LIST),
-    shipments: hasPermission(SHIPMENT_LIST),
-    projects: hasPermission(PROJECT_LIST),
-    productProviders: hasPermission(PRODUCT_PROVIDER_LIST),
+    orders:
+      hasPermission(ORDER_LIST) &&
+      (hasPermission(ORDER_UPDATE) ||
+        hasPermission([ORDER_DOCUMENT_CREATE, ORDER_DOCUMENT_SET_ENTITY])),
+    orderItems:
+      hasPermission(ORDER_ITEMS_LIST) &&
+      (hasPermission(ORDER_ITEMS_UPDATE) ||
+        hasPermission([ORDER_ITEMS_DOCUMENT_CREATE, ORDER_ITEMS_DOCUMENT_SET_ENTITY])),
+    shipments:
+      hasPermission(SHIPMENT_LIST) &&
+      (hasPermission(SHIPMENT_UPDATE) ||
+        hasPermission([SHIPMENT_DOCUMENT_CREATE, SHIPMENT_DOCUMENT_SET_ENTITY])),
+    projects:
+      hasPermission(PROJECT_LIST) &&
+      hasPermission(MILESTONE_LIST) &&
+      hasPermission(PROJECT_UPDATE) &&
+      (hasPermission(MILESTONE_UPDATE) ||
+        hasPermission([MILESTONE_DOCUMENT_CREATE, MILESTONE_DOCUMENT_SET_ENTITY])),
+    productProviders:
+      hasPermission(PRODUCT_PROVIDER_LIST) &&
+      (hasPermission(PRODUCT_PROVIDER_UPDATE) ||
+        hasPermission([PRODUCT_PROVIDER_DOCUMENT_CREATE, PRODUCT_PROVIDER_DOCUMENT_SET_ENTITY])),
   };
 
   return (
