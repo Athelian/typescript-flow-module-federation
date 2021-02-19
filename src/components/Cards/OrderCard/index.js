@@ -25,6 +25,7 @@ import {
 type OptionalProps = {
   actions: Array<React.Node>,
   onClick: Function,
+  onSelect: Function,
 };
 
 type Props = OptionalProps & {
@@ -35,7 +36,7 @@ const defaultProps = {
   actions: [],
 };
 
-const OrderCard = ({ order, actions, onClick, ...rest }: Props) => {
+const OrderCard = ({ order, actions, onClick, onSelect, ...rest }: Props) => {
   const {
     archived,
     poNo,
@@ -60,6 +61,11 @@ const OrderCard = ({ order, actions, onClick, ...rest }: Props) => {
       color="ORDER"
       actions={actions}
       isArchived={archived}
+      onSelect={() => {
+        if (onSelect) {
+          onSelect(order);
+        }
+      }}
       {...rest}
     >
       <div className={OrderCardWrapperStyle} onClick={onClick} role="presentation">
@@ -157,7 +163,7 @@ const OrderCard = ({ order, actions, onClick, ...rest }: Props) => {
 
 OrderCard.defaultProps = defaultProps;
 
-export default withForbiddenCard(OrderCard, 'order', {
+export default withForbiddenCard(React.memo(OrderCard), 'order', {
   width: '195px',
   height: '268px',
   entityIcon: 'ORDER',

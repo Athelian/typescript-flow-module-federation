@@ -9,13 +9,13 @@ export const LayoutWrapperStyle: string = css`
   position: relative;
 `;
 
-export const ContentWrapperStyle = (notCenter?: boolean) => css`
-  height: calc(100vh - 50px);
+export const ContentWrapperStyle = (notCenter?: boolean, hasSubNavBar?: boolean) => css`
+  ${`height: calc(100vh - ${hasSubNavBar ? 100 : 50}px);`}
+  ${`margin-top: ${hasSubNavBar ? 100 : 50}px;`}
   width: 100%;
   overflow-x: hidden;
   overflow-y: overlay;
   ${scrollbars.MAIN};
-  margin-top: 50px;
   display: flex;
   flex-direction: column;
   ${!notCenter && `align-items: center;`}
@@ -34,6 +34,15 @@ export const NavBarWrapperStyle: string = css`
   ${shadows.HEADER};
   z-index: 4;
   ${transitions.EXPAND};
+`;
+
+export const SubNavBarWrapperStyle: string = css`
+  top: 50px;
+`;
+
+export const SubNavBarContentWrapperStyle: string = css`
+  height: calc(100vh - 100px) !important;
+  margin-top: 100px !important;
 `;
 
 export const NavBarStyle: string = css`

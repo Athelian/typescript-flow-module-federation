@@ -47,11 +47,12 @@ const ProductProviderCard = ({
   unsetNeedDeletedFiles,
   onRemove,
   onClone,
+  onSelect,
   saveOnBlur,
   selectable,
   ...rest
 }: Props) => {
-  const { archived, name, exporter, supplier, referenced, todo, files } = productProvider;
+  const { archived, name, exporter, supplier, referenced, todo, files = [] } = productProvider;
   const exporterName = exporter?.partner?.name || exporter?.name;
   const supplierName = supplier?.partner?.name || supplier?.name;
   const actions = [];
@@ -104,6 +105,11 @@ const ProductProviderCard = ({
       selectable={selectable}
       actions={actions.filter(Boolean)}
       isArchived={archived}
+      onSelect={() => {
+        if (onSelect) {
+          onSelect(productProvider);
+        }
+      }}
       {...rest}
     >
       <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">
@@ -143,7 +149,7 @@ const ProductProviderCard = ({
 
 ProductProviderCard.defaultProps = defaultProps;
 
-export default withForbiddenCard(ProductProviderCard, 'productProvider', {
+export default withForbiddenCard(React.memo(ProductProviderCard), 'productProvider', {
   width: '195px',
   height: '106px',
   entityIcon: 'PRODUCT_PROVIDER',

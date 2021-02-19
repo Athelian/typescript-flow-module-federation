@@ -16,6 +16,19 @@ export type RemoveDialogProps = {
   onRemove: () => Promise<any> | void,
   message: React.Node,
 };
+
+export type FormDialogProps = {
+  isOpen: boolean,
+  onRequestClose: () => void,
+  onCancel: () => void,
+  onSave: () => Promise<any> | void,
+  className?: string,
+  width?: string,
+  isLoading?: boolean,
+  noPadding?: boolean,
+  children: React.Node,
+};
+
 export type DeleteDialogProps = {
   isOpen: boolean,
   onRequestClose: () => void,

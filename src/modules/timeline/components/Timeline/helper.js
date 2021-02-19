@@ -3,6 +3,7 @@
 import isSameDay from 'date-fns/isSameDay';
 import { uuid } from 'utils/id';
 import type { CommentItem, DateItem, LogItem } from 'modules/timeline/types';
+import { toLowerFirst } from 'utils/string';
 
 type Entry = LogItem | CommentItem;
 type DecorateEntry = Entry | DateItem;
@@ -17,8 +18,6 @@ const normalizeParameters = (
     }),
     {}
   );
-
-const toLowerFirst = (type: string): string => type.charAt(0).toLowerCase() + type.slice(1);
 
 const toLowerCamel = (entityType: string): string =>
   toLowerFirst(entityType.replace(/[-_]([a-z])/g, m => m[1].toUpperCase()));

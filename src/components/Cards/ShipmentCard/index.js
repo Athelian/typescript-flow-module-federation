@@ -46,6 +46,7 @@ import {
 type Props = {|
   actions: Array<React.Node>,
   onClick: Function,
+  onSelect: Function,
   shipment: Shipment,
   navigable?: boolean,
 |};
@@ -55,7 +56,7 @@ const defaultProps = {
   navigable: true,
 };
 
-const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props) => {
+const ShipmentCard = ({ shipment, navigable, actions, onClick, onSelect, ...rest }: Props) => {
   const {
     archived,
     no,
@@ -117,6 +118,11 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
       color="SHIPMENT"
       actions={actions}
       isArchived={archived}
+      onSelect={() => {
+        if (onSelect) {
+          onSelect(shipment);
+        }
+      }}
       {...rest}
     >
       <div className={ShipmentCardWrapperStyle} onClick={onClick} role="presentation">
@@ -286,7 +292,7 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, ...rest }: Props)
 
 ShipmentCard.defaultProps = defaultProps;
 
-export default withForbiddenCard(ShipmentCard, 'shipment', {
+export default withForbiddenCard(React.memo(ShipmentCard), 'shipment', {
   width: '860px',
   height: '164px',
   entityIcon: 'SHIPMENT',

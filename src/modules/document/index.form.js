@@ -7,10 +7,11 @@ import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
 import { FormContainer } from 'modules/form';
 import { documentUpdateMutation, prepareParsedDocumentInput } from 'modules/document/form/mutation';
+import { documentQuery } from 'modules/document/form/query';
 import validator from 'modules/document/form/validator';
 import DocumentFormContainer from 'modules/document/form/container';
 import DocumentForm from 'modules/document/form';
-import { documentQuery } from 'modules/document/form/query';
+import useDocumentParentMutation from './hooks/useDocumentParentMutation';
 
 type Props = {
   documentId?: string,
@@ -32,7 +33,11 @@ const DocumentFormModuleImpl = ({ isLoading, documentId }: ImplProps) => {
     resetState,
   } = DocumentFormContainer.useContainer();
 
-  const [documentMutate, { loading: isProcessing }] = useMutation(documentUpdateMutation);
+  const [updateParent, { loading: isParentUpdating }] = useDocumentParentMutation();
+
+  const [documentMutate, { loading: isDocumentProcessing }] = useMutation(documentUpdateMutation);
+
+  const isProcessing = isParentUpdating || isDocumentProcessing;
 
   React.useEffect(() => {
     return () => {
@@ -41,18 +46,26 @@ const DocumentFormModuleImpl = ({ isLoading, documentId }: ImplProps) => {
   }, []);
 
   const handleSave = async () => {
+    // if parent has changed
+    if (originalState?.entity?.id !== state?.entity?.id) {
+      await updateParent({
+        type: state.entity.__typename,
+        newState: state,
+      });
+    }
+
     const input = prepareParsedDocumentInput(originalState, state);
 
-    const { data } = await documentMutate({
+    const { data: newDocument } = await documentMutate({
       variables: { id: state.id, input },
     });
 
-    const violations = data?.fileUpdate?.violations;
+    const violations = newDocument?.fileUpdate?.violations;
 
     if (violations && violations.length) {
       formContainer.onErrors(violations);
     } else {
-      initializeState(data?.fileUpdate);
+      initializeState(newDocument?.fileUpdate);
       formContainer.onReset();
     }
   };
