@@ -7,4 +7,5 @@ export const SelectedEntitiesWrapperStyle: string = css`
   position: absolute;
   bottom: 25px;
   right: 50px;
+  z-index: 1;
 `;

@@ -178,8 +178,10 @@ const DocumentModule = () => {
             <BaseButton
               icon="CHECKED"
               label={<FormattedMessage {...messages.selectMultiple} />}
-              backgroundColor="TEAL"
-              hoverBackgroundColor="TEAL_DARK"
+              backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+              hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+              textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+              hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
               onClick={() => {
                 if (isMultiSelect) {
                   setSelectedFiles({});
