@@ -99,7 +99,7 @@ const ParentDocumentSelection = ({
   };
 
   return (
-    <SlideView isOpen={isParentSelectionOpen} onRequestClose={onRequestClose}>
+    <SlideView shouldConfirm={false} isOpen={isParentSelectionOpen} onRequestClose={onRequestClose}>
       <SlideViewLayout>
         <SlideViewNavBar>
           <Label className={ParentNavbarLabelStyle}>

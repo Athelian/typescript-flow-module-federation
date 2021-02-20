@@ -19,7 +19,7 @@ import {
   Sort,
 } from 'components/NavBar';
 import useFilterSort from 'hooks/useFilterSort';
-import { DOCUMENT_CREATE } from 'modules/permission/constants/file';
+import { DOCUMENT_CREATE, DOCUMENT_UPDATE } from 'modules/permission/constants/file';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
 import { SelectedFloat, ButtonFloat } from 'components/Float';
@@ -64,6 +64,7 @@ const DocumentModule = () => {
 
   const hasPermissions = useViewerHasPermissions();
   const canUpload = hasPermissions(DOCUMENT_CREATE);
+  const canUpdate = hasPermissions(DOCUMENT_UPDATE);
 
   const [selectedFiles, setSelectedFiles] = React.useState({});
   const [isMultiSelect, setMultiSelect] = React.useState(false);
@@ -153,6 +154,18 @@ const DocumentModule = () => {
       });
   };
 
+  const onRequestClose = React.useCallback(() => {
+    setParentSelectionOpen(false);
+  }, []);
+
+  const onSelectDone = React.useCallback(() => {
+    setSelectedFiles({});
+    setParentSelectionOpen(false);
+    if (refetchRef.current) {
+      refetchRef.current();
+    }
+  }, []);
+
   return (
     <Provider>
       <Content>
@@ -175,20 +188,22 @@ const DocumentModule = () => {
                 <input type="file" accept="*" hidden multiple value="" onChange={handleChange} />
               </label>
             )}
-            <BaseButton
-              icon="CHECKED"
-              label={<FormattedMessage {...messages.selectMultiple} />}
-              backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
-              hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
-              textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-              hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-              onClick={() => {
-                if (isMultiSelect) {
-                  setSelectedFiles({});
-                }
-                setMultiSelect(isMulti => !isMulti);
-              }}
-            />
+            {canUpdate && (
+              <BaseButton
+                icon="CHECKED"
+                label={<FormattedMessage {...messages.selectMultiple} />}
+                backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+                hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+                textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                onClick={() => {
+                  if (isMultiSelect) {
+                    setSelectedFiles({});
+                  }
+                  setMultiSelect(isMulti => !isMulti);
+                }}
+              />
+            )}
           </GridRow>
         </NavBar>
         <DocumentList
@@ -214,15 +229,9 @@ const DocumentModule = () => {
         <ParentDocumentSelection
           mutateOnDialogSave
           isParentSelectionOpen={isParentSelectionOpen}
-          onSelectDone={() => {
-            setSelectedFiles({});
-            setParentSelectionOpen(false);
-            if (refetchRef.current) {
-              refetchRef.current();
-            }
-          }}
+          onSelectDone={onSelectDone}
           files={selectedFiles}
-          onRequestClose={() => setParentSelectionOpen(false)}
+          onRequestClose={onRequestClose}
         />
       </Content>
     </Provider>
