@@ -1,14 +1,16 @@
 // @flow
 import * as React from 'react';
 import FormDialog from 'components/Dialog/FormDialog';
+import type { File } from 'generated/graphql';
 import { useIntl } from 'react-intl';
+import { formatFilesToArray } from 'utils/file';
 import { DocumentsUpload } from 'components/Form';
 import { getFileTypesByEntity } from 'components/Cards/DocumentCard';
 import { ParentDialogStyle, ParentDialogUploadBodyStyle } from '../../../../style';
 
 type Props = {
   entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider' | 'Milestone',
-  files: Object | [Object],
+  files: File | [File],
   isDialogOpen: boolean,
   isLoading?: boolean,
   onCancel: Function,
@@ -16,19 +18,7 @@ type Props = {
   onSave: Function,
 };
 
-const formatFiles = (files: any) => {
-  if (Array.isArray(files)) {
-    return files;
-  }
-
-  if (files.id) {
-    return [files];
-  }
-
-  return Object.values(files);
-};
-
-const ParentDocumentDialog = ({
+const ParentDocumentTypeDialog = ({
   entity,
   files,
   isDialogOpen,
@@ -38,7 +28,7 @@ const ParentDocumentDialog = ({
   onSave,
 }: Props) => {
   const intl = useIntl();
-  const [dialogFiles, setDialogFiles] = React.useState(formatFiles(files));
+  const [dialogFiles, setDialogFiles] = React.useState(formatFilesToArray(files));
 
   React.useEffect(() => {
     const [firstType] = getFileTypesByEntity(entity, intl);
@@ -75,4 +65,4 @@ const ParentDocumentDialog = ({
   );
 };
 
-export default ParentDocumentDialog;
+export default ParentDocumentTypeDialog;
