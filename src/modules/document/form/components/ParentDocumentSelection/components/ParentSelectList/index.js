@@ -8,6 +8,7 @@ type Props = {
   type: string,
   onCancel: Function,
   onSelect: Function,
+  isLoading?: boolean,
 };
 
 const ParentSelectList = ({ type, ...rest }: Props) => {

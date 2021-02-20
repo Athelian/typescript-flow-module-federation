@@ -118,6 +118,15 @@ const SelectProjectAndMilestone = ({
     <SlideViewLayout>
       <SlideViewNavBar isSubNavBar={isSubContent}>
         <EntityIcon icon="PROJECT" color="PROJECT" />
+        <Search
+          query={filterAndSort.filter.query}
+          onChange={newQuery =>
+            onChangeFilter({
+              ...filterAndSort,
+              filter: { ...filterAndSort.filter, query: newQuery },
+            })
+          }
+        />
         <SortInput
           sort={currentSort(sortFields, filterAndSort.sort)}
           ascending={filterAndSort.sort.direction !== 'DESCENDING'}
@@ -129,15 +138,6 @@ const SelectProjectAndMilestone = ({
                 field: value,
                 direction: ascending ? 'ASCENDING' : 'DESCENDING',
               },
-            })
-          }
-        />
-        <Search
-          query={filterAndSort.filter.query}
-          onChange={newQuery =>
-            onChangeFilter({
-              ...filterAndSort,
-              filter: { ...filterAndSort.filter, query: newQuery },
             })
           }
         />
