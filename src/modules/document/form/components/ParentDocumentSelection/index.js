@@ -86,7 +86,10 @@ const ParentDocumentSelection = ({
 
   const onParentSelected = (parent: Object) => {
     if (activeType === 'OrderItem' || activeType === 'Milestone') {
-      onDialogSave(formatFilesToArray(files), parent);
+      // since OrderItem and Milestone only have one type 'Miscellaneous'
+      // so we set to Document
+      const updatedFiles = formatFilesToArray(files).map(file => ({ ...file, type: 'Document' }));
+      onDialogSave(updatedFiles, parent);
       return;
     }
 

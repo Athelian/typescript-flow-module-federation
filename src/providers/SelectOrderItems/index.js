@@ -181,7 +181,7 @@ function SelectOrderItems({
                   });
               }}
               hasMore={hasMore}
-              isQuerying={isQuerying}
+              isLoading={isQuerying}
               itemWidth="195px"
               isEmpty={orderItems.length === 0}
               emptyMessage={
