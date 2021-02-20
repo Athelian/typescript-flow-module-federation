@@ -21,6 +21,7 @@ import { shipmentListQuery } from './query';
 
 type OptionalProps = {
   cacheKey: string,
+  isLoading?: boolean,
 };
 
 type Props = OptionalProps & {
@@ -28,7 +29,7 @@ type Props = OptionalProps & {
   onSelect: Function,
 };
 
-function SelectShipments({ cacheKey, onCancel, onSelect }: Props) {
+function SelectShipments({ cacheKey, isLoading = false, onCancel, onSelect }: Props) {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', archived: false },
     { updatedAt: 'DESCENDING' },
@@ -42,7 +43,7 @@ function SelectShipments({ cacheKey, onCancel, onSelect }: Props) {
     perPage: 10,
   };
 
-  const { loading, data, fetchMore, error } = useQuery(shipmentListQuery, {
+  const { loading: isQuerying, data, fetchMore, error } = useQuery(shipmentListQuery, {
     fetchPolicy: 'network-only',
     variables,
   });
@@ -82,10 +83,11 @@ function SelectShipments({ cacheKey, onCancel, onSelect }: Props) {
         <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
-        <CancelButton onClick={onCancel} />
+        <CancelButton onClick={onCancel} disabled={isLoading} />
         <SaveButton
           data-testid="btnSaveSelectTasks"
-          disabled={!selectedShipment}
+          disabled={!selectedShipment || isQuerying || isLoading}
+          isLoading={isLoading}
           onClick={() => {
             onSelect(selectedShipment);
           }}
@@ -97,7 +99,7 @@ function SelectShipments({ cacheKey, onCancel, onSelect }: Props) {
           items={shipments}
           onLoadMore={() => loadMore({ fetchMore, data }, variables, 'shipments')}
           hasMore={hasMore}
-          isLoading={loading}
+          isLoading={isQuerying}
           renderItem={item => {
             return (
               <ShipmentCard

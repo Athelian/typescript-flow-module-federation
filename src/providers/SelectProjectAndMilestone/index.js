@@ -28,6 +28,7 @@ type OptionalProps = {
   cacheKey: string,
   parentEntityId?: string,
   milestone?: Milestone,
+  isLoading?: boolean,
   saveButtonMessage: Object,
 };
 
@@ -76,6 +77,7 @@ const SelectProjectAndMilestone = ({
   parentEntityId,
   isSubContent,
   hideForbidden,
+  isLoading = false,
 }: Props) => {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
@@ -140,6 +142,7 @@ const SelectProjectAndMilestone = ({
           }
         />
         <CancelButton
+          disabled={isLoading}
           onClick={() => {
             setSelected(values => ({
               ...values,
@@ -167,8 +170,9 @@ const SelectProjectAndMilestone = ({
           }}
           disabled={
             getByPathWithDefault('', 'id', selectedMilestone) ===
-            getByPathWithDefault('', 'id', milestone)
+              getByPathWithDefault('', 'id', milestone) || isLoading
           }
+          isLoading={isLoading}
           data-testid="btnSaveSelectProjectAndMilestone"
         />
       </SlideViewNavBar>

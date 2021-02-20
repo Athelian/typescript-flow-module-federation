@@ -22,6 +22,7 @@ import { productProvidersQuery } from './query';
 
 type OptionalProps = {
   cacheKey: string,
+  isLoading?: boolean,
 };
 
 type Props = OptionalProps & {
@@ -29,7 +30,7 @@ type Props = OptionalProps & {
   onSelect: Function,
 };
 
-function SelectProductProviders({ cacheKey, onCancel, onSelect }: Props) {
+function SelectProductProviders({ cacheKey, isLoading = false, onCancel, onSelect }: Props) {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', archived: false },
     { updatedAt: 'DESCENDING' },
@@ -43,7 +44,7 @@ function SelectProductProviders({ cacheKey, onCancel, onSelect }: Props) {
     perPage: 20,
   };
 
-  const { loading, data, fetchMore, error } = useQuery(productProvidersQuery, {
+  const { loading: isQuerying, data, fetchMore, error } = useQuery(productProvidersQuery, {
     fetchPolicy: 'network-only',
     variables,
   });
@@ -82,12 +83,12 @@ function SelectProductProviders({ cacheKey, onCancel, onSelect }: Props) {
         />
         <Search query={query} onChange={setQuery} />
         <Sort config={ProductProviderSortConfig} sortBy={sortBy} onChange={setSortBy} />
-        <CancelButton onClick={onCancel} />
+        <CancelButton onClick={onCancel} disabled={isLoading} />
         <SaveButton
           data-testid="btnSaveSelectProductProviders"
-          disabled={!selectedProductProvider || loading}
+          disabled={!selectedProductProvider || isQuerying || isLoading}
           onClick={() => onSelect(selectedProductProvider)}
-          isLoading={loading}
+          isLoading={isLoading}
         />
       </SlideViewNavBar>
 
@@ -95,7 +96,7 @@ function SelectProductProviders({ cacheKey, onCancel, onSelect }: Props) {
         <GridView
           onLoadMore={() => loadMore({ fetchMore, data }, variables, 'productProviders')}
           hasMore={hasMore}
-          isLoading={loading}
+          isLoading={isQuerying}
           itemWidth="195px"
           isEmpty={productProviders.length === 0}
           emptyMessage={

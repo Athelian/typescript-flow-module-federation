@@ -21,6 +21,7 @@ import { orderListQuery } from './query';
 
 type OptionalProps = {
   cacheKey: string,
+  isLoading?: boolean,
 };
 
 type Props = OptionalProps & {
@@ -28,7 +29,7 @@ type Props = OptionalProps & {
   onSelect: Function,
 };
 
-function SelectOrders({ cacheKey, onCancel, onSelect }: Props) {
+function SelectOrders({ cacheKey, isLoading = false, onCancel, onSelect }: Props) {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', archived: false },
     { updatedAt: 'DESCENDING' },
@@ -76,9 +77,10 @@ function SelectOrders({ cacheKey, onCancel, onSelect }: Props) {
         <Search query={query} onChange={setQuery} />
         <Sort config={OrderSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
-        <CancelButton onClick={onCancel} />
+        <CancelButton disabled={isLoading} onClick={onCancel} />
         <SaveButton
-          disabled={!selectedOrder}
+          disabled={!selectedOrder || isLoading}
+          isLoading={isLoading}
           onClick={() => {
             onSelect(selectedOrder);
           }}

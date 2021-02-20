@@ -91,4 +91,16 @@ export function canViewFile(hasPermissions: Function, type: FileType) {
   }
 }
 
+export const formatFilesToArray = (files: any) => {
+  if (Array.isArray(files)) {
+    return files;
+  }
+
+  if (files.id) {
+    return [files];
+  }
+
+  return Object.values(files);
+};
+
 export default canViewFile;

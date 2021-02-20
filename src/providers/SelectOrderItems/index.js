@@ -25,6 +25,7 @@ import { ItemWrapperStyle } from './style';
 
 type OptionalProps = {
   cacheKey: string,
+  isLoading?: boolean,
 };
 
 type Props = OptionalProps & {
@@ -58,6 +59,7 @@ function SelectOrderItems({
   onSelect,
   filter,
   isSubContent,
+  isLoading = false,
   disableIncrement,
   singleSelection,
   hideForbidden,
@@ -73,7 +75,7 @@ function SelectOrderItems({
     cacheKey
   );
 
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isQuerying, setIsQuerying] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);
   const [page, setPage] = React.useState(1);
   const [orderItems, setOrderItems] = React.useState([]);
@@ -87,7 +89,7 @@ function SelectOrderItems({
       const totalPage = getByPathWithDefault(1, 'orderItems.totalPage', result);
       setHasMore(nextPage <= totalPage);
       setPage(nextPage);
-      setIsLoading(false);
+      setIsQuerying(false);
     },
   });
 
@@ -95,7 +97,7 @@ function SelectOrderItems({
 
   React.useEffect(() => {
     if (loading && !refetching) {
-      setIsLoading(true);
+      setIsQuerying(true);
     }
   }, [loading, refetching]);
 
@@ -132,9 +134,10 @@ function SelectOrderItems({
                 })
               }
             />
-            <CancelButton onClick={onCancel} />
+            <CancelButton onClick={onCancel} disabled={isLoading} />
             <SaveButton
-              disabled={selected.length === 0}
+              disabled={selected.length === 0 || isLoading}
+              isLoading={isLoading}
               onClick={() => {
                 onSelect(removeTypename(singleSelection ? selected[0] : selected));
               }}
@@ -178,7 +181,7 @@ function SelectOrderItems({
                   });
               }}
               hasMore={hasMore}
-              isLoading={isLoading}
+              isQuerying={isQuerying}
               itemWidth="195px"
               isEmpty={orderItems.length === 0}
               emptyMessage={
