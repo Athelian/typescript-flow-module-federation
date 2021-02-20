@@ -2,7 +2,7 @@
 import * as React from 'react';
 import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import SelectOrderItems from 'providers/SelectOrderItems';
-import { SelectOrders, SelectShipments, SelectEndProducts } from './components';
+import { SelectOrders, SelectShipments, SelectProducts } from './components';
 
 type Props = {
   type: string,
@@ -18,7 +18,7 @@ const ParentSelectList = ({ type, ...rest }: Props) => {
     case 'Shipment':
       return <SelectShipments {...rest} />;
     case 'ProductProvider':
-      return <SelectEndProducts {...rest} />;
+      return <SelectProducts {...rest} />;
     case 'Milestone':
       return <SelectProjectAndMilestone {...rest} isSubContent hideForbidden />;
     case 'OrderItem':

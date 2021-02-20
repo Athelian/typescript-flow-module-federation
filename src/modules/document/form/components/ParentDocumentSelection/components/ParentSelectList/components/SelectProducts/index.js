@@ -30,7 +30,7 @@ type Props = OptionalProps & {
   onSelect: Function,
 };
 
-function SelectProductProviders({ cacheKey, isLoading = false, onCancel, onSelect }: Props) {
+function SelectProducts({ cacheKey, isLoading = false, onCancel, onSelect }: Props) {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', archived: false },
     { updatedAt: 'DESCENDING' },
@@ -125,9 +125,9 @@ function SelectProductProviders({ cacheKey, isLoading = false, onCancel, onSelec
 }
 
 const defaultProps = {
-  cacheKey: 'SelectProductProviders',
+  cacheKey: 'SelectProducts',
 };
 
-SelectProductProviders.defaultProps = defaultProps;
+SelectProducts.defaultProps = defaultProps;
 
-export default SelectProductProviders;
+export default SelectProducts;

@@ -1,5 +1,5 @@
 import SelectOrders from './SelectOrders';
 import SelectShipments from './SelectShipments';
-import SelectEndProducts from './SelectEndProducts';
+import SelectProducts from './SelectProducts';
 
-export { SelectOrders, SelectShipments, SelectEndProducts };
+export { SelectOrders, SelectShipments, SelectProducts };
