@@ -15,16 +15,16 @@ const ParentSelectList = ({ type, ...rest }: Props) => {
   switch (type) {
     case 'Order':
       return <SelectOrders {...rest} />;
-    case 'Shipment':
-      return <SelectShipments {...rest} />;
-    case 'ProductProvider':
-      return <SelectProducts {...rest} />;
-    case 'Milestone':
-      return <SelectProjectAndMilestone {...rest} isSubContent hideForbidden />;
     case 'OrderItem':
       return (
         <SelectOrderItems {...rest} singleSelection isSubContent disableIncrement hideForbidden />
       );
+    case 'Shipment':
+      return <SelectShipments {...rest} />;
+    case 'Milestone':
+      return <SelectProjectAndMilestone {...rest} isSubContent hideForbidden />;
+    case 'ProductProvider':
+      return <SelectProducts {...rest} />;
     default:
   }
 

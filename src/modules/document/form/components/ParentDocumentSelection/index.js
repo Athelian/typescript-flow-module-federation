@@ -52,10 +52,14 @@ const ParentDocumentSelection = ({
   const activeType = getByPathWithDefault('Order', 'filter.entityTypes.0', filterAndSort);
 
   React.useEffect(() => {
-    if (!isParentSelectionOpen && !selectedParent) {
+    if (!isParentSelectionOpen && selectedParent) {
       setSelectedParent(null);
     }
   }, [isParentSelectionOpen, selectedParent]);
+
+  React.useEffect(() => {
+    setSelectedParent(null);
+  }, [activeType]);
 
   const onDialogSave = async (newFiles: File[], newParent?: Object) => {
     const parentParam = newParent || selectedParent;
@@ -78,8 +82,6 @@ const ParentDocumentSelection = ({
       });
     }
 
-    // resets the selected
-    setSelectedParent(null);
     setDialogOpen(false);
 
     onSelectDone({
