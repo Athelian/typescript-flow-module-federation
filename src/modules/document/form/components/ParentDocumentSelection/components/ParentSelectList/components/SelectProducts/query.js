@@ -74,3 +74,5 @@ export const productsQuery = gql`
   ${ownedByFragment}
   ${forbiddenFragment}
 `;
+
+export default productsQuery;
