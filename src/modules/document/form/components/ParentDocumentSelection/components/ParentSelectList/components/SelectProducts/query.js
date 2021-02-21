@@ -1,29 +1,64 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  productProviderCardFragment,
   forbiddenFragment,
   partnerNameFragment,
   tagFragment,
-  taskCountFragment,
   imageFragment,
-  priceFragment,
-  productProviderPackagingFragment,
-  metricFragment,
-  sizeFragment,
   ownedByFragment,
+  priceFragment,
+  taskCountFragment,
 } from 'graphql';
 
-export const productProvidersQuery = gql`
-  query productProviders(
-    $filterBy: ProductProviderFilterInput
-    $sortBy: ProductProviderSortInput
+export const productsQuery = gql`
+  query products(
+    $filterBy: ProductFilterInput
+    $sortBy: ProductSortInput
     $page: Int!
     $perPage: Int!
   ) {
-    productProviders(filterBy: $filterBy, sortBy: $sortBy, page: $page, perPage: $perPage) {
+    products(filterBy: $filterBy, sortBy: $sortBy, page: $page, perPage: $perPage) {
       nodes {
-        ...productProviderCardFragment
+        ... on Product {
+          id
+          name
+          serial
+          importer {
+            ...partnerNameFragment
+          }
+          tags {
+            ...tagFragment
+            ...forbiddenFragment
+          }
+          files {
+            ...imageFragment
+          }
+          ownedBy {
+            ...ownedByFragment
+          }
+          productProviders {
+            ... on ProductProvider {
+              id
+              name
+              archived
+              referenced
+              exporter {
+                ...partnerNameFragment
+              }
+              supplier {
+                ...partnerNameFragment
+              }
+              unitPrice {
+                ...priceFragment
+              }
+              todo {
+                taskCount {
+                  ...taskCountFragment
+                }
+              }
+            }
+          }
+        }
         ...forbiddenFragment
       }
       page
@@ -31,26 +66,11 @@ export const productProvidersQuery = gql`
     }
   }
 
-  ${productProviderCardFragment}
-  ${partnerNameFragment}
   ${priceFragment}
-  ${productProviderPackagingFragment}
-  ${metricFragment}
-  ${sizeFragment}
-  ${tagFragment}
   ${taskCountFragment}
+  ${partnerNameFragment}
+  ${tagFragment}
   ${imageFragment}
   ${ownedByFragment}
   ${forbiddenFragment}
-`;
-
-export const productProvidersByIDsQuery = gql`
-  query productProvidersByIDs($ids: [ID!]!) {
-    productProvidersByIDs(ids: $ids) {
-      ... on ProductProvider {
-        id
-        name
-      }
-    }
-  }
 `;
