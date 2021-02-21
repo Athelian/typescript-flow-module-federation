@@ -10,7 +10,7 @@ import { ParentDialogStyle, ParentDialogUploadBodyStyle } from '../../../../styl
 
 type Props = {
   entity: 'Order' | 'OrderItem' | 'Shipment' | 'ProductProvider' | 'Milestone',
-  files: File | [File],
+  files: File | File[],
   isDialogOpen: boolean,
   isLoading?: boolean,
   onCancel: Function,
