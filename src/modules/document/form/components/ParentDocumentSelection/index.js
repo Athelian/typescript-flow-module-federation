@@ -51,8 +51,14 @@ const ParentDocumentSelection = ({
 
   const activeType = getByPathWithDefault('Order', 'filter.entityTypes.0', filterAndSort);
 
+  React.useEffect(() => {
+    if (!isParentSelectionOpen && !selectedParent) {
+      setSelectedParent(null);
+    }
+  }, [isParentSelectionOpen, selectedParent]);
+
   const onDialogSave = async (newFiles: File[], newParent?: Object) => {
-    const parentParam = selectedParent || newParent;
+    const parentParam = newParent || selectedParent;
 
     if (mutateOnDialogSave && parentParam) {
       const newEntity = {
@@ -72,22 +78,21 @@ const ParentDocumentSelection = ({
       });
     }
 
+    // resets the selected
+    setSelectedParent(null);
+    setDialogOpen(false);
+
     onSelectDone({
       parent: parentParam,
       files: newFiles,
       activeType,
     });
-
-    // resets the selected
-    setSelectedParent(null);
-
-    setDialogOpen(false);
   };
 
   const onParentSelected = (parent: Object) => {
     if (activeType === 'OrderItem' || activeType === 'Milestone') {
-      // since OrderItem and Milestone only have one type 'Miscellaneous'
-      // so we set to Document
+      // OrderItem and Milestone only have one type 'Miscellaneous'
+      // so we set type to Document
       const updatedFiles = formatFilesToArray(files).map(file => ({ ...file, type: 'Document' }));
       onDialogSave(updatedFiles, parent);
       return;

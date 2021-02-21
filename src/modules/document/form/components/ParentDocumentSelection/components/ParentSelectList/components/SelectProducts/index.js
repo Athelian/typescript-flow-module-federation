@@ -81,7 +81,7 @@ function SelectProducts({ cacheKey, isLoading = false, onCancel, onSelect }: Pro
   const nextPage = getByPathWithDefault(1, 'products.page', data) + 1;
   const totalPage = getByPathWithDefault(1, 'products.totalPage', data);
   const hasMore = nextPage <= totalPage;
-  console.log('isEndProductViewOpen', isEndProductViewOpen);
+
   return (
     <>
       <SlideViewNavBar isSubNavBar>

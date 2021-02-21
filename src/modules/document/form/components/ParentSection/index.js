@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { toLowerFirst } from 'utils/string';
+import type { File } from 'generated/graphql';
 import { SectionHeader, Display, Blackout } from 'components/Form';
 import DocumentFormContainer from 'modules/document/form/container';
 import { SingleCardSection } from 'components/Sections';
@@ -35,7 +36,7 @@ const ParentSection = () => {
     Milestone: <ParentMilestoneCard milestone={state?.milestone} />,
   };
 
-  const onSelectDone = (props: { parent: Object, files: [Object], activeType: string }) => {
+  const onSelectDone = (props: { parent: Object, files: File[], activeType: string }) => {
     const { parent, files, activeType } = props;
 
     if (!parent || !parent.id) {
