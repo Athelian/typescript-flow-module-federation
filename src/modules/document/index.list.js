@@ -4,7 +4,6 @@ import { useMutation } from '@apollo/react-hooks';
 import type { FileInput } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
-import useUser from 'hooks/useUser';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import { Content } from 'components/Layout';
 import Icon from 'components/Icon';
@@ -36,7 +35,6 @@ import {
 } from './style';
 
 const DocumentModule = () => {
-  const { organization } = useUser();
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', ownerId: null },
     { updatedAt: 'DESCENDING' },
@@ -200,16 +198,7 @@ const DocumentModule = () => {
                 hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
                 onClick={() => {
                   if (isMultiSelect) {
-                    setFilterBy({
-                      ...filterBy,
-                      ownerId: null,
-                    });
                     setSelectedFiles({});
-                  } else {
-                    setFilterBy({
-                      ...filterBy,
-                      ownerId: organization.id,
-                    });
                   }
                   setMultiSelect(isMulti => !isMulti);
                 }}
@@ -219,6 +208,7 @@ const DocumentModule = () => {
         </NavBar>
         <DocumentList
           uploadFiles={filesState}
+          isMultiSelect={isMultiSelect}
           refetchRef={refetchRef}
           onSelect={isMultiSelect ? onSelect : null}
           selectedFiles={selectedFiles}
