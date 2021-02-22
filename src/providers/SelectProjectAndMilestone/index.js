@@ -28,6 +28,7 @@ type OptionalProps = {
   cacheKey: string,
   parentEntityId?: string,
   milestone?: Milestone,
+  isLoading?: boolean,
   saveButtonMessage: Object,
 };
 
@@ -76,6 +77,7 @@ const SelectProjectAndMilestone = ({
   parentEntityId,
   isSubContent,
   hideForbidden,
+  isLoading = false,
 }: Props) => {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
@@ -116,6 +118,15 @@ const SelectProjectAndMilestone = ({
     <SlideViewLayout>
       <SlideViewNavBar isSubNavBar={isSubContent}>
         <EntityIcon icon="PROJECT" color="PROJECT" />
+        <Search
+          query={filterAndSort.filter.query}
+          onChange={newQuery =>
+            onChangeFilter({
+              ...filterAndSort,
+              filter: { ...filterAndSort.filter, query: newQuery },
+            })
+          }
+        />
         <SortInput
           sort={currentSort(sortFields, filterAndSort.sort)}
           ascending={filterAndSort.sort.direction !== 'DESCENDING'}
@@ -130,16 +141,8 @@ const SelectProjectAndMilestone = ({
             })
           }
         />
-        <Search
-          query={filterAndSort.filter.query}
-          onChange={newQuery =>
-            onChangeFilter({
-              ...filterAndSort,
-              filter: { ...filterAndSort.filter, query: newQuery },
-            })
-          }
-        />
         <CancelButton
+          disabled={isLoading}
           onClick={() => {
             setSelected(values => ({
               ...values,
@@ -167,8 +170,9 @@ const SelectProjectAndMilestone = ({
           }}
           disabled={
             getByPathWithDefault('', 'id', selectedMilestone) ===
-            getByPathWithDefault('', 'id', milestone)
+              getByPathWithDefault('', 'id', milestone) || isLoading
           }
+          isLoading={isLoading}
           data-testid="btnSaveSelectProjectAndMilestone"
         />
       </SlideViewNavBar>

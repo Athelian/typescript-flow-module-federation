@@ -8,9 +8,11 @@ import useDocumentParentMutation from 'modules/document/hooks/useDocumentParentM
 import { SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { Label } from 'components/Form';
 import { toLowerFirst } from 'utils/string';
+import { formatFilesToArray } from 'utils/file';
+import type { File } from 'generated/graphql';
 
 import { ParentNavbarLabelStyle } from '../../style';
-import { ParentNavbarTabs, ParentDocumentDialog, ParentSelectList } from './components';
+import { ParentDocumentTypeDialog, ParentNavbarTabs, ParentSelectList } from './components';
 
 const initFilter = {
   filter: {
@@ -26,7 +28,7 @@ const initFilter = {
 
 type Props = {
   isParentSelectionOpen: boolean,
-  files: any,
+  files: File | File[],
   mutateOnDialogSave?: boolean,
   onRequestClose: Function,
   onSelectDone: Function,
@@ -39,67 +41,71 @@ const ParentDocumentSelection = ({
   onSelectDone,
   files,
 }: Props) => {
-  const [selected, setSelected] = React.useState({
-    parent: null,
-    files: [],
-    activeType: 'Order',
-  });
+  const [selectedParent, setSelectedParent] = React.useState(null);
 
   const [isDialogOpen, setDialogOpen] = React.useState(false);
 
-  const [updateParent, { loading: isParentUpdating }] = useDocumentParentMutation();
+  const [updateParentMutation, { loading: isParentUpdating }] = useDocumentParentMutation();
 
   const { filterAndSort, onChangeFilter } = useFilter(initFilter, `filterParentDocumentType`);
 
   const activeType = getByPathWithDefault('Order', 'filter.entityTypes.0', filterAndSort);
 
-  const onParentSelected = (parent: Object) => {
-    setSelected(_selected => {
-      return {
-        ..._selected,
-        parent,
-      };
-    });
+  React.useEffect(() => {
+    if (!isParentSelectionOpen && selectedParent) {
+      setSelectedParent(null);
+    }
+  }, [isParentSelectionOpen, selectedParent]);
 
-    setDialogOpen(true);
-  };
+  React.useEffect(() => {
+    setSelectedParent(null);
+  }, [activeType]);
 
-  const onDialogSave = async (newFiles: [Object]) => {
-    if (mutateOnDialogSave && selected.parent) {
+  const onDialogSave = async (newFiles: File[], newParent?: Object) => {
+    const parentParam = newParent || selectedParent;
+
+    if (mutateOnDialogSave && parentParam) {
       const newEntity = {
         entity: {
-          id: selected.parent.id,
+          id: parentParam.id,
           __typename: activeType,
         },
         [toLowerFirst(activeType)]: {
-          ...selected.parent,
+          ...parentParam,
           files: newFiles,
         },
       };
 
-      await updateParent({
+      await updateParentMutation({
         type: activeType,
         newState: newEntity,
       });
     }
 
+    setDialogOpen(false);
+
     onSelectDone({
-      ...selected,
+      parent: parentParam,
       files: newFiles,
       activeType,
     });
+  };
 
-    // resets the selected
-    setSelected({
-      parentId: null,
-      files: [],
-    });
+  const onParentSelected = (parent: Object) => {
+    if (activeType === 'OrderItem' || activeType === 'Milestone') {
+      // OrderItem and Milestone only have one type 'Miscellaneous'
+      // so we set type to Document
+      const updatedFiles = formatFilesToArray(files).map(file => ({ ...file, type: 'Document' }));
+      onDialogSave(updatedFiles, parent);
+      return;
+    }
 
-    setDialogOpen(false);
+    setSelectedParent(parent);
+    setDialogOpen(true);
   };
 
   return (
-    <SlideView isOpen={isParentSelectionOpen} onRequestClose={onRequestClose}>
+    <SlideView shouldConfirm={false} isOpen={isParentSelectionOpen} onRequestClose={onRequestClose}>
       <SlideViewLayout>
         <SlideViewNavBar>
           <Label className={ParentNavbarLabelStyle}>
@@ -116,13 +122,14 @@ const ParentDocumentSelection = ({
         </SlideViewNavBar>
         {isParentSelectionOpen && (
           <ParentSelectList
+            isLoading={isParentUpdating}
             onSelect={onParentSelected}
             onCancel={onRequestClose}
             type={activeType}
           />
         )}
         {isDialogOpen && (
-          <ParentDocumentDialog
+          <ParentDocumentTypeDialog
             files={files}
             isLoading={isParentUpdating}
             isDialogOpen={isDialogOpen}

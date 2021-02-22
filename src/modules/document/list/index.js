@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useQuery } from 'react-apollo';
 import type { FileInput, FilePayload } from 'generated/graphql';
+import useUser from 'hooks/useUser';
 import { isForbidden } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import type { FilterBy, SortBy } from 'types';
@@ -15,6 +16,7 @@ type Props = {|
   page: number,
   uploadFiles: Array<FileInput>,
   onSelect?: Function,
+  isMultiSelect?: boolean,
   refetchRef: any,
   selectedFiles: Object,
 |};
@@ -23,10 +25,12 @@ const DocumentList = ({
   uploadFiles,
   onSelect,
   selectedFiles,
+  isMultiSelect = false,
   refetchRef,
   ...filtersAndSort
 }: Props) => {
   const [deleteIds, setDeleteIds] = React.useState([]);
+  const { organization } = useUser();
 
   const mergeFiles = (allFiles: Array<FilePayload>) => {
     const fileIds = uploadFiles.map(file => file.id);
@@ -63,7 +67,10 @@ const DocumentList = ({
 
   return (
     <DocumentGridView
-      files={mergeFiles(data?.files?.nodes ?? []).filter(file => !isForbidden(file))}
+      files={mergeFiles(data?.files?.nodes ?? []).filter(
+        file =>
+          !isForbidden(file) && (isMultiSelect ? file?.ownedBy?.id === organization?.id : true)
+      )}
       onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'files')}
       hasMore={hasMore}
       isLoading={loading}

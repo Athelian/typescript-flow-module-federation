@@ -1,5 +1,5 @@
-import ParentDocumentDialog from './ParentDocumentDialog';
+import ParentDocumentTypeDialog from './ParentDocumentTypeDialog';
 import ParentNavbarTabs from './ParentNavbarTabs';
 import ParentSelectList from './ParentSelectList';
 
-export { ParentDocumentDialog, ParentNavbarTabs, ParentSelectList };
+export { ParentDocumentTypeDialog, ParentNavbarTabs, ParentSelectList };

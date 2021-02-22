@@ -33,11 +33,9 @@ const DocumentFormModuleImpl = ({ isLoading, documentId }: ImplProps) => {
     resetState,
   } = DocumentFormContainer.useContainer();
 
-  const [updateParent, { loading: isParentUpdating }] = useDocumentParentMutation();
-
-  const [documentMutate, { loading: isDocumentProcessing }] = useMutation(documentUpdateMutation);
-
-  const isProcessing = isParentUpdating || isDocumentProcessing;
+  const [updateParent] = useDocumentParentMutation();
+  const [documentMutate] = useMutation(documentUpdateMutation);
+  const [isProcessing, setIsProcessing] = React.useState(false);
 
   React.useEffect(() => {
     return () => {
@@ -46,19 +44,28 @@ const DocumentFormModuleImpl = ({ isLoading, documentId }: ImplProps) => {
   }, []);
 
   const handleSave = async () => {
-    // if parent has changed
-    if (originalState?.entity?.id !== state?.entity?.id) {
-      await updateParent({
-        type: state.entity.__typename,
-        newState: state,
+    let newDocument = null;
+
+    try {
+      setIsProcessing(true);
+      // if parent has changed
+      if (originalState?.entity?.id !== state?.entity?.id) {
+        await updateParent({
+          type: state.entity.__typename,
+          newState: state,
+        });
+      }
+
+      const input = prepareParsedDocumentInput(originalState, state);
+
+      const { data: document } = await documentMutate({
+        variables: { id: state.id, input },
       });
+
+      newDocument = document;
+    } finally {
+      setIsProcessing(false);
     }
-
-    const input = prepareParsedDocumentInput(originalState, state);
-
-    const { data: newDocument } = await documentMutate({
-      variables: { id: state.id, input },
-    });
 
     const violations = newDocument?.fileUpdate?.violations;
 

@@ -1,14 +1,14 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import usePartnerPermission from 'hooks/usePartnerPermission';
-import usePermission from 'hooks/usePermission';
+import { useHasPermissions } from 'contexts/Permissions';
 import { toLowerFirst } from 'utils/string';
+import { canChangeFileParent } from 'utils/file';
+import type { File } from 'generated/graphql';
 import { SectionHeader, Display, Blackout } from 'components/Form';
 import DocumentFormContainer from 'modules/document/form/container';
 import { SingleCardSection } from 'components/Sections';
 import { BaseButton } from 'components/Buttons';
-import { DOCUMENT_SET_ENTITY, DOCUMENT_UPDATE } from 'modules/permission/constants/file';
 import {
   ParentOrderCard,
   ParentItemCard,
@@ -19,11 +19,10 @@ import {
 import ParentDocumentSelection from '../ParentDocumentSelection';
 
 const ParentSection = () => {
-  const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner);
-  const canSetParent = hasPermission([DOCUMENT_SET_ENTITY, DOCUMENT_UPDATE]);
+  const { state, originalState, setFieldValues } = DocumentFormContainer.useContainer();
+  const hasPermissions = useHasPermissions(originalState?.ownedBy?.id);
 
-  const { state, setFieldValues } = DocumentFormContainer.useContainer();
+  const canSetParent = canChangeFileParent(hasPermissions, originalState);
 
   const [isParentSelectionOpen, setParentSelectionOpen] = React.useState(false);
 
@@ -35,7 +34,7 @@ const ParentSection = () => {
     Milestone: <ParentMilestoneCard milestone={state?.milestone} />,
   };
 
-  const onSelectDone = (props: { parent: Object, files: [Object], activeType: string }) => {
+  const onSelectDone = (props: { parent: Object, files: File[], activeType: string }) => {
     const { parent, files, activeType } = props;
 
     if (!parent || !parent.id) {
