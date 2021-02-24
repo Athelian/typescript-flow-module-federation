@@ -16,10 +16,7 @@ import {
   ProductFilterConfig,
   ProductSortConfig,
 } from 'components/NavBar';
-import {
-  // SaveButton,
-  CancelButton,
-} from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
 import { isForbidden, isNotFound } from 'utils/data';
 import useFilterSort from 'hooks/useFilterSort';
@@ -77,7 +74,6 @@ function SelectProducts({ cacheKey, isLoading = false, onCancel, onSelect }: Pro
         ..._items,
         endProduct: newEndProduct,
       }));
-      // setEndProductViewOpen(false);
 
       if (onSelect) {
         onSelect({
@@ -87,7 +83,6 @@ function SelectProducts({ cacheKey, isLoading = false, onCancel, onSelect }: Pro
           },
         });
       }
-      // setEndProductViewOpen(true);
     },
     [onSelect, selectedItems.product]
   );
