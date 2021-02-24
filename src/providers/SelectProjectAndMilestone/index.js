@@ -29,6 +29,7 @@ type OptionalProps = {
   parentEntityId?: string,
   milestone?: Milestone,
   isLoading?: boolean,
+  saveOnSelect?: boolean,
   saveButtonMessage: Object,
 };
 
@@ -77,6 +78,7 @@ const SelectProjectAndMilestone = ({
   parentEntityId,
   isSubContent,
   hideForbidden,
+  saveOnSelect = false,
   isLoading = false,
 }: Props) => {
   const sortFields = [
@@ -152,29 +154,31 @@ const SelectProjectAndMilestone = ({
             onCancel();
           }}
         />
-        <BaseButton
-          id="save_button"
-          label={saveButtonMessage}
-          onClick={() => {
-            if (selectedMilestone) {
-              onSelect({
-                ...selectedMilestone,
-                project: {
-                  ...selectedProject,
-                  milestones: selectedProject.milestones,
-                },
-              });
-            } else {
-              onSelect(null);
+        {!saveOnSelect && (
+          <BaseButton
+            id="save_button"
+            label={saveButtonMessage}
+            onClick={() => {
+              if (selectedMilestone) {
+                onSelect({
+                  ...selectedMilestone,
+                  project: {
+                    ...selectedProject,
+                    milestones: selectedProject.milestones,
+                  },
+                });
+              } else {
+                onSelect(null);
+              }
+            }}
+            disabled={
+              getByPathWithDefault('', 'id', selectedMilestone) ===
+                getByPathWithDefault('', 'id', milestone) || isLoading
             }
-          }}
-          disabled={
-            getByPathWithDefault('', 'id', selectedMilestone) ===
-              getByPathWithDefault('', 'id', milestone) || isLoading
-          }
-          isLoading={isLoading}
-          data-testid="btnSaveSelectProjectAndMilestone"
-        />
+            isLoading={isLoading}
+            data-testid="btnSaveSelectProjectAndMilestone"
+          />
+        )}
       </SlideViewNavBar>
 
       <Content hasSubNavBar={isSubContent}>
@@ -279,6 +283,7 @@ const SelectProjectAndMilestone = ({
                                   <SelectMilestone
                                     milestones={item.milestones}
                                     milestone={selectedMilestone}
+                                    saveOnSelect={saveOnSelect}
                                     onCancel={() => {
                                       resetSelection({
                                         project: selectedProject,
@@ -309,7 +314,22 @@ const SelectProjectAndMilestone = ({
                                           },
                                         }));
                                       }
-                                      slideToggle(false);
+
+                                      if (saveOnSelect && onSelect) {
+                                        onSelect(
+                                          !newMilestone
+                                            ? null
+                                            : {
+                                                ...newMilestone,
+                                                project: {
+                                                  ...currentSelection.project,
+                                                  milestones: currentSelection.project.milestones,
+                                                },
+                                              }
+                                        );
+                                      } else {
+                                        slideToggle(false);
+                                      }
                                     }}
                                   />
                                 )}

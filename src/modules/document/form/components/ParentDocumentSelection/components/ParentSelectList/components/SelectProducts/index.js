@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@apollo/react-hooks';
 import loadMore from 'utils/loadMore';
-import type { Product } from 'generated/graphql';
+import type { Product, ProductProvider } from 'generated/graphql';
 import { Content, SlideViewNavBar } from 'components/Layout';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
@@ -16,7 +16,7 @@ import {
   ProductFilterConfig,
   ProductSortConfig,
 } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
 import { isForbidden, isNotFound } from 'utils/data';
 import useFilterSort from 'hooks/useFilterSort';
@@ -68,6 +68,25 @@ function SelectProducts({ cacheKey, isLoading = false, onCancel, onSelect }: Pro
     setEndProductViewOpen(true);
   }, []);
 
+  const onSelectEndProduct = React.useCallback(
+    (newEndProduct: ProductProvider) => {
+      setSelectedItems(_items => ({
+        ..._items,
+        endProduct: newEndProduct,
+      }));
+
+      if (onSelect) {
+        onSelect({
+          ...newEndProduct,
+          product: {
+            ...selectedItems.product,
+          },
+        });
+      }
+    },
+    [onSelect, selectedItems.product]
+  );
+
   const products = React.useMemo(() => {
     return getByPathWithDefault([], 'products.nodes', data).filter(
       product => !isForbidden(product) && !isNotFound(product)
@@ -95,19 +114,6 @@ function SelectProducts({ cacheKey, isLoading = false, onCancel, onSelect }: Pro
         <Search query={query} onChange={setQuery} />
         <Sort config={ProductSortConfig} sortBy={sortBy} onChange={setSortBy} />
         <CancelButton onClick={onCancel} disabled={isLoading} />
-        <SaveButton
-          data-testid="btnSaveSelectProducts"
-          disabled={!selectedItems.endProduct || isQuerying || isLoading}
-          onClick={() => {
-            onSelect({
-              ...selectedItems.endProduct,
-              product: {
-                ...selectedItems.product,
-              },
-            });
-          }}
-          isLoading={isLoading}
-        />
       </SlideViewNavBar>
 
       <Content hasSubNavBar>
@@ -154,13 +160,7 @@ function SelectProducts({ cacheKey, isLoading = false, onCancel, onSelect }: Pro
               onCancel={() => {
                 setEndProductViewOpen(false);
               }}
-              onSelect={newEndProduct => {
-                setSelectedItems(_items => ({
-                  ..._items,
-                  endProduct: newEndProduct,
-                }));
-                setEndProductViewOpen(false);
-              }}
+              onSelect={onSelectEndProduct}
             />
           )}
         </SlideView>
