@@ -69,7 +69,10 @@ const DocumentList = ({
     <DocumentGridView
       files={mergeFiles(data?.files?.nodes ?? []).filter(
         file =>
-          !isForbidden(file) && (isMultiSelect ? file?.ownedBy?.id === organization?.id : true)
+          !isForbidden(file) &&
+          (isMultiSelect
+            ? file?.ownedBy?.id === organization?.id && !isForbidden(file?.entity)
+            : true)
       )}
       onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'files')}
       hasMore={hasMore}
