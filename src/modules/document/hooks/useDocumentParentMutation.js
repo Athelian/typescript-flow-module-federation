@@ -8,6 +8,10 @@ import {
   prepareParsedDocumentParentInput,
 } from 'modules/document/form/mutation';
 
+import { isForbidden } from 'utils/data';
+import type { Shipment, Order, OrderItem, Project, Product } from 'generated/graphql';
+
+import { toLowerFirst } from 'utils/string';
 import { orderItemFilesQuery, productFilesQuery } from 'modules/document/form/query';
 import { shipmentFormFilesQuery } from 'modules/shipment/form/components/DocumentsSection/query';
 
@@ -95,13 +99,56 @@ const useDocumentParentMutation = () => {
     }
   };
 
+  // for order, orderItem and shipment entities
+  const areValidFiles = (entity: Order | OrderItem | Shipment): boolean => {
+    return !entity.files.some(file => isForbidden(file));
+  };
+
+  const areValidProductFiles = (entity: Product): boolean => {
+    return !entity.productProviders.some(productProvider => {
+      return !!productProvider?.files.some(file => isForbidden(file));
+    });
+  };
+
+  const areValidProjectFiles = (entity: Project): boolean => {
+    return !entity.milestones.some(milestone => {
+      return !!milestone?.files?.some(file => isForbidden(file));
+    });
+  };
+
+  // if one of the files is forbidden then do not continue the save
+  // else data loss will occur
+  const areEntityFilesValid = (data: any, type: string) => {
+    if (!data) {
+      return false;
+    }
+
+    switch (type) {
+      case 'Order':
+      case 'OrderItem':
+      case 'Shipment':
+        return areValidFiles(data[toLowerFirst(type)]);
+      case 'ProductProvider':
+        return areValidProductFiles(data.product);
+      case 'Milestone':
+        return areValidProjectFiles(data.project);
+      default:
+        return false;
+    }
+  };
+
   const mutation = async ({ type, newState }: { type: string, newState: Object }) => {
     const entity = await getEntity(type, getEntityId(newState));
 
-    let updated = null;
-    if (entity && entity.data) {
-      updated = await updateDocumentParent(entity.data, newState);
+    if (!entity || !entity.data) {
+      return { violations: 'Entity not found' };
     }
+
+    if (!areEntityFilesValid(entity.data, type)) {
+      return { violations: 'You do not have permission to update the files' };
+    }
+
+    const updated = await updateDocumentParent(entity.data, newState);
 
     return updated;
   };
