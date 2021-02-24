@@ -80,7 +80,6 @@ function SelectProducts({ cacheKey, isLoading = false, onCancel, onSelect }: Pro
       // setEndProductViewOpen(false);
 
       if (onSelect) {
-        console.log('i am here');
         onSelect({
           ...newEndProduct,
           product: {
