@@ -8,7 +8,6 @@ import useDocumentParentMutation from 'modules/document/hooks/useDocumentParentM
 import { SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { Label } from 'components/Form';
 import { toLowerFirst } from 'utils/string';
-import { formatFilesToArray } from 'utils/file';
 import type { File } from 'generated/graphql';
 
 import { ParentNavbarLabelStyle } from '../../style';
@@ -61,7 +60,7 @@ const ParentDocumentSelection = ({
     setSelectedParent(null);
   }, [activeType]);
 
-  const onDialogSave = async (newFiles: File[], newParent?: Object) => {
+  const onDocumentTypeSave = async (newFiles: File[], newParent?: Object) => {
     const parentParam = newParent || selectedParent;
 
     if (mutateOnDialogSave && parentParam) {
@@ -92,14 +91,6 @@ const ParentDocumentSelection = ({
   };
 
   const onParentSelected = (parent: Object) => {
-    if (activeType === 'OrderItem' || activeType === 'Milestone') {
-      // OrderItem and Milestone only have one type 'Miscellaneous'
-      // so we set type to Document
-      const updatedFiles = formatFilesToArray(files).map(file => ({ ...file, type: 'Document' }));
-      onDialogSave(updatedFiles, parent);
-      return;
-    }
-
     setSelectedParent(parent);
     setDialogOpen(true);
   };
@@ -136,7 +127,7 @@ const ParentDocumentSelection = ({
             onRequestClose={() => setDialogOpen(false)}
             onCancel={() => setDialogOpen(false)}
             entity={activeType}
-            onSave={onDialogSave}
+            onSave={onDocumentTypeSave}
           />
         )}
       </SlideViewLayout>

@@ -15,9 +15,16 @@ type Props = {
   onSelect: (selectedMilestone: ?Milestone) => void,
   milestone: ?Milestone,
   milestones: Array<Milestone>,
+  saveOnSelect?: boolean,
 };
 
-function SelectMilestone({ onCancel, onSelect, milestones, milestone }: Props) {
+function SelectMilestone({
+  onCancel,
+  onSelect,
+  saveOnSelect = false,
+  milestones,
+  milestone,
+}: Props) {
   return (
     <ObjectValue defaultValue={milestone}>
       {({ value: selectedMilestone, set: setSelectMilestone }) => (
@@ -30,15 +37,17 @@ function SelectMilestone({ onCancel, onSelect, milestones, milestone }: Props) {
                 setSelectMilestone(milestone);
               }}
             />
-            <SaveButton
-              id="select_milestone_save_button"
-              data-testid="btnSaveSelectMilestone"
-              disabled={
-                getByPathWithDefault('', 'id', selectedMilestone) ===
-                getByPathWithDefault('', 'id', milestone)
-              }
-              onClick={() => onSelect(selectedMilestone)}
-            />
+            {!saveOnSelect && (
+              <SaveButton
+                id="select_milestone_save_button"
+                data-testid="btnSaveSelectMilestone"
+                disabled={
+                  getByPathWithDefault('', 'id', selectedMilestone) ===
+                  getByPathWithDefault('', 'id', milestone)
+                }
+                onClick={() => onSelect(selectedMilestone)}
+              />
+            )}
           </SlideViewNavBar>
 
           <Content>
@@ -61,11 +70,18 @@ function SelectMilestone({ onCancel, onSelect, milestones, milestone }: Props) {
                   <MilestoneCard
                     key={item.id}
                     milestone={item}
-                    onClick={() =>
-                      item.id === getByPathWithDefault('', 'id', selectedMilestone)
-                        ? setSelectMilestone(null)
-                        : setSelectMilestone(item)
-                    }
+                    onClick={() => {
+                      if (saveOnSelect) {
+                        setSelectMilestone(item);
+                        onSelect(item);
+                      } else {
+                        setSelectMilestone(
+                          item.id === getByPathWithDefault('', 'id', selectedMilestone)
+                            ? null
+                            : item
+                        );
+                      }
+                    }}
                     selectable
                     selected={item.id === getByPathWithDefault('', 'id', selectedMilestone)}
                   />

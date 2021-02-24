@@ -12,7 +12,7 @@ import {
   Search,
   Sort,
 } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
 import { isForbidden, isNotFound } from 'utils/data';
 import useFilterSort from 'hooks/useFilterSort';
@@ -52,13 +52,10 @@ function SelectShipments({ cacheKey, isLoading = false, onCancel, onSelect }: Pr
 
   const onSelectShipment = React.useCallback(
     (shipment: Object) => {
-      if (selectedShipment?.id === shipment?.id) {
-        setSelectedShipment(null);
-      } else {
-        setSelectedShipment(shipment);
-      }
+      setSelectedShipment(shipment);
+      onSelect(shipment);
     },
-    [selectedShipment]
+    [onSelect]
   );
 
   const shipments = React.useMemo(() => {
@@ -84,14 +81,6 @@ function SelectShipments({ cacheKey, isLoading = false, onCancel, onSelect }: Pr
         <Search query={query} onChange={setQuery} />
         <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
         <CancelButton onClick={onCancel} disabled={isLoading} />
-        <SaveButton
-          data-testid="btnSaveSelectTasks"
-          disabled={!selectedShipment || isQuerying || isLoading}
-          isLoading={isLoading}
-          onClick={() => {
-            onSelect(selectedShipment);
-          }}
-        />
       </SlideViewNavBar>
 
       <Content hasSubNavBar>

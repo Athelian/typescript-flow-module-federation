@@ -16,7 +16,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import { isForbidden, isNotFound } from 'utils/data';
 import useFilterSort from 'hooks/useFilterSort';
 import { OrderCard } from 'components/Cards';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
 import { orderListQuery } from './query';
 
 type OptionalProps = {
@@ -50,9 +50,15 @@ function SelectOrders({ cacheKey, isLoading = false, onCancel, onSelect }: Props
 
   const [selectedOrder, setSelectedOrder] = React.useState(null);
 
-  const onSelectOrder = React.useCallback((order: Object) => {
-    setSelectedOrder(_selectedOrder => (_selectedOrder?.id === order?.id ? null : order));
-  }, []);
+  const onSelectOrder = React.useCallback(
+    (order: Object) => {
+      setSelectedOrder(order);
+      if (onSelect) {
+        onSelect(order);
+      }
+    },
+    [onSelect]
+  );
 
   const orders = React.useMemo(() => {
     return getByPathWithDefault([], 'orders.nodes', data).filter(
@@ -78,13 +84,6 @@ function SelectOrders({ cacheKey, isLoading = false, onCancel, onSelect }: Props
         <Sort config={OrderSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         <CancelButton disabled={isLoading} onClick={onCancel} />
-        <SaveButton
-          disabled={!selectedOrder || isLoading}
-          isLoading={isLoading}
-          onClick={() => {
-            onSelect(selectedOrder);
-          }}
-        />
       </SlideViewNavBar>
 
       <Content hasSubNavBar>

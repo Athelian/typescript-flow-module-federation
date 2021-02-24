@@ -26,15 +26,16 @@ import { ItemWrapperStyle } from './style';
 type OptionalProps = {
   cacheKey: string,
   isLoading?: boolean,
+  isSubContent?: boolean,
+  disableIncrement?: boolean,
+  singleSelection?: boolean,
+  hideForbidden?: boolean,
+  saveOnSelect?: boolean,
 };
 
 type Props = OptionalProps & {
   onCancel: Function,
   onSelect: Function,
-  isSubContent?: boolean,
-  disableIncrement?: boolean,
-  singleSelection?: boolean,
-  hideForbidden?: boolean,
   filter: Object,
   intl: IntlShape,
 };
@@ -60,6 +61,7 @@ function SelectOrderItems({
   filter,
   isSubContent,
   isLoading = false,
+  saveOnSelect = false,
   disableIncrement,
   singleSelection,
   hideForbidden,
@@ -135,13 +137,15 @@ function SelectOrderItems({
               }
             />
             <CancelButton onClick={onCancel} disabled={isLoading} />
-            <SaveButton
-              disabled={selected.length === 0 || isLoading}
-              isLoading={isLoading}
-              onClick={() => {
-                onSelect(removeTypename(singleSelection ? selected[0] : selected));
-              }}
-            />
+            {!saveOnSelect && (
+              <SaveButton
+                disabled={selected.length === 0 || isLoading}
+                isLoading={isLoading}
+                onClick={() => {
+                  onSelect(removeTypename(singleSelection ? selected[0] : selected));
+                }}
+              />
+            )}
           </SlideViewNavBar>
 
           <Content hasSubNavBar={isSubContent}>
@@ -225,15 +229,15 @@ function SelectOrderItems({
                       selected={isSelected}
                       onSelect={() => {
                         if (singleSelection) {
-                          if (isSelected) {
-                            set([]);
-                          } else {
-                            set([item]);
-                          }
+                          set(saveOnSelect || !isSelected ? [item] : []);
                         } else if (isSelected) {
                           arrayValueFilter(({ id }) => id !== item.id);
                         } else {
                           push(item);
+                        }
+
+                        if (saveOnSelect) {
+                          onSelect(singleSelection ? item : selected);
                         }
                       }}
                     />

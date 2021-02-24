@@ -5,7 +5,7 @@ import type { ProductProvider } from 'generated/graphql';
 import GridView from 'components/GridView';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { CancelButton } from 'components/Buttons';
 import { ProductProviderCard } from 'components/Cards';
 
 type Props = {
@@ -17,11 +17,13 @@ type Props = {
 function SelectEndProduct({ onCancel, onSelect, productProviders }: Props) {
   const [selectedProductProvider, setSelectedProductProvider] = React.useState(null);
 
-  const onSelectProductProvider = React.useCallback((productProvider: ProductProvider) => {
-    setSelectedProductProvider(_selectedProductProvider =>
-      _selectedProductProvider?.id === productProvider?.id ? null : productProvider
-    );
-  }, []);
+  const onSelectProductProvider = React.useCallback(
+    (productProvider: ProductProvider) => {
+      setSelectedProductProvider(productProvider);
+      onSelect(productProvider);
+    },
+    [onSelect]
+  );
 
   return (
     <SlideViewLayout>
@@ -32,12 +34,6 @@ function SelectEndProduct({ onCancel, onSelect, productProviders }: Props) {
             setSelectedProductProvider(null);
             onCancel();
           }}
-        />
-        <SaveButton
-          id="select_product_provider_save_button"
-          data-testid="btnSaveSelectProductProvider"
-          disabled={!selectedProductProvider}
-          onClick={() => onSelect(selectedProductProvider)}
         />
       </SlideViewNavBar>
 
