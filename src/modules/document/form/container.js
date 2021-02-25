@@ -65,6 +65,13 @@ const useDocumentFormContainer = (initialState: File = defaultState) => {
     });
   };
 
+  const setFieldValues = (values: Object) => {
+    setState((oldState: Object) => ({
+      ...oldState,
+      ...values,
+    }));
+  };
+
   return {
     state,
     originalState,
@@ -72,6 +79,7 @@ const useDocumentFormContainer = (initialState: File = defaultState) => {
     isDirty,
     resetState,
     setFieldValue,
+    setFieldValues,
   };
 };
 

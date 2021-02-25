@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
-import { Query } from 'react-apollo';
+import { useQuery } from 'react-apollo';
 import type { FileInput, FilePayload } from 'generated/graphql';
+import useUser from 'hooks/useUser';
 import { isForbidden } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import type { FilterBy, SortBy } from 'types';
@@ -14,10 +15,23 @@ type Props = {|
   perPage: number,
   page: number,
   uploadFiles: Array<FileInput>,
+  onSelect?: Function,
+  isMultiSelect?: boolean,
+  refetchRef: any,
+  selectedFiles: Object,
 |};
 
-const DocumentList = ({ uploadFiles, ...filtersAndSort }: Props) => {
+const DocumentList = ({
+  uploadFiles,
+  onSelect,
+  selectedFiles,
+  isMultiSelect = false,
+  refetchRef,
+  ...filtersAndSort
+}: Props) => {
   const [deleteIds, setDeleteIds] = React.useState([]);
+  const { organization } = useUser();
+
   const mergeFiles = (allFiles: Array<FilePayload>) => {
     const fileIds = uploadFiles.map(file => file.id);
     return [
@@ -26,30 +40,49 @@ const DocumentList = ({ uploadFiles, ...filtersAndSort }: Props) => {
     ];
   };
 
+  const { loading, data, fetchMore, error, refetch } = useQuery(documentListQuery, {
+    variables: filtersAndSort,
+    fetchPolicy: 'network-only',
+  });
+
+  React.useEffect(() => {
+    if (refetchRef) {
+      // eslint-disable-next-line
+      refetchRef.current = refetch;
+    }
+
+    return () => {
+      // eslint-disable-next-line
+      refetchRef.current = null;
+    };
+  }, [refetchRef, refetch]);
+
+  if (error) {
+    return error.message;
+  }
+
+  const nextPage = (data?.files?.page ?? 1) + 1;
+  const totalPage = data?.files?.totalPage ?? 1;
+  const hasMore = nextPage <= totalPage;
+
   return (
-    <Query query={documentListQuery} variables={filtersAndSort} fetchPolicy="network-only">
-      {({ loading, data, fetchMore, error }) => {
-        if (error) {
-          return error.message;
-        }
-
-        const nextPage = (data?.files?.page ?? 1) + 1;
-        const totalPage = data?.files?.totalPage ?? 1;
-        const hasMore = nextPage <= totalPage;
-
-        return (
-          <DocumentGridView
-            files={mergeFiles(data?.files?.nodes ?? []).filter(file => !isForbidden(file))}
-            onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'files')}
-            hasMore={hasMore}
-            isLoading={loading}
-            afterDelete={fileId => {
-              setDeleteIds([...deleteIds, fileId]);
-            }}
-          />
-        );
+    <DocumentGridView
+      files={mergeFiles(data?.files?.nodes ?? []).filter(
+        file =>
+          !isForbidden(file) &&
+          (isMultiSelect
+            ? file?.ownedBy?.id === organization?.id && !isForbidden(file?.entity)
+            : true)
+      )}
+      onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'files')}
+      hasMore={hasMore}
+      isLoading={loading}
+      onSelect={onSelect}
+      selectedFiles={selectedFiles}
+      afterDelete={fileId => {
+        setDeleteIds([...deleteIds, fileId]);
       }}
-    </Query>
+    />
   );
 };
 

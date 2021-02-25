@@ -7,6 +7,7 @@ import { Provider } from 'unstated';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import { Content } from 'components/Layout';
 import Icon from 'components/Icon';
+import { BaseButton } from 'components/Buttons';
 import usePrevious from 'hooks/usePrevious';
 import {
   FileFilterConfig,
@@ -18,9 +19,12 @@ import {
   Sort,
 } from 'components/NavBar';
 import useFilterSort from 'hooks/useFilterSort';
-import { DOCUMENT_CREATE } from 'modules/permission/constants/file';
+import { DOCUMENT_CREATE, DOCUMENT_UPDATE } from 'modules/permission/constants/file';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
+import { SelectedFloat, ButtonFloat } from 'components/Float';
+import GridRow from 'components/GridRow';
+import ParentDocumentSelection from './form/components/ParentDocumentSelection';
 import DocumentList from './list';
 import { fileUploadMutation } from './list/mutation';
 import messages from './messages';
@@ -32,7 +36,7 @@ import {
 
 const DocumentModule = () => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
-    { query: '' },
+    { query: '', ownerId: null },
     { updatedAt: 'DESCENDING' },
     'file_cards'
   );
@@ -59,7 +63,31 @@ const DocumentModule = () => {
   }, [filterBy, lastFilter, query, sortBy]);
 
   const hasPermissions = useViewerHasPermissions();
-  const uploadable = hasPermissions(DOCUMENT_CREATE);
+  const canUpload = hasPermissions(DOCUMENT_CREATE);
+  const canUpdate = hasPermissions(DOCUMENT_UPDATE);
+
+  const [selectedFiles, setSelectedFiles] = React.useState({});
+  const [isMultiSelect, setMultiSelect] = React.useState(false);
+  const [isParentSelectionOpen, setParentSelectionOpen] = React.useState(false);
+
+  const onSelect = React.useCallback(file => {
+    if (file && file.id) {
+      setSelectedFiles(_prevIds => {
+        const newFiles = JSON.parse(JSON.stringify(_prevIds));
+        if (newFiles[file.id]) {
+          delete newFiles[file.id];
+          return newFiles;
+        }
+
+        return {
+          ...newFiles,
+          [file.id]: file,
+        };
+      });
+    }
+  }, []);
+
+  const refetchRef = React.useRef(null);
 
   const handleChange = (event: SyntheticInputEvent<HTMLInputElement> | Array<File>) => {
     let newFiles = [];
@@ -126,6 +154,18 @@ const DocumentModule = () => {
       });
   };
 
+  const onRequestClose = React.useCallback(() => {
+    setParentSelectionOpen(false);
+  }, []);
+
+  const onSelectDone = React.useCallback(() => {
+    setSelectedFiles({});
+    setParentSelectionOpen(false);
+    if (refetchRef.current) {
+      refetchRef.current();
+    }
+  }, []);
+
   return (
     <Provider>
       <Content>
@@ -136,8 +176,8 @@ const DocumentModule = () => {
           <Search query={query} onChange={setQuery} />
           <Sort config={FileSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
-          {uploadable && (
-            <>
+          <GridRow>
+            {canUpload && (
               <label className={AddDocumentButtonWrapperStyle}>
                 <div className={AddDocumentButtonLabelStyle}>
                   <FormattedMessage {...messages.newDocument} />
@@ -147,15 +187,52 @@ const DocumentModule = () => {
                 </div>
                 <input type="file" accept="*" hidden multiple value="" onChange={handleChange} />
               </label>
-            </>
-          )}
+            )}
+            {canUpdate && (
+              <BaseButton
+                icon="CHECKED"
+                label={<FormattedMessage {...messages.selectMultiple} />}
+                backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+                hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+                textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                onClick={() => {
+                  if (isMultiSelect) {
+                    setSelectedFiles({});
+                  }
+                  setMultiSelect(isMulti => !isMulti);
+                }}
+              />
+            )}
+          </GridRow>
         </NavBar>
         <DocumentList
           uploadFiles={filesState}
+          isMultiSelect={isMultiSelect}
+          refetchRef={refetchRef}
+          onSelect={isMultiSelect ? onSelect : null}
+          selectedFiles={selectedFiles}
           filterBy={{ query, ...filterBy }}
           sortBy={sortBy}
           page={1}
           perPage={10}
+        />
+        {!!Object.keys(selectedFiles).length && (
+          <>
+            <SelectedFloat
+              selectCount={Object.keys(selectedFiles).length}
+              onClearClicked={() => setSelectedFiles({})}
+            />
+            <ButtonFloat label="SET PARENT" onClick={() => setParentSelectionOpen(true)} />
+          </>
+        )}
+
+        <ParentDocumentSelection
+          mutateOnDialogSave
+          isParentSelectionOpen={isParentSelectionOpen}
+          onSelectDone={onSelectDone}
+          files={selectedFiles}
+          onRequestClose={onRequestClose}
         />
       </Content>
     </Provider>

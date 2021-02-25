@@ -43,7 +43,15 @@ import {
 } from 'modules/permission/constants/milestone';
 import { DOCUMENT_FORM, DOCUMENT_DELETE } from 'modules/permission/constants/file';
 import { getParentInfo } from 'utils/task';
+
 import { deleteFileMutation } from './mutation';
+
+type RenderItemProps = {
+  file: FilePayload,
+  afterDelete?: (fileId: string) => void,
+  onSelect?: (fileId: string) => void,
+  isSelected?: boolean,
+};
 
 type Props = {
   files: Array<FilePayload>,
@@ -51,10 +59,17 @@ type Props = {
   hasMore: boolean,
   isLoading: boolean,
   afterDelete?: (fileId: string) => void,
-  renderItem?: (item: FilePayload, afterDelete?: (fileId: string) => void) => React$Node,
+  onSelect?: (fileId: string) => void,
+  selectedFiles?: { [key: string]: Object },
+  renderItem?: (props: RenderItemProps) => React$Node,
 };
 
-const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => void): React$Node =>
+const defaultRenderItem = ({
+  file,
+  afterDelete,
+  onSelect,
+  isSelected,
+}: RenderItemProps): React$Node =>
   file?.uploading ? (
     <UploadPlaceholder progress={file?.progress ?? 0} height="184px" key={file?.id} />
   ) : (
@@ -157,15 +172,22 @@ const defaultRenderItem = (file: FilePayload, afterDelete?: (fileId: string) => 
               file={file}
               navigable={viewPermissions?.[parentType] || !parentType}
               downloadable={downloadPermissions?.[parentType] || !parentType}
-              onClick={evt => {
-                evt.stopPropagation();
-                if (hasPermission(DOCUMENT_FORM) || !parentType) {
-                  navigate(`/document/${encodeId(file.id)}`);
-                }
-              }}
+              selectable={!!onSelect}
+              selected={isSelected}
+              onSelect={onSelect}
+              onClick={
+                !onSelect
+                  ? evt => {
+                      evt.stopPropagation();
+                      if (hasPermission(DOCUMENT_FORM) || !parentType) {
+                        navigate(`/document/${encodeId(file.id)}`);
+                      }
+                    }
+                  : null
+              }
               showActionsOnHover
               actions={[
-                ...(deletePermissions?.[parentType] || !parentType
+                ...(!onSelect && (deletePermissions?.[parentType] || !parentType)
                   ? [
                       <CardAction
                         icon="REMOVE"
@@ -191,6 +213,8 @@ const DocumentGridView = ({
   hasMore,
   isLoading,
   afterDelete,
+  onSelect,
+  selectedFiles,
   renderItem = defaultRenderItem,
 }: Props): React$Node => {
   return (
@@ -204,7 +228,16 @@ const DocumentGridView = ({
         <FormattedMessage id="modules.Documents.noDocumentFound" defaultMessage="No files found" />
       }
     >
-      {files.map(file => renderItem(file, afterDelete))}
+      {files.map(file => {
+        const isSelected = !!onSelect && !!selectedFiles && !!file.id && !!selectedFiles[file.id];
+
+        return renderItem({
+          file,
+          afterDelete,
+          onSelect,
+          isSelected,
+        });
+      })}
     </GridView>
   );
 };

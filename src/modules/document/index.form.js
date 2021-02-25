@@ -7,10 +7,11 @@ import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
 import { FormContainer } from 'modules/form';
 import { documentUpdateMutation, prepareParsedDocumentInput } from 'modules/document/form/mutation';
+import { documentQuery } from 'modules/document/form/query';
 import validator from 'modules/document/form/validator';
 import DocumentFormContainer from 'modules/document/form/container';
 import DocumentForm from 'modules/document/form';
-import { documentQuery } from 'modules/document/form/query';
+import useDocumentParentMutation from './hooks/useDocumentParentMutation';
 
 type Props = {
   documentId?: string,
@@ -32,7 +33,9 @@ const DocumentFormModuleImpl = ({ isLoading, documentId }: ImplProps) => {
     resetState,
   } = DocumentFormContainer.useContainer();
 
-  const [documentMutate, { loading: isProcessing }] = useMutation(documentUpdateMutation);
+  const [updateParent] = useDocumentParentMutation();
+  const [documentMutate] = useMutation(documentUpdateMutation);
+  const [isProcessing, setIsProcessing] = React.useState(false);
 
   React.useEffect(() => {
     return () => {
@@ -41,18 +44,35 @@ const DocumentFormModuleImpl = ({ isLoading, documentId }: ImplProps) => {
   }, []);
 
   const handleSave = async () => {
-    const input = prepareParsedDocumentInput(originalState, state);
+    let newDocument = null;
 
-    const { data } = await documentMutate({
-      variables: { id: state.id, input },
-    });
+    try {
+      setIsProcessing(true);
+      // if parent has changed
+      if (originalState?.entity?.id !== state?.entity?.id) {
+        await updateParent({
+          type: state.entity.__typename,
+          newState: state,
+        });
+      }
 
-    const violations = data?.fileUpdate?.violations;
+      const input = prepareParsedDocumentInput(originalState, state);
+
+      const { data: document } = await documentMutate({
+        variables: { id: state.id, input },
+      });
+
+      newDocument = document;
+    } finally {
+      setIsProcessing(false);
+    }
+
+    const violations = newDocument?.fileUpdate?.violations;
 
     if (violations && violations.length) {
       formContainer.onErrors(violations);
     } else {
-      initializeState(data?.fileUpdate);
+      initializeState(newDocument?.fileUpdate);
       formContainer.onReset();
     }
   };
