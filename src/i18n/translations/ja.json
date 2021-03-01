@@ -27,7 +27,7 @@
   "validation.no.required": "バッチIDは必須です。",
   "validation.quantity.number": "数字で記入してください",
   "components.cards.loadingRate": "Loading %",
-  "module.container.loadingRateCalculation": "Total Volume / Max Volume",
+  "module.container.loadingRateCalculation": "総容量 / 最大容量",
   "module.container.loadingRateCalculationValues": "{totalVolume}m³ / {maxVolume}m³",
   "module.container.loadingRateTooltip": "Please choose a Container Type in order to calculate this value",
   "components.cards.batches": "バッチ",
