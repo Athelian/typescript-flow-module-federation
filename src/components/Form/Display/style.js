@@ -8,6 +8,18 @@ type DisplayWrapperType = {
   height: string,
   color: string,
   fontSize: string,
+  numLines: number,
+};
+
+const webkitLines = (numLines: number, height: number) => {
+  if (!numLines) {
+    return `${height}px`;
+  }
+
+  return `
+    -webkit-line-clamp: ${numLines};
+    height: ${numLines * 20}px;
+  `;
 };
 
 export const DisplayWrapperStyle = ({
@@ -16,11 +28,14 @@ export const DisplayWrapperStyle = ({
   height,
   color,
   fontSize,
+  lines,
 }: DisplayWrapperType): string => css`
   ${fontSizesWithHeights[fontSize]};
   font-weight: bold;
+  height: ${height};
   color: ${colors[color]};
-  ${presets.ELLIPSIS};
+  ${lines ? presets.MULTI_LINE_ELLIPSIS : presets.ELLIPSIS};
+  ${webkitLines(lines, height)}
   ${borderRadiuses.MAIN};
   text-align: ${align};
   min-width: 0;
@@ -28,7 +43,6 @@ export const DisplayWrapperStyle = ({
   flex: 1;
   max-width: ${width};
   padding: 0 5px;
-  height: ${height};
   line-height: ${height};
 `;
 
