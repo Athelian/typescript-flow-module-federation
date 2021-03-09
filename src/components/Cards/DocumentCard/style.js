@@ -37,7 +37,7 @@ export const FileNameWrapperStyle: string = css`
 export const FileNameStyle: string = css`
   ${presets.MULTI_LINE_ELLIPSIS};
   -webkit-line-clamp: 2;
-  height: 40px;
+  max-height: 40px;
   word-wrap: break-word;
 `;
 
