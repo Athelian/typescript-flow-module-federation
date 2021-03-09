@@ -8,12 +8,14 @@ type DisplayWrapperType = {
   height: string,
   color: string,
   fontSize: string,
-  numLines: number,
+  lines: number,
 };
 
-const webkitLines = (numLines: number, height: number) => {
+const webkitLines = (numLines: number, height: string = '20px') => {
   if (!numLines) {
-    return `${height}px`;
+    return `
+    height: ${height};
+    `;
   }
 
   return `
