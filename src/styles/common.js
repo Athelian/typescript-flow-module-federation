@@ -290,9 +290,15 @@ export const presets = {
     }
   `,
   ELLIPSIS: `
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+  `,
+  MULTI_LINE_ELLIPSIS: `
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
   `,
   BOX: `
     ${shadows.WATERFALL};

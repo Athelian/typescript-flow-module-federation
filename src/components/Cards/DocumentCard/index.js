@@ -189,8 +189,9 @@ const DocumentCard = ({
 
         <Tooltip message={`${fileName}.${fileExtension}`}>
           <div className={FileNameWrapperStyle}>
-            <div className={FileNameStyle}>{fileName}</div>
-            {`.${fileExtension}`}
+            <div className={FileNameStyle}>
+              {fileName}.{fileExtension}
+            </div>
           </div>
         </Tooltip>
 

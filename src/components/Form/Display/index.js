@@ -10,6 +10,7 @@ type OptionalProps = {
   color: string,
   fontSize: string,
   blackout: boolean,
+  lines: number,
 };
 
 type Props = OptionalProps & {
@@ -23,13 +24,34 @@ const defaultProps = {
   color: 'BLACK',
   fontSize: 'MAIN',
   blackout: false,
+  lines: 0,
 };
 
-const Display = ({ align, width, height, color, fontSize, blackout, children, ...rest }: Props) =>
+const Display = ({
+  align,
+  width,
+  height,
+  color,
+  fontSize,
+  blackout,
+  children,
+  lines,
+  ...rest
+}: Props) =>
   blackout ? (
     <Blackout width={width} height={height} />
   ) : (
-    <div className={DisplayWrapperStyle({ align, width, height, color, fontSize })} {...rest}>
+    <div
+      className={DisplayWrapperStyle({
+        align,
+        width,
+        height,
+        color,
+        fontSize,
+        lines,
+      })}
+      {...rest}
+    >
       {children}
     </div>
   );

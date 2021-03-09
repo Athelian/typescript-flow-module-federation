@@ -7,7 +7,7 @@ export const DocumentCardWrapperStyle = (cardHeight: string): string => css`
   position: relative;
   grid-gap: 5px;
   width: 195px;
-  height: ${cardHeight};
+  min-height: ${cardHeight};
   padding: 10px 5px;
 `;
 
@@ -30,12 +30,15 @@ export const FileNameWrapperStyle: string = css`
   flex: 1;
   padding: 0 5px;
   margin: 5px 0 0 0;
-  height: 20px;
+  height: 40px;
   line-height: 20px;
 `;
 
 export const FileNameStyle: string = css`
-  ${presets.ELLIPSIS};
+  ${presets.MULTI_LINE_ELLIPSIS};
+  -webkit-line-clamp: 2;
+  height: 40px;
+  word-wrap: break-word;
 `;
 
 export const DocumentTypeStyle: string = css`

@@ -18,28 +18,13 @@ body {
 }
 
 body.ssp {
-  font-family:
-    'Source Sans Pro',
-    Helvetica,
-    Arial,
-    '游ゴシック体',
-    'YuGothic',
-    'メイリオ',
-    'Meiryo',
+  font-family: 'Source Sans Pro', Helvetica, Arial, '游ゴシック体', 'YuGothic', 'メイリオ', 'Meiryo',
     sans-serif;
 }
 
 body.sspnsjp {
-  font-family:
-    'Source Sans Pro',
-    'Noto Sans JP',
-    Helvetica,
-    Arial,
-    '游ゴシック体',
-    'YuGothic',
-    'メイリオ',
-    'Meiryo',
-    sans-serif;
+  font-family: 'Source Sans Pro', 'Noto Sans JP', Helvetica, Arial, '游ゴシック体', 'YuGothic',
+    'メイリオ', 'Meiryo', sans-serif;
 }
 
 button {
@@ -88,4 +73,8 @@ input:focus {
   margin: 0;
   font-family: inherit;
   outline: none;
+}
+
+.tippy-tooltip {
+  overflow-wrap: break-word;
 }
