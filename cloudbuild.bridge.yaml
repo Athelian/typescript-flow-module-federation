@@ -79,4 +79,4 @@ secrets:
   - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
     secretEnv:
       FIREBASE_TOKEN: 'CiQABMiRSxFPfnwdM7ahaPi95H2ma5VUVYCgwx3zI9ZhWFOQ81oSkAEA9/U/J4HRwK9t0kLVe6F1T1W74JWV3AEPQ14N6aDa99NnGln6D3E6W+ZuSMEX1dwkUbG9UulC6Y/9swER5SzggPkAmHIKHaQnp1u1VpXoML1qMG1iRo8qCfbyJsTBfmXxYcnpkaJPwT9JAtHamX3maDhdnU2C80sVD+iys1WlL8Lm1I1xoItc0Z/E9VpIzXM='
-timeout: 1800s
+timeout: 2400s
