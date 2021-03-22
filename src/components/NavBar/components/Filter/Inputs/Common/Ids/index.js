@@ -23,6 +23,8 @@ type Props = {
   renderItem: Object => React.Node,
 };
 
+const defaultIds = [];
+
 const Ids = ({
   value,
   readonly,
@@ -35,7 +37,7 @@ const Ids = ({
 }: Props) => {
   const [open, setOpen] = React.useState<boolean>(false);
   const { data, loading } = useQuery(query, {
-    variables: { ids: value },
+    variables: { ids: value || defaultIds },
     fetchPolicy: 'cache-and-network',
   });
 
@@ -53,7 +55,7 @@ const Ids = ({
         }}
       >
         {(() => {
-          if (loading && value.length > 0) {
+          if (loading) {
             return <LoadingIcon size={20} />;
           }
 

@@ -55,7 +55,7 @@ const OrganizationSelector = ({
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
       <Selector.Many
-        selected={selected.map(id => ({ id }))}
+        selected={selected ? selected.map(id => ({ id })) : []}
         onSelect={({ isSelected, filter, item, max, value, push }) => {
           if (isSelected) {
             filter(i => i.id !== item?.organization?.id);
@@ -136,6 +136,9 @@ const OrganizationIdsImpl = (organizationType: ?string, title: React.Node) => ({
     )}
   />
 );
+
+// these variables are imported in
+// src/components/NavBar/components/Filter/index.js
 
 export const ImporterIds = OrganizationIdsImpl(
   'Importer',

@@ -160,7 +160,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId, exporter
                           {selectBatchesIsOpen && (
                             <SelectShipmentBatches
                               filter={{
-                                orderImporterIds: [importerId],
+                                orderImporterIds: importerId ? [importerId] : null,
                                 orderExporterIds: exporterId ? [exporterId] : null,
                               }}
                               selectedBatches={batches}
