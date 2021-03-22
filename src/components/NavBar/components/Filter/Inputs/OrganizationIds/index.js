@@ -137,6 +137,9 @@ const OrganizationIdsImpl = (organizationType: ?string, title: React.Node) => ({
   />
 );
 
+// these variables are imported in
+// src/components/NavBar/components/Filter/index.js
+
 export const ImporterIds = OrganizationIdsImpl(
   'Importer',
   <FormattedMessage {...messages.importers} />
