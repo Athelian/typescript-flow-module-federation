@@ -211,6 +211,13 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'BATCH',
+    field: 'batchDesiredAt',
+    type: 'date_range',
+    message: batchMessages.desiredAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'BATCH',
     field: 'batchTotalVolume',
     type: 'volume_range',
     message: batchMessages.totalVolume,
@@ -956,6 +963,13 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
     field: 'batchProducedAt',
     type: 'date_range',
     message: batchMessages.producedAt,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'BATCH',
+    field: 'batchDesiredAt',
+    type: 'date_range',
+    message: batchMessages.desiredAt,
     defaultValue: { after: null, before: null },
   },
   {
