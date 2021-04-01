@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
-import { isEnableBetaFeature } from 'utils/env';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
@@ -117,11 +116,10 @@ export default function Actions({ targets }: Props) {
   return (
     <>
       <div className={LeftActionsWrapperStyle}>
-        {(!selectors.isShipmentFocus || (selectors.isShipmentFocus && isEnableBetaFeature)) && (
-          <ActionButton onClick={navigateToGTV}>
-            <Icon icon="TABLE" />
-          </ActionButton>
-        )}
+        {/* previously used selectors.isShipmentFocus if should show or not */}
+        <ActionButton onClick={navigateToGTV}>
+          <Icon icon="TABLE" />
+        </ActionButton>
         <ActionButton
           onClick={() => {
             dispatch({
