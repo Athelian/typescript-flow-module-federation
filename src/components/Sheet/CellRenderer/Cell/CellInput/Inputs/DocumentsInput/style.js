@@ -20,6 +20,8 @@ export const DocumentIconStyle = (color: string): string => css`
 `;
 
 export const DocumentsDialogWrapperStyle: string = css`
+  width: 880px;
+  max-width: calc(100vw - 30px);
   background-color: ${colors.GRAY_VERY_LIGHT};
   ${borderRadiuses.MAIN};
 `;
