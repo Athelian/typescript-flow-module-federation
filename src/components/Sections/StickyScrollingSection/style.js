@@ -4,7 +4,7 @@ import { borderRadiuses, colors } from 'styles/common';
 
 export const StickyScrollingSectionWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
-  width: 880px;
+  width: 100%;
 `;
 
 export const StickyStyle: string = css`
