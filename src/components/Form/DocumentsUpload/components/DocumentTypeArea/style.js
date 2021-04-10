@@ -10,9 +10,20 @@ export const DocumentTypeAreaWrapperStyle = (isDraggedOver: boolean): string => 
 `;
 
 export const DocumentTypeAreaHeaderStyle: string = css`
-  height: 30px;
+  height: auto;
   display: flex;
   align-items: center;
+  @media (max-width: 799px) {
+    flex-wrap: wrap;
+    > div {
+      flex: 1 0 100%;
+    }
+  }
+  @media (max-width: 619px) {
+    > div + div {
+      grid-auto-flow: row;
+    }
+  }
 `;
 
 export const AddDocumentButtonWrapperStyle: string = css`
@@ -46,7 +57,7 @@ export const AddDocumentButtonIconStyle: string = css`
 export const DocumentTypeAreaBodyStyle: string = css`
   padding: 10px 5px 5px 5px;
   display: grid;
-  grid-template-columns: repeat(4, 195px);
+  grid-template-columns: repeat(auto-fit, 195px);
   grid-auto-rows: min-content;
   grid-column-gap: 20px;
   grid-row-gap: 30px;
