@@ -12,7 +12,7 @@ export const SectionWrapperStyle = (display: Boolean) => css`
   `};
   flex-direction: column;
   align-items: center;
-  &#order_documentsSection {
+  &[id$='documentsSection'] {
     > div {
       width: 100%;
     }
