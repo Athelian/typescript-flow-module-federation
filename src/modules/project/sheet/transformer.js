@@ -191,8 +191,11 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
       columnKey: 'project.followers',
       type: 'followers',
       // return organization ids for followers modal org filter
-      computed: root =>
-        [root?.ownedBy?.id, ...(root?.organizations?.map(org => org?.id) ?? [])].filter(Boolean),
+      computed: root => {
+        const projectOrganizations = root?.organizations?.map(org => org?.id) ?? [];
+
+        return [root?.ownedBy?.id, ...projectOrganizations].filter(Boolean);
+      },
       ...transformValueField(
         basePath,
         project,
