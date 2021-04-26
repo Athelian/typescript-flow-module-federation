@@ -22,11 +22,15 @@ function normalizedInput(
       switch (field) {
         case 'dueDate':
           return {
-            [(field: string)]: value || null,
+            [field]: value || null,
           };
         case 'tags':
           return {
             tagIds: value.map(tag => extractForbiddenId(tag).id).filter(Boolean),
+          };
+        case 'followers':
+          return {
+            followerIds: value.map(follower => follower?.id).filter(Boolean),
           };
         default:
           return {

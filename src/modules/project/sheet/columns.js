@@ -78,6 +78,13 @@ export const projectColumns: Array<ColumnConfig> = [
     width: 200,
   },
   {
+    key: 'project.followers',
+    title: <FormattedMessage {...projectMessages.followers} />,
+    icon: 'PROJECT',
+    color: colors.PROJECT,
+    width: ColumnWidths.Followers,
+  },
+  {
     key: 'project.organizations',
     title: <FormattedMessage {...projectMessages.sharedPartners} />,
     icon: 'PROJECT',
