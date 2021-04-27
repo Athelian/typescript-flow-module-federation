@@ -261,6 +261,19 @@ export default function entityEventHandler(
                       }));
                   }
                   break;
+                case 'followers':
+                  if (change.new) {
+                    return client
+                      .query({
+                        query: usersByIDsQuery,
+                        variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                      })
+                      .then(({ data }) => ({
+                        field: change.field,
+                        new: newCustomValue(data.usersByIDs),
+                      }));
+                  }
+                  break;
                 default:
                   break;
               }
