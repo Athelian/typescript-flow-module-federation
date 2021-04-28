@@ -14,6 +14,7 @@ import {
   PROJECT_SET_NAME,
   PROJECT_SET_TAGS,
   PROJECT_UPDATE,
+  PROJECT_SET_FOLLOWERS,
   PROJECT_SET_ARCHIVED,
   PROJECT_SET_ORGANIZATIONS,
 } from 'modules/permission/constants/project';
@@ -185,6 +186,22 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
         at: new Date(item.updatedAt),
         by: item.updatedBy,
       })),
+    },
+    {
+      columnKey: 'project.followers',
+      type: 'followers',
+      // return organization ids for followers modal org filter
+      computed: root => {
+        const projectOrganizations = root?.organizations?.map(org => org?.id) ?? [];
+
+        return [root?.ownedBy?.id, ...projectOrganizations].filter(Boolean);
+      },
+      ...transformValueField(
+        basePath,
+        project,
+        'followers',
+        hasPermission => hasPermission(PROJECT_UPDATE) || hasPermission(PROJECT_SET_FOLLOWERS)
+      ),
     },
     {
       columnKey: 'project.updatedBy',
