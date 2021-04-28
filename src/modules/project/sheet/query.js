@@ -31,6 +31,9 @@ const projectSheetFragment = gql`
         }
       }
     }
+    followers {
+      ...userAvatarFragment
+    }
     createdAt
     updatedAt
     createdBy {
