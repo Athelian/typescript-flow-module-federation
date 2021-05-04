@@ -11,7 +11,11 @@ import type {
 } from 'components/Sheet/SheetLive/types';
 import { defaultEntityEventChangeTransformer } from 'components/Sheet/SheetLive/entity';
 import { extraChange, mergeChanges, newCustomValue } from 'components/Sheet/SheetLive/helper';
-import { filesByIDsQuery, usersByIDsQuery } from 'modules/sheet/common/query';
+import {
+  filesByIDsQuery,
+  usersByIDsQuery,
+  organizationsByIDsQuery,
+} from 'modules/sheet/common/query';
 import { decorateMilestone, decorateTask, unDecorateMilestone, unDecorateTask } from './decorator';
 import { computeMilestoneStatus, computeTaskApprovalStatus, computeTaskStatus } from './helper';
 import { milestoneByIDQuery, tagsByIDsQuery, taskByIDQuery, userByIDQuery } from './query';
@@ -233,7 +237,6 @@ export default function entityEventHandler(
         break;
       case 'Update': {
         let { changes } = event;
-
         switch (event.entity.__typename) {
           case 'Project':
             changes = await mapAsync(changes, change => {
@@ -258,6 +261,19 @@ export default function entityEventHandler(
                       .then(({ data }) => ({
                         field: change.field,
                         new: newCustomValue(data.user),
+                      }));
+                  }
+                  break;
+                case 'organizations':
+                  if (change.new) {
+                    return client
+                      .query({
+                        query: organizationsByIDsQuery,
+                        variables: { ids: (change.new?.values ?? []).map(v => v.entity?.id) },
+                      })
+                      .then(({ data }) => ({
+                        field: change.field,
+                        new: newCustomValue(data.organizationsByIDs),
                       }));
                   }
                   break;

@@ -17,6 +17,9 @@ function normalizedInput(
   project: Object,
   userId: string
 ): Object {
+  console.log('value is ', value);
+  console.log('field is ', field);
+  console.log('project is ', project);
   switch (entity.type) {
     case 'Project':
       switch (field) {
@@ -32,6 +35,22 @@ function normalizedInput(
           return {
             followerIds: value.map(follower => follower?.id).filter(Boolean),
           };
+        case 'organizations': {
+          const organizationsById = value.reduce((arr, org) => {
+            // eslint-disable-next-line
+            arr[org.id] = true;
+            return arr;
+          }, {});
+
+          return {
+            // remove followers not in new organizations
+            followerIds: project.followers
+              .filter(follower => !!organizationsById[follower.organization.id])
+              .map(follower => follower?.id)
+              .filter(Boolean),
+            organizationIds: value.map(organization => organization?.id).filter(Boolean),
+          };
+        }
         default:
           return {
             [field]: value,
