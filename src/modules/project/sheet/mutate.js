@@ -32,6 +32,22 @@ function normalizedInput(
           return {
             followerIds: value.map(follower => follower?.id).filter(Boolean),
           };
+        case 'organizations': {
+          const organizationsById = value.reduce((arr, org) => {
+            // eslint-disable-next-line
+            arr[org.id] = true;
+            return arr;
+          }, {});
+
+          return {
+            // remove followers not in new organizations
+            followerIds: project.followers
+              .filter(follower => !!organizationsById[follower.organization.id])
+              .map(follower => follower?.id)
+              .filter(Boolean),
+            organizationIds: value.map(organization => organization?.id).filter(Boolean),
+          };
+        }
         default:
           return {
             [field]: value,
