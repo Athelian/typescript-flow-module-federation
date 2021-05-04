@@ -17,9 +17,6 @@ function normalizedInput(
   project: Object,
   userId: string
 ): Object {
-  console.log('value is ', value);
-  console.log('field is ', field);
-  console.log('project is ', project);
   switch (entity.type) {
     case 'Project':
       switch (field) {
