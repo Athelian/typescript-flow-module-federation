@@ -81,38 +81,6 @@ export const extractForbiddenId = (data: Object): Object => {
   return data;
 };
 
-/**
- * gets the deleted between two array objects with key as reference
- */
-export const findDeletedArrayData = (
-  key: string,
-  originalValues: Object[],
-  newValues: Object[]
-) => {
-  // convert to objects by id
-  const origById = originalValues.reduce((arr, value) => {
-    // eslint-disable-next-line
-    arr[value.id] = value;
-    return arr;
-  }, {});
-
-  const newById = newValues.reduce((arr, value) => {
-    // eslint-disable-next-line
-    arr[value.id] = value;
-    return arr;
-  }, {});
-
-  const deleted = Object.keys(origById).reduce((arr, origId) => {
-    if (!newById[origId]) {
-      arr.push(origById[origId]);
-    }
-
-    return arr;
-  }, []);
-
-  return deleted;
-};
-
 // For String and Number fields. Can be used for Object in certain situations.
 export const parseGenericField = (key: string, originalValue: ?any, newValue: ?any): Object => {
   if (!isEquals(originalValue, newValue)) {
@@ -271,6 +239,38 @@ type FilesType = {
   name: string,
   type: string,
   memo: ?string,
+};
+
+/**
+ * gets the deleted between two array objects with key as reference
+ */
+export const findDeletedArrayData = (
+  key: string,
+  originalValues: ?Array<FilesType>,
+  newValues: Array<FilesType>
+) => {
+  // convert to objects by id
+  const origById = originalValues.reduce((arr, value) => {
+    // eslint-disable-next-line
+    arr[value.id] = value;
+    return arr;
+  }, {});
+
+  const newById = newValues.reduce((arr, value) => {
+    // eslint-disable-next-line
+    arr[value.id] = value;
+    return arr;
+  }, {});
+
+  const deleted = Object.keys(origById).reduce((arr, origId) => {
+    if (!newById[origId]) {
+      arr.push(origById[origId]);
+    }
+
+    return arr;
+  }, []);
+
+  return deleted;
 };
 
 // Use for Documents fields. Need to send ids even for new files.
