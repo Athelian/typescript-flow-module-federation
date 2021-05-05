@@ -81,6 +81,38 @@ export const extractForbiddenId = (data: Object): Object => {
   return data;
 };
 
+/**
+ * gets the deleted between two array objects with key as reference
+ */
+export const findDeletedArrayData = (
+  key: string,
+  originalValues: Object[],
+  newValues: Object[]
+) => {
+  // convert to objects by id
+  const origById = originalValues.reduce((arr, value) => {
+    // eslint-disable-next-line
+    arr[value.id] = value;
+    return arr;
+  }, {});
+
+  const newById = newValues.reduce((arr, value) => {
+    // eslint-disable-next-line
+    arr[value.id] = value;
+    return arr;
+  }, {});
+
+  const deleted = Object.keys(origById).reduce((arr, origId) => {
+    if (!newById[origId]) {
+      arr.push(origById[origId]);
+    }
+
+    return arr;
+  }, []);
+
+  return deleted;
+};
+
 // For String and Number fields. Can be used for Object in certain situations.
 export const parseGenericField = (key: string, originalValue: ?any, newValue: ?any): Object => {
   if (!isEquals(originalValue, newValue)) {
@@ -245,23 +277,41 @@ type FilesType = {
 export const parseFilesField = (
   key: string,
   originalFiles: ?Array<FilesType>,
-  newFiles: Array<FilesType>
-): Object => ({
-  ...parseArrayOfChildrenField(
-    key,
-    originalFiles,
-    newFiles,
-    (oldFile: ?Object, newFile: Object) => {
-      return {
-        id: newFile.id,
-        ...parseGenericField('name', getByPathWithDefault(null, 'name', oldFile), newFile.name),
-        ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
-        ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
-        ...parseArrayOfIdsField('tagIds', getByPathWithDefault([], 'tags', oldFile), newFile.tags),
-      };
-    }
-  ),
-});
+  newFiles: Array<FilesType>,
+  returnDeletedFiles?: boolean
+): Object => {
+  const changedFiles = {
+    ...parseArrayOfChildrenField(
+      key,
+      originalFiles,
+      newFiles,
+      (oldFile: ?Object, newFile: Object) => {
+        return {
+          id: newFile.id,
+          ...parseGenericField('name', getByPathWithDefault(null, 'name', oldFile), newFile.name),
+          ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
+          ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
+          ...parseArrayOfIdsField(
+            'tagIds',
+            getByPathWithDefault([], 'tags', oldFile),
+            newFile.tags
+          ),
+        };
+      }
+    ),
+  };
+
+  if (!returnDeletedFiles) {
+    return changedFiles;
+  }
+
+  return {
+    changed: changedFiles,
+    deleted: {
+      files: findDeletedArrayData('id', originalFiles, newFiles),
+    },
+  };
+};
 
 type ApprovalType = {
   approvedBy: {
@@ -483,6 +533,9 @@ export const parseSizeField = (
   };
 };
 
+/**
+ * gets the difference between two objects
+ */
 export const findChangeData = (originalValues: Object, newValues: Object) => {
   const changedData = diff(originalValues, newValues);
   logger.warn({
