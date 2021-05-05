@@ -1,5 +1,6 @@
 // @flow
-import { isNullOrUndefined, isDataType, getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isDataType, isNullOrUndefined } from 'utils/fp';
+
 import { parseFilesField } from 'utils/data';
 
 export const getShipmentSummary = (shipment: Object) => {
@@ -61,10 +62,16 @@ export const numActualArrivalDateApproved = (containers: Array<Object>): number 
     .map(({ warehouseArrivalActualDateApprovedBy }) => warehouseArrivalActualDateApprovedBy)
     .filter(Boolean).length;
 
+type MergeFileStateProps = {
+  originalValues: Object,
+  newValues: Object,
+  latestFiles: Array<Object>
+}
+
 /**
  * Merges latest files with local file state
  */
-export const mergeFileStates = ({ originalValues, newValues, latestFiles = [] }) => {
+export const mergeFileStates = ({ originalValues, newValues, latestFiles = [] }: MergeFileStateProps) => {
   const { changed, deleted } = parseFilesField(
     'files',
     originalValues.files,
