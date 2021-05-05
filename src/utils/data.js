@@ -250,11 +250,12 @@ export const findDeletedArrayData = (
   newValues: Array<FilesType>
 ) => {
   // convert to objects by id
-  const origById = originalValues.reduce((arr, value) => {
-    // eslint-disable-next-line
-    arr[value.id] = value;
-    return arr;
-  }, {});
+  const origById =
+    originalValues?.reduce((arr, value) => {
+      // eslint-disable-next-line
+      arr[value.id] = value;
+      return arr;
+    }, {}) ?? {};
 
   const newById = newValues.reduce((arr, value) => {
     // eslint-disable-next-line
