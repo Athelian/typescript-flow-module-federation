@@ -1213,6 +1213,13 @@ export const ProjectFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'PROJECT',
+    field: 'followerIds',
+    type: 'users',
+    message: projectMessages.followers,
+    defaultValue: [],
+  },
+  {
+    entity: 'PROJECT',
     field: 'tagIdsWithOperator',
     type: 'project_tags_with_operator',
     message: projectMessages.tags,
