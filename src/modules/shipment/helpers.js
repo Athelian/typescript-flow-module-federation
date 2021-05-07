@@ -1,5 +1,7 @@
 // @flow
-import { isNullOrUndefined, isDataType, getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isDataType, isNullOrUndefined } from 'utils/fp';
+
+import { parseFilesField } from 'utils/data';
 
 export const getShipmentSummary = (shipment: Object) => {
   const totalBatches = shipment.batches ? shipment.batches.length : 0;
@@ -59,3 +61,58 @@ export const numActualArrivalDateApproved = (containers: Array<Object>): number 
   containers
     .map(({ warehouseArrivalActualDateApprovedBy }) => warehouseArrivalActualDateApprovedBy)
     .filter(Boolean).length;
+
+type MergeFileStateProps = {
+  originalValues: Object,
+  newValues: Object,
+  latestFiles: Array<Object>
+}
+
+/**
+ * Merges latest files with local file state
+ */
+export const mergeFileStates = ({ originalValues, newValues, latestFiles = [] }: MergeFileStateProps) => {
+  const { changed, deleted } = parseFilesField(
+    'files',
+    originalValues.files,
+    newValues.files,
+    true
+  );
+
+  const deletedFilesById = deleted.files.reduce((arr, file) => {
+    // eslint-disable-next-line
+    arr[file.id] = true;
+
+    return arr;
+  }, {});
+
+  const changedFilesById = changed.files.reduce((arr, file) => {
+    // an unchanged file object would have this format { id: 'asidnoqn' }
+    if (Object.keys(file).length > 1) {
+      // eslint-disable-next-line
+      arr[file.id] = file;
+    }
+
+    return arr;
+  }, {});
+
+  // remove deleted files
+  const newFileState = JSON.parse(JSON.stringify(latestFiles))
+    .filter(file => !deletedFilesById[file.id])
+    .map(file => {
+      // set the changed files
+      // file ids that do not exist in latestFiles are newly uploaded files
+      if (changedFilesById[file.id]) {
+        const changedFile = changedFilesById[file.id];
+        delete changedFilesById[file.id];
+        return changedFile;
+      }
+
+      return { id: file.id };
+    });
+
+  // add newly uploaded files
+  newFileState.push(...Object.values(changedFilesById));
+
+  return newFileState;
+};

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
-import { Mutation } from 'react-apollo';
+import { ApolloConsumer, Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import QueryFormV2 from 'components/common/QueryFormV2';
 import { navigate } from '@reach/router';
@@ -23,6 +23,8 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId, uuid } from 'utils/id';
 import Timeline from 'modules/timeline/components/Timeline';
 import { shipmentExportQuery, shipmentTimelineQuery } from './query';
+import { shipmentFormFilesQuery } from './form/components/DocumentsSection/query';
+
 import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
@@ -34,6 +36,7 @@ import {
   ShipmentTasksContainer,
 } from './form/containers';
 import ShipmentForm from './form';
+import { mergeFileStates } from './helpers';
 import validator from './form/validator';
 import { shipmentFormQuery } from './form/query';
 import {
@@ -118,6 +121,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
     originalValues: Object,
     existingBatches: Array<Object>,
     newValues: Object,
+    client: Object,
     saveShipment: Function,
     onSuccess: Object => void,
     onErrors: (Array<Object>) => void
@@ -153,6 +157,25 @@ class ShipmentFormModule extends React.PureComponent<Props> {
         }
       }
     } else if (shipmentId) {
+      // fix for concurrency issue
+      if (input.files) {
+        const updatedFiles = await client.query({
+          query: shipmentFormFilesQuery,
+          variables: {
+            id: decodeId(shipmentId),
+          },
+          fetchPolicy: 'network-only',
+        });
+
+        if (updatedFiles?.data?.shipment?.files) {
+          input.files = mergeFileStates({
+            originalValues,
+            newValues,
+            latestFiles: updatedFiles?.data?.shipment?.files ?? [],
+          });
+        }
+      }
+
       const result = await saveShipment({
         variables: { input, id: decodeId(shipmentId) },
       });
@@ -368,283 +391,86 @@ class ShipmentFormModule extends React.PureComponent<Props> {
       <UserConsumer>
         {({ user, organization }) => (
           <Provider inject={[formContainer]}>
-            <Mutation
-              mutation={isNewOrClone ? createShipmentMutation : updateShipmentMutation}
-              onCompleted={this.onMutationCompleted}
-              {...mutationKey}
-            >
-              {(saveShipment, { loading: isLoading, error: apiError }) => {
-                const { types = [] } = organization;
-                const isImporter = types.includes('Importer');
-                const isExporter = types.includes('Exporter');
-                const isForwarder = types.includes('Forwarder');
+            <ApolloConsumer>
+              {client => (
+                <Mutation
+                  mutation={isNewOrClone ? createShipmentMutation : updateShipmentMutation}
+                  onCompleted={this.onMutationCompleted}
+                  {...mutationKey}
+                >
+                  {(saveShipment, { loading: isLoading, error: apiError }) => {
+                    const { types = [] } = organization;
+                    const isImporter = types.includes('Importer');
+                    const isExporter = types.includes('Exporter');
+                    const isForwarder = types.includes('Forwarder');
 
-                return (
-                  <CurrentLayout>
-                    <CurrentNavBar>
-                      <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
-                      <JumpToSection>
-                        <SectionTabs
-                          link="shipment_shipmentSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.Shipments.shipment"
-                              defaultMessage="SHIPMENT"
+                    return (
+                      <CurrentLayout>
+                        <CurrentNavBar>
+                          <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
+                          <JumpToSection>
+                            <SectionTabs
+                              link="shipment_shipmentSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.Shipments.shipment"
+                                  defaultMessage="SHIPMENT"
+                                />
+                              }
+                              icon="SHIPMENT"
                             />
-                          }
-                          icon="SHIPMENT"
-                        />
-                        <SectionTabs
-                          link="shipment_timelineSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.Shipments.timeline"
-                              defaultMessage="TIMELINE"
+                            <SectionTabs
+                              link="shipment_timelineSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.Shipments.timeline"
+                                  defaultMessage="TIMELINE"
+                                />
+                              }
+                              icon="TIMELINE"
                             />
-                          }
-                          icon="TIMELINE"
-                        />
-                        <SectionTabs
-                          link="shipment_cargoSection"
-                          label={
-                            <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO" />
-                          }
-                          icon="CARGO"
-                        />
-                        <SectionTabs
-                          link="shipment_documentsSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.Shipments.document"
-                              defaultMessage="DOCUMENTS"
+                            <SectionTabs
+                              link="shipment_cargoSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.Shipments.cargo"
+                                  defaultMessage="CARGO"
+                                />
+                              }
+                              icon="CARGO"
                             />
-                          }
-                          icon="DOCUMENT"
-                        />
-                        <SectionTabs
-                          link="shipment_taskSection"
-                          label={
-                            <FormattedMessage id="modules.Shipments.task" defaultMessage="TASKS" />
-                          }
-                          icon="TASK"
-                        />
-                        <SectionTabs
-                          link="shipment_orderSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.Shipments.order"
-                              defaultMessage="ORDERS"
+                            <SectionTabs
+                              link="shipment_documentsSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.Shipments.document"
+                                  defaultMessage="DOCUMENTS"
+                                />
+                              }
+                              icon="DOCUMENT"
                             />
-                          }
-                          icon="ORDER"
-                        />
-                      </JumpToSection>
+                            <SectionTabs
+                              link="shipment_taskSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.Shipments.task"
+                                  defaultMessage="TASKS"
+                                />
+                              }
+                              icon="TASK"
+                            />
+                            <SectionTabs
+                              link="shipment_orderSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.Shipments.order"
+                                  defaultMessage="ORDERS"
+                                />
+                              }
+                              icon="ORDER"
+                            />
+                          </JumpToSection>
 
-                      <Subscribe
-                        to={[
-                          ShipmentInfoContainer,
-                          ShipmentTagsContainer,
-                          ShipmentTransportTypeContainer,
-                          ShipmentTimelineContainer,
-                          ShipmentBatchesContainer,
-                          ShipmentContainersContainer,
-                          ShipmentFilesContainer,
-                          ShipmentTasksContainer,
-                        ]}
-                      >
-                        {(
-                          shipmentInfoContainer,
-                          shipmentTagsContainer,
-                          shipmentTransportTypeContainer,
-                          shipmentTimelineContainer,
-                          shipmentBatchesContainer,
-                          shipmentContainersContainer,
-                          shipmentFilesContainer,
-                          shipmentTasksContainer
-                        ) => {
-                          const isDirty =
-                            shipmentInfoContainer.isDirty() ||
-                            shipmentTagsContainer.isDirty() ||
-                            shipmentTransportTypeContainer.isDirty() ||
-                            shipmentTimelineContainer.isDirty() ||
-                            shipmentBatchesContainer.isDirty() ||
-                            shipmentContainersContainer.isDirty() ||
-                            shipmentFilesContainer.isDirty() ||
-                            shipmentTasksContainer.isDirty();
-                          return (
-                            <>
-                              <BooleanValue>
-                                {({ value: opened, set: slideToggle }) =>
-                                  !isNewOrClone && (
-                                    <>
-                                      <LogsButton
-                                        entityType="shipment"
-                                        entityId={shipmentId}
-                                        onClick={() => slideToggle(true)}
-                                      />
-                                      <SlideView
-                                        isOpen={opened}
-                                        onRequestClose={() => slideToggle(false)}
-                                      >
-                                        <SlideViewLayout
-                                          navBar={
-                                            <SlideViewNavBar>
-                                              <EntityIcon icon="LOGS" color="LOGS" />
-                                            </SlideViewNavBar>
-                                          }
-                                        >
-                                          {shipmentId && opened ? (
-                                            <Timeline
-                                              query={shipmentTimelineQuery}
-                                              queryField="shipment"
-                                              variables={{
-                                                id: decodeId(shipmentId),
-                                              }}
-                                              entity={{
-                                                shipmentId: decodeId(shipmentId),
-                                              }}
-                                              users={shipmentInfoContainer.state.followers}
-                                            />
-                                          ) : null}
-                                        </SlideViewLayout>
-                                      </SlideView>
-                                    </>
-                                  )
-                                }
-                              </BooleanValue>
-                              {isNewOrClone ? (
-                                <CancelButton
-                                  onClick={() => (onCancel ? onCancel() : this.onCancel())}
-                                />
-                              ) : (
-                                <>
-                                  {isDirty && (
-                                    <ResetFormButton
-                                      onClick={() => {
-                                        this.initAllValues(
-                                          {
-                                            shipmentInfoContainer,
-                                            shipmentTagsContainer,
-                                            shipmentTransportTypeContainer,
-                                            shipmentTimelineContainer,
-                                            shipmentBatchesContainer,
-                                            shipmentContainersContainer,
-                                            shipmentFilesContainer,
-                                            shipmentTasksContainer,
-                                          },
-                                          {
-                                            ...shipmentInfoContainer.originalValues,
-                                            ...shipmentTagsContainer.originalValues,
-                                            ...shipmentTransportTypeContainer.originalValues,
-                                            ...shipmentTimelineContainer.originalValues,
-                                            ...shipmentBatchesContainer.originalValues,
-                                            ...shipmentContainersContainer.originalValues,
-                                            ...shipmentFilesContainer.originalValues,
-                                            ...shipmentTasksContainer.originalValues,
-                                          },
-                                          user.timezone
-                                        );
-                                        formContainer.onReset();
-                                      }}
-                                    />
-                                  )}
-                                </>
-                              )}
-
-                              {(isNewOrClone || isDirty) && (
-                                <SaveFormButton
-                                  id="shipment_form_save_button"
-                                  disabled={
-                                    !formContainer.isReady(
-                                      {
-                                        ...shipmentBatchesContainer.state,
-                                        ...shipmentContainersContainer.state,
-                                        ...shipmentFilesContainer.state,
-                                        ...shipmentInfoContainer.state,
-                                        ...shipmentTagsContainer.state,
-                                        ...shipmentTimelineContainer.state,
-                                        ...shipmentTransportTypeContainer.state,
-                                        ...shipmentTasksContainer.state,
-                                      },
-                                      validator
-                                    )
-                                  }
-                                  isLoading={isLoading}
-                                  onClick={() => {
-                                    this.onSave(
-                                      {
-                                        ...shipmentBatchesContainer.originalValues,
-                                        ...shipmentContainersContainer.originalValues,
-                                        ...shipmentFilesContainer.originalValues,
-                                        ...shipmentInfoContainer.originalValues,
-                                        ...shipmentTagsContainer.originalValues,
-                                        ...shipmentTimelineContainer.originalValues,
-                                        ...shipmentTransportTypeContainer.originalValues,
-                                        ...shipmentTasksContainer.originalValues,
-                                      },
-                                      shipmentBatchesContainer.existingBatches,
-                                      {
-                                        ...shipmentBatchesContainer.state,
-                                        ...shipmentContainersContainer.state,
-                                        ...shipmentFilesContainer.state,
-                                        ...shipmentInfoContainer.state,
-                                        ...shipmentTagsContainer.state,
-                                        ...shipmentTimelineContainer.state,
-                                        ...shipmentTransportTypeContainer.state,
-                                        ...shipmentTasksContainer.state,
-                                      },
-                                      saveShipment,
-                                      updateShipment => {
-                                        this.initAllValues(
-                                          {
-                                            shipmentInfoContainer,
-                                            shipmentTagsContainer,
-                                            shipmentTransportTypeContainer,
-                                            shipmentTimelineContainer,
-                                            shipmentBatchesContainer,
-                                            shipmentContainersContainer,
-                                            shipmentFilesContainer,
-                                            shipmentTasksContainer,
-                                          },
-                                          {
-                                            ...updateShipment,
-                                            hasCalledTasksApiYet: true,
-                                            hasCalledBatchesApiYet: true,
-                                            hasCalledTimelineApiYet: true,
-                                            hasCalledContainerApiYet: true,
-                                            hasCalledFilesApiYet: true,
-                                          },
-                                          user.timezone
-                                        );
-                                        formContainer.onReset();
-                                      },
-                                      formContainer.onErrors
-                                    );
-                                  }}
-                                />
-                              )}
-                              {shipmentId && !isDirty && !isNewOrClone && (
-                                <ExportButton
-                                  type="Shipment"
-                                  exportQuery={shipmentExportQuery}
-                                  variables={{ id: decodeId(shipmentId) }}
-                                />
-                              )}
-                            </>
-                          );
-                        }}
-                      </Subscribe>
-                    </CurrentNavBar>
-                    <Content>
-                      {apiError && <p>Error: Please try again.</p>}
-                      {this.isNew() || !shipmentId ? (
-                        <>
-                          <ShipmentForm
-                            shipment={{}}
-                            isNew
-                            loading={false}
-                            initDataForSlideView={initDataForSlideView}
-                          />
                           <Subscribe
                             to={[
                               ShipmentInfoContainer,
@@ -666,59 +492,190 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                               shipmentContainersContainer,
                               shipmentFilesContainer,
                               shipmentTasksContainer
-                            ) =>
-                              this.onFormReady(
-                                {
-                                  shipmentInfoContainer,
-                                  shipmentTagsContainer,
-                                  shipmentTransportTypeContainer,
-                                  shipmentTimelineContainer,
-                                  shipmentBatchesContainer,
-                                  shipmentContainersContainer,
-                                  shipmentFilesContainer,
-                                  shipmentTasksContainer,
-                                },
-                                {
-                                  id: uuid(),
-                                  importer: isImporter ? organization : null,
-                                  exporter: isExporter ? organization : null,
-                                  forwarders: isForwarder ? [organization] : [],
-                                  booked: false,
-                                  customFields: {
-                                    mask: null,
-                                    fieldValues: [],
-                                  },
-                                  cargoReady: {},
-                                  containerGroups: [{}],
-                                  voyages: [{}],
-                                  tags: [],
-                                  followers: [{ ...user, organization }],
-                                  todo: {
-                                    tasks: [],
-                                    taskTemplate: null,
-                                  },
-                                  files: [],
-                                  containers: [],
-                                  batches: [],
-                                  ...initDataForSlideView,
-                                },
-                                user.timezone
-                              )
-                            }
+                            ) => {
+                              const isDirty =
+                                shipmentInfoContainer.isDirty() ||
+                                shipmentTagsContainer.isDirty() ||
+                                shipmentTransportTypeContainer.isDirty() ||
+                                shipmentTimelineContainer.isDirty() ||
+                                shipmentBatchesContainer.isDirty() ||
+                                shipmentContainersContainer.isDirty() ||
+                                shipmentFilesContainer.isDirty() ||
+                                shipmentTasksContainer.isDirty();
+                              return (
+                                <>
+                                  <BooleanValue>
+                                    {({ value: opened, set: slideToggle }) =>
+                                      !isNewOrClone && (
+                                        <>
+                                          <LogsButton
+                                            entityType="shipment"
+                                            entityId={shipmentId}
+                                            onClick={() => slideToggle(true)}
+                                          />
+                                          <SlideView
+                                            isOpen={opened}
+                                            onRequestClose={() => slideToggle(false)}
+                                          >
+                                            <SlideViewLayout
+                                              navBar={
+                                                <SlideViewNavBar>
+                                                  <EntityIcon icon="LOGS" color="LOGS" />
+                                                </SlideViewNavBar>
+                                              }
+                                            >
+                                              {shipmentId && opened ? (
+                                                <Timeline
+                                                  query={shipmentTimelineQuery}
+                                                  queryField="shipment"
+                                                  variables={{
+                                                    id: decodeId(shipmentId),
+                                                  }}
+                                                  entity={{
+                                                    shipmentId: decodeId(shipmentId),
+                                                  }}
+                                                  users={shipmentInfoContainer.state.followers}
+                                                />
+                                              ) : null}
+                                            </SlideViewLayout>
+                                          </SlideView>
+                                        </>
+                                      )
+                                    }
+                                  </BooleanValue>
+                                  {isNewOrClone ? (
+                                    <CancelButton
+                                      onClick={() => (onCancel ? onCancel() : this.onCancel())}
+                                    />
+                                  ) : (
+                                    <>
+                                      {isDirty && (
+                                        <ResetFormButton
+                                          onClick={() => {
+                                            this.initAllValues(
+                                              {
+                                                shipmentInfoContainer,
+                                                shipmentTagsContainer,
+                                                shipmentTransportTypeContainer,
+                                                shipmentTimelineContainer,
+                                                shipmentBatchesContainer,
+                                                shipmentContainersContainer,
+                                                shipmentFilesContainer,
+                                                shipmentTasksContainer,
+                                              },
+                                              {
+                                                ...shipmentInfoContainer.originalValues,
+                                                ...shipmentTagsContainer.originalValues,
+                                                ...shipmentTransportTypeContainer.originalValues,
+                                                ...shipmentTimelineContainer.originalValues,
+                                                ...shipmentBatchesContainer.originalValues,
+                                                ...shipmentContainersContainer.originalValues,
+                                                ...shipmentFilesContainer.originalValues,
+                                                ...shipmentTasksContainer.originalValues,
+                                              },
+                                              user.timezone
+                                            );
+                                            formContainer.onReset();
+                                          }}
+                                        />
+                                      )}
+                                    </>
+                                  )}
+
+                                  {(isNewOrClone || isDirty) && (
+                                    <SaveFormButton
+                                      id="shipment_form_save_button"
+                                      disabled={
+                                        !formContainer.isReady(
+                                          {
+                                            ...shipmentBatchesContainer.state,
+                                            ...shipmentContainersContainer.state,
+                                            ...shipmentFilesContainer.state,
+                                            ...shipmentInfoContainer.state,
+                                            ...shipmentTagsContainer.state,
+                                            ...shipmentTimelineContainer.state,
+                                            ...shipmentTransportTypeContainer.state,
+                                            ...shipmentTasksContainer.state,
+                                          },
+                                          validator
+                                        )
+                                      }
+                                      isLoading={isLoading}
+                                      onClick={() => {
+                                        this.onSave(
+                                          {
+                                            ...shipmentBatchesContainer.originalValues,
+                                            ...shipmentContainersContainer.originalValues,
+                                            ...shipmentFilesContainer.originalValues,
+                                            ...shipmentInfoContainer.originalValues,
+                                            ...shipmentTagsContainer.originalValues,
+                                            ...shipmentTimelineContainer.originalValues,
+                                            ...shipmentTransportTypeContainer.originalValues,
+                                            ...shipmentTasksContainer.originalValues,
+                                          },
+                                          shipmentBatchesContainer.existingBatches,
+                                          {
+                                            ...shipmentBatchesContainer.state,
+                                            ...shipmentContainersContainer.state,
+                                            ...shipmentFilesContainer.state,
+                                            ...shipmentInfoContainer.state,
+                                            ...shipmentTagsContainer.state,
+                                            ...shipmentTimelineContainer.state,
+                                            ...shipmentTransportTypeContainer.state,
+                                            ...shipmentTasksContainer.state,
+                                          },
+                                          client,
+                                          saveShipment,
+                                          updateShipment => {
+                                            this.initAllValues(
+                                              {
+                                                shipmentInfoContainer,
+                                                shipmentTagsContainer,
+                                                shipmentTransportTypeContainer,
+                                                shipmentTimelineContainer,
+                                                shipmentBatchesContainer,
+                                                shipmentContainersContainer,
+                                                shipmentFilesContainer,
+                                                shipmentTasksContainer,
+                                              },
+                                              {
+                                                ...updateShipment,
+                                                hasCalledTasksApiYet: true,
+                                                hasCalledBatchesApiYet: true,
+                                                hasCalledTimelineApiYet: true,
+                                                hasCalledContainerApiYet: true,
+                                                hasCalledFilesApiYet: true,
+                                              },
+                                              user.timezone
+                                            );
+                                            formContainer.onReset();
+                                          },
+                                          formContainer.onErrors
+                                        );
+                                      }}
+                                    />
+                                  )}
+                                  {shipmentId && !isDirty && !isNewOrClone && (
+                                    <ExportButton
+                                      type="Shipment"
+                                      exportQuery={shipmentExportQuery}
+                                      variables={{ id: decodeId(shipmentId) }}
+                                    />
+                                  )}
+                                </>
+                              );
+                            }}
                           </Subscribe>
-                        </>
-                      ) : (
-                        <QueryFormV2
-                          query={shipmentFormQuery}
-                          entityId={shipmentId}
-                          entityType="shipment"
-                          render={(shipment, loading) => (
+                        </CurrentNavBar>
+                        <Content>
+                          {apiError && <p>Error: Please try again.</p>}
+                          {this.isNew() || !shipmentId ? (
                             <>
                               <ShipmentForm
-                                loading={loading}
-                                isClone={this.isClone()}
-                                shipment={shipment}
-                                anchor={anchor}
+                                shipment={{}}
+                                isNew
+                                loading={false}
+                                initDataForSlideView={initDataForSlideView}
                               />
                               <Subscribe
                                 to={[
@@ -753,20 +710,97 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                       shipmentFilesContainer,
                                       shipmentTasksContainer,
                                     },
-                                    shipment,
+                                    {
+                                      id: uuid(),
+                                      importer: isImporter ? organization : null,
+                                      exporter: isExporter ? organization : null,
+                                      forwarders: isForwarder ? [organization] : [],
+                                      booked: false,
+                                      customFields: {
+                                        mask: null,
+                                        fieldValues: [],
+                                      },
+                                      cargoReady: {},
+                                      containerGroups: [{}],
+                                      voyages: [{}],
+                                      tags: [],
+                                      followers: [{ ...user, organization }],
+                                      todo: {
+                                        tasks: [],
+                                        taskTemplate: null,
+                                      },
+                                      files: [],
+                                      containers: [],
+                                      batches: [],
+                                      ...initDataForSlideView,
+                                    },
                                     user.timezone
                                   )
                                 }
                               </Subscribe>
                             </>
+                          ) : (
+                            <QueryFormV2
+                              query={shipmentFormQuery}
+                              entityId={shipmentId}
+                              entityType="shipment"
+                              render={(shipment, loading) => (
+                                <>
+                                  <ShipmentForm
+                                    loading={loading}
+                                    isClone={this.isClone()}
+                                    shipment={shipment}
+                                    anchor={anchor}
+                                  />
+                                  <Subscribe
+                                    to={[
+                                      ShipmentInfoContainer,
+                                      ShipmentTagsContainer,
+                                      ShipmentTransportTypeContainer,
+                                      ShipmentTimelineContainer,
+                                      ShipmentBatchesContainer,
+                                      ShipmentContainersContainer,
+                                      ShipmentFilesContainer,
+                                      ShipmentTasksContainer,
+                                    ]}
+                                  >
+                                    {(
+                                      shipmentInfoContainer,
+                                      shipmentTagsContainer,
+                                      shipmentTransportTypeContainer,
+                                      shipmentTimelineContainer,
+                                      shipmentBatchesContainer,
+                                      shipmentContainersContainer,
+                                      shipmentFilesContainer,
+                                      shipmentTasksContainer
+                                    ) =>
+                                      this.onFormReady(
+                                        {
+                                          shipmentInfoContainer,
+                                          shipmentTagsContainer,
+                                          shipmentTransportTypeContainer,
+                                          shipmentTimelineContainer,
+                                          shipmentBatchesContainer,
+                                          shipmentContainersContainer,
+                                          shipmentFilesContainer,
+                                          shipmentTasksContainer,
+                                        },
+                                        shipment,
+                                        user.timezone
+                                      )
+                                    }
+                                  </Subscribe>
+                                </>
+                              )}
+                            />
                           )}
-                        />
-                      )}
-                    </Content>
-                  </CurrentLayout>
-                );
-              }}
-            </Mutation>
+                        </Content>
+                      </CurrentLayout>
+                    );
+                  }}
+                </Mutation>
+              )}
+            </ApolloConsumer>
           </Provider>
         )}
       </UserConsumer>
