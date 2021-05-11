@@ -92,7 +92,7 @@ const ProjectTemplateFormHeader = ({
                       removeTypename(container.state)
                     );
                     createProjectTemplate({ variables: { input } });
-                    setTimeout(() => (onSave ? onSave() : null), 200);
+                    setTimeout(() => (onSave ? onSave() : null), 400);
                   }}
                 />
               </>
@@ -115,7 +115,7 @@ const ProjectTemplateFormHeader = ({
                       removeTypename(container.state)
                     );
                     updateProjectTemplate({ variables: { id, input } });
-                    setTimeout(() => (onSave ? onSave() : null), 200);
+                    setTimeout(() => (onSave ? onSave() : null), 400);
                   }}
                 />
               </>
