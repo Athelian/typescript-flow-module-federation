@@ -121,6 +121,14 @@ const menu: Array<MenuConfig> = [
         path: 'table',
       },
       {
+        label: <FormattedMessage {...messages.newTable} />,
+        icon: 'TABLE',
+        path: 'table',
+        legacy: true,
+        href: `${window.location.origin}/new/table/shipment`,
+        redirect: true,
+      },
+      {
         label: <FormattedMessage {...messages.cards} />,
         icon: 'CARDS',
         path: 'cards',
@@ -284,6 +292,8 @@ const SideBar = () => {
   const hasPermissions = useViewerHasPermissions();
   const uiState = useUI();
   const { isUsingLegacyFeatures } = useUser();
+  console.log('window location', window.location);
+
   return (
     <Location>
       {({ location }) => {
@@ -368,6 +378,7 @@ const SideBar = () => {
                           icon={subConfig.icon}
                           label={subConfig.label}
                           isBeta={subConfig.beta}
+                          href={subConfig.href}
                         />
                       );
                     })}
