@@ -292,7 +292,6 @@ const SideBar = () => {
   const hasPermissions = useViewerHasPermissions();
   const uiState = useUI();
   const { isUsingLegacyFeatures } = useUser();
-  console.log('window location', window.location);
 
   return (
     <Location>
