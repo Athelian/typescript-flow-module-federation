@@ -1,35 +1,33 @@
 // @flow
-
-import { type HasPermissions, useViewerHasPermissions } from 'contexts/Permissions';
-import { Logo, MenuItem, SubMenu } from './components';
+import React from 'react';
+import { Location } from '@reach/router';
+import { FormattedMessage } from 'react-intl';
+import { ORDER_LIST } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_LIST } from 'modules/permission/constants/orderItem';
+import { BATCH_LIST } from 'modules/permission/constants/batch';
+import { SHIPMENT_LIST } from 'modules/permission/constants/shipment';
+import { CONTAINER_LIST } from 'modules/permission/constants/container';
+import { PRODUCT_LIST } from 'modules/permission/constants/product';
+import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
+import { TAG_LIST } from 'modules/permission/constants/tag';
+import { CUSTOM_FIELD_DEFINITIONS_LIST } from 'modules/permission/constants/customFields';
+import { TEMPLATE_LIST } from 'modules/permission/constants/template';
+import { PARTNER_LIST } from 'modules/permission/constants/partner';
+import { STAFF_LIST } from 'modules/permission/constants/staff';
+import { PROJECT_LIST } from 'modules/permission/constants/project';
+import { DOCUMENT_LIST } from 'modules/permission/constants/file';
 import {
   PROJECT_TEMPLATE_LIST,
   TASK_LIST,
   TASK_TEMPLATE_LIST,
 } from 'modules/permission/constants/task';
-import { SideBarBodyStyle, SideBarWrapperStyle } from './style';
-
-import { BATCH_LIST } from 'modules/permission/constants/batch';
-import { CONTAINER_LIST } from 'modules/permission/constants/container';
-import { CUSTOM_FIELD_DEFINITIONS_LIST } from 'modules/permission/constants/customFields';
-import { DOCUMENT_LIST } from 'modules/permission/constants/file';
-import { FormattedMessage } from 'react-intl';
-import { Location } from '@reach/router';
-import { ORDER_ITEMS_LIST } from 'modules/permission/constants/orderItem';
-import { ORDER_LIST } from 'modules/permission/constants/order';
-import { PARTNER_LIST } from 'modules/permission/constants/partner';
-import { PRODUCT_LIST } from 'modules/permission/constants/product';
-import { PROJECT_LIST } from 'modules/permission/constants/project';
-import React from 'react';
-import { SHIPMENT_LIST } from 'modules/permission/constants/shipment';
-import { STAFF_LIST } from 'modules/permission/constants/staff';
-import { TAG_LIST } from 'modules/permission/constants/tag';
-import { TEMPLATE_LIST } from 'modules/permission/constants/template';
-import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
-import { isEnableBetaFeature } from 'utils/env';
-import messages from './messages';
-import { useUI } from 'contexts/UI';
+import { useViewerHasPermissions, type HasPermissions } from 'contexts/Permissions';
 import useUser from 'hooks/useUser';
+import { useUI } from 'contexts/UI';
+import { isEnableBetaFeature } from 'utils/env';
+import { Logo, MenuItem, SubMenu } from './components';
+import { SideBarWrapperStyle, SideBarBodyStyle } from './style';
+import messages from './messages';
 
 type MenuConfig = {
   label: any,
