@@ -64,10 +64,8 @@ steps:
       - -c
       - |
         cd /web-app-next-build
-        dir
         yarn install --ignore-optional
         yarn build:export
-        dir
     volumes:
       - name: 'web-app-next-build'
         path: /web-app-next-build
@@ -88,11 +86,6 @@ steps:
       - |
         mkdir build/new
         cp -vr /web-app-next-build/out/* ./build/new
-        dir
-        cd build
-        dir
-        cd new
-        dir
     volumes:
       - name: 'web-app-next-build'
         path: /web-app-next-build
