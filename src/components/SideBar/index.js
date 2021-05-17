@@ -127,7 +127,7 @@ const menu: Array<MenuConfig> = [
         icon: 'TABLE',
         path: 'table',
         legacy: true,
-        href: `${window.location.origin}/new/table/shipment`,
+        href: `${window.location.origin}/new/shipment/table`,
         redirect: true,
       },
       {
