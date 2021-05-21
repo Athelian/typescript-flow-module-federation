@@ -125,7 +125,7 @@ const menu: Array<MenuConfig> = [
       {
         label: <FormattedMessage {...messages.newTable} />,
         icon: 'TABLE',
-        // path: 'table',
+        path: 'newTable',
         hidden: isAppInProduction,
         href: `${window.location.origin}/new/shipment/table`,
         redirect: true,
