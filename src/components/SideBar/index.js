@@ -24,7 +24,7 @@ import {
 import { useViewerHasPermissions, type HasPermissions } from 'contexts/Permissions';
 import useUser from 'hooks/useUser';
 import { useUI } from 'contexts/UI';
-import { isAppInProduction, isEnableBetaFeature } from 'utils/env';
+import { isEnableBetaFeature } from 'utils/env';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle } from './style';
 import messages from './messages';
@@ -126,9 +126,8 @@ const menu: Array<MenuConfig> = [
         label: <FormattedMessage {...messages.newTable} />,
         icon: 'TABLE',
         path: 'newTable',
-        hidden: isAppInProduction,
+        hidden: !isEnableBetaFeature,
         href: `${window.location.origin}/new/shipment/table`,
-        redirect: true,
       },
       {
         label: <FormattedMessage {...messages.cards} />,
