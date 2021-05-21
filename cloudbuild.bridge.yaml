@@ -104,7 +104,8 @@ steps:
       - |
         git clone git@github.com:zenportinc/web-app-next.git /web-app-next-build
         cd /web-app-next-build
-        git checkout develop
+        git checkout feat/cookie
+    # git checkout develop
     volumes:
       - name: 'web-app-next-build'
         path: /web-app-next-build
