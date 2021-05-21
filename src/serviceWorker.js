@@ -47,14 +47,16 @@ export function register(config) {
       } else {
         if (window.location.pathname.startsWith('/new')) {
           console.info('unregistering service worker for new route');
-          unregister();
-          console.info('reloading');
-          window.location.reload();
-          return false;
+          navigator.serviceWorker.ready.then(registration => {
+            registration.unregister().then(() => {
+              console.log('reloading');
+              window.location.reload();
+            });
+          });
+        } else {
+          // Is not localhost. Just register service worker
+          registerValidSW(swUrl, config);
         }
-
-        // Is not localhost. Just register service worker
-        registerValidSW(swUrl, config);
       }
     });
   }
