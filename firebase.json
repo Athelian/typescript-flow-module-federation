@@ -39,6 +39,15 @@
           ]
         },
         {
+          "source": "/new/shipment/table.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ]
+        },
+        {
           "source": "/index.html",
           "headers": [
             {
@@ -46,6 +55,10 @@
               "value": "no-store"
             }
           ]
+        },
+        {
+          "source": "/new/shipment/table",
+          "destination": "/new/shipment/table.html"
         }
       ],
       "rewrites": [
