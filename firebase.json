@@ -106,12 +106,25 @@
               "value": "no-store"
             }
           ]
+        },
+        {
+          "source": "/new/shipment/table.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ]
         }
       ],
       "rewrites": [
         {
           "source": "/favicon.ico",
           "destination": "/favicon.ico"
+        },
+        {
+          "source": "/new/shipment/table",
+          "destination": "/new/shipment/table.html"
         },
         {
           "source": "**",
@@ -184,5 +197,13 @@
         "**/node_modules/**"
       ]
     }
-  ]
+  ],
+  "emulators": {
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true
+    }
+  }
 }

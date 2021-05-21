@@ -18,6 +18,15 @@ function NavigateLink({ to, className, children, href, onClick }: Props) {
       emitter.emit('NAVIGATE_TO', to);
     }
   };
+
+  if (href) {
+    return (
+      <a href={href} className={className}>
+        {children}
+      </a>
+    );
+  }
+
   return (
     // $FlowFixMe Flow typed is not updated yet
     <Link

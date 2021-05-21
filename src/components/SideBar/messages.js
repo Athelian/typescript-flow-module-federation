@@ -70,6 +70,10 @@ export default defineMessages({
     id: 'modules.SideBar.table',
     defaultMessage: 'TABLE',
   },
+  newTable: {
+    id: 'modules.SideBar.newTable',
+    defaultMessage: 'TABLE (NEW)',
+  },
   documents: {
     id: 'modules.SideBar.documents',
     defaultMessage: 'DOCUMENTS',

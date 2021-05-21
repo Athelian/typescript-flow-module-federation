@@ -36,6 +36,7 @@ type MenuConfig = {
   permitted?: HasPermissions => boolean,
   hidden?: boolean,
   legacy?: boolean,
+  href?: string,
   beta?: boolean,
   submenu?: Array<{
     label: any,
@@ -44,6 +45,7 @@ type MenuConfig = {
     overrideFullPath?: string,
     permitted?: HasPermissions => boolean,
     hidden?: boolean,
+    href?: string,
     beta?: boolean,
     legacy?: boolean,
   }>,
@@ -119,6 +121,13 @@ const menu: Array<MenuConfig> = [
         label: <FormattedMessage {...messages.table} />,
         icon: 'TABLE',
         path: 'table',
+      },
+      {
+        label: <FormattedMessage {...messages.newTable} />,
+        icon: 'TABLE',
+        path: 'newTable',
+        hidden: !isEnableBetaFeature,
+        href: `${window.location.origin}/new/shipment/table`,
       },
       {
         label: <FormattedMessage {...messages.cards} />,
@@ -284,6 +293,7 @@ const SideBar = () => {
   const hasPermissions = useViewerHasPermissions();
   const uiState = useUI();
   const { isUsingLegacyFeatures } = useUser();
+
   return (
     <Location>
       {({ location }) => {
@@ -368,6 +378,7 @@ const SideBar = () => {
                           icon={subConfig.icon}
                           label={subConfig.label}
                           isBeta={subConfig.beta}
+                          href={subConfig.href}
                         />
                       );
                     })}
