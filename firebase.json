@@ -39,7 +39,7 @@
           ]
         },
         {
-          "source": "/new/shipment/table.html",
+          "source": "/index.html",
           "headers": [
             {
               "key": "Cache-Control",
@@ -48,7 +48,7 @@
           ]
         },
         {
-          "source": "/index.html",
+          "source": "/new/shipment/table.html",
           "headers": [
             {
               "key": "Cache-Control",
