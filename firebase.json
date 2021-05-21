@@ -55,16 +55,16 @@
               "value": "no-store"
             }
           ]
-        },
-        {
-          "source": "/new/shipment/table",
-          "destination": "/new/shipment/table.html"
         }
       ],
       "rewrites": [
         {
           "source": "/favicon.ico",
           "destination": "/favicon.ico"
+        },
+        {
+          "source": "/new/shipment/table",
+          "destination": "/new/shipment/table.html"
         },
         {
           "source": "**",
