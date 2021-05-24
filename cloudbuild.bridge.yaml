@@ -3,7 +3,7 @@
 ####################################
 name: 'Deploy Staging'
 triggers:
-  - branches: ['develop', 'test/service-worker']
+  - branches: ['develop']
 steps:
   # build web app next
   - name: 'gcr.io/cloud-builders/git'
