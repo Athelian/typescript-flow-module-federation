@@ -45,7 +45,7 @@ export function register(config) {
           );
         });
       } else {
-        if (window.location.pathname.startsWith('/new')) {
+        if (window.location.pathname.startsWith('/new/shipment/table')) {
           console.info('unregistering service worker for new route');
           unregister();
           console.info('reloading');
