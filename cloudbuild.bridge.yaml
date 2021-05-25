@@ -82,7 +82,7 @@ timeout: 3600s
 #########################################
 name: 'Deploy Staging Hotfixes'
 triggers:
-  - branches: ['hotfixes']
+  - branches: ['hotfixes', 'feat/add-prod-new-table']
 steps:
   - name: 'gcr.io/cloud-builders/git'
     secretEnv: ['SSH_KEY']
@@ -104,8 +104,7 @@ steps:
       - |
         git clone git@github.com:zenportinc/web-app-next.git /web-app-next-build
         cd /web-app-next-build
-        git checkout develop
-    # git checkout develop
+        git checkout master
     volumes:
       - name: 'web-app-next-build'
         path: /web-app-next-build
@@ -118,7 +117,7 @@ steps:
       - |
         cd /web-app-next-build
         yarn install --ignore-optional
-        yarn build:export
+        yarn build:export:prod
     volumes:
       - name: 'web-app-next-build'
         path: /web-app-next-build
@@ -128,7 +127,7 @@ steps:
       ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
   - name: 'node:10-slim'
     entrypoint: yarn
-    args: ['build:stg']
+    args: ['build:prod']
     env:
       - 'ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA'
       - 'ZENPORT_FIREBASE_REVISION_KEY=revision_staging_hot'
