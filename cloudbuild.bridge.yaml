@@ -5,6 +5,45 @@ name: 'Deploy Staging'
 triggers:
   - branches: ['develop']
 steps:
+  # build web app next
+  - name: 'gcr.io/cloud-builders/git'
+    secretEnv: ['SSH_KEY']
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        echo "$$SSH_KEY" >> /root/.ssh/id_rsa
+        chmod 600 /root/.ssh/id_rsa
+        ssh-keyscan -t rsa github.com > known_hosts.github
+        cp known_hosts.github /root/.ssh/known_hosts
+    volumes:
+      - name: 'ssh'
+        path: '/root/.ssh'
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        git clone git@github.com:zenportinc/web-app-next.git /web-app-next-build
+        cd /web-app-next-build
+        git checkout develop
+    volumes:
+      - name: 'web-app-next-build'
+        path: /web-app-next-build
+      - name: 'ssh'
+        path: /root/.ssh
+  - name: 'node:14.16-slim'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        cd /web-app-next-build
+        yarn install --ignore-optional
+        yarn build:export
+    volumes:
+      - name: 'web-app-next-build'
+        path: /web-app-next-build
+  # end build web app next
   - name: 'node:10-slim'
     entrypoint: yarn
     args:
@@ -13,6 +52,16 @@ steps:
     entrypoint: yarn
     args: ['build:stg']
     env: ['ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA']
+  - name: 'node:10-slim'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        mkdir build/new
+        cp -vr /web-app-next-build/out/* ./build/new
+    volumes:
+      - name: 'web-app-next-build'
+        path: /web-app-next-build
   - name: 'gcr.io/zenport-183806/firebase'
     args: ['deploy', '--only', 'hosting:staging']
     secretEnv: ['FIREBASE_TOKEN']
@@ -23,7 +72,10 @@ secrets:
   - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
     secretEnv:
       FIREBASE_TOKEN: 'CiQABMiRSxFPfnwdM7ahaPi95H2ma5VUVYCgwx3zI9ZhWFOQ81oSkAEA9/U/J4HRwK9t0kLVe6F1T1W74JWV3AEPQ14N6aDa99NnGln6D3E6W+ZuSMEX1dwkUbG9UulC6Y/9swER5SzggPkAmHIKHaQnp1u1VpXoML1qMG1iRo8qCfbyJsTBfmXxYcnpkaJPwT9JAtHamX3maDhdnU2C80sVD+iys1WlL8Lm1I1xoItc0Z/E9VpIzXM='
-timeout: 2400s
+  - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/testkeyring/cryptoKeys/SSH_KEY'
+    secretEnv:
+      SSH_KEY: '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'
+timeout: 3600s
 ---
 #########################################
 # Branch hotfixes deploy to staging-hot #
@@ -32,16 +84,63 @@ name: 'Deploy Staging Hotfixes'
 triggers:
   - branches: ['hotfixes']
 steps:
+  - name: 'gcr.io/cloud-builders/git'
+    secretEnv: ['SSH_KEY']
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        echo "$$SSH_KEY" >> /root/.ssh/id_rsa
+        chmod 600 /root/.ssh/id_rsa
+        ssh-keyscan -t rsa github.com > known_hosts.github
+        cp known_hosts.github /root/.ssh/known_hosts
+    volumes:
+      - name: 'ssh'
+        path: '/root/.ssh'
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        git clone git@github.com:zenportinc/web-app-next.git /web-app-next-build
+        cd /web-app-next-build
+        git checkout master
+    volumes:
+      - name: 'web-app-next-build'
+        path: /web-app-next-build
+      - name: 'ssh'
+        path: /root/.ssh
+  - name: 'node:14.16-slim'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        cd /web-app-next-build
+        yarn install --ignore-optional
+        yarn build:export:prod
+    volumes:
+      - name: 'web-app-next-build'
+        path: /web-app-next-build
   - name: 'node:10-slim'
     entrypoint: yarn
     args:
       ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
   - name: 'node:10-slim'
     entrypoint: yarn
-    args: ['build:stg']
+    args: ['build:prod']
     env:
       - 'ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA'
       - 'ZENPORT_FIREBASE_REVISION_KEY=revision_staging_hot'
+  - name: 'node:10-slim'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        mkdir build/new
+        cp -vr /web-app-next-build/out/* ./build/new
+    volumes:
+      - name: 'web-app-next-build'
+        path: /web-app-next-build
   - name: 'gcr.io/zenport-183806/firebase'
     args: ['deploy', '--only', 'hosting:staging-hot']
     secretEnv: ['FIREBASE_TOKEN']
@@ -52,7 +151,11 @@ secrets:
   - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
     secretEnv:
       FIREBASE_TOKEN: 'CiQABMiRSxFPfnwdM7ahaPi95H2ma5VUVYCgwx3zI9ZhWFOQ81oSkAEA9/U/J4HRwK9t0kLVe6F1T1W74JWV3AEPQ14N6aDa99NnGln6D3E6W+ZuSMEX1dwkUbG9UulC6Y/9swER5SzggPkAmHIKHaQnp1u1VpXoML1qMG1iRo8qCfbyJsTBfmXxYcnpkaJPwT9JAtHamX3maDhdnU2C80sVD+iys1WlL8Lm1I1xoItc0Z/E9VpIzXM='
-timeout: 1800s
+  - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/testkeyring/cryptoKeys/SSH_KEY'
+    secretEnv:
+      SSH_KEY: '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'
+
+timeout: 3600s
 ---
 ######################################
 # Branch master deploy to production #
@@ -61,14 +164,65 @@ name: 'Deploy Prod'
 triggers:
   - branches: ['master']
 steps:
+  - name: 'gcr.io/cloud-builders/git'
+    secretEnv: ['SSH_KEY']
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        echo "$$SSH_KEY" >> /root/.ssh/id_rsa
+        chmod 600 /root/.ssh/id_rsa
+        ssh-keyscan -t rsa github.com > known_hosts.github
+        cp known_hosts.github /root/.ssh/known_hosts
+    volumes:
+      - name: 'ssh'
+        path: '/root/.ssh'
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        git clone git@github.com:zenportinc/web-app-next.git /web-app-next-build
+        cd /web-app-next-build
+        git checkout master
+    volumes:
+      - name: 'web-app-next-build'
+        path: /web-app-next-build
+      - name: 'ssh'
+        path: /root/.ssh
+  - name: 'node:14.16-slim'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        cd /web-app-next-build
+        yarn install --ignore-optional
+        yarn build:export:prod
+    volumes:
+      - name: 'web-app-next-build'
+        path: /web-app-next-build
+  # end build web app next
   - name: 'node:10-slim'
     entrypoint: yarn
     args:
       ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
+
   - name: 'node:10-slim'
     entrypoint: yarn
     args: ['build:prod']
     env: ['ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA']
+
+  - name: 'node:10-slim'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        mkdir build/new
+        cp -vr /web-app-next-build/out/* ./build/new
+    volumes:
+      - name: 'web-app-next-build'
+        path: /web-app-next-build
+
   - name: 'gcr.io/zenport-183806/firebase'
     args: ['deploy', '--only', 'hosting:prod']
     secretEnv: ['FIREBASE_TOKEN']
@@ -79,4 +233,7 @@ secrets:
   - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/cloudbuild/cryptoKeys/FIREBASE_TOKEN'
     secretEnv:
       FIREBASE_TOKEN: 'CiQABMiRSxFPfnwdM7ahaPi95H2ma5VUVYCgwx3zI9ZhWFOQ81oSkAEA9/U/J4HRwK9t0kLVe6F1T1W74JWV3AEPQ14N6aDa99NnGln6D3E6W+ZuSMEX1dwkUbG9UulC6Y/9swER5SzggPkAmHIKHaQnp1u1VpXoML1qMG1iRo8qCfbyJsTBfmXxYcnpkaJPwT9JAtHamX3maDhdnU2C80sVD+iys1WlL8Lm1I1xoItc0Z/E9VpIzXM='
+  - kmsKeyName: 'projects/zenport-183806/locations/global/keyRings/testkeyring/cryptoKeys/SSH_KEY'
+    secretEnv:
+      SSH_KEY: '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'
 timeout: 2400s

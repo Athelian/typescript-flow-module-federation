@@ -605,6 +605,7 @@ module.exports = function(webpackEnv) {
           navigateFallbackBlacklist: [
             // Exclude URLs starting with /_, as they're likely an API call
             new RegExp('^/_'),
+            new RegExp('^/new/'),
             // Exclude any URLs whose last part seems to be a file extension
             // as they're likely a resource and not a SPA route.
             // URLs containing a "?" character won't be blacklisted as they're likely
@@ -659,7 +660,7 @@ module.exports = function(webpackEnv) {
 
   const enableSpeedMap = false;
 
-  if(enableSpeedMap) {
+  if (enableSpeedMap) {
     return smp.wrap(config);
   }
 

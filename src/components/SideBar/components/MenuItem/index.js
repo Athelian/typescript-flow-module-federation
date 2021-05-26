@@ -8,12 +8,13 @@ type Props = {
   path: string,
   isActive: boolean,
   isBeta?: boolean,
+  href?: string,
   icon: string,
   label: React.Node,
 };
 
-const MenuItem = ({ path, isActive, isBeta, icon, label }: Props): React.Node => (
-  <NavigateLink to={path} className={MenuItemStyle(isActive)}>
+const MenuItem = ({ path, isActive, isBeta, href, icon, label }: Props): React.Node => (
+  <NavigateLink to={path} href={href} className={MenuItemStyle(isActive)}>
     <span />
 
     <div className={IconStyle}>
