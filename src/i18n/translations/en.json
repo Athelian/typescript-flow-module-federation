@@ -287,7 +287,7 @@
   "modules.SideBar.tags": "TAGS",
   "modules.SideBar.metadata": "CUSTOM FIELDS",
   "modules.SideBar.table": "TABLE",
-  "modules.SideBar.newTable": "TABLE (NEW)",
+  "modules.SideBar.newTable": "TABLE (BETA)",
   "modules.SideBar.documents": "DOCUMENTS",
   "modules.SideBar.cards": "CARDS",
   "modules.SideBar.map": "MAP",
