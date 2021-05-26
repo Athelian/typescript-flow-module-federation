@@ -21,7 +21,7 @@ What things you need to install the software and how to install them
     Follow the instructions and install latest version of node.js (10.x.x)
 
     ```sh
-    nvm install 10
+     nvm install 10
     ```
 
   - git
