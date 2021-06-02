@@ -3,16 +3,23 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import * as Yup from 'yup';
 
+const passwordValidationRule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/;
 const validator: Object = Yup.object().shape({
   currentPassword: Yup.string()
     .required()
     .min(6),
   newPassword: Yup.string()
     .required()
-    .min(6),
+    .matches(
+      passwordValidationRule,
+      'Must Contain 8 Characters, One Uppercase, One Lowercase and One Number'
+    ),
   confirmPassword: Yup.string()
     .required()
-    .min(6)
+    .matches(
+      passwordValidationRule,
+      'Must Contain 8 Characters, One Uppercase, One Lowercase and One Number'
+    )
     .oneOf(
       // $FlowFixMe type not support yet
       [Yup.ref('newPassword'), null],
