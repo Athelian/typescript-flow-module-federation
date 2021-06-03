@@ -10,16 +10,24 @@ const validator: Object = Yup.object().shape({
     .min(6),
   newPassword: Yup.string()
     .required()
-    .matches(
-      passwordValidationRule,
-      'Must Contain 8 Characters, One Uppercase, One Lowercase and One Number'
-    ),
+    .matches(passwordValidationRule, () => {
+      return (
+        <FormattedMessage
+          id="modules.profile.passwordInvalid"
+          defaultMessage="Must Contain 8 Characters, One Uppercase, One Lowercase and One Number"
+        />
+      );
+    }),
   confirmPassword: Yup.string()
     .required()
-    .matches(
-      passwordValidationRule,
-      'Must Contain 8 Characters, One Uppercase, One Lowercase and One Number'
-    )
+    .matches(passwordValidationRule, () => {
+      return (
+        <FormattedMessage
+          id="modules.profile.passwordInvalid"
+          defaultMessage="Must Contain 8 Characters, One Uppercase, One Lowercase and One Number"
+        />
+      );
+    })
     .oneOf(
       // $FlowFixMe type not support yet
       [Yup.ref('newPassword'), null],
