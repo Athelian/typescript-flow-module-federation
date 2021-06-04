@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 import { Subscribe } from 'unstated';
 import { SectionWrapper, SectionHeader, PasswordInputFactory } from 'components/Form';
@@ -15,6 +15,7 @@ import { ChangePasswordContainer } from './containers';
 import validator from './validator';
 
 export default function Security() {
+  const intl = useIntl();
   return (
     <div className={FormWrapperStyle}>
       <SectionWrapper id="reset_password_section">
@@ -52,7 +53,7 @@ export default function Security() {
                     <FormField
                       name="currentPassword"
                       initValue={values.currentPassword}
-                      validator={validator}
+                      validator={validator(intl)}
                       values={values}
                       setFieldValue={setFieldValue}
                     >
@@ -74,7 +75,7 @@ export default function Security() {
                     <FormField
                       name="newPassword"
                       initValue={values.newPassword}
-                      validator={validator}
+                      validator={validator(intl)}
                       values={values}
                       setFieldValue={setFieldValue}
                     >
@@ -96,7 +97,7 @@ export default function Security() {
                     <FormField
                       name="confirmPassword"
                       initValue={values.confirmPassword}
-                      validator={validator}
+                      validator={validator(intl)}
                       values={values}
                       setFieldValue={setFieldValue}
                     >
@@ -117,7 +118,7 @@ export default function Security() {
                     </FormField>
                     <div className={ButtonWrapperStyle}>
                       <SaveFormButton
-                        disabled={!formContainer.isReady(values, validator)}
+                        disabled={!formContainer.isReady(values, validator(intl))}
                         isLoading={loading}
                         onClick={() => {
                           const { currentPassword, newPassword } = values;

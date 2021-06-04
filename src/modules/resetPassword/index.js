@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { Link } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import GradientContainer from 'components/GradientContainer';
@@ -21,6 +21,7 @@ type Props = {
 export default function ResetPasswordModule({ token }: Props) {
   const [passwordChanged, setPasswordChanged] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
+  const intl = useIntl();
 
   return (
     <GradientContainer className={ContainerStyle}>
@@ -72,7 +73,7 @@ export default function ResetPasswordModule({ token }: Props) {
                             <FormField
                               name="password"
                               initValue={values.password}
-                              validator={validator}
+                              validator={validator(intl)}
                               values={values}
                               setFieldValue={setFieldValue}
                             >
@@ -94,7 +95,7 @@ export default function ResetPasswordModule({ token }: Props) {
                             <FormField
                               name="confirmPassword"
                               initValue={values.confirmPassword}
-                              validator={validator}
+                              validator={validator(intl)}
                               values={values}
                               setFieldValue={setFieldValue}
                             >
@@ -124,7 +125,7 @@ export default function ResetPasswordModule({ token }: Props) {
                             }
                             backgroundColor="TEAL"
                             hoverBackgroundColor="TEAL_DARK"
-                            disabled={!formContainer.isReady(values, validator)}
+                            disabled={!formContainer.isReady(values, validator(intl))}
                             type="submit"
                             onClick={() =>
                               requestResetPassword({
