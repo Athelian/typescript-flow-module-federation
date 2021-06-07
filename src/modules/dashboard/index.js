@@ -8,9 +8,9 @@ import LoadingIcon from 'components/LoadingIcon';
 import { useViewerHasPermissions, useViewerPermissions } from 'contexts/Permissions';
 
 const findRedirectUrlBaseOnPermission = (hasPermission: string => boolean) => {
+  if (hasPermission(SHIPMENT_LIST)) return 'shipment';
   if (hasPermission(ORDER_LIST)) return 'order';
   if (hasPermission(PRODUCT_LIST)) return 'product';
-  if (hasPermission(SHIPMENT_LIST)) return 'shipment';
   return '403';
 };
 

@@ -23,7 +23,7 @@ const ShipmentApp = () => (
     {({ location }) => (
       <Router location={location}>
         {/* $FlowFixMe Flow typed is not updated yet */}
-        <Redirect path="/" from="/" to="/shipment/cards" noThrow />
+        <Redirect path="/" from="/" to="/shipment/map" noThrow />
         <ShipmentModuleListWrapper path="/cards" />
         {/* $FlowFixMe Flow typed is not updated yet */}
         <ShipmentSheetModuleWrapper path="/table" shipmentIds={location?.state?.shipmentIds} />
