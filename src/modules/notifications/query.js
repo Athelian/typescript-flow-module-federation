@@ -36,13 +36,12 @@ export const notificationListQuery = gql`
               ... on Model {
                 id
               }
-            }
-            milestone: entity {
               ... on Milestone {
+                id
+                __typename
                 project {
                   ... on Project {
                     id
-                    __typename
                   }
                 }
               }

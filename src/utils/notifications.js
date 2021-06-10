@@ -11,9 +11,9 @@ export const parseUrl = (notification: Notification) => {
   let typeName = notification?.entity?.__typename;
 
   // Since we don't have Milestone view, so get parent entity (project) to show.
-  if (typeName === 'Milestone' && notification?.milestone.__typename === 'Milestone') {
+  if (typeName === 'Milestone' && notification?.entity?.project !== undefined) {
     typeName = 'Project';
-    id = notification?.milestone.project.id;
+    id = notification?.entity?.project.id;
   } else if (typeName === 'File') {
     typeName = 'Document';
   }
