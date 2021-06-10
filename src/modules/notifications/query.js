@@ -37,6 +37,16 @@ export const notificationListQuery = gql`
                 id
               }
             }
+            milestone: entity {
+              ... on Milestone {
+                project {
+                  ... on Project {
+                    id
+                    __typename
+                  }
+                }
+              }
+            }
           }
         }
         page
