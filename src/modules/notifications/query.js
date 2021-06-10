@@ -36,6 +36,15 @@ export const notificationListQuery = gql`
               ... on Model {
                 id
               }
+              ... on Milestone {
+                id
+                __typename
+                project {
+                  ... on Project {
+                    id
+                  }
+                }
+              }
             }
           }
         }

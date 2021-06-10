@@ -9,6 +9,7 @@ const mappingIcon = {
   OrderItem: 'ORDER_ITEM',
   orderItem: 'ORDER_ITEM',
   productProvider: 'PRODUCT_PROVIDER',
+  File: 'DOCUMENT',
 };
 
 export const parseRoute = (entityType: string) => {
