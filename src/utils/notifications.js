@@ -14,6 +14,8 @@ export const parseUrl = (notification: Notification) => {
   if (typeName === 'Milestone' && notification?.milestone.__typename === 'Milestone') {
     typeName = 'Project';
     id = notification?.milestone.project.id;
+  } else if (typeName === 'File') {
+    typeName = 'Document';
   }
 
   return `/${parseRoute(typeName).toLowerCase()}/${encodeId(id)}`;
