@@ -58,7 +58,7 @@ function filterByFile(items: Array<Entry>, hasPermissions: Function): Array<Entr
         (entry?.entityType === 'file' &&
           ['order', 'shipment', 'product'].includes(entry?.parentEntityType) &&
           canViewFile(hasPermissions, entry?.entity?.type)) ||
-        entry?.entityType !== 'file'
+        entry?.entityType === entry?.parentEntityType
     )
     .reduce((result, entry, counter, entries) => {
       const lastEntry = result[result.length - 1];
