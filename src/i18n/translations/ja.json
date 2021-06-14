@@ -601,6 +601,7 @@
   "modules.Notification.preferences.batch_delete_adjustment": "変更数量を削除",
   "modules.Notification.preferences.batch_delete_adjustment_in_shipment": "シップメント内において変更数量を削除",
   "modules.Notification.preferences.comment_create": "作成",
+  "modules.Notification.preferences.file_uploaded_to_entity": "アップロード",
   "modules.Notification.preferences.container_create": "作成",
   "modules.Notification.preferences.container_update_agreed_date": "予定到着日を更新",
   "modules.Notification.preferences.container_approve_agreed_date": "予定到着日を承認",
