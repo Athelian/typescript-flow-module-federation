@@ -78,6 +78,10 @@ export default defineMessages({
     id: 'modules.Notification.preferences.comment_create',
     defaultMessage: 'Create',
   },
+  file_uploaded_to_entity: {
+    id: 'modules.Notification.preferences.file_uploaded_to_entity',
+    defaultMessage: 'Upload',
+  },
   container_create: {
     id: 'modules.Notification.preferences.container_create',
     defaultMessage: 'Create',

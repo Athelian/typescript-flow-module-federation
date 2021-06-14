@@ -609,6 +609,7 @@
   "modules.Notification.preferences.batch_delete_adjustment": "Delete Quantity Adjustment",
   "modules.Notification.preferences.batch_delete_adjustment_in_shipment": "Delete Quantity Adjustment inside shipment",
   "modules.Notification.preferences.comment_create": "Create",
+  "modules.Notification.preferences.file_uploaded_to_entity": "Upload",
   "modules.Notification.preferences.container_create": "Create",
   "modules.Notification.preferences.container_update_agreed_date": "Update an agreed arrival",
   "modules.Notification.preferences.container_approve_agreed_date": "Approved an agreed arrival",

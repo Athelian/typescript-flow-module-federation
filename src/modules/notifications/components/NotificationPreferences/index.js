@@ -411,6 +411,15 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
             />
 
             <PreferenceSetting
+              icon="DOCUMENT"
+              preferences={preferencesByType({
+                preferences,
+                entity: 'file',
+              })}
+              onChange={togglePreference}
+            />
+
+            <PreferenceSetting
               icon="PROJECT"
               preferences={[
                 ...preferencesByType({
