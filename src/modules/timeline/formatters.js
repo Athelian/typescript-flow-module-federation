@@ -192,10 +192,23 @@ export const ForwardersFormatter = (log: LogItem): * => {
   let message = null;
   const values = {
     user: <User user={log.createdBy} />,
-    added: added.map(v => v.entity?.partner?.name ?? v.entity?.name).join(', '),
+    added: (
+      <>
+        {added.map(v => (
+          <Value value={v.entity?.partner?.name || v.entity?.name} />
+        ))}
+      </>
+    ),
     addedCount: added.length,
-    removed: removed.map(v => v.entity?.partner?.name ?? v.entity?.name).join(', '),
+    removed: (
+      <>
+        {removed.map(v => (
+          <Value value={v.entity?.partner?.name || v.entity?.name} />
+        ))}
+      </>
+    ),
     removedCount: removed.length,
+    field: <Field field="forwarder" entityType={log.parameters.entity_type.string} />,
   };
 
   if (added.length > 0 && removed.length > 0) {

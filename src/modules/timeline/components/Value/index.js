@@ -44,7 +44,7 @@ const FormattedValue = ({ value }: Props) => {
     case 'EntityValue':
       return value?.entity?.name || '';
     default:
-      return null;
+      return value;
   }
 };
 
