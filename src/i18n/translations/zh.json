@@ -496,7 +496,7 @@
   "modules.container.maxVolume": "Max Volume",
   "modules.Documents.documentSection": "Document",
   "modules.Documents.type": "类型",
-  "modules.Documents.tags": "Tags",
+  "modules.Documents.tags": "标签",
   "modules.Documents.description": "Description",
   "modules.Documents.filename": "Filename",
   "modules.Documents.fileSize": "File Size",
