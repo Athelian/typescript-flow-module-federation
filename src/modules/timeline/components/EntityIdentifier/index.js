@@ -18,6 +18,9 @@ const EntityIdentifier = ({ log }: Props) => {
     case 'TIMELINE_DATE_REVISION':
       entityType = 'SHIPMENT';
       break;
+    case 'FILE':
+      entityType = 'DOCUMENT';
+      break;
     default:
       break;
   }
