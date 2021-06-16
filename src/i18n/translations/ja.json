@@ -497,6 +497,7 @@
   "modules.Documents.documentSection": "書類",
   "modules.Documents.type": "種類",
   "modules.Documents.tags": "タグ",
+  "modules.Documents.memo": "メモ",
   "modules.Documents.description": "詳細",
   "modules.Documents.filename": "ファイル名",
   "modules.Documents.fileSize": "ファイルサイズ",

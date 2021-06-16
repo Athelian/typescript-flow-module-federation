@@ -13,8 +13,12 @@ type Props = {
 
 const Field = ({ field, entityType, intl }: Props) => {
   const pluralizedEntityType = pluralize(entityType);
-  const module = pluralizedEntityType.charAt(0).toUpperCase() + pluralizedEntityType.slice(1);
+  let module = pluralizedEntityType.charAt(0).toUpperCase() + pluralizedEntityType.slice(1);
   const fieldName = camelCase(field);
+
+  if (module === 'Files') {
+    module = 'Documents';
+  }
 
   return (
     <span className={FieldStyle}>

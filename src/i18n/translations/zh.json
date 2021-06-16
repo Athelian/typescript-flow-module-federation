@@ -497,6 +497,7 @@
   "modules.Documents.documentSection": "Document",
   "modules.Documents.type": "类型",
   "modules.Documents.tags": "标签",
+  "modules.Documents.memo": "注释",
   "modules.Documents.description": "Description",
   "modules.Documents.filename": "Filename",
   "modules.Documents.fileSize": "File Size",
