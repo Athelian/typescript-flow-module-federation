@@ -56,7 +56,7 @@ function filterByFile(items: Array<Entry>, hasPermissions: Function): Array<Entr
     .filter(
       entry =>
         (entry?.entityType === 'file' &&
-          ['order', 'shipment', 'product', 'orderItem'].includes(entry?.parentEntityType) &&
+          ['order', 'orderItem', 'shipment', 'productProvider'].includes(entry?.parentEntityType) &&
           canViewFile(hasPermissions, entry?.entity?.type)) ||
         entry?.entityType === entry?.parentEntityType
     )
