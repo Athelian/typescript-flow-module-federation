@@ -22799,7 +22799,6 @@ export type Query = {|
   taskTemplate: TaskTemplatePayload,
   taskTemplates: TaskTemplatePayloadPaginatedSearch,
   taskTemplatesByIDs: Array<TaskTemplatePayload>,
-  partnersExport: ExportPayload,
   project: ProjectPayload,
   projects: ProjectPayloadPaginatedSearch,
   projectsByIDs: Array<ProjectPayload>,
