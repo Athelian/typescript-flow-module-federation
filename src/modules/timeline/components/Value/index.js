@@ -74,7 +74,7 @@ const translatedDocumentType = (formattedValue: any, intl: IntlShape) => {
 };
 
 const Value = ({ value, entityType, intl }: Props) => {
-  let formattedValue = FormattedValue(value);
+  let formattedValue = FormattedValue({ value, entityType, intl });
   if (entityType === 'file' && formattedValue !== null) {
     formattedValue = translatedDocumentType(formattedValue, intl);
   }
