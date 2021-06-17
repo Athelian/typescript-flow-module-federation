@@ -42,7 +42,7 @@ const FormattedValue = ({ value }: Props) => {
       return `(${value.size.length.value} ${value.size.length.metric} x ${value.size.width.value} ${value.size.width.metric} x ${value.size.height.value} ${value.size.height.metric})`;
     case 'Values':
       return value.values
-        .map(val => FormattedValue({ value: val }))
+        .map(val => FormattedValue(val))
         .filter(Boolean)
         .join(', ');
     case 'EntityValue':
@@ -54,7 +54,7 @@ const FormattedValue = ({ value }: Props) => {
 
 // TranslateDocumentType - mapping document type translation key
 // ex: from `ShipmentWarehouseArrivalReport` to `warehouseArrivalReport`
-const translatedDocumentType = (formattedValue: String, intl: IntlShape) => {
+const translatedDocumentType = (formattedValue: any, intl: IntlShape) => {
   const splittedValues = formattedValue.split('_');
   let translateId = 'common.other';
   if (splittedValues.length > 1) {
@@ -74,7 +74,7 @@ const translatedDocumentType = (formattedValue: String, intl: IntlShape) => {
 };
 
 const Value = ({ value, entityType, intl }: Props) => {
-  let formattedValue = FormattedValue({ value });
+  let formattedValue = FormattedValue(value);
   if (entityType === 'file' && formattedValue !== null) {
     formattedValue = translatedDocumentType(formattedValue, intl);
   }
