@@ -59,14 +59,14 @@ export const UpdateFormatter = (log: LogItem): * => {
     message = log.entityType === log.parentEntityType ? messages.setField : messages.setChildField;
     values = {
       ...values,
-      value: <Value value={log.parameters.new} />,
+      value: <Value value={log.parameters.new} entityType={log.parameters.entity_type.string} />,
     };
   } else if (log.parameters.new === null) {
     message =
       log.entityType === log.parentEntityType ? messages.clearField : messages.clearChildField;
     values = {
       ...values,
-      value: <Value value={log.parameters.old} />,
+      value: <Value value={log.parameters.old} entityType={log.parameters.entity_type.string} />,
     };
   } else {
     message =

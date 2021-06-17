@@ -871,6 +871,7 @@
   "modules.OrderItems.list.sort.updatedAt": "最后修改日期",
   "modules.OrderItems.list.sort.createdAt": "创建日期",
   "modules.OrderItems.list.sort.no": "订单商品 No.",
+  "modules.OrderItems.no": "订单商品 No.",
   "modules.orderItems.unitPrice": "单位价格",
   "modules.OrderItems.list.sort.currency": "货币",
   "modules.OrderItems.list.sort.productName": "商品名称",

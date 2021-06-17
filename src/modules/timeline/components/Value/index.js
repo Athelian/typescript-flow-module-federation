@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedDate, injectIntl, type IntlShape } from 'react-intl';
 import pluralize from 'pluralize';
-import { camelCase, lowerFirst } from 'lodash';
+import { camelCase, lowerFirst, upperFirst } from 'lodash';
 import { getByPath } from 'utils/fp';
 import { ValueStyle } from './style';
 
@@ -60,9 +60,9 @@ const translatedDocumentType = (formattedValue: String, intl: IntlShape) => {
   if (splittedValues.length > 1) {
     const entityType = splittedValues[0];
     const pluralizedEntityType = pluralize(entityType);
-    const module = pluralizedEntityType.charAt(0) + pluralizedEntityType.slice(1).toLowerCase();
-    let documentType = camelCase(formattedValue);
-    documentType = lowerFirst(documentType);
+    let module = pluralizedEntityType.charAt(0) + pluralizedEntityType.slice(1).toLowerCase();
+    module = upperFirst(camelCase(module));
+    const documentType = lowerFirst(camelCase(formattedValue));
 
     translateId = `modules.${module}.fileType.${documentType}`;
   }
@@ -75,7 +75,7 @@ const translatedDocumentType = (formattedValue: String, intl: IntlShape) => {
 
 const Value = ({ value, entityType, intl }: Props) => {
   let formattedValue = FormattedValue({ value });
-  if (entityType === 'file') {
+  if (entityType === 'file' && formattedValue !== null) {
     formattedValue = translatedDocumentType(formattedValue, intl);
   }
   return <ValueWrapper>{formattedValue}</ValueWrapper>;

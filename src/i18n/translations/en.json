@@ -879,6 +879,7 @@
   "modules.OrderItems.list.sort.updatedAt": "Last Modified",
   "modules.OrderItems.list.sort.createdAt": "Date Created",
   "modules.OrderItems.list.sort.no": "Item No.",
+  "modules.OrderItems.no": "Item No.",
   "modules.orderItems.unitPrice": "Unit Price",
   "modules.OrderItems.list.sort.currency": "Currency",
   "modules.OrderItems.list.sort.productName": "Product Name",

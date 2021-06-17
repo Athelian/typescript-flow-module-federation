@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { injectIntl, type IntlShape } from 'react-intl';
 import pluralize from 'pluralize';
-import { camelCase } from 'lodash/fp';
+import { camelCase, upperFirst } from 'lodash/fp';
 import { FieldStyle } from './style';
 
 type Props = {
@@ -14,6 +14,7 @@ type Props = {
 const Field = ({ field, entityType, intl }: Props) => {
   const pluralizedEntityType = pluralize(entityType);
   let module = pluralizedEntityType.charAt(0).toUpperCase() + pluralizedEntityType.slice(1);
+  module = upperFirst(camelCase(module));
   const fieldName = camelCase(field);
 
   if (module === 'Files') {
