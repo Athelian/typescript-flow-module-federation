@@ -19167,7 +19167,9 @@ export const CustomizableEntityTypeValues = Object.freeze({
   Batch: 'Batch', 
   Shipment: 'Shipment', 
   Container: 'Container', 
-  Warehouse: 'Warehouse'
+  Warehouse: 'Warehouse', 
+  Project: 'Project', 
+  Milestone: 'Milestone'
 });
 
 
@@ -19299,6 +19301,7 @@ export type ExportTemplate = {|
     extension: $ElementType<Scalars, 'String'>,
     builder: $ElementType<Scalars, 'String'>,
     fetcher: $ElementType<Scalars, 'String'>,
+    worker: $ElementType<Scalars, 'String'>,
     normalizers: Array<$ElementType<Scalars, 'String'>>,
     ownedBy?: ?OrganizationPayload,
     id: $ElementType<Scalars, 'ID'>,
@@ -19350,7 +19353,11 @@ export const ExportTypeValues = Object.freeze({
   /** Batch */
   Batch: 'Batch', 
   /** Batches */
-  Batches: 'Batches'
+  Batches: 'Batches', 
+  /** Partner */
+  Partner: 'Partner', 
+  /** Partners */
+  Partners: 'Partners'
 });
 
 
@@ -20245,6 +20252,10 @@ export type MaskEdit = {|
     type: MaskEditType,
     fields: Array<$ElementType<Scalars, 'String'>>,
     columns: Array<MaskEditColumn>,
+    sections: Array<MaskEditSection>,
+    filterSort?: ?$ElementType<Scalars, 'String'>,
+    collapses: Array<$ElementType<Scalars, 'String'>>,
+    milestones: Array<MaskEditMilestone>,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -20257,23 +20268,67 @@ export type MaskEdit = {|
   |}
 |};
 
+export type MaskEditByUserInput = {|
+  name: $ElementType<Scalars, 'String'>,
+  type: MaskEditType,
+  memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
+  fields?: ?Array<$ElementType<Scalars, 'String'>>,
+  columns: Array<MaskEditColumnInput>,
+  sections?: ?Array<MaskEditSectionInput>,
+  filterSort?: ?$ElementType<Scalars, 'String'>,
+  collapses?: ?Array<$ElementType<Scalars, 'String'>>,
+  milestones?: ?Array<MaskEditMilestoneInput>,
+|};
+
 export type MaskEditColumn = {|
    __typename?: 'MaskEditColumn',
   key: $ElementType<Scalars, 'String'>,
   hidden: $ElementType<Scalars, 'Boolean'>,
+  group?: ?$ElementType<Scalars, 'String'>,
+  width?: ?$ElementType<Scalars, 'Int'>,
+  pinned?: ?$ElementType<Scalars, 'Boolean'>,
+  highlight?: ?MaskEditColumnHighlight,
 |};
+
+export const MaskEditColumnHighlightValues = Object.freeze({
+  /** Red */
+  Red: 'Red', 
+  /** Orange */
+  Orange: 'Orange', 
+  /** Yellow */
+  Yellow: 'Yellow', 
+  /** Green */
+  Green: 'Green', 
+  /** Blue */
+  Blue: 'Blue', 
+  /** Purple */
+  Purple: 'Purple'
+});
+
+
+export type MaskEditColumnHighlight = $Values<typeof MaskEditColumnHighlightValues>;
 
 export type MaskEditColumnInput = {|
   key: $ElementType<Scalars, 'String'>,
   hidden: $ElementType<Scalars, 'Boolean'>,
+  group?: ?$ElementType<Scalars, 'String'>,
+  width?: ?$ElementType<Scalars, 'Int'>,
+  pinned?: ?$ElementType<Scalars, 'Boolean'>,
+  highlight?: ?MaskEditColumnHighlight,
 |};
 
 export type MaskEditCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   type: MaskEditType,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   fields?: ?Array<$ElementType<Scalars, 'String'>>,
   columns: Array<MaskEditColumnInput>,
+  sections?: ?Array<MaskEditSectionInput>,
+  filterSort?: ?$ElementType<Scalars, 'String'>,
+  collapses?: ?Array<$ElementType<Scalars, 'String'>>,
+  milestones?: ?Array<MaskEditMilestoneInput>,
 |};
 
 export type MaskEditFilterInput = {|
@@ -20283,6 +20338,17 @@ export type MaskEditFilterInput = {|
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   type?: ?MaskEditType,
+|};
+
+export type MaskEditMilestone = {|
+   __typename?: 'MaskEditMilestone',
+  active: $ElementType<Scalars, 'Boolean'>,
+  tasks: Array<$ElementType<Scalars, 'Boolean'>>,
+|};
+
+export type MaskEditMilestoneInput = {|
+  active: $ElementType<Scalars, 'Boolean'>,
+  tasks: Array<$ElementType<Scalars, 'Boolean'>>,
 |};
 
 export type MaskEditPayload = MaskEdit | BadRequest | Forbidden | NotFound;
@@ -20299,6 +20365,17 @@ export type MaskEditPayloadPaginatedSearch = {|
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
   |}
+|};
+
+export type MaskEditSection = {|
+   __typename?: 'MaskEditSection',
+  name: $ElementType<Scalars, 'String'>,
+  active: $ElementType<Scalars, 'Boolean'>,
+|};
+
+export type MaskEditSectionInput = {|
+  name: $ElementType<Scalars, 'String'>,
+  active: $ElementType<Scalars, 'Boolean'>,
 |};
 
 export type MaskEditSortInput = {|
@@ -20327,8 +20404,13 @@ export type MaskEditUpdateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
   type?: ?MaskEditType,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   fields?: ?Array<$ElementType<Scalars, 'String'>>,
   columns?: ?Array<MaskEditColumnInput>,
+  sections?: ?Array<MaskEditSectionInput>,
+  filterSort?: ?$ElementType<Scalars, 'String'>,
+  collapses?: ?Array<$ElementType<Scalars, 'String'>>,
+  milestones?: ?Array<MaskEditMilestoneInput>,
 |};
 
 export type MaskFilterInput = {|
@@ -20607,6 +20689,7 @@ export type Mutation = {|
   maskEditCreate: MaskEditPayload,
   maskEditUpdate: MaskEditPayload,
   maskEditDelete?: ?EmptyPayload,
+  maskEditByUser: MaskEditPayload,
   commentCreate: TimelineCommentPayload,
   commentUpdate: TimelineCommentPayload,
   commentDelete?: ?EmptyPayload,
@@ -21044,6 +21127,11 @@ export type MutationMaskEditUpdateArgs = {|
 
 export type MutationMaskEditDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type MutationMaskEditByUserArgs = {|
+  input: MaskEditByUserInput
 |};
 
 
@@ -21639,6 +21727,7 @@ export type OrderFilterInput = {|
   orderItemPrice?: ?PriceRangeInput,
   batchTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batchDeliveredAt?: ?DateRangeInput,
+  batchDesiredAt?: ?DateRangeInput,
   batchExpiredAt?: ?DateRangeInput,
   batchProducedAt?: ?DateRangeInput,
   batchTotalVolume?: ?MetricRangeInput,
@@ -22024,6 +22113,8 @@ export type PartnerFilterInput = {|
   updatedAt?: ?DateRangeInput,
   types?: ?Array<OrganizationType>,
   confirmed?: ?$ElementType<Scalars, 'Boolean'>,
+  showRightPartners?: ?$ElementType<Scalars, 'Boolean'>,
+  showLeftPartners?: ?$ElementType<Scalars, 'Boolean'>,
 |};
 
 export type PartnerPayload = Partner | BadRequest | Forbidden | NotFound;
@@ -22535,6 +22626,7 @@ export type Project = {|
   ...Model,
   ...Owned,
   ...Tagged,
+  ...Customizable,
   ...Followed,
   ...{|
      __typename?: 'Project',
@@ -22555,6 +22647,7 @@ export type Project = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     tags: Array<TagPayload>,
+    customFields: CustomFields,
     followers: Array<UserPayload>,
     notificationUnseenCount: $ElementType<Scalars, 'Int'>,
   |}
@@ -22567,6 +22660,7 @@ export type ProjectCreateInput = {|
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestones?: ?Array<ProjectMilestoneCreateInput>,
+  customFields?: ?CustomFieldsInput,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
@@ -22577,6 +22671,7 @@ export type ProjectFilterInput = {|
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   dueDate?: ?DateRangeInput,
+  followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIdsWithOperator?: ?IdsWithOperatorInput,
   notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -22729,6 +22824,7 @@ export type ProjectUpdateInput = {|
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestones?: ?Array<ProjectMilestoneUpdateInput>,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  customFields?: ?CustomFieldsInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
 |};
 
@@ -22805,6 +22901,7 @@ export type Query = {|
   projectExport: ExportPayload,
   projectsExport: ExportPayload,
   projectsByIDsExport: ExportPayload,
+  partnersExport: ExportPayload,
   milestone: MilestonePayload,
   milestonesByIDs: Array<MilestonePayload>,
   projectTemplate: ProjectTemplatePayload,
@@ -22818,6 +22915,7 @@ export type Query = {|
   masks: MaskPayloadPaginatedSearch,
   masksByIDs: Array<MaskPayload>,
   maskEdit: MaskEditPayload,
+  maskEditByUser: MaskEditPayload,
   maskEdits: MaskEditPayloadPaginatedSearch,
   maskEditsByIDs: Array<MaskEditPayload>,
   integration: IntegrationPayload,
@@ -23309,6 +23407,15 @@ export type QueryProjectsByIDsExportArgs = {|
 |};
 
 
+export type QueryPartnersExportArgs = {|
+  templateId: $ElementType<Scalars, 'ID'>,
+  columns?: ?Array<$ElementType<Scalars, 'String'>>,
+  localSortBy?: ?Array<GenericSortInput>,
+  filterBy?: ?PartnerFilterInput,
+  sortBy?: ?PartnerSortInput
+|};
+
+
 export type QueryMilestoneArgs = {|
   id: $ElementType<Scalars, 'ID'>
 |};
@@ -23377,6 +23484,11 @@ export type QueryMasksByIDsArgs = {|
 
 export type QueryMaskEditArgs = {|
   id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type QueryMaskEditByUserArgs = {|
+  type: $ElementType<Scalars, 'String'>
 |};
 
 
@@ -61066,6 +61178,7 @@ export type ShipmentFilterInput = {|
   orderCompletelyShipped?: ?$ElementType<Scalars, 'Boolean'>,
   batchTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batchDeliveredAt?: ?DateRangeInput,
+  batchDesiredAt?: ?DateRangeInput,
   batchExpiredAt?: ?DateRangeInput,
   batchProducedAt?: ?DateRangeInput,
   batchTotalVolume?: ?MetricRangeInput,
