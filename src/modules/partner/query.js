@@ -1,6 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 
+// eslint-disable-next-line import/prefer-default-export
 export const partnersExportQuery = gql`
   query partnersExport(
     $templateId: ID!
