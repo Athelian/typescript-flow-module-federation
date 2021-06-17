@@ -8,6 +8,7 @@ import {
   ARCHIVED,
   CREATE,
   TAGS,
+  DOCUMENTS,
   FORWARDERS,
   UNARCHIVED,
   UPDATE_FIELD,
@@ -222,6 +223,37 @@ export const ForwardersFormatter = (log: LogItem): * => {
   return <FormattedMessage {...message} values={values} />;
 };
 
+export const DocumentsFormatter = (log: LogItem): * => {
+  let message = null;
+  let values = {
+    user: <User user={log.createdBy} />,
+  };
+
+  if (log.parameters.old === null) {
+    message = messages.addedDocumentChild;
+    values = {
+      ...values,
+      value: <Value value={log.parameters.new} />,
+    };
+  } else {
+    message = messages.removedDocumentChild;
+    values = {
+      ...values,
+      value: <Value value={log.parameters.old} />,
+    };
+  }
+
+  values = {
+    ...values,
+    child: <EntityIdentifier log={log} />,
+    documentType: (
+      <Value value={log.parameters.document_type} entityType={log.parameters.entity_type.string} />
+    ),
+  };
+
+  return <FormattedMessage {...message} values={values} />;
+};
+
 export const ReviseDateFormatter = (log: LogItem): * => {
   return (
     <FormattedMessage
@@ -255,6 +287,7 @@ const DefaultFormatters = {
   [ARCHIVED]: ArchivedFormatter,
   [UNARCHIVED]: UnarchivedFormatter,
   [TAGS]: TagsFormatter,
+  [DOCUMENTS]: DocumentsFormatter,
   [FORWARDERS]: ForwardersFormatter,
   [REVISE_DATE]: ReviseDateFormatter,
   [UN_REVISE_DATE]: UnReviseDateFormatter,
