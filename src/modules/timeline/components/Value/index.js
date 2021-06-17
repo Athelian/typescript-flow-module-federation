@@ -62,10 +62,9 @@ const translatedDocumentType = (formattedValue: String, intl: IntlShape) => {
     const pluralizedEntityType = pluralize(entityType);
     const module = pluralizedEntityType.charAt(0) + pluralizedEntityType.slice(1).toLowerCase();
     let documentType = camelCase(formattedValue);
-    documentType = documentType.replace(new RegExp(entityType, 'ig'), '');
     documentType = lowerFirst(documentType);
 
-    translateId = `modules.${module}.${documentType}`;
+    translateId = `modules.${module}.fileType.${documentType}`;
   }
 
   return intl.formatMessage({

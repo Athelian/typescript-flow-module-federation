@@ -419,11 +419,11 @@ export default defineMessages({
     defaultMessage: 'Miscellaneous',
   },
   fileTypeOrderPO: {
-    id: 'modules.Orders.fileType.orderPO',
+    id: 'modules.Orders.fileType.orderPo',
     defaultMessage: 'Order PO',
   },
   fileTypeOrderPI: {
-    id: 'modules.Orders.fileType.orderPI',
+    id: 'modules.Orders.fileType.orderPi',
     defaultMessage: 'Order PI',
   },
   sectionDocuments: {
