@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import Tag from 'components/Tag';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
+import Tag from 'components/Tag';
 import User from './components/User';
 import {
   ARCHIVED,
@@ -16,7 +16,7 @@ import {
 } from './constants';
 import type { LogItem } from './types';
 import EntityIdentifier from './components/EntityIdentifier';
-import { Value } from './components/Value';
+import Value from './components/Value';
 import Field from './components/Field';
 import messages from './messages';
 
@@ -72,8 +72,8 @@ export const UpdateFormatter = (log: LogItem): * => {
       log.entityType === log.parentEntityType ? messages.updateField : messages.updateChildField;
     values = {
       ...values,
-      oldValue: <Value value={log.parameters.old} />,
-      newValue: <Value value={log.parameters.new} />,
+      oldValue: <Value value={log.parameters.old} entityType={log.parameters.entity_type.string} />,
+      newValue: <Value value={log.parameters.new} entityType={log.parameters.entity_type.string} />,
     };
   }
 

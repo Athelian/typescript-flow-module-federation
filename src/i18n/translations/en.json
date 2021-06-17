@@ -576,6 +576,7 @@
   "modules.Projects.previousMilestoneEstimationOrCompleted": "Prev. Milestone's Est. / Compl.",
   "common.milestone": "Milestone",
   "common.documents": "DOCUMENTS",
+  "common.other": "Miscellaneous",
   "modules.Milestones.createdAt": "Date Created",
   "modules.Milestones.updatedAt": "Last Modified",
   "modules.Milestones.name": "Name",

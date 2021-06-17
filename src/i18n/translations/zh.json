@@ -568,6 +568,7 @@
   "modules.Projects.previousMilestoneEstimationOrCompleted": "Prev. Milestone's Est. / Compl.",
   "common.milestone": "里程碑",
   "common.documents": "文件",
+  "common.other": "其他",
   "modules.Milestones.createdAt": "创建日期",
   "modules.Milestones.updatedAt": "最后修改日期",
   "modules.Milestones.name": "名称",

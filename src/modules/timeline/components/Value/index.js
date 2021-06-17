@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
-import { FormattedDate } from 'react-intl';
+import { FormattedDate, injectIntl, type IntlShape } from 'react-intl';
+import pluralize from 'pluralize';
+import { camelCase, lowerFirst } from 'lodash';
 import { getByPath } from 'utils/fp';
 import { ValueStyle } from './style';
 
@@ -14,6 +16,8 @@ export const ValueWrapper = ({ children }: WrapperProps) => (
 
 type Props = {
   value: any,
+  entityType: string,
+  intl: IntlShape,
 };
 
 const FormattedValue = ({ value }: Props) => {
@@ -48,10 +52,34 @@ const FormattedValue = ({ value }: Props) => {
   }
 };
 
-export const Value = ({ value }: Props) => (
-  <ValueWrapper>
-    <FormattedValue value={value} />
-  </ValueWrapper>
-);
+// TranslateDocumentType - mapping document type translation key
+// ex: from `ShipmentWarehouseArrivalReport` to `warehouseArrivalReport`
+const translatedDocumentType = (formattedValue: String, intl: IntlShape) => {
+  const splittedValues = formattedValue.split('_');
+  let translateId = 'common.other';
+  if (splittedValues.length > 1) {
+    const entityType = splittedValues[0];
+    const pluralizedEntityType = pluralize(entityType);
+    const module = pluralizedEntityType.charAt(0) + pluralizedEntityType.slice(1).toLowerCase();
+    let documentType = camelCase(formattedValue);
+    documentType = documentType.replace(new RegExp(entityType, 'ig'), '');
+    documentType = lowerFirst(documentType);
 
-export default Value;
+    translateId = `modules.${module}.${documentType}`;
+  }
+
+  return intl.formatMessage({
+    id: translateId,
+    defaultMessage: formattedValue,
+  });
+};
+
+const Value = ({ value, entityType, intl }: Props) => {
+  let formattedValue = FormattedValue({ value });
+  if (entityType === 'file') {
+    formattedValue = translatedDocumentType(formattedValue, intl);
+  }
+  return <ValueWrapper>{formattedValue}</ValueWrapper>;
+};
+
+export default injectIntl(Value);

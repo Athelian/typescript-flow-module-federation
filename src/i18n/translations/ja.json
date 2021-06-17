@@ -568,6 +568,7 @@
   "modules.Projects.previousMilestoneEstimationOrCompleted": "前マイルストーン期限/完了日",
   "common.milestone": "マイルストーン",
   "common.documents": "書類",
+  "common.other": "その他",
   "modules.Milestones.createdAt": "作成日",
   "modules.Milestones.updatedAt": "最終更新",
   "modules.Milestones.name": "名前",
