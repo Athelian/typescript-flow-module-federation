@@ -733,7 +733,7 @@
   "modules.Orders.tooltip.details": "View Details",
   "modules.Orders.poNo": "PO NO.",
   "modules.Orders.issuedAt": "PO Date",
-  "modules.order.deliveryDate": "Contract Delivery Date",
+  "modules.Orders.deliveryDate": "Contract Delivery Date",
   "modules.Orders.piNo": "PI NO.",
   "modules.Orders.incoterms": "Incoterms",
   "modules.Orders.deliveryPlace": "Place of Delivery",

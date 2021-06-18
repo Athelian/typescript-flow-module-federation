@@ -725,7 +725,7 @@
   "modules.Orders.tooltip.details": "详情",
   "modules.Orders.poNo": "PO NO.",
   "modules.Orders.issuedAt": "订单日期",
-  "modules.order.deliveryDate": "合同运送日期",
+  "modules.Orders.deliveryDate": "合同运送日期",
   "modules.Orders.piNo": "PI NO.",
   "modules.Orders.incoterms": "贸易术语",
   "modules.Orders.deliveryPlace": "运送地点",

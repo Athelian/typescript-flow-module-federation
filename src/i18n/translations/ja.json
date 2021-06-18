@@ -725,7 +725,7 @@
   "modules.Orders.tooltip.details": "詳細を見る",
   "modules.Orders.poNo": "PO No.",
   "modules.Orders.issuedAt": "発注日",
-  "modules.order.deliveryDate": "契約上納期",
+  "modules.Orders.deliveryDate": "契約上納期",
   "modules.Orders.piNo": "PI No.",
   "modules.Orders.incoterms": "インコタームズ",
   "modules.Orders.deliveryPlace": "荷渡地",
