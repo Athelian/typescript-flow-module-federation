@@ -71,28 +71,28 @@ export const getFileTypesByEntity = (
         {
           value: 'ProductSpec',
           label: intl.formatMessage({
-            id: 'modules.provider.fileType.productSpec',
+            id: 'modules.ProductProviders.fileType.productSpec',
             defaultMessage: 'Product Specification',
           }),
         },
         {
           value: 'ProductAnalysisCert',
           label: intl.formatMessage({
-            id: 'modules.provider.fileType.productAnalysisCert',
+            id: 'modules.ProductProviders.fileType.productAnalysisCert',
             defaultMessage: 'Product Analysis Certificate',
           }),
         },
         {
           value: 'ProductOriginCert',
           label: intl.formatMessage({
-            id: 'modules.provider.fileType.productOriginCert',
+            id: 'modules.ProductProviders.fileType.productOriginCert',
             defaultMessage: 'Product Origin Certificate',
           }),
         },
         {
           value: 'Document',
           label: intl.formatMessage({
-            id: 'modules.provider.fileType.document',
+            id: 'modules.ProductProviders.fileType.document',
             defaultMessage: 'Miscellaneous',
           }),
         },

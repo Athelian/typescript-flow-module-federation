@@ -75,11 +75,11 @@ export default defineMessages({
     defaultMessage: 'Supplier Code',
   },
   fileTypeDocument: {
-    id: 'modules.orderItems.fileType.document',
+    id: 'modules.OrderItems.fileType.document',
     defaultMessage: 'Miscellaneous',
   },
   deliveryDate: {
-    id: 'modules.orderItem.deliveryDate',
+    id: 'modules.OrderItems.deliveryDate',
     defaultMessage: 'Delivery Date',
   },
   quantity: {
