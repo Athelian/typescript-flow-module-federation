@@ -447,15 +447,15 @@ export default defineMessages({
     defaultMessage: 'PACKAGING',
   },
   tasks: {
-    id: 'modules.order.tasks',
+    id: 'modules.Orders.tasks',
     defaultMessage: 'TASKS',
   },
   logs: {
-    id: 'modules.order.logs',
+    id: 'modules.Orders.logs',
     defaultMessage: 'LOGS',
   },
   mask: {
-    id: 'modules.order.mask',
+    id: 'modules.Orders.mask',
     defaultMessage: 'Custom fields template',
   },
   sectionTimeline: {
