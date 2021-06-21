@@ -28387,6 +28387,8 @@ enum CustomizableEntityType {
   Shipment
   Container
   Warehouse
+  Project
+  Milestone
 }
 
 input DateRangeInput {
@@ -28504,6 +28506,7 @@ type ExportTemplate implements Model {
   extension: String!
   builder: String!
   fetcher: String!
+  worker: String!
   normalizers: [String!]!
   ownedBy: OrganizationPayload
   id: ID!
@@ -28570,6 +28573,12 @@ enum ExportType {
 
   """Batches"""
   Batches
+
+  """Partner"""
+  Partner
+
+  """Partners"""
+  Partners
 }
 
 type FieldDefinition implements Model & Owned & Sortable {
@@ -29592,6 +29601,10 @@ type MaskEdit implements Model & Owned & Memorizable {
   type: MaskEditType!
   fields: [String!]! @deprecated(reason: "Use instead `columns` field.")
   columns: [MaskEditColumn!]!
+  sections: [MaskEditSection!]!
+  filterSort: String
+  collapses: [String!]!
+  milestones: [MaskEditMilestone!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -29603,22 +29616,70 @@ type MaskEdit implements Model & Owned & Memorizable {
   memo: String
 }
 
+input MaskEditByUserInput {
+  name: String!
+  type: MaskEditType!
+  memo: String
+
+  """Deprecated"""
+  fields: [String!]
+  columns: [MaskEditColumnInput!]!
+  sections: [MaskEditSectionInput!]
+  filterSort: String
+  collapses: [String!]
+  milestones: [MaskEditMilestoneInput!]
+}
+
 type MaskEditColumn {
   key: String!
   hidden: Boolean!
+  group: String
+  width: Int
+  pinned: Boolean
+  highlight: MaskEditColumnHighlight
+}
+
+enum MaskEditColumnHighlight {
+  """Red"""
+  Red
+
+  """Orange"""
+  Orange
+
+  """Yellow"""
+  Yellow
+
+  """Green"""
+  Green
+
+  """Blue"""
+  Blue
+
+  """Purple"""
+  Purple
 }
 
 input MaskEditColumnInput {
   key: String!
   hidden: Boolean!
+  group: String
+  width: Int
+  pinned: Boolean
+  highlight: MaskEditColumnHighlight
 }
 
 input MaskEditCreateInput {
   name: String!
   type: MaskEditType!
   memo: String
+
+  """Deprecated"""
   fields: [String!]
   columns: [MaskEditColumnInput!]!
+  sections: [MaskEditSectionInput!]
+  filterSort: String
+  collapses: [String!]
+  milestones: [MaskEditMilestoneInput!]
 }
 
 input MaskEditFilterInput {
@@ -29628,6 +29689,16 @@ input MaskEditFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   type: MaskEditType
+}
+
+type MaskEditMilestone {
+  active: Boolean!
+  tasks: [Boolean!]!
+}
+
+input MaskEditMilestoneInput {
+  active: Boolean!
+  tasks: [Boolean!]!
 }
 
 union MaskEditPayload = MaskEdit | BadRequest | Forbidden | NotFound
@@ -29640,6 +29711,16 @@ type MaskEditPayloadPaginatedSearch implements Paginated {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+type MaskEditSection {
+  name: String!
+  active: Boolean!
+}
+
+input MaskEditSectionInput {
+  name: String!
+  active: Boolean!
 }
 
 input MaskEditSortInput {
@@ -29669,8 +29750,14 @@ input MaskEditUpdateInput {
   name: String
   type: MaskEditType
   memo: String
+
+  """Deprecated"""
   fields: [String!]
   columns: [MaskEditColumnInput!]
+  sections: [MaskEditSectionInput!]
+  filterSort: String
+  collapses: [String!]
+  milestones: [MaskEditMilestoneInput!]
 }
 
 input MaskFilterInput {
@@ -29926,6 +30013,7 @@ type Mutation {
   maskEditCreate(input: MaskEditCreateInput!): MaskEditPayload!
   maskEditUpdate(id: ID!, input: MaskEditUpdateInput!): MaskEditPayload!
   maskEditDelete(id: ID!): EmptyPayload
+  maskEditByUser(input: MaskEditByUserInput!): MaskEditPayload!
   commentCreate(input: CommentCreateInput!): TimelineCommentPayload!
   commentUpdate(id: ID!, input: CommentUpdateInput!): TimelineCommentPayload!
   commentDelete(id: ID!): EmptyPayload
@@ -30272,6 +30360,7 @@ input OrderFilterInput {
   orderItemPrice: PriceRangeInput
   batchTagIds: [ID!]
   batchDeliveredAt: DateRangeInput
+  batchDesiredAt: DateRangeInput
   batchExpiredAt: DateRangeInput
   batchProducedAt: DateRangeInput
   batchTotalVolume: MetricRangeInput
@@ -30617,6 +30706,8 @@ input PartnerFilterInput {
   updatedAt: DateRangeInput
   types: [OrganizationType!]
   confirmed: Boolean
+  showRightPartners: Boolean
+  showLeftPartners: Boolean
 }
 
 union PartnerPayload = Partner | BadRequest | Forbidden | NotFound
@@ -31032,7 +31123,7 @@ input ProductUpdateWrapperInput {
   input: ProductUpdateInput!
 }
 
-type Project implements Model & Owned & Tagged & Followed {
+type Project implements Model & Owned & Tagged & Customizable & Followed {
   name: String!
   description: String
   dueDate: DateTime
@@ -31050,6 +31141,7 @@ type Project implements Model & Owned & Tagged & Followed {
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
   tags: [TagPayload!]!
+  customFields: CustomFields!
   followers: [UserPayload!]!
   notificationUnseenCount: Int!
 }
@@ -31061,6 +31153,7 @@ input ProjectCreateInput {
   tagIds: [ID!]
   followerIds: [ID!]
   milestones: [ProjectMilestoneCreateInput!]
+  customFields: CustomFieldsInput
   organizationIds: [ID!]
 }
 
@@ -31071,6 +31164,7 @@ input ProjectFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   dueDate: DateRangeInput
+  followerIds: [ID!]
   tagIds: [ID!]
   tagIdsWithOperator: IdsWithOperatorInput
   notTagIds: [ID!]
@@ -31209,6 +31303,7 @@ input ProjectUpdateInput {
   followerIds: [ID!]
   milestones: [ProjectMilestoneUpdateInput!]
   organizationIds: [ID!]
+  customFields: CustomFieldsInput
   archived: Boolean
 }
 
@@ -31284,6 +31379,7 @@ type Query {
   projectExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   projectsExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ExportPayload!
   projectsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
+  partnersExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: PartnerFilterInput, sortBy: PartnerSortInput): ExportPayload!
   milestone(id: ID!): MilestonePayload!
   milestonesByIDs(ids: [ID!]!): [MilestonePayload!]!
   projectTemplate(id: ID!): ProjectTemplatePayload!
@@ -31297,6 +31393,7 @@ type Query {
   masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput, sortBy: MaskSortInput): MaskPayloadPaginatedSearch!
   masksByIDs(ids: [ID!]!): [MaskPayload!]!
   maskEdit(id: ID!): MaskEditPayload!
+  maskEditByUser(type: String!): MaskEditPayload!
   maskEdits(page: Int! = 1, perPage: Int! = 10, filterBy: MaskEditFilterInput, sortBy: MaskEditSortInput): MaskEditPayloadPaginatedSearch!
   maskEditsByIDs(ids: [ID!]!): [MaskEditPayload!]!
   integration(id: ID!): IntegrationPayload!
@@ -87357,6 +87454,7 @@ input ShipmentFilterInput {
   orderCompletelyShipped: Boolean
   batchTagIds: [ID!]
   batchDeliveredAt: DateRangeInput
+  batchDesiredAt: DateRangeInput
   batchExpiredAt: DateRangeInput
   batchProducedAt: DateRangeInput
   batchTotalVolume: MetricRangeInput
