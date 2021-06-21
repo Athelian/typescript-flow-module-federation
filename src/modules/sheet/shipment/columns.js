@@ -768,6 +768,8 @@ const exportKeys = {
     'shipment.todo.taskCount.skipped',
     'shipment.todo.taskCount.delayed',
   ],
+  'shipment.totalPackages': ['shipment.totalPackageQuantity'],
+  'shipment.totalWeight': ['shipment.totalWeight.value', 'shipment.totalWeight.metric'],
   'shipment.totalVolume': ['shipment.totalVolume.value', 'shipment.totalVolume.metric'],
 };
 
