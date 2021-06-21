@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
+import { lowerFirst } from 'lodash';
 import Tag from 'components/Tag';
 import User from './components/User';
 import {
@@ -230,22 +231,30 @@ export const DocumentsFormatter = (log: LogItem): * => {
   };
 
   if (log.parameters.old === null) {
-    message = messages.addedDocumentChild;
+    const childEntityType = lowerFirst(log.parameters.new.entity.__typename);
+    message =
+      log.parentEntityType === childEntityType
+        ? messages.addedDocument
+        : messages.addedDocumentChild;
     values = {
       ...values,
-      value: <Value value={log.parameters.new} />,
+      child: <Value value={log.parameters.new} />,
     };
   } else {
-    message = messages.removedDocumentChild;
+    const childEntityType = lowerFirst(log.parameters.old.entity.__typename);
+    message =
+      log.parentEntityType === childEntityType
+        ? messages.removedDocument
+        : messages.removedDocumentChild;
     values = {
       ...values,
-      value: <Value value={log.parameters.old} />,
+      child: <Value value={log.parameters.old} />,
     };
   }
 
   values = {
     ...values,
-    child: <EntityIdentifier log={log} />,
+    document: <EntityIdentifier log={log} />,
     documentType: (
       <Value value={log.parameters.document_type} entityType={log.parameters.entity_type.string} />
     ),

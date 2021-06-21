@@ -90,6 +90,10 @@ const valueFragment = gql`
           firstName
           lastName
         }
+        ... on Milestone {
+          id
+          name
+        }
         ...partnerNameFragment
       }
     }
