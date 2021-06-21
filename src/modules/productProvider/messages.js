@@ -18,15 +18,15 @@ export default defineMessages({
     id: 'modules.Products.sectionDocuments',
   },
   productSpec: {
-    id: 'modules.provider.fileType.productSpec',
+    id: 'modules.ProductProviders.fileType.productSpec',
     defaultMessage: 'Product Specification',
   },
   productAnalysisCert: {
-    id: 'modules.provider.fileType.productAnalysisCert',
+    id: 'modules.ProductProviders.fileType.productAnalysisCert',
     defaultMessage: 'Product Analysis Certificate',
   },
   productOriginCert: {
-    id: 'modules.provider.fileType.productOriginCert',
+    id: 'modules.ProductProviders.fileType.productOriginCert',
     defaultMessage: 'Product Origin Certificate',
   },
 });

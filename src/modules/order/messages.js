@@ -115,7 +115,7 @@ export default defineMessages({
     defaultMessage: 'PO Date',
   },
   deliveryDate: {
-    id: 'modules.order.deliveryDate',
+    id: 'modules.Orders.deliveryDate',
     defaultMessage: 'Contract Delivery Date',
   },
   PI: {
@@ -419,11 +419,11 @@ export default defineMessages({
     defaultMessage: 'Miscellaneous',
   },
   fileTypeOrderPO: {
-    id: 'modules.Orders.fileType.orderPO',
+    id: 'modules.Orders.fileType.orderPo',
     defaultMessage: 'Order PO',
   },
   fileTypeOrderPI: {
-    id: 'modules.Orders.fileType.orderPI',
+    id: 'modules.Orders.fileType.orderPi',
     defaultMessage: 'Order PI',
   },
   sectionDocuments: {
@@ -447,15 +447,15 @@ export default defineMessages({
     defaultMessage: 'PACKAGING',
   },
   tasks: {
-    id: 'modules.order.tasks',
+    id: 'modules.Orders.tasks',
     defaultMessage: 'TASKS',
   },
   logs: {
-    id: 'modules.order.logs',
+    id: 'modules.Orders.logs',
     defaultMessage: 'LOGS',
   },
   mask: {
-    id: 'modules.order.mask',
+    id: 'modules.Orders.mask',
     defaultMessage: 'Custom fields template',
   },
   sectionTimeline: {

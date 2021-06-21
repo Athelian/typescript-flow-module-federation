@@ -149,11 +149,27 @@ export default defineMessages({
   },
   reviseDateChild: {
     id: 'modules.timeline.reviseDateChild',
-    defaultMessage: '{user} has revised date of {child} to {date} because of {reviseType}',
+    defaultMessage: `{user} has revised date of {child} to {date} because of {reviseType}`,
   },
   unReviseDateChild: {
     id: 'modules.timeline.unReviseDateChild',
-    defaultMessage: '{user} has un-revised a {reviseType} date of {child}',
+    defaultMessage: `{user} has un-revised a {reviseType} date of {child}`,
+  },
+  addedDocument: {
+    id: 'modules.timeline.addedDocument',
+    defaultMessage: `{user} has added {document} to {documentType}.`,
+  },
+  removedDocument: {
+    id: 'modules.timeline.removedDocument',
+    defaultMessage: `{user} has removed {document} from {documentType}.`,
+  },
+  addedDocumentChild: {
+    id: 'modules.timeline.addedDocumentChild',
+    defaultMessage: `{user} has added {document} to {documentType} of {child}.`,
+  },
+  removedDocumentChild: {
+    id: 'modules.timeline.removedDocumentChild',
+    defaultMessage: `{user} has removed {document} from {documentType} of {child}.`,
   },
   // OTHER
   message: {

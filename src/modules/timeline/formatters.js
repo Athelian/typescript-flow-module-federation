@@ -1,13 +1,15 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import Tag from 'components/Tag';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
+import { lowerFirst } from 'lodash';
+import Tag from 'components/Tag';
 import User from './components/User';
 import {
   ARCHIVED,
   CREATE,
   TAGS,
+  DOCUMENTS,
   FORWARDERS,
   UNARCHIVED,
   UPDATE_FIELD,
@@ -16,7 +18,7 @@ import {
 } from './constants';
 import type { LogItem } from './types';
 import EntityIdentifier from './components/EntityIdentifier';
-import { Value } from './components/Value';
+import Value from './components/Value';
 import Field from './components/Field';
 import messages from './messages';
 
@@ -58,22 +60,22 @@ export const UpdateFormatter = (log: LogItem): * => {
     message = log.entityType === log.parentEntityType ? messages.setField : messages.setChildField;
     values = {
       ...values,
-      value: <Value value={log.parameters.new} />,
+      value: <Value value={log.parameters.new} entityType={log.parameters.entity_type.string} />,
     };
   } else if (log.parameters.new === null) {
     message =
       log.entityType === log.parentEntityType ? messages.clearField : messages.clearChildField;
     values = {
       ...values,
-      value: <Value value={log.parameters.old} />,
+      value: <Value value={log.parameters.old} entityType={log.parameters.entity_type.string} />,
     };
   } else {
     message =
       log.entityType === log.parentEntityType ? messages.updateField : messages.updateChildField;
     values = {
       ...values,
-      oldValue: <Value value={log.parameters.old} />,
-      newValue: <Value value={log.parameters.new} />,
+      oldValue: <Value value={log.parameters.old} entityType={log.parameters.entity_type.string} />,
+      newValue: <Value value={log.parameters.new} entityType={log.parameters.entity_type.string} />,
     };
   }
 
@@ -192,10 +194,23 @@ export const ForwardersFormatter = (log: LogItem): * => {
   let message = null;
   const values = {
     user: <User user={log.createdBy} />,
-    added: added.map(v => v.entity?.partner?.name ?? v.entity?.name).join(', '),
+    added: (
+      <>
+        {added.map(v => (
+          <Value value={v.entity?.partner?.name || v.entity?.name} />
+        ))}
+      </>
+    ),
     addedCount: added.length,
-    removed: removed.map(v => v.entity?.partner?.name ?? v.entity?.name).join(', '),
+    removed: (
+      <>
+        {removed.map(v => (
+          <Value value={v.entity?.partner?.name || v.entity?.name} />
+        ))}
+      </>
+    ),
     removedCount: removed.length,
+    field: <Field field="forwarder" entityType={log.parameters.entity_type.string} />,
   };
 
   if (added.length > 0 && removed.length > 0) {
@@ -205,6 +220,45 @@ export const ForwardersFormatter = (log: LogItem): * => {
   } else {
     message = messages.removedForwarders;
   }
+
+  return <FormattedMessage {...message} values={values} />;
+};
+
+export const DocumentsFormatter = (log: LogItem): * => {
+  let message = null;
+  let values = {
+    user: <User user={log.createdBy} />,
+  };
+
+  if (log.parameters.old === null) {
+    const childEntityType = lowerFirst(log.parameters.new.entity.__typename);
+    message =
+      log.parentEntityType === childEntityType
+        ? messages.addedDocument
+        : messages.addedDocumentChild;
+    values = {
+      ...values,
+      child: <Value value={log.parameters.new} />,
+    };
+  } else {
+    const childEntityType = lowerFirst(log.parameters.old.entity.__typename);
+    message =
+      log.parentEntityType === childEntityType
+        ? messages.removedDocument
+        : messages.removedDocumentChild;
+    values = {
+      ...values,
+      child: <Value value={log.parameters.old} />,
+    };
+  }
+
+  values = {
+    ...values,
+    document: <EntityIdentifier log={log} />,
+    documentType: (
+      <Value value={log.parameters.document_type} entityType={log.parameters.entity_type.string} />
+    ),
+  };
 
   return <FormattedMessage {...message} values={values} />;
 };
@@ -242,6 +296,7 @@ const DefaultFormatters = {
   [ARCHIVED]: ArchivedFormatter,
   [UNARCHIVED]: UnarchivedFormatter,
   [TAGS]: TagsFormatter,
+  [DOCUMENTS]: DocumentsFormatter,
   [FORWARDERS]: ForwardersFormatter,
   [REVISE_DATE]: ReviseDateFormatter,
   [UN_REVISE_DATE]: UnReviseDateFormatter,

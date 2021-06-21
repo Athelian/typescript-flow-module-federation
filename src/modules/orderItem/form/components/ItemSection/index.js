@@ -117,7 +117,7 @@ const ItemSection = ({ isSlideView, orderItem }: Props) => {
                           required
                           originalValue={originalValues[name]}
                           label={
-                            <FormattedMessage id="module.OrderItems.no" defaultMessage="ITEM NO" />
+                            <FormattedMessage id="modules.OrderItems.no" defaultMessage="ITEM NO" />
                           }
                           editable={hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_NO])}
                         />
