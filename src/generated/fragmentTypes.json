@@ -525,6 +525,9 @@
             "name": "ProductProvider"
           },
           {
+            "name": "Project"
+          },
+          {
             "name": "Batch"
           },
           {
