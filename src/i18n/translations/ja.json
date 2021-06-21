@@ -1944,7 +1944,7 @@
   "modules.timeline.addedDocument": "{user}が書類の{documentType}に{document}をアップロードしました",
   "modules.timeline.removedDocument": "{user}が書類の{documentType}に{document}を削除しました",
   "modules.timeline.addedDocumentChild": "{user}が{child}の{documentType}に{document}をアップロードしました",
-  "modules.timeline.removedDocumentChild": "{user}が{child}の{documentType}に{document}を削除しました",
+  "modules.timeline.removedDocumentChild": "{user}が{child}の{documentType}の{document}を削除しました",
   "modules.timeline.message": "メッセージ",
   "modules.timeline.commentEdited": "{date} {time} 編集済み",
   "modules.timeline.order": "発注",
