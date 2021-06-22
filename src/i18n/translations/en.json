@@ -1084,6 +1084,7 @@
   "modules.Milestones.addTask": "SELECT TASK",
   "modules.Milestones.completed": "Completed",
   "modules.Milestones.estCompl": "Est. Compl.",
+  "modules.Milestones.milestoneLimit": "There is a limit of 5 milestones",
   "validation.name.required": "Name is a required field",
   "modules.Projects.totalTasks": "Total tasks",
   "modules.Projects.inProgress": "In progress",

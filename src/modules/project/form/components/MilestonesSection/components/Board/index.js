@@ -1,15 +1,19 @@
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import type { DropResult, DroppableProvided } from 'react-beautiful-dnd';
 // @flow
 import React, { Component } from 'react';
+
+import { FormattedMessage } from 'react-intl';
+import { ProjectMilestonesContainer } from 'modules/project/form/containers';
 import { Subscribe } from 'unstated';
 import type { Task } from 'generated/graphql';
-import type { DropResult, DroppableProvided } from 'react-beautiful-dnd';
-import { ProjectMilestonesContainer } from 'modules/project/form/containers';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { Tooltip } from 'components/Tooltip';
 import { UserConsumer } from 'contexts/Viewer';
 import { injectProjectAndMilestoneDueDate } from 'utils/project';
+// import { DashedPlusButton } from 'components/Form';
 import MilestoneColumn from '../MilestoneColumn';
+import { MilestonesSectionWrapperStyle, DisabledMilestoneWrapper } from './style';
 import NewButtonColumn from '../NewButtonColumn';
-import { MilestonesSectionWrapperStyle } from './style';
 
 type MilestoneMap = {
   [id: string]: Array<Task>,
@@ -152,6 +156,8 @@ export default class Board extends Component<Props> {
       projectInfo,
     } = this.props;
 
+    console.log(columns, ordered);
+
     const board = (
       <Droppable
         isDropDisabled={!editable.milestoneColumnEditable}
@@ -186,12 +192,38 @@ export default class Board extends Component<Props> {
               />
             ))}
             {provided.placeholder}
-            {editable.milestoneColumnEditable && (
+            {editable.milestoneColumnEditable && ordered.length <= 4 && (
               <Subscribe to={[ProjectMilestonesContainer]}>
                 {({ newMilestone }) => {
                   return <NewButtonColumn onCreate={newMilestone} />;
                 }}
               </Subscribe>
+            )}
+            {editable.milestoneColumnEditable && ordered.length > 4 && (
+              <div className={DisabledMilestoneWrapper}>
+                <NewButtonColumn />
+                <Tooltip
+                  message={
+                    <FormattedMessage
+                      id="modules.Milestones.milestoneLimit"
+                      defaultMessage="There is a limit of 5 milestones"
+                    />
+                  }
+                >
+                  <div className="tooltip-box" />
+                </Tooltip>
+              </div>
+              // <Tooltip
+              //   message={
+              //     <FormattedMessage
+              //       id="modules.Milestones.milestoneLimit"
+              //       defaultMessage="There is a limit of 5 milestones"
+              //     />
+              //   }
+              // >
+              //   {/* <div>button is not working</div> */}
+              //   <DashedPlusButton />
+              // </Tooltip>
             )}
           </div>
         )}

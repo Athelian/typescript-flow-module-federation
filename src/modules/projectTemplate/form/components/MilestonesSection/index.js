@@ -55,6 +55,7 @@ const MilestonesSection = () => {
                     ))}
                     {dropProvided.placeholder}
                     <div className={PlusButtonStyle}>
+                      hi
                       <DashedPlusButton
                         width="195px"
                         height="140px"

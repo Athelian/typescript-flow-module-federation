@@ -1077,6 +1077,7 @@
   "modules.Milestones.addTask": "タスク追加",
   "modules.Milestones.completed": "完了日",
   "modules.Milestones.estCompl": "完了予定日",
+  "modules.Milestones.milestoneLimit": "マイルストーンは5個以上登録できません",
   "validation.name.required": "名前は必須入力項目です",
   "modules.Projects.totalTasks": "総タスク数",
   "modules.Projects.inProgress": "進行中",
