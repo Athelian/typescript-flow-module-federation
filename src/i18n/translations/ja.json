@@ -250,7 +250,7 @@
   "modules.task.placeAllTasksInAProject": "すべてのタスクをプロジェクトに追加する",
   "modules.task.setToProject": "プロジェクトに追加",
   "modules.task.apply": "適用",
-  "modules.task.taskLimit": "",
+  "modules.task.taskLimit": "つのタスクは5個以上登録できません",
   "modules.Tasks.template": "タスクテンプレート",
   "components.sheet.booked": "予約済",
   "components.sheet.unbooked": "未予約",

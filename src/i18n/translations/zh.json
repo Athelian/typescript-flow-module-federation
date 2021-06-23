@@ -250,7 +250,7 @@
   "modules.task.placeAllTasksInAProject": "在项目中添加所有任务",
   "modules.task.setToProject": "添加到工程",
   "modules.task.apply": "使用",
-  "modules.task.taskLimit": "",
+  "modules.task.taskLimit": "有5个任务的限制",
   "modules.Tasks.template": "模板",
   "components.sheet.booked": "已预订",
   "components.sheet.unbooked": "未预定",
