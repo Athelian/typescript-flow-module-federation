@@ -37,6 +37,8 @@ const getInitFilter = (filter: Object) => ({
   sort: { field: 'updatedAt', direction: 'DESCENDING' },
 });
 
+const MAX_SELECTIONS = 5;
+
 function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
@@ -76,6 +78,9 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
                     onChange={onChangeFilter}
                     canSearch
                   />
+                  <h3>
+                    {selected.length}/{MAX_SELECTIONS}
+                  </h3>
                   <CancelButton onClick={onCancel} />
                   <SaveButton
                     data-testid="btnSaveSelectTasks"
@@ -113,7 +118,7 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
                           onSelect={() => {
                             if (isSelected) {
                               arrayValueFilter(({ id }) => id !== item.id);
-                            } else {
+                            } else if (selected.length <= MAX_SELECTIONS - 1) {
                               push(item);
                             }
                           }}

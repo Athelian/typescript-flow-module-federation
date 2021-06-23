@@ -251,6 +251,7 @@
   "modules.task.placeAllTasksInAProject": "Place all Tasks in a Project",
   "modules.task.setToProject": "SET TO PROJECT",
   "modules.task.apply": "APPLY",
+  "modules.task.taskLimit": "There is a limit of 5 tasks",
   "modules.Tasks.template": "TEMPLATE",
   "components.sheet.booked": "Booked",
   "components.sheet.unbooked": "Unbooked",

@@ -18,7 +18,13 @@ import { FormContainer } from 'modules/form';
 import type { TaskPayload, TaskTemplatePayload } from 'generated/graphql';
 import Tasks from 'modules/task/common/TaskSection/components/Tasks';
 import SelectTaskTemplate from 'modules/task/common/TaskSection/components/SelectTaskTemplate';
-import { TasksSectionStyle, TasksSectionWrapperStyle, TemplateItemStyle } from './style';
+import {
+  TasksSectionStyle,
+  TasksSectionWrapperStyle,
+  TemplateItemStyle,
+  DisabledTaskAddStyle,
+} from './style';
+// DisabledTaskAddStyle
 
 const formContainer = new FormContainer();
 
@@ -64,7 +70,7 @@ const TasksInputDialog = ({
       <Dialog isOpen={open} onRequestClose={onClose}>
         <div className={TasksSectionWrapperStyle}>
           <SectionNavBar>
-            {canAddTasks && (
+            {canAddTasks && tasks.length <= 4 && (
               <NewButton
                 label={<FormattedMessage id="modules.Tasks.newTask" />}
                 onClick={() => {
@@ -84,7 +90,22 @@ const TasksInputDialog = ({
                 }}
               />
             )}
-
+            {canAddTasks && tasks.length > 4 && (
+              <div className={DisabledTaskAddStyle}>
+                {/* <div> */}
+                <NewButton label={<FormattedMessage id="modules.Tasks.newTask" />} />
+                <Tooltip
+                  message={
+                    <FormattedMessage
+                      id="modules.Milestones.taskLimit"
+                      defaultMessage="There is a limit of 5 tasks"
+                    />
+                  }
+                >
+                  <div className="tooltip-box" />
+                </Tooltip>
+              </div>
+            )}
             {canUpdateMilestone && (
               <BooleanValue>
                 {({ value: isOpen, set: toggleSlide }) => (

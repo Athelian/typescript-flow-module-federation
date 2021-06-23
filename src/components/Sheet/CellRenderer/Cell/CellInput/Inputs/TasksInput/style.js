@@ -87,3 +87,17 @@ export const TemplateItemStyle: string = css`
   padding: 0 7.5px;
   height: 260px;
 `;
+
+export const DisabledTaskAddStyle: string = css`
+  position: relative;
+  button {
+    background: ${colors.GRAY_VERY_LIGHT};
+  }
+  .tooltip-box {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+`;
