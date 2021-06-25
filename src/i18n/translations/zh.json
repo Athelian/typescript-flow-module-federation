@@ -1466,6 +1466,8 @@
   "modules.Shipments.totalWeightOverriding": "重量自动计算",
   "modules.Shipments.totalPackageQuantityOverride": "总包裹数量",
   "modules.Shipments.totalPackageQuantityOverriding": "总包裹数量自动计算",
+  "modules.Shipments.autoCalculate": "自动计算",
+  "modules.Shipments.manualInput": "手动输入",
   "modules.Shipments.warehouseArrival": "仓库到达",
   "modules.Shipments.editDates": "编辑日期",
   "components.Shipments.warehouseContainersTimelineTooltip": "由于此装运至少有一个集装箱，因此只能在每个集装箱中设置仓库信息。",
