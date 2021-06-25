@@ -77,7 +77,7 @@ const Value = ({ value, entityType, intl }: Props) => {
   let formattedValue = FormattedValue({ value, entityType, intl });
   if (entityType === 'file' && formattedValue !== null) {
     formattedValue = translatedDocumentType(formattedValue, intl);
-  } else if (entityType === 'shipment' && formattedValue.startsWith('modules.Shipments')) {
+  } else if (entityType === 'shipment' && formattedValue !== null) {
     formattedValue = intl.formatMessage({
       id: value,
       defaultMessage: formattedValue,
