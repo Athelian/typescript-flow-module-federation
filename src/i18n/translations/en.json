@@ -1473,6 +1473,8 @@
   "modules.Shipments.totalWeightOverriding": "WEIGHT Auto-Calculation",
   "modules.Shipments.totalPackageQuantityOverride": "TOTAL PACKAGES",
   "modules.Shipments.totalPackageQuantityOverriding": "TOTAL PACKAGES Auto-Calculation",
+  "modules.Shipments.autoCalculate": "Auto-Calculation",
+  "modules.Shipments.manualInput": "Manual Input",
   "modules.Shipments.warehouseArrival": "WAREHOUSE ARRIVAL",
   "modules.Shipments.editDates": "EDIT DATES",
   "components.Shipments.warehouseContainersTimelineTooltip": "Since this Shipment has at least one Container, the warehouse information can only be set in each Container.",
