@@ -18,6 +18,7 @@ type Props = {
   value: any,
   entityType: string,
   intl: IntlShape,
+  translationKey: string,
 };
 
 const FormattedValue = ({ value }: Props) => {
@@ -73,10 +74,17 @@ const translatedDocumentType = (formattedValue: any, intl: IntlShape) => {
   });
 };
 
-const Value = ({ value, entityType, intl }: Props) => {
-  let formattedValue = FormattedValue({ value, entityType, intl });
+const Value = ({ value, entityType, intl, translationKey }: Props) => {
+  let formattedValue = FormattedValue({ value, entityType, intl, translationKey });
   if (entityType === 'file' && formattedValue !== null) {
     formattedValue = translatedDocumentType(formattedValue, intl);
+  }
+  if (translationKey !== undefined && translationKey !== '' && translationKey !== null) {
+    const module = upperFirst(pluralize(entityType));
+    formattedValue = intl.formatMessage({
+      id: `modules.${module}.${translationKey}`,
+      defaultMessage: formattedValue,
+    });
   }
   return <ValueWrapper>{formattedValue}</ValueWrapper>;
 };

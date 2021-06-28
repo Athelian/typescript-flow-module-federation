@@ -72,11 +72,43 @@ export const UpdateFormatter = (log: LogItem): * => {
   } else {
     message =
       log.entityType === log.parentEntityType ? messages.updateField : messages.updateChildField;
-    values = {
-      ...values,
-      oldValue: <Value value={log.parameters.old} entityType={log.parameters.entity_type.string} />,
-      newValue: <Value value={log.parameters.new} entityType={log.parameters.entity_type.string} />,
-    };
+
+    // For shipment auto-calculation
+    if (
+      ['totalWeightOverriding', 'totalVolumeOverriding', 'totalPackageQuantityOverriding'].includes(
+        log.parameters.field.string
+      )
+    ) {
+      const oldTranslationKey = log.parameters.old.boolean ? 'manualInput' : 'autoCalculate';
+      const newTranslationKey = log.parameters.new.boolean ? 'manualInput' : 'autoCalculate';
+      values = {
+        ...values,
+        oldValue: (
+          <Value
+            value={log.parameters.old}
+            translationKey={oldTranslationKey}
+            entityType={log.parameters.entity_type.string}
+          />
+        ),
+        newValue: (
+          <Value
+            value={log.parameters.new}
+            translationKey={newTranslationKey}
+            entityType={log.parameters.entity_type.string}
+          />
+        ),
+      };
+    } else {
+      values = {
+        ...values,
+        oldValue: (
+          <Value value={log.parameters.old} entityType={log.parameters.entity_type.string} />
+        ),
+        newValue: (
+          <Value value={log.parameters.new} entityType={log.parameters.entity_type.string} />
+        ),
+      };
+    }
   }
 
   if (log.entityType !== log.parentEntityType) {
