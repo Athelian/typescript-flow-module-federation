@@ -1,30 +1,33 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Provider } from 'unstated';
-import { useHasPermissions } from 'contexts/Permissions';
-import Dialog from 'components/Dialog';
-import { BooleanValue } from 'react-values';
-import { recalculateTaskBindingDate, getTasksPermissions } from 'utils/task';
-import { SectionNavBar } from 'components/NavBar';
-import SlideView from 'components/SlideView';
+
 import { BaseButton, NewButton } from 'components/Buttons';
-import useUser from 'hooks/useUser';
-import { Tooltip } from 'components/Tooltip';
-import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import { DashedPlusButton, Label } from 'components/Form';
 import { GrayCard, TemplateCard } from 'components/Cards';
-import { FormContainer } from 'modules/form';
 import type { TaskPayload, TaskTemplatePayload } from 'generated/graphql';
-import Tasks from 'modules/task/common/TaskSection/components/Tasks';
+import { getTasksPermissions, recalculateTaskBindingDate } from 'utils/task';
+
+import { BooleanValue } from 'react-values';
+import Dialog from 'components/Dialog';
+import { FormContainer } from 'modules/form';
+import { FormattedMessage } from 'react-intl';
+import { Provider } from 'unstated';
+import { SectionNavBar } from 'components/NavBar';
+import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import SelectTaskTemplate from 'modules/task/common/TaskSection/components/SelectTaskTemplate';
+import SlideView from 'components/SlideView';
+import Tasks from 'modules/task/common/TaskSection/components/Tasks';
+import { Tooltip } from 'components/Tooltip';
+import { useHasPermissions } from 'contexts/Permissions';
+import useUser from 'hooks/useUser';
+// DisabledTaskAddStyle
+
 import {
+  DisabledTaskAddStyle,
   TasksSectionStyle,
   TasksSectionWrapperStyle,
   TemplateItemStyle,
-  DisabledTaskAddStyle,
 } from './style';
-// DisabledTaskAddStyle
 
 const formContainer = new FormContainer();
 
@@ -92,7 +95,6 @@ const TasksInputDialog = ({
             )}
             {canAddTasks && tasks.length > 4 && (
               <div className={DisabledTaskAddStyle}>
-                {/* <div> */}
                 <NewButton label={<FormattedMessage id="modules.Tasks.newTask" />} />
                 <Tooltip
                   message={
