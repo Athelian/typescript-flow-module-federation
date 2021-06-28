@@ -72,8 +72,6 @@ export const UpdateFormatter = (log: LogItem): * => {
   } else {
     message =
       log.entityType === log.parentEntityType ? messages.updateField : messages.updateChildField;
-    let oldValueKey = log.parameters.old;
-    let newValueKey = log.parameters.new;
 
     // For shipment auto-calculation
     if (
@@ -81,19 +79,36 @@ export const UpdateFormatter = (log: LogItem): * => {
         log.parameters.field.string
       )
     ) {
-      oldValueKey = `modules.Shipments.${
-        log.parameters.old.boolean ? 'manualInput' : 'autoCalculate'
-      }`;
-      newValueKey = `modules.Shipments.${
-        log.parameters.new.boolean ? 'manualInput' : 'autoCalculate'
-      }`;
+      const oldTranslationKey = log.parameters.old.boolean ? 'manualInput' : 'autoCalculate';
+      const newTranslationKey = log.parameters.new.boolean ? 'manualInput' : 'autoCalculate';
+      values = {
+        ...values,
+        oldValue: (
+          <Value
+            value={log.parameters.old}
+            translationKey={oldTranslationKey}
+            entityType={log.parameters.entity_type.string}
+          />
+        ),
+        newValue: (
+          <Value
+            value={log.parameters.new}
+            translationKey={newTranslationKey}
+            entityType={log.parameters.entity_type.string}
+          />
+        ),
+      };
+    } else {
+      values = {
+        ...values,
+        oldValue: (
+          <Value value={log.parameters.old} entityType={log.parameters.entity_type.string} />
+        ),
+        newValue: (
+          <Value value={log.parameters.new} entityType={log.parameters.entity_type.string} />
+        ),
+      };
     }
-
-    values = {
-      ...values,
-      oldValue: <Value value={oldValueKey} entityType={log.parameters.entity_type.string} />,
-      newValue: <Value value={newValueKey} entityType={log.parameters.entity_type.string} />,
-    };
   }
 
   if (log.entityType !== log.parentEntityType) {
