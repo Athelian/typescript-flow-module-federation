@@ -20,7 +20,6 @@ import Tasks from 'modules/task/common/TaskSection/components/Tasks';
 import { Tooltip } from 'components/Tooltip';
 import { useHasPermissions } from 'contexts/Permissions';
 import useUser from 'hooks/useUser';
-// DisabledTaskAddStyle
 
 import {
   DisabledTaskAddStyle,
