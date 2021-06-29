@@ -82,7 +82,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
           setMilestoneValue,
           setDeepFieldValue,
           excludeTaskIds,
-          excludeIds,
+          // excludeIds,
           removeMilestone,
           setNeedDeletedFiles,
           unsetNeedDeletedFiles,
@@ -571,7 +571,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           {selectTasksIsOpen && (
                             <SelectTasks
                               filter={{
-                                excludeIds: excludeIds(),
+                                // excludeIds: excludeIds(),
                                 hasMilestoneExceptIds: excludeTaskIds(),
                                 ownerId: projectInfoState?.ownedBy?.id || organization.id,
                               }}
