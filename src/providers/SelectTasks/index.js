@@ -100,6 +100,10 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter, selectedTasks
                     isLoading={loading}
                     renderItem={(item, position) => {
                       const isSelected = selected.some(({ id }) => id === item.id);
+                      // if a card has a milestone and it is not selected, don't show it (don't show cards that have milestones that aren't the current milestone)
+                      if (item.milestone !== null && !isSelected) {
+                        return null;
+                      }
                       return (
                         <TaskCard
                           entity={{
