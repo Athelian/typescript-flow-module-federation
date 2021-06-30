@@ -82,7 +82,7 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
           setMilestoneValue,
           setDeepFieldValue,
           excludeTaskIds,
-          excludeIds,
+          // excludeIds,
           removeMilestone,
           setNeedDeletedFiles,
           unsetNeedDeletedFiles,
@@ -571,22 +571,24 @@ export default function MilestoneColumnHeaderCard({ provided, milestoneId, isDra
                           {selectTasksIsOpen && (
                             <SelectTasks
                               filter={{
-                                excludeIds: excludeIds(),
+                                // excludeIds: excludeIds(),
                                 hasMilestoneExceptIds: excludeTaskIds(),
                                 ownerId: projectInfoState?.ownedBy?.id || organization.id,
                               }}
                               selectedTasks={tasks}
                               onSelect={selected => {
                                 selectTasksSlideToggle(false);
-                                const counter = tasks.length;
-                                originalTasks.push(...selected);
-                                onChangeValue(`${milestoneId}.tasks`, [
-                                  ...tasks,
-                                  ...selected.map((task, index) => ({
-                                    ...task,
-                                    milestoneSort: counter + index,
-                                  })),
-                                ]);
+
+                                // empty the originalTasks array
+                                while (originalTasks.length > 0) {
+                                  originalTasks.pop();
+                                }
+                                // replace the originalTasks array with the new selected
+                                selected.forEach(task => {
+                                  originalTasks.push(task);
+                                });
+
+                                onChangeValue(`${milestoneId}.tasks`, selected);
                               }}
                               onCancel={() => selectTasksSlideToggle(false)}
                             />

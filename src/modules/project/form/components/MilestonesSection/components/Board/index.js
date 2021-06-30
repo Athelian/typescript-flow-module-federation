@@ -1,15 +1,20 @@
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import type { DropResult, DroppableProvided } from 'react-beautiful-dnd';
 // @flow
 import React, { Component } from 'react';
+
+import { FormattedMessage } from 'react-intl';
+// import { DashedPlusButton } from 'components/Form';
+import { ProjectMilestonesContainer } from 'modules/project/form/containers';
 import { Subscribe } from 'unstated';
 import type { Task } from 'generated/graphql';
-import type { DropResult, DroppableProvided } from 'react-beautiful-dnd';
-import { ProjectMilestonesContainer } from 'modules/project/form/containers';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { Tooltip } from 'components/Tooltip';
 import { UserConsumer } from 'contexts/Viewer';
 import { injectProjectAndMilestoneDueDate } from 'utils/project';
+
 import MilestoneColumn from '../MilestoneColumn';
 import NewButtonColumn from '../NewButtonColumn';
-import { MilestonesSectionWrapperStyle } from './style';
+import { DisabledMilestoneWrapper, MilestonesSectionWrapperStyle } from './style';
 
 type MilestoneMap = {
   [id: string]: Array<Task>,
@@ -186,12 +191,27 @@ export default class Board extends Component<Props> {
               />
             ))}
             {provided.placeholder}
-            {editable.milestoneColumnEditable && (
+            {editable.milestoneColumnEditable && ordered.length <= 4 && (
               <Subscribe to={[ProjectMilestonesContainer]}>
                 {({ newMilestone }) => {
                   return <NewButtonColumn onCreate={newMilestone} />;
                 }}
               </Subscribe>
+            )}
+            {editable.milestoneColumnEditable && ordered.length > 4 && (
+              <div className={DisabledMilestoneWrapper}>
+                <NewButtonColumn />
+                <Tooltip
+                  message={
+                    <FormattedMessage
+                      id="modules.Milestones.milestoneLimit"
+                      defaultMessage="There is a limit of 5 milestones"
+                    />
+                  }
+                >
+                  <div className="tooltip-box" />
+                </Tooltip>
+              </div>
             )}
           </div>
         )}

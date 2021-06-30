@@ -9,6 +9,9 @@ import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { MilestoneCard } from 'components/Cards';
+import { Tooltip } from 'components/Tooltip';
+
+import { DisabledMilestoneCardStyle } from './style';
 
 type Props = {
   onCancel: () => void,
@@ -66,6 +69,26 @@ function SelectMilestone({
               itemWidth="195px"
             >
               {milestones.map(item => {
+                if (
+                  item.taskCount.count >= 5 &&
+                  item.id !== getByPathWithDefault('', 'id', selectedMilestone)
+                ) {
+                  return (
+                    <div className={DisabledMilestoneCardStyle}>
+                      <MilestoneCard key={item.id} milestone={item} selectable={false} />
+                      <Tooltip
+                        message={
+                          <FormattedMessage
+                            id="modules.Milestones.taskLimit"
+                            defaultMessage="There is a limit of 5 tasks"
+                          />
+                        }
+                      >
+                        <div className="tooltip-box" />
+                      </Tooltip>
+                    </div>
+                  );
+                }
                 return (
                   <MilestoneCard
                     key={item.id}

@@ -21,7 +21,12 @@ import usePermission from 'hooks/usePermission';
 import { PROJECT_FORM } from 'modules/permission/constants/project';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';
-import { TasksSectionWrapperStyle, TasksSectionStyle, TemplateItemStyle } from './style';
+import {
+  TasksSectionWrapperStyle,
+  TasksSectionStyle,
+  TemplateItemStyle,
+  DisabledTaskAddStyle,
+} from './style';
 import Tasks from './components/Tasks';
 import SelectTaskTemplate from './components/SelectTaskTemplate';
 
@@ -86,7 +91,7 @@ function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
           />
           <div className={TasksSectionWrapperStyle}>
             <SectionNavBar>
-              {canAddTasks && (
+              {canAddTasks && tasks.length <= 4 && (
                 <NewButton
                   label={intl.formatMessage(messages.newTask)}
                   onClick={() => {
@@ -104,6 +109,21 @@ function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
                     setFieldTouched('tasks');
                   }}
                 />
+              )}
+              {canAddTasks && tasks.length > 4 && (
+                <div className={DisabledTaskAddStyle}>
+                  <NewButton label={intl.formatMessage(messages.newTask)} />
+                  <Tooltip
+                    message={
+                      <FormattedMessage
+                        id="modules.Milestones.taskLimit"
+                        defaultMessage="There is a limit of 5 tasks"
+                      />
+                    }
+                  >
+                    <div className="tooltip-box" />
+                  </Tooltip>
+                </div>
               )}
 
               {canUpdateMilestone && (
