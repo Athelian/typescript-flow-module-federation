@@ -9,7 +9,7 @@ import { injectUid } from 'utils/id';
 import { recalculateTaskBindingDate, getTasksPermissions } from 'utils/task';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
-import { BaseButton, NewButton } from 'components/Buttons';
+import { NewButton } from 'components/Buttons'; // BaseButton for set to project button
 import { Tooltip } from 'components/Tooltip';
 import useUser from 'hooks/useUser';
 import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
@@ -130,7 +130,8 @@ function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
                 <BooleanValue>
                   {({ value: isOpen, set: toggleSlide }) => (
                     <>
-                      <Tooltip
+                      {/* Hiding the set to project button at the moment. This button is not really used, and also contains a bug where a user can set more than 5 tasks to a milestone */}
+                      {/* <Tooltip
                         message={
                           <FormattedMessage
                             id="modules.task.placeAllTasksInAProject"
@@ -150,7 +151,7 @@ function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
                             onClick={() => toggleSlide(true)}
                           />
                         </div>
-                      </Tooltip>
+                      </Tooltip> */}
                       <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
                         {isOpen && (
                           <SelectProjectAndMilestone

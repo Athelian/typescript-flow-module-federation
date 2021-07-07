@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 
-import { BaseButton, NewButton } from 'components/Buttons';
+import { NewButton } from 'components/Buttons'; // BaseButton for set to project button
 import { DashedPlusButton, Label } from 'components/Form';
 import { GrayCard, TemplateCard } from 'components/Cards';
 import type { TaskPayload, TaskTemplatePayload } from 'generated/graphql';
@@ -111,7 +111,8 @@ const TasksInputDialog = ({
               <BooleanValue>
                 {({ value: isOpen, set: toggleSlide }) => (
                   <>
-                    <Tooltip
+                    {/* Hiding the set to project button at the moment. This button is not really used, and also contains a bug where a user can set more than 5 tasks to a milestone */}
+                    {/* <Tooltip
                       message={
                         <FormattedMessage
                           id="modules.task.placeAllTasksInAProject"
@@ -131,7 +132,7 @@ const TasksInputDialog = ({
                           onClick={() => toggleSlide(true)}
                         />
                       </div>
-                    </Tooltip>
+                    </Tooltip> */}
 
                     <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
                       {isOpen && (
