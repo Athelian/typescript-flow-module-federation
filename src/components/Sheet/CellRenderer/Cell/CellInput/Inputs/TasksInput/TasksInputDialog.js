@@ -1,24 +1,32 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Provider } from 'unstated';
-import { useHasPermissions } from 'contexts/Permissions';
-import Dialog from 'components/Dialog';
-import { BooleanValue } from 'react-values';
-import { recalculateTaskBindingDate, getTasksPermissions } from 'utils/task';
-import { SectionNavBar } from 'components/NavBar';
-import SlideView from 'components/SlideView';
-import { BaseButton, NewButton } from 'components/Buttons';
-import useUser from 'hooks/useUser';
-import { Tooltip } from 'components/Tooltip';
-import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
+
+import { NewButton } from 'components/Buttons'; // BaseButton for set to project button
 import { DashedPlusButton, Label } from 'components/Form';
 import { GrayCard, TemplateCard } from 'components/Cards';
-import { FormContainer } from 'modules/form';
 import type { TaskPayload, TaskTemplatePayload } from 'generated/graphql';
-import Tasks from 'modules/task/common/TaskSection/components/Tasks';
+import { getTasksPermissions, recalculateTaskBindingDate } from 'utils/task';
+
+import { BooleanValue } from 'react-values';
+import Dialog from 'components/Dialog';
+import { FormContainer } from 'modules/form';
+import { FormattedMessage } from 'react-intl';
+import { Provider } from 'unstated';
+import { SectionNavBar } from 'components/NavBar';
+import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import SelectTaskTemplate from 'modules/task/common/TaskSection/components/SelectTaskTemplate';
-import { TasksSectionStyle, TasksSectionWrapperStyle, TemplateItemStyle } from './style';
+import SlideView from 'components/SlideView';
+import Tasks from 'modules/task/common/TaskSection/components/Tasks';
+import { Tooltip } from 'components/Tooltip';
+import { useHasPermissions } from 'contexts/Permissions';
+import useUser from 'hooks/useUser';
+
+import {
+  DisabledTaskAddStyle,
+  TasksSectionStyle,
+  TasksSectionWrapperStyle,
+  TemplateItemStyle,
+} from './style';
 
 const formContainer = new FormContainer();
 
@@ -64,7 +72,7 @@ const TasksInputDialog = ({
       <Dialog isOpen={open} onRequestClose={onClose}>
         <div className={TasksSectionWrapperStyle}>
           <SectionNavBar>
-            {canAddTasks && (
+            {canAddTasks && tasks.length <= 4 && (
               <NewButton
                 label={<FormattedMessage id="modules.Tasks.newTask" />}
                 onClick={() => {
@@ -84,12 +92,27 @@ const TasksInputDialog = ({
                 }}
               />
             )}
-
+            {canAddTasks && tasks.length > 4 && (
+              <div className={DisabledTaskAddStyle}>
+                <NewButton label={<FormattedMessage id="modules.Tasks.newTask" />} />
+                <Tooltip
+                  message={
+                    <FormattedMessage
+                      id="modules.Milestones.taskLimit"
+                      defaultMessage="There is a limit of 5 tasks"
+                    />
+                  }
+                >
+                  <div className="tooltip-box" />
+                </Tooltip>
+              </div>
+            )}
             {canUpdateMilestone && (
               <BooleanValue>
                 {({ value: isOpen, set: toggleSlide }) => (
                   <>
-                    <Tooltip
+                    {/* Hiding the set to project button at the moment. This button is not really used, and also contains a bug where a user can set more than 5 tasks to a milestone */}
+                    {/* <Tooltip
                       message={
                         <FormattedMessage
                           id="modules.task.placeAllTasksInAProject"
@@ -109,7 +132,7 @@ const TasksInputDialog = ({
                           onClick={() => toggleSlide(true)}
                         />
                       </div>
-                    </Tooltip>
+                    </Tooltip> */}
 
                     <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
                       {isOpen && (

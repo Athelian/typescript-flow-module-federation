@@ -9,7 +9,7 @@ import { injectUid } from 'utils/id';
 import { recalculateTaskBindingDate, getTasksPermissions } from 'utils/task';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
-import { BaseButton, NewButton } from 'components/Buttons';
+import { NewButton } from 'components/Buttons'; // BaseButton for set to project button
 import { Tooltip } from 'components/Tooltip';
 import useUser from 'hooks/useUser';
 import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
@@ -21,7 +21,12 @@ import usePermission from 'hooks/usePermission';
 import { PROJECT_FORM } from 'modules/permission/constants/project';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';
-import { TasksSectionWrapperStyle, TasksSectionStyle, TemplateItemStyle } from './style';
+import {
+  TasksSectionWrapperStyle,
+  TasksSectionStyle,
+  TemplateItemStyle,
+  DisabledTaskAddStyle,
+} from './style';
 import Tasks from './components/Tasks';
 import SelectTaskTemplate from './components/SelectTaskTemplate';
 
@@ -86,7 +91,7 @@ function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
           />
           <div className={TasksSectionWrapperStyle}>
             <SectionNavBar>
-              {canAddTasks && (
+              {canAddTasks && tasks.length <= 4 && (
                 <NewButton
                   label={intl.formatMessage(messages.newTask)}
                   onClick={() => {
@@ -105,12 +110,28 @@ function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
                   }}
                 />
               )}
+              {canAddTasks && tasks.length > 4 && (
+                <div className={DisabledTaskAddStyle}>
+                  <NewButton label={intl.formatMessage(messages.newTask)} />
+                  <Tooltip
+                    message={
+                      <FormattedMessage
+                        id="modules.Milestones.taskLimit"
+                        defaultMessage="There is a limit of 5 tasks"
+                      />
+                    }
+                  >
+                    <div className="tooltip-box" />
+                  </Tooltip>
+                </div>
+              )}
 
               {canUpdateMilestone && (
                 <BooleanValue>
                   {({ value: isOpen, set: toggleSlide }) => (
                     <>
-                      <Tooltip
+                      {/* Hiding the set to project button at the moment. This button is not really used, and also contains a bug where a user can set more than 5 tasks to a milestone */}
+                      {/* <Tooltip
                         message={
                           <FormattedMessage
                             id="modules.task.placeAllTasksInAProject"
@@ -130,7 +151,7 @@ function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
                             onClick={() => toggleSlide(true)}
                           />
                         </div>
-                      </Tooltip>
+                      </Tooltip> */}
                       <SlideView isOpen={isOpen} onRequestClose={() => toggleSlide(false)}>
                         {isOpen && (
                           <SelectProjectAndMilestone

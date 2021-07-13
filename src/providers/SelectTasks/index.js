@@ -24,6 +24,7 @@ type Props = OptionalProps & {
   onSelect: Function,
   intl: IntlShape,
   filter: Object,
+  selectedTasks: any[],
 };
 
 const getInitFilter = (filter: Object) => ({
@@ -31,13 +32,15 @@ const getInitFilter = (filter: Object) => ({
   page: 1,
   filter: {
     query: '',
-    hasMilestone: false,
+    // hasMilestone: false,
     ...filter,
   },
   sort: { field: 'updatedAt', direction: 'DESCENDING' },
 });
 
-function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
+const MAX_SELECTIONS = 5;
+
+function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter, selectedTasks }: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
@@ -65,7 +68,7 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
         const hasMore = nextPage <= totalPage;
 
         return (
-          <ArrayValue>
+          <ArrayValue defaultValue={selectedTasks}>
             {({ value: selected, push, filter: arrayValueFilter }) => (
               <SlideViewLayout>
                 <SlideViewNavBar>
@@ -76,6 +79,9 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
                     onChange={onChangeFilter}
                     canSearch
                   />
+                  <h3>
+                    {selected.length}/{MAX_SELECTIONS}
+                  </h3>
                   <CancelButton onClick={onCancel} />
                   <SaveButton
                     data-testid="btnSaveSelectTasks"
@@ -94,6 +100,10 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
                     isLoading={loading}
                     renderItem={(item, position) => {
                       const isSelected = selected.some(({ id }) => id === item.id);
+                      // if a card has a milestone and it is not selected, don't show it (don't show cards that have milestones that aren't the current milestone)
+                      if (item.milestone !== null && !isSelected) {
+                        return null;
+                      }
                       return (
                         <TaskCard
                           entity={{
@@ -113,7 +123,7 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
                           onSelect={() => {
                             if (isSelected) {
                               arrayValueFilter(({ id }) => id !== item.id);
-                            } else {
+                            } else if (selected.length <= MAX_SELECTIONS - 1) {
                               push(item);
                             }
                           }}
