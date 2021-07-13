@@ -73,11 +73,11 @@ export default defineMessages({
   },
   newTable: {
     id: 'modules.SideBar.newTable',
-    defaultMessage: 'TABLE (NEW)',
+    defaultMessage: 'TABLE (BETA)',
   },
   newProject: {
     id: 'modules.SideBar.newProject',
-    defaultMessage: 'TABLE (NEW)',
+    defaultMessage: 'TABLE (BETA)',
   },
   documents: {
     id: 'modules.SideBar.documents',
