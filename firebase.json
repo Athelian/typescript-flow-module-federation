@@ -55,6 +55,15 @@
               "value": "no-store"
             }
           ]
+        },
+        {
+          "source": "/new/project/table.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ]
         }
       ],
       "rewrites": [
@@ -65,6 +74,10 @@
         {
           "source": "/new/shipment/table",
           "destination": "/new/shipment/table.html"
+        },
+        {
+          "source": "/new/project/table",
+          "destination": "/new/project/table.html"
         },
         {
           "source": "**",
@@ -128,6 +141,15 @@
               "value": "no-store"
             }
           ]
+        },
+        {
+          "source": "/new/project/table.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ]
         }
       ],
       "rewrites": [
@@ -138,6 +160,10 @@
         {
           "source": "/new/shipment/table",
           "destination": "/new/shipment/table.html"
+        },
+        {
+          "source": "/new/project/table",
+          "destination": "/new/project/table.html"
         },
         {
           "source": "**",
@@ -201,6 +227,15 @@
               "value": "no-store"
             }
           ]
+        },
+        {
+          "source": "/new/project/table.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ]
         }
       ],
       "rewrites": [
@@ -211,6 +246,10 @@
         {
           "source": "/new/shipment/table",
           "destination": "/new/shipment/table.html"
+        },
+        {
+          "source": "/new/project/table",
+          "destination": "/new/project/table.html"
         },
         {
           "source": "**",
