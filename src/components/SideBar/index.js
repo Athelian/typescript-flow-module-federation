@@ -175,6 +175,13 @@ const menu: Array<MenuConfig> = [
         permitted: hasPermissions => hasPermissions(PROJECT_LIST),
       },
       {
+        label: <FormattedMessage {...messages.newProject} />,
+        icon: 'TABLE',
+        path: 'newTable',
+        // hidden: !isEnableBetaFeature,
+        href: `${window.location.origin}/new/project/table`,
+      },
+      {
         label: <FormattedMessage {...messages.cards} />,
         icon: 'CARDS',
         path: 'cards',

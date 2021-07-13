@@ -289,6 +289,7 @@
   "modules.SideBar.metadata": "CUSTOM FIELDS",
   "modules.SideBar.table": "TABLE",
   "modules.SideBar.newTable": "TABLE (BETA)",
+  "modules.SideBar.newProject": "TABLE (BETA)",
   "modules.SideBar.documents": "DOCUMENTS",
   "modules.SideBar.cards": "CARDS",
   "modules.SideBar.map": "MAP",

@@ -1,4 +1,5 @@
 // @flow
+
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
@@ -72,7 +73,11 @@ export default defineMessages({
   },
   newTable: {
     id: 'modules.SideBar.newTable',
-    defaultMessage: 'TABLE (NEW)',
+    defaultMessage: 'TABLE (BETA)',
+  },
+  newProject: {
+    id: 'modules.SideBar.newProject',
+    defaultMessage: 'TABLE (BETA)',
   },
   documents: {
     id: 'modules.SideBar.documents',

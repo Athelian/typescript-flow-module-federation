@@ -288,6 +288,7 @@
   "modules.SideBar.metadata": "カスタムフィールド",
   "modules.SideBar.table": "一覧シート",
   "modules.SideBar.newTable": "一覧シート (ベータ)",
+  "modules.SideBar.newProject": "一覧シート (ベータ)",
   "modules.SideBar.documents": "書類",
   "modules.SideBar.cards": "カードリスト",
   "modules.SideBar.map": "マップ",
