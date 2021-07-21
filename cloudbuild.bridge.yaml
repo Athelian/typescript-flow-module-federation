@@ -104,7 +104,7 @@ steps:
       - |
         git clone git@github.com:zenportinc/web-app-next.git /web-app-next-build
         cd /web-app-next-build
-        git checkout master
+        git checkout hotfixes
     volumes:
       - name: 'web-app-next-build'
         path: /web-app-next-build
@@ -117,7 +117,7 @@ steps:
       - |
         cd /web-app-next-build
         yarn install --ignore-optional
-        yarn build:export:prod
+        yarn build:export
     volumes:
       - name: 'web-app-next-build'
         path: /web-app-next-build
@@ -127,7 +127,7 @@ steps:
       ['install', '--non-interactive', '--no-progress', '--frozen-lockfile', '--ignore-optional']
   - name: 'node:10-slim'
     entrypoint: yarn
-    args: ['build:prod']
+    args: ['build:stg']
     env:
       - 'ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA'
       - 'ZENPORT_FIREBASE_REVISION_KEY=revision_staging_hot'
