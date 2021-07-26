@@ -131,15 +131,15 @@ function decorateShipment(shipment: Object): Object {
       departure: {
         ...voyage.departure,
         approved: {
-          user: voyage?.approvedBy,
-          date: voyage?.approvedAt,
+          user: voyage?.departure?.approvedBy,
+          date: voyage?.departure?.approvedAt,
         },
       },
       arrival: {
         ...voyage.arrival,
         approved: {
-          user: voyage?.approvedBy,
-          date: voyage?.approvedAt,
+          user: voyage?.arrival?.approvedBy,
+          date: voyage?.arrival?.approvedAt,
         },
       },
     })),
