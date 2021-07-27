@@ -14,6 +14,7 @@ import {
   ORDER_DOCUMENT_DELETE,
   ORDER_DOCUMENT_CREATE,
   ORDER_DOCUMENT_SET_TYPE,
+  ORDER_DOCUMENT_FORM,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_UPDATE,
@@ -22,6 +23,7 @@ import {
   ORDER_ITEMS_DOCUMENT_DELETE,
   ORDER_ITEMS_DOCUMENT_CREATE,
   ORDER_ITEMS_DOCUMENT_SET_TYPE,
+  ORDER_ITEMS_DOCUMENT_FORM,
 } from 'modules/permission/constants/orderItem';
 import {
   SHIPMENT_UPDATE,
@@ -30,6 +32,7 @@ import {
   SHIPMENT_DOCUMENT_DELETE,
   SHIPMENT_DOCUMENT_CREATE,
   SHIPMENT_DOCUMENT_SET_TYPE,
+  SHIPMENT_DOCUMENT_FORM,
 } from 'modules/permission/constants/shipment';
 import {
   DOCUMENT_CREATE,
@@ -64,7 +67,7 @@ function checkDocumentActions(type: string, hasPermission: Function) {
         DOCUMENT_CREATE,
       ]);
       const canAddOrphan = hasPermission([ORDER_SET_DOCUMENTS, ORDER_UPDATE]);
-      const canViewForm = hasPermission(DOCUMENT_FORM);
+      const canViewForm = hasPermission([DOCUMENT_FORM, ORDER_DOCUMENT_FORM]);
       const canDownload = hasPermission(ORDER_DOWNLOAD_DOCUMENTS);
       const canChangeType = hasPermission([
         ORDER_SET_DOCUMENTS,
@@ -89,7 +92,7 @@ function checkDocumentActions(type: string, hasPermission: Function) {
         DOCUMENT_CREATE,
       ]);
       const canAddOrphan = hasPermission([ORDER_ITEMS_SET_DOCUMENTS, ORDER_ITEMS_UPDATE]);
-      const canViewForm = hasPermission(DOCUMENT_FORM);
+      const canViewForm = hasPermission([DOCUMENT_FORM, ORDER_ITEMS_DOCUMENT_FORM]);
       const canDownload = hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS);
       const canChangeType = hasPermission([
         ORDER_ITEMS_SET_DOCUMENTS,
@@ -120,7 +123,7 @@ function checkDocumentActions(type: string, hasPermission: Function) {
         DOCUMENT_CREATE,
       ]);
       const canAddOrphan = hasPermission([SHIPMENT_SET_DOCUMENTS, SHIPMENT_UPDATE]);
-      const canViewForm = hasPermission(DOCUMENT_FORM);
+      const canViewForm = hasPermission([DOCUMENT_FORM, SHIPMENT_DOCUMENT_FORM]);
       const canDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
       const canChangeType = hasPermission([
         SHIPMENT_SET_DOCUMENTS,
