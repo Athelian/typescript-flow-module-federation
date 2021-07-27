@@ -10,6 +10,7 @@ import {
   SHIPMENT_DOCUMENT_DELETE,
   SHIPMENT_DOCUMENT_CREATE,
   SHIPMENT_DOCUMENT_SET_TYPE,
+  SHIPMENT_DOCUMENT_FORM,
 } from 'modules/permission/constants/shipment';
 import {
   DOCUMENT_CREATE,
@@ -38,7 +39,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
     DOCUMENT_CREATE,
   ]);
   const canAddOrphan = hasPermission([SHIPMENT_SET_DOCUMENTS, SHIPMENT_UPDATE]);
-  const canViewForm = hasPermission(DOCUMENT_FORM);
+  const canViewForm = hasPermission([DOCUMENT_FORM, SHIPMENT_DOCUMENT_FORM]);
   const canDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
   const canChangeType = hasPermission([
     SHIPMENT_SET_DOCUMENTS,
