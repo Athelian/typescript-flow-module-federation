@@ -12,13 +12,13 @@ import {
   PRODUCT_PROVIDER_DOCUMENT_DELETE,
   PRODUCT_PROVIDER_DOCUMENT_CREATE,
   PRODUCT_PROVIDER_DOCUMENT_SET_TYPE,
+  PRODUCT_PROVIDER_DOCUMENT_FORM,
 } from 'modules/permission/constants/product';
 import {
   DOCUMENT_CREATE,
   DOCUMENT_DELETE,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
-  DOCUMENT_FORM,
 } from 'modules/permission/constants/file';
 
 export default function EndProductDocumentsSection() {
@@ -30,7 +30,7 @@ export default function EndProductDocumentsSection() {
     DOCUMENT_CREATE,
   ]);
   const canAddOrphan = hasPermission([PRODUCT_PROVIDER_SET_DOCUMENTS, PRODUCT_PROVIDER_UPDATE]);
-  const canViewForm = hasPermission(DOCUMENT_FORM);
+  const canViewForm = hasPermission(PRODUCT_PROVIDER_DOCUMENT_FORM);
   const canDownload = hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS);
   const canChangeType = hasPermission([
     PRODUCT_PROVIDER_SET_DOCUMENTS,

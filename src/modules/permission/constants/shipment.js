@@ -19,6 +19,7 @@ export const SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT =
   'shipment.files.getByTypeWarehouseInspectionReport';
 export const SHIPMENT_DOCUMENT_DELETE = 'shipment.files.delete';
 export const SHIPMENT_DOCUMENT_CREATE = 'shipment.files.create';
+export const SHIPMENT_DOCUMENT_FORM = 'shipment.files.form';
 export const SHIPMENT_DOCUMENT_SET_NAME = 'shipment.files.setName';
 export const SHIPMENT_DOCUMENT_SET_TAGS = 'shipment.files.setTags';
 export const SHIPMENT_DOCUMENT_SET_TYPE = 'shipment.files.setType';

@@ -11,13 +11,13 @@ import {
   ORDER_ITEMS_DOCUMENT_DELETE,
   ORDER_ITEMS_DOCUMENT_CREATE,
   ORDER_ITEMS_DOCUMENT_SET_TYPE,
+  ORDER_ITEMS_DOCUMENT_FORM,
 } from 'modules/permission/constants/orderItem';
 import {
   DOCUMENT_CREATE,
   DOCUMENT_DELETE,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
-  DOCUMENT_FORM,
 } from 'modules/permission/constants/file';
 import { OrderItemFilesContainer } from 'modules/orderItem/form/containers';
 
@@ -30,7 +30,7 @@ function ItemDocumentsSection() {
     DOCUMENT_CREATE,
   ]);
   const canAddOrphan = hasPermission([ORDER_ITEMS_SET_DOCUMENTS, ORDER_ITEMS_UPDATE]);
-  const canViewForm = hasPermission(DOCUMENT_FORM);
+  const canViewForm = hasPermission(ORDER_ITEMS_DOCUMENT_FORM);
   const canDownload = hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS);
   const canChangeType = hasPermission([
     ORDER_ITEMS_SET_DOCUMENTS,
