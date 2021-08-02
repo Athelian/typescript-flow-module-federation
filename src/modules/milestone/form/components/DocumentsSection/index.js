@@ -19,7 +19,6 @@ import {
   DOCUMENT_DELETE,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
-  DOCUMENT_FORM,
 } from 'modules/permission/constants/file';
 
 export default function MilestoneDocumentsSection() {
@@ -31,7 +30,7 @@ export default function MilestoneDocumentsSection() {
     DOCUMENT_CREATE,
   ]);
   const canAddOrphan = hasPermission([MILESTONE_SET_DOCUMENTS, MILESTONE_UPDATE]);
-  const canViewForm = hasPermission([DOCUMENT_FORM, MILESTONE_DOCUMENT_FORM]);
+  const canViewForm = hasPermission(MILESTONE_DOCUMENT_FORM);
   const canDownload = hasPermission(MILESTONE_DOWNLOAD_DOCUMENTS);
   const canChangeType = hasPermission([
     MILESTONE_SET_DOCUMENTS,

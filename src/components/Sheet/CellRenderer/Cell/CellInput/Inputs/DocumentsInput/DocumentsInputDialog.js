@@ -39,7 +39,6 @@ import {
   DOCUMENT_DELETE,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
-  DOCUMENT_FORM,
 } from 'modules/permission/constants/file';
 import { DocumentsDialogWrapperStyle } from './style';
 
@@ -67,7 +66,7 @@ function checkDocumentActions(type: string, hasPermission: Function) {
         DOCUMENT_CREATE,
       ]);
       const canAddOrphan = hasPermission([ORDER_SET_DOCUMENTS, ORDER_UPDATE]);
-      const canViewForm = hasPermission([DOCUMENT_FORM, ORDER_DOCUMENT_FORM]);
+      const canViewForm = hasPermission(ORDER_DOCUMENT_FORM);
       const canDownload = hasPermission(ORDER_DOWNLOAD_DOCUMENTS);
       const canChangeType = hasPermission([
         ORDER_SET_DOCUMENTS,
@@ -92,7 +91,7 @@ function checkDocumentActions(type: string, hasPermission: Function) {
         DOCUMENT_CREATE,
       ]);
       const canAddOrphan = hasPermission([ORDER_ITEMS_SET_DOCUMENTS, ORDER_ITEMS_UPDATE]);
-      const canViewForm = hasPermission([DOCUMENT_FORM, ORDER_ITEMS_DOCUMENT_FORM]);
+      const canViewForm = hasPermission(ORDER_ITEMS_DOCUMENT_FORM);
       const canDownload = hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS);
       const canChangeType = hasPermission([
         ORDER_ITEMS_SET_DOCUMENTS,
@@ -123,7 +122,7 @@ function checkDocumentActions(type: string, hasPermission: Function) {
         DOCUMENT_CREATE,
       ]);
       const canAddOrphan = hasPermission([SHIPMENT_SET_DOCUMENTS, SHIPMENT_UPDATE]);
-      const canViewForm = hasPermission([DOCUMENT_FORM, SHIPMENT_DOCUMENT_FORM]);
+      const canViewForm = hasPermission(SHIPMENT_DOCUMENT_FORM);
       const canDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
       const canChangeType = hasPermission([
         SHIPMENT_SET_DOCUMENTS,

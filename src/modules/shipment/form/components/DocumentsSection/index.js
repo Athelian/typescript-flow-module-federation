@@ -17,7 +17,6 @@ import {
   DOCUMENT_DELETE,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
-  DOCUMENT_FORM,
 } from 'modules/permission/constants/file';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
@@ -39,7 +38,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
     DOCUMENT_CREATE,
   ]);
   const canAddOrphan = hasPermission([SHIPMENT_SET_DOCUMENTS, SHIPMENT_UPDATE]);
-  const canViewForm = hasPermission([DOCUMENT_FORM, SHIPMENT_DOCUMENT_FORM]);
+  const canViewForm = hasPermission(SHIPMENT_DOCUMENT_FORM);
   const canDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
   const canChangeType = hasPermission([
     SHIPMENT_SET_DOCUMENTS,
