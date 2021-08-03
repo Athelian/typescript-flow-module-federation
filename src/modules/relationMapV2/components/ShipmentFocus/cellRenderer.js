@@ -23,6 +23,8 @@ import {
   SHIPMENT_LONG_WIDTH,
 } from 'modules/relationMapV2/constants';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
+import { SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
+import { CONTAINER_BATCHES_REMOVE } from 'modules/permission/constants/container';
 import { Hits, Entities, ClientSorts, FocusedView } from 'modules/relationMapV2/store';
 import {
   getColorByEntity,
@@ -578,7 +580,7 @@ function BatchCell({
             hasRelation={isTargetedBatch}
             type={beforeConnector}
           >
-            {belongToContainer && hasBatchPermissions([BATCH_UPDATE]) && (
+            {belongToContainer && hasBatchPermissions([CONTAINER_BATCHES_REMOVE]) && (
               <RemoveButton
                 offset
                 onClick={() => {
@@ -1253,7 +1255,7 @@ function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
           hasRelation={isTargetedBatch && isTargetedShipment}
           type="HORIZONTAL"
         >
-          {hasBatchPermissions([BATCH_UPDATE]) && (
+          {hasBatchPermissions([SHIPMENT_REMOVE_BATCH]) && (
             <RemoveButton
               onClick={() => {
                 dispatch({

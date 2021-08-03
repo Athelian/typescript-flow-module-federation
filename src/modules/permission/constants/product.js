@@ -53,6 +53,7 @@ export const PRODUCT_PROVIDER_SET_DOCUMENTS = 'product.productProviders.setDocum
 export const PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS = 'product.productProviders.downloadDocuments';
 export const PRODUCT_PROVIDER_DOCUMENT_DELETE = 'product.productProviderFiles.delete';
 export const PRODUCT_PROVIDER_DOCUMENT_CREATE = 'product.productProviderFiles.create';
+export const PRODUCT_PROVIDER_DOCUMENT_FORM = 'product.productProviderFiles.form';
 export const PRODUCT_PROVIDER_DOCUMENT_SET_NAME = 'product.productProviderFiles.setName';
 export const PRODUCT_PROVIDER_DOCUMENT_SET_TAGS = 'product.productProviderFiles.setTags';
 export const PRODUCT_PROVIDER_DOCUMENT_SET_TYPE = 'product.productProviderFiles.setType';

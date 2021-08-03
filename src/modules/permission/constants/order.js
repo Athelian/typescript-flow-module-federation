@@ -9,6 +9,7 @@ export const ORDER_DOCUMENT_GET_TYPE_PO = 'order.files.getByTypePO';
 export const ORDER_DOCUMENT_GET_TYPE_PI = 'order.files.getByTypePI';
 export const ORDER_DOCUMENT_DELETE = 'order.files.delete';
 export const ORDER_DOCUMENT_CREATE = 'order.files.create';
+export const ORDER_DOCUMENT_FORM = 'order.files.form';
 export const ORDER_DOCUMENT_SET_NAME = 'order.files.setName';
 export const ORDER_DOCUMENT_SET_TAGS = 'order.files.setTags';
 export const ORDER_DOCUMENT_SET_TYPE = 'order.files.setType';
