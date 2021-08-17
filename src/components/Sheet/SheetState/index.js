@@ -141,7 +141,6 @@ export const SheetState = ({
   const [state, dispatch] = React.useReducer<State, Action>(memoizedReducer, initialState);
   const addedRowsRef = React.useRef([]);
   const removedRowsRef = React.useRef([]);
-  console.log(state);
   const memoizedMutate = React.useCallback(
     ({ cell, value, item }) => {
       const cellValue = state.rows[cell.x][cell.y];
