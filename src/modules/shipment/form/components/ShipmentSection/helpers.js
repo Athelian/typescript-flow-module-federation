@@ -92,6 +92,14 @@ export const renderForwarders = (forwarders: Array<Object>, allowToUpdate: boole
           <PartnerCard partner={forwarders[2]} size="quarter" readOnly={!allowToUpdate} />
           <PartnerCard partner={forwarders[3]} size="quarter" readOnly={!allowToUpdate} />
         </GridRow>
+        <GridRow gap="10px">
+          {forwarders[4] && (
+            <PartnerCard partner={forwarders[4]} size="quarter" readOnly={!allowToUpdate} />
+          )}
+          {forwarders[5] && (
+            <PartnerCard partner={forwarders[5]} size="quarter" readOnly={!allowToUpdate} />
+          )}
+        </GridRow>
       </GridColumn>
     );
   }

@@ -793,7 +793,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         infoMessage={
                           <FormattedMessage
                             id="modules.Shipments.tooltipForwarder"
-                            defaultMessage="You can choose up to 4 Forwarders."
+                            defaultMessage="You can choose up to 6 Forwarders."
                           />
                         }
                       />

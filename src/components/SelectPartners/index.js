@@ -27,7 +27,7 @@ type Props = {|
   onCancel: Function,
 |};
 
-const MAX_SELECTIONS = 4;
+let MAX_SELECTIONS = 4;
 
 const SelectPartners = ({ partnerTypes, selected, onCancel, onSelect }: Props) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
@@ -43,6 +43,10 @@ const SelectPartners = ({ partnerTypes, selected, onCancel, onSelect }: Props) =
     },
     'viewer.user.organization.partners'
   );
+
+  if (partnerTypes.includes('Forwarder')) {
+    MAX_SELECTIONS = 6;
+  }
 
   return (
     <Selector.Many selected={selected} max={MAX_SELECTIONS}>
