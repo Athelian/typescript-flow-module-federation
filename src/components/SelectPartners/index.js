@@ -19,7 +19,7 @@ import PartnerGridView from 'modules/partner/list/PartnerGridView';
 
 type Props = {|
   partnerTypes: Array<string>,
-  partnerCount?: number,
+  partnerCount: number,
   selected: Array<{
     id: string,
     name: string,
