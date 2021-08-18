@@ -23,7 +23,6 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId, uuid } from 'utils/id';
 import Timeline from 'modules/timeline/components/Timeline';
 import { shipmentExportQuery, shipmentTimelineQuery } from './query';
-import { shipmentFormFilesQuery } from './form/components/DocumentsSection/query';
 
 import {
   ShipmentBatchesContainer,
@@ -36,7 +35,6 @@ import {
   ShipmentTasksContainer,
 } from './form/containers';
 import ShipmentForm from './form';
-import { mergeFileStates } from './helpers';
 import validator from './form/validator';
 import { shipmentFormQuery } from './form/query';
 import {
@@ -127,7 +125,6 @@ class ShipmentFormModule extends React.PureComponent<Props> {
     onErrors: (Array<Object>) => void
   ) => {
     const { shipmentId, onSuccessCallback } = this.props;
-
     const isNewOrClone = this.isNewOrClone();
 
     const input = prepareParsedShipmentInput({
@@ -157,25 +154,6 @@ class ShipmentFormModule extends React.PureComponent<Props> {
         }
       }
     } else if (shipmentId) {
-      // fix for concurrency issue
-      if (input.files) {
-        const updatedFiles = await client.query({
-          query: shipmentFormFilesQuery,
-          variables: {
-            id: decodeId(shipmentId),
-          },
-          fetchPolicy: 'network-only',
-        });
-
-        if (updatedFiles?.data?.shipment?.files) {
-          input.files = mergeFileStates({
-            originalValues,
-            newValues,
-            latestFiles: updatedFiles?.data?.shipment?.files ?? [],
-          });
-        }
-      }
-
       const result = await saveShipment({
         variables: { input, id: decodeId(shipmentId) },
       });

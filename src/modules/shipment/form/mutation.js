@@ -449,7 +449,12 @@ export const prepareParsedShipmentInput = ({
         };
       }
     ),
-    ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
+    ...parseFilesField({
+      key: 'files',
+      originalFiles: getByPathWithDefault([], 'files', originalValues),
+      newFiles: newValues.files,
+      isNewFormat: true,
+    }),
     ...parseTodoField(
       getByPathWithDefault(
         { tasks: [], taskTemplate: null, milestone: null },
