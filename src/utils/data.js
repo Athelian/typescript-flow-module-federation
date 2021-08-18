@@ -310,40 +310,40 @@ export const parseFilesField = ({
     ),
   };
 
-  if (isNewFormat) {
-    const deletedFilesById = findDeletedArrayData('id', originalFiles, newFiles).reduce(
-      (arr, file) => {
-        // eslint-disable-next-line no-param-reassign
-        arr[file.id] = file;
-        return arr;
-      },
-      {}
-    );
-
-    const newFilesById = newFiles
-      .map(file => file.isNew)
-      .reduce((arr, file) => {
-        // eslint-disable-next-line no-param-reassign
-        arr[file.id] = file;
-        return arr;
-      }, {});
-
-    const newFormatFiles = Object.keys(changedFiles.files).reduce((arr, file) => {
-      const { id } = file;
-
-      if (deletedFilesById[id]) {
-        arr.push({ ...file, deleted: true });
-      } else if (newFilesById[id]) {
-        arr.push({ ...file });
-      }
-
-      return arr;
-    }, []);
-
-    return newFormatFiles;
+  if (!isNewFormat) {
+    return changedFiles;
   }
 
-  return changedFiles;
+  const deletedFilesById = findDeletedArrayData('id', originalFiles, newFiles).reduce(
+    (arr, file) => {
+      // eslint-disable-next-line no-param-reassign
+      arr[file.id] = file;
+      return arr;
+    },
+    {}
+  );
+
+  const newFilesById = newFiles
+    .map(file => file.isNew)
+    .reduce((arr, file) => {
+      // eslint-disable-next-line no-param-reassign
+      arr[file.id] = file;
+      return arr;
+    }, {});
+
+  const newFormatFiles = Object.keys(changedFiles.files).reduce((arr, file) => {
+    const { id } = file;
+
+    if (deletedFilesById[id]) {
+      arr.push({ ...file, deleted: true });
+    } else if (newFilesById[id]) {
+      arr.push({ ...file });
+    }
+
+    return arr;
+  }, []);
+
+  return newFormatFiles;
 };
 
 type ApprovalType = {
