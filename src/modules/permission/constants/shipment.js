@@ -4,7 +4,7 @@ export const SHIPMENT_ORDER_LIST = 'shipment.orders.list';
 export const SHIPMENT_FORM = 'shipment.shipments.form';
 export const SHIPMENT_CREATE = 'shipment.shipments.create';
 export const SHIPMENT_UPDATE = 'shipment.shipments.update';
-export const SHIPMENT_DOWNLOAD_DOCUMENTS = 'shipment.shipments.downloadDocuments';
+export const SHIPMENT_DOWNLOAD_DOCUMENTS = 'shipment.shipments.download';
 export const SHIPMENT_DOCUMENT_GET = 'shipment.files.get';
 export const SHIPMENT_DOCUMENT_GET_TYPE_BL = 'shipment.files.getByTypeBL';
 export const SHIPMENT_DOCUMENT_GET_TYPE_INVOICE = 'shipment.files.getByTypeInvoice';
@@ -25,6 +25,32 @@ export const SHIPMENT_DOCUMENT_SET_TAGS = 'shipment.files.setTags';
 export const SHIPMENT_DOCUMENT_SET_TYPE = 'shipment.files.setType';
 export const SHIPMENT_DOCUMENT_SET_ENTITY = 'shipment.files.setEntity';
 export const SHIPMENT_DOCUMENT_SET_MEMO = 'shipment.files.setMemo';
+
+export const SHIPMENT_DOCUMENT_SET = 'shipment.files.set';
+export const SHIPMENT_DOCUMENT_SET_BL = 'shipment.files.setByTypeBL';
+export const SHIPMENT_DOCUMENT_SET_INVOICE = 'shipment.files.setByTypeInvoice';
+export const SHIPMENT_DOCUMENT_SET_PACKING_LIST = 'shipment.files.setByTypePackingList';
+export const SHIPMENT_DOCUMENT_SET_IMPORT_DECLARATION = 'shipment.files.setByTypeImportDeclaration';
+export const SHIPMENT_DOCUMENT_SET_INSPECTION_APPLICATION =
+  'shipment.files.setByTypeInspectionApplication';
+export const SHIPMENT_DOCUMENT_SET_WAREHOUSE_ARRIVAL =
+  'shipment.files.setByTypeWarehouseArrivalReport';
+export const SHIPMENT_DOCUMENT_SET_WAREHOUSE_INSPECTION =
+  'shipment.files.setByTypeWarehouseInspectionReport';
+export const SHIPMENT_DOCUMENT_SET_MISCELLANEOUS = 'shipment.files.setByTypeMiscellaneous';
+
+export const SHIPMENT_DOCUMENT_GET_BL = 'shipment.files.getByTypeBL';
+export const SHIPMENT_DOCUMENT_GET_INVOICE = 'shipment.files.getByTypeInvoice';
+export const SHIPMENT_DOCUMENT_GET_PACKING_LIST = 'shipment.files.getByTypePackingList';
+export const SHIPMENT_DOCUMENT_GET_IMPORT_DECLARATION = 'shipment.files.getByTypeImportDeclaration';
+export const SHIPMENT_DOCUMENT_GET_INSPECTION_APPLICATION =
+  'shipment.files.getByTypeInspectionApplication';
+export const SHIPMENT_DOCUMENT_GET_WAREHOUSE_ARRIVAL =
+  'shipment.files.getByTypeWarehouseArrivalReport';
+export const SHIPMENT_DOCUMENT_GET_WAREHOUSE_INSPECTION =
+  'shipment.files.getByTypeWarehouseInspectionReport';
+export const SHIPMENT_DOCUMENT_GET_MISCELLANEOUS = 'shipment.files.getByTypeMiscellaneous';
+
 export const SHIPMENT_SET_FOLLOWERS = 'shipment.shipments.setFollowers';
 export const SHIPMENT_SET_ARCHIVED = 'shipment.shipments.setArchived';
 export const SHIPMENT_SET_DOCUMENTS = 'shipment.shipments.setDocuments';
