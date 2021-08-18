@@ -97,7 +97,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
     getByPathWithDefault(null, 'importer', originalValues),
     newValues.importer
   ),
-  ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
+  ...parseFilesField({
+    key: 'files',
+    originalFiles: getByPathWithDefault([], 'files', originalValues),
+    newFiles: newValues.files,
+  }),
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
   ...parseGenericField(
     'serial',
@@ -248,11 +252,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
           ),
         })
       ),
-      ...parseFilesField(
-        'files',
-        getByPathWithDefault([], 'files', oldProductProvider),
-        getByPathWithDefault([], 'files', newProductProvider)
-      ),
+      ...parseFilesField({
+        key: 'files',
+        originalFiles: getByPathWithDefault([], 'files', oldProductProvider),
+        newFiles: getByPathWithDefault([], 'files', newProductProvider),
+      }),
       ...parseTodoField(
         getByPathWithDefault(
           { tasks: [], taskTemplate: null, milestone: null },

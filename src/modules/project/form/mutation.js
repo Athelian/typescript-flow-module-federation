@@ -115,7 +115,11 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
       };
     }
   ),
-  ...parseFilesField('files', originalValues?.files ?? [], newValues.files),
+  ...parseFilesField({
+    key: 'files',
+    originalFiles: originalValues?.files ?? [],
+    newFiles: newValues.files,
+  }),
 });
 
 export const updateProjectMutation = gql`
