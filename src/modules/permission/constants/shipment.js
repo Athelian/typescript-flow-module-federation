@@ -6,6 +6,9 @@ export const SHIPMENT_CREATE = 'shipment.shipments.create';
 export const SHIPMENT_UPDATE = 'shipment.shipments.update';
 export const SHIPMENT_DOWNLOAD_DOCUMENTS = 'shipment.shipments.download';
 export const SHIPMENT_DOCUMENT_GET = 'shipment.files.get';
+export const SHIPMENT_DOCUMENT_DOWNLOAD = 'shipment.files.download';
+export const SHIPMENT_DOCUMENT_UPDATE = 'shipment.files.update';
+export const SHIPMENT_DOCUMENT_DELETE = 'shipment.files.delete';
 export const SHIPMENT_DOCUMENT_GET_TYPE_BL = 'shipment.files.getByTypeBL';
 export const SHIPMENT_DOCUMENT_GET_TYPE_INVOICE = 'shipment.files.getByTypeInvoice';
 export const SHIPMENT_DOCUMENT_GET_TYPE_PACKING_LIST = 'shipment.files.getByTypePackingList';
@@ -17,7 +20,6 @@ export const SHIPMENT_DOCUMENT_GET_TYPE_WAREHOUSE_ARRIVAL_REPORT =
   'shipment.files.getByTypeWarehouseArrivalReport';
 export const SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT =
   'shipment.files.getByTypeWarehouseInspectionReport';
-export const SHIPMENT_DOCUMENT_DELETE = 'shipment.files.delete';
 export const SHIPMENT_DOCUMENT_CREATE = 'shipment.files.create';
 export const SHIPMENT_DOCUMENT_FORM = 'shipment.files.form';
 export const SHIPMENT_DOCUMENT_SET_NAME = 'shipment.files.setName';
