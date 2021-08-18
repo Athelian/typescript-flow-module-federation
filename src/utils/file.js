@@ -26,7 +26,7 @@ import {
   SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT,
   SHIPMENT_DOCUMENT_CREATE,
   SHIPMENT_DOCUMENT_DELETE,
-  SHIPMENT_SET_DOCUMENTS,
+  SHIPMENT_DOCUMENT_SET,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
 import {
@@ -138,7 +138,7 @@ export function canChangeFileParent(hasPermissions: Function, file: File) {
       );
     case 'Shipment':
       return (
-        hasPermissions([SHIPMENT_UPDATE, SHIPMENT_SET_DOCUMENTS]) ||
+        hasPermissions([SHIPMENT_UPDATE, SHIPMENT_DOCUMENT_SET]) ||
         (hasPermissions(SHIPMENT_DOCUMENT_CREATE) && hasPermissions(SHIPMENT_DOCUMENT_DELETE))
       );
     case 'Milestone':

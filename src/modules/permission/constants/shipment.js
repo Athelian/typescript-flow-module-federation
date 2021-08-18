@@ -53,7 +53,6 @@ export const SHIPMENT_DOCUMENT_GET_MISCELLANEOUS = 'shipment.files.getByTypeMisc
 
 export const SHIPMENT_SET_FOLLOWERS = 'shipment.shipments.setFollowers';
 export const SHIPMENT_SET_ARCHIVED = 'shipment.shipments.setArchived';
-export const SHIPMENT_SET_DOCUMENTS = 'shipment.shipments.setDocuments';
 export const SHIPMENT_SET_IMPORTER = 'shipment.shipments.setImporter';
 export const SHIPMENT_SET_EXPORTER = 'shipment.shipments.setExporter';
 export const SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY =

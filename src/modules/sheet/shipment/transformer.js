@@ -27,7 +27,7 @@ import {
   SHIPMENT_SET_CONTRACT_NO,
   SHIPMENT_SET_CUSTOM_FIELDS,
   SHIPMENT_SET_CUSTOM_FIELDS_MASK,
-  SHIPMENT_SET_DOCUMENTS,
+  SHIPMENT_DOCUMENT_SET,
   SHIPMENT_SET_EXPORTER,
   SHIPMENT_SET_FORWARDERS,
   SHIPMENT_SET_INCOTERM,
@@ -1392,7 +1392,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'files',
-        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_DOCUMENTS)
+        hasPermission => hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_DOCUMENT_SET)
       ),
     },
     {
