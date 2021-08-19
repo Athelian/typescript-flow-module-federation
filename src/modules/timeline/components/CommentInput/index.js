@@ -96,12 +96,7 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
                   </span>
                   <div className={MessageButtonWrapper}>
                     <SubmitMenu sendType={sendType} refetch={refetch}>
-                      <button
-                        className={ButtonStyle}
-                        type="button"
-                        disabled={loading}
-                        onClick={() => submit()}
-                      >
+                      <button className={ButtonStyle} type="button" disabled={loading}>
                         <Icon icon="HORIZONTAL_ELLIPSIS" />
                       </button>
                     </SubmitMenu>
