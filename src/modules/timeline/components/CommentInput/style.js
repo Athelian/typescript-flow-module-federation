@@ -123,6 +123,7 @@ export const MessageButtonWrapper = css`
     margin-left: 10px;
   }
 `;
+
 export const TippyStyle = css`
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
   .tippy-backdrop {
@@ -136,14 +137,11 @@ export const TippyStyle = css`
     display: block;
     text-align: left;
     font-size: 12px;
-    /* overflow: hidden; */
-
     white-space: nowrap;
     font-size: 12px;
     line-height: 15px;
     letter-spacing: 2px;
     text-transform: uppercase;
-
-    color: #aaaaaa;
+    color: ${colors.GRAY_DARK};
   }
 `;
