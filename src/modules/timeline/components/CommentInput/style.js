@@ -1,5 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
+
 import {
   colors,
   scrollbars,
@@ -114,4 +115,35 @@ export const MentionCompanyStyle: string = css`
   ${fontSizes.MEDIUM};
   color: ${colors.GRAY_DARK};
   ${presets.ELLIPSIS};
+`;
+
+export const MessageButtonWrapper = css`
+  display: flex;
+  button {
+    margin-left: 10px;
+  }
+`;
+export const TippyStyle = css`
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  .tippy-backdrop {
+    background-color: white;
+  }
+  .radio-wrapper {
+    margin: 10px;
+  }
+  .radio-label {
+    width: 100%;
+    display: block;
+    text-align: left;
+    font-size: 12px;
+    /* overflow: hidden; */
+
+    white-space: nowrap;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    color: #aaaaaa;
+  }
 `;
