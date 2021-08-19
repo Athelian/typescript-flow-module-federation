@@ -50,7 +50,7 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
       setSendType(messageData?.viewer?.messagePreferences?.sendMessageByEnter);
     },
   });
-  console.log(sendType);
+
   return (
     <StringValue>
       {({ value, set }) => (
@@ -95,7 +95,7 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
                     <FormattedMessage {...messages.message} />
                   </span>
                   <div className={MessageButtonWrapper}>
-                    <SubmitMenu>
+                    <SubmitMenu sendType={sendType}>
                       <button
                         className={ButtonStyle}
                         type="button"

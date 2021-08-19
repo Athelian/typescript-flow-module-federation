@@ -6,10 +6,19 @@ import { TippyStyle } from './style';
 
 type Props = {
   children: React.Node,
+  sendType: boolean,
 };
 
-const SubmitMenu = ({ children }: Props) => {
-  const [radioValue, setRadioValue] = React.useState('New Message');
+const SubmitMenu = ({ children, sendType }: Props) => {
+  const [radioValue, setRadioValue] = React.useState('Send Message');
+
+  React.useEffect(() => {
+    if (sendType) {
+      setRadioValue('Send Message');
+    } else {
+      setRadioValue('New Line');
+    }
+  }, [sendType]);
 
   const toggleRadio = value => {
     setRadioValue(value);
@@ -27,8 +36,8 @@ const SubmitMenu = ({ children }: Props) => {
     <div className="menu-options">
       <div className="radio-wrapper">
         <RadioInput
-          selected={radioValue === 'New Message'}
-          onToggle={() => toggleRadio('New Message')}
+          selected={radioValue === 'Send Message'}
+          onToggle={() => toggleRadio('Send Message')}
         >
           <div className="radio-label">
             Enter sends a message
