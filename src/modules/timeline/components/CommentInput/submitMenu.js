@@ -6,7 +6,7 @@ import { TippyStyle } from './style';
 
 type Props = {
   children: React.Node,
-  sendType: boolean,
+  sendType?: boolean,
 };
 
 const SubmitMenu = ({ children, sendType }: Props) => {
