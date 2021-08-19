@@ -17,6 +17,7 @@ import {
 
 type ExtraProps = {
   partnerTypes: Array<string>,
+  partnerCount?: number,
 };
 
 const PartnersSelectorInput = ({
@@ -62,6 +63,7 @@ const PartnersSelectorInput = ({
       <SlideView isOpen={focus} onRequestClose={forceBlur}>
         <SelectPartners
           partnerTypes={extra?.partnerTypes ?? []}
+          partnerCount={extra?.partnerCount ?? 4}
           selected={(value ?? []).map(organization => {
             const assembledPartner = {
               ...organization?.partner,
