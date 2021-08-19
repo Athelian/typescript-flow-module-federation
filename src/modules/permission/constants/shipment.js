@@ -20,6 +20,7 @@ export const SHIPMENT_DOCUMENT_GET_TYPE_WAREHOUSE_ARRIVAL_REPORT =
   'shipment.files.getByTypeWarehouseArrivalReport';
 export const SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT =
   'shipment.files.getByTypeWarehouseInspectionReport';
+export const SHIPMENT_DOCUMENT_GET_TYPE_MISCELLANEOUS = 'shipment.files.getByTypeMiscellaneous';
 export const SHIPMENT_DOCUMENT_CREATE = 'shipment.files.create';
 export const SHIPMENT_DOCUMENT_FORM = 'shipment.files.form';
 export const SHIPMENT_DOCUMENT_SET_NAME = 'shipment.files.setName';
@@ -40,18 +41,6 @@ export const SHIPMENT_DOCUMENT_SET_WAREHOUSE_ARRIVAL =
 export const SHIPMENT_DOCUMENT_SET_WAREHOUSE_INSPECTION =
   'shipment.files.setByTypeWarehouseInspectionReport';
 export const SHIPMENT_DOCUMENT_SET_MISCELLANEOUS = 'shipment.files.setByTypeMiscellaneous';
-
-export const SHIPMENT_DOCUMENT_GET_BL = 'shipment.files.getByTypeBL';
-export const SHIPMENT_DOCUMENT_GET_INVOICE = 'shipment.files.getByTypeInvoice';
-export const SHIPMENT_DOCUMENT_GET_PACKING_LIST = 'shipment.files.getByTypePackingList';
-export const SHIPMENT_DOCUMENT_GET_IMPORT_DECLARATION = 'shipment.files.getByTypeImportDeclaration';
-export const SHIPMENT_DOCUMENT_GET_INSPECTION_APPLICATION =
-  'shipment.files.getByTypeInspectionApplication';
-export const SHIPMENT_DOCUMENT_GET_WAREHOUSE_ARRIVAL =
-  'shipment.files.getByTypeWarehouseArrivalReport';
-export const SHIPMENT_DOCUMENT_GET_WAREHOUSE_INSPECTION =
-  'shipment.files.getByTypeWarehouseInspectionReport';
-export const SHIPMENT_DOCUMENT_GET_MISCELLANEOUS = 'shipment.files.getByTypeMiscellaneous';
 
 export const SHIPMENT_SET_FOLLOWERS = 'shipment.shipments.setFollowers';
 export const SHIPMENT_SET_ARCHIVED = 'shipment.shipments.setArchived';

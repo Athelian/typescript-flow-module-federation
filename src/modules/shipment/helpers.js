@@ -1,8 +1,6 @@
 // @flow
 import { getByPathWithDefault, isDataType, isNullOrUndefined } from 'utils/fp';
 
-import { parseFilesField } from 'utils/data';
-
 export const getShipmentSummary = (shipment: Object) => {
   const totalBatches = shipment.batches ? shipment.batches.length : 0;
   const batchesOfActiveOrder = (shipment.batches || []).reduce(

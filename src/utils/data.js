@@ -286,7 +286,6 @@ export const parseFilesField = ({
   key: string,
   originalFiles: ?Array<FilesType>,
   newFiles: Array<FilesType>,
-  returnDeletedFiles?: boolean,
   isNewFormat?: boolean,
 }): Object => {
   const changedFiles = {
@@ -314,36 +313,39 @@ export const parseFilesField = ({
     return changedFiles;
   }
 
-  const deletedFilesById = findDeletedArrayData('id', originalFiles, newFiles).reduce(
-    (arr, file) => {
+  const allFilesById = {
+    ...originalFiles.reduce((arr, file) => {
       // eslint-disable-next-line no-param-reassign
       arr[file.id] = file;
       return arr;
-    },
-    {}
-  );
-
-  const newFilesById = newFiles
-    .map(file => file.isNew)
-    .reduce((arr, file) => {
+    }, {}),
+    ...newFiles.reduce((arr, file) => {
       // eslint-disable-next-line no-param-reassign
       arr[file.id] = file;
       return arr;
-    }, {});
+    }, {}),
+  };
 
-  const newFormatFiles = Object.keys(changedFiles.files).reduce((arr, file) => {
-    const { id } = file;
+  const deletedFiles = findDeletedArrayData('id', originalFiles, newFiles);
 
-    if (deletedFilesById[id]) {
-      arr.push({ ...file, deleted: true });
-    } else if (newFilesById[id]) {
-      arr.push({ ...file });
-    }
+  const newFormattedFiles = [
+    ...changedFiles.files
+      .filter(file => Object.keys(file).length > 1)
+      .map(file => {
+        // eslint-disable-next-line no-param-reassign
+        file.type = allFilesById[file.id].type;
+        return file;
+      }),
+    ...deletedFiles.map(file => ({
+      id: file.id,
+      type: allFilesById[file.id].type,
+      orphan: true,
+    })),
+  ];
 
-    return arr;
-  }, []);
-
-  return newFormatFiles;
+  return {
+    files: newFormattedFiles,
+  };
 };
 
 type ApprovalType = {
