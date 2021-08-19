@@ -42,7 +42,7 @@ export const commentDeleteMutation = gql`
 `;
 
 export const messagePreferencesMutation = gql`
-  mutation messagePreferencesUpdate($input: MessagePreferencesInput!) {
+  mutation messagePreferences($input: MessagePreferencesInput!) {
     messagePreferencesUpdate(input: $input) {
       ...badRequestFragment
       ...forbiddenFragment

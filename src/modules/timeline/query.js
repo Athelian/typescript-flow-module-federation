@@ -164,7 +164,7 @@ export const eventFragment = gql`
 `;
 
 export const messagePreferencesQuery = gql`
-  query messagePreferencesQuery {
+  query messagePreferences {
     viewer {
       messagePreferences {
         ... on MessagePreferences {
