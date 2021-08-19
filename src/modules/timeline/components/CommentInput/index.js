@@ -45,7 +45,7 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
 
   const mentionInputRef = React.useRef(null);
 
-  const { data: messageData } = useQuery(messagePreferencesQuery, {
+  const { data: messageData, refetch } = useQuery(messagePreferencesQuery, {
     onCompleted: () => {
       setSendType(messageData?.viewer?.messagePreferences?.sendMessageByEnter);
     },
@@ -95,7 +95,7 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
                     <FormattedMessage {...messages.message} />
                   </span>
                   <div className={MessageButtonWrapper}>
-                    <SubmitMenu sendType={sendType}>
+                    <SubmitMenu sendType={sendType} refetch={refetch}>
                       <button
                         className={ButtonStyle}
                         type="button"

@@ -2,15 +2,20 @@
 import * as React from 'react';
 import Tippy from '@tippy.js/react';
 import { RadioInput } from 'components/Form';
+import { ApolloQueryResult } from 'react-apollo';
+import { useMutation } from '@apollo/react-hooks';
+import { messagePreferencesMutation } from 'modules/timeline/mutation';
 import { TippyStyle } from './style';
 
 type Props = {
   children: React.Node,
   sendType?: boolean,
+  refetch: ApolloQueryResult<empty>,
 };
 
-const SubmitMenu = ({ children, sendType }: Props) => {
+const SubmitMenu = ({ children, sendType, refetch }: Props) => {
   const [radioValue, setRadioValue] = React.useState('Send Message');
+  const [messagePreferencesMutationUpdate] = useMutation(messagePreferencesMutation);
 
   React.useEffect(() => {
     if (sendType) {
@@ -22,6 +27,15 @@ const SubmitMenu = ({ children, sendType }: Props) => {
 
   const toggleRadio = value => {
     setRadioValue(value);
+    messagePreferencesMutationUpdate({
+      variables: {
+        input: {
+          sendMessageByEnter: value === 'Send Message',
+        },
+      },
+    }).then(() => {
+      refetch();
+    });
   };
 
   const getPlatform = () => {
