@@ -17,6 +17,7 @@ import { CONTAINER_CREATE } from 'modules/permission/constants/container';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
 import {
+  SHIPMENT_SET,
   SHIPMENT_UPDATE,
   SHIPMENT_ADD_BATCH,
   SHIPMENT_CREATE,
@@ -159,7 +160,7 @@ export default function MoveBatch({ onSuccess }: Props) {
     return (
       isSameImporter() &&
       hasPermissions(CONTAINER_CREATE) &&
-      hasPermissions([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]) &&
+      hasPermissions([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]) &&
       (hasPermissions(BATCH_UPDATE) ||
         (hasPermissions(BATCH_SET_SHIPMENT) && hasPermissions(BATCH_SET_CONTAINER)))
     );

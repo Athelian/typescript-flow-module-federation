@@ -4,6 +4,7 @@ export const SHIPMENT_ORDER_LIST = 'shipment.orders.list';
 export const SHIPMENT_FORM = 'shipment.shipments.form';
 export const SHIPMENT_CREATE = 'shipment.shipments.create';
 export const SHIPMENT_UPDATE = 'shipment.shipments.update';
+export const SHIPMENT_SET = 'shipment.shipments.set';
 export const SHIPMENT_DOWNLOAD_DOCUMENTS = 'shipment.shipments.download';
 export const SHIPMENT_DOCUMENT_GET = 'shipment.files.get';
 export const SHIPMENT_DOCUMENT_DOWNLOAD = 'shipment.files.download';

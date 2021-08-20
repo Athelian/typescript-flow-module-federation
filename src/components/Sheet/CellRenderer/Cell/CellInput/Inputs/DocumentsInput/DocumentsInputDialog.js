@@ -26,7 +26,7 @@ import {
   ORDER_ITEMS_DOCUMENT_FORM,
 } from 'modules/permission/constants/orderItem';
 import {
-  SHIPMENT_UPDATE,
+  SHIPMENT_SET,
   SHIPMENT_DOCUMENT_SET,
   SHIPMENT_DOWNLOAD_DOCUMENTS,
   SHIPMENT_DOCUMENT_DELETE,
@@ -121,7 +121,7 @@ function checkDocumentActions(type: string, hasPermission: Function) {
         SHIPMENT_DOCUMENT_CREATE,
         DOCUMENT_CREATE,
       ]);
-      const canAddOrphan = hasPermission([SHIPMENT_DOCUMENT_SET, SHIPMENT_UPDATE]);
+      const canAddOrphan = hasPermission([SHIPMENT_DOCUMENT_SET, SHIPMENT_SET]);
       const canViewForm = hasPermission(SHIPMENT_DOCUMENT_FORM);
       const canDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
       const canChangeType = hasPermission([

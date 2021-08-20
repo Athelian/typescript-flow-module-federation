@@ -9,6 +9,7 @@ import GridView from 'components/GridView';
 import { ShipmentCard, CardAction } from 'components/Cards';
 import {
   SHIPMENT_CREATE,
+  SHIPMENT_SET,
   SHIPMENT_UPDATE,
   SHIPMENT_SET_ARCHIVED,
   SHIPMENT_FORM,
@@ -54,7 +55,9 @@ const defaultRenderItem = item => (
                     onClick={() => navigate(`/shipment/clone/${encodeId(item.id)}`)}
                   />
                 ),
-                (permissions.includes(SHIPMENT_UPDATE) ||
+                (permissions.some(permission =>
+                  [SHIPMENT_SET, SHIPMENT_UPDATE].includes(permission)
+                ) ||
                   permissions.includes(SHIPMENT_SET_ARCHIVED)) && (
                   <CardAction
                     icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}

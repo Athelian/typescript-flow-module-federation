@@ -4,6 +4,7 @@ import { Subscribe } from 'unstated';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
+  SHIPMENT_SET,
   SHIPMENT_UPDATE,
   SHIPMENT_DOCUMENT_SET,
   SHIPMENT_DOWNLOAD_DOCUMENTS,
@@ -37,7 +38,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
     SHIPMENT_DOCUMENT_CREATE,
     DOCUMENT_CREATE,
   ]);
-  const canAddOrphan = hasPermission([SHIPMENT_DOCUMENT_SET, SHIPMENT_UPDATE]);
+  const canAddOrphan = hasPermission([SHIPMENT_DOCUMENT_SET, SHIPMENT_SET, SHIPMENT_UPDATE]);
   const canViewForm = hasPermission(SHIPMENT_DOCUMENT_FORM);
   const canDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
   const canChangeType = hasPermission([

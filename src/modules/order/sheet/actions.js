@@ -43,6 +43,7 @@ import {
 import { CONTAINER_CREATE } from 'modules/permission/constants/container';
 import {
   SHIPMENT_CREATE,
+  SHIPMENT_SET,
   SHIPMENT_UPDATE,
   SHIPMENT_ADD_BATCH,
 } from 'modules/permission/constants/shipment';
@@ -306,7 +307,7 @@ export default {
     BatchMoveToNewContainerOnExistShipmentAction,
     hasPermissions =>
       hasPermissions(CONTAINER_CREATE) &&
-      (hasPermissions(SHIPMENT_UPDATE) || hasPermissions(SHIPMENT_ADD_BATCH)) &&
+      (hasPermissions([SHIPMENT_SET, SHIPMENT_UPDATE]) || hasPermissions(SHIPMENT_ADD_BATCH)) &&
       (hasPermissions(BATCH_UPDATE) ||
         (hasPermissions(BATCH_SET_SHIPMENT) && hasPermissions(BATCH_SET_CONTAINER)))
   ),
