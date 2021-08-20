@@ -65,7 +65,13 @@ const DocumentTypeArea = ({
 
   const [{ isDraggedOver, canDrop }, dropRef] = useDrop({
     accept: otherTypes,
-    canDrop: item => item.type !== type.value,
+    canDrop: item => {
+      if (!canUpload) {
+        return false;
+      }
+
+      return item.type !== type.value;
+    },
     drop: item => ({ ...item, type: type.value }),
     collect: monitor => ({
       isDraggedOver: monitor.isOver(),

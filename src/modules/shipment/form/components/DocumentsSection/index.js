@@ -37,6 +37,8 @@ function DocumentsSection({ entityId, isLoading }: Props) {
     SHIPMENT_DOCUMENT_SET,
     SHIPMENT_DOCUMENT_CREATE,
     DOCUMENT_CREATE,
+    SHIPMENT_SET,
+    SHIPMENT_UPDATE,
   ]);
   const canAddOrphan = hasPermission([SHIPMENT_DOCUMENT_SET, SHIPMENT_SET, SHIPMENT_UPDATE]);
   const canViewForm = hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_DOCUMENT_FORM]);
