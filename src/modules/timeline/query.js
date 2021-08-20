@@ -162,3 +162,15 @@ export const eventFragment = gql`
   ${valueFragment}
   ${partnerNameFragment}
 `;
+
+export const messagePreferencesQuery = gql`
+  query messagePreferences {
+    viewer {
+      messagePreferences {
+        ... on MessagePreferences {
+          sendMessageByEnter
+        }
+      }
+    }
+  }
+`;

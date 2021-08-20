@@ -3,15 +3,18 @@ import * as React from 'react';
 import type { UserPayload } from 'generated/graphql';
 import { StringValue } from 'react-values';
 import { Mutation } from 'react-apollo';
+import { useQuery } from '@apollo/react-hooks';
 import { FormattedMessage } from 'react-intl';
 import { clone } from 'ramda';
 import { MentionsInput, Mention } from 'react-mentions';
 import type { DocumentNode } from 'graphql/language/ast';
 import UserAvatar from 'components/UserAvatar';
+import { messagePreferencesQuery } from 'modules/timeline/query';
 import { DefaultStyle, TextAreaInput } from 'components/Form/Inputs';
 import Icon from 'components/Icon';
 import { commentCreateMutation } from 'modules/timeline/mutation';
 import messages from 'modules/timeline/messages';
+import SubmitMenu from 'modules/timeline/components/CommentInput/submitMenu';
 import {
   ButtonStyle,
   HeaderWrapperStyle,
@@ -24,6 +27,7 @@ import {
   MentionSuggestionNameWrapperStyle,
   MentionNameStyle,
   MentionCompanyStyle,
+  MessageButtonWrapper,
 } from './style';
 
 type Props = {|
@@ -37,7 +41,15 @@ type Props = {|
 
 const CommentInput = ({ entity, query, queryField, variables, onCompleted, users }: Props) => {
   const [focused, setFocused] = React.useState(false);
+  const [sendType, setSendType] = React.useState(false);
+
   const mentionInputRef = React.useRef(null);
+
+  const { data: messageData, refetch } = useQuery(messagePreferencesQuery, {
+    onCompleted: () => {
+      setSendType(messageData?.viewer?.messagePreferences?.sendMessageByEnter);
+    },
+  });
 
   return (
     <StringValue>
@@ -82,14 +94,21 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
                   <span className={TitleStyle}>
                     <FormattedMessage {...messages.message} />
                   </span>
-                  <button
-                    className={ButtonStyle}
-                    type="button"
-                    disabled={loading}
-                    onClick={() => submit()}
-                  >
-                    <Icon icon="PAPER_PLANE" />
-                  </button>
+                  <div className={MessageButtonWrapper}>
+                    <SubmitMenu sendType={sendType} refetch={refetch}>
+                      <button className={ButtonStyle} type="button" disabled={loading}>
+                        <Icon icon="HORIZONTAL_ELLIPSIS" />
+                      </button>
+                    </SubmitMenu>
+                    <button
+                      className={ButtonStyle}
+                      type="button"
+                      disabled={loading}
+                      onClick={() => submit()}
+                    >
+                      <Icon icon="PAPER_PLANE" />
+                    </button>
+                  </div>
                 </div>
                 <DefaultStyle
                   type="textarea"
@@ -161,7 +180,12 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
                       onBlur={() => setFocused(false)}
                       onKeyDown={e => {
                         e.stopPropagation();
-                        if (e.key === 'Enter' && !e.shiftKey) {
+                        if (sendType) {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            submit();
+                          }
+                        } else if (e.keyCode === 13 && e.metaKey) {
                           e.preventDefault();
                           submit();
                         }

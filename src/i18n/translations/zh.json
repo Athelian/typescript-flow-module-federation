@@ -1962,6 +1962,8 @@
   "modules.timeline.project": "工程",
   "modules.timeline.container": "container",
   "modules.timeline.file": "file",
+  "modules.timeline.sendMessage": "发送訊息",
+  "modules.timeline.newLine": "添加新行",
   "components.Header.notification.noActiveNotifications": "No active notifications found",
   "components.Header.notification.viewMoreNotifications": "{totalMoreItems} more...",
   "components.Header.notification.viewAllNotification": "VIEW ALL NOTIFICATIONS",
