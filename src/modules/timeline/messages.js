@@ -220,4 +220,12 @@ export default defineMessages({
     id: 'modules.timeline.file',
     defaultMessage: 'file',
   },
+  sendMessage: {
+    id: 'modules.timeline.sendMessage',
+    defaultMessage: 'sends a message',
+  },
+  newLine: {
+    id: 'modules.timeline.newLine',
+    defaultMessage: 'adds a new line',
+  },
 });

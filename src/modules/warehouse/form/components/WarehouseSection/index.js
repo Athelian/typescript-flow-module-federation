@@ -327,6 +327,7 @@ const WarehouseSection = ({ isNew, isClone, isLoading, warehouse }: Props) => {
                               {opened && (
                                 <SelectPartners
                                   partnerTypes={[]}
+                                  partnerCount={4}
                                   selected={values.organizations.map(org => org?.partner)}
                                   onCancel={() => slideToggle(false)}
                                   onSelect={selected => {

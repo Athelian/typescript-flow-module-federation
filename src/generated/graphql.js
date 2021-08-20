@@ -17917,6 +17917,7 @@ export type BatchFilterInput = {|
   desiredAt?: ?DateRangeInput,
   hasShipment?: ?$ElementType<Scalars, 'Boolean'>,
   hasShipmentExcludeId?: ?$ElementType<Scalars, 'ID'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIdsWithOperator?: ?IdsWithOperatorInput,
   notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -17971,8 +17972,10 @@ export type BatchSortInput = {|
   shipmentNo?: ?SortOrder,
   shipmentLoadPort?: ?SortOrder,
   shipmentLoadPortDeparture?: ?SortOrder,
+  shipmentLoadPortDepartureDateDifference?: ?SortOrder,
   shipmentDischargePort?: ?SortOrder,
   shipmentDischargePortArrival?: ?SortOrder,
+  shipmentDischargePortArrivalDateDifference?: ?SortOrder,
 |};
 
 export type BatchUpdateInput = {|
@@ -19263,6 +19266,15 @@ export type EntityInput = {|
 
 export type EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | ShipmentAggregate | BadRequest | Forbidden | NotFound;
 
+export type EntityTagInput = {|
+  id?: ?$ElementType<Scalars, 'ID'>,
+  name?: ?$ElementType<Scalars, 'ID'>,
+  color?: ?$ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  entityTypes?: ?Array<TagEntityType>,
+  deleted?: ?$ElementType<Scalars, 'Boolean'>,
+|};
+
 export type EntityValue = {|
    __typename?: 'EntityValue',
   entity?: ?EntityPayload,
@@ -19464,6 +19476,7 @@ export type FileFilterInput = {|
   mimetype?: ?$ElementType<Scalars, 'String'>,
   hasEntity?: ?$ElementType<Scalars, 'Boolean'>,
   hasEntityExcludeId?: ?$ElementType<Scalars, 'ID'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIdsWithOperator?: ?IdsWithOperatorInput,
   notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -20256,6 +20269,7 @@ export type MaskEdit = {|
     filterSort?: ?$ElementType<Scalars, 'String'>,
     collapses: Array<$ElementType<Scalars, 'String'>>,
     milestones: Array<MaskEditMilestone>,
+    selectedMaskEdit?: ?MaskEdit,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -20279,6 +20293,7 @@ export type MaskEditByUserInput = {|
   filterSort?: ?$ElementType<Scalars, 'String'>,
   collapses?: ?Array<$ElementType<Scalars, 'String'>>,
   milestones?: ?Array<MaskEditMilestoneInput>,
+  selectedMaskEditId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type MaskEditColumn = {|
@@ -20455,6 +20470,17 @@ export type Memorizable = {|
   memo?: ?$ElementType<Scalars, 'String'>,
 |};
 
+export type MessagePreferences = {|
+   __typename?: 'MessagePreferences',
+  sendMessageByEnter: $ElementType<Scalars, 'Boolean'>,
+|};
+
+export type MessagePreferencesInput = {|
+  sendMessageByEnter?: ?$ElementType<Scalars, 'Boolean'>,
+|};
+
+export type MessagePreferencesPayload = MessagePreferences | BadRequest | Forbidden | NotFound;
+
 export type MetricRangeInput = {|
   min?: ?$ElementType<Scalars, 'Float'>,
   max?: ?$ElementType<Scalars, 'Float'>,
@@ -20535,6 +20561,16 @@ export const MilestoneDateBindingValues = Object.freeze({
 export type MilestoneDateBinding = $Values<typeof MilestoneDateBindingValues>;
 
 export type MilestonePayload = Milestone | BadRequest | Forbidden | NotFound;
+
+export const MilestoneStatusTypeValues = Object.freeze({
+  /** Completed */
+  Completed: 'Completed', 
+  /** Uncompleted */
+  Uncompleted: 'Uncompleted'
+});
+
+
+export type MilestoneStatusType = $Values<typeof MilestoneStatusTypeValues>;
 
 export type MilestoneTaskInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
@@ -20628,6 +20664,9 @@ export type Mutation = {|
   userUpdate: UserPayload,
   userAddRole: UserRolesPayload,
   userRemoveRole: UserRolesPayload,
+  organizationGroupCreate: OrganizationGroupPayload,
+  organizationGroupUpdate: OrganizationGroupPayload,
+  organizationGroupDelete?: ?EmptyPayload,
   partnerUpdate: PartnerPayload,
   productCreate: ProductPayload,
   productUpdate: ProductPayload,
@@ -20678,6 +20717,9 @@ export type Mutation = {|
   tagCreate: TagPayload,
   tagUpdate: TagPayload,
   tagDelete?: ?EmptyPayload,
+  tagGroupCreate: TagGroupPayload,
+  tagGroupUpdate: TagGroupPayload,
+  tagGroupDelete?: ?EmptyPayload,
   fileUpload: FilePayload,
   fileUpdate: FilePayload,
   fileDelete?: ?EmptyPayload,
@@ -20718,6 +20760,7 @@ export type Mutation = {|
   milestoneCreate: MilestonePayload,
   milestoneUpdate: MilestonePayload,
   milestoneDelete?: ?EmptyPayload,
+  messagePreferencesUpdate: MessagePreferencesPayload,
   projectTemplateCreate: ProjectTemplatePayload,
   projectTemplateUpdate: ProjectTemplatePayload,
   projectTemplateDelete?: ?EmptyPayload,
@@ -20795,6 +20838,22 @@ export type MutationUserAddRoleArgs = {|
 export type MutationUserRemoveRoleArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   input: UserRoleInput
+|};
+
+
+export type MutationOrganizationGroupCreateArgs = {|
+  input: OrganizationGroupCreateInput
+|};
+
+
+export type MutationOrganizationGroupUpdateArgs = {|
+  id: $ElementType<Scalars, 'ID'>,
+  input: OrganizationGroupUpdateInput
+|};
+
+
+export type MutationOrganizationGroupDeleteArgs = {|
+  id: $ElementType<Scalars, 'ID'>
 |};
 
 
@@ -21071,6 +21130,22 @@ export type MutationTagDeleteArgs = {|
 |};
 
 
+export type MutationTagGroupCreateArgs = {|
+  input: TagGroupCreateInput
+|};
+
+
+export type MutationTagGroupUpdateArgs = {|
+  id: $ElementType<Scalars, 'ID'>,
+  input: TagGroupUpdateInput
+|};
+
+
+export type MutationTagGroupDeleteArgs = {|
+  id: $ElementType<Scalars, 'ID'>
+|};
+
+
 export type MutationFileUploadArgs = {|
   file: $ElementType<Scalars, 'Upload'>,
   input: FileInput
@@ -21268,6 +21343,11 @@ export type MutationMilestoneUpdateArgs = {|
 
 export type MutationMilestoneDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type MutationMessagePreferencesUpdateArgs = {|
+  input: MessagePreferencesInput
 |};
 
 
@@ -21718,7 +21798,9 @@ export type OrderFilterInput = {|
   poNos?: ?Array<$ElementType<Scalars, 'String'>>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   exporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  /** Deprecated */
   supplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIdsWithOperator?: ?IdsWithOperatorInput,
   notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -22007,6 +22089,7 @@ export type Organization = {|
     paid: $ElementType<Scalars, 'Boolean'>,
     disabled: $ElementType<Scalars, 'Boolean'>,
     dummy: $ElementType<Scalars, 'Boolean'>,
+    shareAllTags: $ElementType<Scalars, 'Boolean'>,
     users: UserPayloadPaginatedSearch,
     /** Resolving the current partnership of this organization from user's organization */
   partner?: ?PartnerPayload,
@@ -22035,6 +22118,39 @@ export type OrganizationPartnersArgs = {|
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?PartnerFilterInput,
   sortBy?: ?PartnerSortInput
+|};
+
+export type OrganizationGroup = {|
+  ...Model,
+  ...Owned,
+  ...{|
+     __typename?: 'OrganizationGroup',
+    name: $ElementType<Scalars, 'String'>,
+    description?: ?$ElementType<Scalars, 'String'>,
+    organizations: Array<OrganizationPayload>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+  |}
+|};
+
+export type OrganizationGroupCreateInput = {|
+  name: $ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+|};
+
+export type OrganizationGroupPayload = OrganizationGroup | BadRequest | Forbidden | NotFound;
+
+export type OrganizationGroupUpdateInput = {|
+  name?: ?$ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type OrganizationPayload = Organization | BadRequest | Forbidden | NotFound;
@@ -22330,6 +22446,7 @@ export type ProductFilterInput = {|
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   exporterId?: ?$ElementType<Scalars, 'ID'>,
   supplierId?: ?$ElementType<Scalars, 'ID'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIdsWithOperator?: ?IdsWithOperatorInput,
   notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -22490,6 +22607,7 @@ export type ProductProviderFilterInput = {|
   exporterId?: ?$ElementType<Scalars, 'ID'>,
   supplierId?: ?$ElementType<Scalars, 'ID'>,
   importerId?: ?$ElementType<Scalars, 'ID'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIdsWithOperator?: ?IdsWithOperatorInput,
   notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -22671,11 +22789,15 @@ export type ProjectFilterInput = {|
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   dueDate?: ?DateRangeInput,
+  sharedPartnerOrganizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIdsWithOperator?: ?IdsWithOperatorInput,
   notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
+  milestones?: ?Array<ProjectMilestoneFilterInput>,
+  tasks?: ?Array<ProjectTaskFilterInput>,
 |};
 
 export type ProjectMilestoneCreateInput = {|
@@ -22691,6 +22813,20 @@ export type ProjectMilestoneCreateInput = {|
   estimatedCompletionDateBinding?: ?MilestoneDateBinding,
   tasks?: ?Array<MilestoneTaskInput>,
   files?: ?Array<EntityFileInput>,
+|};
+
+export type ProjectMilestoneFilterInput = {|
+  position: $ElementType<Scalars, 'Int'>,
+  status?: ?MilestoneStatusType,
+  dueDate?: ?DateRangeInput,
+  estimatedCompletionDate?: ?DateRangeInput,
+|};
+
+export type ProjectMilestoneSortInput = {|
+  position?: ?$ElementType<Scalars, 'Int'>,
+  status?: ?SortOrder,
+  dueDate?: ?SortOrder,
+  estimatedCompletionDate?: ?SortOrder,
 |};
 
 export type ProjectMilestoneUpdateInput = {|
@@ -22728,7 +22864,27 @@ export type ProjectPayloadPaginatedSearch = {|
 export type ProjectSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
+  archived?: ?SortOrder,
   name?: ?SortOrder,
+  description?: ?SortOrder,
+  dueDate?: ?SortOrder,
+  milestone?: ?ProjectMilestoneSortInput,
+  task?: ?ProjectTaskSortInput,
+|};
+
+export type ProjectTaskFilterInput = {|
+  milestonePosition: $ElementType<Scalars, 'Int'>,
+  position: $ElementType<Scalars, 'Int'>,
+  status?: ?TaskStatusType,
+  dueDate?: ?DateRangeInput,
+  tagIdsWithOperator?: ?IdsWithOperatorInput,
+  notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+|};
+
+export type ProjectTaskSortInput = {|
+  milestonePosition?: ?$ElementType<Scalars, 'Int'>,
+  position?: ?$ElementType<Scalars, 'Int'>,
+  status?: ?SortOrder,
   dueDate?: ?SortOrder,
 |};
 
@@ -22837,6 +22993,8 @@ export type Query = {|
   usersByIDs: Array<UserPayload>,
   organization: OrganizationPayload,
   organizationsByIDs: Array<OrganizationPayload>,
+  organizationGroup: OrganizationGroupPayload,
+  organizationGroupsByIDs: Array<OrganizationGroupPayload>,
   partner: PartnerPayload,
   partnership: PartnershipPayload,
   partnerships: PartnershipPayloadPaginatedSearch,
@@ -22882,10 +23040,13 @@ export type Query = {|
   warehousesByIDs: Array<WarehousePayload>,
   tag: TagPayload,
   tags: TagPayloadPaginatedSearch,
+  tagsForEntity: TagPayloadPaginatedSearch,
   tagsByIDs: Array<TagPayload>,
   tagExport: ExportPayload,
   tagsExport: ExportPayload,
   tagsByIDsExport: ExportPayload,
+  tagGroup: TagGroupPayload,
+  tagGroupsByIDs: Array<TagGroupPayload>,
   task: TaskPayload,
   tasks: TaskPayloadPaginatedSearch,
   tasksByIDs: Array<TaskPayload>,
@@ -22964,6 +23125,16 @@ export type QueryOrganizationArgs = {|
 
 
 export type QueryOrganizationsByIDsArgs = {|
+  ids: Array<$ElementType<Scalars, 'ID'>>
+|};
+
+
+export type QueryOrganizationGroupArgs = {|
+  id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type QueryOrganizationGroupsByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
 |};
 
@@ -23273,6 +23444,14 @@ export type QueryTagsArgs = {|
 |};
 
 
+export type QueryTagsForEntityArgs = {|
+  entityOwnerId: $ElementType<Scalars, 'ID'>,
+  entityType: TagEntityType,
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>
+|};
+
+
 export type QueryTagsByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
 |};
@@ -23300,6 +23479,16 @@ export type QueryTagsByIDsExportArgs = {|
   templateId: $ElementType<Scalars, 'ID'>,
   columns?: ?Array<$ElementType<Scalars, 'String'>>,
   localSortBy?: ?Array<GenericSortInput>
+|};
+
+
+export type QueryTagGroupArgs = {|
+  id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type QueryTagGroupsByIDsArgs = {|
+  ids: Array<$ElementType<Scalars, 'ID'>>
 |};
 
 
@@ -61137,6 +61326,7 @@ export type ShipmentFilterInput = {|
   ids?: ?Array<$ElementType<Scalars, 'ID'>>,
   importerId?: ?$ElementType<Scalars, 'ID'>,
   importerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIdsWithOperator?: ?IdsWithOperatorInput,
   notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -61162,7 +61352,10 @@ export type ShipmentFilterInput = {|
   containerContainerType?: ?$ElementType<Scalars, 'String'>,
   containerContainerOption?: ?ContainerOption,
   containerWarehouseIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  /** Deprecated */
   containerTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  containerTagIdsWithOperator?: ?IdsWithOperatorInput,
+  containerNotTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   containerCreatedAt?: ?DateRangeInput,
   containerUpdatedAt?: ?DateRangeInput,
   containerWarehouseArrivalAgreedDate?: ?DateRangeInput,
@@ -61173,18 +61366,31 @@ export type ShipmentFilterInput = {|
   orderArchived?: ?$ElementType<Scalars, 'Boolean'>,
   orderExporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   orderFollowerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  /** Deprecated */
   orderTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  orderTagIdsWithOperator?: ?IdsWithOperatorInput,
+  orderNotTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   orderCompletelyBatched?: ?$ElementType<Scalars, 'Boolean'>,
   orderCompletelyShipped?: ?$ElementType<Scalars, 'Boolean'>,
-  batchTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  orderCreatedAt?: ?DateRangeInput,
+  orderUpdatedAt?: ?DateRangeInput,
+  orderItemTagIdsWithOperator?: ?IdsWithOperatorInput,
+  orderItemNotTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batchDeliveredAt?: ?DateRangeInput,
   batchDesiredAt?: ?DateRangeInput,
   batchExpiredAt?: ?DateRangeInput,
   batchProducedAt?: ?DateRangeInput,
   batchTotalVolume?: ?MetricRangeInput,
+  /** Deprecated */
+  batchTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  batchTagIdsWithOperator?: ?IdsWithOperatorInput,
+  batchNotTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   productId?: ?$ElementType<Scalars, 'ID'>,
   productIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  /** Deprecated */
   productTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  productTagIdsWithOperator?: ?IdsWithOperatorInput,
+  productNotTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   productProviderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   productProviderExporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   productProviderSupplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -61565,21 +61771,30 @@ export type ShipmentShipperAppointedEvent = {|
 export type ShipmentSortInput = {|
   createdAt?: ?SortOrder,
   updatedAt?: ?SortOrder,
+  archived?: ?SortOrder,
   no?: ?SortOrder,
   blNo?: ?SortOrder,
   cargoReady?: ?SortOrder,
   loadPort?: ?SortOrder,
   loadPortDeparture?: ?SortOrder,
+  loadPortDepartureDateDifference?: ?SortOrder,
   firstTransitPortArrival?: ?SortOrder,
   firstTransitPortDeparture?: ?SortOrder,
   secondTransitPortArrival?: ?SortOrder,
   secondTransitPortDeparture?: ?SortOrder,
   dischargePort?: ?SortOrder,
   dischargePortArrival?: ?SortOrder,
+  dischargePortArrivalDateDifference?: ?SortOrder,
   vesselName?: ?SortOrder,
   customClearance?: ?SortOrder,
   warehouseArrival?: ?SortOrder,
   deliveryReady?: ?SortOrder,
+  importerName?: ?SortOrder,
+  exporterName?: ?SortOrder,
+  totalVolumeValue?: ?SortOrder,
+  totalWeightValue?: ?SortOrder,
+  totalPriceAmount?: ?SortOrder,
+  customField?: ?GenericSortInput,
 |};
 
 export type ShipmentUpdateInput = {|
@@ -61599,7 +61814,9 @@ export type ShipmentUpdateInput = {|
   incoterm?: ?Incoterm,
   carrier?: ?$ElementType<Scalars, 'String'>,
   cargoReady?: ?TimelineDateNestedInput,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   forwarderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batches?: ?Array<ShipmentBatchInput>,
@@ -61710,6 +61927,7 @@ export type Tag = {|
     description?: ?$ElementType<Scalars, 'String'>,
     color: $ElementType<Scalars, 'String'>,
     entityTypes: Array<TagEntityType>,
+    tagGroups: Array<TagGroupPayload>,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -61722,10 +61940,11 @@ export type Tag = {|
 |};
 
 export type TagCreateInput = {|
-  name: $ElementType<Scalars, 'String'>,
-  color: $ElementType<Scalars, 'String'>,
+  name?: ?$ElementType<Scalars, 'ID'>,
+  color?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
-  entityTypes: Array<TagEntityType>,
+  entityTypes?: ?Array<TagEntityType>,
+  deleted?: ?$ElementType<Scalars, 'Boolean'>,
 |};
 
 export const TagEntityTypeValues = Object.freeze({
@@ -61769,6 +61988,43 @@ export type Tagged = {|
   tags: Array<TagPayload>,
 |};
 
+export type TagGroup = {|
+  ...Model,
+  ...Owned,
+  ...Tagged,
+  ...{|
+     __typename?: 'TagGroup',
+    name: $ElementType<Scalars, 'String'>,
+    description?: ?$ElementType<Scalars, 'String'>,
+    organizationGroups: Array<OrganizationGroupPayload>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+    tags: Array<TagPayload>,
+  |}
+|};
+
+export type TagGroupCreateInput = {|
+  name: $ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  organizationGroupIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+|};
+
+export type TagGroupPayload = TagGroup | BadRequest | Forbidden | NotFound;
+
+export type TagGroupUpdateInput = {|
+  name?: ?$ElementType<Scalars, 'ID'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  organizationGroupIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+|};
+
 export type TagPayload = Tag | BadRequest | Forbidden | NotFound;
 
 export type TagPayloadPaginatedSearch = {|
@@ -61796,6 +62052,7 @@ export type TagUpdateInput = {|
   color?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   entityTypes?: ?Array<TagEntityType>,
+  deleted?: ?$ElementType<Scalars, 'Boolean'>,
 |};
 
 export type Task = {|
@@ -61955,6 +62212,20 @@ export type TaskSortInput = {|
   dueDate?: ?SortOrder,
   entity?: ?SortOrder,
 |};
+
+export const TaskStatusTypeValues = Object.freeze({
+  /** InProgress */
+  InProgress: 'InProgress', 
+  /** Completed */
+  Completed: 'Completed', 
+  /** Skipped */
+  Skipped: 'Skipped', 
+  /** Uncompleted */
+  Uncompleted: 'Uncompleted'
+});
+
+
+export type TaskStatusType = $Values<typeof TaskStatusTypeValues>;
 
 export type TaskTemplate = {|
   ...Model,
@@ -62374,6 +62645,7 @@ export type UserFilterInput = {|
   updatedAt?: ?DateRangeInput,
   organizationId?: ?$ElementType<Scalars, 'ID'>,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIdsWithOperator?: ?IdsWithOperatorInput,
   notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -62455,6 +62727,7 @@ export type Viewer = {|
   notificationCount: $ElementType<Scalars, 'Int'>,
   notificationUnseenCount: $ElementType<Scalars, 'Int'>,
   notificationPreferences: NotificationPreferences,
+  messagePreferences: MessagePreferences,
 |};
 
 

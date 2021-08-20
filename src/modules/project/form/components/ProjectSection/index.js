@@ -151,7 +151,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                           entityType="Order"
                           customFields={values.customFields}
                           setFieldValue={setFieldValue}
-                          editable={{ 
+                          editable={{
                             values: hasPermission([ORDER_UPDATE, ORDER_SET_CUSTOM_FIELDS]),
                             mask: hasPermission([ORDER_UPDATE, ORDER_SET_CUSTOM_FIELDS_MASK]),
                           }}
@@ -327,6 +327,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                                       {opened && (
                                         <SelectPartners
                                           partnerTypes={[]}
+                                          partnerCount={4}
                                           selected={
                                             values.organizations?.map(org => org?.partner) || []
                                           }

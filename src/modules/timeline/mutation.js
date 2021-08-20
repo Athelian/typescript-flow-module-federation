@@ -40,3 +40,14 @@ export const commentDeleteMutation = gql`
   ${forbiddenFragment}
   ${notFoundFragment}
 `;
+
+export const messagePreferencesMutation = gql`
+  mutation messagePreferencesUpdate($input: MessagePreferencesInput!) {
+    messagePreferencesUpdate(input: $input) {
+      ...badRequestFragment
+      ...forbiddenFragment
+    }
+  }
+  ${forbiddenFragment}
+  ${badRequestFragment}
+`;
