@@ -329,13 +329,11 @@ export const parseFilesField = ({
   const deletedFiles = findDeletedArrayData('id', originalFiles, newFiles);
 
   const newFormattedFiles = [
-    ...changedFiles.files
-      .filter(file => Object.keys(file).length > 1)
-      .map(file => {
-        // eslint-disable-next-line no-param-reassign
-        file.type = allFilesById[file.id].type;
-        return file;
-      }),
+    ...changedFiles.files.map(file => {
+      // eslint-disable-next-line no-param-reassign
+      file.type = allFilesById[file.id].type;
+      return file;
+    }),
     ...deletedFiles.map(file => ({
       id: file.id,
       type: allFilesById[file.id].type,
