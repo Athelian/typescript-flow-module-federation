@@ -9,15 +9,16 @@ import {
   SHIPMENT_DOCUMENT_SET,
   SHIPMENT_DOCUMENT_DOWNLOAD,
   SHIPMENT_DOCUMENT_DELETE,
-  SHIPMENT_DOCUMENT_CREATE,
   SHIPMENT_DOCUMENT_SET_TYPE,
   SHIPMENT_DOCUMENT_FORM,
 } from 'modules/permission/constants/shipment';
 import {
-  DOCUMENT_CREATE,
+  DOCUMENT_GET,
+  DOCUMENT_SET,
   DOCUMENT_DELETE,
   DOCUMENT_SET_TYPE,
   DOCUMENT_UPDATE,
+  DOCUMENT_DOWNLOAD,
 } from 'modules/permission/constants/file';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
@@ -33,17 +34,36 @@ type Props = {|
 function DocumentsSection({ entityId, isLoading }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+
   const canUpload = hasPermission([
+    DOCUMENT_SET,
+    DOCUMENT_UPDATE,
     SHIPMENT_DOCUMENT_SET,
-    SHIPMENT_DOCUMENT_CREATE,
-    DOCUMENT_CREATE,
     SHIPMENT_SET,
     SHIPMENT_UPDATE,
   ]);
-  const canAddOrphan = hasPermission([SHIPMENT_DOCUMENT_SET, SHIPMENT_SET, SHIPMENT_UPDATE]);
-  const canViewForm = hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_DOCUMENT_FORM]);
-  const canDownload = hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_DOCUMENT_DOWNLOAD]);
+  const canAddOrphan = hasPermission([
+    DOCUMENT_SET,
+    SHIPMENT_DOCUMENT_SET,
+    SHIPMENT_SET,
+    SHIPMENT_UPDATE,
+  ]);
+  const canViewForm = hasPermission([
+    DOCUMENT_GET,
+    DOCUMENT_SET,
+    SHIPMENT_SET,
+    SHIPMENT_UPDATE,
+    SHIPMENT_DOCUMENT_FORM,
+  ]);
+  const canDownload = hasPermission([
+    DOCUMENT_SET,
+    SHIPMENT_SET,
+    SHIPMENT_UPDATE,
+    DOCUMENT_DOWNLOAD,
+    SHIPMENT_DOCUMENT_DOWNLOAD,
+  ]);
   const canChangeType = hasPermission([
+    DOCUMENT_SET,
     SHIPMENT_SET,
     SHIPMENT_UPDATE,
     SHIPMENT_DOCUMENT_SET,
@@ -52,6 +72,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
     DOCUMENT_UPDATE,
   ]);
   const canDelete = hasPermission([
+    DOCUMENT_SET,
     SHIPMENT_SET,
     SHIPMENT_UPDATE,
     SHIPMENT_DOCUMENT_SET,

@@ -1,5 +1,6 @@
 // @flow
 
+export const DOCUMENT_SET = 'file.files.set';
 export const DOCUMENT_GET = 'file.files.get';
 export const DOCUMENT_DOWNLOAD = 'file.files.download';
 export const DOCUMENT_LIST = 'file.files.list';
