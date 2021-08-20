@@ -90,7 +90,6 @@ const DocumentsUpload = ({
   const filesStateRef = React.useRef(filesState);
   const previousFilesRef = React.useRef<Array<UploadFileState>>([]);
 
-  // TODO: to transfer somewhere else
   const documentTypePermissions = useDocumentTypePermission({ entity });
 
   React.useEffect(() => {

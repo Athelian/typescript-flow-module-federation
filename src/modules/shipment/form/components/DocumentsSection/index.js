@@ -60,6 +60,7 @@ function DocumentsSection({ entityId, isLoading }: Props) {
     SHIPMENT_SET,
     SHIPMENT_UPDATE,
     DOCUMENT_DOWNLOAD,
+    SHIPMENT_DOCUMENT_SET,
     SHIPMENT_DOCUMENT_DOWNLOAD,
   ]);
   const canChangeType = hasPermission([
