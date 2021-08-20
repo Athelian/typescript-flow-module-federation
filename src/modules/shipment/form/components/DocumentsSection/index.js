@@ -39,15 +39,19 @@ function DocumentsSection({ entityId, isLoading }: Props) {
     DOCUMENT_CREATE,
   ]);
   const canAddOrphan = hasPermission([SHIPMENT_DOCUMENT_SET, SHIPMENT_SET, SHIPMENT_UPDATE]);
-  const canViewForm = hasPermission(SHIPMENT_DOCUMENT_FORM);
-  const canDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
+  const canViewForm = hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_DOCUMENT_FORM]);
+  const canDownload = hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_DOWNLOAD_DOCUMENTS]);
   const canChangeType = hasPermission([
+    SHIPMENT_SET,
+    SHIPMENT_UPDATE,
     SHIPMENT_DOCUMENT_SET,
     DOCUMENT_SET_TYPE,
     SHIPMENT_DOCUMENT_SET_TYPE,
     DOCUMENT_UPDATE,
   ]);
   const canDelete = hasPermission([
+    SHIPMENT_SET,
+    SHIPMENT_UPDATE,
     SHIPMENT_DOCUMENT_SET,
     SHIPMENT_DOCUMENT_DELETE,
     DOCUMENT_DELETE,

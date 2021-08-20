@@ -220,12 +220,12 @@ const DocumentsUpload = ({
                 onSave([...files.filter(file => file.type !== type.value), ...updatedValues])
               }
               onUpload={evt => handleUpload(evt, type.value)}
-              canUpload={canSet ?? canUpload}
-              canAddOrphan={canSet ?? canAddOrphan}
-              canViewForm={canSet ?? canViewForm}
-              canDownload={canSet ?? canDownload}
-              canChangeType={canSet ?? canChangeType}
-              canDelete={canSet ?? canDelete}
+              canUpload={canUpload || canSet}
+              canAddOrphan={canAddOrphan || canSet}
+              canViewForm={canViewForm || canSet}
+              canDownload={canDownload || canSet}
+              canChangeType={canChangeType || canSet}
+              canDelete={canDelete || canSet}
             />
           );
         })}
