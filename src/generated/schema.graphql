@@ -26756,6 +26756,8 @@ input BatchFilterInput {
   desiredAt: DateRangeInput
   hasShipment: Boolean
   hasShipmentExcludeId: ID
+
+  """Deprecated"""
   tagIds: [ID!]
   tagIdsWithOperator: IdsWithOperatorInput
   notTagIds: [ID!]
@@ -26806,8 +26808,10 @@ input BatchSortInput {
   shipmentNo: SortOrder
   shipmentLoadPort: SortOrder
   shipmentLoadPortDeparture: SortOrder
+  shipmentLoadPortDepartureDateDifference: SortOrder
   shipmentDischargePort: SortOrder
   shipmentDischargePortArrival: SortOrder
+  shipmentDischargePortArrivalDateDifference: SortOrder
 }
 
 input BatchUpdateInput {
@@ -28474,6 +28478,15 @@ input EntityInput {
 
 union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | ShipmentAggregate | BadRequest | Forbidden | NotFound
 
+input EntityTagInput {
+  id: ID
+  name: ID
+  color: String
+  description: String
+  entityTypes: [TagEntityType!]
+  deleted: Boolean
+}
+
 type EntityValue {
   entity: EntityPayload
 }
@@ -28660,6 +28673,8 @@ input FileFilterInput {
   mimetype: String
   hasEntity: Boolean
   hasEntityExcludeId: ID
+
+  """Deprecated"""
   tagIds: [ID!]
   tagIdsWithOperator: IdsWithOperatorInput
   notTagIds: [ID!]
@@ -29605,6 +29620,7 @@ type MaskEdit implements Model & Owned & Memorizable {
   filterSort: String
   collapses: [String!]!
   milestones: [MaskEditMilestone!]!
+  selectedMaskEdit: MaskEdit
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -29628,6 +29644,7 @@ input MaskEditByUserInput {
   filterSort: String
   collapses: [String!]
   milestones: [MaskEditMilestoneInput!]
+  selectedMaskEditId: ID
 }
 
 type MaskEditColumn {
@@ -29798,6 +29815,16 @@ interface Memorizable {
   memo: String
 }
 
+type MessagePreferences {
+  sendMessageByEnter: Boolean!
+}
+
+input MessagePreferencesInput {
+  sendMessageByEnter: Boolean
+}
+
+union MessagePreferencesPayload = MessagePreferences | BadRequest | Forbidden | NotFound
+
 input MetricRangeInput {
   min: Float
   max: Float
@@ -29866,6 +29893,14 @@ enum MilestoneDateBinding {
 }
 
 union MilestonePayload = Milestone | BadRequest | Forbidden | NotFound
+
+enum MilestoneStatusType {
+  """Completed"""
+  Completed
+
+  """Uncompleted"""
+  Uncompleted
+}
 
 input MilestoneTaskInput {
   name: String
@@ -29952,6 +29987,9 @@ type Mutation {
   userUpdate(id: ID!, input: UserUpdateInput!): UserPayload!
   userAddRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
   userRemoveRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
+  organizationGroupCreate(input: OrganizationGroupCreateInput!): OrganizationGroupPayload!
+  organizationGroupUpdate(id: ID!, input: OrganizationGroupUpdateInput!): OrganizationGroupPayload!
+  organizationGroupDelete(id: ID!): EmptyPayload
   partnerUpdate(id: ID!, input: PartnerUpdateInput!): PartnerPayload!
   productCreate(input: ProductCreateInput!): ProductPayload!
   productUpdate(id: ID!, input: ProductUpdateInput!): ProductPayload!
@@ -30002,6 +30040,9 @@ type Mutation {
   tagCreate(input: TagCreateInput!): TagPayload!
   tagUpdate(id: ID!, input: TagUpdateInput!): TagPayload!
   tagDelete(id: ID!): EmptyPayload
+  tagGroupCreate(input: TagGroupCreateInput!): TagGroupPayload!
+  tagGroupUpdate(id: ID!, input: TagGroupUpdateInput!): TagGroupPayload!
+  tagGroupDelete(id: ID!): EmptyPayload
   fileUpload(file: Upload!, input: FileInput!): FilePayload!
   fileUpdate(id: ID!, input: FileInput!): FilePayload!
   fileDelete(id: ID!): EmptyPayload
@@ -30042,6 +30083,7 @@ type Mutation {
   milestoneCreate(input: MilestoneCreateInput!): MilestonePayload!
   milestoneUpdate(id: ID!, input: MilestoneUpdateInput!): MilestonePayload!
   milestoneDelete(id: ID!): EmptyPayload
+  messagePreferencesUpdate(input: MessagePreferencesInput!): MessagePreferencesPayload!
   projectTemplateCreate(input: ProjectTemplateCreateInput!): ProjectTemplatePayload!
   projectTemplateUpdate(id: ID!, input: ProjectTemplateUpdateInput!): ProjectTemplatePayload!
   projectTemplateDelete(id: ID!): EmptyPayload
@@ -30351,7 +30393,11 @@ input OrderFilterInput {
   poNos: [String!]
   followerIds: [ID!]
   exporterIds: [ID!]
+
+  """Deprecated"""
   supplierIds: [ID!]
+
+  """Deprecated"""
   tagIds: [ID!]
   tagIdsWithOperator: IdsWithOperatorInput
   notTagIds: [ID!]
@@ -30619,6 +30665,7 @@ type Organization implements Model {
   paid: Boolean!
   disabled: Boolean!
   dummy: Boolean!
+  shareAllTags: Boolean!
   users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPaginatedSearch!
 
   """
@@ -30633,6 +30680,34 @@ type Organization implements Model {
   createdBy: UserPayload
   updatedBy: UserPayload
   deletedBy: UserPayload
+}
+
+type OrganizationGroup implements Model & Owned {
+  name: String!
+  description: String
+  organizations: [OrganizationPayload!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: OrganizationPayload!
+}
+
+input OrganizationGroupCreateInput {
+  name: String!
+  description: String
+  organizationIds: [ID!]
+}
+
+union OrganizationGroupPayload = OrganizationGroup | BadRequest | Forbidden | NotFound
+
+input OrganizationGroupUpdateInput {
+  name: String
+  description: String
+  organizationIds: [ID!]
 }
 
 union OrganizationPayload = Organization | BadRequest | Forbidden | NotFound
@@ -30859,6 +30934,8 @@ input ProductFilterInput {
   archived: Boolean
   exporterId: ID
   supplierId: ID
+
+  """Deprecated"""
   tagIds: [ID!]
   tagIdsWithOperator: IdsWithOperatorInput
   notTagIds: [ID!]
@@ -31001,6 +31078,8 @@ input ProductProviderFilterInput {
   exporterId: ID
   supplierId: ID
   importerId: ID
+
+  """Deprecated"""
   tagIds: [ID!]
   tagIdsWithOperator: IdsWithOperatorInput
   notTagIds: [ID!]
@@ -31164,11 +31243,16 @@ input ProjectFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   dueDate: DateRangeInput
+  sharedPartnerOrganizationIds: [ID!]
   followerIds: [ID!]
+
+  """Deprecated"""
   tagIds: [ID!]
   tagIdsWithOperator: IdsWithOperatorInput
   notTagIds: [ID!]
   archived: Boolean
+  milestones: [ProjectMilestoneFilterInput!]
+  tasks: [ProjectTaskFilterInput!]
 }
 
 input ProjectMilestoneCreateInput {
@@ -31184,6 +31268,20 @@ input ProjectMilestoneCreateInput {
   estimatedCompletionDateBinding: MilestoneDateBinding
   tasks: [MilestoneTaskInput!]
   files: [EntityFileInput!]
+}
+
+input ProjectMilestoneFilterInput {
+  position: Int!
+  status: MilestoneStatusType
+  dueDate: DateRangeInput
+  estimatedCompletionDate: DateRangeInput
+}
+
+input ProjectMilestoneSortInput {
+  position: Int
+  status: SortOrder
+  dueDate: SortOrder
+  estimatedCompletionDate: SortOrder
 }
 
 input ProjectMilestoneUpdateInput {
@@ -31217,7 +31315,27 @@ type ProjectPayloadPaginatedSearch implements Paginated {
 input ProjectSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  archived: SortOrder
   name: SortOrder
+  description: SortOrder
+  dueDate: SortOrder
+  milestone: ProjectMilestoneSortInput
+  task: ProjectTaskSortInput
+}
+
+input ProjectTaskFilterInput {
+  milestonePosition: Int!
+  position: Int!
+  status: TaskStatusType
+  dueDate: DateRangeInput
+  tagIdsWithOperator: IdsWithOperatorInput
+  notTagIds: [ID!]
+}
+
+input ProjectTaskSortInput {
+  milestonePosition: Int
+  position: Int
+  status: SortOrder
   dueDate: SortOrder
 }
 
@@ -31315,6 +31433,8 @@ type Query {
   usersByIDs(ids: [ID!]!): [UserPayload!]!
   organization(id: ID!): OrganizationPayload!
   organizationsByIDs(ids: [ID!]!): [OrganizationPayload!]!
+  organizationGroup(id: ID!): OrganizationGroupPayload!
+  organizationGroupsByIDs(ids: [ID!]!): [OrganizationGroupPayload!]!
   partner(id: ID!): PartnerPayload!
   partnership(id: ID!): PartnershipPayload!
   partnerships(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPayloadPaginatedSearch!
@@ -31360,10 +31480,13 @@ type Query {
   warehousesByIDs(ids: [ID!]!): [WarehousePayload!]!
   tag(id: ID!): TagPayload!
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPaginatedSearch!
+  tagsForEntity(entityOwnerId: ID!, entityType: TagEntityType!, page: Int! = 1, perPage: Int! = 10): TagPayloadPaginatedSearch!
   tagsByIDs(ids: [ID!]!): [TagPayload!]!
   tagExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   tagsExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
   tagsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
+  tagGroup(id: ID!): TagGroupPayload!
+  tagGroupsByIDs(ids: [ID!]!): [TagGroupPayload!]!
   task(id: ID!): TaskPayload!
   tasks(page: Int! = 1, perPage: Int! = 10, filterBy: TaskFilterInput, sortBy: TaskSortInput): TaskPayloadPaginatedSearch!
   tasksByIDs(ids: [ID!]!): [TaskPayload!]!
@@ -87413,6 +87536,8 @@ input ShipmentFilterInput {
   ids: [ID!]
   importerId: ID
   importerIds: [ID!]
+
+  """Deprecated"""
   tagIds: [ID!]
   tagIdsWithOperator: IdsWithOperatorInput
   notTagIds: [ID!]
@@ -87438,7 +87563,11 @@ input ShipmentFilterInput {
   containerContainerType: String
   containerContainerOption: ContainerOption
   containerWarehouseIds: [ID!]
+
+  """Deprecated"""
   containerTagIds: [ID!]
+  containerTagIdsWithOperator: IdsWithOperatorInput
+  containerNotTagIds: [ID!]
   containerCreatedAt: DateRangeInput
   containerUpdatedAt: DateRangeInput
   containerWarehouseArrivalAgreedDate: DateRangeInput
@@ -87449,18 +87578,34 @@ input ShipmentFilterInput {
   orderArchived: Boolean
   orderExporterIds: [ID!]
   orderFollowerIds: [ID!]
+
+  """Deprecated"""
   orderTagIds: [ID!]
+  orderTagIdsWithOperator: IdsWithOperatorInput
+  orderNotTagIds: [ID!]
   orderCompletelyBatched: Boolean
   orderCompletelyShipped: Boolean
-  batchTagIds: [ID!]
+  orderCreatedAt: DateRangeInput
+  orderUpdatedAt: DateRangeInput
+  orderItemTagIdsWithOperator: IdsWithOperatorInput
+  orderItemNotTagIds: [ID!]
   batchDeliveredAt: DateRangeInput
   batchDesiredAt: DateRangeInput
   batchExpiredAt: DateRangeInput
   batchProducedAt: DateRangeInput
   batchTotalVolume: MetricRangeInput
+
+  """Deprecated"""
+  batchTagIds: [ID!]
+  batchTagIdsWithOperator: IdsWithOperatorInput
+  batchNotTagIds: [ID!]
   productId: ID
   productIds: [ID!]
+
+  """Deprecated"""
   productTagIds: [ID!]
+  productTagIdsWithOperator: IdsWithOperatorInput
+  productNotTagIds: [ID!]
   productProviderIds: [ID!]
   productProviderExporterIds: [ID!]
   productProviderSupplierIds: [ID!]
@@ -87733,21 +87878,30 @@ type ShipmentShipperAppointedEvent implements ShipmentEventInterface & EventInte
 input ShipmentSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  archived: SortOrder
   no: SortOrder
   blNo: SortOrder
   cargoReady: SortOrder
   loadPort: SortOrder
   loadPortDeparture: SortOrder
+  loadPortDepartureDateDifference: SortOrder
   firstTransitPortArrival: SortOrder
   firstTransitPortDeparture: SortOrder
   secondTransitPortArrival: SortOrder
   secondTransitPortDeparture: SortOrder
   dischargePort: SortOrder
   dischargePortArrival: SortOrder
+  dischargePortArrivalDateDifference: SortOrder
   vesselName: SortOrder
   customClearance: SortOrder
   warehouseArrival: SortOrder
   deliveryReady: SortOrder
+  importerName: SortOrder
+  exporterName: SortOrder
+  totalVolumeValue: SortOrder
+  totalWeightValue: SortOrder
+  totalPriceAmount: SortOrder
+  customField: GenericSortInput
 }
 
 input ShipmentUpdateInput {
@@ -87767,7 +87921,10 @@ input ShipmentUpdateInput {
   incoterm: Incoterm
   carrier: String
   cargoReady: TimelineDateNestedInput
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   forwarderIds: [ID!]
   batches: [ShipmentBatchInput!]
@@ -87847,6 +88004,7 @@ type Tag implements Model & Owned {
   description: String
   color: String!
   entityTypes: [TagEntityType!]!
+  tagGroups: [TagGroupPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -87858,10 +88016,11 @@ type Tag implements Model & Owned {
 }
 
 input TagCreateInput {
-  name: String!
-  color: String!
+  name: ID
+  color: String
   description: String
-  entityTypes: [TagEntityType!]!
+  entityTypes: [TagEntityType!]
+  deleted: Boolean
 }
 
 enum TagEntityType {
@@ -87912,6 +88071,37 @@ interface Tagged {
   tags: [TagPayload!]!
 }
 
+type TagGroup implements Model & Owned & Tagged {
+  name: String!
+  description: String
+  organizationGroups: [OrganizationGroupPayload!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: OrganizationPayload!
+  tags: [TagPayload!]!
+}
+
+input TagGroupCreateInput {
+  name: String!
+  description: String
+  tagIds: [ID!]
+  organizationGroupIds: [ID!]
+}
+
+union TagGroupPayload = TagGroup | BadRequest | Forbidden | NotFound
+
+input TagGroupUpdateInput {
+  name: ID
+  description: String
+  tagIds: [ID!]
+  organizationGroupIds: [ID!]
+}
+
 union TagPayload = Tag | BadRequest | Forbidden | NotFound
 
 type TagPayloadPaginatedSearch implements Paginated {
@@ -87935,6 +88125,7 @@ input TagUpdateInput {
   color: String
   description: String
   entityTypes: [TagEntityType!]
+  deleted: Boolean
 }
 
 type Task implements Model & Owned & Sortable & Memorizable & Tagged {
@@ -88077,6 +88268,20 @@ input TaskSortInput {
   startDate: SortOrder
   dueDate: SortOrder
   entity: SortOrder
+}
+
+enum TaskStatusType {
+  """InProgress"""
+  InProgress
+
+  """Completed"""
+  Completed
+
+  """Skipped"""
+  Skipped
+
+  """Uncompleted"""
+  Uncompleted
 }
 
 type TaskTemplate implements Model & Owned {
@@ -88451,6 +88656,8 @@ input UserFilterInput {
   updatedAt: DateRangeInput
   organizationId: ID
   organizationIds: [ID!]
+
+  """Deprecated"""
   tagIds: [ID!]
   tagIdsWithOperator: IdsWithOperatorInput
   notTagIds: [ID!]
@@ -88525,6 +88732,7 @@ type Viewer {
   notificationCount: Int!
   notificationUnseenCount: Int!
   notificationPreferences: NotificationPreferences!
+  messagePreferences: MessagePreferences!
 }
 
 type Violation {

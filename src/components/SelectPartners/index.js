@@ -19,6 +19,7 @@ import PartnerGridView from 'modules/partner/list/PartnerGridView';
 
 type Props = {|
   partnerTypes: Array<string>,
+  partnerCount: number,
   selected: Array<{
     id: string,
     name: string,
@@ -27,9 +28,7 @@ type Props = {|
   onCancel: Function,
 |};
 
-const MAX_SELECTIONS = 4;
-
-const SelectPartners = ({ partnerTypes, selected, onCancel, onSelect }: Props) => {
+const SelectPartners = ({ partnerTypes, partnerCount, selected, onCancel, onSelect }: Props) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', types: partnerTypes },
     { updatedAt: 'DESCENDING' }
@@ -45,7 +44,7 @@ const SelectPartners = ({ partnerTypes, selected, onCancel, onSelect }: Props) =
   );
 
   return (
-    <Selector.Many selected={selected} max={MAX_SELECTIONS}>
+    <Selector.Many selected={selected} max={partnerCount}>
       {({ value, dirty, getItemProps }) => (
         <SlideViewLayout>
           <SlideViewNavBar>
@@ -61,7 +60,7 @@ const SelectPartners = ({ partnerTypes, selected, onCancel, onSelect }: Props) =
             <Sort config={PartnerSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
             <h3>
-              {value.length}/{MAX_SELECTIONS}
+              {value.length}/{partnerCount}
             </h3>
             <CancelButton disabled={false} onClick={onCancel} />
             <SaveButton disabled={!dirty} onClick={() => onSelect(value)} />

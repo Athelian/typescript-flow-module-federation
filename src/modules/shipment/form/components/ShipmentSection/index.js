@@ -793,7 +793,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         infoMessage={
                           <FormattedMessage
                             id="modules.Shipments.tooltipForwarder"
-                            defaultMessage="You can choose up to 4 Forwarders."
+                            defaultMessage="You can choose up to 6 Forwarders."
                           />
                         }
                       />
@@ -835,6 +835,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                       <>
                                         <SelectPartners
                                           partnerTypes={['Forwarder']}
+                                          partnerCount={6}
                                           selected={forwarders.map(forwarder => forwarder?.partner)}
                                           onCancel={() => forwardersSelectorToggle(false)}
                                           onSelect={selected => {
