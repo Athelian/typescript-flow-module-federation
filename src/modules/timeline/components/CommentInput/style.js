@@ -126,6 +126,7 @@ export const MessageButtonWrapper = css`
 
 export const TippyStyle = css`
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
   .tippy-backdrop {
     background-color: #fff;
   }
