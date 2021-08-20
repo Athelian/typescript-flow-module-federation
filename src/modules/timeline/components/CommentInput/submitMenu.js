@@ -2,9 +2,11 @@
 import * as React from 'react';
 import Tippy from '@tippy.js/react';
 import { RadioInput } from 'components/Form';
+import { useIntl } from 'react-intl';
 import { ApolloQueryResult } from 'react-apollo';
 import { useMutation } from '@apollo/react-hooks';
 import { messagePreferencesMutation } from 'modules/timeline/mutation';
+import messages from 'modules/timeline/messages';
 import { TippyStyle } from './style';
 
 type Props = {
@@ -16,6 +18,7 @@ type Props = {
 const SubmitMenu = ({ children, sendType, refetch }: Props) => {
   const [radioValue, setRadioValue] = React.useState('Send Message');
   const [messagePreferencesMutationUpdate] = useMutation(messagePreferencesMutation);
+  const intl = useIntl();
 
   React.useEffect(() => {
     if (sendType) {
@@ -56,18 +59,18 @@ const SubmitMenu = ({ children, sendType, refetch }: Props) => {
           onToggle={() => toggleRadio('Send Message')}
         >
           <div className="radio-label">
-            Enter sends a message
+            {`Enter ${intl.formatMessage(messages.sendMessage)}`}
             <br />
-            (shift + enter adds a new line)
+            {`(shift + enter ${intl.formatMessage(messages.sendMessage)})`}
           </div>
         </RadioInput>
       </div>
       <div className="radio-wrapper">
         <RadioInput selected={radioValue === 'New Line'} onToggle={() => toggleRadio('New Line')}>
           <div className="radio-label">
-            Enter adds a new line
+            {`Enter ${intl.formatMessage(messages.newLine)}`}
             <br />
-            {`(${getPlatform()} + enter sends a message)`}
+            {`(${getPlatform()} + Enter ${intl.formatMessage(messages.newLine)})`}
           </div>
         </RadioInput>
       </div>
