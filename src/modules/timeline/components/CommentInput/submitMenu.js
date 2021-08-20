@@ -34,7 +34,9 @@ const SubmitMenu = ({ children, sendType, refetch }: Props) => {
         },
       },
     }).then(() => {
-      refetch();
+      if (refetch) {
+        refetch();
+      }
     });
   };
 
