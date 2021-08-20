@@ -28,7 +28,7 @@ import {
 import {
   SHIPMENT_SET,
   SHIPMENT_DOCUMENT_SET,
-  SHIPMENT_DOWNLOAD_DOCUMENTS,
+  SHIPMENT_DOCUMENT_DOWNLOAD,
   SHIPMENT_DOCUMENT_DELETE,
   SHIPMENT_DOCUMENT_CREATE,
   SHIPMENT_DOCUMENT_SET_TYPE,
@@ -123,7 +123,7 @@ function checkDocumentActions(type: string, hasPermission: Function) {
       ]);
       const canAddOrphan = hasPermission([SHIPMENT_DOCUMENT_SET, SHIPMENT_SET]);
       const canViewForm = hasPermission(SHIPMENT_DOCUMENT_FORM);
-      const canDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
+      const canDownload = hasPermission(SHIPMENT_DOCUMENT_DOWNLOAD);
       const canChangeType = hasPermission([
         SHIPMENT_DOCUMENT_SET,
         DOCUMENT_SET_TYPE,

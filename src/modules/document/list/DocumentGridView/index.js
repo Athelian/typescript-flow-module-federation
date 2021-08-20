@@ -33,7 +33,7 @@ import {
 } from 'modules/permission/constants/product';
 import {
   SHIPMENT_FORM,
-  SHIPMENT_DOWNLOAD_DOCUMENTS,
+  SHIPMENT_DOCUMENT_DOWNLOAD,
   SHIPMENT_DOCUMENT_DELETE,
 } from 'modules/permission/constants/shipment';
 import { PROJECT_FORM } from 'modules/permission/constants/project';
@@ -98,7 +98,7 @@ const defaultRenderItem = ({
         const downloadPermissions = {
           order: hasPermission(ORDER_DOWNLOAD_DOCUMENTS),
           orderItem: hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS),
-          shipment: hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS),
+          shipment: hasPermission(SHIPMENT_DOCUMENT_DOWNLOAD),
           product: hasPermission(PRODUCT_DOWNLOAD_DOCUMENTS),
           productProvider: hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS),
           project: hasPermission(MILESTONE_DOWNLOAD_DOCUMENTS),

@@ -206,7 +206,7 @@ const DocumentsUpload = ({
     <DndProvider backend={HTML5Backend}>
       <div className={cx(DocumentsUploadWrapperStyle, uploadWrapperStyle)}>
         {types.map(type => {
-          const canSet = documentTypePermissions[type.value]?.canSet;
+          const canSetType = documentTypePermissions[type.value]?.canSet;
 
           return (
             <DocumentTypeArea
@@ -220,12 +220,12 @@ const DocumentsUpload = ({
                 onSave([...files.filter(file => file.type !== type.value), ...updatedValues])
               }
               onUpload={evt => handleUpload(evt, type.value)}
-              canUpload={canUpload || canSet}
-              canAddOrphan={canAddOrphan || canSet}
-              canViewForm={canViewForm || canSet}
-              canDownload={canDownload || canSet}
-              canChangeType={canChangeType || canSet}
-              canDelete={canDelete || canSet}
+              canUpload={canUpload || canSetType}
+              canAddOrphan={canAddOrphan || canSetType}
+              canViewForm={canViewForm || canSetType}
+              canDownload={canDownload || canSetType}
+              canChangeType={canChangeType || canSetType}
+              canDelete={canDelete || canSetType}
             />
           );
         })}

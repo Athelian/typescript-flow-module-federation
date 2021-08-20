@@ -11,7 +11,7 @@ import {
 } from 'modules/permission/constants/file';
 import { ORDER_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/orderItem';
-import { SHIPMENT_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/shipment';
+import { SHIPMENT_DOCUMENT_DOWNLOAD } from 'modules/permission/constants/shipment';
 import { PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/product';
 import { MILESTONE_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/milestone';
 import { TAG_LIST } from 'modules/permission/constants/tag';
@@ -52,7 +52,7 @@ const DocumentSection = () => {
     hasPermissions(DOCUMENT_DOWNLOAD) ||
     (state.entity?.__typename === 'Order' && hasPermissions(ORDER_DOWNLOAD_DOCUMENTS)) ||
     (state.entity?.__typename === 'OrderItem' && hasPermissions(ORDER_ITEMS_DOWNLOAD_DOCUMENTS)) ||
-    (state.entity?.__typename === 'Shipment' && hasPermissions(SHIPMENT_DOWNLOAD_DOCUMENTS)) ||
+    (state.entity?.__typename === 'Shipment' && hasPermissions(SHIPMENT_DOCUMENT_DOWNLOAD)) ||
     (state.entity?.__typename === 'ProductProvider' &&
       hasPermissions(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS)) ||
     (state.entity?.__typename === 'Milestone' && hasPermissions(MILESTONE_DOWNLOAD_DOCUMENTS));
