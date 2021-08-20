@@ -127,10 +127,10 @@ export const MessageButtonWrapper = css`
 export const TippyStyle = css`
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
   .tippy-backdrop {
-    background-color: white;
+    background-color: #fff;
   }
   .radio-wrapper {
-    margin: 10px;
+    margin: 10px 10px 10px 8px;
   }
   .radio-label {
     width: 100%;
