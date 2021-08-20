@@ -314,7 +314,7 @@ export const parseFilesField = ({
   }
 
   const allFilesById = {
-    ...originalFiles.reduce((arr, file) => {
+    ...(originalFiles ?? []).reduce((arr, file) => {
       // eslint-disable-next-line no-param-reassign
       arr[file.id] = file;
       return arr;
@@ -329,7 +329,7 @@ export const parseFilesField = ({
   const deletedFiles = findDeletedArrayData('id', originalFiles, newFiles);
 
   const newFormattedFiles = [
-    ...changedFiles.files.map(file => {
+    ...changedFiles[key].map(file => {
       // eslint-disable-next-line no-param-reassign
       file.type = allFilesById[file.id].type;
       return file;
@@ -342,7 +342,7 @@ export const parseFilesField = ({
   ];
 
   return {
-    files: newFormattedFiles,
+    [key]: newFormattedFiles,
   };
 };
 

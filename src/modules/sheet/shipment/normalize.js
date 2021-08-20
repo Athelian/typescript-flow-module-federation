@@ -32,7 +32,7 @@ export default function normalizeSheetShipmentInput(
     case 'blDate':
     case 'bookingDate':
       return {
-        [field]: newValue || null,
+        [(field: string)]: newValue || null,
       };
     case 'tags':
       return {

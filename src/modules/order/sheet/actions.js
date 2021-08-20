@@ -307,7 +307,9 @@ export default {
     BatchMoveToNewContainerOnExistShipmentAction,
     hasPermissions =>
       hasPermissions(CONTAINER_CREATE) &&
-      (hasPermissions([SHIPMENT_SET, SHIPMENT_UPDATE]) || hasPermissions(SHIPMENT_ADD_BATCH)) &&
+      (hasPermissions(SHIPMENT_SET) ||
+        hasPermissions(SHIPMENT_UPDATE) ||
+        hasPermissions(SHIPMENT_ADD_BATCH)) &&
       (hasPermissions(BATCH_UPDATE) ||
         (hasPermissions(BATCH_SET_SHIPMENT) && hasPermissions(BATCH_SET_CONTAINER)))
   ),

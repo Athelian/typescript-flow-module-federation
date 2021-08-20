@@ -1,4 +1,5 @@
 // @flow
+
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 
@@ -28,7 +29,7 @@ interface Props {
 /**
  * for retrieving the permissions of a document type of an entity
  */
-const useDocumentTypePermission = ({ entity }: Props) => {
+const useDocumentTypePermission = ({ entity }: Props): Object => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
