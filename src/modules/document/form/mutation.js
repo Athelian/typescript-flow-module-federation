@@ -23,7 +23,7 @@ import {
   badRequestFragment,
   forbiddenFragment,
 } from 'graphql';
-import { parseEnumField, parseMemoField, parseArrayOfIdsField } from 'utils/data';
+import { parseEnumField, parseMemoField, parseArrayOfIdsField, parseFilesField } from 'utils/data';
 import { toLowerFirst } from 'utils/string';
 
 export const documentUpdateMutation: Object = gql`
@@ -265,6 +265,16 @@ export const prepareParsedDocumentParentInput = (
       };
       break;
     }
+    case 'Shipment':
+      input = {
+        id: entity.id,
+        input: parseFilesField({
+          key: 'files',
+          originalFiles: originalEntity[loweredTypename].files,
+          newFiles: entity.files,
+        }),
+      };
+      break;
     default: {
       const oldFiles = originalEntity[loweredTypename].files.map(file => ({
         id: file.id,

@@ -28,6 +28,7 @@ import {
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import {
+  SHIPMENT_SET,
   SHIPMENT_UPDATE,
   SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY,
   SHIPMENT_SET_TOTAL_VOLUME,
@@ -87,7 +88,7 @@ const CustomPlaceHolder = () => (
 const ShipmentSummary = ({ entityId, isLoading, isNewOrClone }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const canUpdate = hasPermission(SHIPMENT_UPDATE);
+  const canUpdate = hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]);
 
   return (
     <QueryPlaceHolder

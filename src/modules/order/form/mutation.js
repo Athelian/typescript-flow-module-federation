@@ -165,7 +165,11 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
       ...prepareParseOrderItem(oldItem, newItem),
     })
   ),
-  ...parseFilesField('files', getByPathWithDefault(null, 'files', originalValues), newValues.files),
+  ...parseFilesField({
+    key: 'files',
+    originalFiles: getByPathWithDefault(null, 'files', originalValues),
+    newFiles: newValues.files,
+  }),
   ...parseTodoField(
     getByPathWithDefault(
       { tasks: [], taskTemplate: null, milestone: null },

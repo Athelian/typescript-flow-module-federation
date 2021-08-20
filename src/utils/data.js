@@ -274,13 +274,20 @@ export const findDeletedArrayData = (
   return deleted;
 };
 
-// Use for Documents fields. Need to send ids even for new files.
-export const parseFilesField = (
+/**
+ * Use for Documents fields. Need to send ids even for new files.
+ */
+export const parseFilesField = ({
+  key,
+  originalFiles,
+  newFiles,
+  isNewFormat,
+}: {
   key: string,
   originalFiles: ?Array<FilesType>,
   newFiles: Array<FilesType>,
-  returnDeletedFiles?: boolean
-): Object => {
+  isNewFormat?: boolean,
+}): Object => {
   const changedFiles = {
     ...parseArrayOfChildrenField(
       key,
@@ -302,15 +309,40 @@ export const parseFilesField = (
     ),
   };
 
-  if (!returnDeletedFiles) {
+  if (!isNewFormat) {
     return changedFiles;
   }
 
+  const allFilesById = {
+    ...(originalFiles ?? []).reduce((arr, file) => {
+      // eslint-disable-next-line no-param-reassign
+      arr[file.id] = file;
+      return arr;
+    }, {}),
+    ...newFiles.reduce((arr, file) => {
+      // eslint-disable-next-line no-param-reassign
+      arr[file.id] = file;
+      return arr;
+    }, {}),
+  };
+
+  const deletedFiles = findDeletedArrayData('id', originalFiles, newFiles);
+
+  const newFormattedFiles = [
+    ...changedFiles[key].map(file => {
+      // eslint-disable-next-line no-param-reassign
+      file.type = allFilesById[file.id].type;
+      return file;
+    }),
+    ...deletedFiles.map(file => ({
+      id: file.id,
+      type: allFilesById[file.id].type,
+      orphan: true,
+    })),
+  ];
+
   return {
-    changed: changedFiles,
-    deleted: {
-      files: findDeletedArrayData('id', originalFiles, newFiles),
-    },
+    [key]: newFormattedFiles,
   };
 };
 
