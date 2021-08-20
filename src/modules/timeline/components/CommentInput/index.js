@@ -185,7 +185,7 @@ const CommentInput = ({ entity, query, queryField, variables, onCompleted, users
                             e.preventDefault();
                             submit();
                           }
-                        } else if (e.keyCode === 13 && e.metaKey) {
+                        } else if (e.keyCode === 13 && (e.metaKey || e.ctrlKey)) {
                           e.preventDefault();
                           submit();
                         }
