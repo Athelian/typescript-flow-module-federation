@@ -205,6 +205,9 @@ export default function transformSheetBatch({
     {
       columnKey: 'batch.tags',
       type: 'batch_tags',
+      extra: {
+        entityOwnerId: batch?.ownedBy?.id,
+      },
       ...transformValueField(
         basePath,
         batch,

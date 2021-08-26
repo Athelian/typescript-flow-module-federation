@@ -395,6 +395,9 @@ export default function transformSheetShipment({
     {
       columnKey: 'shipment.tags',
       type: 'shipment_tags',
+      extra: {
+        entityOwnerId: shipment?.ownedBy?.id,
+      },
       ...transformValueField(
         basePath,
         shipment,

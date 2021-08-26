@@ -369,8 +369,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                   />
 
                   <Subscribe to={[ProductTagsContainer]}>
-                    {({ state: { ownedBy, tags }, setFieldValue: changeTags }) => {
-                      console.log('product form', ownedBy?.id);
+                    {({ state: { tags }, setFieldValue: changeTags }) => {
                       return (
                         <FieldItem
                           vertical
@@ -384,7 +383,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                               id="tags"
                               name="tags"
                               tagType="Product"
-                              entityOwnerId={ownedBy?.id}
+                              entityOwnerId={product?.ownedBy?.id}
                               values={tags}
                               onChange={value => {
                                 changeTags('tags', value);

@@ -117,7 +117,6 @@ const PartnerSection = () => {
             }
             input={<Display height="30px">{state.organization?.postalCode}</Display>}
           />
-          {console.log('partner tags', state?.ownedBy?.id)}
           <FieldItem
             vertical
             label={
@@ -129,7 +128,6 @@ const PartnerSection = () => {
               <TagsInput
                 name="tags"
                 tagType="Partner"
-                entityOwnerId={state?.ownedBy?.id}
                 values={state.tags}
                 onChange={value => {
                   setFieldValue('tags', value);
