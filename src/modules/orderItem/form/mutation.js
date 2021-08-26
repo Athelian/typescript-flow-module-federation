@@ -36,7 +36,7 @@ import {
 import {
   parseGenericField,
   parseParentIdField,
-  parseArrayOfIdsField,
+  parseTagsField,
   parseArrayOfChildrenField,
   parseFilesField,
   parseCustomFieldsField,
@@ -101,11 +101,7 @@ export const prepareParseOrderItem = (originalValues: Object, newValues: Object)
     newValues.quantity
   ),
   ...parseDateField('deliveryDate', originalValues?.deliveryDate, newValues.deliveryDate),
-  ...parseArrayOfIdsField(
-    'tagIds',
-    getByPathWithDefault([], 'tags', originalValues),
-    newValues.tags
-  ),
+  ...parseTagsField('tags', originalValues?.tags ?? [], newValues.tags),
   ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
   ...parseArrayOfChildrenField(
     'batches',

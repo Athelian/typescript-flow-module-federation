@@ -49,6 +49,7 @@ import {
   parseFilesField,
   parseEnumField,
   parseCustomFieldsField,
+  parseTagsField,
   parseTodoField,
   parseDatetimeField,
 } from 'utils/data';
@@ -303,11 +304,7 @@ export const prepareParsedShipmentInput = ({
       getByPathWithDefault(null, 'customFields', originalValues),
       newValues.customFields
     ),
-    ...parseArrayOfIdsField(
-      'tagIds',
-      getByPathWithDefault([], 'tags', originalValues),
-      newValues.tags
-    ),
+    ...parseTagsField('tags', getByPathWithDefault([], 'tags', originalValues), newValues.tags),
     ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
     ...parseGenericField(
       'totalPackageQuantityOverride',

@@ -37,7 +37,7 @@ import {
   parseGenericField,
   parseEnumField,
   parseMemoField,
-  parseArrayOfIdsField,
+  parseTagsField,
   parseParentIdField,
   parseArrayOfChildrenField,
   parseApprovalField,
@@ -209,11 +209,7 @@ export const prepareParsedContainerInput = ({
         approvedAt: newValues.departureDateApprovedAt,
       }
     ),
-    ...parseArrayOfIdsField(
-      'tagIds',
-      getByPathWithDefault([], 'tags', originalValues),
-      newValues.tags
-    ),
+    ...parseTagsField('tags', getByPathWithDefault([], 'tags', originalValues), newValues.tags),
     ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
     ...parseParentIdField(
       'warehouseId',

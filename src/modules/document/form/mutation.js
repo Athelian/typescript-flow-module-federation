@@ -23,7 +23,7 @@ import {
   badRequestFragment,
   forbiddenFragment,
 } from 'graphql';
-import { parseEnumField, parseMemoField, parseArrayOfIdsField, parseFilesField } from 'utils/data';
+import { parseEnumField, parseMemoField, parseTagsField, parseFilesField } from 'utils/data';
 import { toLowerFirst } from 'utils/string';
 
 export const documentUpdateMutation: Object = gql`
@@ -183,7 +183,7 @@ export const prepareParsedDocumentInput = (originalValues: ?Object, newValues: O
     ...parseEnumField('type', originalValues?.type, newValues.type),
     // ...parseParentIdField('entityId', originalValues?.entity, newValues.entity),
     ...parseMemoField('memo', originalValues?.memo, newValues.memo),
-    ...parseArrayOfIdsField('tagIds', originalValues?.tags ?? [], newValues.tags),
+    ...parseTagsField('tags', originalValues?.tags ?? [], newValues.tags),
   };
 };
 
