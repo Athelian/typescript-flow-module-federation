@@ -41,7 +41,7 @@ type Props = {
 
 type OptionsProps = {
   entityType: string,
-  entityOwnerId: string,
+  entityOwnerId?: string,
   selectedItems: Array<Item>,
   isOpen: boolean,
   inputValue: ?string,
