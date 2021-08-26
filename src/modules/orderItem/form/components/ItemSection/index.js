@@ -211,7 +211,6 @@ const ItemSection = ({ isSlideView, orderItem }: Props) => {
                         ]),
                       }}
                     />
-                    {console.log('orderItem?.ownedBy?.id', orderItem?.ownedBy?.id)}
                     <FieldItem
                       vertical
                       label={

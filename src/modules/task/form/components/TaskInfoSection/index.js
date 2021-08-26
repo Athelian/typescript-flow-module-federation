@@ -778,8 +778,6 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                     </GridColumn>
                   }
                 />
-                {console.log('task?.ownedBy?.id', task?.ownedBy?.id)}
-
                 <FieldItem
                   vertical
                   label={

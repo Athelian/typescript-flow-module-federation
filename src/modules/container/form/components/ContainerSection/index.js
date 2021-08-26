@@ -629,7 +629,6 @@ const ContainerSection = ({ container }: Props) => {
                     )}
                   </div>
                 </div>
-                {console.log('container?.ownedBy?.id', container?.ownedBy?.id)}
                 <FieldItem
                   vertical
                   label={

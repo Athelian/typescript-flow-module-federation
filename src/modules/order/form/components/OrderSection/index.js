@@ -324,8 +324,6 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                         mask: hasPermission([ORDER_UPDATE, ORDER_SET_CUSTOM_FIELDS_MASK]),
                       }}
                     />
-                    {console.log('order tags', ownedBy?.id)}
-
                     <Subscribe to={[OrderTagsContainer]}>
                       {({ state: { tags }, setFieldValue: changeTags }) => (
                         <FieldItem

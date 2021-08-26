@@ -176,7 +176,6 @@ const ProjectSection = ({ isNew, project }: Props) => {
                         <div className={DescriptionTagsWrapperStyle}>
                           <Subscribe to={[ProjectTagsContainer]}>
                             {({ state: { tags }, setFieldValue: changeTags }) => {
-                              console.log('project?.ownedBy?.id', project?.ownedBy?.id);
                               return (
                                 <div className={TagsWrapperStyle}>
                                   <Label height="30px">
