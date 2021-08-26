@@ -134,7 +134,7 @@ const TagOptions = ({
     return () => document.removeEventListener('wheel', listener, opts);
   }, [closeMenu]);
 
-  const tags = (loading ? [] : data?.tags?.nodes ?? [])
+  const tags = (loading ? [] : data?.tags?.nodes ?? data?.tagsForEntity?.nodes ?? [])
     .filter(tag => !isForbidden(tag) && !isNotFound(tag))
     .sort((a, b) => {
       if (a.name < b.name) return -1;
