@@ -369,40 +369,43 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                   />
 
                   <Subscribe to={[ProductTagsContainer]}>
-                    {({ state: { ownedBy, tags }, setFieldValue: changeTags }) => (
-                      <FieldItem
-                        vertical
-                        label={
-                          <Label height="30px">
-                            <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
-                          </Label>
-                        }
-                        input={
-                          <TagsInput
-                            id="tags"
-                            name="tags"
-                            tagType="Product"
-                            entityOwnerId={ownedBy?.id}
-                            values={tags}
-                            onChange={value => {
-                              changeTags('tags', value);
-                            }}
-                            onClickRemove={value => {
-                              changeTags(
-                                'tags',
-                                tags.filter(({ id }) => id !== value.id)
-                              );
-                            }}
-                            editable={{
-                              set:
-                                hasPermission(TAG_LIST) &&
-                                hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
-                              remove: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
-                            }}
-                          />
-                        }
-                      />
-                    )}
+                    {({ state: { ownedBy, tags }, setFieldValue: changeTags }) => {
+                      console.log('product form', ownedBy?.id);
+                      return (
+                        <FieldItem
+                          vertical
+                          label={
+                            <Label height="30px">
+                              <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
+                            </Label>
+                          }
+                          input={
+                            <TagsInput
+                              id="tags"
+                              name="tags"
+                              tagType="Product"
+                              entityOwnerId={ownedBy?.id}
+                              values={tags}
+                              onChange={value => {
+                                changeTags('tags', value);
+                              }}
+                              onClickRemove={value => {
+                                changeTags(
+                                  'tags',
+                                  tags.filter(({ id }) => id !== value.id)
+                                );
+                              }}
+                              editable={{
+                                set:
+                                  hasPermission(TAG_LIST) &&
+                                  hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
+                                remove: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
+                              }}
+                            />
+                          }
+                        />
+                      );
+                    }}
                   </Subscribe>
 
                   <FormField

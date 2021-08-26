@@ -241,6 +241,7 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                         mask: hasPermission([BATCH_UPDATE, BATCH_SET_CUSTOM_FIELDS_MASK]),
                       }}
                     />
+                    {console.log('batch?.ownedBy?.id', batch?.ownedBy?.id)}
                     <FieldItem
                       vertical
                       label={

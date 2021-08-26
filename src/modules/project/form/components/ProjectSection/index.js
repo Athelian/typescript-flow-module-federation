@@ -175,36 +175,39 @@ const ProjectSection = ({ isNew, project }: Props) => {
                         </Subscribe>
                         <div className={DescriptionTagsWrapperStyle}>
                           <Subscribe to={[ProjectTagsContainer]}>
-                            {({ state: { tags }, setFieldValue: changeTags }) => (
-                              <div className={TagsWrapperStyle}>
-                                <Label height="30px">
-                                  <FormattedMessage {...messages.tags} />
-                                </Label>
-                                <TagsInput
-                                  id="tags"
-                                  name="tags"
-                                  tagType="Project"
-                                  entityOwnerId={project?.ownedBy?.id}
-                                  values={tags}
-                                  onChange={value => {
-                                    changeTags('tags', value);
-                                  }}
-                                  onClickRemove={value => {
-                                    changeTags(
-                                      'tags',
-                                      tags.filter(({ id }) => id !== value.id)
-                                    );
-                                  }}
-                                  editable={{
-                                    set:
-                                      hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]) &&
-                                      hasPermission(TAG_LIST),
-                                    remove: hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]),
-                                  }}
-                                  width="100%"
-                                />
-                              </div>
-                            )}
+                            {({ state: { tags }, setFieldValue: changeTags }) => {
+                              console.log('project?.ownedBy?.id', project?.ownedBy?.id);
+                              return (
+                                <div className={TagsWrapperStyle}>
+                                  <Label height="30px">
+                                    <FormattedMessage {...messages.tags} />
+                                  </Label>
+                                  <TagsInput
+                                    id="tags"
+                                    name="tags"
+                                    tagType="Project"
+                                    entityOwnerId={project?.ownedBy?.id}
+                                    values={tags}
+                                    onChange={value => {
+                                      changeTags('tags', value);
+                                    }}
+                                    onClickRemove={value => {
+                                      changeTags(
+                                        'tags',
+                                        tags.filter(({ id }) => id !== value.id)
+                                      );
+                                    }}
+                                    editable={{
+                                      set:
+                                        hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]) &&
+                                        hasPermission(TAG_LIST),
+                                      remove: hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]),
+                                    }}
+                                    width="100%"
+                                  />
+                                </div>
+                              );
+                            }}
                           </Subscribe>
                         </div>
                       </GridColumn>

@@ -117,7 +117,7 @@ const PartnerSection = () => {
             }
             input={<Display height="30px">{state.organization?.postalCode}</Display>}
           />
-
+          {console.log('partner tags', state?.ownedBy?.id)}
           <FieldItem
             vertical
             label={

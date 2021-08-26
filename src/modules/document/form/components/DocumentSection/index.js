@@ -103,7 +103,7 @@ const DocumentSection = () => {
               />
             )}
           </FormField>
-
+          {console.log('state.ownedBy?.id', state.ownedBy?.id)}
           <FieldItem
             vertical
             label={
