@@ -8,7 +8,7 @@ import { isForbidden, isNotFound } from 'utils/data';
 import Tag from 'components/Tag';
 import Icon from 'components/Icon';
 import usePortalSlot from 'hooks/usePortalSlot';
-import { tagsQuery } from './query';
+import { tagsQuery, tagsForEntityQuery } from './query';
 import { OptionStyle, OptionsWrapperStyle, SelectedStyle } from './style';
 
 type Item = {
@@ -27,6 +27,7 @@ export type RenderInputProps = {
 };
 
 type Props = {
+  entityOwnerId?: string,
   entityType: string,
   value: Array<Item>,
   disabled?: boolean,
@@ -40,6 +41,7 @@ type Props = {
 
 type OptionsProps = {
   entityType: string,
+  entityOwnerId: string,
   selectedItems: Array<Item>,
   isOpen: boolean,
   inputValue: ?string,
@@ -83,6 +85,7 @@ const TagOption = ({ index, style, data }: OptionProps) => {
 
 const TagOptions = ({
   entityType,
+  entityOwnerId,
   selectedItems,
   inputValue,
   highlightedIndex,
@@ -92,13 +95,13 @@ const TagOptions = ({
   getMenuProps,
   getItemProps,
 }: OptionsProps) => {
-  const { data, loading } = useQuery(tagsQuery, {
+  const { data, loading } = useQuery(entityOwnerId ? tagsForEntityQuery : tagsQuery, {
     fetchPolicy: 'cache-and-network',
     variables: {
       entityType,
-      query: inputValue,
       page: 1,
       perPage: 100,
+      ...(entityOwnerId ? { entityOwnerId } : { query: inputValue }),
     },
   });
 
@@ -191,6 +194,7 @@ const stateReducer = (state: Object, changes: Object) => {
 
 const TagsInput = ({
   entityType,
+  entityOwnerId,
   value,
   disabled,
   onChange,
@@ -280,6 +284,7 @@ const TagsInput = ({
           {isOpen && (
             <TagOptions
               entityType={entityType}
+              entityOwnerId={entityOwnerId}
               selectedItems={value}
               highlightedIndex={highlightedIndex}
               inputValue={inputValue}
