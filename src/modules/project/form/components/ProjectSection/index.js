@@ -43,7 +43,7 @@ import {
   PROJECT_SET_ARCHIVED,
   PROJECT_SET_FOLLOWERS,
 } from 'modules/permission/constants/project';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import { ProjectActivateDialog, ProjectArchiveDialog } from 'modules/project/common/Dialog';
 import messages from 'modules/project/messages';
 import Followers from 'components/Followers';
@@ -200,7 +200,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                                     editable={{
                                       set:
                                         hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]) &&
-                                        hasPermission(TAG_LIST),
+                                        hasPermission(TAG_GET),
                                       remove: hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]),
                                     }}
                                     width="100%"

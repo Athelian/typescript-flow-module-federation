@@ -4,7 +4,7 @@ import React from 'react';
 import { type IntlShape, injectIntl, FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { ObjectValue } from 'react-values';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import emitter from 'utils/emitter';
 import useUser from 'hooks/useUser';
@@ -804,7 +804,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                         );
                       }}
                       editable={{
-                        set: hasPermission(TAG_LIST) && editable.tags,
+                        set: hasPermission(TAG_GET) && editable.tags,
                         remove: editable.tags,
                       }}
                     />

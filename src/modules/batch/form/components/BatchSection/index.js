@@ -7,7 +7,7 @@ import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
 import { spreadOrderItem } from 'utils/item';
 import Icon from 'components/Icon';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ORDER_ITEMS_FORM, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
@@ -267,7 +267,7 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                           }}
                           editable={{
                             set:
-                              hasPermission(TAG_LIST) &&
+                              hasPermission(TAG_GET) &&
                               hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]),
                             remove: hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]),
                           }}

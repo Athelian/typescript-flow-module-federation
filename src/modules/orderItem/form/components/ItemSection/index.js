@@ -18,7 +18,7 @@ import {
   ORDER_ITEMS_SET_MEMO,
 } from 'modules/permission/constants/orderItem';
 import { ORDER_FORM } from 'modules/permission/constants/order';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import { getItemQuantityChartData } from 'utils/item';
@@ -237,7 +237,7 @@ const ItemSection = ({ isSlideView, orderItem }: Props) => {
                           }}
                           editable={{
                             set:
-                              hasPermission(TAG_LIST) &&
+                              hasPermission(TAG_GET) &&
                               hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TAGS]),
                             remove: hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TAGS]),
                           }}

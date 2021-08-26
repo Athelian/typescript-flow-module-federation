@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useEntityHasPermissions } from 'contexts/Permissions';
 import { PARTNER_UPDATE, PARTNER_SET_TAGS } from 'modules/permission/constants/partner';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import { TagsInput, SectionHeader, LastModified, FieldItem, Display, Label } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import PartnerFormContainer from 'modules/partner/form/container';
@@ -143,7 +143,7 @@ const PartnerSection = () => {
                 editable={{
                   // TODO: Remove hardcoded true when the strings are setup
                   set:
-                    (hasPermissions(TAG_LIST) && (canUpdate || hasPermissions(PARTNER_SET_TAGS))) ||
+                    (hasPermissions(TAG_GET) && (canUpdate || hasPermissions(PARTNER_SET_TAGS))) ||
                     true,
                   remove: canUpdate || hasPermissions(PARTNER_SET_TAGS) || true,
                 }}

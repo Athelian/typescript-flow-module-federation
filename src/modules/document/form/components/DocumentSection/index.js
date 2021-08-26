@@ -14,7 +14,7 @@ import { ORDER_ITEMS_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/ord
 import { SHIPMENT_DOCUMENT_DOWNLOAD } from 'modules/permission/constants/shipment';
 import { PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/product';
 import { MILESTONE_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/milestone';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import validator from 'modules/tableTemplate/form/validator';
 import { FormField } from 'modules/form';
 import {
@@ -127,7 +127,7 @@ const DocumentSection = () => {
                   );
                 }}
                 editable={{
-                  set: hasPermissions(TAG_LIST) && (canUpdate || hasPermissions(DOCUMENT_SET_TAGS)),
+                  set: hasPermissions(TAG_GET) && (canUpdate || hasPermissions(DOCUMENT_SET_TAGS)),
                   remove: canUpdate || hasPermissions(DOCUMENT_SET_TAGS),
                 }}
               />

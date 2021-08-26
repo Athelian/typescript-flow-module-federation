@@ -58,7 +58,7 @@ import { FormField } from 'modules/form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import { ContainerInfoContainer } from 'modules/container/form/containers';
 import validator from 'modules/container/form/validator';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import { getLatestDate } from 'utils/shipment';
 import { calculateDateDifferenceInDaysFromToday, calculateDueDate } from 'utils/date';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
@@ -655,7 +655,7 @@ const ContainerSection = ({ container }: Props) => {
                       }}
                       editable={{
                         set:
-                          hasPermission(TAG_LIST) &&
+                          hasPermission(TAG_GET) &&
                           hasPermission([CONTAINER_UPDATE, CONTAINER_SET_TAGS]),
                         remove: hasPermission([CONTAINER_UPDATE, CONTAINER_SET_TAGS]),
                       }}
