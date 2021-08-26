@@ -10,7 +10,6 @@ import { recalculateTaskBindingDate, getTasksPermissions } from 'utils/task';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons'; // BaseButton for set to project button
-import { Tooltip } from 'components/Tooltip';
 import useUser from 'hooks/useUser';
 import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
@@ -21,12 +20,7 @@ import usePermission from 'hooks/usePermission';
 import { PROJECT_FORM } from 'modules/permission/constants/project';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';
-import {
-  TasksSectionWrapperStyle,
-  TasksSectionStyle,
-  TemplateItemStyle,
-  DisabledTaskAddStyle,
-} from './style';
+import { TasksSectionWrapperStyle, TasksSectionStyle, TemplateItemStyle } from './style';
 import Tasks from './components/Tasks';
 import SelectTaskTemplate from './components/SelectTaskTemplate';
 
@@ -91,7 +85,7 @@ function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
           />
           <div className={TasksSectionWrapperStyle}>
             <SectionNavBar>
-              {canAddTasks && tasks.length <= 4 && (
+              {canAddTasks && (
                 <NewButton
                   label={intl.formatMessage(messages.newTask)}
                   onClick={() => {
@@ -110,22 +104,6 @@ function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
                   }}
                 />
               )}
-              {canAddTasks && tasks.length > 4 && (
-                <div className={DisabledTaskAddStyle}>
-                  <NewButton label={intl.formatMessage(messages.newTask)} />
-                  <Tooltip
-                    message={
-                      <FormattedMessage
-                        id="modules.Milestones.taskLimit"
-                        defaultMessage="There is a limit of 5 tasks"
-                      />
-                    }
-                  >
-                    <div className="tooltip-box" />
-                  </Tooltip>
-                </div>
-              )}
-
               {canUpdateMilestone && (
                 <BooleanValue>
                   {({ value: isOpen, set: toggleSlide }) => (
