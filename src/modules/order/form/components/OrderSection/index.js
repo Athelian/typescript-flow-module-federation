@@ -74,7 +74,7 @@ type Props = {
 const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { archived } = order;
+  const { archived, ownedBy } = order;
   return (
     <MainSectionPlaceholder height={961} isLoading={isLoading}>
       <SectionHeader
@@ -339,6 +339,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                               id="tags"
                               name="tags"
                               tagType="Order"
+                              entityOwnerId={ownedBy?.id}
                               values={tags}
                               onChange={value => {
                                 changeTags('tags', value);

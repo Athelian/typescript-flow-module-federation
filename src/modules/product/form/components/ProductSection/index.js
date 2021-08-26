@@ -369,7 +369,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                   />
 
                   <Subscribe to={[ProductTagsContainer]}>
-                    {({ state: { tags }, setFieldValue: changeTags }) => (
+                    {({ state: { ownedBy, tags }, setFieldValue: changeTags }) => (
                       <FieldItem
                         vertical
                         label={
@@ -382,6 +382,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                             id="tags"
                             name="tags"
                             tagType="Product"
+                            entityOwnerId={ownedBy?.id}
                             values={tags}
                             onChange={value => {
                               changeTags('tags', value);

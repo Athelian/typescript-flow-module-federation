@@ -254,6 +254,7 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                           name="tags"
                           tagType="Batch"
                           values={values.tags}
+                          entityOwnerId={batch?.ownedBy?.id}
                           onChange={value => {
                             setFieldValue('tags', value);
                           }}

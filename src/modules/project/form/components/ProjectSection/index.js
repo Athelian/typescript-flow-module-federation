@@ -184,6 +184,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                                   id="tags"
                                   name="tags"
                                   tagType="Project"
+                                  entityOwnerId={project?.ownedBy?.id}
                                   values={tags}
                                   onChange={value => {
                                     changeTags('tags', value);

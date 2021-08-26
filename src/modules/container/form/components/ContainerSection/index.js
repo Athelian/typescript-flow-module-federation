@@ -642,6 +642,7 @@ const ContainerSection = ({ container }: Props) => {
                       id="tags"
                       name="tags"
                       tagType="Container"
+                      entityOwnerId={container?.ownedBy?.id}
                       values={values.tags}
                       onChange={value => {
                         setFieldValue('tags', value);
