@@ -314,7 +314,7 @@ export const parseFilesField = ({
   }
 
   const allFilesById = {
-    ...originalFiles.reduce((arr, file) => {
+    ...(originalFiles ?? []).reduce((arr, file) => {
       // eslint-disable-next-line no-param-reassign
       arr[file.id] = file;
       return arr;
