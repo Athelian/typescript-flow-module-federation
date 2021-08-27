@@ -55,7 +55,7 @@ import {
 import messages from 'modules/order/messages';
 import SelectExporter from 'modules/order/common/SelectExporter';
 import { PartnerCard, GrayCard } from 'components/Cards';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import OrderSummary from './components/OrderSummary';
 import {
   OrderSectionWrapperStyle,
@@ -74,7 +74,7 @@ type Props = {
 const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { archived } = order;
+  const { archived, ownedBy } = order;
   return (
     <MainSectionPlaceholder height={961} isLoading={isLoading}>
       <SectionHeader
@@ -324,7 +324,6 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                         mask: hasPermission([ORDER_UPDATE, ORDER_SET_CUSTOM_FIELDS_MASK]),
                       }}
                     />
-
                     <Subscribe to={[OrderTagsContainer]}>
                       {({ state: { tags }, setFieldValue: changeTags }) => (
                         <FieldItem
@@ -339,6 +338,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                               id="tags"
                               name="tags"
                               tagType="Order"
+                              entityOwnerId={ownedBy?.id}
                               values={tags}
                               onChange={value => {
                                 changeTags('tags', value);
@@ -350,7 +350,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                 );
                               }}
                               editable={{
-                                set: hasPermission(TAG_LIST) && hasPermission(ORDER_UPDATE),
+                                set: hasPermission(TAG_GET) && hasPermission(ORDER_UPDATE),
                                 remove: hasPermission(ORDER_UPDATE),
                               }}
                             />

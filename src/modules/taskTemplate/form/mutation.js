@@ -11,7 +11,7 @@ import {
 import {
   parseGenericField,
   parseArrayOfChildrenField,
-  parseArrayOfIdsField,
+  parseTagsField,
   parseMemoField,
   parseEnumField,
 } from 'utils/data';
@@ -97,7 +97,7 @@ export const prepareParsedTaskTemplate = (originalValues: ?Object, newValues: Ob
           getByPathWithDefault(null, 'description', oldTask),
           newTask.description
         ),
-        ...parseArrayOfIdsField('tagIds', getByPathWithDefault([], 'tags', oldTask), newTask.tags),
+        ...parseTagsField('tags', oldTask?.tags ?? [], newTask.tags),
       };
     }
   ),

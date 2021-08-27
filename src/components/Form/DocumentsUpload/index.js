@@ -16,6 +16,7 @@ import { Tooltip } from 'components/Tooltip';
 import { SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import { StickyScrollingSection } from 'components/Sections';
+import useDocumentTypePermission from './hooks/useDocumentTypePermission';
 import fileUploadMutation from './mutation';
 import { DocumentTypeArea } from './components';
 import { DocumentsDragAndDropTooltipWrapperStyle, DocumentsUploadWrapperStyle } from './style';
@@ -88,6 +89,8 @@ const DocumentsUpload = ({
   >([]);
   const filesStateRef = React.useRef(filesState);
   const previousFilesRef = React.useRef<Array<UploadFileState>>([]);
+
+  const documentTypePermissions = useDocumentTypePermission({ entity });
 
   React.useEffect(() => {
     filesStateRef.current = filesState;
@@ -202,6 +205,8 @@ const DocumentsUpload = ({
     <DndProvider backend={HTML5Backend}>
       <div className={cx(DocumentsUploadWrapperStyle, uploadWrapperStyle)}>
         {types.map(type => {
+          const canSetType = documentTypePermissions[type.value]?.canSet;
+
           return (
             <DocumentTypeArea
               key={type.value}
@@ -214,12 +219,12 @@ const DocumentsUpload = ({
                 onSave([...files.filter(file => file.type !== type.value), ...updatedValues])
               }
               onUpload={evt => handleUpload(evt, type.value)}
-              canUpload={canUpload}
-              canAddOrphan={canAddOrphan}
-              canViewForm={canViewForm}
-              canDownload={canDownload}
-              canChangeType={canChangeType}
-              canDelete={canDelete}
+              canUpload={canUpload || canSetType}
+              canAddOrphan={canAddOrphan || canSetType}
+              canViewForm={canViewForm || canSetType}
+              canDownload={canDownload || canSetType}
+              canChangeType={canChangeType || canSetType}
+              canDelete={canDelete || canSetType}
             />
           );
         })}

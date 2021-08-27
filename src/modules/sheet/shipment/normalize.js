@@ -1,6 +1,6 @@
 // @flow
 import type { Shipment } from 'generated/graphql';
-import { parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
+import { parseFilesField, parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 
 const cleanUpPorts = (shipment: Shipment) => {
@@ -38,34 +38,16 @@ export default function normalizeSheetShipmentInput(
       return {
         tagIds: newValue.map(tag => extractForbiddenId(tag).id).filter(Boolean),
       };
-    case 'files':
-      return {
-        files: newValue.map(
-          ({
-            __typename,
-            entity: e,
-            ownedBy,
-            tags,
-            path,
-            uploading,
-            progress,
-            size,
-            isNew,
-            createdAt,
-            order,
-            orderItem,
-            shipment: s,
-            productProvider,
-            milestone,
-            updatedAt,
-            updatedBy,
-            ...rest
-          }) => ({
-            ...rest,
-            tagIds: tags.map(tag => tag.id),
-          })
-        ),
-      };
+    case 'files': {
+      const newFiles = parseFilesField({
+        key: 'files',
+        originalFiles: oldValue,
+        newFiles: newValue,
+        isNewFormat: true,
+      });
+
+      return newFiles;
+    }
     case 'totalVolume':
       return {
         totalVolumeOverride: newValue.value ? removeTypename(newValue.value) : null,

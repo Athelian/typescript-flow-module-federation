@@ -17,16 +17,10 @@ import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import SelectTaskTemplate from 'modules/task/common/TaskSection/components/SelectTaskTemplate';
 import SlideView from 'components/SlideView';
 import Tasks from 'modules/task/common/TaskSection/components/Tasks';
-import { Tooltip } from 'components/Tooltip';
 import { useHasPermissions } from 'contexts/Permissions';
 import useUser from 'hooks/useUser';
 
-import {
-  DisabledTaskAddStyle,
-  TasksSectionStyle,
-  TasksSectionWrapperStyle,
-  TemplateItemStyle,
-} from './style';
+import { TasksSectionStyle, TasksSectionWrapperStyle, TemplateItemStyle } from './style';
 
 const formContainer = new FormContainer();
 
@@ -72,7 +66,7 @@ const TasksInputDialog = ({
       <Dialog isOpen={open} onRequestClose={onClose}>
         <div className={TasksSectionWrapperStyle}>
           <SectionNavBar>
-            {canAddTasks && tasks.length <= 4 && (
+            {canAddTasks && (
               <NewButton
                 label={<FormattedMessage id="modules.Tasks.newTask" />}
                 onClick={() => {
@@ -91,21 +85,6 @@ const TasksInputDialog = ({
                   });
                 }}
               />
-            )}
-            {canAddTasks && tasks.length > 4 && (
-              <div className={DisabledTaskAddStyle}>
-                <NewButton label={<FormattedMessage id="modules.Tasks.newTask" />} />
-                <Tooltip
-                  message={
-                    <FormattedMessage
-                      id="modules.Milestones.taskLimit"
-                      defaultMessage="There is a limit of 5 tasks"
-                    />
-                  }
-                >
-                  <div className="tooltip-box" />
-                </Tooltip>
-              </div>
             )}
             {canUpdateMilestone && (
               <BooleanValue>

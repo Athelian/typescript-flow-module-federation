@@ -28,6 +28,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  entityOwnerId?: string,
   tagType: TagsQueryType,
   name: string,
   id?: string,
@@ -154,7 +155,17 @@ export default class TagsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { editable, width, tagType, disabled, values, name, id, onClickRemove } = this.props;
+    const {
+      entityOwnerId,
+      editable,
+      width,
+      tagType,
+      disabled,
+      values,
+      name,
+      id,
+      onClickRemove,
+    } = this.props;
     const { focused } = this.state;
 
     return editable.set ? (
@@ -280,28 +291,34 @@ export default class TagsInput extends React.Component<Props, State> {
                   />
                 </div>
                 {isOpen && (
-                  <TagListProvider queryString={inputValue} tagType={tagType}>
-                    {({ data: tags }) => (
-                      <TagSelectOptions
-                        getItemProps={getItemProps}
-                        items={this.computeFilteredTags(
-                          (tags ?? [])
-                            .filter(tag => !isForbidden(tag) && !isNotFound(tag))
-                            .sort((a, b) => {
-                              if (a.name < b.name) return -1;
-                              if (a.name > b.name) return 1;
-                              return 0;
-                            }),
-                          inputValue
-                        )}
-                        selectedItems={values}
-                        highlightedIndex={highlightedIndex}
-                        itemToString={item => (item ? item.description || item.name : '')}
-                        itemToValue={item => (item ? item.description : '')}
-                        width={width}
-                        align="left"
-                      />
-                    )}
+                  <TagListProvider
+                    queryString={inputValue}
+                    tagType={tagType}
+                    entityOwnerId={entityOwnerId}
+                  >
+                    {({ data: tags }) => {
+                      return (
+                        <TagSelectOptions
+                          getItemProps={getItemProps}
+                          items={this.computeFilteredTags(
+                            (tags ?? [])
+                              .filter(tag => !isForbidden(tag) && !isNotFound(tag))
+                              .sort((a, b) => {
+                                if (a.name < b.name) return -1;
+                                if (a.name > b.name) return 1;
+                                return 0;
+                              }),
+                            inputValue
+                          )}
+                          selectedItems={values}
+                          highlightedIndex={highlightedIndex}
+                          itemToString={item => (item ? item.description || item.name : '')}
+                          itemToValue={item => (item ? item.description : '')}
+                          width={width}
+                          align="left"
+                        />
+                      );
+                    }}
                   </TagListProvider>
                 )}
               </div>

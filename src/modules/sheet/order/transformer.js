@@ -223,6 +223,9 @@ export default function transformSheetOrder({
     {
       columnKey: 'order.tags',
       type: 'order_tags',
+      extra: {
+        entityOwnerId: order?.ownedBy?.id,
+      },
       ...transformValueField(
         basePath,
         order,

@@ -18,7 +18,8 @@ import {
 import {
   SHIPMENT_LIST,
   SHIPMENT_DOCUMENT_CREATE,
-  SHIPMENT_SET_DOCUMENTS,
+  SHIPMENT_DOCUMENT_SET,
+  SHIPMENT_SET,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
 import { PROJECT_LIST, PROJECT_UPDATE } from 'modules/permission/constants/project';
@@ -57,8 +58,8 @@ const ParentNavbarTabs = ({ filterAndSort, onChangeFilter, activeType }: Props) 
         hasPermission([ORDER_ITEMS_DOCUMENT_CREATE, ORDER_ITEMS_SET_DOCUMENTS])),
     shipments:
       hasPermission(SHIPMENT_LIST) &&
-      (hasPermission(SHIPMENT_UPDATE) ||
-        hasPermission([SHIPMENT_DOCUMENT_CREATE, SHIPMENT_SET_DOCUMENTS])),
+      (hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
+        hasPermission([SHIPMENT_DOCUMENT_CREATE, SHIPMENT_DOCUMENT_SET])),
     projects:
       hasPermission(PROJECT_LIST) &&
       hasPermission(MILESTONE_LIST) &&

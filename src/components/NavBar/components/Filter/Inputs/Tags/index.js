@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { FormattedMessage } from 'react-intl';
 import { Label, TagsInput } from 'components/Form';
 import { useViewerHasPermissions } from 'contexts/Permissions';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
 import { tagsByIDsQuery } from './query';
@@ -40,7 +40,7 @@ const TagsImpl = ({ value, readonly, onChange, tagType }: ImplProps) => {
           onChange(value.filter(id => id !== removedTag.id));
         }}
         editable={{
-          set: hasPermissions(TAG_LIST),
+          set: hasPermissions(TAG_GET),
           remove: true,
         }}
       />

@@ -11,10 +11,10 @@ import {
 } from 'modules/permission/constants/file';
 import { ORDER_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/orderItem';
-import { SHIPMENT_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/shipment';
+import { SHIPMENT_DOCUMENT_DOWNLOAD } from 'modules/permission/constants/shipment';
 import { PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/product';
 import { MILESTONE_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/milestone';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import validator from 'modules/tableTemplate/form/validator';
 import { FormField } from 'modules/form';
 import {
@@ -52,7 +52,7 @@ const DocumentSection = () => {
     hasPermissions(DOCUMENT_DOWNLOAD) ||
     (state.entity?.__typename === 'Order' && hasPermissions(ORDER_DOWNLOAD_DOCUMENTS)) ||
     (state.entity?.__typename === 'OrderItem' && hasPermissions(ORDER_ITEMS_DOWNLOAD_DOCUMENTS)) ||
-    (state.entity?.__typename === 'Shipment' && hasPermissions(SHIPMENT_DOWNLOAD_DOCUMENTS)) ||
+    (state.entity?.__typename === 'Shipment' && hasPermissions(SHIPMENT_DOCUMENT_DOWNLOAD)) ||
     (state.entity?.__typename === 'ProductProvider' &&
       hasPermissions(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS)) ||
     (state.entity?.__typename === 'Milestone' && hasPermissions(MILESTONE_DOWNLOAD_DOCUMENTS));
@@ -103,7 +103,6 @@ const DocumentSection = () => {
               />
             )}
           </FormField>
-
           <FieldItem
             vertical
             label={
@@ -115,6 +114,7 @@ const DocumentSection = () => {
               <TagsInput
                 name="tags"
                 tagType="File"
+                entityOwnerId={state.ownedBy?.id}
                 values={state.tags}
                 onChange={value => {
                   setFieldValue('tags', value);
@@ -126,7 +126,7 @@ const DocumentSection = () => {
                   );
                 }}
                 editable={{
-                  set: hasPermissions(TAG_LIST) && (canUpdate || hasPermissions(DOCUMENT_SET_TAGS)),
+                  set: hasPermissions(TAG_GET) && (canUpdate || hasPermissions(DOCUMENT_SET_TAGS)),
                   remove: canUpdate || hasPermissions(DOCUMENT_SET_TAGS),
                 }}
               />

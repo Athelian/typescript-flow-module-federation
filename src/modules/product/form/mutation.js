@@ -35,6 +35,7 @@ import {
   parseCustomFieldsField,
   parseFilesField,
   parseTodoField,
+  parseTagsField,
   parseMemoField,
   parseDefaultIndexField,
   parseSizeField,
@@ -97,7 +98,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
     getByPathWithDefault(null, 'importer', originalValues),
     newValues.importer
   ),
-  ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
+  ...parseFilesField({
+    key: 'files',
+    originalFiles: getByPathWithDefault([], 'files', originalValues),
+    newFiles: newValues.files,
+  }),
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
   ...parseGenericField(
     'serial',
@@ -124,11 +129,7 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
     getByPathWithDefault(null, 'customFields', originalValues),
     newValues.customFields
   ),
-  ...parseArrayOfIdsField(
-    'tagIds',
-    getByPathWithDefault([], 'tags', originalValues),
-    newValues.tags
-  ),
+  ...parseTagsField('tags', originalValues?.tags ?? [], newValues.tags),
   ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
   ...parseTodoField(
     getByPathWithDefault(
@@ -248,11 +249,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
           ),
         })
       ),
-      ...parseFilesField(
-        'files',
-        getByPathWithDefault([], 'files', oldProductProvider),
-        getByPathWithDefault([], 'files', newProductProvider)
-      ),
+      ...parseFilesField({
+        key: 'files',
+        originalFiles: getByPathWithDefault([], 'files', oldProductProvider),
+        newFiles: getByPathWithDefault([], 'files', newProductProvider),
+      }),
       ...parseTodoField(
         getByPathWithDefault(
           { tasks: [], taskTemplate: null, milestone: null },

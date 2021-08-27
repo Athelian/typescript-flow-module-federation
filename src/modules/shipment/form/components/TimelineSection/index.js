@@ -9,6 +9,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { getByPath } from 'utils/fp';
 import {
+  SHIPMENT_SET,
   SHIPMENT_UPDATE,
   SHIPMENT_SET_VOYAGES,
   SHIPMENT_SET_WAREHOUSE,
@@ -50,10 +51,11 @@ type Props = {|
 const TimelineSection = ({ isNew, isTaskReadyForBinding }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
+  const allowToUpdate = hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]);
 
   const allowSetWarehouse =
-    hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) && hasPermission(WAREHOUSE_LIST);
+    hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) &&
+    hasPermission(WAREHOUSE_LIST);
 
   const prevValue = usePrevious(isTaskReadyForBinding);
   React.useEffect(() => {
@@ -99,7 +101,7 @@ const TimelineSection = ({ isNew, isTaskReadyForBinding }: Props) => {
               <div className={TimelineWrapperStyle}>
                 <VerticalLayout shipment={values} />
                 <VoyageSelector
-                  editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_VOYAGES])}
+                  editable={hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_VOYAGES])}
                   shipment={values}
                   setFieldDeepValue={setFieldDeepValue}
                   setShipmentContainers={setShipmentContainers}

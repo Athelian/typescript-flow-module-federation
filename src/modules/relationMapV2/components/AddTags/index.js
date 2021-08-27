@@ -6,12 +6,16 @@ import { extractForbiddenId } from 'utils/data';
 import { useAllHasPermission } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import { ORDER_UPDATE, ORDER_SET_TAGS } from 'modules/permission/constants/order';
 import { BATCH_UPDATE, BATCH_SET_TAGS } from 'modules/permission/constants/batch';
 import { ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TAGS } from 'modules/permission/constants/orderItem';
 import { CONTAINER_UPDATE, CONTAINER_SET_TAGS } from 'modules/permission/constants/container';
-import { SHIPMENT_UPDATE, SHIPMENT_SET_TAGS } from 'modules/permission/constants/shipment';
+import {
+  SHIPMENT_SET,
+  SHIPMENT_UPDATE,
+  SHIPMENT_SET_TAGS,
+} from 'modules/permission/constants/shipment';
 import { BaseButton } from 'components/Buttons';
 import { FieldItem, Label, TagsInput } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
@@ -128,7 +132,7 @@ export default function AddTags({ onSuccess }: Props) {
       case CONTAINER:
         return hasPermission([CONTAINER_UPDATE, CONTAINER_SET_TAGS]);
       case SHIPMENT:
-        return hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TAGS]);
+        return hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_TAGS]);
       default:
         return false;
     }
@@ -522,7 +526,7 @@ export default function AddTags({ onSuccess }: Props) {
                 isProcessing
                   ? { set: false, remove: false }
                   : {
-                      set: hasPermission(TAG_LIST) && allowToUpdate(),
+                      set: hasPermission(TAG_GET) && allowToUpdate(),
                       remove: allowToUpdate(),
                     }
               }

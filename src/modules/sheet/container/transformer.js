@@ -310,6 +310,9 @@ export default function transformSheetContainer({
     {
       columnKey: 'container.tags',
       type: 'container_tags',
+      extra: {
+        entityOwnerId: container?.ownedBy?.id,
+      },
       ...transformValueField(
         basePath,
         container,

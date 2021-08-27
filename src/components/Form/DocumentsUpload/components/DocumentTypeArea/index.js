@@ -1,4 +1,5 @@
 // @flow
+
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
@@ -65,7 +66,9 @@ const DocumentTypeArea = ({
 
   const [{ isDraggedOver, canDrop }, dropRef] = useDrop({
     accept: otherTypes,
-    canDrop: item => item.type !== type.value,
+    canDrop: item => {
+      return canUpload && item.type !== type.value;
+    },
     drop: item => ({ ...item, type: type.value }),
     collect: monitor => ({
       isDraggedOver: monitor.isOver(),

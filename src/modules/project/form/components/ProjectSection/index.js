@@ -43,7 +43,7 @@ import {
   PROJECT_SET_ARCHIVED,
   PROJECT_SET_FOLLOWERS,
 } from 'modules/permission/constants/project';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import { ProjectActivateDialog, ProjectArchiveDialog } from 'modules/project/common/Dialog';
 import messages from 'modules/project/messages';
 import Followers from 'components/Followers';
@@ -175,35 +175,38 @@ const ProjectSection = ({ isNew, project }: Props) => {
                         </Subscribe>
                         <div className={DescriptionTagsWrapperStyle}>
                           <Subscribe to={[ProjectTagsContainer]}>
-                            {({ state: { tags }, setFieldValue: changeTags }) => (
-                              <div className={TagsWrapperStyle}>
-                                <Label height="30px">
-                                  <FormattedMessage {...messages.tags} />
-                                </Label>
-                                <TagsInput
-                                  id="tags"
-                                  name="tags"
-                                  tagType="Project"
-                                  values={tags}
-                                  onChange={value => {
-                                    changeTags('tags', value);
-                                  }}
-                                  onClickRemove={value => {
-                                    changeTags(
-                                      'tags',
-                                      tags.filter(({ id }) => id !== value.id)
-                                    );
-                                  }}
-                                  editable={{
-                                    set:
-                                      hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]) &&
-                                      hasPermission(TAG_LIST),
-                                    remove: hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]),
-                                  }}
-                                  width="100%"
-                                />
-                              </div>
-                            )}
+                            {({ state: { tags }, setFieldValue: changeTags }) => {
+                              return (
+                                <div className={TagsWrapperStyle}>
+                                  <Label height="30px">
+                                    <FormattedMessage {...messages.tags} />
+                                  </Label>
+                                  <TagsInput
+                                    id="tags"
+                                    name="tags"
+                                    tagType="Project"
+                                    entityOwnerId={project?.ownedBy?.id}
+                                    values={tags}
+                                    onChange={value => {
+                                      changeTags('tags', value);
+                                    }}
+                                    onClickRemove={value => {
+                                      changeTags(
+                                        'tags',
+                                        tags.filter(({ id }) => id !== value.id)
+                                      );
+                                    }}
+                                    editable={{
+                                      set:
+                                        hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]) &&
+                                        hasPermission(TAG_GET),
+                                      remove: hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]),
+                                    }}
+                                    width="100%"
+                                  />
+                                </div>
+                              );
+                            }}
                           </Subscribe>
                         </div>
                       </GridColumn>
