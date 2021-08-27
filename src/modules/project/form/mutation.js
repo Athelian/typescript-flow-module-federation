@@ -30,6 +30,7 @@ import {
   parseDateField,
   parseArrayOfIdsField,
   parseParentIdField,
+  parseTagsField,
   parseTaskField,
   parseEnumField,
   parseFilesField,
@@ -164,7 +165,7 @@ export const prepareParsedProjectInput = (
   ...parseMemoField('description', originalValues?.description ?? null, newValues.description),
   ...parseDateField('dueDate', originalValues?.dueDate ?? null, newValues.dueDate),
   ...parseGenericField('archived', originalValues?.archived ?? false, newValues.archived),
-  ...parseArrayOfIdsField('tagIds', originalValues?.tags ?? [], newValues.tags),
+  ...parseTagsField('tags', originalValues?.tags ?? [], newValues.tags),
   ...parseArrayOfIdsField(
     'organizationIds',
     originalValues?.organizations ?? [],

@@ -130,20 +130,24 @@ const TagInputRenderer = ({
 
 const TagsInput = (entityType: string) => ({
   value,
+  extra,
   onChange,
   readonly,
-}: InputProps<Array<{ id: string, name: string, color: string }>>) => (
-  <div className={TagsInputWrapperStyle}>
-    <BaseTagsInput
-      entityType={entityType}
-      value={value || []}
-      disabled={readonly}
-      onChange={onChange}
-      optionWidth={200}
-      renderInput={TagInputRenderer}
-    />
-  </div>
-);
+}: InputProps<Array<{ id: string, name: string, color: string }>>) => {
+  return (
+    <div className={TagsInputWrapperStyle}>
+      <BaseTagsInput
+        entityType={entityType}
+        entityOwnerId={extra?.entityOwnerId}
+        value={value || []}
+        disabled={readonly}
+        onChange={onChange}
+        optionWidth={200}
+        renderInput={TagInputRenderer}
+      />
+    </div>
+  );
+};
 
 export default {
   Product: TagsInput('Product'),

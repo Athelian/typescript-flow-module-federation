@@ -271,6 +271,9 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
     {
       columnKey: 'project.tags',
       type: 'project_tags',
+      extra: {
+        entityOwnerId: project?.ownedBy?.id,
+      },
       ...transformValueField(
         basePath,
         project,
@@ -725,6 +728,9 @@ function transformTask(
     {
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.tags`,
       type: 'task_tags',
+      extra: {
+        entityOwnerId: task?.ownedBy?.id,
+      },
       ...transformValueField(
         basePath,
         task,

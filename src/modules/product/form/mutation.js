@@ -35,6 +35,7 @@ import {
   parseCustomFieldsField,
   parseFilesField,
   parseTodoField,
+  parseTagsField,
   parseMemoField,
   parseDefaultIndexField,
   parseSizeField,
@@ -128,11 +129,7 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
     getByPathWithDefault(null, 'customFields', originalValues),
     newValues.customFields
   ),
-  ...parseArrayOfIdsField(
-    'tagIds',
-    getByPathWithDefault([], 'tags', originalValues),
-    newValues.tags
-  ),
+  ...parseTagsField('tags', originalValues?.tags ?? [], newValues.tags),
   ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
   ...parseTodoField(
     getByPathWithDefault(

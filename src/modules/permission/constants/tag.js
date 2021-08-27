@@ -1,5 +1,6 @@
 // @flow
 
+export const TAG_GET = 'tag.tags.get';
 export const TAG_LIST = 'tag.tags.list';
 export const TAG_FORM = 'tag.tags.form';
 export const TAG_CREATE = 'tag.tags.create';

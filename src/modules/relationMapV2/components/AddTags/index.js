@@ -6,7 +6,7 @@ import { extractForbiddenId } from 'utils/data';
 import { useAllHasPermission } from 'contexts/Permissions';
 import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import { ORDER_UPDATE, ORDER_SET_TAGS } from 'modules/permission/constants/order';
 import { BATCH_UPDATE, BATCH_SET_TAGS } from 'modules/permission/constants/batch';
 import { ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TAGS } from 'modules/permission/constants/orderItem';
@@ -526,7 +526,7 @@ export default function AddTags({ onSuccess }: Props) {
                 isProcessing
                   ? { set: false, remove: false }
                   : {
-                      set: hasPermission(TAG_LIST) && allowToUpdate(),
+                      set: hasPermission(TAG_GET) && allowToUpdate(),
                       remove: allowToUpdate(),
                     }
               }

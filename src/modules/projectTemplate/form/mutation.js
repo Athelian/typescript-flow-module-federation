@@ -6,7 +6,7 @@ import { projectTemplateFormFragment } from 'graphql/projectTemplate/fragment';
 import {
   parseGenericField,
   parseArrayOfChildrenField,
-  parseArrayOfIdsField,
+  parseTagsField,
   parseMemoField,
   parseEnumField,
 } from 'utils/data';
@@ -66,7 +66,7 @@ export const prepareParsedProjectTemplate = (
 ): Object => ({
   ...parseGenericField('name', originalValues?.name, newValues.name),
   ...parseMemoField('description', originalValues?.description, newValues.description),
-  ...parseArrayOfIdsField('tagIds', originalValues?.tags || [], newValues.tags),
+  ...parseTagsField('tags', originalValues?.tags ?? [], newValues.tags),
   ...parseArrayOfChildrenField(
     'milestones',
     originalValues?.milestones || [],

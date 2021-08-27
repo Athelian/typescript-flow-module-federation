@@ -20,4 +20,33 @@ export const tagsQuery = gql`
   }
 `;
 
+export const tagsForEntityQuery = gql`
+  query tagsForEntity(
+    $entityOwnerId: ID!
+    $entityType: TagEntityType!
+    $page: Int!
+    $perPage: Int!
+  ) {
+    tagsForEntity(
+      entityOwnerId: $entityOwnerId
+      entityType: $entityType
+      page: $page
+      perPage: $perPage
+    ) {
+      nodes {
+        ... on Tag {
+          id
+          name
+          color
+        }
+      }
+      page
+      totalPage
+      perPage
+      count
+      totalCount
+    }
+  }
+`;
+
 export default tagsQuery;

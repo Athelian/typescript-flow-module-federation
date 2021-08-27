@@ -7,7 +7,7 @@ import {
   badRequestFragment,
   forbiddenFragment,
 } from 'graphql';
-import { parseArrayOfIdsField } from 'utils/data';
+import { parseTagsField } from 'utils/data';
 
 export const partnerUpdateMutation = gql`
   mutation partnerUpdate($id: ID!, $input: PartnerUpdateInput!) {
@@ -26,5 +26,5 @@ export const partnerUpdateMutation = gql`
 `;
 
 export const prepareParsedPartnerInput = (originalValues: ?Object, newValues: Object): Object => ({
-  ...parseArrayOfIdsField('tagIds', originalValues?.tags ?? [], newValues.tags),
+  ...parseTagsField('tags', originalValues?.tags ?? [], newValues.tags),
 });

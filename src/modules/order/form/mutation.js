@@ -39,6 +39,7 @@ import {
   parseMemoField,
   parseDateField,
   parseEnumField,
+  parseTagsField,
   parseArrayOfIdsField,
   parseParentIdField,
   parseArrayOfChildrenField,
@@ -141,11 +142,7 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
     getByPathWithDefault(null, 'customFields', originalValues),
     newValues.customFields
   ),
-  ...parseArrayOfIdsField(
-    'tagIds',
-    getByPathWithDefault([], 'tags', originalValues),
-    newValues.tags
-  ),
+  ...parseTagsField('tags', originalValues?.tags ?? [], newValues.tags),
   ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
   ...parseParentIdField(
     'exporterId',

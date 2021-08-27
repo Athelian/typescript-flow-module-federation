@@ -23,7 +23,7 @@ import {
 } from 'modules/product/form/containers';
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import { DOCUMENT_CREATE, DOCUMENT_DELETE } from 'modules/permission/constants/file';
 import {
   PRODUCT_CREATE,
@@ -369,39 +369,42 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                   />
 
                   <Subscribe to={[ProductTagsContainer]}>
-                    {({ state: { tags }, setFieldValue: changeTags }) => (
-                      <FieldItem
-                        vertical
-                        label={
-                          <Label height="30px">
-                            <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
-                          </Label>
-                        }
-                        input={
-                          <TagsInput
-                            id="tags"
-                            name="tags"
-                            tagType="Product"
-                            values={tags}
-                            onChange={value => {
-                              changeTags('tags', value);
-                            }}
-                            onClickRemove={value => {
-                              changeTags(
-                                'tags',
-                                tags.filter(({ id }) => id !== value.id)
-                              );
-                            }}
-                            editable={{
-                              set:
-                                hasPermission(TAG_LIST) &&
-                                hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
-                              remove: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
-                            }}
-                          />
-                        }
-                      />
-                    )}
+                    {({ state: { tags }, setFieldValue: changeTags }) => {
+                      return (
+                        <FieldItem
+                          vertical
+                          label={
+                            <Label height="30px">
+                              <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
+                            </Label>
+                          }
+                          input={
+                            <TagsInput
+                              id="tags"
+                              name="tags"
+                              tagType="Product"
+                              entityOwnerId={product?.ownedBy?.id}
+                              values={tags}
+                              onChange={value => {
+                                changeTags('tags', value);
+                              }}
+                              onClickRemove={value => {
+                                changeTags(
+                                  'tags',
+                                  tags.filter(({ id }) => id !== value.id)
+                                );
+                              }}
+                              editable={{
+                                set:
+                                  hasPermission(TAG_GET) &&
+                                  hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
+                                remove: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
+                              }}
+                            />
+                          }
+                        />
+                      );
+                    }}
                   </Subscribe>
 
                   <FormField

@@ -81,6 +81,46 @@ export const extractForbiddenId = (data: Object): Object => {
   return data;
 };
 
+type FilesType = {
+  id: string,
+  name: string,
+  type: string,
+  memo: ?string,
+};
+
+/**
+ * gets the deleted between two array objects with key as reference
+ */
+export const findDeletedArrayData = (
+  key: string,
+  originalValues: ?Array<FilesType>,
+  newValues: Array<FilesType>
+) => {
+  // convert to objects by id
+  const origById =
+    originalValues?.reduce((arr, value) => {
+      // eslint-disable-next-line
+      arr[value.id] = value;
+      return arr;
+    }, {}) ?? {};
+
+  const newById = newValues.reduce((arr, value) => {
+    // eslint-disable-next-line
+    arr[value.id] = value;
+    return arr;
+  }, {});
+
+  const deleted = Object.keys(origById).reduce((arr, origId) => {
+    if (!newById[origId]) {
+      arr.push(origById[origId]);
+    }
+
+    return arr;
+  }, []);
+
+  return deleted;
+};
+
 // For String and Number fields. Can be used for Object in certain situations.
 export const parseGenericField = (key: string, originalValue: ?any, newValue: ?any): Object => {
   if (!isEquals(originalValue, newValue)) {
@@ -139,6 +179,30 @@ export const parseArrayOfIdsField = (
   const newArrayOfIds = newArray ? newArray.map(({ id }) => id) : [];
 
   if (!isEquals(originalArrayOfIds, newArrayOfIds)) return { [key]: newArrayOfIds };
+  return {};
+};
+
+// Use for Tag Fields. This uses the new format
+export const parseTagsField = (
+  key: string,
+  originalArray: ?Array<Object>,
+  newArray: Array<Object>
+): Object => {
+  const originalArrayOfIds = (originalArray || []).map(({ id }) => id);
+  const newArrayOfIds = newArray ? newArray.map(({ id }) => id) : [];
+
+  if (!isEquals(originalArrayOfIds, newArrayOfIds)) {
+    const deletedTags = findDeletedArrayData('id', originalArray ?? [], newArray ?? []).map(
+      tag => ({
+        id: tag.id,
+        deleted: true,
+      })
+    );
+
+    const newTags = newArray ? newArray.map(({ id }) => ({ id })) : [];
+
+    return { [key]: [...newTags, ...deletedTags] };
+  }
   return {};
 };
 
@@ -234,46 +298,6 @@ export const parseCustomFieldsField = (
   return {};
 };
 
-type FilesType = {
-  id: string,
-  name: string,
-  type: string,
-  memo: ?string,
-};
-
-/**
- * gets the deleted between two array objects with key as reference
- */
-export const findDeletedArrayData = (
-  key: string,
-  originalValues: ?Array<FilesType>,
-  newValues: Array<FilesType>
-) => {
-  // convert to objects by id
-  const origById =
-    originalValues?.reduce((arr, value) => {
-      // eslint-disable-next-line
-      arr[value.id] = value;
-      return arr;
-    }, {}) ?? {};
-
-  const newById = newValues.reduce((arr, value) => {
-    // eslint-disable-next-line
-    arr[value.id] = value;
-    return arr;
-  }, {});
-
-  const deleted = Object.keys(origById).reduce((arr, origId) => {
-    if (!newById[origId]) {
-      arr.push(origById[origId]);
-    }
-
-    return arr;
-  }, []);
-
-  return deleted;
-};
-
 /**
  * Use for Documents fields. Need to send ids even for new files.
  */
@@ -299,11 +323,7 @@ export const parseFilesField = ({
           ...parseGenericField('name', getByPathWithDefault(null, 'name', oldFile), newFile.name),
           ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
           ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
-          ...parseArrayOfIdsField(
-            'tagIds',
-            getByPathWithDefault([], 'tags', oldFile),
-            newFile.tags
-          ),
+          ...parseTagsField('tags', oldFile?.tags ?? [], newFile.tags),
         };
       }
     ),
@@ -491,7 +511,7 @@ export const parseTaskField = (
       getByPathWithDefault(null, 'description', originalTask),
       newTask.description
     ),
-    ...parseArrayOfIdsField('tagIds', getByPathWithDefault([], 'tags', originalTask), newTask.tags),
+    ...parseTagsField('tags', originalTask?.tags ?? [], newTask.tags),
     ...parseParentIdField(
       'taskTemplateId',
       getByPathWithDefault(null, 'taskTemplate', originalTask),

@@ -76,7 +76,7 @@ import messages from 'modules/shipment/messages';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
-import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TAG_GET } from 'modules/permission/constants/tag';
 import SelectPartners from 'components/SelectPartners';
 import SelectPartner from 'components/SelectPartner';
 import Followers from 'components/Followers';
@@ -104,7 +104,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
   const { isOwner } = usePartnerPermission();
   const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
-  const { id: shipmentId, archived } = shipment;
+  const { id: shipmentId, archived, ownedBy } = shipment;
 
   return (
     <Subscribe to={[ShipmentInfoContainer]}>
@@ -548,6 +548,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             id="tags"
                             name="tags"
                             tagType="Shipment"
+                            entityOwnerId={ownedBy?.id}
                             values={tags}
                             onChange={value => {
                               changeTags('tags', value);
@@ -560,7 +561,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             }}
                             editable={{
                               set:
-                                hasPermission(TAG_LIST) &&
+                                hasPermission(TAG_GET) &&
                                 hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_TAGS]),
                               remove: hasPermission([
                                 SHIPMENT_SET,
