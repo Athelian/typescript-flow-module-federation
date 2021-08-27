@@ -61,7 +61,7 @@ const SubmitMenu = ({ children, sendType, refetch }: Props) => {
           <div className="radio-label">
             {`Enter ${intl.formatMessage(messages.sendMessage)}`}
             <br />
-            {`(shift + enter ${intl.formatMessage(messages.sendMessage)})`}
+            {`(shift + enter ${intl.formatMessage(messages.newLine)})`}
           </div>
         </RadioInput>
       </div>
@@ -70,7 +70,7 @@ const SubmitMenu = ({ children, sendType, refetch }: Props) => {
           <div className="radio-label">
             {`Enter ${intl.formatMessage(messages.newLine)}`}
             <br />
-            {`(${getPlatform()} + Enter ${intl.formatMessage(messages.newLine)})`}
+            {`(${getPlatform()} + Enter ${intl.formatMessage(messages.sendMessage)})`}
           </div>
         </RadioInput>
       </div>
