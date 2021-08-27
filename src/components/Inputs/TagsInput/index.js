@@ -101,8 +101,8 @@ const TagOptions = ({
       entityType,
       page: 1,
       perPage: 100,
-      query: inputValue,
-      ...(entityOwnerId && { entityOwnerId, query: inputValue }),
+      query: inputValue || '',
+      ...(entityOwnerId && { entityOwnerId }),
     },
   });
 
