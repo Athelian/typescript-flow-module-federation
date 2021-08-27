@@ -26723,7 +26723,10 @@ input BatchCreateInput {
   packageSize: SizeInput
   packageCapacity: Float
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -26835,7 +26838,10 @@ input BatchUpdateInput {
   packageSize: SizeInput
   packageCapacity: Float
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -26956,7 +26962,10 @@ input ContainerBatchInput {
   packageSize: SizeInput
   packageCapacity: Float
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -26986,7 +26995,10 @@ input ContainerCreateInput {
   containerOption: ContainerOption
   batches: [ContainerBatchInput!]
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -27086,7 +27098,10 @@ input ContainerUpdateInput {
   containerOption: ContainerOption
   batches: [ContainerBatchInput!]
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -28451,6 +28466,7 @@ input EntityFileInput {
   memo: String
   orphan: Boolean
   tagIds: [ID!]
+  tags: [EntityTagInput!]
 }
 
 type EntityHit {
@@ -28687,6 +28703,7 @@ input FileInput {
   memo: String
   orphan: Boolean
   tagIds: [ID!]
+  tags: [EntityTagInput!]
 }
 
 union FilePayload = File | BadRequest | Forbidden | NotFound
@@ -29925,7 +29942,10 @@ input MilestoneTaskInput {
   skippedAt: DateTime
   memo: String
   description: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   id: ID
   entity: EntityInput
 }
@@ -30374,7 +30394,10 @@ input OrderCreateInput {
   deliveryPlace: String
   deliveryDate: DateTime
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   orderItems: [OrderOrderItemInput!]
   files: [EntityFileInput!]
@@ -30502,7 +30525,10 @@ input OrderItemBatchInput {
   packageSize: SizeInput
   packageCapacity: Float
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -30518,7 +30544,10 @@ input OrderItemCreateInput {
   quantity: Float!
   deliveryDate: DateTime
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   batches: [OrderItemBatchInput!]
   files: [EntityFileInput!]
   followerIds: [ID!]
@@ -30572,7 +30601,10 @@ input OrderItemUpdateInput {
   quantity: Float
   deliveryDate: DateTime
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   batches: [OrderItemBatchInput!]
   files: [EntityFileInput!]
   followerIds: [ID!]
@@ -30593,7 +30625,10 @@ input OrderOrderItemInput {
   quantity: Float
   deliveryDate: DateTime
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   batches: [OrderItemBatchInput!]
   files: [EntityFileInput!]
   followerIds: [ID!]
@@ -30638,7 +30673,10 @@ input OrderUpdateInput {
   deliveryPlace: String
   deliveryDate: DateTime
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   orderItems: [OrderOrderItemInput!]
   files: [EntityFileInput!]
@@ -30846,7 +30884,10 @@ input PartnerUpdateInput {
   code: String
   types: [OrganizationType!]
   confirmedAt: DateTime
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
 }
 
 type Port {
@@ -30916,7 +30957,10 @@ input ProductCreateInput {
   janCode: String
   hsCode: String
   material: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   files: [EntityFileInput!]
   memo: String
@@ -31188,7 +31232,10 @@ input ProductUpdateInput {
   janCode: String
   hsCode: String
   material: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   files: [EntityFileInput!]
   memo: String
@@ -31229,7 +31276,10 @@ input ProjectCreateInput {
   name: String!
   description: String
   dueDate: DateTime
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   milestones: [ProjectMilestoneCreateInput!]
   customFields: CustomFieldsInput
@@ -31357,7 +31407,10 @@ type ProjectTemplate implements Model & Owned & Tagged {
 input ProjectTemplateCreateInput {
   name: String!
   description: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   milestones: [ProjectTemplateMilestoneCreateInput!]
 }
 
@@ -31409,7 +31462,10 @@ input ProjectTemplateSortInput {
 input ProjectTemplateUpdateInput {
   name: ID
   description: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   milestones: [ProjectTemplateMilestoneUpdateInput!]
 }
 
@@ -31417,7 +31473,10 @@ input ProjectUpdateInput {
   name: ID
   description: String
   dueDate: DateTime
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   milestones: [ProjectMilestoneUpdateInput!]
   organizationIds: [ID!]
@@ -31480,7 +31539,7 @@ type Query {
   warehousesByIDs(ids: [ID!]!): [WarehousePayload!]!
   tag(id: ID!): TagPayload!
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPaginatedSearch!
-  tagsForEntity(entityOwnerId: ID!, entityType: TagEntityType!, page: Int! = 1, perPage: Int! = 10): TagPayloadPaginatedSearch!
+  tagsForEntity(entityOwnerId: ID!, entityType: TagEntityType!, filterBy: TagFilterInput, page: Int! = 1, perPage: Int! = 10): TagPayloadPaginatedSearch!
   tagsByIDs(ids: [ID!]!): [TagPayload!]!
   tagExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   tagsExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
@@ -87386,7 +87445,10 @@ input ShipmentBatchInput {
   packageSize: SizeInput
   packageCapacity: Float
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -87445,7 +87507,10 @@ input ShipmentContainerCreateInput {
   containerOption: ContainerOption
   batches: [ContainerBatchInput!]
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -87473,7 +87538,10 @@ input ShipmentContainerUpdateInput {
   containerOption: ContainerOption
   batches: [ContainerBatchInput!]
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   customFields: CustomFieldsInput
   todo: TodoInput
@@ -87496,7 +87564,10 @@ input ShipmentCreateInput {
   incoterm: Incoterm
   carrier: String
   cargoReady: TimelineDateNestedInput
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   followerIds: [ID!]
   forwarderIds: [ID!]
   batches: [ShipmentBatchInput!]
@@ -88089,7 +88160,10 @@ type TagGroup implements Model & Owned & Tagged {
 input TagGroupCreateInput {
   name: String!
   description: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   organizationGroupIds: [ID!]
 }
 
@@ -88098,7 +88172,7 @@ union TagGroupPayload = TagGroup | BadRequest | Forbidden | NotFound
 input TagGroupUpdateInput {
   name: ID
   description: String
-  tagIds: [ID!]
+  tags: [EntityTagInput!]
   organizationGroupIds: [ID!]
 }
 
@@ -88202,7 +88276,10 @@ input TaskCreateInput {
   skippedAt: DateTime
   memo: String
   description: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   entity: EntityInput!
   taskTemplateId: ID
   milestoneId: ID
@@ -88379,7 +88456,10 @@ input TaskTemplateTaskCreateInput {
   skippedAt: DateTime
   memo: String
   description: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
 }
 
 input TaskTemplateTaskUpdateInput {
@@ -88405,7 +88485,10 @@ input TaskTemplateTaskUpdateInput {
   skippedAt: DateTime
   memo: String
   description: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   id: ID
 }
 
@@ -88439,7 +88522,10 @@ input TaskUpdateInput {
   skippedAt: DateTime
   memo: String
   description: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   entity: EntityInput
   taskTemplateId: ID
   milestoneId: ID
@@ -88597,7 +88683,10 @@ input TodoTaskInput {
   skippedAt: DateTime
   memo: String
   description: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
   id: ID
   taskTemplateId: ID
   milestoneId: ID
@@ -88708,7 +88797,10 @@ input UserUpdateInput {
   avatar: EntityFileInput
   organizationId: ID
   memo: String
+
+  """Deprecated"""
   tagIds: [ID!]
+  tags: [EntityTagInput!]
 }
 
 union Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | DurationValue | MetricValueValue | SizeValue | EntityValue | Values
