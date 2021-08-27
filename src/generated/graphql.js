@@ -17883,7 +17883,9 @@ export type BatchCreateInput = {|
   packageSize?: ?SizeInput,
   packageCapacity?: ?$ElementType<Scalars, 'Float'>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -17999,7 +18001,9 @@ export type BatchUpdateInput = {|
   packageSize?: ?SizeInput,
   packageCapacity?: ?$ElementType<Scalars, 'Float'>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -18133,7 +18137,9 @@ export type ContainerBatchInput = {|
   packageSize?: ?SizeInput,
   packageCapacity?: ?$ElementType<Scalars, 'Float'>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -18163,7 +18169,9 @@ export type ContainerCreateInput = {|
   containerOption?: ?ContainerOption,
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -18277,7 +18285,9 @@ export type ContainerUpdateInput = {|
   containerOption?: ?ContainerOption,
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -19238,6 +19248,7 @@ export type EntityFileInput = {|
   memo?: ?$ElementType<Scalars, 'String'>,
   orphan?: ?$ElementType<Scalars, 'Boolean'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
 |};
 
 export type EntityHit = {|
@@ -19489,6 +19500,7 @@ export type FileInput = {|
   memo?: ?$ElementType<Scalars, 'String'>,
   orphan?: ?$ElementType<Scalars, 'Boolean'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
 |};
 
 export type FilePayload = File | BadRequest | Forbidden | NotFound;
@@ -20595,7 +20607,9 @@ export type MilestoneTaskInput = {|
   skippedAt?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   id?: ?$ElementType<Scalars, 'ID'>,
   entity?: ?EntityInput,
 |};
@@ -21779,7 +21793,9 @@ export type OrderCreateInput = {|
   deliveryPlace?: ?$ElementType<Scalars, 'String'>,
   deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   orderItems?: ?Array<OrderOrderItemInput>,
   files?: ?Array<EntityFileInput>,
@@ -21915,7 +21931,9 @@ export type OrderItemBatchInput = {|
   packageSize?: ?SizeInput,
   packageCapacity?: ?$ElementType<Scalars, 'Float'>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -21931,7 +21949,9 @@ export type OrderItemCreateInput = {|
   quantity: $ElementType<Scalars, 'Float'>,
   deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   batches?: ?Array<OrderItemBatchInput>,
   files?: ?Array<EntityFileInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -21989,7 +22009,9 @@ export type OrderItemUpdateInput = {|
   quantity?: ?$ElementType<Scalars, 'Float'>,
   deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   batches?: ?Array<OrderItemBatchInput>,
   files?: ?Array<EntityFileInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -22010,7 +22032,9 @@ export type OrderOrderItemInput = {|
   quantity?: ?$ElementType<Scalars, 'Float'>,
   deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   batches?: ?Array<OrderItemBatchInput>,
   files?: ?Array<EntityFileInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -22059,7 +22083,9 @@ export type OrderUpdateInput = {|
   deliveryPlace?: ?$ElementType<Scalars, 'String'>,
   deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   orderItems?: ?Array<OrderOrderItemInput>,
   files?: ?Array<EntityFileInput>,
@@ -22306,7 +22332,9 @@ export type PartnerUpdateInput = {|
   code?: ?$ElementType<Scalars, 'String'>,
   types?: ?Array<OrganizationType>,
   confirmedAt?: ?$ElementType<Scalars, 'DateTime'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
 |};
 
 export type Port = {|
@@ -22428,7 +22456,9 @@ export type ProductCreateInput = {|
   janCode?: ?$ElementType<Scalars, 'String'>,
   hsCode?: ?$ElementType<Scalars, 'String'>,
   material?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
@@ -22726,7 +22756,9 @@ export type ProductUpdateInput = {|
   janCode?: ?$ElementType<Scalars, 'String'>,
   hsCode?: ?$ElementType<Scalars, 'String'>,
   material?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   files?: ?Array<EntityFileInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
@@ -22775,7 +22807,9 @@ export type ProjectCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestones?: ?Array<ProjectMilestoneCreateInput>,
   customFields?: ?CustomFieldsInput,
@@ -22912,7 +22946,9 @@ export type ProjectTemplate = {|
 export type ProjectTemplateCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   milestones?: ?Array<ProjectTemplateMilestoneCreateInput>,
 |};
 
@@ -22968,7 +23004,9 @@ export type ProjectTemplateSortInput = {|
 export type ProjectTemplateUpdateInput = {|
   name?: ?$ElementType<Scalars, 'ID'>,
   description?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   milestones?: ?Array<ProjectTemplateMilestoneUpdateInput>,
 |};
 
@@ -22976,7 +23014,9 @@ export type ProjectUpdateInput = {|
   name?: ?$ElementType<Scalars, 'ID'>,
   description?: ?$ElementType<Scalars, 'String'>,
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   milestones?: ?Array<ProjectMilestoneUpdateInput>,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -23447,6 +23487,7 @@ export type QueryTagsArgs = {|
 export type QueryTagsForEntityArgs = {|
   entityOwnerId: $ElementType<Scalars, 'ID'>,
   entityType: TagEntityType,
+  filterBy?: ?TagFilterInput,
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>
 |};
@@ -61161,7 +61202,9 @@ export type ShipmentBatchInput = {|
   packageSize?: ?SizeInput,
   packageCapacity?: ?$ElementType<Scalars, 'Float'>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -61235,7 +61278,9 @@ export type ShipmentContainerCreateInput = {|
   containerOption?: ?ContainerOption,
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -61263,7 +61308,9 @@ export type ShipmentContainerUpdateInput = {|
   containerOption?: ?ContainerOption,
   batches?: ?Array<ContainerBatchInput>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
@@ -61286,7 +61333,9 @@ export type ShipmentCreateInput = {|
   incoterm?: ?Incoterm,
   carrier?: ?$ElementType<Scalars, 'String'>,
   cargoReady?: ?TimelineDateNestedInput,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   followerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   forwarderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   batches?: ?Array<ShipmentBatchInput>,
@@ -62012,7 +62061,9 @@ export type TagGroup = {|
 export type TagGroupCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   organizationGroupIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
@@ -62021,7 +62072,7 @@ export type TagGroupPayload = TagGroup | BadRequest | Forbidden | NotFound;
 export type TagGroupUpdateInput = {|
   name?: ?$ElementType<Scalars, 'ID'>,
   description?: ?$ElementType<Scalars, 'String'>,
-  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   organizationGroupIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
@@ -62138,7 +62189,9 @@ export type TaskCreateInput = {|
   skippedAt?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   entity: EntityInput,
   taskTemplateId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
@@ -62328,7 +62381,9 @@ export type TaskTemplateTaskCreateInput = {|
   skippedAt?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
 |};
 
 export type TaskTemplateTaskUpdateInput = {|
@@ -62354,7 +62409,9 @@ export type TaskTemplateTaskUpdateInput = {|
   skippedAt?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   id?: ?$ElementType<Scalars, 'ID'>,
 |};
 
@@ -62388,7 +62445,9 @@ export type TaskUpdateInput = {|
   skippedAt?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   entity?: ?EntityInput,
   taskTemplateId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
@@ -62582,7 +62641,9 @@ export type TodoTaskInput = {|
   skippedAt?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   description?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
   id?: ?$ElementType<Scalars, 'ID'>,
   taskTemplateId?: ?$ElementType<Scalars, 'ID'>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
@@ -62701,7 +62762,9 @@ export type UserUpdateInput = {|
   avatar?: ?EntityFileInput,
   organizationId?: ?$ElementType<Scalars, 'ID'>,
   memo?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tags?: ?Array<EntityTagInput>,
 |};
 
 export type Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | DurationValue | MetricValueValue | SizeValue | EntityValue | Values;

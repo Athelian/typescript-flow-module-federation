@@ -24,6 +24,7 @@ const TagListProvider = ({ children, tagType, entityOwnerId, queryString }: Prop
   let variables = {
     page: 1,
     perPage: 100,
+    query: debouncedQueryString || '',
   };
 
   if (entityOwnerId) {
@@ -36,7 +37,6 @@ const TagListProvider = ({ children, tagType, entityOwnerId, queryString }: Prop
     variables = {
       ...variables,
       entityTypes: [tagType],
-      query: debouncedQueryString || '',
     };
   }
 

@@ -22,10 +22,12 @@ export const tagsForEntityQuery = gql`
   query tagsForEntity(
     $entityOwnerId: ID!
     $entityType: TagEntityType!
+    $query: String!
     $page: Int!
     $perPage: Int!
   ) {
     tagsForEntity(
+      filterBy: { query: $query }
       entityOwnerId: $entityOwnerId
       entityType: $entityType
       page: $page
