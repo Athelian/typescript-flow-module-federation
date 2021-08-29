@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
+import { Tooltip, FullValueTooltip } from 'components/Tooltip';
 import type { Tag as TagType } from './type.js.flow';
-import { TagStyle, PrefixStyle, SuffixStyle } from './style';
+import { TagStyle, PrefixStyle, SuffixStyle, OwnerStyle } from './style';
 
 type OptionalProps = {
   prefix: React.Node,
@@ -27,9 +28,16 @@ const Tag = ({ tag, prefix, suffix }: Props) => {
 
   return (
     <div className={TagStyle(color)}>
-      {prefix && <div className={PrefixStyle(color)}>{prefix}</div>}
-      {name}
-      {suffix && <div className={SuffixStyle(color)}>{suffix}</div>}
+      <FullValueTooltip message={name}>
+        <div>
+          {prefix && <div className={PrefixStyle(color)}>{prefix}</div>}
+          {name}
+          {suffix && <div className={SuffixStyle(color)}>{suffix}</div>}
+        </div>
+      </FullValueTooltip>
+      <Tooltip message="shared by Zenport, Inc.">
+        <span className={OwnerStyle}>Z</span>
+      </Tooltip>
     </div>
   );
 };
