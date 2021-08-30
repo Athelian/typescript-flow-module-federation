@@ -34,6 +34,12 @@ export const tagFragment = gql`
     id
     name
     color
+    ownedBy {
+      ... on Organization {
+        id
+        name
+      }
+    }
   }
 `;
 
