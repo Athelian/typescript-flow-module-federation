@@ -127,7 +127,6 @@ function normalizedInput(
     case 'Task':
       switch (field) {
         case 'tags':
-          // TODO:
           return parseTagsField('tags', oldValue, value);
         case 'status': {
           switch (value) {
