@@ -365,6 +365,7 @@ export const tagsByIDsQuery = gql`
   }
 
   ${tagFragment}
+  ${forbiddenFragment}
 `;
 
 export const projectMutation = gql`
