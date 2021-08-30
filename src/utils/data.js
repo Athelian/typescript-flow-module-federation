@@ -188,7 +188,7 @@ export const parseTagsField = (
   originalArray: ?Array<Object>,
   newArray: Array<Object>
 ): Object => {
-  const originalArrayOfIds = (originalArray || []).map(({ id }) => id);
+  const originalArrayOfIds = (originalArray || []).map(({ id }) => id).filter(Boolean);
   const newArrayOfIds = newArray ? newArray.map(({ id }) => id) : [];
 
   if (!isEquals(originalArrayOfIds, newArrayOfIds)) {

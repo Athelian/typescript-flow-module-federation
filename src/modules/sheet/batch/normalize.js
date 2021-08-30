@@ -1,6 +1,6 @@
 // @flow
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
-import { parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
+import { parseTodoField, removeTypename, parseTagsField } from 'utils/data';
 import { calculateVolume, calculatePackageQuantity, findActiveQuantityField } from 'utils/batch';
 import { defaultVolumeMetric } from 'utils/metric';
 
@@ -76,9 +76,7 @@ export default function normalizeSheetBatchInput(
           : undefined,
       };
     case 'tags':
-      return {
-        tagIds: newValue.map(tag => extractForbiddenId(tag).id).filter(Boolean),
-      };
+      return parseTagsField('tags', oldValue, newValue);
     case 'todo':
       return parseTodoField(removeTypename(oldValue), removeTypename(newValue));
     case 'mask':
