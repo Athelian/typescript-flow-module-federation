@@ -211,7 +211,7 @@ function normalizedInput(
         return {};
       }
 
-      return normalizeSheetContainerInput(container, field, newValue);
+      return normalizeSheetContainerInput(container, field, oldValue, newValue);
     }
     case 'Batch': {
       const batch = [

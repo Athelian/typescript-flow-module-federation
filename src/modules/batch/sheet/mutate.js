@@ -104,7 +104,7 @@ function normalizedInput(
     case 'Shipment':
       return normalizeSheetShipmentInput(batch.shipment, field, oldValue, newValue);
     case 'Container':
-      return normalizeSheetContainerInput(batch.container, field, newValue);
+      return normalizeSheetContainerInput(batch.container, field, oldValue, newValue);
     case 'Voyage':
       return normalizeSheetVoyageInput(batch.shipment, entity.id, field, newValue);
     case 'ContainerGroup':

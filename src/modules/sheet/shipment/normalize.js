@@ -1,6 +1,6 @@
 // @flow
 import type { Shipment } from 'generated/graphql';
-import { parseFilesField, parseTodoField, removeTypename, extractForbiddenId } from 'utils/data';
+import { parseFilesField, parseTodoField, removeTypename, parseTagsField } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 
 const cleanUpPorts = (shipment: Shipment) => {
@@ -35,9 +35,7 @@ export default function normalizeSheetShipmentInput(
         [(field: string)]: newValue || null,
       };
     case 'tags':
-      return {
-        tagIds: newValue.map(tag => extractForbiddenId(tag).id).filter(Boolean),
-      };
+      return parseTagsField('tags', oldValue, newValue);
     case 'files': {
       const newFiles = parseFilesField({
         key: 'files',
