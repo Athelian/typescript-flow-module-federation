@@ -1,10 +1,11 @@
 // @flow
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
-import { extractForbiddenId } from 'utils/data';
+import { parseTagsField } from 'utils/data';
 
 export default function normalizeSheetContainerInput(
   container: Object,
   field: string,
+  oldValue: any,
   newValue: any
 ): Object {
   switch (field) {
@@ -15,9 +16,7 @@ export default function normalizeSheetContainerInput(
         [(field: string)]: newValue || null,
       };
     case 'tags':
-      return {
-        tagIds: newValue.map(tag => extractForbiddenId(tag).id).filter(Boolean),
-      };
+      return parseTagsField('tags', oldValue, newValue);
     case 'warehouseArrivalAgreedDateApproved':
       return {
         warehouseArrivalAgreedDateApprovedById: newValue?.user?.id ?? null,

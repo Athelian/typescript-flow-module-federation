@@ -207,7 +207,7 @@ function normalizeInput(
         return {};
       }
 
-      return normalizeSheetContainerInput(container, field, newValue);
+      return normalizeSheetContainerInput(container, field, oldValue, newValue);
     }
     case 'Voyage': {
       const shipment = getShipmentByVoyageId(entity.id, item);
