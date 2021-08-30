@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Tooltip, FullValueTooltip } from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import useUser from 'hooks/useUser';
 import type { Tag as TagType } from './type.js.flow';
 import { TagStyle, PrefixStyle, SuffixStyle, OwnerStyle } from './style';
@@ -25,21 +25,29 @@ const Tag = ({ tag, prefix, suffix }: Props) => {
     color: '#ffffff',
   };
   const mergedTag = { ...defaultTag, ...tag };
-  const { color, name } = mergedTag;
+  const { color, name, ownedBy } = mergedTag;
   const { organization } = useUser();
-  console.log(organization);
+
+  const tagIsShared = organization?.id !== ownedBy?.id;
+  // This is used since tags are in the input
+  const popperOptions = {
+    modifiers: {
+      preventOverflow: { enabled: false },
+    },
+  };
+
   return (
     <div className={TagStyle(color)}>
-      <FullValueTooltip message={name}>
-        <div>
-          {prefix && <div className={PrefixStyle(color)}>{prefix}</div>}
-          {name}
-          {suffix && <div className={SuffixStyle(color)}>{suffix}</div>}
-        </div>
-      </FullValueTooltip>
-      <Tooltip message="shared by Zenport, Inc.">
-        <span className={OwnerStyle}>Z</span>
-      </Tooltip>
+      <span>
+        {tagIsShared && (
+          <Tooltip message={`shared by ${ownedBy?.name}`} popperOptions={popperOptions}>
+            <span className={OwnerStyle}>{ownedBy?.name.charAt(0)}</span>
+          </Tooltip>
+        )}
+        {prefix && <div className={PrefixStyle(color)}>{prefix}</div>}
+        {name}
+      </span>
+      {suffix && <div className={SuffixStyle(color)}>{suffix}</div>}
     </div>
   );
 };

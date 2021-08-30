@@ -22,9 +22,10 @@ export const TagStyle = (color: string): string => css`
 `;
 
 export const OwnerStyle: string = css`
+  margin-right: 4px;
   font-size: 12px;
-  height: 16px;
-  width: 16px;
+  height: 14px;
+  width: 14px;
   background: #c4c4c4;
   border-radius: 50%;
   color: #fff;
