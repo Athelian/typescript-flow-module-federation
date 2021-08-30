@@ -1,6 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
-import { extractForbiddenId } from 'utils/data';
+import { parseTagsField } from 'utils/data';
 import { projectMutation, milestoneMutation, taskMutation } from './query';
 
 const mutations = {
@@ -12,6 +12,7 @@ const mutations = {
 function normalizedInput(
   entity: Object,
   field: string,
+  oldValue: any,
   value: any,
   // eslint-disable-next-line no-unused-vars
   project: Object,
@@ -25,9 +26,7 @@ function normalizedInput(
             [field]: value || null,
           };
         case 'tags':
-          return {
-            tagIds: value.map(tag => extractForbiddenId(tag).id).filter(Boolean),
-          };
+          return parseTagsField('tags', oldValue, value);
         case 'followers':
           return {
             followerIds: value.map(follower => follower?.id).filter(Boolean),
@@ -128,9 +127,7 @@ function normalizedInput(
     case 'Task':
       switch (field) {
         case 'tags':
-          return {
-            tagIds: value.map(tag => extractForbiddenId(tag).id).filter(Boolean),
-          };
+          return parseTagsField('tags', oldValue, value);
         case 'status': {
           switch (value) {
             case 'in_progress':
@@ -243,6 +240,7 @@ export default function(client: ApolloClient, userId: string) {
   return function mutate({
     entity,
     field,
+    oldValue,
     newValue,
     item,
   }: {
@@ -257,7 +255,7 @@ export default function(client: ApolloClient, userId: string) {
         mutation: mutations[entity.type],
         variables: {
           id: entity.id,
-          input: normalizedInput(entity, field, newValue, item, userId),
+          input: normalizedInput(entity, field, oldValue, newValue, item, userId),
         },
       })
       .then(({ data }) => {

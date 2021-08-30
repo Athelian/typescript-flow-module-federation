@@ -406,7 +406,7 @@ export function generateMilestoneTaskColumns(
 
 export const defaultColumns = [
   ...projectColumns,
-  ...generateMilestoneTaskColumns(milestoneColumns('#'), 4, taskColumns('#', '#'), 5),
+  ...generateMilestoneTaskColumns(milestoneColumns('#'), 5, taskColumns('#', '#'), 5),
 ];
 
 export function computeProjectColumnConfigsFromTemplate(template: Object): Array<ColumnConfig> {
