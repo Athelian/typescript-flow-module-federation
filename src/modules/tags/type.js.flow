@@ -6,5 +6,4 @@ export type Tag = {
   description: ?string,
   color: string,
   entityTypes: Array<string>,
-  ownedBy: Object,
 };
