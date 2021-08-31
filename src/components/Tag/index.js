@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Tooltip } from 'components/Tooltip';
+import { FormattedMessage } from 'react-intl';
 import useUser from 'hooks/useUser';
 import type { Tag as TagType } from './type.js.flow';
 import { TagStyle, PrefixStyle, SuffixStyle, OwnerStyle } from './style';
@@ -40,7 +41,15 @@ const Tag = ({ tag, prefix, suffix }: Props) => {
     <div className={TagStyle(color)}>
       <span>
         {tagIsShared && (
-          <Tooltip message={`shared by ${ownedBy?.name}`} popperOptions={popperOptions}>
+          <Tooltip
+            message={
+              <>
+                <FormattedMessage id="modules.Tags.sharedBy" defaultMessage="sharedBy" />{' '}
+                <span>{ownedBy?.name}</span>
+              </>
+            }
+            popperOptions={popperOptions}
+          >
             <span className={OwnerStyle}>{ownedBy?.name.charAt(0)}</span>
           </Tooltip>
         )}

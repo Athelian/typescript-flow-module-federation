@@ -1825,6 +1825,7 @@
   "modules.Tags.shipmentTags": "SHIPMENT TAGS",
   "modules.Tags.userTags": "USER TAGS",
   "modules.Tags.batchTags": "BATCH TAGS",
+  "modules.Tags.sharedBy": "shared by",
   "modules.Tags.requestTags": "REQUEST TAGS",
   "modules.Tags.validation.required": "Required",
   "modules.Tags.validation.invalidColor": "Invalid color",
