@@ -21,6 +21,16 @@ export const TagWrapperStyle: string = css`
   }
 `;
 
+export const TagWithSharedWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  width: 155px;
+  margin: 0 10px;
+  & > div {
+    width: 100%;
+  }
+`;
+
 export const TagDescriptionWrapperStyle: string = css`
   position: relative;
   ${fontSizes.MAIN};

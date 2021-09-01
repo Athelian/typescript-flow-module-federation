@@ -29,6 +29,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   entityOwnerId?: string,
+  ownedBy?: Object,
   tagType: TagsQueryType,
   name: string,
   id?: string,

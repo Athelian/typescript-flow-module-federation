@@ -1818,6 +1818,7 @@
   "modules.Tags.shipmentTags": "装运标签",
   "modules.Tags.userTags": "用户标签",
   "modules.Tags.batchTags": "批次标签",
+  "modules.Tags.sharedBy": "共享者",
   "modules.Tags.requestTags": "要求标签",
   "modules.Tags.validation.required": "必需",
   "modules.Tags.validation.invalidColor": "无效的颜色",
