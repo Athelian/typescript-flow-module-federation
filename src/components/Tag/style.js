@@ -10,6 +10,7 @@ export const TagStyle = (color: string): string => css`
   ${layout.HORIZONTAL};
   ${layout.CENTER};
   display: inline-flex;
+  justify-content: space-between;
   background-color: ${color};
   padding: 0 5px;
   font-weight: bold;
@@ -18,6 +19,22 @@ export const TagStyle = (color: string): string => css`
   width: min-content;
   user-select: none;
   flex-shrink: 0;
+`;
+
+export const OwnerStyle: string = css`
+  margin-right: 4px;
+  font-size: 12px;
+  height: 14px;
+  width: 14px;
+  background: #c4c4c4;
+  border-radius: 50%;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  &:empty {
+    display: none;
+  }
 `;
 
 export const PrefixStyle = (color: string): string => css`

@@ -133,7 +133,7 @@ const TagsInput = (entityType: string) => ({
   extra,
   onChange,
   readonly,
-}: InputProps<Array<{ id: string, name: string, color: string }>>) => {
+}: InputProps<Array<{ id: string, name: string, color: string, ownedBy: Object }>>) => {
   return (
     <div className={TagsInputWrapperStyle}>
       <BaseTagsInput
