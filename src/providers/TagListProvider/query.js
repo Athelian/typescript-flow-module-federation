@@ -29,9 +29,9 @@ export const tagsForEntityQuery = gql`
     $perPage: Int!
   ) {
     tagsForEntity(
+      filterBy: { query: $query }
       entityOwnerId: $entityOwnerId
       entityType: $entityType
-      filterBy: { query: $query }
       page: $page
       perPage: $perPage
     ) {
