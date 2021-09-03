@@ -101,7 +101,7 @@ const TagOptions = ({
     variables: {
       entityType,
       page: 1,
-      perPage: 100,
+      perPage: 10,
       query: inputValue || '',
       ...(entityOwnerId && { entityOwnerId }),
     },
@@ -145,6 +145,14 @@ const TagOptions = ({
     });
   const height = Math.min(tags.length * 30, 200);
 
+  const scrollCheck = React.useCallback(event => {
+    console.log('adasdasd');
+    const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
+    if (bottom) {
+      console.log('At The Bottom');
+    }
+  }, []);
+
   return (
     <>
       <div ref={companionRef} />
@@ -158,6 +166,7 @@ const TagOptions = ({
           })}
         >
           <FixedSizeList
+            onScroll={scrollCheck}
             width={optionWidth}
             height={height}
             itemCount={tags.length}

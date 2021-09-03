@@ -297,7 +297,7 @@ export default class TagsInput extends React.Component<Props, State> {
                     tagType={tagType}
                     entityOwnerId={entityOwnerId}
                   >
-                    {({ data: tags }) => {
+                    {({ data: tags, onScroll }) => {
                       return (
                         <TagSelectOptions
                           getItemProps={getItemProps}
@@ -311,6 +311,7 @@ export default class TagsInput extends React.Component<Props, State> {
                               }),
                             inputValue
                           )}
+                          onScroll={onScroll}
                           selectedItems={values}
                           highlightedIndex={highlightedIndex}
                           itemToString={item => (item ? item.description || item.name : '')}
