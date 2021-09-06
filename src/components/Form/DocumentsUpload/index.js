@@ -294,8 +294,6 @@ const DocumentsUpload = ({
                     hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
                     onClick={e => {
                       e.stopPropagation();
-                      console.log('download was clicked');
-                      console.log('selected files are', selectedFiles);
                       const interval = 100;
 
                       Object.values(selectedFiles).map((selectedFile, index) => {
@@ -328,10 +326,6 @@ const DocumentsUpload = ({
                   textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
                   hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
                   onClick={() => {
-                    console.log('button clicked');
-                    // if (isMultiSelect) {
-                    //   setSelectedFiles({});
-                    // }
                     if (isMultiSelect) {
                       setSelectedFiles({});
                     }
