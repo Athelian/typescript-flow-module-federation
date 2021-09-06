@@ -298,7 +298,7 @@ const DocumentsUpload = ({
                       console.log('selected files are', selectedFiles);
                       const interval = 100;
 
-                      Object.values(selectedFiles).forEach((selectedFile, index) => {
+                      Object.values(selectedFiles).map((selectedFile, index) => {
                         setTimeout(function() {
                           window.open(selectedFile?.path ?? '', '_blank');
 
@@ -316,6 +316,7 @@ const DocumentsUpload = ({
 
                         // window.open(selectedFile?.path ?? '', '_self')
                       });
+                      setSelectedFiles({});
                     }}
                   />
                 )}
