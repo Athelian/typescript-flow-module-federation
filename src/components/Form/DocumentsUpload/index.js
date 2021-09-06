@@ -1,4 +1,7 @@
+/* eslint-disable */
+
 // @flow
+
 import * as React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import type { FilePayload } from 'generated/graphql';
@@ -16,10 +19,17 @@ import { Tooltip } from 'components/Tooltip';
 import { SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import { StickyScrollingSection } from 'components/Sections';
+import { BaseButton } from 'components/Buttons';
 import useDocumentTypePermission from './hooks/useDocumentTypePermission';
 import fileUploadMutation from './mutation';
 import { DocumentTypeArea } from './components';
-import { DocumentsDragAndDropTooltipWrapperStyle, DocumentsUploadWrapperStyle } from './style';
+import GridRow from 'components/GridRow';
+import {
+  DocumentsDragAndDropTooltipWrapperStyle,
+  DocumentsUploadWrapperStyle,
+  NavContentRightContainer,
+  NavContentRightContainerButtons,
+} from './style';
 import messages from './messages';
 
 type Props = {|
@@ -87,6 +97,10 @@ const DocumentsUpload = ({
       progress: number,
     }>
   >([]);
+
+  const [isMultiSelect, setMultiSelect] = React.useState(false);
+  const [selectedFiles, setSelectedFiles] = React.useState({});
+
   const filesStateRef = React.useRef(filesState);
   const previousFilesRef = React.useRef<Array<UploadFileState>>([]);
 
@@ -201,6 +215,21 @@ const DocumentsUpload = ({
       });
   };
 
+  const onDocumentClicked = React.useCallback((file: Object) => {
+    setSelectedFiles(oldFiles => {
+      if (oldFiles[file.id]) {
+        const temp = JSON.parse(JSON.stringify(oldFiles));
+        delete temp[file.id];
+        return temp;
+      }
+
+      return {
+        ...oldFiles,
+        [file.id]: file,
+      };
+    });
+  }, []);
+
   const documentsBody = (
     <DndProvider backend={HTML5Backend}>
       <div className={cx(DocumentsUploadWrapperStyle, uploadWrapperStyle)}>
@@ -225,6 +254,9 @@ const DocumentsUpload = ({
               canDownload={canDownload || canSetType}
               canChangeType={canChangeType || canSetType}
               canDelete={canDelete || canSetType}
+              isMultiSelect={isMultiSelect}
+              selectedFiles={selectedFiles}
+              onDocumentClicked={onDocumentClicked}
             />
           );
         })}
@@ -248,11 +280,73 @@ const DocumentsUpload = ({
         />
       }
       navbarContent={
-        <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
-          <div className={DocumentsDragAndDropTooltipWrapperStyle}>
-            <Icon icon="INFO" />
+        <>
+          <div className={NavContentRightContainer}>
+            <div className={NavContentRightContainerButtons}>
+              <GridRow>
+                {!!Object.keys(selectedFiles).length && (
+                  <BaseButton
+                    icon="DOWNLOAD"
+                    label={<FormattedMessage {...messages.downloadSelected} />}
+                    backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+                    hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+                    textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                    hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                    onClick={e => {
+                      e.stopPropagation();
+                      console.log('download was clicked');
+                      console.log('selected files are', selectedFiles);
+                      const interval = 100;
+
+                      Object.values(selectedFiles).forEach((selectedFile, index) => {
+                        setTimeout(function() {
+                          window.open(selectedFile?.path ?? '', '_blank');
+
+                          // const link = document.createElement('a');
+                          // // $FlowFixMe: flow doesn't understand that I checked already
+                          // link.href = selectedFile?.path;
+                          // link.download = selectedFile?.name;
+                          // if (document.body) {
+                          //   document.body.appendChild(link);
+                          //   link.click();
+                          //   // $FlowFixMe: flow doesn't understand that I checked already
+                          //   document.body.removeChild(link);
+                          // }
+                        }, interval * (index + 1));
+
+                        // window.open(selectedFile?.path ?? '', '_self')
+                      });
+                    }}
+                  />
+                )}
+                <BaseButton
+                  icon="CHECKED"
+                  label={<FormattedMessage {...messages.selectMultiple} />}
+                  backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+                  hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+                  textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                  hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                  onClick={() => {
+                    console.log('button clicked');
+                    // if (isMultiSelect) {
+                    //   setSelectedFiles({});
+                    // }
+                    if (isMultiSelect) {
+                      setSelectedFiles({});
+                    }
+
+                    setMultiSelect(isMulti => !isMulti);
+                  }}
+                />
+              </GridRow>
+            </div>
+            <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
+              <div className={DocumentsDragAndDropTooltipWrapperStyle}>
+                <Icon icon="INFO" />
+              </div>
+            </Tooltip>
           </div>
-        </Tooltip>
+        </>
       }
     >
       {documentsBody}
