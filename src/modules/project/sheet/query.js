@@ -330,7 +330,6 @@ export const taskByIDQuery = gql`
 
   ${taskSheetFragment}
   ${userAvatarFragment}
-  ${documentFragment}
   ${ownedByFragment}
   ${tagFragment}
   ${forbiddenFragment}
