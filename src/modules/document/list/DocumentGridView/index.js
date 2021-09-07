@@ -41,7 +41,12 @@ import {
   MILESTONE_DOWNLOAD_DOCUMENTS,
   MILESTONE_DOCUMENT_DELETE,
 } from 'modules/permission/constants/milestone';
-import { DOCUMENT_FORM, DOCUMENT_DELETE } from 'modules/permission/constants/file';
+import {
+  DOCUMENT_SET,
+  DOCUMENT_DOWNLOAD,
+  DOCUMENT_FORM,
+  DOCUMENT_DELETE,
+} from 'modules/permission/constants/file';
 import { getParentInfo } from 'utils/task';
 
 import { deleteFileMutation } from './mutation';
@@ -95,13 +100,14 @@ const defaultRenderItem = ({
           productProvider: hasPermission(PRODUCT_FORM),
           project: hasPermission(PROJECT_FORM),
         };
-        const downloadPermissions = {
-          order: hasPermission(ORDER_DOWNLOAD_DOCUMENTS),
-          orderItem: hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS),
-          shipment: hasPermission(SHIPMENT_DOCUMENT_DOWNLOAD),
-          product: hasPermission(PRODUCT_DOWNLOAD_DOCUMENTS),
-          productProvider: hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS),
-          project: hasPermission(MILESTONE_DOWNLOAD_DOCUMENTS),
+        const downloadPermission = hasPermission([DOCUMENT_SET, DOCUMENT_DOWNLOAD]);
+        const downloadPermissionsOfParentType = {
+          order: hasPermission(ORDER_DOWNLOAD_DOCUMENTS) || downloadPermission,
+          orderItem: hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS) || downloadPermission,
+          shipment: hasPermission(SHIPMENT_DOCUMENT_DOWNLOAD) || downloadPermission,
+          product: hasPermission(PRODUCT_DOWNLOAD_DOCUMENTS) || downloadPermission,
+          productProvider: hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS) || downloadPermission,
+          project: hasPermission(MILESTONE_DOWNLOAD_DOCUMENTS) || downloadPermission,
         };
         const deletePermissions = {
           order: hasPermission(ORDER_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
@@ -171,7 +177,7 @@ const defaultRenderItem = ({
             <DocumentCard
               file={file}
               navigable={viewPermissions?.[parentType] || !parentType}
-              downloadable={downloadPermissions?.[parentType] || !parentType}
+              downloadable={downloadPermissionsOfParentType?.[parentType] || !parentType}
               selectable={!!onSelect}
               selected={isSelected}
               onSelect={onSelect}
