@@ -85,7 +85,9 @@ const DocumentsSelector = ({ onCancel, onSelect, alreadyAddedDocuments }: Props)
               onLoadMore={loadMore}
               hasMore={hasMore}
               isLoading={loading}
-              renderItem={file => <RenderItem file={file} selectItemProps={getItemProps(file)} />}
+              renderItem={({ file }) => (
+                <RenderItem file={file} selectItemProps={getItemProps(file)} />
+              )}
             />
           </Content>
         </SlideViewLayout>
