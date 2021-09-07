@@ -158,6 +158,7 @@ const DocumentCard = ({
   onClick,
   ...rest
 }: Props) => {
+  console.log('what? downloadable', downloadable);
   cardHeight = hideParentInfo ? '134px' : '184px';
   const name = file?.name ?? '';
   const fileExtension = getFileExtension(name);

@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { navigate } from '@reach/router';
 import { intersection } from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import { canViewFile } from 'utils/file';
+import { canViewFile, canDownloadFile } from 'utils/file';
 import { encodeId } from 'utils/id';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import UploadPlaceholder from 'components/UploadPlaceholder';
@@ -14,39 +14,20 @@ import DocumentCard from 'components/Cards/DocumentCard';
 import ActionDialog, { FileLabelIcon } from 'components/Dialog/ActionDialog';
 import { CardAction } from 'components/Cards';
 import { BaseButton } from 'components/Buttons';
-import {
-  ORDER_FORM,
-  ORDER_DOWNLOAD_DOCUMENTS,
-  ORDER_DOCUMENT_DELETE,
-} from 'modules/permission/constants/order';
+import { ORDER_FORM, ORDER_DOCUMENT_DELETE } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_FORM,
-  ORDER_ITEMS_DOWNLOAD_DOCUMENTS,
   ORDER_ITEMS_DOCUMENT_DELETE,
 } from 'modules/permission/constants/orderItem';
 import {
   PRODUCT_FORM,
-  PRODUCT_DOWNLOAD_DOCUMENTS,
   PRODUCT_DOCUMENT_DELETE,
-  PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS,
   PRODUCT_PROVIDER_DOCUMENT_DELETE,
 } from 'modules/permission/constants/product';
-import {
-  SHIPMENT_FORM,
-  SHIPMENT_DOCUMENT_DOWNLOAD,
-  SHIPMENT_DOCUMENT_DELETE,
-} from 'modules/permission/constants/shipment';
+import { SHIPMENT_FORM, SHIPMENT_DOCUMENT_DELETE } from 'modules/permission/constants/shipment';
 import { PROJECT_FORM } from 'modules/permission/constants/project';
-import {
-  MILESTONE_DOWNLOAD_DOCUMENTS,
-  MILESTONE_DOCUMENT_DELETE,
-} from 'modules/permission/constants/milestone';
-import {
-  DOCUMENT_SET,
-  DOCUMENT_DOWNLOAD,
-  DOCUMENT_FORM,
-  DOCUMENT_DELETE,
-} from 'modules/permission/constants/file';
+import { MILESTONE_DOCUMENT_DELETE } from 'modules/permission/constants/milestone';
+import { DOCUMENT_FORM, DOCUMENT_DELETE } from 'modules/permission/constants/file';
 import { getParentInfo } from 'utils/task';
 
 import { deleteFileMutation } from './mutation';
@@ -99,15 +80,6 @@ const defaultRenderItem = ({
           product: hasPermission(PRODUCT_FORM),
           productProvider: hasPermission(PRODUCT_FORM),
           project: hasPermission(PROJECT_FORM),
-        };
-        const downloadPermission = hasPermission([DOCUMENT_SET, DOCUMENT_DOWNLOAD]);
-        const downloadPermissionsOfParentType = {
-          order: hasPermission(ORDER_DOWNLOAD_DOCUMENTS) || downloadPermission,
-          orderItem: hasPermission(ORDER_ITEMS_DOWNLOAD_DOCUMENTS) || downloadPermission,
-          shipment: hasPermission(SHIPMENT_DOCUMENT_DOWNLOAD) || downloadPermission,
-          product: hasPermission(PRODUCT_DOWNLOAD_DOCUMENTS) || downloadPermission,
-          productProvider: hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS) || downloadPermission,
-          project: hasPermission(MILESTONE_DOWNLOAD_DOCUMENTS) || downloadPermission,
         };
         const deletePermissions = {
           order: hasPermission(ORDER_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
@@ -177,7 +149,7 @@ const defaultRenderItem = ({
             <DocumentCard
               file={file}
               navigable={viewPermissions?.[parentType] || !parentType}
-              downloadable={downloadPermissionsOfParentType?.[parentType] || !parentType}
+              downloadable={canDownloadFile(hasPermission, parentType) || !parentType}
               selectable={!!onSelect}
               selected={isSelected}
               onSelect={onSelect}

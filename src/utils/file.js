@@ -7,12 +7,14 @@ import {
   ORDER_DOCUMENT_CREATE,
   ORDER_DOCUMENT_DELETE,
   ORDER_SET_DOCUMENTS,
+  ORDER_DOWNLOAD_DOCUMENTS,
   ORDER_UPDATE,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_DOCUMENT_CREATE,
   ORDER_ITEMS_DOCUMENT_DELETE,
   ORDER_ITEMS_SET_DOCUMENTS,
+  ORDER_ITEMS_DOWNLOAD_DOCUMENTS,
   ORDER_ITEMS_UPDATE,
 } from 'modules/permission/constants/orderItem';
 import {
@@ -29,6 +31,7 @@ import {
   SHIPMENT_DOCUMENT_CREATE,
   SHIPMENT_DOCUMENT_DELETE,
   SHIPMENT_DOCUMENT_SET,
+  SHIPMENT_DOCUMENT_DOWNLOAD,
   SHIPMENT_SET,
   SHIPMENT_UPDATE,
 } from 'modules/permission/constants/shipment';
@@ -37,6 +40,7 @@ import {
   MILESTONE_DOCUMENT_CREATE,
   MILESTONE_DOCUMENT_DELETE,
   MILESTONE_SET_DOCUMENTS,
+  MILESTONE_DOWNLOAD_DOCUMENTS,
 } from 'modules/permission/constants/milestone';
 import {
   PRODUCT_DOCUMENT_GET,
@@ -44,16 +48,41 @@ import {
   PRODUCT_DOCUMENT_GET_TYPE_ANALYSIS_CERTIFICATE,
   PRODUCT_DOCUMENT_GET_TYPE_ORIGIN_CERTIFICATE,
   PRODUCT_SET_DOCUMENTS,
+  PRODUCT_DOWNLOAD_DOCUMENTS,
   PRODUCT_DOCUMENT_CREATE,
   PRODUCT_DOCUMENT_DELETE,
   PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_DOCUMENT_CREATE,
   PRODUCT_PROVIDER_DOCUMENT_DELETE,
   PRODUCT_PROVIDER_SET_DOCUMENTS,
+  PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS,
 } from 'modules/permission/constants/product';
 
-import { DOCUMENT_GET, DOCUMENT_UPDATE } from 'modules/permission/constants/file';
+import {
+  DOCUMENT_SET,
+  DOCUMENT_DOWNLOAD,
+  DOCUMENT_GET,
+  DOCUMENT_UPDATE,
+} from 'modules/permission/constants/file';
 
+export function canDownloadFile(hasPermissions: Function, entityType: string) {
+  switch (entityType) {
+    case 'order':
+      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, ORDER_DOWNLOAD_DOCUMENTS]);
+    case 'orderItem':
+      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, ORDER_ITEMS_DOWNLOAD_DOCUMENTS]);
+    case 'shipment':
+      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, SHIPMENT_DOCUMENT_DOWNLOAD]);
+    case 'product':
+      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, PRODUCT_DOWNLOAD_DOCUMENTS]);
+    case 'productProvider':
+      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS]);
+    case 'project':
+      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, MILESTONE_DOWNLOAD_DOCUMENTS]);
+    default:
+      return false;
+  }
+}
 export function canViewFile(hasPermissions: Function, type: FileType, entityType?: string) {
   switch (type) {
     case 'OrderPo':
