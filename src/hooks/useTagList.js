@@ -3,10 +3,9 @@
 import * as React from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import useDebounce from 'hooks/useDebounce';
-import type { TagsQueryType } from 'providers/TagListProvider/type.js.flow';
 
 type Props = {
-  tagType: TagsQueryType,
+  tagType: string,
   entityOwnerId?: string,
   queryString?: string,
   query?: any,
@@ -81,7 +80,7 @@ const useTagList = ({ tagType, entityOwnerId, queryString, query }: Props) => {
   }, [debouncedQueryString, getTags, totalPages, pageSettings]);
 
   const onScroll = React.useCallback(
-    ({ event, scrollHeight, scrollTop, clientHeight }) => {
+    ({ event, scrollHeight, scrollTop, clientHeight }: Object) => {
       if (
         !event?.target &&
         (Number.isNaN(scrollHeight) || Number.isNaN(scrollTop) || Number.isNaN(clientHeight))

@@ -15,7 +15,7 @@ type Props = {
  * @param entityOwnerId organization id that owns the entity
  */
 const TagListProvider = ({ children, tagType, entityOwnerId, queryString }: Props) => {
-  const { tagData, loading, onScroll } = useTagList({
+  const { tags, loading, onScroll } = useTagList({
     tagType,
     entityOwnerId,
     query: entityOwnerId ? tagsForEntityQuery : tagsQuery,
@@ -23,7 +23,7 @@ const TagListProvider = ({ children, tagType, entityOwnerId, queryString }: Prop
   });
 
   return children({
-    data: tagData,
+    data: tags,
     loading,
     onScroll,
   });
