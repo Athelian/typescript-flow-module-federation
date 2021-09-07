@@ -61,7 +61,7 @@ const DocumentTypeArea = ({
   canDelete,
 }: Props) => {
   const hasPermissions = useViewerHasPermissions();
-  const canView = canViewFile(hasPermissions, type.value);
+  const canView = canViewFile(hasPermissions, type.value, entityType);
   const otherTypes = types.filter(t => t !== type);
 
   const [{ isDraggedOver, canDrop }, dropRef] = useDrop({

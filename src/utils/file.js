@@ -24,6 +24,8 @@ import {
   SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_APPLICATION,
   SHIPMENT_DOCUMENT_GET_TYPE_WAREHOUSE_ARRIVAL_REPORT,
   SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT,
+  SHIPMENT_DOCUMENT_GET_TYPE_MISCELLANEOUS,
+  SHIPMENT_DOCUMENT_SET_MISCELLANEOUS,
   SHIPMENT_DOCUMENT_CREATE,
   SHIPMENT_DOCUMENT_DELETE,
   SHIPMENT_DOCUMENT_SET,
@@ -52,41 +54,51 @@ import {
 
 import { DOCUMENT_GET, DOCUMENT_UPDATE } from 'modules/permission/constants/file';
 
-export function canViewFile(hasPermissions: Function, type: FileType) {
+export function canViewFile(hasPermissions: Function, type: FileType, entityType?: string) {
   switch (type) {
     case 'OrderPo':
       return hasPermissions([DOCUMENT_GET, ORDER_DOCUMENT_GET, ORDER_DOCUMENT_GET_TYPE_PO]);
     case 'OrderPi':
       return hasPermissions([DOCUMENT_GET, ORDER_DOCUMENT_GET, ORDER_DOCUMENT_GET_TYPE_PI]);
     case 'ShipmentBl':
-      return hasPermissions([DOCUMENT_GET, SHIPMENT_DOCUMENT_GET, SHIPMENT_DOCUMENT_GET_TYPE_BL]);
+      return hasPermissions([
+        DOCUMENT_GET,
+        SHIPMENT_DOCUMENT_GET,
+        SHIPMENT_DOCUMENT_GET_TYPE_BL,
+        SHIPMENT_DOCUMENT_SET,
+      ]);
     case 'ShipmentInvoice':
       return hasPermissions([
         DOCUMENT_GET,
         SHIPMENT_DOCUMENT_GET,
+        SHIPMENT_DOCUMENT_SET,
         SHIPMENT_DOCUMENT_GET_TYPE_INVOICE,
       ]);
     case 'ShipmentPackingList':
       return hasPermissions([
         DOCUMENT_GET,
         SHIPMENT_DOCUMENT_GET,
+        SHIPMENT_DOCUMENT_SET,
         SHIPMENT_DOCUMENT_GET_TYPE_PACKING_LIST,
       ]);
     case 'ShipmentImportDeclaration':
       return hasPermissions([
         DOCUMENT_GET,
         SHIPMENT_DOCUMENT_GET,
+        SHIPMENT_DOCUMENT_SET,
         SHIPMENT_DOCUMENT_GET_TYPE_IMPORT_DECLARATION,
       ]);
     case 'ShipmentInspectionApplication':
       return hasPermissions([
         DOCUMENT_GET,
+        SHIPMENT_DOCUMENT_SET,
         SHIPMENT_DOCUMENT_GET,
         SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_APPLICATION,
       ]);
     case 'ShipmentWarehouseArrivalReport':
       return hasPermissions([
         DOCUMENT_GET,
+        SHIPMENT_DOCUMENT_SET,
         SHIPMENT_DOCUMENT_GET,
         SHIPMENT_DOCUMENT_GET_TYPE_WAREHOUSE_ARRIVAL_REPORT,
       ]);
@@ -94,6 +106,7 @@ export function canViewFile(hasPermissions: Function, type: FileType) {
       return hasPermissions([
         DOCUMENT_GET,
         SHIPMENT_DOCUMENT_GET,
+        SHIPMENT_DOCUMENT_SET,
         SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT,
       ]);
     case 'ProductSpec':
@@ -116,6 +129,14 @@ export function canViewFile(hasPermissions: Function, type: FileType) {
       ]);
 
     default:
+      if (entityType === 'Shipment') {
+        return hasPermissions([
+          DOCUMENT_GET,
+          SHIPMENT_DOCUMENT_SET,
+          SHIPMENT_DOCUMENT_GET_TYPE_MISCELLANEOUS,
+          SHIPMENT_DOCUMENT_SET_MISCELLANEOUS,
+        ]);
+      }
       return hasPermissions(DOCUMENT_GET);
   }
 }
