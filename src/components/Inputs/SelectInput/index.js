@@ -152,14 +152,6 @@ const SelectOptions = ({
   }, [inputValue, items, filterItems]);
   const height = Math.min(availableItems.length * optionHeight, 200);
 
-  const scrollCheck = React.useCallback(event => {
-    console.log('SelectOptions sadadasdasdasdas');
-    const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
-    if (bottom) {
-      console.log('At The Bottom');
-    }
-  }, []);
-
   return (
     <>
       <div ref={companionRef} />
@@ -173,7 +165,6 @@ const SelectOptions = ({
           })}
         >
           <FixedSizeList
-            onScroll={scrollCheck}
             width={optionWidth}
             height={height}
             itemCount={availableItems.length}

@@ -20,7 +20,7 @@ const useTagList = ({ tagType, entityOwnerId, queryString, query }: Props) => {
 
   const [pageSettings, setPageSettings] = React.useState({
     page: 1,
-    perPage: 15,
+    perPage: 100,
   });
 
   const [totalPages, setTotalPages] = React.useState(0);

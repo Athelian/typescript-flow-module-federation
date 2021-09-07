@@ -10,7 +10,7 @@ type OptionalProps = {
   height: string,
   dropDirection: 'down' | 'up',
 };
-//
+
 type Props = OptionalProps & {
   highlightedIndex: ?number,
   getItemProps: Function,
