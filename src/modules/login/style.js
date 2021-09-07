@@ -15,21 +15,11 @@ export const LoginContainerStyle: string = css`
   ${layout.CENTER};
   justify-content: space-between;
   overflow: hidden;
-`;
-
-export const LoginLogoContainerStyle: string = css`
-  ${layout.CENTER};
-  ${layout.VERTICAL};
-  justify-content: flex-end;
-  flex: 1.5;
-  min-height: 200px;
-  @media screen and (max-height: 600px) {
-    margin-top: 10px;
-  }
+  padding-top: 20vh;
 `;
 
 export const LoginLogoStyle: string = css`
-  width: 80px;
+  width: 140px;
   padding: 10px 0;
 `;
 
@@ -46,13 +36,14 @@ export const LoginBoxStyle: string = css`
   flex-shrink: 0;
   display: grid;
   grid-auto-rows: min-content;
-  grid-gap: 40px;
+  grid-gap: 20px;
   justify-items: center;
 `;
 
 export const LoginButtonsStyle: string = css`
   ${layout.VERTICAL};
   align-items: center;
+  width: 100%;
 `;
 
 export const ForgotPasswordStyle: string = css`
@@ -86,4 +77,21 @@ export const LoginCopyrightStyle: string = css`
   min-height: 60px;
   color: #fff;
   flex: 1;
+`;
+
+export const Separator: string = css`
+  display: flex;
+  width: 100%;
+  flex-basis: 100%;
+  align-items: center;
+  color: #aaa;
+  margin: 8px 0px;
+  &:before,
+  &:after {
+    content: '';
+    flex-grow: 1;
+    background: #e5e5e5;
+    height: 1px;
+    margin: 0px 8px;
+  }
 `;
