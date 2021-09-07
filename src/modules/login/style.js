@@ -110,6 +110,7 @@ export const Separator: string = css`
 
 export const SsoButtonStyle: string = css`
   display: flex;
+  cursor: pointer;
   align-items: center;
   width: 100%;
   border-radius: 5px;

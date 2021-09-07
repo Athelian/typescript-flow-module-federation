@@ -8,8 +8,9 @@ type Props = {|
 |};
 
 const SsoButton = ({ type }: Props) => {
+  const serverURL = process.env.ZENPORT_SERVER_URL || '';
   return (
-    <a href={`https://graphql-staging.zenport.io/sso/login/${type}`} style={{ width: '100%' }}>
+    <a href={`${serverURL}/sso/login/${type}`} style={{ width: '100%' }}>
       <button type="button" className={SsoButtonStyle}>
         {type === 'google' && (
           <>
