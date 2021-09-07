@@ -30,7 +30,6 @@ import {
   CreatedAtStyle,
   TagsAndButtonsWrapperStyle,
   TagsWrapperStyle,
-  DownloadButtonStyle,
 } from './style';
 
 type Props = {|
@@ -158,7 +157,6 @@ const DocumentCard = ({
   onClick,
   ...rest
 }: Props) => {
-  console.log('what? downloadable', downloadable);
   cardHeight = hideParentInfo ? '134px' : '184px';
   const name = file?.name ?? '';
   const fileExtension = getFileExtension(name);
@@ -227,6 +225,7 @@ const DocumentCard = ({
               ))}
           </div>
 
+          {/* TODO: currently this part covered by the selector, so the button can't be click here.
           {downloadable ? (
             <button
               className={DownloadButtonStyle(false)}
@@ -251,7 +250,7 @@ const DocumentCard = ({
                 <Icon icon="DOWNLOAD" />
               </div>
             </Tooltip>
-          )}
+          )} */}
         </div>
       </div>
     </BaseCard>

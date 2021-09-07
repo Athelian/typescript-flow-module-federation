@@ -65,7 +65,7 @@ import {
   DOCUMENT_UPDATE,
 } from 'modules/permission/constants/file';
 
-export function canDownloadFile(hasPermissions: Function, entityType: string) {
+export function canDownloadFile(hasPermissions: Function, entityType?: string) {
   switch (entityType) {
     case 'order':
       return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, ORDER_DOWNLOAD_DOCUMENTS]);
@@ -80,7 +80,7 @@ export function canDownloadFile(hasPermissions: Function, entityType: string) {
     case 'project':
       return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, MILESTONE_DOWNLOAD_DOCUMENTS]);
     default:
-      return false;
+      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD]);
   }
 }
 export function canViewFile(hasPermissions: Function, type: FileType, entityType?: string) {
