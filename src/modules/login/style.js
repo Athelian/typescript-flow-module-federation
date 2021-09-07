@@ -79,19 +79,50 @@ export const LoginCopyrightStyle: string = css`
   flex: 1;
 `;
 
+export const SsoStyle: string = css`
+  display: grid;
+  grid-auto-rows: min-content;
+  grid-gap: 16px;
+  justify-items: center;
+  width: 100%;
+`;
+
 export const Separator: string = css`
   display: flex;
   width: 100%;
   flex-basis: 100%;
   align-items: center;
   color: #aaa;
-  margin: 8px 0px;
   &:before,
   &:after {
     content: '';
     flex-grow: 1;
     background: #e5e5e5;
     height: 1px;
-    margin: 0px 8px;
   }
+  &:before {
+    margin: 0px 8px 0px 0px;
+  }
+  &:after {
+    margin: 0px 0px 0px 8px;
+  }
+`;
+
+export const SsoButtonStyle: string = css`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  padding: 8px 10px;
+  font-size: 12px;
+  &:hover {
+    background-color: #eee;
+  }
+`;
+
+export const LogoStyle: string = css`
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
 `;

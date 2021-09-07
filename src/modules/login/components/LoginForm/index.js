@@ -14,6 +14,7 @@ import {
   ForgotPasswordStyle,
   LoginLogoStyle,
   Separator,
+  SsoStyle,
 } from 'modules/login/style';
 import {
   FieldItem,
@@ -24,6 +25,7 @@ import {
   PasswordInput,
 } from 'components/Form';
 import { BaseButton } from 'components/Buttons';
+import SsoButton from './ssoButton';
 
 type Props = {
   onLogin: Function,
@@ -34,10 +36,7 @@ function LoginForm({ onLogin }: Props) {
   const [password, setPassword] = React.useState('');
   return (
     <form data-testid="loginForm" className={LoginBoxStyle}>
-      {/* <div className={LoginBoxStyle}> */}
-      {/* <div className={LoginLogoContainerStyle}> */}
       <img src={loginIcon} className={LoginLogoStyle} alt="brand logo" />
-      {/* </div> */}
       <GridColumn>
         <FormField
           name="email"
@@ -132,8 +131,10 @@ function LoginForm({ onLogin }: Props) {
           <FormattedMessage id="modules.login.forgotPassword" defaultMessage="forgot password?" />
         </Link>
       </div>
-      {/* </div> */}
-      <div className={Separator}>OR</div>
+      <div className={SsoStyle}>
+        <div className={Separator}>OR</div>
+        <SsoButton type="google" />
+      </div>
     </form>
   );
 }
