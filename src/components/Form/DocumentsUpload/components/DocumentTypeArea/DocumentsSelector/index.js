@@ -5,7 +5,7 @@ import useFilterSort from 'hooks/useFilterSort';
 import useQueryList from 'hooks/useQueryList';
 import Selector from 'components/Selector';
 import { isForbidden } from 'utils/data';
-import { canViewFile } from 'utils/file';
+import { canViewFile, canDownloadFile } from 'utils/file';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { DocumentCard } from 'components/Cards';
@@ -30,9 +30,19 @@ type Props = {
 const RenderItem = ({ file, selectItemProps }: {| file: FilePayload, selectItemProps: any |}) => {
   const hasPermissions = useViewerHasPermissions();
   const canView = canViewFile(hasPermissions, file.type);
+  const canDownload = canDownloadFile(hasPermissions);
+
   if (!canView) return null;
 
-  return <DocumentCard key={file.id} file={file} hideParentInfo {...selectItemProps} />;
+  return (
+    <DocumentCard
+      key={file.id}
+      file={file}
+      downloadable={canDownload}
+      hideParentInfo
+      {...selectItemProps}
+    />
+  );
 };
 
 const DocumentsSelector = ({ onCancel, onSelect, alreadyAddedDocuments }: Props) => {
