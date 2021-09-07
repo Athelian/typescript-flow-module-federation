@@ -302,16 +302,12 @@ export default class TagsInput extends React.Component<Props, State> {
                         <TagSelectOptions
                           getItemProps={getItemProps}
                           items={this.computeFilteredTags(
-                            (tags ?? [])
-                              .filter(tag => !isForbidden(tag) && !isNotFound(tag))
-                              .sort((a, b) => {
-                                if (a.name < b.name) return -1;
-                                if (a.name > b.name) return 1;
-                                return 0;
-                              }),
+                            (tags ?? []).filter(tag => !isForbidden(tag) && !isNotFound(tag)),
                             inputValue
                           )}
-                          onScroll={onScroll}
+                          onScroll={(scrollTop, event) => {
+                            onScroll({ event });
+                          }}
                           selectedItems={values}
                           highlightedIndex={highlightedIndex}
                           itemToString={item => (item ? item.description || item.name : '')}

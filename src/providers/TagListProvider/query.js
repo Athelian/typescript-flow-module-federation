@@ -36,7 +36,7 @@ export const tagsForEntityQuery = gql`
     $entityOwnerId: ID!
     $entityType: TagEntityType!
     $query: String!
-    # $sortBy: TagSortInput
+    $sortBy: TagSortInput
     $page: Int!
     $perPage: Int!
   ) {
@@ -44,7 +44,7 @@ export const tagsForEntityQuery = gql`
       filterBy: { query: $query }
       entityOwnerId: $entityOwnerId
       entityType: $entityType
-      # sortBy: $sortBy
+      sortBy: $sortBy
       page: $page
       perPage: $perPage
     ) {
