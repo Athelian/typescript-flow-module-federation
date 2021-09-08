@@ -142,7 +142,6 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
         {({ originalValues: initialValues, state, setFieldValue }) => {
           const values = { ...initialValues, ...state };
           const { ownedBy } = values;
-          console.log(ownedBy);
           return (
             <div className={ProductSectionWrapperStyle}>
               <Subscribe to={[ProductFilesContainer]}>
