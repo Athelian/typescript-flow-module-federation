@@ -99,8 +99,8 @@ const prepareParsedProductProviderInput = (
 ): Object => {
   const deletedProductProviders = findDeletedArrayData(
     'id',
-    originalValues?.productProviders ?? [],
-    newValues?.productProviders ?? []
+    getByPathWithDefault([], 'productProviders', originalValues),
+    getByPathWithDefault([], 'productProviders', newValues)
   ).map(productProvider => ({
     id: productProvider.id,
     deleted: true,
@@ -109,7 +109,7 @@ const prepareParsedProductProviderInput = (
   const newProductProviders = parseArrayOfChildrenField(
     'productProviders',
     getByPathWithDefault([], 'productProviders', originalValues),
-    newValues.productProviders,
+    getByPathWithDefault([], 'productProviders', newValues),
     (oldProductProvider: ?Object, newProductProvider: Object) => ({
       ...(!oldProductProvider ? {} : { id: oldProductProvider.id }),
       ...parseParentIdField(
@@ -236,12 +236,12 @@ const prepareParsedProductProviderInput = (
     })
   );
 
-  newProductProviders.productProviders = [
-    ...deletedProductProviders,
-    ...newProductProviders.productProviders,
-  ];
-
-  return newProductProviders;
+  return {
+    productProviders: [
+      ...deletedProductProviders,
+      ...getByPathWithDefault([], 'productProviders', newProductProviders),
+    ],
+  };
 };
 
 export const prepareParsedProductInput = (originalValues: ?Object, newValues: Object): Object => ({
