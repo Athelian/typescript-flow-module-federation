@@ -247,5 +247,23 @@ export const ownedByFragment = gql`
   fragment ownedByFragment on Organization {
     id
     name
+    types
+    partner {
+      ... on Partner {
+        id
+        name
+        code
+        types
+        tags {
+          ...tagFragment
+        }
+        organization {
+          ... on Organization {
+            id
+            name
+          }
+        }
+      }
+    }
   }
 `;
