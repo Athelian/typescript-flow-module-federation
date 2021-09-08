@@ -24,6 +24,7 @@ import { BaseButton } from 'components/Buttons';
 import useDocumentTypePermission from './hooks/useDocumentTypePermission';
 import fileUploadMutation from './mutation';
 import { DocumentTypeArea } from './components';
+import { SectionNavBar } from 'components/NavBar';
 import GridRow from 'components/GridRow';
 import {
   DocumentsDragAndDropTooltipWrapperStyle,
@@ -266,8 +267,72 @@ const DocumentsUpload = ({
     </DndProvider>
   );
 
+  const navbarContent = (
+    <>
+      <div className={NavContentRightContainer}>
+        <div className={NavContentRightContainerButtons}>
+          <GridRow>
+            {!!Object.keys(selectedFiles).length && (
+              <BaseButton
+                icon="DOWNLOAD"
+                label={<FormattedMessage {...messages.downloadSelected} />}
+                backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+                hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+                textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                onClick={e => {
+                  e.stopPropagation();
+                  const interval = 100;
+
+                  Object.values(selectedFiles).map((selectedFile, index) => {
+                    setTimeout(() => {
+                      if (
+                        selectedFile &&
+                        selectedFile.path &&
+                        typeof selectedFile.path === 'string' &&
+                        selectedFile.name &&
+                        typeof selectedFile.name === 'string'
+                      ) {
+                        const { path, name } = selectedFile;
+                        downloadFile(path, name);
+                      }
+                    }, interval * (index + 1));
+                  });
+                  setSelectedFiles({});
+                }}
+              />
+            )}
+            <BaseButton
+              icon="CHECKED"
+              label={<FormattedMessage {...messages.selectMultiple} />}
+              backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+              hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+              textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+              hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+              onClick={() => {
+                if (isMultiSelect) {
+                  setSelectedFiles({});
+                }
+
+                setMultiSelect(isMulti => !isMulti);
+              }}
+            />
+          </GridRow>
+        </div>
+        <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
+          <div className={DocumentsDragAndDropTooltipWrapperStyle}>
+            <Icon icon="INFO" />
+          </div>
+        </Tooltip>
+      </div>
+    </>
+  );
+
   return isInDialog ? (
-    documentsBody
+    <>
+      <SectionNavBar>{navbarContent}</SectionNavBar>
+      {documentsBody}
+    </>
   ) : (
     <StickyScrollingSection
       sectionHeader={
@@ -281,66 +346,7 @@ const DocumentsUpload = ({
           }
         />
       }
-      navbarContent={
-        <>
-          <div className={NavContentRightContainer}>
-            <div className={NavContentRightContainerButtons}>
-              <GridRow>
-                {!!Object.keys(selectedFiles).length && (
-                  <BaseButton
-                    icon="DOWNLOAD"
-                    label={<FormattedMessage {...messages.downloadSelected} />}
-                    backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
-                    hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
-                    textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-                    hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-                    onClick={e => {
-                      e.stopPropagation();
-                      const interval = 100;
-
-                      Object.values(selectedFiles).map((selectedFile, index) => {
-                        setTimeout(() => {
-                          if (
-                            selectedFile &&
-                            selectedFile.path &&
-                            typeof selectedFile.path === 'string' &&
-                            selectedFile.name &&
-                            typeof selectedFile.name === 'string'
-                          ) {
-                            const { path, name } = selectedFile;
-                            downloadFile(path, name);
-                          }
-                        }, interval * (index + 1));
-                      });
-                      setSelectedFiles({});
-                    }}
-                  />
-                )}
-                <BaseButton
-                  icon="CHECKED"
-                  label={<FormattedMessage {...messages.selectMultiple} />}
-                  backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
-                  hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
-                  textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-                  hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-                  onClick={() => {
-                    if (isMultiSelect) {
-                      setSelectedFiles({});
-                    }
-
-                    setMultiSelect(isMulti => !isMulti);
-                  }}
-                />
-              </GridRow>
-            </div>
-            <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
-              <div className={DocumentsDragAndDropTooltipWrapperStyle}>
-                <Icon icon="INFO" />
-              </div>
-            </Tooltip>
-          </div>
-        </>
-      }
+      navbarContent={navbarContent}
     >
       {documentsBody}
     </StickyScrollingSection>
