@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { SsoButtonStyle, LogoStyle } from 'modules/login/style';
 import googleIcon from 'media/google.png';
+import { FormattedMessage } from 'react-intl';
 
 type Props = {|
   type: string,
@@ -15,7 +16,7 @@ const SsoButton = ({ type }: Props) => {
         {type === 'google' && (
           <>
             <img src={googleIcon} className={LogoStyle} alt="google logo" />
-            Continue with Google
+            <FormattedMessage id="modules.Login.google" defaultMessage="Continue with Google" />
           </>
         )}
       </button>

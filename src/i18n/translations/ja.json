@@ -541,6 +541,7 @@
   "modules.Login.password": "パスワード",
   "modules.Login.login": "ログイン",
   "modules.Login.loggingIn": "ログイン中 ...",
+  "modules.Login.google": "Continue with Google",
   "modules.metadata.addCustomField": "カスタムフィールドを追加",
   "modules.metadata.customFields": "カスタムフィールド",
   "modules.metadata.template": "フィールドテンプレート",

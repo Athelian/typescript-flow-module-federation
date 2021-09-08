@@ -116,13 +116,13 @@ function LoginForm({ onLogin }: Props) {
           {form => (
             <BaseButton
               data-testid="submitButton"
+              icon="LOGIN"
               label={<FormattedMessage {...messages.login} />}
               backgroundColor="TEAL"
               hoverBackgroundColor="TEAL_DARK"
               disabled={!form.isReady({ email, password }, validator)}
               type="submit"
               onClick={() => onLogin({ email, password })}
-              style={{ width: '100%' }}
             />
           )}
         </Subscribe>

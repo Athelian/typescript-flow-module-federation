@@ -541,6 +541,7 @@
   "modules.Login.password": "密码",
   "modules.Login.login": "登录",
   "modules.Login.loggingIn": "登录中...",
+  "modules.Login.google": "继续使用Google帳戶",
   "modules.metadata.addCustomField": "添加自定义字段",
   "modules.metadata.customFields": "自定义字段",
   "modules.metadata.template": "模板",

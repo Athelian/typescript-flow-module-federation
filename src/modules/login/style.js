@@ -20,7 +20,7 @@ export const LoginContainerStyle: string = css`
 
 export const LoginLogoStyle: string = css`
   width: 140px;
-  padding: 10px 0;
+  padding-top: 10px;
 `;
 
 export const LoginLogoNameStyle: string = css`
@@ -36,20 +36,20 @@ export const LoginBoxStyle: string = css`
   flex-shrink: 0;
   display: grid;
   grid-auto-rows: min-content;
-  grid-gap: 20px;
+  grid-gap: 28px;
   justify-items: center;
 `;
 
 export const LoginButtonsStyle: string = css`
-  ${layout.VERTICAL};
-  align-items: center;
+  ${layout.LAYOUT};
+  ${layout.CENTER};
   width: 100%;
+  justify-content: space-between;
 `;
 
 export const ForgotPasswordStyle: string = css`
   ${fontSizesWithHeights.MAIN};
   color: ${colors.TEAL};
-  margin-top: 20px;
 `;
 
 export const LoginFormWrapperStyle: string = css`
@@ -85,10 +85,11 @@ export const SsoStyle: string = css`
   grid-gap: 16px;
   justify-items: center;
   width: 100%;
+  margin-top: -10px;
 `;
 
 export const Separator: string = css`
-  display: flex;
+  ${layout.LAYOUT};
   width: 100%;
   flex-basis: 100%;
   align-items: center;
@@ -109,13 +110,14 @@ export const Separator: string = css`
 `;
 
 export const SsoButtonStyle: string = css`
-  display: flex;
+  ${layout.LAYOUT};
+  color: #555555;
   cursor: pointer;
   align-items: center;
   width: 100%;
-  border-radius: 5px;
-  border: 1px solid #aaa;
-  padding: 8px 10px;
+  border-radius: 3px;
+  border: 1px solid #c2c8d0;
+  padding: 6px 8px;
   font-size: 12px;
   &:hover {
     background-color: #eee;
@@ -123,7 +125,7 @@ export const SsoButtonStyle: string = css`
 `;
 
 export const LogoStyle: string = css`
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   margin-right: 10px;
 `;
