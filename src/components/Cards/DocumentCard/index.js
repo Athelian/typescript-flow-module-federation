@@ -30,7 +30,6 @@ import {
   CreatedAtStyle,
   TagsAndButtonsWrapperStyle,
   TagsWrapperStyle,
-  DownloadButtonStyle,
 } from './style';
 
 type Props = {|
@@ -227,6 +226,7 @@ const DocumentCard = ({
               ))}
           </div>
 
+          {/* TODO: currently this part covered by the selector, so the button can't be click here.
           {downloadable ? (
             <button
               className={DownloadButtonStyle(false)}
@@ -251,7 +251,7 @@ const DocumentCard = ({
                 <Icon icon="DOWNLOAD" />
               </div>
             </Tooltip>
-          )}
+          )} */}
         </div>
       </div>
     </BaseCard>
