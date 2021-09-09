@@ -1,11 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const SelectedEntitiesWrapperStyle: string = css`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  bottom: 30px;
-  right: 50px;
-  z-index: 1;
-`;
+export const SelectedEntitiesWrapperStyle: string = (right: number) => {
+  return css`
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 30px;
+    right: ${right}px;
+    z-index: 1;
+  `;
+};
