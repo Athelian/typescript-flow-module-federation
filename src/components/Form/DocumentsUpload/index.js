@@ -33,7 +33,6 @@ import {
   NavContentRightContainerButtons,
 } from './style';
 import messages from './messages';
-import jsDownload from 'js-file-download';
 
 type Props = {|
   files: Array<FilePayload>,
