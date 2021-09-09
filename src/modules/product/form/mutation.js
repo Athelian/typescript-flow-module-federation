@@ -39,6 +39,7 @@ import {
   parseMemoField,
   parseDefaultIndexField,
   parseSizeField,
+  findDeletedArrayData,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -56,6 +57,7 @@ export const createProductMutation: Object = gql`
   ${forbiddenFragment}
 `;
 
+//
 export const updateProductMutation: Object = gql`
   mutation productUpdate($id: ID!, $input: ProductUpdateInput!) {
     productUpdate(id: $id, input: $input) {
@@ -91,58 +93,23 @@ export const updateProductMutation: Object = gql`
   ${productProviderPackagingFragment}
 `;
 
-export const prepareParsedProductInput = (originalValues: ?Object, newValues: Object): Object => ({
-  ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
-  ...parseParentIdField(
-    'importerId',
-    getByPathWithDefault(null, 'importer', originalValues),
-    newValues.importer
-  ),
-  ...parseFilesField({
-    key: 'files',
-    originalFiles: getByPathWithDefault([], 'files', originalValues),
-    newFiles: newValues.files,
-  }),
-  ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
-  ...parseGenericField(
-    'serial',
-    getByPathWithDefault(null, 'serial', originalValues),
-    newValues.serial
-  ),
-  ...parseGenericField(
-    'janCode',
-    getByPathWithDefault(null, 'janCode', originalValues),
-    newValues.janCode || null
-  ),
-  ...parseGenericField(
-    'hsCode',
-    getByPathWithDefault(null, 'hsCode', originalValues),
-    newValues.hsCode || null
-  ),
-  ...parseGenericField(
-    'material',
-    getByPathWithDefault(null, 'material', originalValues),
-    newValues.material
-  ),
-  ...parseCustomFieldsField(
-    'customFields',
-    getByPathWithDefault(null, 'customFields', originalValues),
-    newValues.customFields
-  ),
-  ...parseTagsField('tags', originalValues?.tags ?? [], newValues.tags),
-  ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
-  ...parseTodoField(
-    getByPathWithDefault(
-      { tasks: [], taskTemplate: null, milestone: null },
-      'todo',
-      originalValues
-    ),
-    newValues.todo
-  ),
-  ...parseArrayOfChildrenField(
+const prepareParsedProductProviderInput = (
+  originalValues: ?Array<Object>,
+  newValues: Array<Object>
+): Object => {
+  const deletedProductProviders = findDeletedArrayData(
+    'id',
+    getByPathWithDefault([], 'productProviders', originalValues),
+    getByPathWithDefault([], 'productProviders', newValues)
+  ).map(productProvider => ({
+    id: productProvider.id,
+    deleted: true,
+  }));
+
+  const newProductProviders = parseArrayOfChildrenField(
     'productProviders',
     getByPathWithDefault([], 'productProviders', originalValues),
-    newValues.productProviders,
+    getByPathWithDefault([], 'productProviders', newValues),
     (oldProductProvider: ?Object, newProductProvider: Object) => ({
       ...(!oldProductProvider ? {} : { id: oldProductProvider.id }),
       ...parseParentIdField(
@@ -267,5 +234,63 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         )
       ),
     })
+  );
+
+  return {
+    productProviders: [
+      ...deletedProductProviders,
+      ...getByPathWithDefault([], 'productProviders', newProductProviders),
+    ],
+  };
+};
+
+export const prepareParsedProductInput = (originalValues: ?Object, newValues: Object): Object => ({
+  ...parseArrayOfIdsField('followerIds', originalValues?.followers ?? [], newValues.followers),
+  ...parseParentIdField(
+    'importerId',
+    getByPathWithDefault(null, 'importer', originalValues),
+    newValues.importer
   ),
+  ...parseFilesField({
+    key: 'files',
+    originalFiles: getByPathWithDefault([], 'files', originalValues),
+    newFiles: newValues.files,
+  }),
+  ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
+  ...parseGenericField(
+    'serial',
+    getByPathWithDefault(null, 'serial', originalValues),
+    newValues.serial
+  ),
+  ...parseGenericField(
+    'janCode',
+    getByPathWithDefault(null, 'janCode', originalValues),
+    newValues.janCode || null
+  ),
+  ...parseGenericField(
+    'hsCode',
+    getByPathWithDefault(null, 'hsCode', originalValues),
+    newValues.hsCode || null
+  ),
+  ...parseGenericField(
+    'material',
+    getByPathWithDefault(null, 'material', originalValues),
+    newValues.material
+  ),
+  ...parseCustomFieldsField(
+    'customFields',
+    getByPathWithDefault(null, 'customFields', originalValues),
+    newValues.customFields
+  ),
+  ...parseTagsField('tags', originalValues?.tags ?? [], newValues.tags),
+  ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
+  ...parseTodoField(
+    getByPathWithDefault(
+      { tasks: [], taskTemplate: null, milestone: null },
+      'todo',
+      originalValues
+    ),
+    newValues.todo
+  ),
+  ...prepareParsedProductProviderInput(originalValues, newValues),
 });
