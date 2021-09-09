@@ -519,6 +519,7 @@
   "modules.documents.navbar.label": "SELECT DOCUMENT TYPE",
   "components.Documents.newDocument": "UPLOAD DOCUMENT",
   "components.Documents.selectMultiple": "SELECT MULTIPLE",
+  "components.Documents.downloadSelected": "DOWNLOAD SELECTED",
   "modules.Documents.createdAt": "Date Created",
   "modules.Documents.updatedAt": "Last Modified",
   "modules.Documents.name": "Name",

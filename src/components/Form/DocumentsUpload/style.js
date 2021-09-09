@@ -13,9 +13,6 @@ import {
 
 export const DocumentsDragAndDropTooltipWrapperStyle: string = css`
   ${presets.BUTTON};
-  position: absolute;
-  right: 0;
-  top: 0;
   ${fontSizes.LARGE};
   color: ${colors.GRAY};
   width: 50px;
@@ -24,6 +21,21 @@ export const DocumentsDragAndDropTooltipWrapperStyle: string = css`
   &:hover {
     color: ${colors.GRAY_DARK};
   }
+`;
+
+export const NavContentRightContainer: string = css`
+  display: flex;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  align-items: center;
+`;
+
+export const NavContentRightContainerButtons: string = css`
+  display: flex;
+  height: 100%;
+  align-items: center;
 `;
 
 export const DocumentsUploadWrapperStyle: string = css`

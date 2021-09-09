@@ -1,5 +1,6 @@
 // @flow
 import type { FileType, File } from 'generated/graphql';
+import logger from 'utils/logger';
 import {
   ORDER_DOCUMENT_GET,
   ORDER_DOCUMENT_GET_TYPE_PO,
@@ -223,6 +224,23 @@ export const formatFilesToArray = (files: any) => {
   }
 
   return Object.values(files);
+};
+
+export const downloadFile = (url: string, name: string) => {
+  fetch(url)
+    .then(resp => resp.blob())
+    .then(blob => {
+      const newUrl = window.URL.createObjectURL(blob);
+      const a = window.document.createElement('a');
+      a.style.display = 'none';
+      a.href = newUrl;
+      // the filename you want
+      a.download = name;
+      window.document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
+    .catch(e => logger.error(e));
 };
 
 export default canViewFile;

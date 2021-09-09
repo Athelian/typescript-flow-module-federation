@@ -22,6 +22,7 @@ import useFilterSort from 'hooks/useFilterSort';
 import { DOCUMENT_CREATE, DOCUMENT_UPDATE } from 'modules/permission/constants/file';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
+import { downloadFile } from 'utils/file';
 import { SelectedFloat, ButtonFloat } from 'components/Float';
 import GridRow from 'components/GridRow';
 import ParentDocumentSelection from './form/components/ParentDocumentSelection';
@@ -222,6 +223,30 @@ const DocumentModule = () => {
             <SelectedFloat
               selectCount={Object.keys(selectedFiles).length}
               onClearClicked={() => setSelectedFiles({})}
+            />
+            <ButtonFloat
+              right={160}
+              label="DOWNLOAD"
+              onClick={() => {
+                const interval = 100;
+
+                Object.values(selectedFiles).map((selectedFile, index) => {
+                  setTimeout(() => {
+                    if (
+                      selectedFile &&
+                      selectedFile.path &&
+                      typeof selectedFile.path === 'string' &&
+                      selectedFile.name &&
+                      typeof selectedFile.name === 'string'
+                    ) {
+                      const { path, name } = selectedFile;
+                      downloadFile(path, name);
+                    }
+                  }, interval * (index + 1));
+
+                  return null;
+                });
+              }}
             />
             <ButtonFloat label="SET PARENT" onClick={() => setParentSelectionOpen(true)} />
           </>

@@ -7,11 +7,12 @@ type Props = {
   label: string,
   onClick?: Function,
   disabled?: boolean,
+  right?: number,
 };
 
-const ButtonFloat = ({ label, onClick, disabled = false }: Props) => {
+const ButtonFloat = ({ label, onClick, right = 50, disabled = false }: Props) => {
   return (
-    <div className={SelectedEntitiesWrapperStyle}>
+    <div className={SelectedEntitiesWrapperStyle(right)}>
       <BaseButton
         label={label}
         backgroundColor="TEAL"

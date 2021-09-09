@@ -512,6 +512,7 @@
   "modules.Documents.noDocumentFound": "未找到文件",
   "components.Documents.newDocument": "上传文件",
   "components.Documents.selectMultiple": "选择多个文件",
+  "components.Documents.downloadSelected": "已选择下载",
   "modules.Documents.createdAt": "创建日期",
   "modules.Documents.updatedAt": "最后修改日期",
   "modules.Documents.name": "名称",

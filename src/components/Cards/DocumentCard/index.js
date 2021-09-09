@@ -39,6 +39,7 @@ type Props = {|
   hideParentInfo?: boolean,
   downloadable?: boolean,
   navigable?: boolean,
+  selected?: boolean,
   onChange?: (field: string, value: mixed) => void,
   onClick?: Function,
   onSelect?: Function,
