@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const SelectedEntitiesWrapperStyle: string = (right: number) => {
+export const SelectedEntitiesWrapperStyle = (right: number) => {
   return css`
     display: flex;
     flex-direction: column;
