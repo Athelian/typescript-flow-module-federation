@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 // @flow
 
 import * as React from 'react';
@@ -21,11 +19,11 @@ import { SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import { StickyScrollingSection } from 'components/Sections';
 import { BaseButton } from 'components/Buttons';
+import { SectionNavBar } from 'components/NavBar';
+import GridRow from 'components/GridRow';
 import useDocumentTypePermission from './hooks/useDocumentTypePermission';
 import fileUploadMutation from './mutation';
 import { DocumentTypeArea } from './components';
-import { SectionNavBar } from 'components/NavBar';
-import GridRow from 'components/GridRow';
 import {
   DocumentsDragAndDropTooltipWrapperStyle,
   DocumentsUploadWrapperStyle,
@@ -296,6 +294,8 @@ const DocumentsUpload = ({
                         downloadFile(path, name);
                       }
                     }, interval * (index + 1));
+
+                    return null;
                   });
                   setSelectedFiles({});
                 }}
