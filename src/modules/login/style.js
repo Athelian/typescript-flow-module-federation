@@ -10,12 +10,10 @@ import {
 } from 'styles/common';
 
 export const LoginContainerStyle: string = css`
-  ${layout.FIT};
   ${layout.VERTICAL};
   ${layout.CENTER};
-  justify-content: space-between;
-  overflow: hidden;
-  padding-top: 20vh;
+  justify-content: center;
+  height: 100vh;
 `;
 
 export const LoginLogoStyle: string = css`
@@ -71,12 +69,13 @@ export const LoginErrorStyle: string = css`
 `;
 
 export const LoginCopyrightStyle: string = css`
-  ${layout.VERTICAL};
-  justify-content: flex-end;
-  padding: 20px 0;
-  min-height: 60px;
   color: #fff;
-  flex: 1;
+  min-height: 60px;
+  padding: 20px 0;
+  @media screen and (min-height: 700px) {
+    position: absolute;
+    bottom: 0;
+  }
 `;
 
 export const SsoStyle: string = css`
