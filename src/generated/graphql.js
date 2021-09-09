@@ -21764,6 +21764,7 @@ export type Order = {|
     orderItems: Array<OrderItemPayload>,
     shipments: Array<ShipmentPayload>,
     containers: Array<ContainerPayload>,
+    organizations: Array<OrganizationPayload>,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -21801,6 +21802,7 @@ export type OrderCreateInput = {|
   files?: ?Array<EntityFileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type OrderFilterInput = {|
@@ -22091,6 +22093,7 @@ export type OrderUpdateInput = {|
   files?: ?Array<EntityFileInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type OrderUpdateWrapperInput = {|
@@ -22116,6 +22119,7 @@ export type Organization = {|
     disabled: $ElementType<Scalars, 'Boolean'>,
     dummy: $ElementType<Scalars, 'Boolean'>,
     shareAllTags: $ElementType<Scalars, 'Boolean'>,
+    forceMFA: $ElementType<Scalars, 'Boolean'>,
     users: UserPayloadPaginatedSearch,
     /** Resolving the current partnership of this organization from user's organization */
   partner?: ?PartnerPayload,
@@ -22392,6 +22396,7 @@ export type Product = {|
     batches: BatchPayloadPaginatedSearch,
     shipments: ShipmentPayloadPaginatedSearch,
     containers: ContainerPayloadPaginatedSearch,
+    organizations: Array<OrganizationPayload>,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -22465,6 +22470,7 @@ export type ProductCreateInput = {|
   productProviders: Array<ProductProductProviderCreateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type ProductFilterInput = {|
@@ -22518,6 +22524,7 @@ export type ProductProductProviderCreateInput = {|
   packages: Array<ProductProviderPackageCreateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type ProductProductProviderUpdateInput = {|
@@ -22541,6 +22548,7 @@ export type ProductProductProviderUpdateInput = {|
   packages?: ?Array<ProductProviderPackageUpdateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   id?: ?$ElementType<Scalars, 'ID'>,
 |};
 
@@ -22579,6 +22587,7 @@ export type ProductProvider = {|
     packages: Array<ProductProviderPackagePayload>,
     timeline: Timeline,
     todo: Todo,
+    organizations: Array<OrganizationPayload>,
     batches: BatchPayloadPaginatedSearch,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
@@ -22623,6 +22632,7 @@ export type ProductProviderCreateInput = {|
   packages: Array<ProductProviderPackageCreateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   productId: $ElementType<Scalars, 'ID'>,
 |};
 
@@ -22737,6 +22747,7 @@ export type ProductProviderUpdateInput = {|
   packages?: ?Array<ProductProviderPackageUpdateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   id?: ?$ElementType<Scalars, 'ID'>,
   productId?: ?$ElementType<Scalars, 'ID'>,
 |};
@@ -22765,6 +22776,7 @@ export type ProductUpdateInput = {|
   productProviders?: ?Array<ProductProductProviderUpdateInput>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type ProductUpdateWrapperInput = {|
@@ -23488,6 +23500,7 @@ export type QueryTagsForEntityArgs = {|
   entityOwnerId: $ElementType<Scalars, 'ID'>,
   entityType: TagEntityType,
   filterBy?: ?TagFilterInput,
+  sortBy?: ?TagSortInput,
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>
 |};
@@ -61111,6 +61124,7 @@ export type Shipment = {|
     containers: Array<ContainerPayload>,
     timeline: Timeline,
     todo: Todo,
+    organizations: Array<OrganizationPayload>,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -61354,6 +61368,7 @@ export type ShipmentCreateInput = {|
   totalPackageQuantityOverriding?: ?$ElementType<Scalars, 'Boolean'>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type ShipmentEventInterface = {|
@@ -61884,6 +61899,7 @@ export type ShipmentUpdateInput = {|
   totalPackageQuantityOverriding?: ?$ElementType<Scalars, 'Boolean'>,
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type ShipmentUpdateWrapperInput = {|
@@ -62686,6 +62702,7 @@ export type User = {|
     avatar?: ?FilePayload,
     language: Language,
     timezone: $ElementType<Scalars, 'String'>,
+    mfaType?: ?$ElementType<Scalars, 'String'>,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
