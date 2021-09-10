@@ -10,27 +10,15 @@ import {
 } from 'styles/common';
 
 export const LoginContainerStyle: string = css`
-  ${layout.FIT};
   ${layout.VERTICAL};
   ${layout.CENTER};
-  justify-content: space-between;
-  overflow: hidden;
-`;
-
-export const LoginLogoContainerStyle: string = css`
-  ${layout.CENTER};
-  ${layout.VERTICAL};
-  justify-content: flex-end;
-  flex: 1.5;
-  min-height: 200px;
-  @media screen and (max-height: 600px) {
-    margin-top: 10px;
-  }
+  justify-content: center;
+  height: 100vh;
 `;
 
 export const LoginLogoStyle: string = css`
-  width: 80px;
-  padding: 10px 0;
+  width: 140px;
+  padding-top: 10px;
 `;
 
 export const LoginLogoNameStyle: string = css`
@@ -46,19 +34,20 @@ export const LoginBoxStyle: string = css`
   flex-shrink: 0;
   display: grid;
   grid-auto-rows: min-content;
-  grid-gap: 40px;
+  grid-gap: 28px;
   justify-items: center;
 `;
 
 export const LoginButtonsStyle: string = css`
-  ${layout.VERTICAL};
-  align-items: center;
+  ${layout.LAYOUT};
+  ${layout.CENTER};
+  width: 100%;
+  justify-content: space-between;
 `;
 
 export const ForgotPasswordStyle: string = css`
   ${fontSizesWithHeights.MAIN};
   color: ${colors.TEAL};
-  margin-top: 20px;
 `;
 
 export const LoginFormWrapperStyle: string = css`
@@ -80,10 +69,62 @@ export const LoginErrorStyle: string = css`
 `;
 
 export const LoginCopyrightStyle: string = css`
-  ${layout.VERTICAL};
-  justify-content: flex-end;
-  padding: 20px 0;
-  min-height: 60px;
   color: #fff;
-  flex: 1;
+  min-height: 60px;
+  padding: 20px 0;
+  @media screen and (min-height: 700px) {
+    position: absolute;
+    bottom: 0;
+  }
+`;
+
+export const SsoStyle: string = css`
+  display: grid;
+  grid-auto-rows: min-content;
+  grid-gap: 16px;
+  justify-items: center;
+  width: 100%;
+  margin-top: -10px;
+`;
+
+export const Separator: string = css`
+  ${layout.LAYOUT};
+  width: 100%;
+  flex-basis: 100%;
+  align-items: center;
+  color: #aaa;
+  &:before,
+  &:after {
+    content: '';
+    flex-grow: 1;
+    background: #e5e5e5;
+    height: 1px;
+  }
+  &:before {
+    margin: 0px 8px 0px 0px;
+  }
+  &:after {
+    margin: 0px 0px 0px 8px;
+  }
+`;
+
+export const SsoButtonStyle: string = css`
+  ${layout.LAYOUT};
+  color: #555555;
+  cursor: pointer;
+  align-items: center;
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid #c2c8d0;
+  padding: 6px 8px;
+  font-size: 12px;
+  &:hover {
+    background-color: #eee;
+  }
+`;
+
+export const LogoStyle: string = css`
+  width: 14px;
+  height: 14px;
+  margin-right: 10px;
 `;
