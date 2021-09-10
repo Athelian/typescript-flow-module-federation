@@ -511,6 +511,7 @@
   "modules.documents.deleteBatch.message1": "本当にこの{fileLabel}を削除しますか？",
   "modules.Documents.noDocumentFound": "ファイルが見つかりません",
   "components.Documents.newDocument": "書類アップロード",
+  "components.Documents.selectAll": "すべて選択",
   "components.Documents.selectMultiple": "複数書類の選択",
   "components.Documents.downloadSelected": "選択したダウンロード",
   "modules.Documents.createdAt": "作成日",
