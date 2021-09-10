@@ -933,6 +933,7 @@
   "modules.Products.tasks": "任务",
   "modules.Products.newProvider": "新出口商•供应商",
   "modules.Products.noProviderFound": "请至少创建一个出口商•供应商",
+  "modules.Products.pleaseAddYourself": "Please add yourself as an exporter, supplier or importer",
   "modules.Products.product": "商品",
   "modules.Products.name": "名称",
   "modules.Products.serial": "商品号码",

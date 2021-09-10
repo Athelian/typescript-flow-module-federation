@@ -21,7 +21,9 @@ import ResetFormButton from 'components/ResetFormButton';
 import SaveFormButton from 'components/SaveFormButton';
 import SlideView from 'components/SlideView';
 import { contains, getByPathWithDefault } from 'utils/fp';
+import Icon from 'components/Icon';
 import { productProviderTimelineQuery } from './query';
+import { WarningMessageStyle } from '../../style';
 
 type OptionalProps = {
   isOwner: boolean,
@@ -203,6 +205,13 @@ const ProductProviderFormWrapper = ({
                         })
                       }
                     />
+                    <span className={WarningMessageStyle}>
+                      <Icon icon="WARNING" />
+                      <FormattedMessage
+                        id="modules.Products.pleaseAddYourself"
+                        defaultMessage="Please add yourself as an exporter, supplier or importer"
+                      />
+                    </span>
                   </>
                 )}
                 {!isNew &&

@@ -933,6 +933,7 @@
   "modules.Products.tasks": "タスク",
   "modules.Products.newProvider": "追加",
   "modules.Products.noProviderFound": "輸出者もしくは製造者が見つかりません。新しく追加してください。",
+  "modules.Products.pleaseAddYourself": "Please add yourself as an exporter, supplier or importer",
   "modules.Products.product": "商品",
   "modules.Products.name": "商品名",
   "modules.Products.serial": "商品番号",

@@ -940,6 +940,7 @@
   "modules.Products.tasks": "TASKS",
   "modules.Products.newProvider": "NEW END PRODUCT",
   "modules.Products.noProviderFound": "Please create at least one end product",
+  "modules.Products.pleaseAddYourself": "Please add yourself as an exporter, supplier or importer",
   "modules.Products.product": "Product",
   "modules.Products.name": "Name",
   "modules.Products.serial": "Serial",

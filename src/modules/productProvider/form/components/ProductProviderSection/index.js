@@ -14,7 +14,7 @@ import { convertValueToFormFieldFormat } from 'components/Form/Factories/helpers
 import SelectExporter from 'modules/order/common/SelectExporter';
 import SlideView from 'components/SlideView';
 import validator from 'modules/product/form/validator';
-import GridRow from 'components/GridRow';
+// import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { PartnerCard, GrayCard } from 'components/Cards';
 import {
@@ -37,7 +37,7 @@ import {
   PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK,
   PRODUCT_PROVIDER_SET_MEMO,
 } from 'modules/permission/constants/product';
-import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
+import { ProductProviderSectionWrapperStyle, MainFieldsWrapperStyle } from './style';
 import { generateName } from './helper';
 
 type Props = {
@@ -55,10 +55,117 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
 
         return (
           <div className={ProductProviderSectionWrapperStyle}>
-            <GridColumn>
-              <GridRow>
-                <GridColumn gap="10px">
+            <div className={MainFieldsWrapperStyle}>
+              <GridColumn>
+                <FormField
+                  name="name"
+                  initValue={values.name}
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <TextInputFactory
+                      name={name}
+                      {...inputHandlers}
+                      isNew={isNew}
+                      required
+                      originalValue={originalValues[name]}
+                      label={
+                        <FormattedMessage
+                          id="modules.ProductProviders.name"
+                          defaultMessage="NAME"
+                        />
+                      }
+                      {...(isExist
+                        ? {
+                            errorMessage: (
+                              <FormattedMessage
+                                id="modules.ProductProviders.mustBeUniqueName"
+                                defaultMessage="The name of End Product with the same Exporter and Supplier must be unique"
+                              />
+                            ),
+                            isTouched: true,
+                          }
+                        : {})}
+                      editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_NAME])}
+                    />
+                  )}
+                </FormField>
+
+                <FormField
+                  name="origin"
+                  initValue={values.origin}
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <EnumSearchSelectInputFactory
+                      name={name}
+                      {...inputHandlers}
+                      isNew={isNew}
+                      originalValue={originalValues[name]}
+                      label={
+                        <FormattedMessage
+                          id="modules.ProductProviders.countryOfOrigin"
+                          defaultMessage="COUNTRY OF ORIGIN"
+                        />
+                      }
+                      editable={hasPermission([
+                        PRODUCT_PROVIDER_UPDATE,
+                        PRODUCT_PROVIDER_SET_ORIGIN,
+                      ])}
+                      enumType="Country"
+                    />
+                  )}
+                </FormField>
+
+                <CustomFieldsFactory
+                  entityType="ProductProvider"
+                  customFields={values.customFields}
+                  setFieldValue={setFieldValue}
+                  editable={{
+                    values: hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_CUSTOM_FIELDS,
+                    ]),
+                    mask: hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK,
+                    ]),
+                  }}
+                />
+                <FormField
+                  name="memo"
+                  initValue={values.memo}
+                  values={values}
+                  validator={validator}
+                  setFieldValue={setFieldValue}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <TextAreaInputFactory
+                      {...inputHandlers}
+                      editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_MEMO])}
+                      name={name}
+                      isNew={isNew}
+                      originalValue={originalValues[name]}
+                      label={
+                        <FormattedMessage
+                          id="modules.ProductProviders.memo"
+                          defaultMessage="MEMO"
+                        />
+                      }
+                      inputWidth="400px"
+                      inputHeight="120px"
+                    />
+                  )}
+                </FormField>
+              </GridColumn>
+              <GridColumn>
+                <div>
                   <FieldItem
+                    vertical
                     label={
                       <Label required>
                         <FormattedMessage
@@ -68,7 +175,6 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       </Label>
                     }
                   />
-
                   {values.isNew &&
                   hasPermission(PARTNER_LIST) &&
                   hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_EXPORTER]) ? (
@@ -152,10 +258,10 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       )}
                     </>
                   )}
-                </GridColumn>
-
-                <GridColumn gap="10px">
+                </div>
+                <div>
                   <FieldItem
+                    vertical
                     label={
                       <Label>
                         <FormattedMessage
@@ -247,107 +353,9 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       )}
                     </>
                   )}
-                </GridColumn>
-              </GridRow>
-
-              <FormField
-                name="name"
-                initValue={values.name}
-                setFieldValue={setFieldValue}
-                values={values}
-                validator={validator}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <TextInputFactory
-                    name={name}
-                    {...inputHandlers}
-                    isNew={isNew}
-                    required
-                    originalValue={originalValues[name]}
-                    label={
-                      <FormattedMessage id="modules.ProductProviders.name" defaultMessage="NAME" />
-                    }
-                    {...(isExist
-                      ? {
-                          errorMessage: (
-                            <FormattedMessage
-                              id="modules.ProductProviders.mustBeUniqueName"
-                              defaultMessage="The name of End Product with the same Exporter and Supplier must be unique"
-                            />
-                          ),
-                          isTouched: true,
-                        }
-                      : {})}
-                    editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_NAME])}
-                  />
-                )}
-              </FormField>
-
-              <FormField
-                name="origin"
-                initValue={values.origin}
-                setFieldValue={setFieldValue}
-                values={values}
-                validator={validator}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <EnumSearchSelectInputFactory
-                    name={name}
-                    {...inputHandlers}
-                    isNew={isNew}
-                    originalValue={originalValues[name]}
-                    label={
-                      <FormattedMessage
-                        id="modules.ProductProviders.countryOfOrigin"
-                        defaultMessage="COUNTRY OF ORIGIN"
-                      />
-                    }
-                    editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_ORIGIN])}
-                    enumType="Country"
-                  />
-                )}
-              </FormField>
-
-              <CustomFieldsFactory
-                entityType="ProductProvider"
-                customFields={values.customFields}
-                setFieldValue={setFieldValue}
-                editable={{
-                  values: hasPermission([
-                    PRODUCT_PROVIDER_UPDATE,
-                    PRODUCT_PROVIDER_SET_CUSTOM_FIELDS,
-                  ]),
-                  mask: hasPermission([
-                    PRODUCT_PROVIDER_UPDATE,
-                    PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK,
-                  ]),
-                }}
-              />
-              <FormField
-                name="memo"
-                initValue={values.memo}
-                values={values}
-                validator={validator}
-                setFieldValue={setFieldValue}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <TextAreaInputFactory
-                    {...inputHandlers}
-                    editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_MEMO])}
-                    name={name}
-                    isNew={isNew}
-                    originalValue={originalValues[name]}
-                    label={
-                      <FormattedMessage id="modules.ProductProviders.memo" defaultMessage="MEMO" />
-                    }
-                    inputWidth="400px"
-                    inputHeight="120px"
-                  />
-                )}
-              </FormField>
-
-              <div className={DividerStyle} />
-            </GridColumn>
+                </div>
+              </GridColumn>
+            </div>
           </div>
         );
       }}
