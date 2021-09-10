@@ -264,58 +264,88 @@ const DocumentsUpload = ({
     </DndProvider>
   );
 
+  const isAllSelected = Object.keys(filesState).length === Object.keys(selectedFiles).length;
+
   const navbarContent = (
     <>
       <div className={NavContentRightContainer}>
         <div className={NavContentRightContainerButtons}>
           <GridRow>
             {!!Object.keys(selectedFiles).length && (
-              <BaseButton
-                icon="DOWNLOAD"
-                label={<FormattedMessage {...messages.downloadSelected} />}
-                backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
-                hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
-                textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-                hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-                onClick={e => {
-                  e.stopPropagation();
-                  const interval = 100;
+              <>
+                <BaseButton
+                  icon="DOWNLOAD"
+                  label={<FormattedMessage {...messages.downloadSelected} />}
+                  backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+                  hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+                  textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                  hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                  onClick={e => {
+                    e.stopPropagation();
+                    const interval = 100;
 
-                  Object.values(selectedFiles).map((selectedFile, index) => {
-                    setTimeout(() => {
-                      if (
-                        selectedFile &&
-                        selectedFile.path &&
-                        typeof selectedFile.path === 'string' &&
-                        selectedFile.name &&
-                        typeof selectedFile.name === 'string'
-                      ) {
-                        const { path, name } = selectedFile;
-                        downloadFile(path, name);
-                      }
-                    }, interval * (index + 1));
+                    Object.values(selectedFiles).map((selectedFile, index) => {
+                      setTimeout(() => {
+                        if (
+                          selectedFile &&
+                          selectedFile.path &&
+                          typeof selectedFile.path === 'string' &&
+                          selectedFile.name &&
+                          typeof selectedFile.name === 'string'
+                        ) {
+                          const { path, name } = selectedFile;
+                          downloadFile(path, name);
+                        }
+                      }, interval * (index + 1));
 
-                    return null;
-                  });
-                  setSelectedFiles({});
-                }}
-              />
+                      return null;
+                    });
+                    setSelectedFiles({});
+                  }}
+                />
+              </>
             )}
-            <BaseButton
-              icon="CHECKED"
-              label={<FormattedMessage {...messages.selectMultiple} />}
-              backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
-              hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
-              textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-              hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-              onClick={() => {
-                if (isMultiSelect) {
-                  setSelectedFiles({});
-                }
+            {Object.keys(filesState).length > 0 && (
+              <>
+                <BaseButton
+                  icon="CHECKED"
+                  label={<FormattedMessage {...messages.selectAll} />}
+                  backgroundColor={isAllSelected ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+                  hoverBackgroundColor={isAllSelected ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+                  textColor={isAllSelected ? 'WHITE' : 'GRAY_DARK'}
+                  hoverTextColor={isAllSelected ? 'WHITE' : 'GRAY_DARK'}
+                  onClick={() => {
+                    setMultiSelect(true);
 
-                setMultiSelect(isMulti => !isMulti);
-              }}
-            />
+                    setSelectedFiles(
+                      isAllSelected
+                        ? {}
+                        : filesState.reduce((arr, file) => {
+                            // eslint-disable-next-line
+                            arr[file.id] = file;
+                            return arr;
+                          }, {})
+                    );
+                  }}
+                />
+
+                <BaseButton
+                  icon="CHECKED"
+                  label={<FormattedMessage {...messages.selectMultiple} />}
+                  backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+                  hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+                  textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                  hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                  onClick={() => {
+                    if (isMultiSelect) {
+                      setSelectedFiles({});
+                    }
+
+                    setMultiSelect(isMulti => !isMulti);
+                  }}
+                />
+              </>
+            )}
           </GridRow>
         </div>
         <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
