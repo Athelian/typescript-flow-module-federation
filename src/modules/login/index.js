@@ -6,13 +6,18 @@ import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import GradientContainer from 'components/GradientContainer';
 import { AuthenticatedConsumer } from 'contexts/Viewer';
+import loginIcon from 'media/icon_white.png';
+import loginIconName from 'media/logo_white.png';
 import LoadingIcon from 'components/LoadingIcon';
 import LoginForm from './components/LoginForm';
 import {
   LoginContainerStyle,
   LoginFormWrapperStyle,
+  LoginLogoStyle,
   LoginErrorStyle,
+  LoginLogoNameStyle,
   LoginCopyrightStyle,
+  LoginLogoContainerStyle,
 } from './style';
 import messages from './messages';
 import { loginMutation } from './mutation';
@@ -48,6 +53,10 @@ const Login = ({ redirectUrl = '/' }: Props) => (
                   <LoadingIcon />
                 ) : (
                   <Provider>
+                    <div className={LoginLogoContainerStyle}>
+                      <img src={loginIcon} className={LoginLogoStyle} alt="brand logo" />
+                      <img src={loginIconName} className={LoginLogoNameStyle} alt="brand logo" />
+                    </div>
                     <div className={LoginFormWrapperStyle}>
                       <LoginForm
                         onLogin={variables => login({ variables: { input: variables } })}
