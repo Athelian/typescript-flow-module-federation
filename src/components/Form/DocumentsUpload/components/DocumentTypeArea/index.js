@@ -43,6 +43,9 @@ type Props = {|
   canDownload: boolean,
   canChangeType: boolean,
   canDelete: boolean,
+  isMultiSelect: boolean,
+  selectedFiles: Object,
+  onDocumentClicked: (file: Object) => void,
 |};
 
 const DocumentTypeArea = ({
@@ -59,6 +62,9 @@ const DocumentTypeArea = ({
   canDownload,
   canChangeType,
   canDelete,
+  isMultiSelect,
+  selectedFiles,
+  onDocumentClicked,
 }: Props) => {
   const hasPermissions = useViewerHasPermissions();
   const canView = canViewFile(hasPermissions, type.value, entityType);
@@ -123,10 +129,10 @@ const DocumentTypeArea = ({
                         >
                           <DocumentsSelector
                             onCancel={() => setDocumentsSelectorIsOpen(false)}
-                            onSelect={selectedFiles => {
+                            onSelect={newSelectedFiles => {
                               onSave([
                                 ...files,
-                                ...selectedFiles.map(file => ({
+                                ...newSelectedFiles.map(file => ({
                                   ...file,
                                   type: type.value,
                                   entity: { __typename: entityType },
@@ -192,10 +198,14 @@ const DocumentTypeArea = ({
                                 downloadable={canDownload}
                                 onClick={evt => {
                                   evt.stopPropagation();
-                                  if (canViewForm) {
+                                  if (isMultiSelect) {
+                                    onDocumentClicked(file);
+                                  } else if (canViewForm) {
                                     setDocumentFormIsOpen(true);
                                   }
                                 }}
+                                selectable={isMultiSelect}
+                                selected={selectedFiles[file.id]}
                                 showActionsOnHover
                                 actions={[
                                   canDelete && (

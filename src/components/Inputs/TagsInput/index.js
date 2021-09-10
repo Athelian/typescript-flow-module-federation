@@ -1,13 +1,14 @@
 // @flow
+
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { FixedSizeList } from 'react-window';
 import Downshift from 'downshift';
-import { useQuery } from '@apollo/react-hooks';
 import { isForbidden, isNotFound } from 'utils/data';
 import Tag from 'components/Tag';
 import Icon from 'components/Icon';
 import usePortalSlot from 'hooks/usePortalSlot';
+import useTagList from 'hooks/useTagList';
 import { tagsQuery, tagsForEntityQuery } from './query';
 import { OptionStyle, OptionsWrapperStyle, SelectedStyle } from './style';
 
@@ -96,20 +97,17 @@ const TagOptions = ({
   getMenuProps,
   getItemProps,
 }: OptionsProps) => {
-  const { data, loading } = useQuery(entityOwnerId ? tagsForEntityQuery : tagsQuery, {
-    fetchPolicy: 'cache-and-network',
-    variables: {
-      entityType,
-      page: 1,
-      perPage: 100,
-      query: inputValue || '',
-      ...(entityOwnerId && { entityOwnerId }),
-    },
+  const { tags: tagData, onScroll } = useTagList({
+    tagType: entityType,
+    entityOwnerId,
+    query: entityOwnerId ? tagsForEntityQuery : tagsQuery,
+    queryString: inputValue || '',
   });
 
   const slot = usePortalSlot();
   const companionRef = React.useRef<HTMLDivElement | null>(null);
   const optionsRef = React.useRef<HTMLDivElement | null>(null);
+  const outerRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     if (!isOpen || !companionRef.current || !optionsRef.current) {
@@ -136,14 +134,22 @@ const TagOptions = ({
     return () => document.removeEventListener('wheel', listener, opts);
   }, [closeMenu]);
 
-  const tags = (loading ? [] : data?.tags?.nodes ?? data?.tagsForEntity?.nodes ?? [])
-    .filter(tag => !isForbidden(tag) && !isNotFound(tag))
-    .sort((a, b) => {
-      if (a.name < b.name) return -1;
-      if (a.name > b.name) return 1;
-      return 0;
-    });
+  const tags = (tagData ?? []).filter(tag => !isForbidden(tag) && !isNotFound(tag));
   const height = Math.min(tags.length * 30, 200);
+
+  const scrollCheck = React.useCallback(() => {
+    if (!outerRef?.current) {
+      return;
+    }
+
+    const { scrollHeight, scrollTop, clientHeight } = outerRef.current;
+
+    onScroll({
+      scrollHeight,
+      scrollTop,
+      clientHeight,
+    });
+  }, [onScroll]);
 
   return (
     <>
@@ -161,7 +167,9 @@ const TagOptions = ({
             width={optionWidth}
             height={height}
             itemCount={tags.length}
+            onScroll={scrollCheck}
             itemSize={30}
+            outerRef={outerRef}
             itemData={{
               tags,
               getItemProps,

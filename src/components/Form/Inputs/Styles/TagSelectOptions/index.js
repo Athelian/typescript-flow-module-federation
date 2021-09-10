@@ -14,6 +14,7 @@ type OptionalProps = {
 type Props = OptionalProps & {
   highlightedIndex: ?number,
   getItemProps: Function,
+  onScroll: Function,
   items: Array<any>,
   selectedItems: Array<any>,
   itemToValue: any => any,
@@ -39,6 +40,7 @@ function TagSelectOptions({
   items,
   highlightedIndex,
   getItemProps,
+  onScroll,
   align,
   width,
   height,
@@ -56,6 +58,7 @@ function TagSelectOptions({
           itemCount={items.length}
           itemSize={30}
           overscanCount={numItemsInAPage}
+          onScroll={onScroll}
           renderItem={({ index, style }) => {
             const item = items[index];
             if (!item) return null;

@@ -131,7 +131,7 @@ class ProductCard extends React.PureComponent<Props, State> {
               </div>
               <div className={ProductExporterStyle}>
                 <Icon icon="EXPORTER" />
-                {productProviders.length > 0 && productProviders[0].exporter.name}
+                {productProviders.length > 0 && productProviders?.[0]?.exporter?.name}
               </div>
               <div className={ProductSupplierStyle}>
                 <Icon icon="SUPPLIER" />

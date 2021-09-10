@@ -2,8 +2,19 @@
 import gql from 'graphql-tag';
 
 export const tagsQuery = gql`
-  query tagsQuery($entityTypes: [TagEntityType!], $query: String, $page: Int!, $perPage: Int!) {
-    tags(filterBy: { entityTypes: $entityTypes, query: $query }, page: $page, perPage: $perPage) {
+  query tagsQuery(
+    $entityTypes: [TagEntityType!]
+    $sortBy: TagSortInput
+    $query: String
+    $page: Int!
+    $perPage: Int!
+  ) {
+    tags(
+      filterBy: { entityTypes: $entityTypes, query: $query }
+      sortBy: $sortBy
+      page: $page
+      perPage: $perPage
+    ) {
       nodes {
         ... on Tag {
           id
@@ -25,13 +36,15 @@ export const tagsForEntityQuery = gql`
     $entityOwnerId: ID!
     $entityType: TagEntityType!
     $query: String!
+    $sortBy: TagSortInput
     $page: Int!
     $perPage: Int!
   ) {
     tagsForEntity(
+      filterBy: { query: $query }
       entityOwnerId: $entityOwnerId
       entityType: $entityType
-      filterBy: { query: $query }
+      sortBy: $sortBy
       page: $page
       perPage: $perPage
     ) {

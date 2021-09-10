@@ -247,5 +247,6 @@ export const ownedByFragment = gql`
   fragment ownedByFragment on Organization {
     id
     name
+    types
   }
 `;

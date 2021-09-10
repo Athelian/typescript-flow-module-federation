@@ -14,4 +14,16 @@ export default defineMessages({
     id: 'components.Form.DocumentsUpload.noDocuments',
     defaultMessage: 'No documents found',
   },
+  selectAll: {
+    id: 'components.Documents.selectAll',
+    defaultMessage: 'SELECT ALL',
+  },
+  selectMultiple: {
+    id: 'components.Documents.selectMultiple',
+    defaultMessage: 'SELECT MULTIPLE',
+  },
+  downloadSelected: {
+    id: 'components.Documents.downloadSelected',
+    defaultMessage: 'DOWNLOAD SELECTED',
+  },
 });

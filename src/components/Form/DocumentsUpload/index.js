@@ -1,4 +1,5 @@
 // @flow
+
 import * as React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import type { FilePayload } from 'generated/graphql';
@@ -11,15 +12,24 @@ import Icon from 'components/Icon';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
+import { downloadFile } from 'utils/file';
 import { getFileTypesByEntity } from 'components/Cards/DocumentCard';
 import { Tooltip } from 'components/Tooltip';
 import { SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import { StickyScrollingSection } from 'components/Sections';
+import { BaseButton } from 'components/Buttons';
+import { SectionNavBar } from 'components/NavBar';
+import GridRow from 'components/GridRow';
 import useDocumentTypePermission from './hooks/useDocumentTypePermission';
 import fileUploadMutation from './mutation';
 import { DocumentTypeArea } from './components';
-import { DocumentsDragAndDropTooltipWrapperStyle, DocumentsUploadWrapperStyle } from './style';
+import {
+  DocumentsDragAndDropTooltipWrapperStyle,
+  DocumentsUploadWrapperStyle,
+  NavContentRightContainer,
+  NavContentRightContainerButtons,
+} from './style';
 import messages from './messages';
 
 type Props = {|
@@ -87,6 +97,10 @@ const DocumentsUpload = ({
       progress: number,
     }>
   >([]);
+
+  const [isMultiSelect, setMultiSelect] = React.useState(false);
+  const [selectedFiles, setSelectedFiles] = React.useState<{ [k: string]: string }>({});
+
   const filesStateRef = React.useRef(filesState);
   const previousFilesRef = React.useRef<Array<UploadFileState>>([]);
 
@@ -201,6 +215,21 @@ const DocumentsUpload = ({
       });
   };
 
+  const onDocumentClicked = React.useCallback((file: Object) => {
+    setSelectedFiles(oldFiles => {
+      if (oldFiles[file.id]) {
+        const temp = JSON.parse(JSON.stringify(oldFiles));
+        delete temp[file.id];
+        return temp;
+      }
+
+      return {
+        ...oldFiles,
+        [file.id]: file,
+      };
+    });
+  }, []);
+
   const documentsBody = (
     <DndProvider backend={HTML5Backend}>
       <div className={cx(DocumentsUploadWrapperStyle, uploadWrapperStyle)}>
@@ -225,6 +254,9 @@ const DocumentsUpload = ({
               canDownload={canDownload || canSetType}
               canChangeType={canChangeType || canSetType}
               canDelete={canDelete || canSetType}
+              isMultiSelect={isMultiSelect}
+              selectedFiles={selectedFiles}
+              onDocumentClicked={onDocumentClicked}
             />
           );
         })}
@@ -232,8 +264,104 @@ const DocumentsUpload = ({
     </DndProvider>
   );
 
+  const isAllSelected = filesState.length === Object.keys(selectedFiles).length;
+
+  const navbarContent = (
+    <>
+      <div className={NavContentRightContainer}>
+        <div className={NavContentRightContainerButtons}>
+          <GridRow>
+            {!!Object.keys(selectedFiles).length && (
+              <>
+                <BaseButton
+                  icon="DOWNLOAD"
+                  label={<FormattedMessage {...messages.downloadSelected} />}
+                  backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+                  hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+                  textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                  hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                  onClick={e => {
+                    e.stopPropagation();
+                    const interval = 100;
+
+                    Object.values(selectedFiles).map((selectedFile, index) => {
+                      setTimeout(() => {
+                        if (
+                          selectedFile &&
+                          selectedFile.path &&
+                          typeof selectedFile.path === 'string' &&
+                          selectedFile.name &&
+                          typeof selectedFile.name === 'string'
+                        ) {
+                          const { path, name } = selectedFile;
+                          downloadFile(path, name);
+                        }
+                      }, interval * (index + 1));
+
+                      return null;
+                    });
+                    setSelectedFiles({});
+                  }}
+                />
+              </>
+            )}
+            {filesState.length > 0 && (
+              <>
+                <BaseButton
+                  icon="CHECKED"
+                  label={<FormattedMessage {...messages.selectAll} />}
+                  backgroundColor={isAllSelected ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+                  hoverBackgroundColor={isAllSelected ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+                  textColor={isAllSelected ? 'WHITE' : 'GRAY_DARK'}
+                  hoverTextColor={isAllSelected ? 'WHITE' : 'GRAY_DARK'}
+                  onClick={() => {
+                    setMultiSelect(true);
+
+                    setSelectedFiles(
+                      isAllSelected
+                        ? {}
+                        : filesState.reduce((arr, file) => {
+                            // eslint-disable-next-line
+                            arr[file.id] = file;
+                            return arr;
+                          }, {})
+                    );
+                  }}
+                />
+
+                <BaseButton
+                  icon="CHECKED"
+                  label={<FormattedMessage {...messages.selectMultiple} />}
+                  backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
+                  hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
+                  textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                  hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
+                  onClick={() => {
+                    if (isMultiSelect) {
+                      setSelectedFiles({});
+                    }
+
+                    setMultiSelect(isMulti => !isMulti);
+                  }}
+                />
+              </>
+            )}
+          </GridRow>
+        </div>
+        <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
+          <div className={DocumentsDragAndDropTooltipWrapperStyle}>
+            <Icon icon="INFO" />
+          </div>
+        </Tooltip>
+      </div>
+    </>
+  );
+
   return isInDialog ? (
-    documentsBody
+    <>
+      <SectionNavBar>{navbarContent}</SectionNavBar>
+      {documentsBody}
+    </>
   ) : (
     <StickyScrollingSection
       sectionHeader={
@@ -247,13 +375,7 @@ const DocumentsUpload = ({
           }
         />
       }
-      navbarContent={
-        <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
-          <div className={DocumentsDragAndDropTooltipWrapperStyle}>
-            <Icon icon="INFO" />
-          </div>
-        </Tooltip>
-      }
+      navbarContent={navbarContent}
     >
       {documentsBody}
     </StickyScrollingSection>

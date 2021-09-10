@@ -30366,6 +30366,7 @@ type Order implements Model & Owned & Tagged & Followed & Supervised & Documente
   orderItems: [OrderItemPayload!]!
   shipments: [ShipmentPayload!]!
   containers: [ContainerPayload!]!
+  organizations: [OrganizationPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -30403,6 +30404,7 @@ input OrderCreateInput {
   files: [EntityFileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
+  organizationIds: [ID!]
 }
 
 input OrderFilterInput {
@@ -30682,6 +30684,7 @@ input OrderUpdateInput {
   files: [EntityFileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
+  organizationIds: [ID!]
 }
 
 input OrderUpdateWrapperInput {
@@ -30704,6 +30707,7 @@ type Organization implements Model {
   disabled: Boolean!
   dummy: Boolean!
   shareAllTags: Boolean!
+  forceMFA: Boolean!
   users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPaginatedSearch!
 
   """
@@ -30934,6 +30938,7 @@ type Product implements Model & Owned & Tagged & Followed & Documented & Memoriz
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPaginatedSearch!
   shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPaginatedSearch!
   containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPaginatedSearch!
+  organizations: [OrganizationPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -30967,6 +30972,7 @@ input ProductCreateInput {
   productProviders: [ProductProductProviderCreateInput!]!
   customFields: CustomFieldsInput
   todo: TodoInput
+  organizationIds: [ID!]
 }
 
 input ProductFilterInput {
@@ -31017,6 +31023,7 @@ input ProductProductProviderCreateInput {
   packages: [ProductProviderPackageCreateInput!]!
   customFields: CustomFieldsInput
   todo: TodoInput
+  organizationIds: [ID!]
 }
 
 input ProductProductProviderUpdateInput {
@@ -31040,6 +31047,7 @@ input ProductProductProviderUpdateInput {
   packages: [ProductProviderPackageUpdateInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
+  organizationIds: [ID!]
   id: ID
 }
 
@@ -31073,6 +31081,7 @@ type ProductProvider implements Model & Owned & Sortable & Documented & Customiz
   packages: [ProductProviderPackagePayload!]!
   timeline: Timeline!
   todo: Todo!
+  organizations: [OrganizationPayload!]!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPaginatedSearch!
   id: ID!
   createdAt: DateTime!
@@ -31108,6 +31117,7 @@ input ProductProviderCreateInput {
   packages: [ProductProviderPackageCreateInput!]!
   customFields: CustomFieldsInput
   todo: TodoInput
+  organizationIds: [ID!]
   productId: ID!
 }
 
@@ -31213,6 +31223,7 @@ input ProductProviderUpdateInput {
   packages: [ProductProviderPackageUpdateInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
+  organizationIds: [ID!]
   id: ID
   productId: ID
 }
@@ -31242,6 +31253,7 @@ input ProductUpdateInput {
   productProviders: [ProductProductProviderUpdateInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
+  organizationIds: [ID!]
 }
 
 input ProductUpdateWrapperInput {
@@ -31539,7 +31551,7 @@ type Query {
   warehousesByIDs(ids: [ID!]!): [WarehousePayload!]!
   tag(id: ID!): TagPayload!
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPaginatedSearch!
-  tagsForEntity(entityOwnerId: ID!, entityType: TagEntityType!, filterBy: TagFilterInput, page: Int! = 1, perPage: Int! = 10): TagPayloadPaginatedSearch!
+  tagsForEntity(entityOwnerId: ID!, entityType: TagEntityType!, filterBy: TagFilterInput, sortBy: TagSortInput, page: Int! = 1, perPage: Int! = 10): TagPayloadPaginatedSearch!
   tagsByIDs(ids: [ID!]!): [TagPayload!]!
   tagExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   tagsExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
@@ -87360,6 +87372,7 @@ type Shipment implements Model & Owned & Tagged & Followed & Supervised & Docume
   containers: [ContainerPayload!]!
   timeline: Timeline!
   todo: Todo!
+  organizations: [OrganizationPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -87586,6 +87599,7 @@ input ShipmentCreateInput {
   totalPackageQuantityOverriding: Boolean
   customFields: CustomFieldsInput
   todo: TodoInput
+  organizationIds: [ID!]
 }
 
 interface ShipmentEventInterface {
@@ -88014,6 +88028,7 @@ input ShipmentUpdateInput {
   totalPackageQuantityOverriding: Boolean
   customFields: CustomFieldsInput
   todo: TodoInput
+  organizationIds: [ID!]
 }
 
 input ShipmentUpdateWrapperInput {
@@ -88726,6 +88741,7 @@ type User implements Model & Tagged & Memorizable {
   avatar: FilePayload
   language: Language!
   timezone: String!
+  mfaType: String
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!

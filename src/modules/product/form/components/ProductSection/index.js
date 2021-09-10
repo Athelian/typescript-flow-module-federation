@@ -141,7 +141,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
       <Subscribe to={[ProductInfoContainer]}>
         {({ originalValues: initialValues, state, setFieldValue }) => {
           const values = { ...initialValues, ...state };
-          const { importer } = values;
+          const { ownedBy } = values;
           return (
             <div className={ProductSectionWrapperStyle}>
               <Subscribe to={[ProductFilesContainer]}>
@@ -162,6 +162,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                                     className={ProductImageStyle}
                                     height="180px"
                                   />
+
                                   {!isForbidden(file) && (
                                     <button
                                       className={ViewImageButtonStyle}
@@ -433,13 +434,10 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                     vertical
                     label={
                       <Label required>
-                        <FormattedMessage
-                          id="modules.Products.importer"
-                          defaultMessage="IMPORTER"
-                        />
+                        <FormattedMessage id="modules.Warehouses.owner" defaultMessage="OWNER" />
                       </Label>
                     }
-                    input={<PartnerCard partner={importer} readOnly />}
+                    input={<PartnerCard partner={ownedBy} readOnly />}
                   />
                 </GridColumn>
               </div>
