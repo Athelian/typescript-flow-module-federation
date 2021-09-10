@@ -551,7 +551,6 @@
   "modules.Login.password": "PASSWORD",
   "modules.Login.login": "LOGIN",
   "modules.Login.loggingIn": "Logging in ...",
-  "modules.Login.google": "Continue with Google",
   "modules.metadata.addCustomField": "ADD CUSTOM FIELD",
   "modules.metadata.customFields": "CUSTOM FIELDS",
   "modules.metadata.template": "TEMPLATE",
