@@ -264,7 +264,7 @@ const DocumentsUpload = ({
     </DndProvider>
   );
 
-  const isAllSelected = Object.keys(filesState).length === Object.keys(selectedFiles).length;
+  const isAllSelected = filesState.length === Object.keys(selectedFiles).length;
 
   const navbarContent = (
     <>
@@ -305,7 +305,7 @@ const DocumentsUpload = ({
                 />
               </>
             )}
-            {Object.keys(filesState).length > 0 && (
+            {filesState.length > 0 && (
               <>
                 <BaseButton
                   icon="CHECKED"
