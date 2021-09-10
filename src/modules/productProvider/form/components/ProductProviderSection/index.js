@@ -163,7 +163,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                 </FormField>
               </GridColumn>
               <GridColumn>
-                <div>
+                <GridColumn gap="5px">
                   <FieldItem
                     vertical
                     label={
@@ -258,8 +258,8 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       )}
                     </>
                   )}
-                </div>
-                <div>
+                </GridColumn>
+                <GridColumn gap="5px">
                   <FieldItem
                     vertical
                     label={
@@ -353,7 +353,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       )}
                     </>
                   )}
-                </div>
+                </GridColumn>
               </GridColumn>
             </div>
           </div>
