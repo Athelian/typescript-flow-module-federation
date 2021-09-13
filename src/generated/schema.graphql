@@ -26654,6 +26654,12 @@ input AppointShipmentShipperInput {
   shipperId: ID!
 }
 
+type Authenticated {
+  authenticated: Boolean!
+  authenticatedMfa: Boolean!
+  mfaType: String
+}
+
 type BadRequest {
   violations: [Violation!]!
 }
@@ -28382,6 +28388,16 @@ enum Currency {
   ZWL
 }
 
+input CustomFieldFilterInput {
+  query: String
+  ownerId: ID
+  excludeIds: [ID!]
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  entityTypes: [CustomizableEntityType!]
+  organizationIds: [ID!]
+}
+
 type CustomFields {
   mask: MaskPayload
   fieldValues: [FieldValuePayload!]!
@@ -28613,6 +28629,8 @@ enum ExportType {
 type FieldDefinition implements Model & Owned & Sortable {
   name: String!
   entityType: CustomizableEntityType!
+  type: FieldDefinitionType!
+  permission: FieldDefinitionPermission!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -28631,6 +28649,27 @@ input FieldDefinitionInput {
 
 union FieldDefinitionPayload = FieldDefinition | BadRequest | Forbidden | NotFound
 
+type FieldDefinitionPayloadPaginatedSearch implements Paginated {
+  nodes: [FieldDefinitionPayload!]!
+  hits: [Hit!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+enum FieldDefinitionPermission {
+  """Private"""
+  Private
+
+  """Public"""
+  Public
+
+  """ReadOnly"""
+  ReadOnly
+}
+
 type FieldDefinitions {
   fieldDefinitions: [FieldDefinition!]!
 }
@@ -28641,6 +28680,20 @@ input FieldDefinitionsInput {
 }
 
 union FieldDefinitionsPayload = FieldDefinitions | BadRequest | Forbidden | NotFound
+
+enum FieldDefinitionType {
+  """Text"""
+  Text
+
+  """Integer"""
+  Integer
+
+  """Decimal"""
+  Decimal
+
+  """Date"""
+  Date
+}
 
 type FieldValue {
   value: Value!
@@ -30001,6 +30054,8 @@ interface Model {
 type Mutation {
   login(input: CredentialsInput!): TokenPayload!
   logout: Boolean!
+  requestOneTimePassword(type: OneTimePasswordType!): TokenPayload!
+  verifyOneTimePassword(code: String!): TokenPayload!
   changePassword(input: ChangePasswordInput!): EmptyPayload
   requestResetPassword(input: RequestResetPasswordInput!): EmptyPayload
   resetPassword(input: ResetPasswordInput!): EmptyPayload
@@ -30337,6 +30392,10 @@ enum NotificationType {
 
   """task_update"""
   task_update
+}
+
+enum OneTimePasswordType {
+  Email
 }
 
 type Order implements Model & Owned & Tagged & Followed & Supervised & Documented & Customizable & Memorizable {
@@ -30924,7 +30983,7 @@ input PriceRangeInput {
 
 type Product implements Model & Owned & Tagged & Followed & Documented & Memorizable & Customizable {
   archived: Boolean!
-  importer: OrganizationPayload!
+  importer: OrganizationPayload! @deprecated(reason: "use `ownedBy` instead")
   name: String!
   serial: String!
   hsCode: String
@@ -30956,6 +31015,7 @@ type Product implements Model & Owned & Tagged & Followed & Documented & Memoriz
 }
 
 input ProductCreateInput {
+  """Deprecated"""
   importerId: ID
   name: String!
   serial: String!
@@ -31005,7 +31065,11 @@ type ProductPayloadPaginatedSearch implements Paginated {
 
 input ProductProductProviderCreateInput {
   name: String!
+
+  """Deprecated"""
   exporterId: ID!
+
+  """Deprecated"""
   supplierId: ID
   unitType: String
   unitVolume: MetricValueInput
@@ -31024,12 +31088,19 @@ input ProductProductProviderCreateInput {
   customFields: CustomFieldsInput
   todo: TodoInput
   organizationIds: [ID!]
+  exporterIds: [ID!]
+  importerIds: [ID!]
+  supplierIds: [ID!]
 }
 
 input ProductProductProviderUpdateInput {
   archived: Boolean
   name: String
+
+  """Deprecated"""
   exporterId: ID
+
+  """Deprecated"""
   supplierId: ID
   unitType: String
   unitVolume: MetricValueInput
@@ -31048,6 +31119,10 @@ input ProductProductProviderUpdateInput {
   customFields: CustomFieldsInput
   todo: TodoInput
   organizationIds: [ID!]
+  exporterIds: [ID!]
+  importerIds: [ID!]
+  supplierIds: [ID!]
+  deleted: Boolean
   id: ID
 }
 
@@ -31060,8 +31135,11 @@ type ProductProvider implements Model & Owned & Sortable & Documented & Customiz
   referenced: Boolean!
   name: String!
   product: ProductPayload!
-  exporter: OrganizationPayload!
-  supplier: OrganizationPayload
+  exporters: [OrganizationPayload!]!
+  importers: [OrganizationPayload!]!
+  suppliers: [OrganizationPayload!]!
+  exporter: OrganizationPayload! @deprecated(reason: "use `exporters` instead")
+  supplier: OrganizationPayload @deprecated(reason: "use `suppliers` instead")
   unitType: String
   unitVolume: MetricValue
   autoCalculateUnitVolume: Boolean!
@@ -31099,7 +31177,11 @@ type ProductProvider implements Model & Owned & Sortable & Documented & Customiz
 
 input ProductProviderCreateInput {
   name: String!
+
+  """Deprecated"""
   exporterId: ID!
+
+  """Deprecated"""
   supplierId: ID
   unitType: String
   unitVolume: MetricValueInput
@@ -31118,6 +31200,9 @@ input ProductProviderCreateInput {
   customFields: CustomFieldsInput
   todo: TodoInput
   organizationIds: [ID!]
+  exporterIds: [ID!]
+  importerIds: [ID!]
+  supplierIds: [ID!]
   productId: ID!
 }
 
@@ -31129,9 +31214,18 @@ input ProductProviderFilterInput {
   updatedAt: DateRangeInput
   archived: Boolean
   productId: ID
+
+  """Deprecated"""
   exporterId: ID
+
+  """Deprecated"""
   supplierId: ID
+
+  """Deprecated"""
   importerId: ID
+  exporterIds: [ID!]
+  importerIds: [ID!]
+  supplierIds: [ID!]
 
   """Deprecated"""
   tagIds: [ID!]
@@ -31205,7 +31299,11 @@ input ProductProviderSortInput {
 input ProductProviderUpdateInput {
   archived: Boolean
   name: String
+
+  """Deprecated"""
   exporterId: ID
+
+  """Deprecated"""
   supplierId: ID
   unitType: String
   unitVolume: MetricValueInput
@@ -31224,6 +31322,10 @@ input ProductProviderUpdateInput {
   customFields: CustomFieldsInput
   todo: TodoInput
   organizationIds: [ID!]
+  exporterIds: [ID!]
+  importerIds: [ID!]
+  supplierIds: [ID!]
+  deleted: Boolean
   id: ID
   productId: ID
 }
@@ -31237,6 +31339,8 @@ input ProductSortInput {
 
 input ProductUpdateInput {
   archived: Boolean
+
+  """Deprecated"""
   importerId: ID
   name: String
   serial: String
@@ -31498,7 +31602,8 @@ input ProjectUpdateInput {
 
 type Query {
   viewer: Viewer!
-  authenticated: Boolean!
+  authenticated: Boolean! @deprecated(reason: "Use authenticatedWithMFA instead.")
+  authenticatedWithMFA: Authenticated!
   user(id: ID!): UserPayload!
   users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPaginatedSearch!
   usersByIDs(ids: [ID!]!): [UserPayload!]!
@@ -31583,6 +31688,7 @@ type Query {
   milestoneTemplatesByIDs(ids: [ID!]!): [MilestoneTemplatePayload!]!
   fieldDefinition(id: ID!): FieldDefinitionPayload!
   fieldDefinitions(entityType: CustomizableEntityType!): [FieldDefinitionPayload!]!
+  customFields(page: Int! = 1, perPage: Int! = 10, filterBy: CustomFieldFilterInput): FieldDefinitionPayloadPaginatedSearch!
   mask(id: ID!): MaskPayload!
   masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput, sortBy: MaskSortInput): MaskPayloadPaginatedSearch!
   masksByIDs(ids: [ID!]!): [MaskPayload!]!
