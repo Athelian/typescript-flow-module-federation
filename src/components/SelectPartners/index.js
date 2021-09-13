@@ -19,7 +19,7 @@ import PartnerGridView from 'modules/partner/list/PartnerGridView';
 
 type Props = {|
   partnerTypes: Array<string>,
-  partnerCount: number,
+  partnerCount?: number,
   selected: Array<{
     id: string,
     name: string,
@@ -59,9 +59,11 @@ const SelectPartners = ({ partnerTypes, partnerCount, selected, onCancel, onSele
             <Search query={query} onChange={setQuery} />
             <Sort config={PartnerSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
-            <h3>
-              {value.length}/{partnerCount}
-            </h3>
+            {partnerCount && (
+              <h3>
+                {value.length}/{partnerCount}
+              </h3>
+            )}
             <CancelButton disabled={false} onClick={onCancel} />
             <SaveButton disabled={!dirty} onClick={() => onSelect(value)} />
           </SlideViewNavBar>

@@ -417,10 +417,8 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                   set: setselectedImporters,
                                 }) => (
                                   <>
-                                    {console.log('importer', values.importers)}
                                     <SelectPartners
                                       partnerTypes={['Importer']}
-                                      partnerCount={1000}
                                       selected={
                                         values?.importers?.map(importer => importer?.partner) ?? []
                                       }
