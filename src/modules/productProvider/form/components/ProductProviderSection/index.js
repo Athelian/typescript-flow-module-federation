@@ -32,6 +32,7 @@ import {
   PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_SET_EXPORTER,
   PRODUCT_PROVIDER_SET_SUPPLIER,
+  // PRODUCT_PROVIDER_SET_IMPORTER,
   PRODUCT_PROVIDER_SET_NAME,
   PRODUCT_PROVIDER_SET_ORIGIN,
   PRODUCT_PROVIDER_SET_CUSTOM_FIELDS,
@@ -356,7 +357,8 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     </>
                   )}
                 </GridColumn>
-                <GridColumn gap="5px">
+
+                <GridColumn>
                   <FieldItem
                     vertical
                     label={
@@ -367,111 +369,74 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                         />
                       </Label>
                     }
-                  />
-                  {values.isNew &&
-                  hasPermission(PARTNER_LIST) &&
-                  hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_SUPPLIER]) ? (
-                    <BooleanValue>
-                      {({ value: opened, set: importerSlideToggle }) => (
-                        <>
-                          {!values.importers ? (
-                            <DashedPlusButton
-                              width="195px"
-                              height="215px"
-                              onClick={() => importerSlideToggle(true)}
-                            />
-                          ) : (
-                            <div
-                              onClick={() =>
-                                hasPermission(PARTNER_LIST) ? importerSlideToggle(true) : () => {}
-                              }
-                              role="presentation"
-                            >
-                              {renderImporters(
-                                values?.importers ?? [],
-                                hasPermission([
-                                  // SHIPMENT_SET,
-                                  // SHIPMENT_UPDATE,
-                                  // SHIPMENT_SET_FORWARDERS,
-                                ])
-                              )}
-                            </div>
-                          )}
-                          <SlideView
-                            isOpen={opened}
-                            onRequestClose={() => importerSlideToggle(false)}
-                          >
-                            {opened && (
-                              // <FormField
-                              //   name="name"
-                              //   initValue={values.name}
-                              //   setFieldValue={setFieldArrayValue}
-                              //   values={values}
-                              //   validator={validator}
-                              //   saveOnChange
-                              //   validationOnChange
-                              // >
-                              <ArrayValue defaultValue={values?.importers ?? []}>
-                                {({
-                                  // value: selectedImporters,
-                                  set: setselectedImporters,
-                                }) => (
-                                  <>
-                                    <SelectPartners
-                                      partnerTypes={['Importer']}
-                                      selected={
-                                        values?.importers?.map(importer => importer?.partner) ?? []
-                                      }
-                                      onCancel={() => importerSlideToggle(false)}
-                                      onSelect={selected => {
-                                        const assembledOrgs = selected.map(
-                                          ({ organization, ...partner }) => ({
-                                            ...organization,
-                                            partner: {
-                                              ...partner,
-                                            },
-                                          })
-                                        );
-
-                                        // const removedImporters =
-                                        //   values?.importers?.filter(
-                                        //     prevImporter =>
-                                        //       assembledOrgs.some(
-                                        //         newImporter => newImporter.id === prevImporter.id
-                                        //       )
-                                        //   ) || [];
-
-                                        // console.log('assembled', assembledOrgs)
-                                        // console.log('removed', removedImporters)
-                                        // if (removedImporters.length > 0) {
-                                        //   // setselectedImporters(assembledOrgs);
-                                        //   setFieldArrayValue('importers', removedImporters);
-                                        //   importerSlideToggle(false);
-                                        // } else {
-                                        setFieldArrayValue('importers', assembledOrgs);
-                                        setselectedImporters(assembledOrgs);
-                                        importerSlideToggle(false);
-                                        // }
-                                      }}
-                                    />
-                                  </>
+                    input={
+                      <BooleanValue>
+                        {({ value: importersSelectorIsOpen, set: importerSlideToggle }) => (
+                          <>
+                            {!values.importers ? (
+                              <DashedPlusButton
+                                width="195px"
+                                height="215px"
+                                onClick={() => importerSlideToggle(true)}
+                              />
+                            ) : (
+                              <div
+                                onClick={() =>
+                                  hasPermission(PARTNER_LIST) &&
+                                  hasPermission([PRODUCT_PROVIDER_UPDATE])
+                                    ? importerSlideToggle(true)
+                                    : () => {}
+                                }
+                                role="presentation"
+                              >
+                                {renderImporters(
+                                  values?.importers,
+                                  hasPermission([PRODUCT_PROVIDER_UPDATE])
                                 )}
-                              </ArrayValue>
-                              // </FormField>
+                              </div>
                             )}
-                          </SlideView>
-                        </>
-                      )}
-                    </BooleanValue>
-                  ) : (
-                    <>
-                      {!values?.importers ? (
-                        <GrayCard width="195px" height="215px" />
-                      ) : (
-                        <PartnerCard partner={values.supplier} readOnly />
-                      )}
-                    </>
-                  )}
+
+                            <SlideView
+                              isOpen={importersSelectorIsOpen}
+                              onRequestClose={() => importerSlideToggle(false)}
+                            >
+                              {importersSelectorIsOpen && (
+                                <ArrayValue defaultValue={values?.importers ?? []}>
+                                  {({ set: setselectedImporters }) => (
+                                    <>
+                                      <SelectPartners
+                                        partnerTypes={['Importer']}
+                                        selected={
+                                          values?.importers?.map(importer => importer?.partner) ??
+                                          []
+                                        }
+                                        onCancel={() => importerSlideToggle(false)}
+                                        onSelect={selected => {
+                                          const assembledOrgs = selected.map(
+                                            ({ organization, ...partner }) => ({
+                                              ...organization,
+                                              partner: {
+                                                ...partner,
+                                              },
+                                            })
+                                          );
+
+                                          setFieldArrayValue('importers', assembledOrgs);
+                                          setselectedImporters(assembledOrgs);
+                                          importerSlideToggle(false);
+                                        }}
+                                      />
+                                    </>
+                                  )}
+                                </ArrayValue>
+                                // </FormField>
+                              )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+                    }
+                  />
                 </GridColumn>
               </GridColumn>
             </div>

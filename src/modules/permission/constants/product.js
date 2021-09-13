@@ -76,6 +76,7 @@ export const PRODUCT_PROVIDER_PACKAGE_SET_WEIGHT = 'product.productProviderPacka
 export const PRODUCT_PROVIDER_SET_PRODUCTION_LEAD_TIME =
   'product.productProviders.setProductionLeadTime';
 export const PRODUCT_PROVIDER_SET_SUPPLIER = 'product.productProviders.setSupplier';
+export const PRODUCT_PROVIDER_SET_IMPORTER = 'product.productProviders.setImporters';
 export const PRODUCT_PROVIDER_SET_UNIT_PRICE = 'product.productProviders.setUnitPrice';
 export const PRODUCT_PROVIDER_SET_UNIT_SIZE = 'product.productProviders.setUnitSize';
 export const PRODUCT_PROVIDER_SET_UNIT_TYPE = 'product.productProviders.setUnitType';

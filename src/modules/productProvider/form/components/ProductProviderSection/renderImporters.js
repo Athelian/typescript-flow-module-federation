@@ -6,7 +6,7 @@ import GridColumn from 'components/GridColumn';
 import { DashedPlusButton } from 'components/Form';
 
 const renderimporters = (importers: Array<Object>, allowToUpdate: boolean) => {
-  const numOfimporters = importers.length;
+  const numOfimporters = importers?.length;
 
   if (numOfimporters === 0) {
     if (allowToUpdate) {
