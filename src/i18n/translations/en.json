@@ -1448,7 +1448,7 @@
   "modules.Shipment.mainExporterChangeMessage": "Changing the Main Exporter will remove all Batches of the current Main Exporter. Are you sure you want to change the Main Exporter?",
   "modules.Shipment.mainExporterDeselectMessage": "Are you sure you want to change the Main Exporter?",
   "modules.Shipments.forwarder": "FORWARDER",
-  "modules.Shipments.tooltipForwarder": "You can choose up to 6 Forwarders.",
+  "modules.Shipments.tooltipForwarder": "Owners can edit the product information. To add other partners, use end products.",
   "modules.Shipment.forwardersDialogMessage": "Changing the Forwarders will remove all Followers of the removed Forwarders from the Shipment. Are you sure you want to change the Forwarders?",
   "modules.Shipments.relatedExporters": "RELATED EXPORTERS",
   "modules.Shipments.tooltipExporter": "Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment.",

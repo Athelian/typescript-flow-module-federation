@@ -1442,7 +1442,7 @@
   "modules.Shipment.mainExporterChangeMessage": "主要輸出者を変更すると、現在選択されている主要輸出者のバッチが全て削除されます。また、全てのタスク、シップメント担当者、タイムライン上の担当者、コンテナ上の日付担当者から現在選択されている主要輸出者のスタッフが削除されます。本当に主要輸出者を変更しますか？",
   "modules.Shipment.mainExporterDeselectMessage": "主要輸出者を変更すると、全てのタスク、シップメント担当者、タイムライン上の担当者、コンテナ上の日付担当者から現在選択されている主要輸出者のスタッフが削除されます。本当に主要輸出者を変更しますか？",
   "modules.Shipments.forwarder": "フォワーダー",
-  "modules.Shipments.tooltipForwarder": "6つまでフォーワーダーを選択することが可能です。",
+  "modules.Shipments.tooltipForwarder": "この商品に取引先を追加するにはエンドプロダクトを開いてください。",
   "modules.Shipment.forwardersDialogMessage": "フォワーダーを変更すると、シップメントや全てのコンテナから、変更されたフォワーダーのフォロワーが取り除かれます。本当にフォワーダーを変更しますか？",
   "modules.Shipments.relatedExporters": "関連輸出者",
   "modules.Shipments.tooltipExporter": "関連輸出者は、シップメントの貨物として選択されたバッチに基づいて表示されます。",
