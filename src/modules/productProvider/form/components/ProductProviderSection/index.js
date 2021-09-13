@@ -52,7 +52,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
   const { hasPermission } = usePermission(isOwner);
   return (
     <Subscribe to={[ProductProviderInfoContainer]}>
-      {({ originalValues, state, setFieldValue }) => {
+      {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
         const values = { ...originalValues, ...state };
 
         return (
@@ -406,7 +406,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                               // <FormField
                               //   name="name"
                               //   initValue={values.name}
-                              //   setFieldValue={setFieldValue}
+                              //   setFieldValue={setFieldArrayValue}
                               //   values={values}
                               //   validator={validator}
                               //   saveOnChange
@@ -418,6 +418,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                   set: setselectedImporters,
                                 }) => (
                                   <>
+                                    {console.log('importer', values.importers)}
                                     <SelectPartners
                                       partnerTypes={['Importer']}
                                       partnerCount={1000}
@@ -434,22 +435,26 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                             },
                                           })
                                         );
-                                        console.log(assembledOrgs);
-                                        const removedImporters =
-                                          values?.importers?.filter(
-                                            prevImporter =>
-                                              !assembledOrgs.some(
-                                                newImporter => newImporter.id === prevImporter.id
-                                              )
-                                          ) || [];
 
-                                        if (removedImporters.length > 0) {
-                                          setselectedImporters(assembledOrgs);
-                                        } else {
-                                          setFieldValue('supplier', assembledOrgs);
-                                          setselectedImporters(assembledOrgs);
-                                          importerSlideToggle(false);
-                                        }
+                                        // const removedImporters =
+                                        //   values?.importers?.filter(
+                                        //     prevImporter =>
+                                        //       assembledOrgs.some(
+                                        //         newImporter => newImporter.id === prevImporter.id
+                                        //       )
+                                        //   ) || [];
+
+                                        // console.log('assembled', assembledOrgs)
+                                        // console.log('removed', removedImporters)
+                                        // if (removedImporters.length > 0) {
+                                        //   // setselectedImporters(assembledOrgs);
+                                        //   setFieldArrayValue('importers', removedImporters);
+                                        //   importerSlideToggle(false);
+                                        // } else {
+                                        setFieldArrayValue('importers', assembledOrgs);
+                                        setselectedImporters(assembledOrgs);
+                                        importerSlideToggle(false);
+                                        // }
                                       }}
                                     />
                                   </>
