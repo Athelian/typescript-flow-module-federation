@@ -4,6 +4,7 @@ import { partnersQuery } from 'graphql/partner/query';
 import { cleanUpData } from 'utils/data';
 import useFilterSort from 'hooks/useFilterSort';
 import useQueryList from 'hooks/useQueryList';
+import useUser from 'hooks/useUser';
 import Selector from 'components/Selector';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
@@ -30,6 +31,7 @@ type Props = {|
   confirmationDialogMessage?: ?string | React.Node,
   deselectDialogMessage?: ?string | React.Node,
   isRequired?: boolean,
+  includeOwner?: boolean,
 |};
 
 const SelectPartner = ({
@@ -40,6 +42,7 @@ const SelectPartner = ({
   confirmationDialogMessage,
   deselectDialogMessage,
   isRequired,
+  includeOwner = false,
 }: Props) => {
   const [confirmationDialogIsOpen, setConfirmationDialogIsOpen] = React.useState(false);
   const [deselectDialogIsOpen, setDeselectDialogIsOpen] = React.useState(false);
@@ -49,6 +52,8 @@ const SelectPartner = ({
     { updatedAt: 'DESCENDING' }
   );
 
+  const { organization } = useUser();
+
   const { nodes, loading, hasMore, loadMore } = useQueryList(
     partnersQuery,
     {
@@ -57,6 +62,28 @@ const SelectPartner = ({
     },
     'viewer.user.organization.partners'
   );
+
+  const items = React.useMemo(() => {
+    if (
+      includeOwner &&
+      partnerTypes.some(partnerType => organization.types.includes(partnerType))
+    ) {
+      const ownerOrg = {
+        id: 'somePartnershipId',
+        name: '', // some partnership name
+        organization: {
+          id: organization.id,
+          name: organization.name,
+        },
+        types: organization.types,
+        code: '',
+        tags: [],
+      };
+      return [ownerOrg, ...nodes];
+    }
+
+    return nodes;
+  }, [includeOwner, nodes, organization, partnerTypes]);
 
   return (
     <Selector.Single selected={selected} required={isRequired}>
@@ -124,7 +151,7 @@ const SelectPartner = ({
               hasMore={hasMore}
               isLoading={loading}
               onLoadMore={loadMore}
-              items={nodes}
+              items={items}
               renderItem={item => (
                 <PartnerCard key={item.id} partner={item} {...getItemProps(cleanUpData(item))} />
               )}

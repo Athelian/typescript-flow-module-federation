@@ -6,6 +6,7 @@ import useQueryList from 'hooks/useQueryList';
 import Selector from 'components/Selector';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import useUser from 'hooks/useUser';
 import {
   EntityIcon,
   Filter,
@@ -20,6 +21,7 @@ import PartnerGridView from 'modules/partner/list/PartnerGridView';
 type Props = {|
   partnerTypes: Array<string>,
   partnerCount?: number,
+  includeOwner?: boolean,
   selected: Array<{
     id: string,
     name: string,
@@ -28,11 +30,20 @@ type Props = {|
   onCancel: Function,
 |};
 
-const SelectPartners = ({ partnerTypes, partnerCount, selected, onCancel, onSelect }: Props) => {
+const SelectPartners = ({
+  partnerTypes,
+  partnerCount,
+  includeOwner = false,
+  selected,
+  onCancel,
+  onSelect,
+}: Props) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', types: partnerTypes },
     { updatedAt: 'DESCENDING' }
   );
+
+  const { organization } = useUser();
 
   const { nodes, loading, hasMore, loadMore } = useQueryList(
     partnersQuery,
@@ -42,6 +53,28 @@ const SelectPartners = ({ partnerTypes, partnerCount, selected, onCancel, onSele
     },
     'viewer.user.organization.partners'
   );
+
+  const items = React.useMemo(() => {
+    if (
+      includeOwner &&
+      partnerTypes.some(partnerType => organization.types.includes(partnerType))
+    ) {
+      const ownerOrg = {
+        id: 'somePartnershipId',
+        name: '', // some partnership name
+        organization: {
+          id: organization.id,
+          name: organization.name,
+        },
+        types: organization.types,
+        code: '',
+        tags: [],
+      };
+      return [ownerOrg, ...nodes];
+    }
+
+    return nodes;
+  }, [includeOwner, nodes, organization, partnerTypes]);
 
   return (
     <Selector.Many selected={selected} max={partnerCount}>
@@ -73,7 +106,7 @@ const SelectPartners = ({ partnerTypes, partnerCount, selected, onCancel, onSele
               hasMore={hasMore}
               isLoading={loading}
               onLoadMore={loadMore}
-              items={nodes}
+              items={items}
               renderItem={item => (
                 <PartnerCard key={item.id} partner={item} {...getItemProps(item)} />
               )}
