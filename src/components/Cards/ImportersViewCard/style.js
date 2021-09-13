@@ -5,7 +5,6 @@ import { colors } from 'styles/common';
 export const ImportersCardStyle: string = css`
   padding: 10px;
   width: 100%;
-  height: 88px;
   box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
   border-radius: 5px;
   background-color: #ffffff;
@@ -14,6 +13,7 @@ export const ImportersCardStyle: string = css`
 `;
 export const ImporterCardHeaderStyle: string = css`
   display: flex;
+  margin-bottom: 20px;
 `;
 
 export const ImporterIconStyle: string = css`

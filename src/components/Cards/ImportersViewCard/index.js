@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import Icon from 'components/Icon';
-import withForbiddenCard from 'hoc/withForbiddenCard';
+import { FormattedMessage } from 'react-intl';
+import { BaseButton } from 'components/Buttons';
 import { ImportersCardStyle, ImporterIconStyle, ImporterCardHeaderStyle } from './style';
 
 type Props = {|
@@ -21,17 +22,22 @@ const ImportersViewCard = ({ count, onClick }: Props) => {
         <div className={ImporterIconStyle}>
           <Icon icon="IMPORTER" />
         </div>
-        {count} Importers
+        {count}{' '}
+        <FormattedMessage id="components.NavBar.Filter.importers" defaultMessage="Importers" />
       </div>
+      <BaseButton
+        icon="IMPORTERS"
+        label={
+          <FormattedMessage id="components.Header.notification.viewAll" defaultMessage="View All" />
+        }
+        backgroundColor="TEAL"
+        hoverBackgroundColor="TEAL_DARK"
+        onClick={onClick}
+      />
     </div>
   );
 };
 
 ImportersViewCard.defaultProps = defaultProps;
 
-export default withForbiddenCard(ImportersViewCard, 'partner', {
-  width: '195px',
-  height: '215px',
-  entityIcon: 'PARTNER',
-  entityColor: 'PARTNER',
-});
+export default ImportersViewCard;

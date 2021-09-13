@@ -361,11 +361,10 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     vertical
                     label={
                       <Label>
-                        {/* <FormattedMessage
-                          id="modules.ProductProviders.supplier"
-                          defaultMessage="SUPPLIER"
-                        /> */}
-                        IMPORTERS
+                        <FormattedMessage
+                          id="components.NavBar.Filter.importers"
+                          defaultMessage="Importers"
+                        />
                       </Label>
                     }
                   />

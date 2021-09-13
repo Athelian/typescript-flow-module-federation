@@ -53,7 +53,6 @@ const renderimporters = (importers: Array<Object>, allowToUpdate: boolean) => {
   if (numOfimporters > 4) {
     return (
       <GridColumn gap="10px">
-        <PartnerCard partner={importers[0]} size="quarter" readOnly={!allowToUpdate} />
         <ImportersViewCard
           count={numOfimporters}
           partner={importers[0]}
