@@ -207,6 +207,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                   <SelectExporter
                                     cacheKey="EndProductSelectExporter"
                                     isRequired
+                                    includeOwner
                                     selected={values?.exporter?.partner}
                                     onCancel={() => exporterSlideToggle(false)}
                                     warningMessage={
@@ -307,6 +308,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                               >
                                 {({ onChange }) => (
                                   <SelectPartner
+                                    includeOwner
                                     partnerTypes={['Supplier']}
                                     selected={values?.supplier?.partner}
                                     onCancel={() => supplierSlideToggle(false)}
@@ -418,6 +420,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                 }) => (
                                   <>
                                     <SelectPartners
+                                      includeOwner
                                       partnerTypes={['Importer']}
                                       selected={
                                         values?.importers?.map(importer => importer?.partner) ?? []
