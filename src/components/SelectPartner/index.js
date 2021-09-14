@@ -69,7 +69,7 @@ const SelectPartner = ({
       partnerTypes.some(partnerType => organization.types.includes(partnerType))
     ) {
       const ownerOrg = {
-        id: 'somePartnershipId',
+        id: null,
         name: '', // some partnership name
         organization: {
           id: organization.id,
@@ -85,8 +85,25 @@ const SelectPartner = ({
     return nodes;
   }, [includeOwner, nodes, organization, partnerTypes]);
 
+  const newSelected = React.useMemo(() => {
+    if (!includeOwner && selected !== undefined) {
+      return selected;
+    }
+
+    // for selecting owner org if supplied
+    // pass undefined to preselect owner org
+    return {
+      id: null,
+      name: '',
+      organization: {
+        id: organization.id,
+        name: organization.name,
+      },
+    };
+  }, [selected, includeOwner, organization]);
+
   return (
-    <Selector.Single selected={selected} required={isRequired}>
+    <Selector.Single selected={newSelected} required={isRequired}>
       {({ value, dirty, getItemProps }) => (
         <SlideViewLayout>
           <SlideViewNavBar>
