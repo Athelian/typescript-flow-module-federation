@@ -65,6 +65,8 @@ import {
   DOCUMENT_GET,
   DOCUMENT_UPDATE,
 } from 'modules/permission/constants/file';
+import JsZip from 'jszip';
+import FileSaver from 'file-saver';
 
 export function canDownloadFile(hasPermissions: Function, entityType?: string) {
   switch (entityType) {
@@ -241,6 +243,38 @@ export const downloadFile = (url: string, name: string) => {
       window.URL.revokeObjectURL(url);
     })
     .catch(e => logger.error(e));
+};
+
+export const downloadByGroup = files => {
+  const download = file => {
+    return fetch(file.url).then(resp => ({
+      file,
+      blob: resp.blob(),
+    }));
+  };
+
+  const promises = files.map(file => {
+    return download(file);
+  });
+
+  return Promise.all(promises);
+};
+
+export const exportZip = data => {
+  const zip = JsZip();
+  data.forEach(({ file, blob }) => {
+    zip.file(file.name, blob);
+  });
+
+  zip.generateAsync({ type: 'blob' }).then(zipFile => {
+    const currentDate = new Date().getTime();
+    const fileName = `${currentDate}.zip`;
+    return FileSaver.saveAs(zipFile, fileName);
+  });
+};
+
+export const downloadAndZip = files => {
+  return downloadByGroup(files).then(exportZip);
 };
 
 export default canViewFile;

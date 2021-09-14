@@ -521,6 +521,8 @@
   "components.Documents.selectAll": "SELECT ALL",
   "components.Documents.selectMultiple": "SELECT MULTIPLE",
   "components.Documents.downloadSelected": "DOWNLOAD SELECTED",
+  "components.Documents.downloadZip": "DOWNLOAD ZIP",
+  "components.Documents.downloadAll": "DOWNLOAD ALL",
   "modules.Documents.createdAt": "Date Created",
   "modules.Documents.updatedAt": "Last Modified",
   "modules.Documents.name": "Name",

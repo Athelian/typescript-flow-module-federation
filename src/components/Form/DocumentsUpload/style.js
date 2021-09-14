@@ -106,3 +106,31 @@ export const DocumentsListStyle: string = css`
   grid-gap: 30px 20px;
   width: 100%;
 `;
+export const DownloadWrapperStyle = css`
+  position: relative;
+`;
+
+export const DownloadDropDownStyle = css`
+  position: absolute;
+  top: 40px;
+  display: flex;
+  flex-direction: column;
+  ${shadows.INPUT};
+  background: ${colors.WHITE};
+  ${borderRadiuses.MAIN};
+  overflow: hidden;
+`;
+
+export const DownloadItemStyle = css`
+  ${presets.BUTTON};
+  justify-content: left;
+  height: 30px;
+  padding: 5px;
+  ${fontSizes.MEDIUM};
+  color: ${colors.GRAY_DARK};
+  white-space: nowrap;
+  &:hover,
+  :focus {
+    background-color: ${colors.GRAY_SUPER_LIGHT};
+  }
+`;
