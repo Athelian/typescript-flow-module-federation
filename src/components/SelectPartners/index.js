@@ -30,6 +30,12 @@ type Props = {|
   onCancel: Function,
 |};
 
+/**
+ * A selector component for selecting partners
+ * If you want to preselect owner org, set includeOwner as true and pass in a
+ * falsy value as one of the values in `selected` array parameter
+ * @param selected a list of partnership ids
+ */
 const SelectPartners = ({
   partnerTypes,
   partnerCount,
@@ -60,7 +66,7 @@ const SelectPartners = ({
       partnerTypes.some(partnerType => organization.types.includes(partnerType))
     ) {
       const ownerOrg = {
-        id: 'somePartnershipId',
+        id: null,
         name: '', // some partnership name
         organization: {
           id: organization.id,
@@ -76,8 +82,34 @@ const SelectPartners = ({
     return nodes;
   }, [includeOwner, nodes, organization, partnerTypes]);
 
+  const newSelected = React.useMemo(() => {
+    return (
+      selected
+        ?.map(partner => {
+          if (partner) {
+            return partner;
+          }
+
+          // for selecting owner org if supplied
+          if (includeOwner) {
+            return {
+              id: null,
+              name: '',
+              organization: {
+                id: organization.id,
+                name: organization.name,
+              },
+            };
+          }
+
+          return null;
+        })
+        .filter(Boolean) ?? []
+    );
+  }, [selected, includeOwner, organization]);
+
   return (
-    <Selector.Many selected={selected} max={partnerCount}>
+    <Selector.Many selected={newSelected} max={partnerCount}>
       {({ value, dirty, getItemProps }) => (
         <SlideViewLayout>
           <SlideViewNavBar>

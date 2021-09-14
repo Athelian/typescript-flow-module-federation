@@ -26,7 +26,6 @@ import {
   TextInputFactory,
   TextAreaInputFactory,
 } from 'components/Form';
-import useUser from 'hooks/useUser';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import {
   PRODUCT_PROVIDER_UPDATE,
@@ -51,7 +50,6 @@ type Props = {
 
 const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
   const { hasPermission } = usePermission(isOwner);
-  const { organization: userOrg } = useUser();
 
   return (
     <Subscribe to={[ProductProviderInfoContainer]}>
@@ -414,21 +412,15 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                 <ArrayValue defaultValue={values?.importers ?? []}>
                                   {({ set: setselectedImporters }) => (
                                     <>
-                                      {console.log(values?.importers)}
                                       <SelectPartners
                                         partnerTypes={['Importer']}
                                         includeOwner
                                         selected={
-                                          values?.importers?.map(importer => {
-                                            if (userOrg.id === importer.id) {
-                                              return importer;
-                                            }
-                                            return importer?.partner;
-                                          }) ?? []
+                                          values?.importers?.map(importer => importer?.partner) ??
+                                          []
                                         }
                                         onCancel={() => importerSlideToggle(false)}
                                         onSelect={selected => {
-                                          console.log(selected);
                                           const assembledOrgs = selected.map(
                                             ({ organization, ...partner }) => ({
                                               ...organization,
@@ -437,7 +429,6 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                               },
                                             })
                                           );
-                                          console.log(assembledOrgs);
                                           setFieldArrayValue('importers', assembledOrgs);
                                           setselectedImporters(assembledOrgs);
                                           importerSlideToggle(false);
