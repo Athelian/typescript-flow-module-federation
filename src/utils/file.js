@@ -245,10 +245,16 @@ export const downloadFile = (url: string, name: string) => {
     .catch(e => logger.error(e));
 };
 
-export const downloadByGroup = files => {
+type DownloadFileParams = Array<{
+  url: string,
+  name: string,
+  blob?: any,
+}>;
+
+export const downloadByGroup = (files: DownloadFileParams) => {
   const download = file => {
     return fetch(file.url).then(resp => ({
-      file,
+      ...file,
       blob: resp.blob(),
     }));
   };
@@ -260,10 +266,10 @@ export const downloadByGroup = files => {
   return Promise.all(promises);
 };
 
-export const exportZip = data => {
+export const exportZip = (data: DownloadFileParams) => {
   const zip = JsZip();
-  data.forEach(({ file, blob }) => {
-    zip.file(file.name, blob);
+  data.forEach(({ name, blob }) => {
+    zip.file(name, blob);
   });
 
   zip.generateAsync({ type: 'blob' }).then(zipFile => {
@@ -273,7 +279,7 @@ export const exportZip = data => {
   });
 };
 
-export const downloadAndZip = files => {
+export const downloadAndZip = (files: DownloadFileParams) => {
   return downloadByGroup(files).then(exportZip);
 };
 
