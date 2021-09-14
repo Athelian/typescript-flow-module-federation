@@ -207,7 +207,7 @@ const ProductProviderFormWrapper = ({
                     <SaveFormButton
                       id="end_product_form_save_button"
                       data-testid="saveProviderButton"
-                      disabled={disableSaveButton}
+                      disabled={disableSaveButton || !hideNavbarWarning}
                       onClick={() =>
                         onSave({
                           ...productProviderInfoContainer.state,
