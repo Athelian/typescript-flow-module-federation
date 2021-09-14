@@ -119,7 +119,7 @@ const SelectExporter = ({
   }, [includeOwner, nodes, organization]);
 
   const newSelected = React.useMemo(() => {
-    if (!includeOwner && selected !== undefined) {
+    if (!includeOwner || selected !== undefined) {
       return selected;
     }
 

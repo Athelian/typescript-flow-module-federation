@@ -86,7 +86,7 @@ const SelectPartner = ({
   }, [includeOwner, nodes, organization, partnerTypes]);
 
   const newSelected = React.useMemo(() => {
-    if (!includeOwner && selected !== undefined) {
+    if (!includeOwner || selected !== undefined) {
       return selected;
     }
 
