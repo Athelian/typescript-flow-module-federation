@@ -17803,6 +17803,13 @@ export type AppointShipmentShipperInput = {|
   shipperId: $ElementType<Scalars, 'ID'>,
 |};
 
+export type Authenticated = {|
+   __typename?: 'Authenticated',
+  authenticated: $ElementType<Scalars, 'Boolean'>,
+  authenticatedMfa: $ElementType<Scalars, 'Boolean'>,
+  mfaType?: ?$ElementType<Scalars, 'String'>,
+|};
+
 export type BadRequest = {|
    __typename?: 'BadRequest',
   violations: Array<Violation>,
@@ -19156,6 +19163,16 @@ export const CurrencyValues = Object.freeze({
 
 export type Currency = $Values<typeof CurrencyValues>;
 
+export type CustomFieldFilterInput = {|
+  query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
+  excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  createdAt?: ?DateRangeInput,
+  updatedAt?: ?DateRangeInput,
+  entityTypes?: ?Array<CustomizableEntityType>,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+|};
+
 export type CustomFields = {|
    __typename?: 'CustomFields',
   mask?: ?MaskPayload,
@@ -19394,6 +19411,8 @@ export type FieldDefinition = {|
      __typename?: 'FieldDefinition',
     name: $ElementType<Scalars, 'String'>,
     entityType: CustomizableEntityType,
+    type: FieldDefinitionType,
+    permission: FieldDefinitionPermission,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -19413,6 +19432,32 @@ export type FieldDefinitionInput = {|
 
 export type FieldDefinitionPayload = FieldDefinition | BadRequest | Forbidden | NotFound;
 
+export type FieldDefinitionPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{|
+     __typename?: 'FieldDefinitionPayloadPaginatedSearch',
+    nodes: Array<FieldDefinitionPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  |}
+|};
+
+export const FieldDefinitionPermissionValues = Object.freeze({
+  /** Private */
+  Private: 'Private', 
+  /** Public */
+  Public: 'Public', 
+  /** ReadOnly */
+  ReadOnly: 'ReadOnly'
+});
+
+
+export type FieldDefinitionPermission = $Values<typeof FieldDefinitionPermissionValues>;
+
 export type FieldDefinitions = {|
    __typename?: 'FieldDefinitions',
   fieldDefinitions: Array<FieldDefinition>,
@@ -19424,6 +19469,20 @@ export type FieldDefinitionsInput = {|
 |};
 
 export type FieldDefinitionsPayload = FieldDefinitions | BadRequest | Forbidden | NotFound;
+
+export const FieldDefinitionTypeValues = Object.freeze({
+  /** Text */
+  Text: 'Text', 
+  /** Integer */
+  Integer: 'Integer', 
+  /** Decimal */
+  Decimal: 'Decimal', 
+  /** Date */
+  Date: 'Date'
+});
+
+
+export type FieldDefinitionType = $Values<typeof FieldDefinitionTypeValues>;
 
 export type FieldValue = {|
    __typename?: 'FieldValue',
@@ -20672,6 +20731,8 @@ export type Mutation = {|
    __typename?: 'Mutation',
   login: TokenPayload,
   logout: $ElementType<Scalars, 'Boolean'>,
+  requestOneTimePassword: TokenPayload,
+  verifyOneTimePassword: TokenPayload,
   changePassword?: ?EmptyPayload,
   requestResetPassword?: ?EmptyPayload,
   resetPassword?: ?EmptyPayload,
@@ -20819,6 +20880,16 @@ export type Mutation = {|
 
 export type MutationLoginArgs = {|
   input: CredentialsInput
+|};
+
+
+export type MutationRequestOneTimePasswordArgs = {|
+  type: OneTimePasswordType
+|};
+
+
+export type MutationVerifyOneTimePasswordArgs = {|
+  code: $ElementType<Scalars, 'String'>
 |};
 
 
@@ -21727,6 +21798,13 @@ export const NotificationTypeValues = Object.freeze({
 
 export type NotificationType = $Values<typeof NotificationTypeValues>;
 
+export const OneTimePasswordTypeValues = Object.freeze({
+  Email: 'Email'
+});
+
+
+export type OneTimePasswordType = $Values<typeof OneTimePasswordTypeValues>;
+
 export type Order = {|
   ...Model,
   ...Owned,
@@ -22455,6 +22533,7 @@ export type ProductContainersArgs = {|
 |};
 
 export type ProductCreateInput = {|
+  /** Deprecated */
   importerId?: ?$ElementType<Scalars, 'ID'>,
   name: $ElementType<Scalars, 'String'>,
   serial: $ElementType<Scalars, 'String'>,
@@ -22506,7 +22585,9 @@ export type ProductPayloadPaginatedSearch = {|
 
 export type ProductProductProviderCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
+  /** Deprecated */
   exporterId: $ElementType<Scalars, 'ID'>,
+  /** Deprecated */
   supplierId?: ?$ElementType<Scalars, 'ID'>,
   unitType?: ?$ElementType<Scalars, 'String'>,
   unitVolume?: ?MetricValueInput,
@@ -22525,12 +22606,17 @@ export type ProductProductProviderCreateInput = {|
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  exporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  importerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  supplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type ProductProductProviderUpdateInput = {|
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   name?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   exporterId?: ?$ElementType<Scalars, 'ID'>,
+  /** Deprecated */
   supplierId?: ?$ElementType<Scalars, 'ID'>,
   unitType?: ?$ElementType<Scalars, 'String'>,
   unitVolume?: ?MetricValueInput,
@@ -22549,6 +22635,10 @@ export type ProductProductProviderUpdateInput = {|
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  exporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  importerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  supplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  deleted?: ?$ElementType<Scalars, 'Boolean'>,
   id?: ?$ElementType<Scalars, 'ID'>,
 |};
 
@@ -22566,6 +22656,9 @@ export type ProductProvider = {|
   referenced: $ElementType<Scalars, 'Boolean'>,
     name: $ElementType<Scalars, 'String'>,
     product: ProductPayload,
+    exporters: Array<OrganizationPayload>,
+    importers: Array<OrganizationPayload>,
+    suppliers: Array<OrganizationPayload>,
     exporter: OrganizationPayload,
     supplier?: ?OrganizationPayload,
     unitType?: ?$ElementType<Scalars, 'String'>,
@@ -22614,7 +22707,9 @@ export type ProductProviderBatchesArgs = {|
 
 export type ProductProviderCreateInput = {|
   name: $ElementType<Scalars, 'String'>,
+  /** Deprecated */
   exporterId: $ElementType<Scalars, 'ID'>,
+  /** Deprecated */
   supplierId?: ?$ElementType<Scalars, 'ID'>,
   unitType?: ?$ElementType<Scalars, 'String'>,
   unitVolume?: ?MetricValueInput,
@@ -22633,6 +22728,9 @@ export type ProductProviderCreateInput = {|
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  exporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  importerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  supplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   productId: $ElementType<Scalars, 'ID'>,
 |};
 
@@ -22644,9 +22742,15 @@ export type ProductProviderFilterInput = {|
   updatedAt?: ?DateRangeInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   productId?: ?$ElementType<Scalars, 'ID'>,
+  /** Deprecated */
   exporterId?: ?$ElementType<Scalars, 'ID'>,
+  /** Deprecated */
   supplierId?: ?$ElementType<Scalars, 'ID'>,
+  /** Deprecated */
   importerId?: ?$ElementType<Scalars, 'ID'>,
+  exporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  importerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  supplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   /** Deprecated */
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIdsWithOperator?: ?IdsWithOperatorInput,
@@ -22729,7 +22833,9 @@ export type ProductProviderSortInput = {|
 export type ProductProviderUpdateInput = {|
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   name?: ?$ElementType<Scalars, 'String'>,
+  /** Deprecated */
   exporterId?: ?$ElementType<Scalars, 'ID'>,
+  /** Deprecated */
   supplierId?: ?$ElementType<Scalars, 'ID'>,
   unitType?: ?$ElementType<Scalars, 'String'>,
   unitVolume?: ?MetricValueInput,
@@ -22748,6 +22854,10 @@ export type ProductProviderUpdateInput = {|
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  exporterIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  importerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  supplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  deleted?: ?$ElementType<Scalars, 'Boolean'>,
   id?: ?$ElementType<Scalars, 'ID'>,
   productId?: ?$ElementType<Scalars, 'ID'>,
 |};
@@ -22761,6 +22871,7 @@ export type ProductSortInput = {|
 
 export type ProductUpdateInput = {|
   archived?: ?$ElementType<Scalars, 'Boolean'>,
+  /** Deprecated */
   importerId?: ?$ElementType<Scalars, 'ID'>,
   name?: ?$ElementType<Scalars, 'String'>,
   serial?: ?$ElementType<Scalars, 'String'>,
@@ -23040,6 +23151,7 @@ export type Query = {|
    __typename?: 'Query',
   viewer: Viewer,
   authenticated: $ElementType<Scalars, 'Boolean'>,
+  authenticatedWithMFA: Authenticated,
   user: UserPayload,
   users: UserPayloadPaginatedSearch,
   usersByIDs: Array<UserPayload>,
@@ -23124,6 +23236,7 @@ export type Query = {|
   milestoneTemplatesByIDs: Array<MilestoneTemplatePayload>,
   fieldDefinition: FieldDefinitionPayload,
   fieldDefinitions: Array<FieldDefinitionPayload>,
+  customFields: FieldDefinitionPayloadPaginatedSearch,
   mask: MaskPayload,
   masks: MaskPayloadPaginatedSearch,
   masksByIDs: Array<MaskPayload>,
@@ -23704,6 +23817,13 @@ export type QueryFieldDefinitionArgs = {|
 
 export type QueryFieldDefinitionsArgs = {|
   entityType: CustomizableEntityType
+|};
+
+
+export type QueryCustomFieldsArgs = {|
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  filterBy?: ?CustomFieldFilterInput
 |};
 
 

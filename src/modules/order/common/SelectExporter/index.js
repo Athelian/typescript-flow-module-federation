@@ -5,6 +5,7 @@ import { isNullOrUndefined } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
 import useFilterSort from 'hooks/useFilterSort';
 import useQueryList from 'hooks/useQueryList';
+import useUser from 'hooks/useUser';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -23,6 +24,7 @@ import PartnerGridView from 'modules/partner/list/PartnerGridView';
 type OptionalProps = {
   cacheKey: string,
   isRequired: boolean,
+  includeOwner?: boolean,
   selected: {
     id: string,
     name: string,
@@ -77,6 +79,7 @@ const SelectExporter = ({
   changeMessage,
   deselectMessage,
   warningMessage,
+  includeOwner,
 }: Props) => {
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
@@ -84,6 +87,8 @@ const SelectExporter = ({
     { updatedAt: 'DESCENDING' },
     cacheKey
   );
+
+  const { organization } = useUser();
 
   const { nodes, loading, hasMore, loadMore } = useQueryList(
     partnersQuery,
@@ -94,8 +99,44 @@ const SelectExporter = ({
     'viewer.user.organization.partners'
   );
 
+  const items = React.useMemo(() => {
+    if (includeOwner && organization.types.includes('Exporter')) {
+      const ownerOrg = {
+        id: null,
+        name: '', // some partnership name
+        organization: {
+          id: organization.id,
+          name: organization.name,
+        },
+        types: organization.types,
+        code: '',
+        tags: [],
+      };
+      return [ownerOrg, ...nodes];
+    }
+
+    return nodes;
+  }, [includeOwner, nodes, organization]);
+
+  const newSelected = React.useMemo(() => {
+    if (!includeOwner || selected !== undefined) {
+      return selected;
+    }
+
+    // for selecting owner org if supplied
+    // pass undefined to preselect owner org
+    return {
+      id: null,
+      name: '',
+      organization: {
+        id: organization.id,
+        name: organization.name,
+      },
+    };
+  }, [selected, includeOwner, organization]);
+
   return (
-    <Selector.Single selected={selected} required={isRequired}>
+    <Selector.Single selected={newSelected} required={isRequired}>
       {({ value, dirty, getItemProps }) => (
         <SlideViewLayout>
           <SlideViewNavBar>
@@ -149,7 +190,7 @@ const SelectExporter = ({
               hasMore={hasMore}
               isLoading={loading}
               onLoadMore={loadMore}
-              items={nodes}
+              items={items}
               renderItem={item => (
                 <PartnerCard
                   key={item.id}

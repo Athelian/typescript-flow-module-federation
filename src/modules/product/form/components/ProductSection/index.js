@@ -407,7 +407,6 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                       );
                     }}
                   </Subscribe>
-
                   <FormField
                     name="memo"
                     initValue={values.memo}

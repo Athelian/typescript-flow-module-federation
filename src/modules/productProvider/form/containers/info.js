@@ -12,6 +12,7 @@ type FormState = {
   name: ?string,
   exporter?: ?Object,
   supplier?: ?Object,
+  importer?: ?Array<Object>,
   origin: ?string,
 
   unitType: ?string,
@@ -28,6 +29,7 @@ type FormState = {
 
 export const initValues: FormState = {
   supplier: null,
+  importers: null,
   origin: null,
   name: null,
   unitType: null,

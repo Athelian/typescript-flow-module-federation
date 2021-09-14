@@ -6,6 +6,7 @@ import useQueryList from 'hooks/useQueryList';
 import Selector from 'components/Selector';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import useUser from 'hooks/useUser';
 import {
   EntityIcon,
   Filter,
@@ -19,7 +20,8 @@ import PartnerGridView from 'modules/partner/list/PartnerGridView';
 
 type Props = {|
   partnerTypes: Array<string>,
-  partnerCount: number,
+  partnerCount?: number,
+  includeOwner?: boolean,
   selected: Array<{
     id: string,
     name: string,
@@ -28,11 +30,26 @@ type Props = {|
   onCancel: Function,
 |};
 
-const SelectPartners = ({ partnerTypes, partnerCount, selected, onCancel, onSelect }: Props) => {
+/**
+ * A selector component for selecting partners
+ * If you want to preselect owner org, set includeOwner as true and pass in a
+ * falsy value as one of the values in `selected` array parameter
+ * @param selected a list of partnership ids
+ */
+const SelectPartners = ({
+  partnerTypes,
+  partnerCount,
+  includeOwner = false,
+  selected,
+  onCancel,
+  onSelect,
+}: Props) => {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', types: partnerTypes },
     { updatedAt: 'DESCENDING' }
   );
+
+  const { organization } = useUser();
 
   const { nodes, loading, hasMore, loadMore } = useQueryList(
     partnersQuery,
@@ -43,8 +60,56 @@ const SelectPartners = ({ partnerTypes, partnerCount, selected, onCancel, onSele
     'viewer.user.organization.partners'
   );
 
+  const items = React.useMemo(() => {
+    if (
+      includeOwner &&
+      partnerTypes.some(partnerType => organization.types.includes(partnerType))
+    ) {
+      const ownerOrg = {
+        id: null,
+        name: '', // some partnership name
+        organization: {
+          id: organization.id,
+          name: organization.name,
+        },
+        types: organization.types,
+        code: '',
+        tags: [],
+      };
+      return [ownerOrg, ...nodes];
+    }
+
+    return nodes;
+  }, [includeOwner, nodes, organization, partnerTypes]);
+
+  const newSelected = React.useMemo(() => {
+    return (
+      selected
+        ?.map(partner => {
+          if (partner) {
+            return partner;
+          }
+
+          // for selecting owner org if supplied
+          if (includeOwner) {
+            return {
+              id: null,
+              name: '',
+              organization: {
+                id: organization.id,
+                name: organization.name,
+              },
+            };
+          }
+
+          return null;
+        })
+        .filter(Boolean) ?? []
+    );
+  }, [selected, includeOwner, organization]);
+
   return (
-    <Selector.Many selected={selected} max={partnerCount}>
+    <Selector.Many selected={newSelected} max={partnerCount}>
       {({ value, dirty, getItemProps }) => (
         <SlideViewLayout>
           <SlideViewNavBar>
@@ -59,9 +124,11 @@ const SelectPartners = ({ partnerTypes, partnerCount, selected, onCancel, onSele
             <Search query={query} onChange={setQuery} />
             <Sort config={PartnerSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
-            <h3>
-              {value.length}/{partnerCount}
-            </h3>
+            {partnerCount && (
+              <h3>
+                {value.length}/{partnerCount}
+              </h3>
+            )}
             <CancelButton disabled={false} onClick={onCancel} />
             <SaveButton disabled={!dirty} onClick={() => onSelect(value)} />
           </SlideViewNavBar>
@@ -71,7 +138,7 @@ const SelectPartners = ({ partnerTypes, partnerCount, selected, onCancel, onSele
               hasMore={hasMore}
               isLoading={loading}
               onLoadMore={loadMore}
-              items={nodes}
+              items={items}
               renderItem={item => (
                 <PartnerCard key={item.id} partner={item} {...getItemProps(item)} />
               )}
