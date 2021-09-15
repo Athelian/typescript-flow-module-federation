@@ -8,7 +8,7 @@ const loadFonts = () => {
   const sourceSansObserver = new FontFaceObserver('Source Sans Pro', {});
   const notoSansObserver = new FontFaceObserver('Noto Sans JP', {});
 
-  // Load EN font and change font family
+  // Load English font and change font family
   sourceSansObserver.load(null, FONT_LOAD_TIMEOUT).then(() => {
     if (document.body) document.body.classList.add('ssp');
   });
