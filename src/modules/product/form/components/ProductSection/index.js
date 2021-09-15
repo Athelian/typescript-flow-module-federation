@@ -141,7 +141,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
       <Subscribe to={[ProductInfoContainer]}>
         {({ originalValues: initialValues, state, setFieldValue }) => {
           const values = { ...initialValues, ...state };
-          const { ownedBy } = values;
+          const { importer } = values;
           return (
             <div className={ProductSectionWrapperStyle}>
               <Subscribe to={[ProductFilesContainer]}>
@@ -434,10 +434,13 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                     vertical
                     label={
                       <Label required>
-                        <FormattedMessage id="modules.Warehouses.owner" defaultMessage="OWNER" />
+                        <FormattedMessage
+                          id="modules.Products.importer"
+                          defaultMessage="IMPORTER"
+                        />{' '}
                       </Label>
                     }
-                    input={<PartnerCard partner={ownedBy} readOnly />}
+                    input={<PartnerCard partner={importer} readOnly />}
                   />
                 </GridColumn>
               </div>
