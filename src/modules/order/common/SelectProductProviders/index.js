@@ -65,8 +65,6 @@ function SelectProductProviders({
     'productProviders'
   );
 
-  console.log('[debug] filterBy', filterBy);
-
   return (
     <Selector.Many selected={[]}>
       {({ value, dirty, getItemProps, getIncrementProps }) => (
