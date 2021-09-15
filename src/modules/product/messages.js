@@ -86,6 +86,18 @@ export default defineMessages({
     id: 'modules.Products.supplier',
     defaultMessage: 'SUPPLIER',
   },
+  importers: {
+    id: 'modules.Products.importers',
+    defaultMessage: 'IMPORTERS',
+  },
+  exporters: {
+    id: 'modules.Products.exporters',
+    defaultMessage: 'EXPORTERS',
+  },
+  suppliers: {
+    id: 'modules.Products.suppliers',
+    defaultMessage: 'SUPPLIERS',
+  },
   origin: {
     id: 'modules.Products.origin',
     defaultMessage: 'COUNTRY OF ORIGIN',

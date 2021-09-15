@@ -114,6 +114,30 @@ export const ProductProviderFilterConfig: Array<FilterConfig> = [
     defaultValue: null,
     hidden: true,
   },
+  {
+    entity: 'END PRODUCT',
+    field: 'importerIds',
+    type: 'importer_ids',
+    message: productMessages.importers,
+    defaultValue: [],
+    hidden: true,
+  },
+  {
+    entity: 'END PRODUCT',
+    field: 'exporterIds',
+    type: 'exporter_ids',
+    message: productMessages.exporters,
+    defaultValue: [],
+    hidden: true,
+  },
+  {
+    entity: 'END PRODUCT',
+    field: 'supplierIds',
+    type: 'supplier_ids',
+    message: productMessages.suppliers,
+    defaultValue: [],
+    hidden: true,
+  },
 ];
 
 export const OrderFilterConfig: Array<FilterConfig> = [
