@@ -4,7 +4,13 @@ import { FormattedMessage } from 'react-intl';
 import { downloadFile, downloadAndZip } from 'utils/file';
 import { BaseButton } from 'components/Buttons';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { DownloadDropDownStyle, DownloadItemStyle, DownloadWrapperStyle } from '../../style';
+import Icon from 'components/Icon';
+import {
+  DownloadDropDownStyle,
+  DownloadItemStyle,
+  DownloadItemIconStyle,
+  DownloadWrapperStyle,
+} from '../../style';
 import messages from '../../messages';
 
 type Props = {
@@ -89,6 +95,9 @@ const DownloadSelectedButton = ({ isMultiSelect, selectedFiles, onDownloadFinish
                   onDownloadFinished();
                 }}
               >
+                <div className={DownloadItemIconStyle}>
+                  <Icon icon="FILE_ARCHIVE" />
+                </div>
                 <FormattedMessage {...messages.downloadZip} />
               </button>
               <button
@@ -99,6 +108,10 @@ const DownloadSelectedButton = ({ isMultiSelect, selectedFiles, onDownloadFinish
                   onDownloadFinished();
                 }}
               >
+                <div className={DownloadItemIconStyle}>
+                  <Icon icon="DOWNLOAD" />
+                </div>
+
                 <FormattedMessage {...messages.downloadAll} />
               </button>
             </div>

@@ -273,8 +273,16 @@ export const exportZip = (data: DownloadFileParams) => {
   });
 
   zip.generateAsync({ type: 'blob' }).then(zipFile => {
-    const currentDate = new Date().getTime();
-    const fileName = `${currentDate}.zip`;
+    const currentDate = new Date();
+    const month = currentDate.getMonth() + 1;
+    const date = currentDate.getDate();
+
+    const monthString = month < 10 ? `0${month}` : month;
+    const dateString = date < 10 ? `0${date}` : date;
+
+    const name = `zenport_${currentDate.getFullYear()}_${monthString}_${dateString}`;
+    const fileName = `${name}.zip`; // zenport_2021_09_15.zip
+
     return FileSaver.saveAs(zipFile, fileName);
   });
 };
