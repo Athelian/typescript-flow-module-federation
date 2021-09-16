@@ -223,7 +223,7 @@ const ContainerBatchCard = ({
 
           <div className={ProductInfoWrapperStyle}>
             <div className={ProductNameWrapperStyle}>
-              {mergedNavigable.product ? (
+              {product && mergedNavigable.product ? (
                 // $FlowFixMe Flow typed is not updated yet
                 <Link
                   className={ProductIconLinkStyle}
@@ -240,10 +240,10 @@ const ContainerBatchCard = ({
                 </div>
               )}
 
-              <div className={ProductNameStyle}>{product.name}</div>
+              <div className={ProductNameStyle}>{product?.name}</div>
             </div>
 
-            <div className={ProductSerialStyle}>{product.serial}</div>
+            <div className={ProductSerialStyle}>{product?.serial}</div>
 
             <div className={ProductProviderNameStyle}>
               <Icon icon="PRODUCT_PROVIDER" />
