@@ -93,6 +93,33 @@ export const updateProductMutation: Object = gql`
   ${productProviderPackagingFragment}
 `;
 
+const prepareExportersAndSuppliers = (oldProductProvider: ?Object, newProductProvider: Object) => {
+  const newExporter = parseParentIdField(
+    'exporterId',
+    getByPathWithDefault(null, 'exporter', oldProductProvider),
+    getByPathWithDefault(null, 'exporter', newProductProvider)
+  );
+  const newSupplier = parseParentIdField(
+    'supplierId',
+    getByPathWithDefault(null, 'supplier', oldProductProvider),
+    getByPathWithDefault(null, 'supplier', newProductProvider)
+  );
+
+  const values: Object = {};
+
+  // note: you cant delete or update exporter / supplier id after it
+  // has been set so this should work
+  if (newExporter.exporterId !== undefined) {
+    values.exporterIds = [newExporter.exporterId];
+  }
+
+  if (newSupplier.supplierId !== undefined) {
+    values.supplierIds = [newSupplier.supplierId];
+  }
+
+  return values;
+};
+
 const prepareParsedProductProviderInput = (
   originalValues: ?Array<Object>,
   newValues: Array<Object>
@@ -127,6 +154,7 @@ const prepareParsedProductProviderInput = (
         getByPathWithDefault(null, 'importers', oldProductProvider),
         getByPathWithDefault(null, 'importers', newProductProvider)
       ),
+      ...prepareExportersAndSuppliers(oldProductProvider, newProductProvider),
       ...parseGenericField(
         'name',
         getByPathWithDefault(null, 'name', oldProductProvider),
