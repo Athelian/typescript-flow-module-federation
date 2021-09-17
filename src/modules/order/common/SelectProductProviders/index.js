@@ -48,8 +48,8 @@ function SelectProductProviders({
 }: Props) {
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     {
-      importerId,
-      exporterId,
+      importerIds: [importerId],
+      exporterIds: [exporterId],
       archived: false,
       query: '',
     },
@@ -76,7 +76,7 @@ function SelectProductProviders({
               config={ProductProviderFilterConfig}
               filterBy={filterBy}
               onChange={setFilterBy}
-              staticFilters={['importerId', 'exporterId', 'archived']}
+              staticFilters={['importerIds', 'exporterIds', 'archived']}
             />
             <Search query={query} onChange={setQuery} />
             <Sort config={ProductProviderSortConfig} sortBy={sortBy} onChange={setSortBy} />

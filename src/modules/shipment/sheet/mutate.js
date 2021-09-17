@@ -177,7 +177,7 @@ function normalizedInput(
 
           // Remove followers from containers of removed forwarders and followers from batches of containers of removed forwarders
           const cleanedContainers = (shipment?.containers ?? []).map(container => {
-            const cleanedContainerBatches = (shipment?.batchesWithoutContainer ?? []).map(batch => {
+            const cleanedContainerBatches = (container?.batches ?? []).map(batch => {
               return {
                 id: batch?.id,
               };
