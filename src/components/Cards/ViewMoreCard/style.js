@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors } from 'styles/common';
 
-export const ImportersCardStyle: string = css`
+export const ViewMoreCardStyle: string = css`
   padding: 10px;
   width: 100%;
   box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
@@ -11,12 +11,12 @@ export const ImportersCardStyle: string = css`
   transition: all 0.2s ease-out;
   cursor: pointer;
 `;
-export const ImporterCardHeaderStyle: string = css`
+export const ViewMoreCardHeaderStyle: string = css`
   display: flex;
   margin-bottom: 20px;
 `;
 
-export const ImporterIconStyle: string = css`
+export const ViewMoreIconStyle: string = css`
   display: flex;
   align-items: center;
   justify-content: center;
