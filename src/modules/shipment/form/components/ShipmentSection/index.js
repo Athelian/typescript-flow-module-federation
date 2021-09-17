@@ -845,7 +845,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         infoMessage={
                           <FormattedMessage
                             id="modules.Shipments.tooltipForwarder"
-                            defaultMessage="You can choose up to 6 Forwarders."
+                            defaultMessage="Owners can edit the product information. To add other partners, use end products"
                           />
                         }
                       />

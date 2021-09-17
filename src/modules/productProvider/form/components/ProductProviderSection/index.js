@@ -3,9 +3,10 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { FormField } from 'modules/form';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, ArrayValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
 import SelectPartner from 'components/SelectPartner';
+import SelectPartners from 'components/SelectPartners';
 import {
   ProductProviderInfoContainer,
   ProductProviderTasksContainer,
@@ -14,7 +15,6 @@ import { convertValueToFormFieldFormat } from 'components/Form/Factories/helpers
 import SelectExporter from 'modules/order/common/SelectExporter';
 import SlideView from 'components/SlideView';
 import validator from 'modules/product/form/validator';
-import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { PartnerCard, GrayCard } from 'components/Cards';
 import {
@@ -31,13 +31,15 @@ import {
   PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_SET_EXPORTER,
   PRODUCT_PROVIDER_SET_SUPPLIER,
+  PRODUCT_PROVIDER_SET_IMPORTER,
   PRODUCT_PROVIDER_SET_NAME,
   PRODUCT_PROVIDER_SET_ORIGIN,
   PRODUCT_PROVIDER_SET_CUSTOM_FIELDS,
   PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK,
   PRODUCT_PROVIDER_SET_MEMO,
 } from 'modules/permission/constants/product';
-import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
+import renderImporters from './renderImporters';
+import { ProductProviderSectionWrapperStyle, MainFieldsWrapperStyle } from './style';
 import { generateName } from './helper';
 
 type Props = {
@@ -48,17 +50,125 @@ type Props = {
 
 const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
   const { hasPermission } = usePermission(isOwner);
+
   return (
     <Subscribe to={[ProductProviderInfoContainer]}>
-      {({ originalValues, state, setFieldValue }) => {
+      {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
         const values = { ...originalValues, ...state };
 
         return (
           <div className={ProductProviderSectionWrapperStyle}>
-            <GridColumn>
-              <GridRow>
-                <GridColumn gap="10px">
+            <div className={MainFieldsWrapperStyle}>
+              <GridColumn>
+                <FormField
+                  name="name"
+                  initValue={values.name}
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <TextInputFactory
+                      name={name}
+                      {...inputHandlers}
+                      isNew={isNew}
+                      required
+                      originalValue={originalValues[name]}
+                      label={
+                        <FormattedMessage
+                          id="modules.ProductProviders.name"
+                          defaultMessage="NAME"
+                        />
+                      }
+                      {...(isExist
+                        ? {
+                            errorMessage: (
+                              <FormattedMessage
+                                id="modules.ProductProviders.mustBeUniqueName"
+                                defaultMessage="The name of End Product with the same Exporter and Supplier must be unique"
+                              />
+                            ),
+                            isTouched: true,
+                          }
+                        : {})}
+                      editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_NAME])}
+                    />
+                  )}
+                </FormField>
+
+                <FormField
+                  name="origin"
+                  initValue={values.origin}
+                  setFieldValue={setFieldValue}
+                  values={values}
+                  validator={validator}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <EnumSearchSelectInputFactory
+                      name={name}
+                      {...inputHandlers}
+                      isNew={isNew}
+                      originalValue={originalValues[name]}
+                      label={
+                        <FormattedMessage
+                          id="modules.ProductProviders.countryOfOrigin"
+                          defaultMessage="COUNTRY OF ORIGIN"
+                        />
+                      }
+                      editable={hasPermission([
+                        PRODUCT_PROVIDER_UPDATE,
+                        PRODUCT_PROVIDER_SET_ORIGIN,
+                      ])}
+                      enumType="Country"
+                    />
+                  )}
+                </FormField>
+
+                <CustomFieldsFactory
+                  entityType="ProductProvider"
+                  customFields={values.customFields}
+                  setFieldValue={setFieldValue}
+                  editable={{
+                    values: hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_CUSTOM_FIELDS,
+                    ]),
+                    mask: hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK,
+                    ]),
+                  }}
+                />
+                <FormField
+                  name="memo"
+                  initValue={values.memo}
+                  values={values}
+                  validator={validator}
+                  setFieldValue={setFieldValue}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <TextAreaInputFactory
+                      {...inputHandlers}
+                      editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_MEMO])}
+                      name={name}
+                      isNew={isNew}
+                      originalValue={originalValues[name]}
+                      label={
+                        <FormattedMessage
+                          id="modules.ProductProviders.memo"
+                          defaultMessage="MEMO"
+                        />
+                      }
+                      inputWidth="400px"
+                      inputHeight="120px"
+                    />
+                  )}
+                </FormField>
+              </GridColumn>
+              <GridColumn>
+                <GridColumn gap="5px">
                   <FieldItem
+                    vertical
                     label={
                       <Label required>
                         <FormattedMessage
@@ -68,7 +178,6 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       </Label>
                     }
                   />
-
                   {values.isNew &&
                   hasPermission(PARTNER_LIST) &&
                   hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_EXPORTER]) ? (
@@ -99,6 +208,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                   <SelectExporter
                                     cacheKey="EndProductSelectExporter"
                                     isRequired
+                                    includeOwner
                                     selected={values?.exporter?.partner}
                                     onCancel={() => exporterSlideToggle(false)}
                                     warningMessage={
@@ -153,9 +263,9 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     </>
                   )}
                 </GridColumn>
-
-                <GridColumn gap="10px">
+                <GridColumn gap="5px">
                   <FieldItem
+                    vertical
                     label={
                       <Label>
                         <FormattedMessage
@@ -199,6 +309,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                               >
                                 {({ onChange }) => (
                                   <SelectPartner
+                                    includeOwner
                                     partnerTypes={['Supplier']}
                                     selected={values?.supplier?.partner}
                                     onCancel={() => supplierSlideToggle(false)}
@@ -248,106 +359,94 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     </>
                   )}
                 </GridColumn>
-              </GridRow>
 
-              <FormField
-                name="name"
-                initValue={values.name}
-                setFieldValue={setFieldValue}
-                values={values}
-                validator={validator}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <TextInputFactory
-                    name={name}
-                    {...inputHandlers}
-                    isNew={isNew}
-                    required
-                    originalValue={originalValues[name]}
+                <GridColumn>
+                  <FieldItem
+                    vertical
                     label={
-                      <FormattedMessage id="modules.ProductProviders.name" defaultMessage="NAME" />
+                      <Label>
+                        <FormattedMessage
+                          id="components.NavBar.Filter.importers"
+                          defaultMessage="Importers"
+                        />
+                      </Label>
                     }
-                    {...(isExist
-                      ? {
-                          errorMessage: (
-                            <FormattedMessage
-                              id="modules.ProductProviders.mustBeUniqueName"
-                              defaultMessage="The name of End Product with the same Exporter and Supplier must be unique"
-                            />
-                          ),
-                          isTouched: true,
-                        }
-                      : {})}
-                    editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_NAME])}
-                  />
-                )}
-              </FormField>
+                    input={
+                      <BooleanValue>
+                        {({ value: importersSelectorIsOpen, set: importerSlideToggle }) => (
+                          <>
+                            {!values.importers ? (
+                              <DashedPlusButton
+                                width="195px"
+                                height="215px"
+                                onClick={() => importerSlideToggle(true)}
+                              />
+                            ) : (
+                              <div
+                                onClick={() =>
+                                  hasPermission(PARTNER_LIST) &&
+                                  hasPermission([
+                                    PRODUCT_PROVIDER_UPDATE,
+                                    PRODUCT_PROVIDER_SET_IMPORTER,
+                                  ])
+                                    ? importerSlideToggle(true)
+                                    : () => {}
+                                }
+                                role="presentation"
+                              >
+                                {renderImporters(
+                                  values?.importers,
+                                  hasPermission([
+                                    PRODUCT_PROVIDER_UPDATE,
+                                    PRODUCT_PROVIDER_SET_IMPORTER,
+                                  ])
+                                )}
+                              </div>
+                            )}
 
-              <FormField
-                name="origin"
-                initValue={values.origin}
-                setFieldValue={setFieldValue}
-                values={values}
-                validator={validator}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <EnumSearchSelectInputFactory
-                    name={name}
-                    {...inputHandlers}
-                    isNew={isNew}
-                    originalValue={originalValues[name]}
-                    label={
-                      <FormattedMessage
-                        id="modules.ProductProviders.countryOfOrigin"
-                        defaultMessage="COUNTRY OF ORIGIN"
-                      />
+                            <SlideView
+                              isOpen={importersSelectorIsOpen}
+                              onRequestClose={() => importerSlideToggle(false)}
+                            >
+                              {importersSelectorIsOpen && (
+                                <ArrayValue defaultValue={values?.importers ?? []}>
+                                  {({ set: setselectedImporters }) => (
+                                    <>
+                                      <SelectPartners
+                                        partnerTypes={['Importer']}
+                                        includeOwner
+                                        selected={
+                                          values?.importers?.map(importer => importer?.partner) ??
+                                          []
+                                        }
+                                        onCancel={() => importerSlideToggle(false)}
+                                        onSelect={selected => {
+                                          const assembledOrgs = selected.map(
+                                            ({ organization, ...partner }) => ({
+                                              ...organization,
+                                              partner: {
+                                                ...partner,
+                                              },
+                                            })
+                                          );
+                                          setFieldArrayValue('importers', assembledOrgs);
+                                          setselectedImporters(assembledOrgs);
+                                          importerSlideToggle(false);
+                                        }}
+                                      />
+                                    </>
+                                  )}
+                                </ArrayValue>
+                              )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
                     }
-                    editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_ORIGIN])}
-                    enumType="Country"
                   />
-                )}
-              </FormField>
-
-              <CustomFieldsFactory
-                entityType="ProductProvider"
-                customFields={values.customFields}
-                setFieldValue={setFieldValue}
-                editable={{
-                  values: hasPermission([
-                    PRODUCT_PROVIDER_UPDATE,
-                    PRODUCT_PROVIDER_SET_CUSTOM_FIELDS,
-                  ]),
-                  mask: hasPermission([
-                    PRODUCT_PROVIDER_UPDATE,
-                    PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK,
-                  ]),
-                }}
-              />
-              <FormField
-                name="memo"
-                initValue={values.memo}
-                values={values}
-                validator={validator}
-                setFieldValue={setFieldValue}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <TextAreaInputFactory
-                    {...inputHandlers}
-                    editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_MEMO])}
-                    name={name}
-                    isNew={isNew}
-                    originalValue={originalValues[name]}
-                    label={
-                      <FormattedMessage id="modules.ProductProviders.memo" defaultMessage="MEMO" />
-                    }
-                    inputWidth="400px"
-                    inputHeight="120px"
-                  />
-                )}
-              </FormField>
-
-              <div className={DividerStyle} />
-            </GridColumn>
+                </GridColumn>
+              </GridColumn>
+            </div>
           </div>
         );
       }}

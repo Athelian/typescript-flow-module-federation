@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors } from 'styles/common';
+import { layout, presets, colors } from 'styles/common';
 
 export const ProductProviderSectionWrapperStyle: string = css`
   ${presets.BOX};
@@ -9,6 +9,13 @@ export const ProductProviderSectionWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+export const MainFieldsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  justify-content: space-between;
+  padding: 0 100px;
+  grid-gap: 60px;
 `;
 
 export const DividerStyle: string = css`

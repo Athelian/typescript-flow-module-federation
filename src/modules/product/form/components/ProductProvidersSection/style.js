@@ -89,3 +89,12 @@ export const EmptyMessageStyle: string = css`
   text-align: center;
   padding: 100px;
 `;
+
+export const WarningMessageStyle: string = css`
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  color: ${colors.RED};
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+`;

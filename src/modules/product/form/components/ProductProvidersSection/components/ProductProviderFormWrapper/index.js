@@ -21,7 +21,10 @@ import ResetFormButton from 'components/ResetFormButton';
 import SaveFormButton from 'components/SaveFormButton';
 import SlideView from 'components/SlideView';
 import { contains, getByPathWithDefault } from 'utils/fp';
+import Icon from 'components/Icon';
+import useUser from 'hooks/useUser';
 import { productProviderTimelineQuery } from './query';
+import { WarningMessageStyle } from '../../style';
 
 type OptionalProps = {
   isOwner: boolean,
@@ -72,6 +75,9 @@ const ProductProviderFormWrapper = ({
   useEffect(() => {
     return () => formContainer.onReset();
   });
+
+  const { organization } = useUser();
+
   return (
     <Provider inject={[formContainer]}>
       <Subscribe
@@ -96,6 +102,13 @@ const ProductProviderFormWrapper = ({
               },
               validator
             ) || isExist;
+          const { exporter, supplier, importers } = productProviderInfoContainer.state;
+
+          const hideNavbarWarning =
+            !isOwner ||
+            exporter?.id === organization.id ||
+            supplier?.id === organization.id ||
+            importers?.some(importer => importer.id === organization.id);
 
           return (
             <SlideViewLayout>
@@ -194,7 +207,7 @@ const ProductProviderFormWrapper = ({
                     <SaveFormButton
                       id="end_product_form_save_button"
                       data-testid="saveProviderButton"
-                      disabled={disableSaveButton}
+                      disabled={disableSaveButton || !hideNavbarWarning}
                       onClick={() =>
                         onSave({
                           ...productProviderInfoContainer.state,
@@ -203,6 +216,15 @@ const ProductProviderFormWrapper = ({
                         })
                       }
                     />
+                    {!hideNavbarWarning && (
+                      <span className={WarningMessageStyle}>
+                        <Icon icon="WARNING" />
+                        <FormattedMessage
+                          id="modules.Products.pleaseAddYourself"
+                          defaultMessage="Please add yourself as an exporter, supplier or importer"
+                        />
+                      </span>
+                    )}
                   </>
                 )}
                 {!isNew &&
