@@ -101,7 +101,6 @@ export const CommentStyle = css`
 `;
 
 export const CustomDocumentIcon = css`
-  /* margin-left: 2px; */
   height: 19px;
   width: 17px;
   border-radius: 2px;
