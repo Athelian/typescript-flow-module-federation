@@ -65,6 +65,8 @@ import {
   DOCUMENT_GET,
   DOCUMENT_UPDATE,
 } from 'modules/permission/constants/file';
+import JsZip from 'jszip';
+import FileSaver from 'file-saver';
 
 export function canDownloadFile(hasPermissions: Function, entityType?: string) {
   switch (entityType) {
@@ -241,6 +243,52 @@ export const downloadFile = (url: string, name: string) => {
       window.URL.revokeObjectURL(url);
     })
     .catch(e => logger.error(e));
+};
+
+type DownloadFileParams = Array<{
+  url: string,
+  name: string,
+  blob?: any,
+}>;
+
+export const downloadByGroup = (files: DownloadFileParams) => {
+  const download = file => {
+    return fetch(file.url).then(resp => ({
+      ...file,
+      blob: resp.blob(),
+    }));
+  };
+
+  const promises = files.map(file => {
+    return download(file);
+  });
+
+  return Promise.all(promises);
+};
+
+export const exportZip = (data: DownloadFileParams) => {
+  const zip = JsZip();
+  data.forEach(({ name, blob }) => {
+    zip.file(name, blob);
+  });
+
+  zip.generateAsync({ type: 'blob' }).then(zipFile => {
+    const currentDate = new Date();
+    const month = currentDate.getMonth() + 1;
+    const date = currentDate.getDate();
+
+    const monthString = month < 10 ? `0${month}` : month;
+    const dateString = date < 10 ? `0${date}` : date;
+
+    const name = `zenport_${currentDate.getFullYear()}_${monthString}_${dateString}`;
+    const fileName = `${name}.zip`; // zenport_2021_09_15.zip
+
+    return FileSaver.saveAs(zipFile, fileName);
+  });
+};
+
+export const downloadAndZip = (files: DownloadFileParams) => {
+  return downloadByGroup(files).then(exportZip);
 };
 
 export default canViewFile;
