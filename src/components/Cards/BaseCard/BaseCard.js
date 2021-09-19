@@ -164,9 +164,14 @@ export default class BaseCard extends React.Component<Props, State> {
         <div className={BadgeContainer}>
           <span className={CommentStyle}>
             <Icon icon="COMMENTS" />
+            <span>9</span>
           </span>
-          <span className={CustomDocumentIcon} />
-          <span className={BadgeStyle} />
+          <span className={CustomDocumentIcon}>
+            <span>9</span>
+          </span>
+          <span className={BadgeStyle}>
+            <span>9</span>
+          </span>
         </div>
         {children}
         {!disabled && selectable && (

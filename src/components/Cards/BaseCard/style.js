@@ -56,12 +56,30 @@ export const BadgeStyle = css`
   background-color: ${colors.RED};
   ${borderRadiuses.CIRCLE};
   border: 2px solid ${colors.GRAY_SUPER_LIGHT};
+  position: relative;
+  span {
+    color: #fff;
+    font-size: 12px;
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 `;
 
 export const CommentStyle = css`
   color: #0B6EDE;
   font-size: 20px;
   margin-right: -2px;
+  position: relative;
+  span {
+    color: #fff;
+    font-size: 12px;
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
   svg path {
     stroke: ${colors.GRAY_SUPER_LIGHT};
     stroke-width: 50px;
@@ -75,7 +93,15 @@ export const CustomDocumentIcon = css`
   border-radius: 2px;
   background-color: #eeeeee;
   clip-path: polygon(0% 0%, 12px 0%, 100% 5px, 100% 100%, 0% 100%);
-
+  position: relative;
+  span {
+    color: #fff;
+    font-size: 12px;
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
   &:before {
     content: '';
     display: block;
