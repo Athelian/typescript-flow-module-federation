@@ -3,7 +3,15 @@ import * as React from 'react';
 import { cx } from 'react-emotion';
 import { omit } from 'utils/fp';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { CardStyle, SelectableCardStyle, BadgeStyle } from './style';
+import Icon from 'components/Icon';
+import {
+  CardStyle,
+  SelectableCardStyle,
+  BadgeStyle,
+  BadgeContainer,
+  CommentStyle,
+  CustomDocumentIcon,
+} from './style';
 import Actions from './Actions';
 import CornerIcon from './CornerIcon';
 
@@ -153,6 +161,13 @@ export default class BaseCard extends React.Component<Props, State> {
           />
         )}
         {showBadge && <span className={BadgeStyle} />}
+        <div className={BadgeContainer}>
+          <span className={CommentStyle}>
+            <Icon icon="COMMENTS" />
+          </span>
+          <span className={CustomDocumentIcon} />
+          <span className={BadgeStyle} />
+        </div>
         {children}
         {!disabled && selectable && (
           <div
