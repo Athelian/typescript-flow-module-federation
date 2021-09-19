@@ -39,18 +39,31 @@ export const SelectableCardStyle = (selected: boolean, flattenCornerIcon: boolea
   cursor: pointer;
 `;
 
-export const BadgeContainer = css`
+export const BadgeContainer = (right: string) => css`
   position: absolute;
   width: 67px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  top: -13px;
-  right: 40px;
+  top: -14px;
+  right: ${right};
   z-index: 1;
 `;
 
 export const BadgeStyle = css`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 14px;
+  height: 14px;
+  background-color: ${colors.RED};
+  ${borderRadiuses.CIRCLE};
+  border: 2px solid ${colors.GRAY_SUPER_LIGHT};
+  z-index: 1;
+`;
+
+export const NewBadgeStyle = css`
+  margin-left: 2px;
   width: 20px;
   height: 20px;
   background-color: ${colors.RED};
@@ -68,9 +81,9 @@ export const BadgeStyle = css`
 `;
 
 export const CommentStyle = css`
+  margin-left: 2px;
   color: #0B6EDE;
   font-size: 20px;
-  margin-right: -2px;
   position: relative;
   span {
     color: #fff;
@@ -88,6 +101,7 @@ export const CommentStyle = css`
 `;
 
 export const CustomDocumentIcon = css`
+  /* margin-left: 2px; */
   height: 19px;
   width: 17px;
   border-radius: 2px;

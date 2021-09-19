@@ -1177,6 +1177,9 @@ function ShipmentCell({
             flattenCornerIcon
             id={`${SHIPMENT}-${shipmentId}`}
             showBadge={shipment?.notificationUnseenCount > 0}
+            filesUnreadCount={shipment?.filesUnreadCount}
+            notificationUnseenCount={shipment?.notificationUnseenCount}
+            notificationPosition="24px"
           >
             <ShipmentCard
               organizationId={shipment?.ownedBy?.id}

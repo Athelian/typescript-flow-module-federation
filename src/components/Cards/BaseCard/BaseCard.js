@@ -11,6 +11,7 @@ import {
   BadgeContainer,
   CommentStyle,
   CustomDocumentIcon,
+  NewBadgeStyle,
 } from './style';
 import Actions from './Actions';
 import CornerIcon from './CornerIcon';
@@ -31,9 +32,12 @@ type Props = {|
   wrapperClassName: string | Function,
   id: ?string,
   showBadge: boolean,
+  filesUnreadCount: ?number,
+  notificationUnseenCount: ?number,
   flattenCornerIcon: boolean,
   children: React.Node,
   onClick?: Function,
+  notificationPosition: string,
 |};
 
 type State = {
@@ -57,6 +61,7 @@ const defaultProps = {
   id: '',
   showBadge: false,
   flattenCornerIcon: false,
+  notificationPosition: '26px',
 };
 
 export default class BaseCard extends React.Component<Props, State> {
@@ -100,7 +105,10 @@ export default class BaseCard extends React.Component<Props, State> {
       children,
       id,
       showBadge,
+      filesUnreadCount,
+      notificationUnseenCount,
       flattenCornerIcon,
+      notificationPosition,
       ...rest
     } = this.props;
 
@@ -161,17 +169,21 @@ export default class BaseCard extends React.Component<Props, State> {
           />
         )}
         {showBadge && <span className={BadgeStyle} />}
-        <div className={BadgeContainer}>
+        <div className={BadgeContainer(notificationPosition)}>
           <span className={CommentStyle}>
             <Icon icon="COMMENTS" />
-            <span>9</span>
+            <span>99</span>
           </span>
-          <span className={CustomDocumentIcon}>
-            <span>9</span>
-          </span>
-          <span className={BadgeStyle}>
-            <span>9</span>
-          </span>
+          {filesUnreadCount > 0 && (
+            <span className={CustomDocumentIcon}>
+              <span>{filesUnreadCount}</span>
+            </span>
+          )}
+          {notificationUnseenCount > 0 && (
+            <span className={NewBadgeStyle}>
+              <span>{notificationUnseenCount}</span>
+            </span>
+          )}
         </div>
         {children}
         {!disabled && selectable && (

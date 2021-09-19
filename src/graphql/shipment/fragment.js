@@ -249,6 +249,7 @@ export const shipmentCardFragment = gql`
       ...metricFragment
     }
     totalVolumeOverriding
+    filesUnreadCount
     totalVolumeOverride {
       ...metricFragment
     }
