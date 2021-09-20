@@ -174,12 +174,12 @@ export default class BaseCard extends React.Component<Props, State> {
             <Icon icon="COMMENTS" />
             <span>99</span>
           </span>
-          {filesUnreadCount > 0 && (
+          {filesUnreadCount && filesUnreadCount > 0 && (
             <span className={CustomDocumentIcon}>
               <span>{filesUnreadCount}</span>
             </span>
           )}
-          {notificationUnseenCount > 0 && (
+          {notificationUnseenCount && notificationUnseenCount > 0 && (
             <span className={NewBadgeStyle}>
               <span>{notificationUnseenCount}</span>
             </span>
