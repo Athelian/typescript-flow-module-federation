@@ -65,10 +65,6 @@ const ShipmentForm = ({
     }
   }, [anchor]);
 
-  // const handleDocumentsRead = () => {
-  //   console.log('fired');
-  // }
-
   return (
     <div className={ShipmentFormWrapperStyle}>
       <SectionWrapper id="shipment_shipmentSection">
@@ -101,19 +97,22 @@ const ShipmentForm = ({
             entityId={!isClone && shipment.id ? shipment.id : ''}
             isLoading={loading}
           />
-          <Waypoint
-            onEnter={({ event }) => {
-              if (event) {
-                fileMarkAsRead({
-                  variables: {
-                    entity: {
-                      shipmentId: shipment.id,
+          {// This will fire the mutation when scrolled to
+          !isNew && !isClone && (
+            <Waypoint
+              onEnter={({ event }) => {
+                if (event) {
+                  fileMarkAsRead({
+                    variables: {
+                      entity: {
+                        shipmentId: shipment.id,
+                      },
                     },
-                  },
-                });
-              }
-            }}
-          />
+                  });
+                }
+              }}
+            />
+          )}
         </div>
       </SectionWrapper>
       <SectionWrapper id="shipment_taskSection">
