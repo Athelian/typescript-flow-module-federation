@@ -895,7 +895,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                       <>
                                         <SelectPartners
                                           partnerTypes={['Forwarder']}
-                                          partnerCount={6}
                                           selected={forwarders.map(forwarder => forwarder?.partner)}
                                           onCancel={() => forwardersSelectorToggle(false)}
                                           onSelect={selected => {

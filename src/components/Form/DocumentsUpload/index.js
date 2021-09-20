@@ -12,7 +12,6 @@ import Icon from 'components/Icon';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
-import { downloadFile } from 'utils/file';
 import { getFileTypesByEntity } from 'components/Cards/DocumentCard';
 import { Tooltip } from 'components/Tooltip';
 import { SectionHeader } from 'components/Form';
@@ -23,7 +22,7 @@ import { SectionNavBar } from 'components/NavBar';
 import GridRow from 'components/GridRow';
 import useDocumentTypePermission from './hooks/useDocumentTypePermission';
 import fileUploadMutation from './mutation';
-import { DocumentTypeArea } from './components';
+import { DocumentTypeArea, DownloadSelectedButton } from './components';
 import {
   DocumentsDragAndDropTooltipWrapperStyle,
   DocumentsUploadWrapperStyle,
@@ -273,33 +272,10 @@ const DocumentsUpload = ({
           <GridRow>
             {!!Object.keys(selectedFiles).length && (
               <>
-                <BaseButton
-                  icon="DOWNLOAD"
-                  label={<FormattedMessage {...messages.downloadSelected} />}
-                  backgroundColor={isMultiSelect ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
-                  hoverBackgroundColor={isMultiSelect ? 'TEAL_DARK' : 'GRAY_VERY_LIGHT'}
-                  textColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-                  hoverTextColor={isMultiSelect ? 'WHITE' : 'GRAY_DARK'}
-                  onClick={e => {
-                    e.stopPropagation();
-                    const interval = 100;
-
-                    Object.values(selectedFiles).map((selectedFile, index) => {
-                      setTimeout(() => {
-                        if (
-                          selectedFile &&
-                          selectedFile.path &&
-                          typeof selectedFile.path === 'string' &&
-                          selectedFile.name &&
-                          typeof selectedFile.name === 'string'
-                        ) {
-                          const { path, name } = selectedFile;
-                          downloadFile(path, name);
-                        }
-                      }, interval * (index + 1));
-
-                      return null;
-                    });
+                <DownloadSelectedButton
+                  selectedFiles={selectedFiles}
+                  isMultiSelect={isMultiSelect}
+                  onDownloadFinished={() => {
                     setSelectedFiles({});
                   }}
                 />

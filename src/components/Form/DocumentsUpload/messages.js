@@ -26,4 +26,12 @@ export default defineMessages({
     id: 'components.Documents.downloadSelected',
     defaultMessage: 'DOWNLOAD SELECTED',
   },
+  downloadZip: {
+    id: 'components.Documents.downloadZip',
+    defaultMessage: 'DOWNLOAD ZIP',
+  },
+  downloadAll: {
+    id: 'components.Documents.downloadAll',
+    defaultMessage: 'DOWNLOAD ALL',
+  },
 });

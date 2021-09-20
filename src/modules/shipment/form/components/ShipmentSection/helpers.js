@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { PartnerCard, GrayCard } from 'components/Cards';
+import { ViewMoreCard, PartnerCard, GrayCard } from 'components/Cards';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { DashedPlusButton } from 'components/Form';
@@ -51,7 +51,7 @@ export const renderExporters = (exporters: Array<Object>) => {
 };
 
 export const renderForwarders = (forwarders: Array<Object>, allowToUpdate: boolean) => {
-  const numOfForwarders = forwarders.length;
+  const numOfForwarders = forwarders?.length;
 
   if (numOfForwarders === 0) {
     if (allowToUpdate) {
@@ -81,7 +81,7 @@ export const renderForwarders = (forwarders: Array<Object>, allowToUpdate: boole
       </GridColumn>
     );
   }
-  if (numOfForwarders > 3) {
+  if (numOfForwarders > 3 && numOfForwarders < 5) {
     return (
       <GridColumn gap="10px">
         <GridRow gap="10px">
@@ -92,14 +92,18 @@ export const renderForwarders = (forwarders: Array<Object>, allowToUpdate: boole
           <PartnerCard partner={forwarders[2]} size="quarter" readOnly={!allowToUpdate} />
           <PartnerCard partner={forwarders[3]} size="quarter" readOnly={!allowToUpdate} />
         </GridRow>
-        <GridRow gap="10px">
-          {forwarders[4] && (
-            <PartnerCard partner={forwarders[4]} size="quarter" readOnly={!allowToUpdate} />
-          )}
-          {forwarders[5] && (
-            <PartnerCard partner={forwarders[5]} size="quarter" readOnly={!allowToUpdate} />
-          )}
-        </GridRow>
+      </GridColumn>
+    );
+  }
+  if (numOfForwarders > 4) {
+    return (
+      <GridColumn gap="10px">
+        <ViewMoreCard
+          count={numOfForwarders}
+          partner={forwarders[0]}
+          cardType="FORWARDER"
+          readOnly={!allowToUpdate}
+        />
       </GridColumn>
     );
   }

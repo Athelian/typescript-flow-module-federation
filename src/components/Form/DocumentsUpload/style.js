@@ -106,3 +106,58 @@ export const DocumentsListStyle: string = css`
   grid-gap: 30px 20px;
   width: 100%;
 `;
+export const DownloadWrapperStyle = css`
+  position: relative;
+`;
+
+export const DownloadDropDownStyle = css`
+  position: absolute;
+  top: 40px;
+  display: flex;
+  flex-direction: column;
+  ${shadows.INPUT};
+  background: ${colors.WHITE};
+  ${borderRadiuses.MAIN};
+  overflow: visible;
+  min-width: 100px;
+
+  &:after {
+    content: '';
+    position: absolute;
+    border: 1px solid rgba(51, 51, 51, 0.19);
+    border-color: white transparent;
+    border-width: 0 10px 9px 10px;
+    top: -9px;
+    left: 5%;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    border: 1px solid #333;
+    border-color: #999 transparent;
+    border-width: 0 10px 9px 10px;
+    top: -9px;
+    left: 5%;
+  }
+`;
+
+export const DownloadItemStyle = css`
+  ${presets.BUTTON};
+  justify-content: left;
+  height: 30px;
+  padding: 15px;
+  padding-left: 10px;
+  ${fontSizes.MEDIUM};
+  color: ${colors.GRAY_DARK};
+  white-space: nowrap;
+  &:hover,
+  :focus {
+    background-color: ${colors.GRAY_SUPER_LIGHT};
+  }
+`;
+
+export const DownloadItemIconStyle = css`
+  margin: 0 5px 0 0;
+  ${fontSizes.SMALL};
+`;
