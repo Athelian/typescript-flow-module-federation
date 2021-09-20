@@ -1176,7 +1176,6 @@ function ShipmentCell({
             onClick={handleClick}
             flattenCornerIcon
             id={`${SHIPMENT}-${shipmentId}`}
-            showBadge={shipment?.notificationUnseenCount > 0}
             filesUnreadCount={shipment?.filesUnreadCount}
             notificationUnseenCount={shipment?.notificationUnseenCount}
             logsUnreadCount={shipment?.timeline?.unreadCount}

@@ -170,15 +170,13 @@ export default class BaseCard extends React.Component<Props, State> {
             flatten={flattenCornerIcon}
           />
         )}
-        {!logsUnreadCount && !filesUnreadCount && !notificationUnseenCount && showBadge && (
-          <span className={BadgeStyle} />
-        )}
+        {showBadge && <span className={BadgeStyle} />}
         <div className={BadgeContainer(notificationPosition)}>
           {!!logsUnreadCount && logsUnreadCount > 0 && (
             <span className={CommentStyle(logsUnreadCount >= 99 ? '10px' : '12px')}>
               <Icon icon="COMMENTS" />
               <span>
-                {logsUnreadCount}
+                {logsUnreadCount >= 99 ? '99' : logsUnreadCount}
                 {logsUnreadCount >= 99 && '+'}
               </span>
             </span>
@@ -186,7 +184,7 @@ export default class BaseCard extends React.Component<Props, State> {
           {!!filesUnreadCount && filesUnreadCount > 0 && (
             <span className={CustomDocumentIcon(filesUnreadCount >= 99 ? '10px' : '12px')}>
               <span>
-                {filesUnreadCount}
+                {filesUnreadCount >= 99 ? '99' : filesUnreadCount}
                 {filesUnreadCount >= 99 && '+'}
               </span>
             </span>
@@ -194,7 +192,7 @@ export default class BaseCard extends React.Component<Props, State> {
           {!!notificationUnseenCount && notificationUnseenCount > 0 && (
             <span className={NewBadgeStyle(notificationUnseenCount >= 99 ? '10px' : '12px')}>
               <span>
-                {notificationUnseenCount}
+                {notificationUnseenCount >= 99 ? '99' : notificationUnseenCount}
                 {notificationUnseenCount >= 99 && '+'}
               </span>
             </span>

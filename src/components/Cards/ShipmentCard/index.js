@@ -113,7 +113,6 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, onSelect, ...rest
 
   return (
     <BaseCard
-      showBadge={shipment?.notificationUnseenCount > 0}
       filesUnreadCount={shipment?.filesUnreadCount}
       logsUnreadCount={shipment?.timeline?.unreadCount}
       notificationUnseenCount={shipment?.notificationUnseenCount}
