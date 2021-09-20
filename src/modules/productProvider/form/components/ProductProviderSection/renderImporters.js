@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { PartnerCard, GrayCard, ImportersViewCard } from 'components/Cards';
+import { ViewMoreCard, PartnerCard, GrayCard } from 'components/Cards';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { DashedPlusButton } from 'components/Form';
@@ -53,9 +53,10 @@ const renderimporters = (importers: Array<Object>, allowToUpdate: boolean) => {
   if (numOfimporters > 4) {
     return (
       <GridColumn gap="10px">
-        <ImportersViewCard
+        <ViewMoreCard
           count={numOfimporters}
           partner={importers[0]}
+          cardType="IMPORTERS"
           readOnly={!allowToUpdate}
         />
       </GridColumn>

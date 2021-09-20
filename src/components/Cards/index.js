@@ -24,7 +24,7 @@ import MilestoneCard from './MilestoneCard';
 import TaskCard from './TaskCard';
 import TemplateCard from './TemplateCard';
 import WarehouseCard from './WarehouseCard';
-import ImportersViewCard from './ImportersViewCard';
+import ViewMoreCard from './ViewMoreCard';
 
 export default BaseCard;
 
@@ -55,5 +55,5 @@ export {
   TaskCard,
   TemplateCard,
   WarehouseCard,
-  ImportersViewCard,
+  ViewMoreCard,
 };
