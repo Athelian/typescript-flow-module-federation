@@ -45,9 +45,10 @@ export const BadgeContainer = (right: string) => css`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  top: -14px;
+  top: -12px;
   right: ${right};
   z-index: 1;
+  max-height: 20px;
 `;
 
 export const BadgeStyle = css`
