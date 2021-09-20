@@ -34,6 +34,7 @@ type Props = {|
   showBadge: boolean,
   filesUnreadCount?: number,
   notificationUnseenCount?: number,
+  logsUnreadCount?: number,
   flattenCornerIcon: boolean,
   children: React.Node,
   onClick?: Function,
@@ -107,6 +108,7 @@ export default class BaseCard extends React.Component<Props, State> {
       showBadge,
       filesUnreadCount,
       notificationUnseenCount,
+      logsUnreadCount,
       flattenCornerIcon,
       notificationPosition,
       ...rest
@@ -168,18 +170,22 @@ export default class BaseCard extends React.Component<Props, State> {
             flatten={flattenCornerIcon}
           />
         )}
-        {showBadge && <span className={BadgeStyle} />}
+        {!logsUnreadCount && !filesUnreadCount && !notificationUnseenCount && showBadge && (
+          <span className={BadgeStyle} />
+        )}
         <div className={BadgeContainer(notificationPosition)}>
-          <span className={CommentStyle}>
-            <Icon icon="COMMENTS" />
-            <span>99</span>
-          </span>
-          {filesUnreadCount && filesUnreadCount > 0 && (
+          {!!logsUnreadCount && logsUnreadCount > 0 && (
+            <span className={CommentStyle}>
+              <Icon icon="COMMENTS" />
+              <span>{logsUnreadCount}</span>
+            </span>
+          )}
+          {!!filesUnreadCount && filesUnreadCount > 0 && (
             <span className={CustomDocumentIcon}>
               <span>{filesUnreadCount}</span>
             </span>
           )}
-          {notificationUnseenCount && notificationUnseenCount > 0 && (
+          {!!notificationUnseenCount && notificationUnseenCount > 0 && (
             <span className={NewBadgeStyle}>
               <span>{notificationUnseenCount}</span>
             </span>

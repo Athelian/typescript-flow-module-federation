@@ -1179,6 +1179,7 @@ function ShipmentCell({
             showBadge={shipment?.notificationUnseenCount > 0}
             filesUnreadCount={shipment?.filesUnreadCount}
             notificationUnseenCount={shipment?.notificationUnseenCount}
+            logsUnreadCount={shipment?.timeline?.unreadCount}
             notificationPosition="24px"
           >
             <ShipmentCard

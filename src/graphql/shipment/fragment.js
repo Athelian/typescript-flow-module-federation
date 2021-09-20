@@ -249,13 +249,16 @@ export const shipmentCardFragment = gql`
       ...metricFragment
     }
     totalVolumeOverriding
-    filesUnreadCount
     totalVolumeOverride {
       ...metricFragment
     }
     orderItemCount
     ... on Followed {
       notificationUnseenCount
+    }
+    filesUnreadCount
+    timeline {
+      unreadCount
     }
     containerTypeCounts {
       containerType
