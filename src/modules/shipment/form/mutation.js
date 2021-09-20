@@ -462,3 +462,14 @@ export const prepareParsedShipmentInput = ({
     ),
   };
 };
+
+export const fileMarkAsReadMutation = gql`
+  mutation fileMarkAsRead($entity: EntityInput!) {
+    fileMarkAsRead(entity: $entity) {
+      ...badRequestFragment
+      ...forbiddenFragment
+    }
+  }
+  ${forbiddenFragment}
+  ${badRequestFragment}
+`;
