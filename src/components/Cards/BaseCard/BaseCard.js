@@ -175,19 +175,28 @@ export default class BaseCard extends React.Component<Props, State> {
         )}
         <div className={BadgeContainer(notificationPosition)}>
           {!!logsUnreadCount && logsUnreadCount > 0 && (
-            <span className={CommentStyle}>
+            <span className={CommentStyle(logsUnreadCount >= 99 ? '10px' : '12px')}>
               <Icon icon="COMMENTS" />
-              <span>{logsUnreadCount}</span>
+              <span>
+                {logsUnreadCount}
+                {logsUnreadCount >= 99 && '+'}
+              </span>
             </span>
           )}
           {!!filesUnreadCount && filesUnreadCount > 0 && (
-            <span className={CustomDocumentIcon}>
-              <span>{filesUnreadCount}</span>
+            <span className={CustomDocumentIcon(filesUnreadCount >= 99 ? '10px' : '12px')}>
+              <span>
+                {filesUnreadCount}
+                {filesUnreadCount >= 99 && '+'}
+              </span>
             </span>
           )}
           {!!notificationUnseenCount && notificationUnseenCount > 0 && (
-            <span className={NewBadgeStyle}>
-              <span>{notificationUnseenCount}</span>
+            <span className={NewBadgeStyle(notificationUnseenCount >= 99 ? '10px' : '12px')}>
+              <span>
+                {notificationUnseenCount}
+                {notificationUnseenCount >= 99 && '+'}
+              </span>
             </span>
           )}
         </div>

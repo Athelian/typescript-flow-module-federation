@@ -62,7 +62,7 @@ export const BadgeStyle = css`
   z-index: 1;
 `;
 
-export const NewBadgeStyle = css`
+export const NewBadgeStyle = (fontSize: string) => css`
   margin-left: 2px;
   width: 20px;
   height: 20px;
@@ -72,7 +72,7 @@ export const NewBadgeStyle = css`
   position: relative;
   span {
     color: #fff;
-    font-size: 12px;
+    font-size: ${fontSize};
     position: absolute;
     top: 46%;
     left: 50%;
@@ -80,14 +80,14 @@ export const NewBadgeStyle = css`
   }
 `;
 
-export const CommentStyle = css`
+export const CommentStyle = (fontSize: string) => css`
   margin-left: 2px;
   color: #0B6EDE;
   font-size: 20px;
   position: relative;
   span {
     color: #fff;
-    font-size: 12px;
+    font-size: ${fontSize};
     position: absolute;
     top: 46%;
     left: 50%;
@@ -100,7 +100,7 @@ export const CommentStyle = css`
   }
 `;
 
-export const CustomDocumentIcon = css`
+export const CustomDocumentIcon = (fontSize: string) => css`
   height: 19px;
   width: 17px;
   border-radius: 2px;
@@ -109,7 +109,7 @@ export const CustomDocumentIcon = css`
   position: relative;
   span {
     color: #fff;
-    font-size: 12px;
+    font-size: ${fontSize};
     position: absolute;
     top: 46%;
     left: 50%;
