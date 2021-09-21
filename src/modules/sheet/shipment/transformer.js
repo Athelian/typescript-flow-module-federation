@@ -233,7 +233,7 @@ export default function transformSheetShipment({
       ? {
           columnKey: 'shipment.forwarders',
           type: 'partners',
-          extra: { partnerTypes: ['Forwarder'], partnerCount: null },
+          extra: { partnerTypes: ['Forwarder'] },
           ...transformValueField(
             basePath,
             shipment,
