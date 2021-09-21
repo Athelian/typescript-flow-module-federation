@@ -57,7 +57,7 @@ const ProjectCard = ({ project, onClick, ...rest }: Props) => {
       // showBadge={project.timeline?.unreadCount > 0}
       logsUnreadCount={project?.timeline?.unreadCount}
       notificationUnseenCount={project?.notificationUnseenCount}
-      notificationPosition="40px"
+      notificationPosition="46px"
       icon="PROJECT"
       color="PROJECT"
       onClick={onClick}

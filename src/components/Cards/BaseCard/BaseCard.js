@@ -62,7 +62,7 @@ const defaultProps = {
   id: '',
   showBadge: false,
   flattenCornerIcon: false,
-  notificationPosition: '26px',
+  notificationPosition: '16px',
 };
 
 export default class BaseCard extends React.Component<Props, State> {

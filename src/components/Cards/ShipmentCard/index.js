@@ -120,7 +120,7 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, onSelect, ...rest
       color="SHIPMENT"
       actions={actions}
       isArchived={archived}
-      notificationPosition="40px"
+      notificationPosition="46px"
       onSelect={() => {
         if (onSelect) {
           onSelect(shipment);
