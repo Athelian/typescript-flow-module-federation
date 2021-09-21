@@ -63,7 +63,7 @@ const PartnersSelectorInput = ({
       <SlideView isOpen={focus} onRequestClose={forceBlur}>
         <SelectPartners
           partnerTypes={extra?.partnerTypes ?? []}
-          partnerCount={extra?.partnerCount ?? 4}
+          partnerCount={extra?.partnerCount ?? null}
           selected={(value ?? []).map(organization => {
             const assembledPartner = {
               ...organization?.partner,
