@@ -14,13 +14,13 @@ export const ShipmentCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 860px;
-  height: 164px;
+  height: 184px;
 `;
 
 export const ShipmentInfoWrapperStyle: string = css`
   display: flex;
   width: 100%;
-  padding: 5px 10px;
+  padding: 20px 10px 5px 10px;
 `;
 
 export const ShipmentLeftWrapperStyle: string = css`

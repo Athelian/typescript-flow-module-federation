@@ -6,13 +6,13 @@ export const ProjectCardStyle: string = css`
   display: flex;
   flex-direction: column;
   width: 645px;
-  height: 216px;
+  height: 226px;
 `;
 
 export const ProjectCardHeaderStyle: string = css`
   width: 100%;
   display: flex;
-  padding: 10px 25px 5px 13px;
+  padding: 20px 25px 5px 13px;
   align-items: center;
 `;
 

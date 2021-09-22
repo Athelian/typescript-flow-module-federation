@@ -34,6 +34,12 @@ export const projectCardFragment = gql`
     description
     dueDate
     archived
+    ... on Followed {
+      notificationUnseenCount
+    }
+    timeline {
+      unreadCount
+    }
     ownedBy {
       ...ownedByFragment
     }

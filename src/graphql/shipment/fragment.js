@@ -256,6 +256,10 @@ export const shipmentCardFragment = gql`
     ... on Followed {
       notificationUnseenCount
     }
+    filesUnreadCount
+    timeline {
+      unreadCount
+    }
     containerTypeCounts {
       containerType
       count

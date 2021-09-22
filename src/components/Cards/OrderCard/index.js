@@ -61,6 +61,7 @@ const OrderCard = ({ order, actions, onClick, onSelect, ...rest }: Props) => {
       color="ORDER"
       actions={actions}
       isArchived={archived}
+      notificationPosition="46px"
       onSelect={() => {
         if (onSelect) {
           onSelect(order);

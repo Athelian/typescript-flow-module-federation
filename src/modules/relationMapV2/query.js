@@ -33,6 +33,10 @@ const shipmentEntityCardFragment = gql`
     ... on Followed {
       notificationUnseenCount
     }
+    filesUnreadCount
+    timeline {
+      unreadCount
+    }
     exporter {
       ... on Organization {
         id

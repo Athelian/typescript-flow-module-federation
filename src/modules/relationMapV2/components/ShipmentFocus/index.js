@@ -684,7 +684,7 @@ export default function ShipmentFocus() {
                             itemCount={hasMoreItems(data, 'shipments') ? rowCount + 1 : rowCount}
                             innerElementType={innerElementType}
                             itemSize={index => {
-                              if (index === 0) return 50;
+                              if (index === 0) return 60;
                               return 75;
                             }}
                             onItemsRendered={onItemsRendered}

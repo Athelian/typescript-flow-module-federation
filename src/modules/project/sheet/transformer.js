@@ -241,6 +241,7 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
     {
       columnKey: 'project.organizations',
       type: 'partners',
+      extra: { partnerCount: 4 },
       ...transformValueField(
         basePath,
         project,
