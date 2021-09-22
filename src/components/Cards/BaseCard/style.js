@@ -41,7 +41,7 @@ export const SelectableCardStyle = (selected: boolean, flattenCornerIcon: boolea
 
 export const BadgeContainer = (right: string) => css`
   position: absolute;
-  width: 66px;
+  width: 63px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 2px;

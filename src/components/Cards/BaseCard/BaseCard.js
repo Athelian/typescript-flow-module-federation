@@ -62,7 +62,7 @@ const defaultProps = {
   id: '',
   showBadge: false,
   flattenCornerIcon: false,
-  notificationPosition: '16px',
+  notificationPosition: '18px',
 };
 
 export default class BaseCard extends React.Component<Props, State> {
@@ -189,14 +189,15 @@ export default class BaseCard extends React.Component<Props, State> {
               </span>
             </span>
           )}
-          {!!notificationUnseenCount && notificationUnseenCount > 0 && (
-            <span className={NewBadgeStyle(notificationUnseenCount >= 99 ? '10px' : '12px')}>
-              <span>
-                {notificationUnseenCount >= 99 ? '99' : notificationUnseenCount}
-                {notificationUnseenCount >= 99 && '+'}
-              </span>
+          {/* {!!notificationUnseenCount && notificationUnseenCount > 0 && ( */}
+          <span className={NewBadgeStyle(notificationUnseenCount >= 99 ? '10px' : '12px')}>
+            <span>
+              21
+              {/* {notificationUnseenCount >= 99 ? '99' : notificationUnseenCount}
+                {notificationUnseenCount >= 99 && '+'} */}
             </span>
-          )}
+          </span>
+          {/* )} */}
         </div>
         {children}
         {!disabled && selectable && (

@@ -1179,7 +1179,7 @@ function ShipmentCell({
             filesUnreadCount={shipment?.filesUnreadCount}
             notificationUnseenCount={shipment?.notificationUnseenCount}
             logsUnreadCount={shipment?.timeline?.unreadCount}
-            notificationPosition="16px"
+            notificationPosition="18px"
           >
             <ShipmentCard
               organizationId={shipment?.ownedBy?.id}
