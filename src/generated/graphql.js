@@ -19217,6 +19217,7 @@ export type DateTimeValue = {|
 |};
 
 export type Documented = {|
+  filesUnreadCount: $ElementType<Scalars, 'Int'>,
   files: Array<FilePayload>,
 |};
 
@@ -20602,6 +20603,7 @@ export type Milestone = {|
     updatedBy?: ?UserPayload,
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
+    filesUnreadCount: $ElementType<Scalars, 'Int'>,
     files: Array<FilePayload>,
     sort: $ElementType<Scalars, 'Int'>,
   |}
@@ -20795,6 +20797,7 @@ export type Mutation = {|
   tagGroupCreate: TagGroupPayload,
   tagGroupUpdate: TagGroupPayload,
   tagGroupDelete?: ?EmptyPayload,
+  fileMarkAsRead?: ?EmptyPayload,
   fileUpload: FilePayload,
   fileUpdate: FilePayload,
   fileDelete?: ?EmptyPayload,
@@ -21228,6 +21231,11 @@ export type MutationTagGroupUpdateArgs = {|
 
 export type MutationTagGroupDeleteArgs = {|
   id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type MutationFileMarkAsReadArgs = {|
+  entity: EntityInput
 |};
 
 
@@ -21855,6 +21863,7 @@ export type Order = {|
     followers: Array<UserPayload>,
     notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     inCharges: Array<UserPayload>,
+    filesUnreadCount: $ElementType<Scalars, 'Int'>,
     files: Array<FilePayload>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
@@ -21984,6 +21993,7 @@ export type OrderItem = {|
     ownedBy: OrganizationPayload,
     sort: $ElementType<Scalars, 'Int'>,
     tags: Array<TagPayload>,
+    filesUnreadCount: $ElementType<Scalars, 'Int'>,
     files: Array<FilePayload>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
@@ -22486,6 +22496,7 @@ export type Product = {|
     tags: Array<TagPayload>,
     followers: Array<UserPayload>,
     notificationUnseenCount: $ElementType<Scalars, 'Int'>,
+    filesUnreadCount: $ElementType<Scalars, 'Int'>,
     files: Array<FilePayload>,
     memo?: ?$ElementType<Scalars, 'String'>,
     customFields: CustomFields,
@@ -22691,6 +22702,7 @@ export type ProductProvider = {|
     deletedBy?: ?UserPayload,
     ownedBy: OrganizationPayload,
     sort: $ElementType<Scalars, 'Int'>,
+    filesUnreadCount: $ElementType<Scalars, 'Int'>,
     files: Array<FilePayload>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,
@@ -61257,6 +61269,7 @@ export type Shipment = {|
     followers: Array<UserPayload>,
     notificationUnseenCount: $ElementType<Scalars, 'Int'>,
     inCharges: Array<UserPayload>,
+    filesUnreadCount: $ElementType<Scalars, 'Int'>,
     files: Array<FilePayload>,
     customFields: CustomFields,
     memo?: ?$ElementType<Scalars, 'String'>,

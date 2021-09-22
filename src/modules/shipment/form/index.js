@@ -1,11 +1,14 @@
 // @flow
 import * as React from 'react';
+import { Waypoint } from 'react-waypoint';
+import { useMutation } from '@apollo/react-hooks';
 import { Subscribe } from 'unstated';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import useUser from 'hooks/useUser';
 import scrollIntoView from 'utils/scrollIntoView';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { SectionWrapper } from 'components/Form';
+import { fileMarkAsReadMutation } from './mutation';
 import {
   ShipmentTasksContainer,
   ShipmentInfoContainer,
@@ -41,6 +44,8 @@ const ShipmentForm = ({
   anchor,
 }: Props) => {
   const { organization } = useUser();
+
+  const [fileMarkAsRead] = useMutation(fileMarkAsReadMutation);
 
   React.useEffect(() => {
     if (anchor) {
@@ -87,10 +92,28 @@ const ShipmentForm = ({
       </Subscribe>
 
       <SectionWrapper id="shipment_documentsSection">
-        <DocumentsSection
-          entityId={!isClone && shipment.id ? shipment.id : ''}
-          isLoading={loading}
-        />
+        <div>
+          <DocumentsSection
+            entityId={!isClone && shipment.id ? shipment.id : ''}
+            isLoading={loading}
+          />
+          {// This will fire the mutation when scrolled to
+          !isNew && !isClone && (
+            <Waypoint
+              onEnter={({ event }) => {
+                if (event) {
+                  fileMarkAsRead({
+                    variables: {
+                      entity: {
+                        shipmentId: shipment.id,
+                      },
+                    },
+                  });
+                }
+              }}
+            />
+          )}
+        </div>
       </SectionWrapper>
       <SectionWrapper id="shipment_taskSection">
         <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>

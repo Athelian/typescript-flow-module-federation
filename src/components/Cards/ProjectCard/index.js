@@ -54,7 +54,10 @@ const ProjectCard = ({ project, onClick, ...rest }: Props) => {
 
   return (
     <BaseCard
-      showBadge={project.timeline?.unreadCount > 0}
+      // showBadge={project.timeline?.unreadCount > 0}
+      logsUnreadCount={project?.timeline?.unreadCount}
+      notificationUnseenCount={project?.notificationUnseenCount}
+      notificationPosition="46px"
       icon="PROJECT"
       color="PROJECT"
       onClick={onClick}

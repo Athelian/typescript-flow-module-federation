@@ -3,7 +3,16 @@ import * as React from 'react';
 import { cx } from 'react-emotion';
 import { omit } from 'utils/fp';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { CardStyle, SelectableCardStyle, BadgeStyle } from './style';
+import Icon from 'components/Icon';
+import {
+  CardStyle,
+  SelectableCardStyle,
+  BadgeStyle,
+  BadgeContainer,
+  CommentStyle,
+  CustomDocumentIcon,
+  NewBadgeStyle,
+} from './style';
 import Actions from './Actions';
 import CornerIcon from './CornerIcon';
 
@@ -23,9 +32,13 @@ type Props = {|
   wrapperClassName: string | Function,
   id: ?string,
   showBadge: boolean,
+  filesUnreadCount?: number,
+  notificationUnseenCount?: number,
+  logsUnreadCount?: number,
   flattenCornerIcon: boolean,
   children: React.Node,
   onClick?: Function,
+  notificationPosition: string,
 |};
 
 type State = {
@@ -49,6 +62,7 @@ const defaultProps = {
   id: '',
   showBadge: false,
   flattenCornerIcon: false,
+  notificationPosition: '18px',
 };
 
 export default class BaseCard extends React.Component<Props, State> {
@@ -92,7 +106,11 @@ export default class BaseCard extends React.Component<Props, State> {
       children,
       id,
       showBadge,
+      filesUnreadCount,
+      notificationUnseenCount,
+      logsUnreadCount,
       flattenCornerIcon,
+      notificationPosition,
       ...rest
     } = this.props;
 
@@ -153,6 +171,33 @@ export default class BaseCard extends React.Component<Props, State> {
           />
         )}
         {showBadge && <span className={BadgeStyle} />}
+        <div className={BadgeContainer(notificationPosition)}>
+          {!!logsUnreadCount && logsUnreadCount > 0 && (
+            <span className={CommentStyle(logsUnreadCount >= 99 ? '10px' : '12px')}>
+              <Icon icon="COMMENTS" />
+              <span>
+                {logsUnreadCount >= 99 ? '99' : logsUnreadCount}
+                {logsUnreadCount >= 99 && '+'}
+              </span>
+            </span>
+          )}
+          {!!filesUnreadCount && filesUnreadCount > 0 && (
+            <span className={CustomDocumentIcon(filesUnreadCount >= 99 ? '10px' : '12px')}>
+              <span>
+                {filesUnreadCount >= 99 ? '99' : filesUnreadCount}
+                {filesUnreadCount >= 99 && '+'}
+              </span>
+            </span>
+          )}
+          {!!notificationUnseenCount && notificationUnseenCount > 0 && (
+            <span className={NewBadgeStyle(notificationUnseenCount >= 99 ? '10px' : '12px')}>
+              <span>
+                {notificationUnseenCount >= 99 ? '99' : notificationUnseenCount}
+                {notificationUnseenCount >= 99 && '+'}
+              </span>
+            </span>
+          )}
+        </div>
         {children}
         {!disabled && selectable && (
           <div

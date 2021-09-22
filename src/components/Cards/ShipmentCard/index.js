@@ -113,11 +113,14 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, onSelect, ...rest
 
   return (
     <BaseCard
-      showBadge={shipment?.notificationUnseenCount > 0}
+      filesUnreadCount={shipment?.filesUnreadCount}
+      logsUnreadCount={shipment?.timeline?.unreadCount}
+      notificationUnseenCount={shipment?.notificationUnseenCount}
       icon="SHIPMENT"
       color="SHIPMENT"
       actions={actions}
       isArchived={archived}
+      notificationPosition="46px"
       onSelect={() => {
         if (onSelect) {
           onSelect(shipment);

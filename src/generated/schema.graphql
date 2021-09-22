@@ -28401,7 +28401,7 @@ input CustomFieldFilterInput {
 type CustomFields {
   mask: MaskPayload
   fieldValues: [FieldValuePayload!]!
-  fieldDefinitions: [FieldDefinitionPayload!]!
+  fieldDefinitions: [FieldDefinitionPayload!]! @deprecated(reason: "query custom fields independently")
 }
 
 input CustomFieldsInput {
@@ -28438,6 +28438,7 @@ type DateTimeValue {
 }
 
 interface Documented {
+  filesUnreadCount: Int!
   files: [FilePayload!]!
 }
 
@@ -29937,6 +29938,7 @@ type Milestone implements Model & Owned & Documented & Sortable {
   updatedBy: UserPayload
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
+  filesUnreadCount: Int!
   files: [FilePayload!]!
   sort: Int!
 }
@@ -30118,6 +30120,7 @@ type Mutation {
   tagGroupCreate(input: TagGroupCreateInput!): TagGroupPayload!
   tagGroupUpdate(id: ID!, input: TagGroupUpdateInput!): TagGroupPayload!
   tagGroupDelete(id: ID!): EmptyPayload
+  fileMarkAsRead(entity: EntityInput!): EmptyPayload
   fileUpload(file: Upload!, input: FileInput!): FilePayload!
   fileUpdate(id: ID!, input: FileInput!): FilePayload!
   fileDelete(id: ID!): EmptyPayload
@@ -30438,6 +30441,7 @@ type Order implements Model & Owned & Tagged & Followed & Supervised & Documente
   followers: [UserPayload!]!
   notificationUnseenCount: Int!
   inCharges: [UserPayload!]!
+  filesUnreadCount: Int!
   files: [FilePayload!]!
   customFields: CustomFields!
   memo: String
@@ -30560,6 +30564,7 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Custo
   ownedBy: OrganizationPayload!
   sort: Int!
   tags: [TagPayload!]!
+  filesUnreadCount: Int!
   files: [FilePayload!]!
   customFields: CustomFields!
   memo: String
@@ -31009,6 +31014,7 @@ type Product implements Model & Owned & Tagged & Followed & Documented & Memoriz
   tags: [TagPayload!]!
   followers: [UserPayload!]!
   notificationUnseenCount: Int!
+  filesUnreadCount: Int!
   files: [FilePayload!]!
   memo: String
   customFields: CustomFields!
@@ -31170,6 +31176,7 @@ type ProductProvider implements Model & Owned & Sortable & Documented & Customiz
   deletedBy: UserPayload
   ownedBy: OrganizationPayload!
   sort: Int!
+  filesUnreadCount: Int!
   files: [FilePayload!]!
   customFields: CustomFields!
   memo: String
@@ -87491,6 +87498,7 @@ type Shipment implements Model & Owned & Tagged & Followed & Supervised & Docume
   followers: [UserPayload!]!
   notificationUnseenCount: Int!
   inCharges: [UserPayload!]!
+  filesUnreadCount: Int!
   files: [FilePayload!]!
   customFields: CustomFields!
   memo: String

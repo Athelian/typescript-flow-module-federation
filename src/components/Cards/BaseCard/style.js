@@ -39,6 +39,18 @@ export const SelectableCardStyle = (selected: boolean, flattenCornerIcon: boolea
   cursor: pointer;
 `;
 
+export const BadgeContainer = (right: string) => css`
+  position: absolute;
+  width: 63px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 2px;
+  top: -14px;
+  right: ${right};
+  z-index: 1;
+  max-height: 28px;
+`;
+
 export const BadgeStyle = css`
   position: absolute;
   top: -5px;
@@ -49,4 +61,81 @@ export const BadgeStyle = css`
   ${borderRadiuses.CIRCLE};
   border: 2px solid ${colors.GRAY_SUPER_LIGHT};
   z-index: 1;
+`;
+
+export const NewBadgeStyle = (fontSize: string) => css`
+  width: 19px;
+  height: 19px;
+  min-width: 19px;
+  min-height: 19px;
+  grid-column: 3;
+  margin-left: -1px;
+  background-color: ${colors.RED};
+  ${borderRadiuses.CIRCLE};
+  border: 1.5px solid ${colors.GRAY_SUPER_LIGHT};
+  position: relative;
+  span {
+    color: #fff;
+    font-size: ${fontSize};
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+`;
+
+export const CommentStyle = (fontSize: string) => css`
+  color: #0B6EDE;
+  grid-column: 1;
+  font-size: 18px;
+  position: relative;
+  margin-top: -1px;
+  max-width: 23px;
+  span {
+    color: #fff;
+    font-size: ${fontSize};
+    position: absolute;
+    top: 44%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  svg {
+    max-width: 30px !important;
+  }
+  svg path {
+    stroke: ${colors.GRAY_SUPER_LIGHT};
+    stroke-width: 20px;
+    }
+  }
+`;
+
+export const CustomDocumentIcon = (fontSize: string) => css`
+  height: 17px;
+  margin-top: 1px;
+  width: 16px;
+  grid-column: 2;
+  border-radius: 2px;
+  background-color: #eeeeee;
+  clip-path: polygon(0% 0%, 12px 0%, 100% 5px, 100% 100%, 0% 100%);
+  position: relative;
+  span {
+    color: #fff;
+    font-size: ${fontSize};
+    position: absolute;
+    top: 47%;
+    left: 49%;
+    transform: translate(-50%, -50%);
+  }
+  &:before {
+    content: '';
+    display: block;
+    position: relative;
+    top: 1px;
+    left: 1px;
+    height: 15px;
+    width: 14px;
+    background-color: #a34fff;
+    border-radius: 1px;
+    clip-path: polygon(0% 0%, 10.5px 0%, 100% 4.5px, 100% 100%, 0% 100%);
+  }
 `;
