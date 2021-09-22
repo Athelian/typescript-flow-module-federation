@@ -514,6 +514,8 @@
   "components.Documents.selectAll": "全选",
   "components.Documents.selectMultiple": "选择多个文件",
   "components.Documents.downloadSelected": "已选择下载",
+  "components.Documents.downloadAll": "全部下载",
+  "components.Documents.downloadZip": "下载压缩包",
   "modules.Documents.createdAt": "创建日期",
   "modules.Documents.updatedAt": "最后修改日期",
   "modules.Documents.name": "名称",
