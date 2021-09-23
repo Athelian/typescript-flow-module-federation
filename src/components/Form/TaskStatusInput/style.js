@@ -129,6 +129,7 @@ export const SkipButtonStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
   width: min-content;
+  white-space: nowrap;
   height: 20px;
   background-color: ${colors.GRAY_VERY_LIGHT};
   color: ${colors.GRAY_DARK};
