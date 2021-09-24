@@ -81,7 +81,7 @@
         },
         {
           "source": "/public/*",
-          "function": "proxyFile"
+          "function": "proxyStagingFile"
         },
         {
           "source": "**",
@@ -246,6 +246,10 @@
         {
           "source": "/new/project/table",
           "destination": "/new/project/table.html"
+        },
+        {
+          "source": "/public/*",
+          "function": "proxyProdFile"
         },
         {
           "source": "**",
