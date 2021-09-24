@@ -80,7 +80,7 @@
           "destination": "/new/project/table.html"
         },
         {
-          "source": "/public/*",
+          "source": "/public/**",
           "function": "proxyStagingFile"
         },
         {
@@ -248,7 +248,7 @@
           "destination": "/new/project/table.html"
         },
         {
-          "source": "/public/*",
+          "source": "/public/**",
           "function": "proxyProdFile"
         },
         {
