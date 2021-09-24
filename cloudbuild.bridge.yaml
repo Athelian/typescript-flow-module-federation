@@ -3,7 +3,7 @@
 ####################################
 name: 'Deploy Staging'
 triggers:
-  - branches: ['develop', 'function-testing']
+  - branches: ['develop']
 steps:
   # build web app next
   - name: 'gcr.io/cloud-builders/git'
@@ -82,7 +82,7 @@ timeout: 3600s
 #########################################
 name: 'Deploy Staging Hotfixes'
 triggers:
-  - branches: ['hotfixes']
+  - branches: ['hotfixes', 'ZEN-1302']
 steps:
   - name: 'gcr.io/cloud-builders/git'
     secretEnv: ['SSH_KEY']
