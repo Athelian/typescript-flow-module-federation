@@ -166,6 +166,10 @@
           "destination": "/new/project/table.html"
         },
         {
+          "source": "/public/**",
+          "function": "proxyStagingFile"
+        },
+        {
           "source": "**",
           "destination": "/index.html"
         }
