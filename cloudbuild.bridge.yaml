@@ -82,7 +82,7 @@ timeout: 3600s
 #########################################
 name: 'Deploy Staging Hotfixes'
 triggers:
-  - branches: ['hotfixes', 'ZEN-1302']
+  - branches: ['hotfixes']
 steps:
   - name: 'gcr.io/cloud-builders/git'
     secretEnv: ['SSH_KEY']
