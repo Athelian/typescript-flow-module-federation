@@ -846,6 +846,7 @@
   "modules.Orders.totalItemQuantity": "总商品数量",
   "modules.Orders.completelyBatched": "完全成批",
   "modules.Orders.completelyShipped": "完全发货",
+  "modules.Orders.sharedPartners.tooltip": "You can choose up to 4 Partners. This will grant them access to this order.",
   "modules.OrderItems.orderItem": "订单商品",
   "modules.OrderItems.batches": "批次",
   "modules.OrderItems.document": "文件",

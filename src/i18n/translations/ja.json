@@ -846,6 +846,7 @@
   "modules.Orders.totalItemQuantity": "合計数量",
   "modules.Orders.completelyBatched": "バッチ済発注",
   "modules.Orders.completelyShipped": "船積み済発注",
+  "modules.Orders.sharedPartners.tooltip": "You can choose up to 4 Partners. This will grant them access to this order.",
   "modules.OrderItems.orderItem": "発注商品",
   "modules.OrderItems.batches": "バッチ",
   "modules.OrderItems.document": "書類",

@@ -14,6 +14,7 @@ const initValues: Order = {
   deliveryDate: null,
   memo: null,
   followers: [],
+  organizations: [],
   shipments: [],
   containers: [],
   customFields: {
@@ -66,5 +67,26 @@ export default class OrderInfoContainer extends Container<Order> {
         follower => follower?.organization?.id !== previousExporter?.id
       ),
     }));
+  };
+
+  onChangePartners = (newPartners: Array<Object>) => {
+    this.setState(({ followers = [], organizations: oldPartners = [] }) => {
+      const removedPartners = oldPartners.filter(
+        oldPartner => !newPartners.some(newPartner => newPartner.id === oldPartner.id)
+      );
+
+      if (oldPartners.length > 0 && removedPartners.length > 0) {
+        const cleanedFollowers = followers.filter(
+          follower =>
+            !removedPartners.some(
+              removedPartner => removedPartner.id === follower?.organization?.id
+            )
+        );
+
+        return { organizations: newPartners, followers: cleanedFollowers };
+      }
+
+      return { organizations: newPartners };
+    });
   };
 }
