@@ -253,7 +253,9 @@ type DownloadFileParams = Array<{
 
 export const downloadByGroup = (files: DownloadFileParams) => {
   const download = file => {
-    return fetch(file.url).then(resp => ({
+    const fileUrl = new URL(file.url);
+
+    return fetch(window.location.host + fileUrl.pathname).then(resp => ({
       ...file,
       blob: resp.blob(),
     }));
