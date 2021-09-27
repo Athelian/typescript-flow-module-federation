@@ -33,6 +33,7 @@ type ShipmentInfoType = {
 
 const initValues = {
   followers: [],
+  organizations: [],
   no: null,
   blNo: null,
   blDate: null,
@@ -81,6 +82,28 @@ export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
 
   setFieldValues = (values: Object) => {
     this.setState(values);
+  };
+
+  // On change partners, set new partners and clean up Followers
+  onChangePartners = (newPartners: Array<Object>) => {
+    this.setState(({ followers = [], organizations: oldPartners = [] }) => {
+      const removedPartners = oldPartners.filter(
+        oldPartner => !newPartners.some(newPartner => newPartner.id === oldPartner.id)
+      );
+
+      if (oldPartners.length > 0 && removedPartners.length > 0) {
+        const cleanedFollowers = followers.filter(
+          follower =>
+            !removedPartners.some(
+              removedPartner => removedPartner.id === follower?.organization?.id
+            )
+        );
+
+        return { organizations: newPartners, followers: cleanedFollowers };
+      }
+
+      return { organizations: newPartners };
+    });
   };
 
   // On change Importer or Exporter, set new partner and clean up Followers
