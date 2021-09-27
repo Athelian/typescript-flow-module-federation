@@ -80,15 +80,15 @@
           "destination": "/new/project/table.html"
         },
         {
+          "source": "/public/**",
+          "function": "proxyStagingFile"
+        },
+        {
           "source": "**",
           "destination": "/index.html"
         }
       ],
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
     },
     {
       "target": "staging-hot",
@@ -166,15 +166,15 @@
           "destination": "/new/project/table.html"
         },
         {
+          "source": "/public/**",
+          "function": "proxyStagingFile"
+        },
+        {
           "source": "**",
           "destination": "/index.html"
         }
       ],
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
     },
     {
       "target": "prod",
@@ -252,15 +252,15 @@
           "destination": "/new/project/table.html"
         },
         {
+          "source": "/public/**",
+          "function": "proxyProdFile"
+        },
+        {
           "source": "**",
           "destination": "/index.html"
         }
       ],
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
     }
   ],
   "emulators": {
