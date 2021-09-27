@@ -978,8 +978,8 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       <FormTooltip
                         infoMessage={
                           <FormattedMessage
-                            id="modules.Shipments.tooltipForwarder"
-                            defaultMessage="Owners can edit the product information. To add other partners, use end products"
+                            id="modules.Shipment.sharedPartners.tooltip"
+                            defaultMessage="You can choose up to 4 Partners. This will grant them access to this shipment."
                           />
                         }
                       />

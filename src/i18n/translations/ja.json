@@ -1443,6 +1443,7 @@
   "modules.Shipments.importer": "輸入者",
   "modules.Shipments.tooltipImporter": "輸入者はこのシップメントへのアクセス権限をもちます。",
   "modules.Shipment.importerDialogMessage": "輸入者を変更すると、全てのバッチが削除されます。また、全てのタスク、シップメント担当者、タイムライン上の担当者、コンテナ上の日付担当者から現在選択されている輸入者のスタッフが削除されます。本当に輸入者を変更しますか？",
+  "modules.Shipment.sharedPartners.tooltip": "You can choose up to 4 Partners. This will grant them access to this shipment.",
   "modules.Shipments.mainExporter": "主要輸出者",
   "modules.Shipments.tooltipMainExporter": "ここで選択されている輸出者はこのシップメントへのアクセス権限をもちます。",
   "modules.Shipment.mainExporterSelectMessage": "主要輸出者を選択すると、選択された輸出者はこのシップメントへのアクセス権限を持ちます。しかし、このシップメントでは主要輸出者のバッチのみが使用可能になるため、主要輸出者のものではないバッチが載っている場合それらのバッチは削除されます。本当に主要輸出者を選択しますか？",

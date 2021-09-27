@@ -1443,6 +1443,7 @@
   "modules.Shipments.importer": "进口商",
   "modules.Shipments.tooltipImporter": "进口商可以访问此装运",
   "modules.Shipment.importerDialogMessage": "更改进口商将删除所有批次。它还将从所有任务，负责人，时间表分配和容器日期分配中删除当前进口商的所有已分配人员。确定要更改进口商？",
+  "modules.Shipment.sharedPartners.tooltip": "You can choose up to 4 Partners. This will grant them access to this shipment.",
   "modules.Shipments.mainExporter": "主出口商",
   "modules.Shipments.tooltipMainExporter": "此处选择的出口商可以访问此装运",
   "modules.Shipment.mainExporterSelectMessage": "选择主出口商将允许他们访问此装运。 但是，这意味着只有批次的主出口商才能在此装运中使用。 将删除当前在此装运中不属于此主出口商的所有批次。 您确定要选择主出口商吗？",
