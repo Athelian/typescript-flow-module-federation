@@ -177,16 +177,6 @@ export const orderCardFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
-    organizations {
-      ... on Organization {
-        id
-        name
-        types
-        partner {
-          ...partnerCardFragment
-        }
-      }
-    }
     archived
     poNo
     issuedAt
