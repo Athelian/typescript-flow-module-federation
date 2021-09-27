@@ -287,6 +287,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
     getByPathWithDefault(null, 'importer', originalValues),
     newValues.importer
   ),
+  ...parseArrayOfIdsField(
+    'organizationIds',
+    originalValues?.organizations ?? [],
+    newValues.organizations
+  ),
   ...parseFilesField({
     key: 'files',
     originalFiles: getByPathWithDefault([], 'files', originalValues),
