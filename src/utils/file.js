@@ -229,7 +229,9 @@ export const formatFilesToArray = (files: any) => {
 };
 
 export const downloadFile = (url: string, name: string) => {
-  fetch(url)
+  const fileUrl = new URL(url);
+
+  fetch(window.location.origin + fileUrl.pathname)
     .then(resp => resp.blob())
     .then(blob => {
       const newUrl = window.URL.createObjectURL(blob);
@@ -255,7 +257,7 @@ export const downloadByGroup = (files: DownloadFileParams) => {
   const download = file => {
     const fileUrl = new URL(file.url);
 
-    return fetch(window.location.host + fileUrl.pathname).then(resp => ({
+    return fetch(window.location.origin + fileUrl.pathname).then(resp => ({
       ...file,
       blob: resp.blob(),
     }));
