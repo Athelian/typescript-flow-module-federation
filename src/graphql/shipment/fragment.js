@@ -265,16 +265,6 @@ export const shipmentCardFragment = gql`
     totalPackageQuantity
     totalPackageQuantityOverriding
     totalPackageQuantityOverride
-    organizations {
-      ... on Organization {
-        id
-        name
-        types
-        partner {
-          ...partnerCardFragment
-        }
-      }
-    }
     totalVolume {
       ...metricFragment
     }
