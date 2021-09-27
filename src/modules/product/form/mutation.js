@@ -156,6 +156,11 @@ const prepareParsedProductProviderInput = (
           getByPathWithDefault(null, 'importers', oldProductProvider),
           getByPathWithDefault(null, 'importers', newProductProvider)
         ),
+        ...parseArrayOfIdsField(
+          'organizationIds',
+          oldProductProvider?.organizations ?? [],
+          newProductProvider.organizations
+        ),
         ...parseGenericField(
           'name',
           getByPathWithDefault(null, 'name', oldProductProvider),
