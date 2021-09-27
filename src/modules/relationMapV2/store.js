@@ -37,13 +37,20 @@ export const Hits = createContainer(useHits);
 type RelationMapEntities = {
   orders?: Array<Order>,
   shipments?: Array<Shipment>,
+  // not sure if this should be here
+  selectedOrders?: Array<Order>,
+  selectedShipments?: Array<Shipment>,
   entities: Object,
 };
 
+//
 function useEntities(
   initialState: RelationMapEntities = {
     orders: [],
     shipments: [],
+    // not sure if this should be here
+    selectedOrders: [],
+    selectedShipments: [],
     entities: {},
   }
 ) {
@@ -897,6 +904,8 @@ function orderReducer(
     },
   }
 ) {
+  console.log('[debug] action.type', action.type);
+
   switch (action.type) {
     case 'NEW_ORDER':
       return update(state, {
@@ -960,6 +969,12 @@ function orderReducer(
       };
     case 'TARGET':
       return produce(state, draft => {
+        // when card is selected this is run
+
+        console.log('[debug] action is ', action);
+        console.log('[debug] draft is ', JSON.parse(JSON.stringify(draft)));
+
+        // TODO: need to add to selected value in mapping or somewhere
         if (draft.targets.includes(action.payload.entity)) {
           draft.targets.splice(draft.targets.indexOf(action.payload.entity), 1);
         } else {
@@ -1579,10 +1594,25 @@ function useFocusView(viewer: 'Order' | 'Shipment') {
       targetedContainerIds: () => targetedIds(state.targets, CONTAINER),
       relatedIds: (mapping: Object) => {
         const batchIds = targetedIds(state.targets, BATCH);
+
+        console.log('[debug] selected batchIds are', batchIds);
+
         const orderIds = [
           ...new Set(
             batchIds
               .map(batchId => {
+                /*
+                 issue is here
+                 if the preselected item is not one of the queried items
+                 then it is not able to get the order
+                 TODO:  need to preserve the preselected item
+                        probably just add to mapping variable
+                        and have it check there everytime this is run
+                  scenarios to consider:
+                   on select item
+                   on deselect item
+                   on deselect all
+                */
                 const [, parentOrderId] = findParentIdsByBatch({
                   batchId,
                   viewer: state.viewer,

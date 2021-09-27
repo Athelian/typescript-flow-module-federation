@@ -98,6 +98,14 @@ export default function MoveBatch({ onSuccess }: Props) {
     switch (target) {
       case 'newOrder':
       case 'newShipment':
+        console.log('[debug] dispatching new shipment');
+        console.table({
+          orderIds,
+          containerIds,
+          shipmentIds,
+          importerIds,
+          exporterIds,
+        });
         dispatch({
           type: 'MOVE_BATCH_TO_NEW_ENTITY',
           payload: {
@@ -989,7 +997,10 @@ export default function MoveBatch({ onSuccess }: Props) {
                       />
                     }
                     icon="SHIPMENT"
-                    onClick={() => onConfirm('newShipment')}
+                    onClick={() => {
+                      console.log('[debug] shipment button clicked');
+                      onConfirm('newShipment');
+                    }}
                   />
                 )}
               </div>
