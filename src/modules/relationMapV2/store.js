@@ -17,7 +17,7 @@ import {
 } from 'modules/relationMapV2/constants';
 import { normalizeEntity } from 'modules/relationMapV2/components/OrderFocus/normalize';
 import { sortOrderItemBy, sortBatchBy, sortContainerBy } from './sort';
-import { targetedIds, findParentIdsByBatch } from './helpers';
+import { targetedIds, findParentIdsByBatch, findRelatedEntitiesByBatch } from './helpers';
 import type { State } from './type.js.flow';
 
 const defaultState = [];
@@ -972,49 +972,37 @@ function orderReducer(
         ...state,
         isDragging: false,
       };
+    // on single card select
     case 'TARGET':
       return produce(state, draft => {
-        // when card is selected this is run
-        //
-        console.log('[debug] state is ', state);
-        console.log('[debug] action is ', action);
-        console.log('[debug] draft is ', JSON.parse(JSON.stringify(draft)));
+        const { entity, mapping } = action.payload; // entity = Batch-15867
 
-        const { entity, mapping } = action.payload; // Batch-15867
-
-        // TODO: need to add to selected value in mapping or somewhere
         if (draft.targets.includes(entity)) {
           draft.targets.splice(draft.targets.indexOf(entity), 1);
         } else {
           draft.targets.push(entity || '');
         }
 
-        if (state.viewer === 'Order' && entity?.startsWith('Batch')) {
-          // const { entities } = mapping;
+        if (['Order', 'Shipment'].includes(state.viewer) && entity?.startsWith('Batch')) {
           const [, batchId] = entity.split('-');
-          const [, orderId] = findParentIdsByBatch({
+
+          const { batch, order, orderItem } = findRelatedEntitiesByBatch({
             batchId,
             viewer: state.viewer,
             entities: mapping.entities,
           });
 
-          const parentOrderItem = Object.values(mapping.entities?.orderItems)?.find(orderItem => {
-            return (orderItem?.batches ?? []).includes(batchId);
-          });
-
-          const batch = mapping.entities?.batches?.[batchId];
-          const order = mapping.entities?.orders?.[orderId];
           draft.targetEntities.batches = {
             ...draft.targetEntities.batches,
             ...(batch && { [batchId]: batch }),
           };
           draft.targetEntities.orders = {
             ...draft.targetEntities.orders,
-            ...(order && { [orderId]: order }),
+            ...(order && { [order.id]: order }),
           };
           draft.targetEntities.orderItems = {
             ...draft.targetEntities.orderItems,
-            ...(parentOrderItem && { [parentOrderItem.id]: parentOrderItem }),
+            ...(orderItem && { [orderItem.id]: orderItem }),
           };
         }
       });
@@ -1027,7 +1015,7 @@ function orderReducer(
       });
     case 'TARGET_TREE': {
       return produce(state, draft => {
-        const { targets = [], entity: sourceEntity = '' } = action.payload;
+        const { targets = [], entity: sourceEntity = '', mapping } = action.payload;
         const isTargetAll = targets.every(entity => draft.targets.includes(entity));
 
         targets.forEach(entity => {
@@ -1037,6 +1025,59 @@ function orderReducer(
             draft.targets.push(entity);
           }
         });
+
+        if (['Order', 'Shipment'].includes(state.viewer) && mapping) {
+          const newTargetEntities = targets.reduce(
+            (arr, entity) => {
+              if (!entity.startsWith('Batch')) {
+                return arr;
+              }
+
+              const [, batchId] = entity.split('-');
+
+              const { batch, order, orderItem } = findRelatedEntitiesByBatch({
+                batchId,
+                viewer: state.viewer,
+                entities: mapping.entities,
+              });
+
+              arr = {
+                batches: {
+                  ...arr.batches,
+                  ...(batch && { [batchId]: batch }),
+                },
+                orders: {
+                  ...arr.orders,
+                  ...(order && { [order.id]: order }),
+                },
+                orderItems: {
+                  ...arr.orderItems,
+                  ...(orderItem && { [orderItem.id]: orderItem }),
+                },
+              };
+
+              return arr;
+            },
+            {
+              batches: {},
+              orders: {},
+              orderItems: {},
+            }
+          );
+
+          draft.targetEntities.batches = {
+            ...draft.targetEntities.batches,
+            ...newTargetEntities.batches,
+          };
+          draft.targetEntities.orders = {
+            ...draft.targetEntities.orders,
+            ...newTargetEntities.orders,
+          };
+          draft.targetEntities.orderItems = {
+            ...draft.targetEntities.orderItems,
+            ...newTargetEntities.orderItems,
+          };
+        }
 
         // case 1: source entity is targeted and remain tree is not targeting
         if (!draft.targets.includes(sourceEntity) && !isTargetAll) {
@@ -1064,24 +1105,20 @@ function orderReducer(
           }
         });
 
-        if (state.viewer === 'Order' && mapping && targets?.[0]?.startsWith('Batch')) {
+        if (['Order', 'Shipment'].includes(state.viewer) && mapping) {
           const newTargetEntities = targets.reduce(
             (arr, entity) => {
+              if (!entity.startsWith('Batch')) {
+                return arr;
+              }
+
               const [, batchId] = entity.split('-');
-              const [, orderId] = findParentIdsByBatch({
+
+              const { batch, order, orderItem } = findRelatedEntitiesByBatch({
                 batchId,
                 viewer: state.viewer,
                 entities: mapping.entities,
               });
-
-              const parentOrderItem = Object.values(mapping.entities?.orderItems)?.find(
-                orderItem => {
-                  return (orderItem?.batches ?? []).includes(batchId);
-                }
-              );
-
-              const batch = mapping.entities?.batches?.[batchId];
-              const order = mapping.entities?.orders?.[orderId];
 
               arr = {
                 batches: {
@@ -1090,11 +1127,11 @@ function orderReducer(
                 },
                 orders: {
                   ...arr.orders,
-                  ...(order && { [orderId]: order }),
+                  ...(order && { [order.id]: order }),
                 },
                 orderItems: {
                   ...arr.orderItems,
-                  ...(parentOrderItem && { [parentOrderItem.id]: parentOrderItem }),
+                  ...(orderItem && { [orderItem.id]: orderItem }),
                 },
               };
 
@@ -1691,25 +1728,10 @@ function useFocusView(viewer: 'Order' | 'Shipment') {
       relatedIds: (mapping: Object) => {
         const batchIds = targetedIds(state.targets, BATCH);
 
-        console.log('[debug] selected batchIds are', batchIds);
-
         const orderIds = [
           ...new Set(
             batchIds
               .map(batchId => {
-                /*
-                 issue is here
-                 if the preselected item is not one of the queried items
-                 then it is not able to get the order
-                 TODO:  need to preserve the preselected item
-                        probably just add to mapping variable
-                        and have it check there everytime this is run
-                  scenarios to consider:
-                   on select item
-                   on deselect item
-                   select all
-                   on deselect all
-                */
                 const [, parentOrderId] = findParentIdsByBatch({
                   batchId,
                   viewer: state.viewer,

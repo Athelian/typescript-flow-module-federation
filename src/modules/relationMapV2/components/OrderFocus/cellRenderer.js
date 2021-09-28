@@ -228,6 +228,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
       type: 'TARGET_TREE',
       payload: {
         targets,
+        mapping,
         entity,
       },
     });
@@ -451,6 +452,7 @@ function OrderItemCell({
       type: 'TARGET_TREE',
       payload: {
         targets,
+        mapping,
         entity,
       },
     });

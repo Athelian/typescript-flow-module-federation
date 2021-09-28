@@ -862,6 +862,7 @@ function ContainerCell({
       type: 'TARGET_TREE',
       payload: {
         targets,
+        mapping,
         entity,
       },
     });
@@ -1131,6 +1132,7 @@ function ShipmentCell({
       type: 'TARGET_TREE',
       payload: {
         targets,
+        mapping,
         entity,
       },
     });
