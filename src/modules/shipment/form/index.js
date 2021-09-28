@@ -67,16 +67,6 @@ const ShipmentForm = ({
 
   return (
     <div className={ShipmentFormWrapperStyle}>
-      <SectionWrapper id="shipment_shipmentSection">
-        <ShipmentSection
-          shipment={shipment}
-          isLoading={loading}
-          isNew={Boolean(isNew)}
-          isClone={Boolean(isClone)}
-          initDataForSlideView={initDataForSlideView}
-        />
-      </SectionWrapper>
-
       <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
         {(taskContainer, infoContainer) => (
           <TimelineAndCargoSections
@@ -90,6 +80,15 @@ const ShipmentForm = ({
           />
         )}
       </Subscribe>
+      <SectionWrapper id="shipment_shipmentSection">
+        <ShipmentSection
+          shipment={shipment}
+          isLoading={loading}
+          isNew={Boolean(isNew)}
+          isClone={Boolean(isClone)}
+          initDataForSlideView={initDataForSlideView}
+        />
+      </SectionWrapper>
 
       <SectionWrapper id="shipment_documentsSection">
         <div>

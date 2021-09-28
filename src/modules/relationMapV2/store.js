@@ -37,6 +37,9 @@ export const Hits = createContainer(useHits);
 type RelationMapEntities = {
   orders?: Array<Order>,
   shipments?: Array<Shipment>,
+  // not sure if this should be here
+  selectedOrders?: Array<Order>,
+  selectedShipments?: Array<Shipment>,
   entities: Object,
 };
 
@@ -45,6 +48,9 @@ function useEntities(
   initialState: RelationMapEntities = {
     orders: [],
     shipments: [],
+    // not sure if this should be here
+    selectedOrders: [],
+    selectedShipments: [],
     entities: {},
   }
 ) {
@@ -903,6 +909,8 @@ function orderReducer(
     },
   }
 ) {
+  console.log('[debug] action.type', action.type);
+
   switch (action.type) {
     case 'NEW_ORDER':
       return update(state, {
@@ -1682,6 +1690,9 @@ function useFocusView(viewer: 'Order' | 'Shipment') {
       // eslint-disable-next-line no-unused-vars
       relatedIds: (mapping: Object) => {
         const batchIds = targetedIds(state.targets, BATCH);
+
+        console.log('[debug] selected batchIds are', batchIds);
+
         const orderIds = [
           ...new Set(
             batchIds
