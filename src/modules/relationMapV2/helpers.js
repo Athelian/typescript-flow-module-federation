@@ -232,9 +232,14 @@ export const findRelatedEntitiesByBatch = ({
     entities,
   });
 
-  const parentOrderItem = Object.values(entities?.orderItems)?.find(orderItem => {
+  let parentOrderItem = Object.values(entities?.orderItems ?? {})?.find(orderItem => {
     return (orderItem?.batches ?? []).includes(batchId);
   });
+
+  if (viewer === SHIPMENT) {
+    const parentItemId = entities?.batches?.[batchId]?.orderItem;
+    parentOrderItem = entities?.orderItems?.[parentItemId];
+  }
 
   const batch = entities?.batches?.[batchId];
   const order = entities?.orders?.[orderId];
