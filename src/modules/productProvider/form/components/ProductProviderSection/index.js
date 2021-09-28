@@ -483,6 +483,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                               }
                               role="presentation"
                             >
+                              {console.log(values)}
                               {renderPartners(
                                 values?.organizations,
                                 hasPermission(PARTNER_LIST) &&

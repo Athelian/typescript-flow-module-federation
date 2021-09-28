@@ -13,6 +13,7 @@ type FormState = {
   exporter?: ?Object,
   supplier?: ?Object,
   importer?: ?Array<Object>,
+  organizations?: ?Array<Object>,
   origin: ?string,
 
   unitType: ?string,
@@ -33,7 +34,7 @@ export const initValues: FormState = {
   origin: null,
   name: null,
   unitType: null,
-
+  organizations: [],
   unitVolume: {
     metric: defaultVolumeMetric,
     value: 0,
