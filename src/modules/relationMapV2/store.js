@@ -989,7 +989,7 @@ function orderReducer(
           const { batch, order, orderItem } = findRelatedEntitiesByBatch({
             batchId,
             viewer: state.viewer,
-            entities: mapping.entities,
+            entities: mapping?.entities ?? {},
           });
 
           draft.targetEntities.batches = {
