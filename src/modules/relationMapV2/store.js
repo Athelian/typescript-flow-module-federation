@@ -37,9 +37,6 @@ export const Hits = createContainer(useHits);
 type RelationMapEntities = {
   orders?: Array<Order>,
   shipments?: Array<Shipment>,
-  // not sure if this should be here
-  selectedOrders?: Array<Order>,
-  selectedShipments?: Array<Shipment>,
   entities: Object,
 };
 
@@ -48,9 +45,6 @@ function useEntities(
   initialState: RelationMapEntities = {
     orders: [],
     shipments: [],
-    // not sure if this should be here
-    selectedOrders: [],
-    selectedShipments: [],
     entities: {},
   }
 ) {
@@ -909,8 +903,6 @@ function orderReducer(
     },
   }
 ) {
-  console.log('[debug] action.type', action.type);
-
   switch (action.type) {
     case 'NEW_ORDER':
       return update(state, {
@@ -1735,7 +1727,6 @@ function useFocusView(viewer: 'Order' | 'Shipment') {
                 const [, parentOrderId] = findParentIdsByBatch({
                   batchId,
                   viewer: state.viewer,
-                  // entities: mapping.entities,
                   entities: state.targetEntities,
                 });
                 return parentOrderId;
