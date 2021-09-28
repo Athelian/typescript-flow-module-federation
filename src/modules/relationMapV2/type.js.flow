@@ -37,6 +37,7 @@ export type State = {|
   order: Object,
   shipment: Object,
   targets: Array<string>,
+  targetEntities: Object,
   isDragging: boolean,
   moveEntity: {
     isOpen: boolean,
