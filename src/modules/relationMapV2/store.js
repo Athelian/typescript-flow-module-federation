@@ -967,7 +967,7 @@ function orderReducer(
     // on single card select
     case 'TARGET':
       return produce(state, draft => {
-        const { entity, mapping } = action.payload; // entity = Batch-15867
+        const { entity = '', mapping } = action.payload; // entity = Batch-15867
 
         if (draft.targets.includes(entity)) {
           draft.targets.splice(draft.targets.indexOf(entity), 1);
@@ -975,7 +975,7 @@ function orderReducer(
           draft.targets.push(entity || '');
         }
 
-        if (['Order', 'Shipment'].includes(state.viewer) && entity?.startsWith('Batch')) {
+        if (['Order', 'Shipment'].includes(state.viewer) && entity.startsWith('Batch')) {
           const [, batchId] = entity.split('-');
 
           const { batch, order, orderItem } = findRelatedEntitiesByBatch({
@@ -994,7 +994,7 @@ function orderReducer(
           };
           draft.targetEntities.orderItems = {
             ...draft.targetEntities.orderItems,
-            ...(orderItem && { [orderItem.id]: orderItem }),
+            ...(orderItem && { [(orderItem: Object).id]: orderItem }),
           };
         }
       });
@@ -1044,7 +1044,7 @@ function orderReducer(
                 },
                 orderItems: {
                   ...arr.orderItems,
-                  ...(orderItem && { [orderItem.id]: orderItem }),
+                  ...(orderItem && { [(orderItem: Object).id]: orderItem }),
                 },
               };
 
@@ -1119,11 +1119,11 @@ function orderReducer(
                 },
                 orders: {
                   ...arr.orders,
-                  ...(order && { [order.id]: order }),
+                  ...(order && { [order?.id]: order }),
                 },
                 orderItems: {
                   ...arr.orderItems,
-                  ...(orderItem && { [orderItem.id]: orderItem }),
+                  ...(orderItem && { [(orderItem: Object).id]: orderItem }),
                 },
               };
 

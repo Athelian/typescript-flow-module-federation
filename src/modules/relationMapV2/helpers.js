@@ -231,7 +231,7 @@ export const findRelatedEntitiesByBatch = ({
     entities,
   });
 
-  let parentOrderItem = Object.values(entities?.orderItems ?? {})?.find(orderItem => {
+  let parentOrderItem = Object.values(entities?.orderItems ?? {})?.find((orderItem: any) => {
     return (orderItem?.batches ?? []).includes(batchId);
   });
 
