@@ -10,6 +10,7 @@ const initValues: Product = {
     mask: null,
     fieldValues: [],
   },
+  organizations: [],
   memo: null,
 };
 
