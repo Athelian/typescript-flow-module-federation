@@ -55,7 +55,7 @@ export const generateName = (
 
 export const renderPartners = (organizations: Array<Object>, allowToUpdate: boolean) => {
   const num = organizations?.length;
-  console.log(num);
+
   if (num === 0) {
     if (allowToUpdate) {
       return <DashedPlusButton width="195px" height="215px" />;
