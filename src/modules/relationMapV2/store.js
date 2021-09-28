@@ -40,7 +40,6 @@ type RelationMapEntities = {
   entities: Object,
 };
 
-//
 function useEntities(
   initialState: RelationMapEntities = {
     orders: [],
