@@ -483,6 +483,7 @@
   "modules.container.warehouseName": "Warehouse Name",
   "modules.container.warehouseArrivalAgreedDateApproved": "Warehouse Arrival Agree Date Approved",
   "modules.container.warehouseArrivalAgreedDate": "Agreed Arrival Date",
+  "modules.Containers.warehouseArrivalAgreedDate": "Agreed Arrival Date",
   "modules.container.warehouseArrivalActualDate": "Actual Arrival Date",
   "modules.container.warehouseArrivalActualDateApproved": "WAREHOUSE ARRIVAL ACTUAL APPROVED",
   "modules.container.departureDate": "Departure Date",

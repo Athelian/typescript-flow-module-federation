@@ -482,6 +482,7 @@
   "modules.container.warehouseName": "仓库名称",
   "modules.container.warehouseArrivalAgreedDateApproved": "约定到达日期已批准",
   "modules.container.warehouseArrivalAgreedDate": "约定到达日期",
+  "modules.Containers.warehouseArrivalAgreedDate": "约定到达日期",
   "modules.container.warehouseArrivalActualDate": "实际到达日期",
   "modules.container.warehouseArrivalActualDateApproved": "实际到达日期已批准",
   "modules.container.departureDate": "发出日期",
