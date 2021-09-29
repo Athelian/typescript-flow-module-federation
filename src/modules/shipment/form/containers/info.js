@@ -101,7 +101,7 @@ export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
 
       const isImporter = oldPartners.filter(oldPartner => importer.id === oldPartner.id);
 
-      if (isForwarder.length !== 0 && isExporter.length !== 0 && isImporter.length !== 0) {
+      if (isForwarder.length !== 0 || isExporter.length !== 0 || isImporter.length !== 0) {
         const removedPartners = oldPartners.filter(
           oldPartner => !newPartners.some(newPartner => newPartner.id === oldPartner.id)
         );
