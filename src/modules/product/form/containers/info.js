@@ -10,6 +10,7 @@ const initValues: Product = {
     mask: null,
     fieldValues: [],
   },
+  organizations: [],
   memo: null,
 };
 
@@ -51,5 +52,26 @@ export default class ProductInfoContainer extends Container<Product> {
     const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };
+  };
+
+  onChangePartners = (newPartners: Array<Object>) => {
+    this.setState(({ followers = [], organizations: oldPartners = [] }) => {
+      const removedPartners = oldPartners.filter(
+        oldPartner => !newPartners.some(newPartner => newPartner.id === oldPartner.id)
+      );
+
+      if (oldPartners.length > 0 && removedPartners.length > 0) {
+        const cleanedFollowers = followers.filter(
+          follower =>
+            !removedPartners.some(
+              removedPartner => removedPartner.id === follower?.organization?.id
+            )
+        );
+
+        return { organizations: newPartners, followers: cleanedFollowers };
+      }
+
+      return { organizations: newPartners };
+    });
   };
 }

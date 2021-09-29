@@ -76,7 +76,6 @@ const ShipmentForm = ({
           initDataForSlideView={initDataForSlideView}
         />
       </SectionWrapper>
-
       <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
         {(taskContainer, infoContainer) => (
           <TimelineAndCargoSections
