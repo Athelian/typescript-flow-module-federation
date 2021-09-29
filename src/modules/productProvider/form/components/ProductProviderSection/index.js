@@ -464,8 +464,8 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       <FormTooltip
                         infoMessage={
                           <FormattedMessage
-                            id="modules.Orders.sharedPartners.tooltip"
-                            defaultMessage="You can choose up to 4 Partners. This will grant them access to this order."
+                            id="modules.ProductProviders.sharedPartners.tooltip"
+                            defaultMessage="Shared Partners will have access to this end product."
                           />
                         }
                       />
@@ -497,7 +497,6 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                               <>
                                 <SelectPartners
                                   partnerTypes={[]}
-                                  partnerCount={4}
                                   selected={values?.organizations?.map(org => org?.partner) || []}
                                   onCancel={() => partnerSelectorToggle(false)}
                                   onSelect={selected => {
@@ -509,7 +508,12 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                         },
                                       })
                                     );
-                                    onChangePartners(assembledOrgs);
+                                    onChangePartners(
+                                      assembledOrgs,
+                                      values?.exporter,
+                                      values?.supplier,
+                                      values?.importers
+                                    );
                                     partnerSelectorToggle(false);
                                   }}
                                 />

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { PartnerCard, GrayCard } from 'components/Cards';
+import { ViewMoreCard, PartnerCard, GrayCard } from 'components/Cards';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { DashedPlusButton } from 'components/Form';
@@ -84,7 +84,7 @@ export const renderPartners = (organizations: Array<Object>, allowToUpdate: bool
       </GridColumn>
     );
   }
-  if (num > 3) {
+  if (num === 4) {
     return (
       <GridColumn gap="10px">
         <GridRow gap="10px">
@@ -95,6 +95,18 @@ export const renderPartners = (organizations: Array<Object>, allowToUpdate: bool
           <PartnerCard partner={organizations[2]} size="quarter" readOnly={!allowToUpdate} />
           <PartnerCard partner={organizations[3]} size="quarter" readOnly={!allowToUpdate} />
         </GridRow>
+      </GridColumn>
+    );
+  }
+  if (num > 4) {
+    return (
+      <GridColumn gap="10px">
+        <ViewMoreCard
+          count={num}
+          partner={organizations[0]}
+          cardType="PARTNER"
+          readOnly={!allowToUpdate}
+        />
       </GridColumn>
     );
   }
