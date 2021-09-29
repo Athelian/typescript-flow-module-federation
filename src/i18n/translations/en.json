@@ -1983,6 +1983,7 @@
   "modules.timeline.file": "file",
   "modules.timeline.sendMessage": "sends a message",
   "modules.timeline.newLine": "adds a new line",
+  "modules.TimelineDates.date": "Date",
   "components.Header.notification.noActiveNotifications": "No active notifications found",
   "components.Header.notification.viewMoreNotifications": "{totalMoreItems} more...",
   "components.Header.notification.viewAllNotification": "VIEW ALL NOTIFICATIONS",

@@ -1977,6 +1977,7 @@
   "modules.timeline.file": "ファイル",
   "modules.timeline.sendMessage": "で送信",
   "modules.timeline.newLine": "で改行",
+  "modules.TimelineDates.date": "日付",
   "components.Header.notification.noActiveNotifications": "進行中の通知はありません",
   "components.Header.notification.viewMoreNotifications": "残り{totalMoreItems}の通知があります",
   "components.Header.notification.viewAllNotification": "全ての通知を見る",
