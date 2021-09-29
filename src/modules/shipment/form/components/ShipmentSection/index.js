@@ -979,7 +979,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         infoMessage={
                           <FormattedMessage
                             id="modules.Shipment.sharedPartners.tooltip"
-                            defaultMessage="You can choose up to 4 Partners. This will grant them access to this shipment."
+                            defaultMessage="Shared Partners will have access to this shipment."
                           />
                         }
                       />
@@ -1012,7 +1012,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                               <>
                                 <SelectPartners
                                   partnerTypes={[]}
-                                  partnerCount={4}
                                   selected={organizations?.map(org => org?.partner) || []}
                                   onCancel={() => partnerSelectorToggle(false)}
                                   onSelect={selected => {

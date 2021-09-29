@@ -81,7 +81,7 @@ export const renderForwarders = (forwarders: Array<Object>, allowToUpdate: boole
       </GridColumn>
     );
   }
-  if (numOfForwarders > 3 && numOfForwarders < 5) {
+  if (numOfForwarders === 4) {
     return (
       <GridColumn gap="10px">
         <GridRow gap="10px">
@@ -141,7 +141,7 @@ export const renderPartners = (organizations: Array<Object>, allowToUpdate: bool
       </GridColumn>
     );
   }
-  if (num > 3) {
+  if (num === 4) {
     return (
       <GridColumn gap="10px">
         <GridRow gap="10px">
@@ -152,6 +152,18 @@ export const renderPartners = (organizations: Array<Object>, allowToUpdate: bool
           <PartnerCard partner={organizations[2]} size="quarter" readOnly={!allowToUpdate} />
           <PartnerCard partner={organizations[3]} size="quarter" readOnly={!allowToUpdate} />
         </GridRow>
+      </GridColumn>
+    );
+  }
+  if (num > 4) {
+    return (
+      <GridColumn gap="10px">
+        <ViewMoreCard
+          count={num}
+          partner={organizations[0]}
+          cardType="PARTNER"
+          readOnly={!allowToUpdate}
+        />
       </GridColumn>
     );
   }
