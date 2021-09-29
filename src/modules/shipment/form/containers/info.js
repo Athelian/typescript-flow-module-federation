@@ -87,7 +87,7 @@ export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
   // On change partners, set new partners and clean up Followers
   onChangePartners = (
     newPartners: Array<Object>,
-    forwarders: Object,
+    forwarders: Array<Object>,
     exporter: Object,
     importer: Object
   ) => {
