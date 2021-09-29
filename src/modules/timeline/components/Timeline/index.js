@@ -44,7 +44,7 @@ function filterItems(items: Array<Entry>, hasPermissions: Function): Array<Entry
         (entry?.parentEntityType === 'orderItem' &&
           entry?.parameters?.field?.string === 'price' &&
           hasPermissions(ORDER_ITEMS_GET_PRICE)) ||
-        entry?.entityType === 'timelineDate' ||
+        ['timelineDate', 'timelineDateRevision', 'voyage'].includes(entry?.entityType) ||
         entry?.entityType === entry?.parentEntityType
     )
     .reduce((result, entry, counter, entries) => {
