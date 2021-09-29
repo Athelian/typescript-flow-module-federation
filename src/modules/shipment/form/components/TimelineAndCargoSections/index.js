@@ -91,18 +91,18 @@ const TimelineAndCargoSections = (props: Props) => {
               {() => {
                 return (
                   <>
+                    <SectionWrapper id="shipment_timelineSection">
+                      <TimelineSection
+                        isNew={isNew}
+                        isTaskReadyForBinding={isTaskReadyForBinding}
+                      />
+                    </SectionWrapper>
                     <SectionWrapper id="shipment_cargoSection">
                       <CargoSection
                         shipmentIsArchived={shipmentIsArchived}
                         importerId={importerId}
                         exporterId={exporterId}
                       />
-                      <SectionWrapper id="shipment_timelineSection">
-                        <TimelineSection
-                          isNew={isNew}
-                          isTaskReadyForBinding={isTaskReadyForBinding}
-                        />
-                      </SectionWrapper>
                     </SectionWrapper>
                   </>
                 );
