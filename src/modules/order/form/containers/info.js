@@ -69,21 +69,26 @@ export default class OrderInfoContainer extends Container<Order> {
     }));
   };
 
-  onChangePartners = (newPartners: Array<Object>) => {
+  onChangePartners = (newPartners: Array<Object>, exporter: Object, importer: Object) => {
     this.setState(({ followers = [], organizations: oldPartners = [] }) => {
-      const removedPartners = oldPartners.filter(
-        oldPartner => !newPartners.some(newPartner => newPartner.id === oldPartner.id)
-      );
+      const isExporter = oldPartners.filter(oldPartner => exporter.id === oldPartner.id);
+      const isImporter = oldPartners.filter(oldPartner => importer.id === oldPartner.id);
 
-      if (oldPartners.length > 0 && removedPartners.length > 0) {
-        const cleanedFollowers = followers.filter(
-          follower =>
-            !removedPartners.some(
-              removedPartner => removedPartner.id === follower?.organization?.id
-            )
+      if (isExporter.length !== 0 || isImporter.length !== 0) {
+        const removedPartners = oldPartners.filter(
+          oldPartner => !newPartners.some(newPartner => newPartner.id === oldPartner.id)
         );
 
-        return { organizations: newPartners, followers: cleanedFollowers };
+        if (oldPartners.length > 0 && removedPartners.length > 0) {
+          const cleanedFollowers = followers.filter(
+            follower =>
+              !removedPartners.some(
+                removedPartner => removedPartner.id === follower?.organization?.id
+              )
+          );
+
+          return { organizations: newPartners, followers: cleanedFollowers };
+        }
       }
 
       return { organizations: newPartners };

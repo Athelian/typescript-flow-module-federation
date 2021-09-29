@@ -519,7 +519,6 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                 <>
                                   <SelectPartners
                                     partnerTypes={[]}
-                                    partnerCount={4}
                                     selected={values?.organizations?.map(org => org?.partner) || []}
                                     onCancel={() => partnerSelectorToggle(false)}
                                     onSelect={selected => {
@@ -531,7 +530,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                           },
                                         })
                                       );
-                                      onChangePartners(assembledOrgs);
+                                      onChangePartners(assembledOrgs, values?.exporter);
                                       partnerSelectorToggle(false);
                                     }}
                                   />

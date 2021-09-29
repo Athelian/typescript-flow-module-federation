@@ -30,6 +30,9 @@ const ViewMoreCard = ({ count, onClick, cardType }: Props) => {
         {cardType === 'IMPORTER' && (
           <FormattedMessage id="components.NavBar.Filter.importers" defaultMessage="Importers" />
         )}
+        {cardType === 'PARTNER' && (
+          <FormattedMessage id="modules.Projects.sharedPartners" defaultMessage="Shared Partners" />
+        )}
       </div>
       <BaseButton
         icon="IMPORTERS"
