@@ -17,7 +17,7 @@ import {
 } from 'modules/relationMapV2/constants';
 import { normalizeEntity } from 'modules/relationMapV2/components/OrderFocus/normalize';
 import { sortOrderItemBy, sortBatchBy, sortContainerBy } from './sort';
-import { targetedIds, findParentIdsByBatch } from './helpers';
+import { targetedIds, findParentIdsByBatch, findRelatedEntitiesByBatch } from './helpers';
 import type { State } from './type.js.flow';
 
 const defaultState = [];
@@ -680,6 +680,11 @@ const initialState: State = {
   order: {},
   shipment: {},
   targets: [],
+  targetEntities: {
+    batches: {},
+    orders: {},
+    orderItems: {},
+  },
   isDragging: false,
   moveEntity: {
     isOpen: false,
@@ -958,12 +963,38 @@ function orderReducer(
         ...state,
         isDragging: false,
       };
+    // on single card select
     case 'TARGET':
       return produce(state, draft => {
-        if (draft.targets.includes(action.payload.entity)) {
-          draft.targets.splice(draft.targets.indexOf(action.payload.entity), 1);
+        const { entity = '', mapping } = action.payload; // entity = Batch-15867
+
+        if (draft.targets.includes(entity)) {
+          draft.targets.splice(draft.targets.indexOf(entity), 1);
         } else {
-          draft.targets.push(action.payload.entity || '');
+          draft.targets.push(entity || '');
+        }
+
+        if (['Order', 'Shipment'].includes(state.viewer) && entity.startsWith('Batch')) {
+          const [, batchId] = entity.split('-');
+
+          const { batch, order, orderItem } = findRelatedEntitiesByBatch({
+            batchId,
+            viewer: state.viewer,
+            entities: mapping?.entities ?? {},
+          });
+
+          draft.targetEntities.batches = {
+            ...draft.targetEntities.batches,
+            ...(batch && { [batchId]: batch }),
+          };
+          draft.targetEntities.orders = {
+            ...draft.targetEntities.orders,
+            ...(order && { [order.id]: order }),
+          };
+          draft.targetEntities.orderItems = {
+            ...draft.targetEntities.orderItems,
+            ...(orderItem && { [(orderItem: Object).id]: orderItem }),
+          };
         }
       });
     case 'REMOVE_TARGETS':
@@ -975,7 +1006,7 @@ function orderReducer(
       });
     case 'TARGET_TREE': {
       return produce(state, draft => {
-        const { targets = [], entity: sourceEntity = '' } = action.payload;
+        const { targets = [], entity: sourceEntity = '', mapping } = action.payload;
         const isTargetAll = targets.every(entity => draft.targets.includes(entity));
 
         targets.forEach(entity => {
@@ -985,6 +1016,59 @@ function orderReducer(
             draft.targets.push(entity);
           }
         });
+
+        if (['Order', 'Shipment'].includes(state.viewer) && mapping) {
+          const newTargetEntities = targets.reduce(
+            (arr, entity) => {
+              if (!entity.startsWith('Batch')) {
+                return arr;
+              }
+
+              const [, batchId] = entity.split('-');
+
+              const { batch, order, orderItem } = findRelatedEntitiesByBatch({
+                batchId,
+                viewer: state.viewer,
+                entities: mapping.entities,
+              });
+
+              arr = {
+                batches: {
+                  ...arr.batches,
+                  ...(batch && { [batchId]: batch }),
+                },
+                orders: {
+                  ...arr.orders,
+                  ...(order && { [order.id]: order }),
+                },
+                orderItems: {
+                  ...arr.orderItems,
+                  ...(orderItem && { [(orderItem: Object).id]: orderItem }),
+                },
+              };
+
+              return arr;
+            },
+            {
+              batches: {},
+              orders: {},
+              orderItems: {},
+            }
+          );
+
+          draft.targetEntities.batches = {
+            ...draft.targetEntities.batches,
+            ...newTargetEntities.batches,
+          };
+          draft.targetEntities.orders = {
+            ...draft.targetEntities.orders,
+            ...newTargetEntities.orders,
+          };
+          draft.targetEntities.orderItems = {
+            ...draft.targetEntities.orderItems,
+            ...newTargetEntities.orderItems,
+          };
+        }
 
         // case 1: source entity is targeted and remain tree is not targeting
         if (!draft.targets.includes(sourceEntity) && !isTargetAll) {
@@ -1001,15 +1085,69 @@ function orderReducer(
     }
     case 'TARGET_ALL':
       return produce(state, draft => {
-        const { targets = [] } = action.payload;
+        const { targets = [], mapping } = action.payload;
         const isTargetAll = targets.every(entity => draft.targets.includes(entity));
         targets.forEach(entity => {
+          // if all items are selected then unselect the items
           if (isTargetAll) {
             draft.targets.splice(draft.targets.indexOf(entity), 1);
           } else if (!draft.targets.includes(entity)) {
             draft.targets.push(entity);
           }
         });
+
+        if (['Order', 'Shipment'].includes(state.viewer) && mapping) {
+          const newTargetEntities = targets.reduce(
+            (arr, entity) => {
+              if (!entity.startsWith('Batch')) {
+                return arr;
+              }
+
+              const [, batchId] = entity.split('-');
+
+              const { batch, order, orderItem } = findRelatedEntitiesByBatch({
+                batchId,
+                viewer: state.viewer,
+                entities: mapping.entities,
+              });
+
+              arr = {
+                batches: {
+                  ...arr.batches,
+                  ...(batch && { [batchId]: batch }),
+                },
+                orders: {
+                  ...arr.orders,
+                  ...(order && { [order?.id]: order }),
+                },
+                orderItems: {
+                  ...arr.orderItems,
+                  ...(orderItem && { [(orderItem: Object).id]: orderItem }),
+                },
+              };
+
+              return arr;
+            },
+            {
+              batches: {},
+              orders: {},
+              orderItems: {},
+            }
+          );
+
+          draft.targetEntities.batches = {
+            ...draft.targetEntities.batches,
+            ...newTargetEntities.batches,
+          };
+          draft.targetEntities.orders = {
+            ...draft.targetEntities.orders,
+            ...newTargetEntities.orders,
+          };
+          draft.targetEntities.orderItems = {
+            ...draft.targetEntities.orderItems,
+            ...newTargetEntities.orderItems,
+          };
+        }
       });
     case 'DND': {
       return update(state, {
@@ -1577,8 +1715,10 @@ function useFocusView(viewer: 'Order' | 'Shipment') {
       targetedBatchIds: () => targetedIds(state.targets, BATCH),
       targetedOrderItemIds: () => targetedIds(state.targets, ORDER_ITEM),
       targetedContainerIds: () => targetedIds(state.targets, CONTAINER),
+      // eslint-disable-next-line no-unused-vars
       relatedIds: (mapping: Object) => {
         const batchIds = targetedIds(state.targets, BATCH);
+
         const orderIds = [
           ...new Set(
             batchIds
@@ -1586,7 +1726,7 @@ function useFocusView(viewer: 'Order' | 'Shipment') {
                 const [, parentOrderId] = findParentIdsByBatch({
                   batchId,
                   viewer: state.viewer,
-                  entities: mapping.entities,
+                  entities: state.targetEntities,
                 });
                 return parentOrderId;
               })
@@ -1595,19 +1735,24 @@ function useFocusView(viewer: 'Order' | 'Shipment') {
         ];
         const containerIds = [
           ...new Set(
-            batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.container).filter(Boolean)
+            batchIds
+              .map(batchId => state.targetEntities?.batches?.[batchId]?.container)
+              .filter(Boolean)
           ),
         ];
+
         const shipmentIds = [
           ...new Set(
-            batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.shipment).filter(Boolean)
+            batchIds
+              .map(batchId => state.targetEntities?.batches?.[batchId]?.shipment)
+              .filter(Boolean)
           ),
         ];
 
         const importerIds = [];
         const exporterIds = [];
         orderIds.forEach(orderId => {
-          const order = mapping.entities?.orders?.[orderId];
+          const order = state.targetEntities?.orders?.[orderId];
           const importId = order?.importer?.id;
           const exporterId = order?.exporter?.id;
           if (importId && !importerIds.includes(importId)) {
