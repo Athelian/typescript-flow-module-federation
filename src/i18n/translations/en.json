@@ -853,6 +853,7 @@
   "modules.Orders.totalItemQuantity": "TOTAL ITEM QUANTITY",
   "modules.Orders.completelyBatched": "Fully Batched",
   "modules.Orders.completelyShipped": "Fully Shipped",
+  "modules.Orders.sharedPartners.tooltip": "You can choose up to 4 Partners. This will grant them access to this order.",
   "modules.OrderItems.orderItem": "ITEM",
   "modules.OrderItems.batches": "BATCHES",
   "modules.OrderItems.document": "DOCUMENTS",

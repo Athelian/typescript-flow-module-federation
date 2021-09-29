@@ -57,6 +57,8 @@ export default function MoveBatch({ onSuccess }: Props) {
   } = selectors.relatedIds(mapping);
   const totalBatches = batchIds.length;
   const { isProcessing, isOpen, type } = state.batchActions;
+  const { targetEntities } = state;
+
   const isMoveBatches = type === 'moveBatches';
 
   const onCancel = () => {
@@ -67,7 +69,13 @@ export default function MoveBatch({ onSuccess }: Props) {
   };
 
   const hasPermissions = useAllHasPermission(
-    batchIds.map(batchId => mapping.entities?.batches?.[batchId]?.ownedBy).filter(Boolean)
+    batchIds
+      .map(
+        batchId =>
+          mapping.entities?.batches?.[batchId]?.ownedBy ||
+          targetEntities?.batches?.[batchId]?.ownedBy
+      )
+      .filter(Boolean)
   );
 
   const onNewContainer = (shipment: Object) => {
@@ -989,7 +997,9 @@ export default function MoveBatch({ onSuccess }: Props) {
                       />
                     }
                     icon="SHIPMENT"
-                    onClick={() => onConfirm('newShipment')}
+                    onClick={() => {
+                      onConfirm('newShipment');
+                    }}
                   />
                 )}
               </div>

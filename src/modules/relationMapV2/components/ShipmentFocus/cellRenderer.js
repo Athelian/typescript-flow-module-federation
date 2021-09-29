@@ -538,6 +538,7 @@ function BatchCell({
       type: 'TARGET',
       payload: {
         entity,
+        mapping,
       },
     });
   };
@@ -862,6 +863,7 @@ function ContainerCell({
       type: 'TARGET_TREE',
       payload: {
         targets,
+        mapping,
         entity,
       },
     });
@@ -1131,6 +1133,7 @@ function ShipmentCell({
       type: 'TARGET_TREE',
       payload: {
         targets,
+        mapping,
         entity,
       },
     });
@@ -1376,6 +1379,7 @@ function BatchSummaryCell({
   afterConnector,
 }: CellProps & { shipment: ?ShipmentPayload, isExpand: boolean, onClick: Function }) {
   const { state, dispatch } = FocusedView.useContainer();
+  const { mapping } = Entities.useContainer();
   const { matches } = Hits.useContainer();
   const { user } = useUser();
   const batches = shipment?.batches ?? [];
@@ -1430,6 +1434,7 @@ function BatchSummaryCell({
                 type: 'TARGET_ALL',
                 payload: {
                   targets,
+                  mapping,
                 },
               });
             }}

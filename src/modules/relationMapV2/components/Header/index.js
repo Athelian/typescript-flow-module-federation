@@ -633,6 +633,7 @@ const Header = ({ intl }: Props) => {
                 type: 'TARGET_ALL',
                 payload: {
                   targets,
+                  mapping,
                 },
               });
             }}

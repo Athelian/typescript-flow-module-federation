@@ -327,7 +327,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
           const [orderItemId] = findParentIdsByBatch({
             batchId,
             viewer: state.viewer,
-            entities: mapping.entities,
+            entities: state.targetEntities ?? {},
           });
           const parentOrder = ordersByIDs.find(order =>
             (order?.orderItems ?? []).map(item => item.id).includes(orderItemId)
