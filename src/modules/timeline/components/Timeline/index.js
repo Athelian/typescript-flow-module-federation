@@ -31,27 +31,8 @@ const defaultProps = {
   formatters: {},
 };
 
-function filterByItemPriceLog(items: Array<Entry>, isBlackOut: boolean): Array<Entry> {
-  if (!isBlackOut) return items;
-
-  return items
-    .filter(
-      entry =>
-        !(entry?.parentEntityType === 'orderItem' && entry?.parameters?.field?.string === 'price')
-    )
-    .reduce((result, entry, counter, entries) => {
-      const lastEntry = result[result.length - 1];
-      const lastEntryIsSeparator =
-        entry?.__typename === 'DateSeparator' && counter === entries.length - 1;
-      const hasTwoEntriesAreSeparator =
-        lastEntry?.__typename === 'DateSeparator' && entry?.__typename === 'DateSeparator';
-      if (hasTwoEntriesAreSeparator || lastEntryIsSeparator) return result;
-
-      return [...result, entry];
-    }, []);
-}
-
-function filterByFile(items: Array<Entry>, hasPermissions: Function): Array<Entry> {
+function filterItems(items: Array<Entry>, hasPermissions: Function): Array<Entry> {
+  // TODO: these entity type name should manage by Enum
   return items
     .filter(
       entry =>
@@ -60,6 +41,10 @@ function filterByFile(items: Array<Entry>, hasPermissions: Function): Array<Entr
             entry?.parentEntityType
           ) &&
           canViewFile(hasPermissions, entry?.entity?.type)) ||
+        (entry?.parentEntityType === 'orderItem' &&
+          entry?.parameters?.field?.string === 'price' &&
+          hasPermissions(ORDER_ITEMS_GET_PRICE)) ||
+        entry?.entityType === 'timelineDate' ||
         entry?.entityType === entry?.parentEntityType
     )
     .reduce((result, entry, counter, entries) => {
@@ -147,24 +132,16 @@ const Timeline = ({
                 padding="30px 100px"
                 emptyMessage="No logs"
               >
-                {filterByItemPriceLog(
-                  filterByFile(items, hasPermissions),
-                  hasPermissions(ORDER_ITEMS_GET_PRICE)
-                ).map((item: any) => {
-                  switch (getByPathWithDefault('', '__typename', item)) {
+                {filterItems(items, hasPermissions).map((entry: Entry) => {
+                  const entryId = getByPathWithDefault('', 'id', entry);
+                  switch (getByPathWithDefault('', '__typename', entry)) {
                     case 'Log':
-                      return (
-                        <Log
-                          key={getByPathWithDefault('', 'id', item)}
-                          formatters={formatters}
-                          log={item}
-                        />
-                      );
+                      return <Log key={entryId} formatters={formatters} log={entry} />;
                     case 'TimelineComment':
                       return (
                         <Comment
-                          key={getByPathWithDefault('', 'id', item)}
-                          comment={item}
+                          key={entryId}
+                          comment={entry}
                           users={users}
                           query={query}
                           queryField={queryField}
@@ -172,9 +149,7 @@ const Timeline = ({
                         />
                       );
                     case 'DateSeparator':
-                      return (
-                        <DateSeparator key={getByPathWithDefault('', 'id', item)} date={item} />
-                      );
+                      return <DateSeparator key={entryId} date={entry} />;
                     default:
                       return null;
                   }
