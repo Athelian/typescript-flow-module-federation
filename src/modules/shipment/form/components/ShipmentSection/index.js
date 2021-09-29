@@ -1024,7 +1024,8 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                         },
                                       })
                                     );
-                                    onChangePartners(assembledOrgs);
+
+                                    onChangePartners(assembledOrgs, forwarders, exporter, importer);
                                     partnerSelectorToggle(false);
                                   }}
                                 />
