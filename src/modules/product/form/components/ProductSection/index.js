@@ -3,6 +3,7 @@ import * as React from 'react';
 import type { ProductPayload } from 'generated/graphql';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
+import SlideView from 'components/SlideView';
 import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { encodeId } from 'utils/id';
@@ -15,6 +16,9 @@ import ProductImage from 'components/ProductImage';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
 import { FormField } from 'modules/form';
+import SelectPartners from 'components/SelectPartners';
+import FormattedNumber from 'components/FormattedNumber';
+import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import Icon from 'components/Icon';
 import {
   ProductInfoContainer,
@@ -48,6 +52,7 @@ import {
   StatusToggle,
   FieldItem,
   Label,
+  FormTooltip,
   TagsInput,
   ImagesUploadInput,
   TextInputFactory,
@@ -55,6 +60,7 @@ import {
   TextAreaInputFactory,
 } from 'components/Form';
 import ImagePreviewDialog from 'components/Dialog/ImagePreviewDialog';
+import renderPartners from './helpers';
 import {
   ProductSectionWrapperStyle,
   ProductImagesWrapperStyle,
@@ -139,7 +145,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
         )}
       </SectionHeader>
       <Subscribe to={[ProductInfoContainer]}>
-        {({ originalValues: initialValues, state, setFieldValue }) => {
+        {({ originalValues: initialValues, state, setFieldValue, onChangePartners }) => {
           const values = { ...initialValues, ...state };
           const { ownedBy } = values;
           return (
@@ -437,6 +443,76 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                       </Label>
                     }
                     input={<PartnerCard partner={ownedBy} readOnly />}
+                  />
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label>
+                        <FormattedMessage
+                          id="modules.Projects.sharedPartners"
+                          defaultMessage="SHARED PARTNERS"
+                        />
+                        {' ('}
+                        <FormattedNumber value={values?.organizations?.length || 0} />)
+                      </Label>
+                    }
+                    tooltip={
+                      <FormTooltip
+                        infoMessage={
+                          <FormattedMessage
+                            id="modules.Orders.sharedPartners.tooltip"
+                            defaultMessage="You can choose up to 4 Partners. This will grant them access to this order."
+                          />
+                        }
+                      />
+                    }
+                    input={
+                      <BooleanValue>
+                        {({ value: partnerSelectorIsOpen, set: partnerSelectorToggle }) => (
+                          <>
+                            <div
+                              onClick={() =>
+                                hasPermission(PARTNER_LIST) && hasPermission([PRODUCT_UPDATE])
+                                  ? partnerSelectorToggle(true)
+                                  : () => {}
+                              }
+                              role="presentation"
+                            >
+                              {renderPartners(
+                                values?.organizations,
+                                hasPermission(PARTNER_LIST) && hasPermission([PRODUCT_UPDATE])
+                              )}
+                            </div>
+
+                            <SlideView
+                              isOpen={partnerSelectorIsOpen}
+                              onRequestClose={() => partnerSelectorToggle(false)}
+                            >
+                              <>
+                                <SelectPartners
+                                  partnerTypes={[]}
+                                  partnerCount={4}
+                                  selected={values?.organizations?.map(org => org?.partner) || []}
+                                  onCancel={() => partnerSelectorToggle(false)}
+                                  onSelect={selected => {
+                                    const assembledOrgs = selected.map(
+                                      ({ organization, ...partner }) => ({
+                                        ...organization,
+                                        partner: {
+                                          ...partner,
+                                        },
+                                      })
+                                    );
+                                    onChangePartners(assembledOrgs);
+                                    partnerSelectorToggle(false);
+                                  }}
+                                />
+                              </>
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+                    }
                   />
                 </GridColumn>
               </div>

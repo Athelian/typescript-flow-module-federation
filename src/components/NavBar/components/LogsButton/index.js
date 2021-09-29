@@ -27,22 +27,23 @@ type Props = {|
 |};
 
 const LogsButton = ({ onClick, entityType, entityId }: Props) => {
+  const requestEntityId = entityType === 'productProvider' ? entityId : decodeId(entityId);
   const { loading, data } = useQuery(unreadTimelineByEntity(entityType), {
     variables: {
-      id: decodeId(entityId),
+      id: requestEntityId,
     },
   });
   const [timelineRead] = useMutation(timelineReadByEntity, {
     variables: {
       entity: {
-        [`${entityType}Id`]: decodeId(entityId),
+        [`${entityType}Id`]: requestEntityId,
       },
     },
     refetchQueries: [
       {
         query: unreadTimelineByEntity(entityType),
         variables: {
-          id: decodeId(entityId),
+          id: requestEntityId,
         },
       },
     ],

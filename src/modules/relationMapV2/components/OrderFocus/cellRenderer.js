@@ -228,6 +228,7 @@ function OrderCell({ data, afterConnector }: CellProps) {
       type: 'TARGET_TREE',
       payload: {
         targets,
+        mapping,
         entity,
       },
     });
@@ -451,6 +452,7 @@ function OrderItemCell({
       type: 'TARGET_TREE',
       payload: {
         targets,
+        mapping,
         entity,
       },
     });
@@ -711,6 +713,7 @@ function BatchCell({
       type: 'TARGET',
       payload: {
         entity,
+        mapping,
       },
     });
   };
@@ -1487,6 +1490,8 @@ function BatchSummaryCell({
   afterConnector,
 }: CellProps & { order: OrderPayload, isExpand: boolean, onClick: Function }) {
   const { state, dispatch } = FocusedView.useContainer();
+  const { mapping } = Entities.useContainer();
+
   const { matches } = Hits.useContainer();
   const { user } = useUser();
   const orderItems = order?.orderItems ?? [];
@@ -1550,6 +1555,7 @@ function BatchSummaryCell({
                 type: 'TARGET_ALL',
                 payload: {
                   targets,
+                  mapping,
                 },
               });
             }}

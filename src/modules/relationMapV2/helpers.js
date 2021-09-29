@@ -216,6 +216,40 @@ export const findShipmentIdsByOrder = (orderId: string, entities: Object) => {
   return [...new Set(parentIds)];
 };
 
+export const findRelatedEntitiesByBatch = ({
+  viewer,
+  batchId,
+  entities,
+}: {|
+  viewer: typeof ORDER | typeof SHIPMENT,
+  batchId: string,
+  entities: Object,
+|}) => {
+  const [, orderId] = findParentIdsByBatch({
+    batchId,
+    viewer,
+    entities,
+  });
+
+  let parentOrderItem = Object.values(entities?.orderItems ?? {})?.find((orderItem: any) => {
+    return (orderItem?.batches ?? []).includes(batchId);
+  });
+
+  if (viewer === SHIPMENT) {
+    const parentItemId = entities?.batches?.[batchId]?.orderItem;
+    parentOrderItem = entities?.orderItems?.[parentItemId];
+  }
+
+  const batch = entities?.batches?.[batchId];
+  const order = entities?.orders?.[orderId];
+
+  return {
+    batch,
+    order,
+    orderItem: parentOrderItem,
+  };
+};
+
 export const targetedIds = (
   targets: Array<string>,
   type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT
