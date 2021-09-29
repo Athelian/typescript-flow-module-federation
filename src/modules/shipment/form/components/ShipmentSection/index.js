@@ -968,7 +968,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       <Label>
                         <FormattedMessage
                           id="modules.Projects.sharedPartners"
-                          defaultMessage="SHARED PARTNERS"
+                          defaultMessage="Shared Partners"
                         />
                         {' ('}
                         <FormattedNumber value={organizations?.length || 0} />)
