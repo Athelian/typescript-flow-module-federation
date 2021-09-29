@@ -783,6 +783,9 @@
             "name": "NotificationPayloadPaginatedList"
           },
           {
+            "name": "OrganizationGroupPayloadPaginatedSearch"
+          },
+          {
             "name": "PartnershipPayloadPaginatedSearch"
           },
           {
@@ -796,6 +799,9 @@
           },
           {
             "name": "TagPayloadPaginatedSearch"
+          },
+          {
+            "name": "TagGroupPayloadPaginatedSearch"
           },
           {
             "name": "TaskPayloadPaginatedSearch"

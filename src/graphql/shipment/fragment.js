@@ -259,6 +259,7 @@ export const shipmentCardFragment = gql`
     filesUnreadCount
     timeline {
       unreadCount
+      unreadMessageCount
     }
     containerTypeCounts {
       containerType

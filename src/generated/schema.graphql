@@ -30808,7 +30808,31 @@ input OrganizationGroupCreateInput {
   organizationIds: [ID!]
 }
 
+input OrganizationGroupFilterInput {
+  query: String
+  ownerId: ID
+  excludeIds: [ID!]
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+}
+
 union OrganizationGroupPayload = OrganizationGroup | BadRequest | Forbidden | NotFound
+
+type OrganizationGroupPayloadPaginatedSearch implements Paginated {
+  nodes: [OrganizationGroupPayload!]!
+  hits: [Hit!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input OrganizationGroupSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
+}
 
 input OrganizationGroupUpdateInput {
   name: String
@@ -30886,6 +30910,7 @@ input PartnerFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   types: [OrganizationType!]
+  name: String
   confirmed: Boolean
   showRightPartners: Boolean
   showLeftPartners: Boolean
@@ -31048,6 +31073,8 @@ input ProductFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
+  name: String
+  serial: String
   exporterId: ID
   supplierId: ID
 
@@ -31220,6 +31247,7 @@ input ProductProviderFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
+  name: String
   productId: ID
 
   """Deprecated"""
@@ -31617,6 +31645,7 @@ type Query {
   organization(id: ID!): OrganizationPayload!
   organizationsByIDs(ids: [ID!]!): [OrganizationPayload!]!
   organizationGroup(id: ID!): OrganizationGroupPayload!
+  organizationGroups(page: Int! = 1, perPage: Int! = 10, filterBy: OrganizationGroupFilterInput, sortBy: OrganizationGroupSortInput): OrganizationGroupPayloadPaginatedSearch!
   organizationGroupsByIDs(ids: [ID!]!): [OrganizationGroupPayload!]!
   partner(id: ID!): PartnerPayload!
   partnership(id: ID!): PartnershipPayload!
@@ -31669,6 +31698,7 @@ type Query {
   tagsExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
   tagsByIDsExport(ids: [ID!]!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   tagGroup(id: ID!): TagGroupPayload!
+  tagGroups(page: Int! = 1, perPage: Int! = 10, filterBy: TagGroupFilterInput, sortBy: TagGroupSortInput): TagGroupPayloadPaginatedSearch!
   tagGroupsByIDs(ids: [ID!]!): [TagGroupPayload!]!
   task(id: ID!): TaskPayload!
   tasks(page: Int! = 1, perPage: Int! = 10, filterBy: TaskFilterInput, sortBy: TaskSortInput): TaskPayloadPaginatedSearch!
@@ -88296,7 +88326,34 @@ input TagGroupCreateInput {
   organizationGroupIds: [ID!]
 }
 
+input TagGroupFilterInput {
+  query: String
+  ownerId: ID
+  excludeIds: [ID!]
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  organizationGroupIds: [ID!]
+  tagIdsWithOperator: IdsWithOperatorInput
+  notTagIds: [ID!]
+}
+
 union TagGroupPayload = TagGroup | BadRequest | Forbidden | NotFound
+
+type TagGroupPayloadPaginatedSearch implements Paginated {
+  nodes: [TagGroupPayload!]!
+  hits: [Hit!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input TagGroupSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  name: SortOrder
+}
 
 input TagGroupUpdateInput {
   name: ID
@@ -88667,6 +88724,7 @@ input TaskUpdateWrapperInput {
 
 type Timeline {
   unreadCount: Int!
+  unreadMessageCount: Int!
   entries(page: Int! = 1, perPage: Int! = 10): TimelineEntryPaginatedList!
 }
 

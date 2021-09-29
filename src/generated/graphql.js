@@ -22263,7 +22263,35 @@ export type OrganizationGroupCreateInput = {|
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
+export type OrganizationGroupFilterInput = {|
+  query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
+  excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  createdAt?: ?DateRangeInput,
+  updatedAt?: ?DateRangeInput,
+|};
+
 export type OrganizationGroupPayload = OrganizationGroup | BadRequest | Forbidden | NotFound;
+
+export type OrganizationGroupPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{|
+     __typename?: 'OrganizationGroupPayloadPaginatedSearch',
+    nodes: Array<OrganizationGroupPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  |}
+|};
+
+export type OrganizationGroupSortInput = {|
+  createdAt?: ?SortOrder,
+  updatedAt?: ?SortOrder,
+  name?: ?SortOrder,
+|};
 
 export type OrganizationGroupUpdateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
@@ -22346,6 +22374,7 @@ export type PartnerFilterInput = {|
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   types?: ?Array<OrganizationType>,
+  name?: ?$ElementType<Scalars, 'String'>,
   confirmed?: ?$ElementType<Scalars, 'Boolean'>,
   showRightPartners?: ?$ElementType<Scalars, 'Boolean'>,
   showLeftPartners?: ?$ElementType<Scalars, 'Boolean'>,
@@ -22570,6 +22599,8 @@ export type ProductFilterInput = {|
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
+  name?: ?$ElementType<Scalars, 'String'>,
+  serial?: ?$ElementType<Scalars, 'String'>,
   exporterId?: ?$ElementType<Scalars, 'ID'>,
   supplierId?: ?$ElementType<Scalars, 'ID'>,
   /** Deprecated */
@@ -22753,6 +22784,7 @@ export type ProductProviderFilterInput = {|
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
+  name?: ?$ElementType<Scalars, 'String'>,
   productId?: ?$ElementType<Scalars, 'ID'>,
   /** Deprecated */
   exporterId?: ?$ElementType<Scalars, 'ID'>,
@@ -23170,6 +23202,7 @@ export type Query = {|
   organization: OrganizationPayload,
   organizationsByIDs: Array<OrganizationPayload>,
   organizationGroup: OrganizationGroupPayload,
+  organizationGroups: OrganizationGroupPayloadPaginatedSearch,
   organizationGroupsByIDs: Array<OrganizationGroupPayload>,
   partner: PartnerPayload,
   partnership: PartnershipPayload,
@@ -23222,6 +23255,7 @@ export type Query = {|
   tagsExport: ExportPayload,
   tagsByIDsExport: ExportPayload,
   tagGroup: TagGroupPayload,
+  tagGroups: TagGroupPayloadPaginatedSearch,
   tagGroupsByIDs: Array<TagGroupPayload>,
   task: TaskPayload,
   tasks: TaskPayloadPaginatedSearch,
@@ -23308,6 +23342,14 @@ export type QueryOrganizationsByIDsArgs = {|
 
 export type QueryOrganizationGroupArgs = {|
   id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type QueryOrganizationGroupsArgs = {|
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  filterBy?: ?OrganizationGroupFilterInput,
+  sortBy?: ?OrganizationGroupSortInput
 |};
 
 
@@ -23663,6 +23705,14 @@ export type QueryTagsByIDsExportArgs = {|
 
 export type QueryTagGroupArgs = {|
   id: $ElementType<Scalars, 'ID'>
+|};
+
+
+export type QueryTagGroupsArgs = {|
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  filterBy?: ?TagGroupFilterInput,
+  sortBy?: ?TagGroupSortInput
 |};
 
 
@@ -62216,7 +62266,38 @@ export type TagGroupCreateInput = {|
   organizationGroupIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
+export type TagGroupFilterInput = {|
+  query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
+  excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  createdAt?: ?DateRangeInput,
+  updatedAt?: ?DateRangeInput,
+  organizationGroupIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  tagIdsWithOperator?: ?IdsWithOperatorInput,
+  notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+|};
+
 export type TagGroupPayload = TagGroup | BadRequest | Forbidden | NotFound;
+
+export type TagGroupPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{|
+     __typename?: 'TagGroupPayloadPaginatedSearch',
+    nodes: Array<TagGroupPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  |}
+|};
+
+export type TagGroupSortInput = {|
+  createdAt?: ?SortOrder,
+  updatedAt?: ?SortOrder,
+  name?: ?SortOrder,
+|};
 
 export type TagGroupUpdateInput = {|
   name?: ?$ElementType<Scalars, 'ID'>,
@@ -62610,6 +62691,7 @@ export type TaskUpdateWrapperInput = {|
 export type Timeline = {|
    __typename?: 'Timeline',
   unreadCount: $ElementType<Scalars, 'Int'>,
+  unreadMessageCount: $ElementType<Scalars, 'Int'>,
   entries: TimelineEntryPaginatedList,
 |};
 

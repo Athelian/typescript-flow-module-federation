@@ -39,6 +39,7 @@ export const projectCardFragment = gql`
     }
     timeline {
       unreadCount
+      unreadMessageCount
     }
     ownedBy {
       ...ownedByFragment
