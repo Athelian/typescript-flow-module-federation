@@ -491,7 +491,6 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                               <>
                                 <SelectPartners
                                   partnerTypes={[]}
-                                  partnerCount={4}
                                   selected={values?.organizations?.map(org => org?.partner) || []}
                                   onCancel={() => partnerSelectorToggle(false)}
                                   onSelect={selected => {

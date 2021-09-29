@@ -847,7 +847,7 @@
   "modules.Orders.totalItemQuantity": "合計数量",
   "modules.Orders.completelyBatched": "バッチ済発注",
   "modules.Orders.completelyShipped": "船積み済発注",
-  "modules.Orders.sharedPartners.tooltip": "Y共有組織に選ばれた組織は、この発注にアクセスできます",
+  "modules.Orders.sharedPartners.tooltip": "共有組織に選ばれた組織は、この発注にアクセスできます",
   "modules.OrderItems.orderItem": "発注商品",
   "modules.OrderItems.batches": "バッチ",
   "modules.OrderItems.document": "書類",
