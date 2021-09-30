@@ -145,19 +145,19 @@ export default class ProductProviderInfoContainer extends Container<FormState> {
     importers: Array<Object>
   ) => {
     this.setState(({ followers = [], organizations: oldPartners = [] }) => {
-      const removedPartners = oldPartners.filter(
-        oldPartner => !newPartners.some(newPartner => newPartner.id === oldPartner.id)
-      );
-
       const isImporter = oldPartners.filter(oldPartner =>
-        importers.some(forwarder => forwarder.id === oldPartner.id)
+        importers.some(forwarder => forwarder?.id === oldPartner.id)
       );
 
-      const isExporter = oldPartners.filter(oldPartner => exporter.id === oldPartner.id);
+      const isExporter = oldPartners.filter(oldPartner => exporter?.id === oldPartner.id);
 
-      const isSupplier = oldPartners.filter(oldPartner => supplier.id === oldPartner.id);
+      const isSupplier = oldPartners.filter(oldPartner => supplier?.id === oldPartner.id);
 
       if (isSupplier.length !== 0 || isExporter.length !== 0 || isImporter.length !== 0) {
+        const removedPartners = oldPartners.filter(
+          oldPartner => !newPartners.some(newPartner => newPartner.id === oldPartner.id)
+        );
+
         if (oldPartners.length > 0 && removedPartners.length > 0) {
           const cleanedFollowers = followers.filter(
             follower =>
