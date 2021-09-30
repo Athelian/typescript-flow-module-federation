@@ -162,6 +162,11 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
       ...prepareParseOrderItem(oldItem, newItem),
     })
   ),
+  ...parseArrayOfIdsField(
+    'organizationIds',
+    originalValues?.organizations ?? [],
+    newValues.organizations
+  ),
   ...parseFilesField({
     key: 'files',
     originalFiles: getByPathWithDefault(null, 'files', originalValues),

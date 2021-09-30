@@ -595,4 +595,8 @@ export default defineMessages({
     defaultMessage:
       'Changing the Exporter will remove all Items and Batches. Are you sure you want to change the Exporter?',
   },
+  sharedPartnersTooltip: {
+    id: 'modules.Orders.sharedPartners.tooltip',
+    defaultMessage: 'You can choose up to 4 Partners. This will grant them access to this order.',
+  },
 });
