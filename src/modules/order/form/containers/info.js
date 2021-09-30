@@ -71,8 +71,8 @@ export default class OrderInfoContainer extends Container<Order> {
 
   onChangePartners = (newPartners: Array<Object>, exporter: Object, importer: Object) => {
     this.setState(({ followers = [], organizations: oldPartners = [] }) => {
-      const isExporter = oldPartners.filter(oldPartner => exporter.id === oldPartner.id);
-      const isImporter = oldPartners.filter(oldPartner => importer.id === oldPartner.id);
+      const isExporter = oldPartners.filter(oldPartner => exporter?.id === oldPartner.id);
+      const isImporter = oldPartners.filter(oldPartner => importer?.id === oldPartner.id);
 
       if (isExporter.length !== 0 || isImporter.length !== 0) {
         const removedPartners = oldPartners.filter(
