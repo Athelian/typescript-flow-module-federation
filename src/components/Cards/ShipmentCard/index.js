@@ -114,7 +114,7 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, onSelect, ...rest
   return (
     <BaseCard
       filesUnreadCount={shipment?.filesUnreadCount}
-      logsUnreadCount={shipment?.timeline?.unreadCount}
+      unreadMessageCount={shipment?.timeline?.unreadMessageCount}
       notificationUnseenCount={shipment?.notificationUnseenCount}
       icon="SHIPMENT"
       color="SHIPMENT"

@@ -36,6 +36,7 @@ const shipmentEntityCardFragment = gql`
     filesUnreadCount
     timeline {
       unreadCount
+      unreadMessageCount
     }
     exporter {
       ... on Organization {

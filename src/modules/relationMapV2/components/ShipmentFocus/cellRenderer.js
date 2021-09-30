@@ -1181,7 +1181,7 @@ function ShipmentCell({
             id={`${SHIPMENT}-${shipmentId}`}
             filesUnreadCount={shipment?.filesUnreadCount}
             notificationUnseenCount={shipment?.notificationUnseenCount}
-            logsUnreadCount={shipment?.timeline?.unreadCount}
+            unreadMessageCount={shipment?.timeline?.unreadMessageCount}
             notificationPosition="18px"
           >
             <ShipmentCard
