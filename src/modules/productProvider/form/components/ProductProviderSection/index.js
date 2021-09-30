@@ -17,6 +17,7 @@ import SlideView from 'components/SlideView';
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
 import { PartnerCard, GrayCard } from 'components/Cards';
+import FormattedNumber from 'components/FormattedNumber';
 import {
   FieldItem,
   Label,
@@ -24,6 +25,7 @@ import {
   EnumSearchSelectInputFactory,
   CustomFieldsFactory,
   TextInputFactory,
+  FormTooltip,
   TextAreaInputFactory,
 } from 'components/Form';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
@@ -40,7 +42,7 @@ import {
 } from 'modules/permission/constants/product';
 import renderImporters from './renderImporters';
 import { ProductProviderSectionWrapperStyle, MainFieldsWrapperStyle } from './style';
-import { generateName } from './helper';
+import { generateName, renderPartners } from './helper';
 
 type Props = {
   isNew: boolean,
@@ -53,7 +55,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
 
   return (
     <Subscribe to={[ProductProviderInfoContainer]}>
-      {({ originalValues, state, setFieldValue, setFieldArrayValue }) => {
+      {({ originalValues, state, setFieldValue, setFieldArrayValue, onChangePartners }) => {
         const values = { ...originalValues, ...state };
 
         return (
@@ -438,6 +440,84 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                   )}
                                 </ArrayValue>
                               )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+                    }
+                  />
+                </GridColumn>
+                <GridColumn>
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label>
+                        <FormattedMessage
+                          id="modules.Projects.sharedPartners"
+                          defaultMessage="SHARED PARTNERS"
+                        />
+                        {' ('}
+                        <FormattedNumber value={values?.organizations?.length || 0} />)
+                      </Label>
+                    }
+                    tooltip={
+                      <FormTooltip
+                        infoMessage={
+                          <FormattedMessage
+                            id="modules.ProductProviders.sharedPartners.tooltip"
+                            defaultMessage="Shared Partners will have access to this end product."
+                          />
+                        }
+                      />
+                    }
+                    input={
+                      <BooleanValue>
+                        {({ value: partnerSelectorIsOpen, set: partnerSelectorToggle }) => (
+                          <>
+                            <div
+                              onClick={() =>
+                                hasPermission(PARTNER_LIST) &&
+                                hasPermission([PRODUCT_PROVIDER_UPDATE])
+                                  ? partnerSelectorToggle(true)
+                                  : () => {}
+                              }
+                              role="presentation"
+                            >
+                              {renderPartners(
+                                values?.organizations,
+                                hasPermission(PARTNER_LIST) &&
+                                  hasPermission([PRODUCT_PROVIDER_UPDATE])
+                              )}
+                            </div>
+
+                            <SlideView
+                              isOpen={partnerSelectorIsOpen}
+                              onRequestClose={() => partnerSelectorToggle(false)}
+                            >
+                              <>
+                                <SelectPartners
+                                  partnerTypes={[]}
+                                  selected={values?.organizations?.map(org => org?.partner) || []}
+                                  onCancel={() => partnerSelectorToggle(false)}
+                                  onSelect={selected => {
+                                    const assembledOrgs = selected.map(
+                                      ({ organization, ...partner }) => ({
+                                        ...organization,
+                                        partner: {
+                                          ...partner,
+                                        },
+                                      })
+                                    );
+                                    onChangePartners(
+                                      assembledOrgs,
+                                      values?.exporter,
+                                      values?.supplier,
+                                      values?.importers
+                                    );
+                                    partnerSelectorToggle(false);
+                                  }}
+                                />
+                              </>
                             </SlideView>
                           </>
                         )}

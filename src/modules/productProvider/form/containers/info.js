@@ -13,6 +13,7 @@ type FormState = {
   exporter?: ?Object,
   supplier?: ?Object,
   importer?: ?Array<Object>,
+  organizations?: ?Array<Object>,
   origin: ?string,
 
   unitType: ?string,
@@ -33,7 +34,7 @@ export const initValues: FormState = {
   origin: null,
   name: null,
   unitType: null,
-
+  organizations: [],
   unitVolume: {
     metric: defaultVolumeMetric,
     value: 0,
@@ -135,5 +136,40 @@ export default class ProductProviderInfoContainer extends Container<FormState> {
     this.setState(prevState => ({
       packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
     }));
+  };
+
+  onChangePartners = (
+    newPartners: Array<Object>,
+    exporter: Object,
+    supplier: Object,
+    importers: Array<Object>
+  ) => {
+    this.setState(({ followers = [], organizations: oldPartners = [] }) => {
+      const isImporter = oldPartners.filter(oldPartner =>
+        importers.some(forwarder => forwarder?.id === oldPartner.id)
+      );
+
+      const isExporter = oldPartners.filter(oldPartner => exporter?.id === oldPartner.id);
+
+      const isSupplier = oldPartners.filter(oldPartner => supplier?.id === oldPartner.id);
+
+      if (isSupplier.length !== 0 || isExporter.length !== 0 || isImporter.length !== 0) {
+        const removedPartners = oldPartners.filter(
+          oldPartner => !newPartners.some(newPartner => newPartner.id === oldPartner.id)
+        );
+
+        if (oldPartners.length > 0 && removedPartners.length > 0) {
+          const cleanedFollowers = followers.filter(
+            follower =>
+              !removedPartners.some(
+                removedPartner => removedPartner.id === follower?.organization?.id
+              )
+          );
+
+          return { organizations: newPartners, followers: cleanedFollowers };
+        }
+      }
+      return { organizations: newPartners };
+    });
   };
 }

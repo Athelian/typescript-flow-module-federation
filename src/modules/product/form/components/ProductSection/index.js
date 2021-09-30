@@ -450,7 +450,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                       <Label>
                         <FormattedMessage
                           id="modules.Projects.sharedPartners"
-                          defaultMessage="SHARED PARTNERS"
+                          defaultMessage="Shared Partners"
                         />
                         {' ('}
                         <FormattedNumber value={values?.organizations?.length || 0} />)
@@ -460,8 +460,8 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                       <FormTooltip
                         infoMessage={
                           <FormattedMessage
-                            id="modules.Orders.sharedPartners.tooltip"
-                            defaultMessage="You can choose up to 4 Partners. This will grant them access to this order."
+                            id="modules.Products.sharedPartners.tooltip"
+                            defaultMessage="Shared Partners will have access to this product"
                           />
                         }
                       />
@@ -491,7 +491,6 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                               <>
                                 <SelectPartners
                                   partnerTypes={[]}
-                                  partnerCount={4}
                                   selected={values?.organizations?.map(org => org?.partner) || []}
                                   onCancel={() => partnerSelectorToggle(false)}
                                   onSelect={selected => {
