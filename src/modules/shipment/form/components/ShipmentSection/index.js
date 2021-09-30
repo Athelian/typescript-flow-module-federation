@@ -81,7 +81,7 @@ import SelectPartners from 'components/SelectPartners';
 import SelectPartner from 'components/SelectPartner';
 import Followers from 'components/Followers';
 import ShipmentSummary from '../ShipmentSummary';
-import { renderExporters, renderForwarders } from './helpers';
+import { renderExporters, renderForwarders, renderPartners } from './helpers';
 import {
   ShipmentSectionWrapperStyle,
   MainFieldsWrapperStyle,
@@ -105,7 +105,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
   const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, archived, ownedBy } = shipment;
-
   return (
     <Subscribe to={[ShipmentInfoContainer]}>
       {({
@@ -113,10 +112,12 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
         state,
         setFieldValue,
         onChangePartner,
+        onChangePartners,
         onChangeForwarders,
       }) => {
         const values: Object = { ...initialValues, ...state };
-        const { forwarders = [], importer, exporter } = values;
+
+        const { forwarders = [], importer, exporter, organizations } = values;
 
         return (
           <MainSectionPlaceholder height={1766} isLoading={isLoading}>
@@ -955,6 +956,79 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                   </ArrayValue>
                                 )}
                               </BooleanValue>
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+                    }
+                  />
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label>
+                        <FormattedMessage
+                          id="modules.Projects.sharedPartners"
+                          defaultMessage="Shared Partners"
+                        />
+                        {' ('}
+                        <FormattedNumber value={organizations?.length || 0} />)
+                      </Label>
+                    }
+                    tooltip={
+                      <FormTooltip
+                        infoMessage={
+                          <FormattedMessage
+                            id="modules.Shipment.sharedPartners.tooltip"
+                            defaultMessage="Shared Partners will have access to this shipment."
+                          />
+                        }
+                      />
+                    }
+                    input={
+                      <BooleanValue>
+                        {({ value: partnerSelectorIsOpen, set: partnerSelectorToggle }) => (
+                          <>
+                            <div
+                              onClick={() =>
+                                isImporter() &&
+                                hasPermission(PARTNER_LIST) &&
+                                hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE])
+                                  ? partnerSelectorToggle(true)
+                                  : () => {}
+                              }
+                              role="presentation"
+                            >
+                              {renderPartners(
+                                organizations,
+                                hasPermission(PARTNER_LIST) &&
+                                  hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE])
+                              )}
+                            </div>
+
+                            <SlideView
+                              isOpen={partnerSelectorIsOpen}
+                              onRequestClose={() => partnerSelectorToggle(false)}
+                            >
+                              <>
+                                <SelectPartners
+                                  partnerTypes={[]}
+                                  selected={organizations?.map(org => org?.partner) || []}
+                                  onCancel={() => partnerSelectorToggle(false)}
+                                  onSelect={selected => {
+                                    const assembledOrgs = selected.map(
+                                      ({ organization, ...partner }) => ({
+                                        ...organization,
+                                        partner: {
+                                          ...partner,
+                                        },
+                                      })
+                                    );
+
+                                    onChangePartners(assembledOrgs, forwarders, exporter, importer);
+                                    partnerSelectorToggle(false);
+                                  }}
+                                />
+                              </>
                             </SlideView>
                           </>
                         )}

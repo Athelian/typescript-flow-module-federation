@@ -81,7 +81,7 @@ export const renderForwarders = (forwarders: Array<Object>, allowToUpdate: boole
       </GridColumn>
     );
   }
-  if (numOfForwarders > 3 && numOfForwarders < 5) {
+  if (numOfForwarders === 4) {
     return (
       <GridColumn gap="10px">
         <GridRow gap="10px">
@@ -102,6 +102,66 @@ export const renderForwarders = (forwarders: Array<Object>, allowToUpdate: boole
           count={numOfForwarders}
           partner={forwarders[0]}
           cardType="FORWARDER"
+          readOnly={!allowToUpdate}
+        />
+      </GridColumn>
+    );
+  }
+  return '';
+};
+
+export const renderPartners = (organizations: Array<Object>, allowToUpdate: boolean) => {
+  const num = organizations?.length;
+
+  if (num === 0) {
+    if (allowToUpdate) {
+      return <DashedPlusButton width="195px" height="215px" />;
+    }
+    return <GrayCard width="195px" height="215px" />;
+  }
+  if (num === 1) {
+    return <PartnerCard partner={organizations[0]} readOnly={!allowToUpdate} />;
+  }
+  if (num === 2) {
+    return (
+      <GridColumn gap="10px">
+        <PartnerCard partner={organizations[0]} size="half" readOnly={!allowToUpdate} />
+        <PartnerCard partner={organizations[1]} size="half" readOnly={!allowToUpdate} />
+      </GridColumn>
+    );
+  }
+  if (num === 3) {
+    return (
+      <GridColumn gap="10px">
+        <PartnerCard partner={organizations[0]} size="half" readOnly={!allowToUpdate} />
+        <GridRow gap="10px">
+          <PartnerCard partner={organizations[1]} size="quarter" readOnly={!allowToUpdate} />
+          <PartnerCard partner={organizations[2]} size="quarter" readOnly={!allowToUpdate} />
+        </GridRow>
+      </GridColumn>
+    );
+  }
+  if (num === 4) {
+    return (
+      <GridColumn gap="10px">
+        <GridRow gap="10px">
+          <PartnerCard partner={organizations[0]} size="quarter" readOnly={!allowToUpdate} />
+          <PartnerCard partner={organizations[1]} size="quarter" readOnly={!allowToUpdate} />
+        </GridRow>
+        <GridRow gap="10px">
+          <PartnerCard partner={organizations[2]} size="quarter" readOnly={!allowToUpdate} />
+          <PartnerCard partner={organizations[3]} size="quarter" readOnly={!allowToUpdate} />
+        </GridRow>
+      </GridColumn>
+    );
+  }
+  if (num > 4) {
+    return (
+      <GridColumn gap="10px">
+        <ViewMoreCard
+          count={num}
+          partner={organizations[0]}
+          cardType="PARTNER"
           readOnly={!allowToUpdate}
         />
       </GridColumn>

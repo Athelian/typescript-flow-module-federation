@@ -33,6 +33,7 @@ type ShipmentInfoType = {
 
 const initValues = {
   followers: [],
+  organizations: [],
   no: null,
   blNo: null,
   blDate: null,
@@ -81,6 +82,44 @@ export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
 
   setFieldValues = (values: Object) => {
     this.setState(values);
+  };
+
+  // On change partners, set new partners and clean up Followers
+  onChangePartners = (
+    newPartners: Array<Object>,
+    forwarders: Array<Object>,
+    exporter: Object,
+    importer: Object
+  ) => {
+    this.setState(({ followers = [], organizations: oldPartners = [] }) => {
+      // Check if forwarder, exporter, or importer
+      const isForwarder = oldPartners.filter(oldPartner =>
+        forwarders.some(forwarder => forwarder?.id === oldPartner.id)
+      );
+
+      const isExporter = oldPartners.filter(oldPartner => exporter?.id === oldPartner.id);
+
+      const isImporter = oldPartners.filter(oldPartner => importer?.id === oldPartner.id);
+
+      if (isForwarder.length !== 0 || isExporter.length !== 0 || isImporter.length !== 0) {
+        const removedPartners = oldPartners.filter(
+          oldPartner => !newPartners.some(newPartner => newPartner.id === oldPartner.id)
+        );
+
+        if (oldPartners.length > 0 && removedPartners.length > 0) {
+          const cleanedFollowers = followers.filter(
+            follower =>
+              !removedPartners.some(
+                removedPartner => removedPartner.id === follower?.organization?.id
+              )
+          );
+
+          return { organizations: newPartners, followers: cleanedFollowers };
+        }
+      }
+
+      return { organizations: newPartners };
+    });
   };
 
   // On change Importer or Exporter, set new partner and clean up Followers

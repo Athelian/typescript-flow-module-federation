@@ -12,6 +12,16 @@ export const shipmentFormQueryFragment = gql`
     followers {
       ...userAvatarFragment
     }
+    organizations {
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
+    }
     ... on Followed {
       notificationUnseenCount
     }
@@ -94,6 +104,16 @@ export const shipmentFormFragment = gql`
     }
     followers {
       ...userAvatarFragment
+    }
+    organizations {
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     ... on Followed {
       notificationUnseenCount

@@ -56,7 +56,7 @@ const renderimporters = (importers: Array<Object>, allowToUpdate: boolean) => {
         <ViewMoreCard
           count={numOfimporters}
           partner={importers[0]}
-          cardType="IMPORTERS"
+          cardType="IMPORTER"
           readOnly={!allowToUpdate}
         />
       </GridColumn>
