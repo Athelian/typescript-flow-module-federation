@@ -50,6 +50,7 @@ type OptionalProps = {
   isSlideView: boolean,
   onSuccessCallback: ?Function,
   redirectAfterSuccess: boolean,
+  location: Location,
   onCancel?: Function,
   initDataForSlideView: Object,
 };
@@ -355,6 +356,21 @@ class ShipmentFormModule extends React.PureComponent<Props> {
     }
   };
 
+  getDefaultParam = () => {
+    const { location } = this.props;
+
+    // shipment/asdf?foo=123&default=logs
+    const query = location?.search?.split('?')?.[1] ?? null;
+
+    // foo=123&default=logs
+    const queryParams = query?.split('&') ?? [];
+
+    // ['foo=123', 'default=logs']
+    const defaultParam = queryParams.find(queryParam => queryParam.startsWith('default'));
+
+    return defaultParam ? defaultParam?.split('=')?.[1] : null;
+  };
+
   render() {
     const { shipmentId, anchor, isSlideView, onCancel, initDataForSlideView } = this.props;
     const isNewOrClone = this.isNewOrClone();
@@ -364,6 +380,8 @@ class ShipmentFormModule extends React.PureComponent<Props> {
     }
     const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
     const CurrentLayout = isSlideView ? SlideViewLayout : React.Fragment;
+
+    const defaultParam = this.getDefaultParam();
 
     return (
       <UserConsumer>
@@ -482,7 +500,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                 shipmentTasksContainer.isDirty();
                               return (
                                 <>
-                                  <BooleanValue>
+                                  <BooleanValue defaultValue={defaultParam === 'logs'}>
                                     {({ value: opened, set: slideToggle }) =>
                                       !isNewOrClone && (
                                         <>
@@ -729,6 +747,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                     isClone={this.isClone()}
                                     shipment={shipment}
                                     anchor={anchor}
+                                    skipToSection={defaultParam}
                                   />
                                   <Subscribe
                                     to={[

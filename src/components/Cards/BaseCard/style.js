@@ -74,6 +74,9 @@ export const NewBadgeStyle = (fontSize: string) => css`
   ${borderRadiuses.CIRCLE};
   border: 1.5px solid ${colors.GRAY_SUPER_LIGHT};
   position: relative;
+  &:hover {
+    margin-top: -2px;
+  }
   span {
     color: #fff;
     font-size: ${fontSize};
@@ -91,6 +94,9 @@ export const CommentStyle = (fontSize: string) => css`
   position: relative;
   margin-top: -1px;
   max-width: 23px;
+  &:hover {
+    margin-top: -3px;
+  }
   span {
     color: #fff;
     font-size: ${fontSize};
@@ -118,6 +124,9 @@ export const CustomDocumentIcon = (fontSize: string) => css`
   background-color: #eeeeee;
   clip-path: polygon(0% 0%, 12px 0%, 100% 5px, 100% 100%, 0% 100%);
   position: relative;
+  &:hover {
+    margin-top: -1px;
+  }
   span {
     color: #fff;
     font-size: ${fontSize};

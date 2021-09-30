@@ -39,6 +39,9 @@ type Props = {|
   children: React.Node,
   onClick?: Function,
   notificationPosition: string,
+  onCommentIconClick?: Function,
+  onDocumentIconClick?: Function,
+  onNotificationIconClick?: Function,
 |};
 
 type State = {
@@ -111,6 +114,9 @@ export default class BaseCard extends React.Component<Props, State> {
       unreadMessageCount,
       flattenCornerIcon,
       notificationPosition,
+      onCommentIconClick,
+      onDocumentIconClick,
+      onNotificationIconClick,
       ...rest
     } = this.props;
 
@@ -173,7 +179,13 @@ export default class BaseCard extends React.Component<Props, State> {
         {showBadge && <span className={BadgeStyle} />}
         <div className={BadgeContainer(notificationPosition)}>
           {!!unreadMessageCount && unreadMessageCount > 0 && (
-            <span className={CommentStyle(unreadMessageCount >= 99 ? '10px' : '12px')}>
+            <span
+              role="button"
+              tabIndex="0"
+              onClick={onCommentIconClick}
+              onKeyDown={onCommentIconClick}
+              className={CommentStyle(unreadMessageCount >= 99 ? '10px' : '12px')}
+            >
               <Icon icon="COMMENTS" />
               <span>
                 {unreadMessageCount >= 99 ? '99' : unreadMessageCount}
@@ -182,7 +194,13 @@ export default class BaseCard extends React.Component<Props, State> {
             </span>
           )}
           {!!filesUnreadCount && filesUnreadCount > 0 && (
-            <span className={CustomDocumentIcon(filesUnreadCount >= 99 ? '10px' : '12px')}>
+            <span
+              role="button"
+              tabIndex="0"
+              onClick={onDocumentIconClick}
+              onKeyDown={onDocumentIconClick}
+              className={CustomDocumentIcon(filesUnreadCount >= 99 ? '10px' : '12px')}
+            >
               <span>
                 {filesUnreadCount >= 99 ? '99' : filesUnreadCount}
                 {filesUnreadCount >= 99 && '+'}
@@ -190,7 +208,13 @@ export default class BaseCard extends React.Component<Props, State> {
             </span>
           )}
           {!!notificationUnseenCount && notificationUnseenCount > 0 && (
-            <span className={NewBadgeStyle(notificationUnseenCount >= 99 ? '10px' : '12px')}>
+            <span
+              role="button"
+              tabIndex="0"
+              onClick={onNotificationIconClick}
+              onKeyDown={onNotificationIconClick}
+              className={NewBadgeStyle(notificationUnseenCount >= 99 ? '10px' : '12px')}
+            >
               <span>
                 {notificationUnseenCount >= 99 ? '99' : notificationUnseenCount}
                 {notificationUnseenCount >= 99 && '+'}
