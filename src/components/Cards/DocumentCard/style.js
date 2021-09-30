@@ -2,12 +2,12 @@
 import { css } from 'react-emotion';
 import { layout, colors, presets, borderRadiuses, fontSizes } from 'styles/common';
 
-export const DocumentCardWrapperStyle = (cardHeight: string): string => css`
+export const DocumentCardWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   position: relative;
   grid-gap: 5px;
   width: 195px;
-  min-height: ${cardHeight};
+  min-height: 184px;
   padding: 10px 5px;
 `;
 
@@ -65,23 +65,25 @@ export const CreatedAtStyle: string = css`
   padding: 0 5px 0 0;
 `;
 
-export const TagsAndButtonsWrapperStyle: string = css`
-  ${layout.GRID_HORIZONTAL};
-  grid-gap: 5px;
-  padding: 0 5px;
+export const ButtonWrapperStyle: string = css`
+  position: absolute;
+  right: 5px;
+  bottom: 10px;
 `;
 
 export const TagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
   overflow: hidden;
-  width: 152px;
+  width: 180px;
   ${borderRadiuses.MAIN};
+  padding-left: 5px;
 `;
 
 export const DownloadButtonStyle = (isDisabled: boolean): string => css`
   ${presets.BUTTON};
-  width: 18px;
+  /* width: 18px; */
+  padding-top: 5px;
   height: 18px;
   ${fontSizes.MAIN};
   ${isDisabled
@@ -93,6 +95,9 @@ export const DownloadButtonStyle = (isDisabled: boolean): string => css`
     color: ${colors.GRAY_LIGHT};
     &:hover {
       color: ${colors.TEAL};
+      div {
+        color: ${colors.TEAL};
+      }
     }
   `};
 `;
