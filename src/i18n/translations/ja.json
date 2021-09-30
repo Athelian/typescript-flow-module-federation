@@ -1122,7 +1122,7 @@
   "modules.Projects.description": "詳細",
   "modules.Projects.followers": "Followers",
   "modules.Projects.sharedPartners": "共有組織",
-  "modules.Projects.sharedPartners.tooltip": "You can choose up to 4 Partners. This will grant them access to this project.",
+  "modules.Projects.sharedPartners.tooltip": "4社までパートナを選ぶことができ、選ばれた組織はこのプロジェクトにアクセスできます。",
   "modules.Projects.diffBetweenLastMilestoneAndProjectDueDate": "プロジェクト期限と最後のマイルストーン期限の間の差",
   "modules.Projects.sheet.repeat": "繰り返し",
   "modules.Projects.sheet.projectSticky": "プロジェクト",

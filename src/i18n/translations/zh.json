@@ -1122,7 +1122,7 @@
   "modules.Projects.description": "注释",
   "modules.Projects.followers": "Followers",
   "modules.Projects.sharedPartners": "共享伙伴",
-  "modules.Projects.sharedPartners.tooltip": "You can choose up to 4 Partners. This will grant them access to this project.",
+  "modules.Projects.sharedPartners.tooltip": "您最多可以选择 4 个合作伙伴。 这将授予他们访问此工程的权限。",
   "modules.Projects.diffBetweenLastMilestoneAndProjectDueDate": "工程到期日和最后里程碑到期日之间的天差",
   "modules.Projects.sheet.repeat": "Repeat",
   "modules.Projects.sheet.projectSticky": "Project",
