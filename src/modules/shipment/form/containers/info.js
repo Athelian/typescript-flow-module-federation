@@ -94,12 +94,12 @@ export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
     this.setState(({ followers = [], organizations: oldPartners = [] }) => {
       // Check if forwarder, exporter, or importer
       const isForwarder = oldPartners.filter(oldPartner =>
-        forwarders.some(forwarder => forwarder.id === oldPartner.id)
+        forwarders.some(forwarder => forwarder?.id === oldPartner.id)
       );
 
-      const isExporter = oldPartners.filter(oldPartner => exporter.id === oldPartner.id);
+      const isExporter = oldPartners.filter(oldPartner => exporter?.id === oldPartner.id);
 
-      const isImporter = oldPartners.filter(oldPartner => importer.id === oldPartner.id);
+      const isImporter = oldPartners.filter(oldPartner => importer?.id === oldPartner.id);
 
       if (isForwarder.length !== 0 || isExporter.length !== 0 || isImporter.length !== 0) {
         const removedPartners = oldPartners.filter(
