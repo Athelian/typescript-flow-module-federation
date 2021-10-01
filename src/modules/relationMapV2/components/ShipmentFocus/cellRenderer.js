@@ -1177,6 +1177,41 @@ function ShipmentCell({
             selected={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
             selectable={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
             onClick={handleClick}
+            onCommentIconClick={evt => {
+              evt.stopPropagation();
+              dispatch({
+                type: 'EDIT',
+                payload: {
+                  type: SHIPMENT,
+                  selectedId: shipmentId,
+                  orderIds,
+                  defaultSection: 'logs',
+                },
+              });
+            }}
+            onDocumentIconClick={evt => {
+              evt.stopPropagation();
+              dispatch({
+                type: 'EDIT',
+                payload: {
+                  type: SHIPMENT,
+                  selectedId: shipmentId,
+                  orderIds,
+                  defaultSection: 'documents',
+                },
+              });
+            }}
+            onNotificationIconClick={evt => {
+              evt.stopPropagation();
+              dispatch({
+                type: 'EDIT',
+                payload: {
+                  type: SHIPMENT,
+                  selectedId: shipmentId,
+                  orderIds,
+                },
+              });
+            }}
             flattenCornerIcon
             id={`${SHIPMENT}-${shipmentId}`}
             filesUnreadCount={shipment?.filesUnreadCount}

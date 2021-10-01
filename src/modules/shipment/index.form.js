@@ -51,6 +51,7 @@ type OptionalProps = {
   onSuccessCallback: ?Function,
   redirectAfterSuccess: boolean,
   location: Location,
+  defaultSection: string,
   onCancel?: Function,
   initDataForSlideView: Object,
 };
@@ -63,6 +64,7 @@ const defaultProps = {
   path: '',
   shipmentId: '',
   anchor: '',
+  defaultSection: null,
   isSlideView: false,
   onSuccessCallback: null,
   redirectAfterSuccess: true,
@@ -357,7 +359,11 @@ class ShipmentFormModule extends React.PureComponent<Props> {
   };
 
   getDefaultParam = () => {
-    const { location } = this.props;
+    const { location, defaultSection } = this.props;
+
+    if (defaultSection) {
+      return defaultSection;
+    }
 
     // shipment/asdf?foo=123&default=logs
     const query = location?.search?.split('?')?.[1] ?? null;

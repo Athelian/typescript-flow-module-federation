@@ -162,6 +162,7 @@ export type State = {|
     type: string,
     selectedId: string,
     orderId?: string,
+    defaultSection?: string,
     orderIds?: Array<string>,
     shipmentIds?: Array<string>,
     containerIds?: Array<string>,
