@@ -504,7 +504,7 @@
   "modules.Documents.description": "Description",
   "modules.Documents.filename": "Filename",
   "modules.Documents.fileSize": "File Size",
-  "modules.Documents.download": "Download",
+  "modules.Documents.download": "下载",
   "modules.Documents.parentSection": "Parent",
   "modules.Documents.noParentMessage": "This file does not belong to any parent. You can add this file to a parent in the parent's form",
   "modules.RelationMap.label.delete": "删除",

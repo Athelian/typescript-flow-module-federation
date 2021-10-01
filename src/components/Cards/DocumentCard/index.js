@@ -28,7 +28,7 @@ import {
   DocumentTypeStyle,
   DocumentParentWrapperStyle,
   CreatedAtStyle,
-  TagsAndButtonsWrapperStyle,
+  ButtonWrapperStyle,
   TagsWrapperStyle,
   DownloadButtonStyle,
 } from './style';
@@ -183,7 +183,7 @@ const DocumentCard = ({
       }}
       {...rest}
     >
-      <div className={DocumentCardWrapperStyle(cardHeight)}>
+      <div className={DocumentCardWrapperStyle}>
         <div className={FileExtensionIconStyle(fileIcon.color)}>
           <Icon {...fileIcon} />
         </div>
@@ -218,15 +218,15 @@ const DocumentCard = ({
           }
         />
 
-        <div className={TagsAndButtonsWrapperStyle}>
-          <div className={TagsWrapperStyle}>
-            {(file?.tags ?? [])
-              .filter(item => !isForbidden(item))
-              .map(tag => (
-                <Tag key={tag.id} tag={tag} />
-              ))}
-          </div>
+        <div className={TagsWrapperStyle}>
+          {(file?.tags ?? [])
+            .filter(item => !isForbidden(item))
+            .map(tag => (
+              <Tag key={tag.id} tag={tag} />
+            ))}
+        </div>
 
+        <div className={ButtonWrapperStyle}>
           {downloadable ? (
             <button
               className={DownloadButtonStyle(false)}
@@ -237,6 +237,9 @@ const DocumentCard = ({
               type="button"
             >
               <Icon icon="DOWNLOAD" />
+              <Label>
+                <FormattedMessage id="modules.Documents.download" defaultMessage="Download" />
+              </Label>
             </button>
           ) : (
             <Tooltip
@@ -249,6 +252,9 @@ const DocumentCard = ({
             >
               <div className={DownloadButtonStyle(true)}>
                 <Icon icon="DOWNLOAD" />
+                <Label>
+                  <FormattedMessage id="modules.Documents.download" defaultMessage="Download" />
+                </Label>
               </div>
             </Tooltip>
           )}
