@@ -317,7 +317,6 @@ export const orderCardFullFragment = gql`
   }
 `;
 
-//
 export const shipmentCardFullFragment = gql`
   fragment shipmentCardFullFragment on Shipment {
     ...shipmentEntityCardFragment
