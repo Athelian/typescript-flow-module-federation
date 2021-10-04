@@ -1334,7 +1334,7 @@ function ItemSummaryCell({
       }
 
       return count;
-    }) ?? 0;
+    }, 0) ?? 0;
 
   return (
     <>
