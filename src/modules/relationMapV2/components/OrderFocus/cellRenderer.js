@@ -1407,7 +1407,7 @@ function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 }
 
 function ItemSummaryCell({
-  data,
+  data, // This is Order type
   onClick,
   isExpand,
   beforeConnector,
@@ -1417,6 +1417,7 @@ function ItemSummaryCell({
   const { matches } = Hits.useContainer();
   const { mapping } = Entities.useContainer();
   const orderItems = data?.orderItems ?? [];
+  const orderItemCount = (data?.orderItems ?? []).length;
   const orderItemIds = orderItems.map(item => item?.id).filter(Boolean);
   const orderId = data?.id;
   const batchIds = flatten(
@@ -1455,7 +1456,7 @@ function ItemSummaryCell({
           hasFilterHits={isMatched}
           isExpanded={isExpand}
           onClick={onClick}
-          total={data?.orderItemCount ?? 0}
+          total={orderItemCount}
           onSelectAll={() => {
             const targets = orderItems.map(item => `${ORDER_ITEM}-${item?.id}`);
             dispatch({
@@ -1524,6 +1525,7 @@ function BatchSummaryCell({
   const hasRelation = containerCount
     ? isTargetedAnyBatches && isTargetedAnyContainers
     : isTargetedAnyBatches && isTargetedAnyShipments;
+
   const total = data?.batchCount ?? 0;
   const isMatched = batchIds.some(itemId => matches?.entity?.[`${itemId}-${BATCH}`]);
   return (

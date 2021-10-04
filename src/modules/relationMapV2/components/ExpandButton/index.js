@@ -12,12 +12,13 @@ export default function ExpandButton() {
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
   const { mapping } = Entities.useContainer();
   const orderIds = Object.keys(mapping.entities?.orders ?? {}).filter(
-    id => mapping.entities?.orders?.[id]?.orderItemCount
+    id => mapping.entities?.orders?.[id]?.orderItems?.length ?? 0
   );
+
   const shipmentIds = Object.keys(mapping.entities?.shipments ?? {}).filter(
     id =>
-      mapping.entities?.shipments?.[id]?.containerCount ||
-      mapping.entities?.shipments?.[id]?.batchCount
+      mapping.entities?.shipments?.[id]?.containers?.length ||
+      mapping.entities?.shipments?.[id]?.batches?.length
   );
 
   const allIsExpanded =

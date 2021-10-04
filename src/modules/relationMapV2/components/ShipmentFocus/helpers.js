@@ -79,8 +79,9 @@ export const shipmentCoordinates = memoize(
     newBatchIDs: Array<string>,
     newContainerIDs: Array<string>,
   }): Array<?CellRender> => {
-    const containerCount = shipment?.containerCount ?? 0;
-    const batchCount = shipment?.batchCount ?? 0;
+    const containerCount = shipment?.containers?.length ?? 0;
+    const batchCount = shipment?.batches?.length ?? 0;
+
     const batches = shipment?.batches ?? [];
     const containers = shipment?.containers ?? [];
     if (!isExpand) {

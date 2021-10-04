@@ -20,9 +20,6 @@ const shipmentEntityCardFragment = gql`
   fragment shipmentEntityCardFragment on Shipment {
     id
     orderCount
-    orderItemCount
-    batchCount
-    containerCount
     totalVolumeOverride {
       ...metricFragment
     }
@@ -35,7 +32,6 @@ const shipmentEntityCardFragment = gql`
     }
     filesUnreadCount
     timeline {
-      unreadCount
       unreadMessageCount
     }
     exporter {
@@ -265,8 +261,6 @@ const orderEntityCardFragment = gql`
     archived
     currency
     poNo
-    orderItemCount
-    orderItemChildlessCount
     batchCount
     containerCount
     shipmentCount
@@ -321,6 +315,7 @@ export const orderCardFullFragment = gql`
   }
 `;
 
+//
 export const shipmentCardFullFragment = gql`
   fragment shipmentCardFullFragment on Shipment {
     ...shipmentEntityCardFragment
