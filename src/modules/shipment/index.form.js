@@ -506,13 +506,14 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                 shipmentTasksContainer.isDirty();
                               return (
                                 <>
-                                  <BooleanValue defaultValue={defaultParam === 'logs'}>
+                                  <BooleanValue>
                                     {({ value: opened, set: slideToggle }) =>
                                       !isNewOrClone && (
                                         <>
                                           <LogsButton
                                             entityType="shipment"
                                             entityId={shipmentId}
+                                            openByDefault={defaultParam === 'logs'}
                                             onClick={() => slideToggle(true)}
                                           />
                                           <SlideView

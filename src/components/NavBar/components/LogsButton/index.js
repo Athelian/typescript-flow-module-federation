@@ -24,15 +24,18 @@ type Props = {|
     | 'task'
     | 'file',
   entityId: string,
+  openByDefault?: boolean,
 |};
 
-const LogsButton = ({ onClick, entityType, entityId }: Props) => {
+const LogsButton = ({ onClick, entityType, entityId, openByDefault }: Props) => {
   const requestEntityId = entityType === 'productProvider' ? entityId : decodeId(entityId);
   const { loading, data } = useQuery(unreadTimelineByEntity(entityType), {
     variables: {
       id: requestEntityId,
     },
   });
+  const isDefaultOpened = React.useRef(false);
+
   const [timelineRead] = useMutation(timelineReadByEntity, {
     variables: {
       entity: {
@@ -48,6 +51,14 @@ const LogsButton = ({ onClick, entityType, entityId }: Props) => {
       },
     ],
   });
+
+  React.useEffect(() => {
+    if (openByDefault && !isDefaultOpened.current) {
+      isDefaultOpened.current = true;
+      timelineRead();
+      onClick();
+    }
+  }, [openByDefault, timelineRead, onClick]);
 
   const badge = loading ? 0 : getByPathWithDefault(0, `${entityType}.timeline.unreadCount`, data);
   return (
