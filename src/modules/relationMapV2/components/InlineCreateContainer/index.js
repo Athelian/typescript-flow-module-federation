@@ -26,10 +26,9 @@ export default function InlineCreateContainer({ onSuccess }: Props) {
   const shipmentId = entity.id;
   const isContainerCreation = type === 'createContainer';
   const shipment = mapping.entities?.shipments?.[shipmentId];
-  const totalContainers = shipment?.containerCount ?? 0;
+  const totalContainers = shipment?.containers?.length ?? 0;
   const voyages = shipment?.voyages ?? [];
   const shipmentIsArchived = shipment?.archived ?? false;
-
   const input = {
     shipmentId,
     ...prepareParsedContainerInput({

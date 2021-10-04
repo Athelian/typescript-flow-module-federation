@@ -224,7 +224,7 @@ const useSortAndFilter = (type: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') => {
         field: 'updatedAt',
         direction: 'DESCENDING',
       },
-      perPage: 10,
+      perPage: 5,
       page: 1,
     },
     type
