@@ -20,6 +20,7 @@ import {
 import validator from 'modules/order/form/validator';
 import { FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
+import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
 import Followers from 'components/Followers';
 import {
@@ -34,6 +35,7 @@ import {
   DateInputFactory,
   CustomFieldsFactory,
   EnumSearchSelectInputFactory,
+  FormTooltip,
 } from 'components/Form';
 import { getQuantityForOrderSummary } from 'modules/order/helpers';
 import {
@@ -54,8 +56,11 @@ import {
 } from 'modules/permission/constants/order';
 import messages from 'modules/order/messages';
 import SelectExporter from 'modules/order/common/SelectExporter';
+import SelectPartners from 'components/SelectPartners';
+import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { PartnerCard, GrayCard } from 'components/Cards';
 import { TAG_GET } from 'modules/permission/constants/tag';
+import renderPartners from './helpers';
 import OrderSummary from './components/OrderSummary';
 import {
   OrderSectionWrapperStyle,
@@ -75,6 +80,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const { archived, ownedBy } = order;
+
   return (
     <MainSectionPlaceholder height={961} isLoading={isLoading}>
       <SectionHeader
@@ -127,7 +133,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
       </SectionHeader>
       <div className={OrderSectionWrapperStyle}>
         <Subscribe to={[OrderInfoContainer]}>
-          {({ originalValues: initialValues, state, setFieldValue }) => {
+          {({ originalValues: initialValues, state, setFieldValue, onChangePartners }) => {
             const values = { ...initialValues, ...state };
             const { currency } = values;
             return (
@@ -467,6 +473,72 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                             )}
                           </>
                         )
+                      }
+                    />
+
+                    <FieldItem
+                      vertical
+                      label={
+                        <Label>
+                          <FormattedMessage
+                            id="modules.Projects.sharedPartners"
+                            defaultMessage="SHARED PARTNERS"
+                          />
+                          {' ('}
+                          <FormattedNumber value={values?.organizations?.length || 0} />)
+                        </Label>
+                      }
+                      tooltip={
+                        <FormTooltip
+                          infoMessage={<FormattedMessage {...messages.sharedPartnersTooltip} />}
+                        />
+                      }
+                      input={
+                        <BooleanValue>
+                          {({ value: partnerSelectorIsOpen, set: partnerSelectorToggle }) => (
+                            <>
+                              <div
+                                onClick={() =>
+                                  hasPermission([ORDER_UPDATE, ORDER_SET_IMPORTER])
+                                    ? partnerSelectorToggle(true)
+                                    : () => {}
+                                }
+                                role="presentation"
+                              >
+                                {renderPartners(
+                                  values?.organizations,
+                                  hasPermission(PARTNER_LIST) &&
+                                    hasPermission([ORDER_UPDATE, ORDER_SET_IMPORTER])
+                                )}
+                              </div>
+
+                              <SlideView
+                                isOpen={partnerSelectorIsOpen}
+                                onRequestClose={() => partnerSelectorToggle(false)}
+                              >
+                                <>
+                                  <SelectPartners
+                                    partnerTypes={[]}
+                                    selected={values?.organizations?.map(org => org?.partner) || []}
+                                    onCancel={() => partnerSelectorToggle(false)}
+                                    onSelect={selected => {
+                                      const assembledOrgs = selected.map(
+                                        ({ organization, ...partner }) => ({
+                                          ...organization,
+                                          partner: {
+                                            ...partner,
+                                          },
+                                        })
+                                      );
+                                      onChangePartners(assembledOrgs, values?.exporter);
+                                      partnerSelectorToggle(false);
+                                    }}
+                                  />
+                                </>
+                              </SlideView>
+                            </>
+                          )}
+                        </BooleanValue>
                       }
                     />
                   </GridColumn>

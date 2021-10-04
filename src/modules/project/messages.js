@@ -64,7 +64,7 @@ export default defineMessages({
   },
   sharedPartners: {
     id: 'modules.Projects.sharedPartners',
-    defaultMessage: 'SHARED PARTNERS',
+    defaultMessage: 'Shared Partners',
   },
   sharedPartnersTooltip: {
     id: 'modules.Projects.sharedPartners.tooltip',

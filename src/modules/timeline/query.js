@@ -11,24 +11,6 @@ export const commentFragment = gql`
         id
         firstName
         lastName
-        email
-        avatar {
-          ... on File {
-            path(preset: Small)
-          }
-        }
-        organization {
-          ... on Organization {
-            id
-            name
-          }
-        }
-        roles {
-          ... on Role {
-            id
-            name
-          }
-        }
       }
     }
     createdAt
@@ -113,24 +95,6 @@ export const eventFragment = gql`
         id
         firstName
         lastName
-        email
-        avatar {
-          ... on File {
-            path(preset: Small)
-          }
-        }
-        organization {
-          ... on Organization {
-            id
-            name
-          }
-        }
-        roles {
-          ... on Role {
-            id
-            name
-          }
-        }
       }
     }
     createdAt

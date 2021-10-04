@@ -196,7 +196,7 @@ type PortType = {
 };
 
 const parsePortField = (key: string, originalPort: ?PortType, newPort: ?PortType) => {
-  if (isEquals(originalPort, newPort)) return {};
+  if (isEquals(originalPort, newPort)) return undefined;
 
   const parsedNewPort = {
     ...parseEnumField(
@@ -211,7 +211,7 @@ const parsePortField = (key: string, originalPort: ?PortType, newPort: ?PortType
     ),
   };
 
-  return { [key]: parsedNewPort };
+  return { [key]: Object.keys(parsedNewPort).length ? parsedNewPort : undefined };
 };
 
 type ShipmentInputType = {
@@ -246,6 +246,11 @@ export const prepareParsedShipmentInput = ({
       'exporterId',
       getByPathWithDefault(null, 'exporter', originalValues),
       newValues.exporter
+    ),
+    ...parseArrayOfIdsField(
+      'organizationIds',
+      originalValues?.organizations ?? [],
+      newValues.organizations
     ),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
     ...parseGenericField(

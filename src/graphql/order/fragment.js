@@ -15,6 +15,16 @@ export const orderFormQueryFragment = gql`
     followers {
       ...userAvatarFragment
     }
+    organizations {
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
+    }
     ... on Followed {
       notificationUnseenCount
     }
@@ -79,6 +89,16 @@ export const orderFormFragment = gql`
     }
     followers {
       ...userAvatarFragment
+    }
+    organizations {
+      ... on Organization {
+        id
+        name
+        types
+        partner {
+          ...partnerCardFragment
+        }
+      }
     }
     ... on Followed {
       notificationUnseenCount
