@@ -32,6 +32,7 @@ type Props = {|
   isNew?: boolean,
   isClone?: boolean,
   anchor?: string,
+  skipToSection?: ?string, // only documents for now
   initDataForSlideView?: Object,
 |};
 
@@ -41,11 +42,31 @@ const ShipmentForm = ({
   shipment,
   loading,
   initDataForSlideView,
+  skipToSection,
   anchor,
 }: Props) => {
   const { organization } = useUser();
 
   const [fileMarkAsRead] = useMutation(fileMarkAsReadMutation);
+
+  React.useEffect(() => {
+    if (skipToSection === 'documents') {
+      // wait for the element is rendering on DOM
+      const sectionId = 'shipment_documentsSection';
+
+      const retryFindElement = () => {
+        const foundElement = document.querySelector(`#${sectionId}`);
+
+        if (!foundElement) {
+          requestAnimationFrame(retryFindElement);
+        } else {
+          // scroll to element after rendering
+          scrollIntoView({ targetId: sectionId });
+        }
+      };
+      requestAnimationFrame(retryFindElement);
+    }
+  }, [skipToSection]);
 
   React.useEffect(() => {
     if (anchor) {
@@ -89,7 +110,6 @@ const ShipmentForm = ({
           />
         )}
       </Subscribe>
-
       <SectionWrapper id="shipment_documentsSection">
         <div>
           <DocumentsSection

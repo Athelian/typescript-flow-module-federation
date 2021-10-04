@@ -788,6 +788,7 @@ const initialState: State = {
   edit: {
     type: '',
     selectedId: '',
+    defaultSection: '',
   },
   newOrders: [],
   newShipments: [],

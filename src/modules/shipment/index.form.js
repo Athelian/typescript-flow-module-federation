@@ -50,6 +50,8 @@ type OptionalProps = {
   isSlideView: boolean,
   onSuccessCallback: ?Function,
   redirectAfterSuccess: boolean,
+  location: Location,
+  defaultSection: string,
   onCancel?: Function,
   initDataForSlideView: Object,
 };
@@ -62,6 +64,7 @@ const defaultProps = {
   path: '',
   shipmentId: '',
   anchor: '',
+  defaultSection: null,
   isSlideView: false,
   onSuccessCallback: null,
   redirectAfterSuccess: true,
@@ -355,6 +358,25 @@ class ShipmentFormModule extends React.PureComponent<Props> {
     }
   };
 
+  getDefaultParam = () => {
+    const { location, defaultSection } = this.props;
+
+    if (defaultSection) {
+      return defaultSection;
+    }
+
+    // shipment/asdf?foo=123&default=logs
+    const query = location?.search?.split('?')?.[1] ?? null;
+
+    // foo=123&default=logs
+    const queryParams = query?.split('&') ?? [];
+
+    // ['foo=123', 'default=logs']
+    const defaultParam = queryParams.find(queryParam => queryParam.startsWith('default'));
+
+    return defaultParam ? defaultParam?.split('=')?.[1] : null;
+  };
+
   render() {
     const { shipmentId, anchor, isSlideView, onCancel, initDataForSlideView } = this.props;
     const isNewOrClone = this.isNewOrClone();
@@ -364,6 +386,8 @@ class ShipmentFormModule extends React.PureComponent<Props> {
     }
     const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
     const CurrentLayout = isSlideView ? SlideViewLayout : React.Fragment;
+
+    const defaultParam = this.getDefaultParam();
 
     return (
       <UserConsumer>
@@ -489,6 +513,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                           <LogsButton
                                             entityType="shipment"
                                             entityId={shipmentId}
+                                            openByDefault={defaultParam === 'logs'}
                                             onClick={() => slideToggle(true)}
                                           />
                                           <SlideView
@@ -729,6 +754,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                     isClone={this.isClone()}
                                     shipment={shipment}
                                     anchor={anchor}
+                                    skipToSection={defaultParam}
                                   />
                                   <Subscribe
                                     to={[

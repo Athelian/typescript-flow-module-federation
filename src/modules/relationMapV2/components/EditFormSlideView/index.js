@@ -56,7 +56,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
       fetchPolicy: 'no-cache',
     }
   );
-  const { type, selectedId: id } = state.edit;
+  const { type, selectedId: id, defaultSection } = state.edit;
   const { mapping, onSetBadges } = Entities.useContainer();
   const onRequestClose = React.useCallback(() => {
     if (isReady.current) {
@@ -218,7 +218,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
       break;
     }
     case SHIPMENT: {
-      form = <ShipmentForm shipmentId={encodeId(id)} isSlideView />;
+      form = <ShipmentForm shipmentId={encodeId(id)} defaultSection={defaultSection} isSlideView />;
       break;
     }
     case 'TASKS': {
