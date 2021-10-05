@@ -9,6 +9,7 @@ type Props = {|
   onClick: Function,
   count: number,
   cardType: string,
+  readOnly?: boolean,
 |};
 
 const defaultProps = {
@@ -16,9 +17,9 @@ const defaultProps = {
   count: 0,
 };
 
-const ViewMoreCard = ({ count, onClick, cardType }: Props) => {
+const ViewMoreCard = ({ count, onClick, cardType, readOnly = false }: Props) => {
   return (
-    <div className={ViewMoreCardStyle} role="presentation" onClick={onClick}>
+    <div className={ViewMoreCardStyle(readOnly)} role="presentation" onClick={onClick}>
       <div className={ViewMoreCardHeaderStyle}>
         <div className={ViewMoreIconStyle}>
           <Icon icon={cardType} />
@@ -36,6 +37,7 @@ const ViewMoreCard = ({ count, onClick, cardType }: Props) => {
       </div>
       <BaseButton
         icon="IMPORTERS"
+        disabled={readOnly}
         label={
           <FormattedMessage id="components.Header.notification.viewAll" defaultMessage="View All" />
         }

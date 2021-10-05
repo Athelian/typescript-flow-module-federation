@@ -2,15 +2,16 @@
 import { css } from 'react-emotion';
 import { colors } from 'styles/common';
 
-export const ViewMoreCardStyle: string = css`
+export const ViewMoreCardStyle = (readOnly?: boolean): string => css`
   padding: 10px;
   width: 100%;
   box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
   border-radius: 5px;
   background-color: #ffffff;
   transition: all 0.2s ease-out;
-  cursor: pointer;
+  ${!readOnly && `cursor: pointer;`};
 `;
+
 export const ViewMoreCardHeaderStyle: string = css`
   display: flex;
   margin-bottom: 20px;
