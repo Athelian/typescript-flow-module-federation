@@ -1177,6 +1177,41 @@ function ShipmentCell({
             selected={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
             selectable={state.targets.includes(`${SHIPMENT}-${shipmentId}`)}
             onClick={handleClick}
+            onCommentIconClick={evt => {
+              evt.stopPropagation();
+              dispatch({
+                type: 'EDIT',
+                payload: {
+                  type: SHIPMENT,
+                  selectedId: shipmentId,
+                  orderIds,
+                  defaultSection: 'logs',
+                },
+              });
+            }}
+            onDocumentIconClick={evt => {
+              evt.stopPropagation();
+              dispatch({
+                type: 'EDIT',
+                payload: {
+                  type: SHIPMENT,
+                  selectedId: shipmentId,
+                  orderIds,
+                  defaultSection: 'documents',
+                },
+              });
+            }}
+            onNotificationIconClick={evt => {
+              evt.stopPropagation();
+              dispatch({
+                type: 'EDIT',
+                payload: {
+                  type: SHIPMENT,
+                  selectedId: shipmentId,
+                  orderIds,
+                },
+              });
+            }}
             flattenCornerIcon
             id={`${SHIPMENT}-${shipmentId}`}
             filesUnreadCount={shipment?.filesUnreadCount}
@@ -1297,7 +1332,7 @@ function NoContainerCell({ data, beforeConnector, afterConnector }: CellProps) {
 }
 
 function ItemSummaryCell({
-  data,
+  data, // this is Shipment type
   onClick,
   isExpand,
   beforeConnector,
@@ -1325,6 +1360,17 @@ function ItemSummaryCell({
         `${mapping?.entities?.orderItems?.[itemId]?.productProvider?.product?.id}-${PRODUCT}`
       ]
   );
+
+  // orderItemCount = no. of batches since 1 batch = 1 order = 1 orderItem
+  const orderItemCount =
+    data?.batches?.reduce((count, batch) => {
+      if (batch.orderItem) {
+        return count + 1;
+      }
+
+      return count;
+    }, 0) ?? 0;
+
   return (
     <>
       <div className={ContentStyle}>
@@ -1344,7 +1390,7 @@ function ItemSummaryCell({
           hasFilterHits={isMatched}
           isExpanded={isExpand}
           onClick={onClick}
-          total={data?.orderItemCount ?? 0}
+          total={orderItemCount}
           onSelectAll={() => {
             const targets = orderItems.map(item => `${ORDER_ITEM}-${item?.id}`);
             dispatch({
@@ -1391,8 +1437,9 @@ function BatchSummaryCell({
   const isTargetedAnyBatches = batchIds.some(batchId =>
     state.targets.includes(`${BATCH}-${batchId}`)
   );
-  const containerCount = shipment?.containerCount ?? 0;
-  const batchCount = shipment?.batchCount ?? 0;
+  const containerCount = shipment?.containers?.length ?? 0;
+  const batchCount = shipment?.batches?.length ?? 0;
+
   const containerIds = (shipment?.containers ?? []).map(container => container.id).filter(Boolean);
   const isTargetedAnyContainers = containerIds.some(containerId =>
     state.targets.includes(`${CONTAINER}-${containerId}`)
@@ -1473,8 +1520,9 @@ function ContainerSummaryCell({
   const { state, dispatch } = FocusedView.useContainer();
   const { matches } = Hits.useContainer();
   const { user } = useUser();
-  const containerCount = shipment?.containerCount ?? 0;
-  const batchCount = shipment?.batchCount ?? 0;
+  const containerCount = shipment?.containers?.length ?? 0;
+  const batchCount = shipment?.batches?.length ?? 0;
+
   const batchIds = (shipment?.batches ?? []).map(batch => batch?.id).filter(Boolean);
   const containers = shipment?.containers ?? [];
   const containerIds = containers.map(container => container?.id).filter(Boolean);
@@ -1595,6 +1643,7 @@ function OrderSummaryCell({
   };
   const isMatched = orderIds.some(itemId => matches.entity && matches.entity[`${itemId}-${ORDER}`]);
   const orderCount = shipment?.orderCount ?? 0;
+
   return (
     <>
       <div className={ContentStyle}>

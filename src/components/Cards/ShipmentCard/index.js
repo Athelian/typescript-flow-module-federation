@@ -1,8 +1,10 @@
 // @flow
 import * as React from 'react';
 import type { Shipment } from 'generated/graphql';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
+import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
 import Icon from 'components/Icon';
 import TaskRing from 'components/TaskRing';
@@ -125,6 +127,15 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, onSelect, ...rest
         if (onSelect) {
           onSelect(shipment);
         }
+      }}
+      onCommentIconClick={() => {
+        navigate(`/shipment/${encodeId(shipment.id)}?default=logs`);
+      }}
+      onDocumentIconClick={() => {
+        navigate(`/shipment/${encodeId(shipment.id)}?default=documents`);
+      }}
+      onNotificationIconClick={() => {
+        navigate(`/shipment/${encodeId(shipment.id)}`);
       }}
       {...rest}
     >

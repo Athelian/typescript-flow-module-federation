@@ -1,3 +1,5 @@
+/* eslint-disable graphql/template-strings */
+
 import gql from 'graphql-tag';
 import {
   tagFragment,
@@ -20,9 +22,6 @@ const shipmentEntityCardFragment = gql`
   fragment shipmentEntityCardFragment on Shipment {
     id
     orderCount
-    orderItemCount
-    batchCount
-    containerCount
     totalVolumeOverride {
       ...metricFragment
     }
@@ -35,7 +34,6 @@ const shipmentEntityCardFragment = gql`
     }
     filesUnreadCount
     timeline {
-      unreadCount
       unreadMessageCount
     }
     exporter {
@@ -265,11 +263,9 @@ const orderEntityCardFragment = gql`
     archived
     currency
     poNo
-    orderItemCount
-    orderItemChildlessCount
-    batchCount
-    containerCount
-    shipmentCount
+    batchCount @skip(if: $skipOrderCounts)
+    containerCount @skip(if: $skipOrderCounts)
+    shipmentCount @skip(if: $skipOrderCounts)
     ... on Followed {
       notificationUnseenCount
     }
@@ -349,6 +345,7 @@ export const orderFocusedListQuery = gql`
     $perPage: Int!
     $filterBy: OrderFilterInput
     $sortBy: OrderSortInput
+    $skipOrderCounts: Boolean = false
   ) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
@@ -388,7 +385,7 @@ export const orderFocusedListQuery = gql`
 `;
 
 export const orderFullFocusDetailQuery = gql`
-  query orderFullFocusDetailQuery($ids: [ID!]!) {
+  query orderFullFocusDetailQuery($ids: [ID!]!, $skipOrderCounts: Boolean = false) {
     ordersByIDs(ids: $ids) {
       ...orderCardFullFragment
     }
@@ -414,6 +411,7 @@ export const shipmentFocusedListQuery = gql`
     $perPage: Int!
     $filterBy: ShipmentFilterInput
     $sortBy: ShipmentSortInput
+    $skipOrderCounts: Boolean = true
   ) {
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
@@ -453,7 +451,7 @@ export const shipmentFocusedListQuery = gql`
 `;
 
 export const shipmentFullFocusDetailQuery = gql`
-  query shipmentFullFocusDetailQuery($ids: [ID!]!) {
+  query shipmentFullFocusDetailQuery($ids: [ID!]!, $skipOrderCounts: Boolean = true) {
     shipmentsByIDs(ids: $ids) {
       ...shipmentCardFullFragment
     }

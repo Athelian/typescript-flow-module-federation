@@ -84,7 +84,7 @@ export const orderCoordinates = memoize(
     newOrderItemIDs: Array<string>,
   }): Array<?CellRender> => {
     const orderItems = order?.orderItems ?? [];
-    const orderItemCount = order?.orderItemCount ?? 0;
+    const orderItemCount = (order?.orderItems ?? []).length;
     const batchCount = order?.batchCount ?? 0;
     const containerCount = order?.containerCount ?? 0;
     const shipmentCount = order?.shipmentCount ?? 0;
