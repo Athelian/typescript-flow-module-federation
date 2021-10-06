@@ -81,7 +81,7 @@ const PermissionsProvider = ({ children }: Props) => {
   }, [authenticated]);
 
   const getPermissionsByOrganization = React.useCallback(
-    (organizationId?: string): Permissions => {
+    (organizationId: ?string): Permissions => {
       if (!organizationId) {
         return {
           loading: false,
@@ -131,7 +131,7 @@ const PermissionsProvider = ({ children }: Props) => {
   );
 
   const hasPermissionsByOrganization = React.useCallback(
-    (organizationId?: string) => {
+    (organizationId: ?string) => {
       const permissionsByOrganization = getPermissionsByOrganization(organizationId);
       return (permissionKey: string | Array<string>) => {
         if (permissionsByOrganization.loading) {

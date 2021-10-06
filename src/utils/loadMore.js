@@ -3,7 +3,7 @@ import { get, set, uniq } from 'lodash/fp';
 import logger from './logger';
 
 const loadMore = (
-  clientData: { fetchMore: Function, data: ?Object, loading: ?boolean },
+  clientData: { fetchMore: Function, data: ?Object, loading?: boolean },
   filtersAndSort: Object = {},
   selectedField: string = ''
 ) => {
