@@ -21,7 +21,7 @@ const OrderList = ({ ...filtersAndSort }: Props) => {
     emitter.once('CHANGE_ORDER_STATUS', () => {
       apolloClient.reFetchObservableQueries();
     });
-  });
+  }, []);
 
   return (
     <Query query={orderListQuery} variables={filtersAndSort} fetchPolicy="network-only">
@@ -37,7 +37,9 @@ const OrderList = ({ ...filtersAndSort }: Props) => {
         return (
           <OrderGridView
             items={getByPathWithDefault([], 'orders.nodes', data)}
-            onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orders')}
+            onLoadMore={() => {
+              loadMore({ fetchMore, data, loading }, filtersAndSort, 'orders');
+            }}
             hasMore={hasMore}
             isLoading={loading}
           />

@@ -72,6 +72,7 @@ const PermissionsProvider = ({ children }: Props) => {
   const client = useApolloClient();
   const { authenticated } = useAuthenticated();
   const [permissions, setPermissions] = React.useState<State>({});
+  const organizationsToSearch = React.useRef({});
 
   React.useEffect(() => {
     if (!authenticated) {
@@ -88,40 +89,43 @@ const PermissionsProvider = ({ children }: Props) => {
         };
       }
 
-      if (!Object.prototype.hasOwnProperty.call(permissions, organizationId)) {
-        setPermissions({
-          ...permissions,
-          [organizationId]: {
-            loading: true,
-            permissions: [],
-          },
-        });
-
-        client
-          .query({
-            query: permissionsForOrganization,
-            variables: {
-              organizationId,
-            },
-            fetchPolicy: 'network-only',
-          })
-          .then(({ data }) => {
-            setPermissions({
-              ...permissions,
-              [organizationId]: {
-                loading: false,
-                permissions: getByPathWithDefault([], 'viewer.permissionsForOrganization', data),
-              },
-            });
-          });
-
+      if (organizationsToSearch.current[organizationId]) {
         return {
           loading: true,
           permissions: [],
         };
       }
 
-      return permissions[organizationId];
+      if (permissions[organizationId]) {
+        return permissions[organizationId];
+      }
+
+      organizationsToSearch.current[organizationId] = true;
+
+      client
+        .query({
+          query: permissionsForOrganization,
+          variables: {
+            organizationId,
+          },
+          fetchPolicy: 'network-only',
+        })
+        .then(({ data }) => {
+          delete organizationsToSearch.current[organizationId];
+
+          setPermissions({
+            ...permissions,
+            [organizationId]: {
+              loading: false,
+              permissions: getByPathWithDefault([], 'viewer.permissionsForOrganization', data),
+            },
+          });
+        });
+
+      return {
+        loading: true,
+        permissions: [],
+      };
     },
     [client, permissions, setPermissions]
   );
