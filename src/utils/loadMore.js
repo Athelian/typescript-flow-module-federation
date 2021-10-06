@@ -3,13 +3,19 @@ import { get, set, uniq } from 'lodash/fp';
 import logger from './logger';
 
 const loadMore = (
-  clientData: { fetchMore: Function, data: ?Object },
+  clientData: { fetchMore: Function, data: ?Object, loading?: boolean },
   filtersAndSort: Object = {},
   selectedField: string = ''
 ) => {
-  const { data = { [`${selectedField}`]: { page: 1, totalPage: 0 } }, fetchMore } = clientData;
+  const {
+    data = {
+      [`${selectedField}`]: { page: 1, totalPage: 0 },
+    },
+    fetchMore,
+    loading = false,
+  } = clientData;
   logger.warn('loadMore', data);
-  if (!data) return Promise.resolve({});
+  if (!data || loading) return Promise.resolve({});
   const nextPage = get(`${selectedField}.page`, data) + 1;
   const totalPage = get(`${selectedField}.totalPage`, data);
   if (nextPage > totalPage) return Promise.resolve({});
