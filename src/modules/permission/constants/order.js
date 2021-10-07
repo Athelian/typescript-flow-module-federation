@@ -1,5 +1,6 @@
 // @flow
-export const ORDER_LIST = 'order.orders.list';
+
+export const ORDER_LIST = 'order.orders.list'; // deprecated
 export const ORDER_FORM = 'order.orders.form';
 export const ORDER_CREATE = 'order.orders.create';
 export const ORDER_UPDATE = 'order.orders.update';

@@ -19,7 +19,8 @@ export const NAVIGATION_CONTAINERS_CARD = 'navigation.containers.card';
 export const NAVIGATION_PRODUCTS_CARD = 'navigation.products.card';
 
 export const NAVIGATION_PROJECTS_TABLE = 'navigation.projects.table';
-export const NAVIGATION_PROJECTS_TABLEΒ = 'navigation.projects.tableβ';
+export const NAVIGATION_PROJECTS_TABLE_BETA = 'navigation.projects.tableβ';
+
 export const NAVIGATION_PROJECTS_CARD = 'navigation.projects.card';
 
 export const NAVIGATION_TASKS_CARD = 'navigation.tasks.card';
@@ -30,7 +31,7 @@ export const NAVIGATION_NETWORK_WAREHOUSES = 'navigation.network.warehouses';
 export const NAVIGATION_NETWORK_PARTNERS = 'navigation.network.partners';
 export const NAVIGATION_NETWORK_USERS = 'navigation.network.users';
 
-export const NAVIGATION_TEMPLATES_CUSTOMFILEDS = 'navigation.templates.customFileds';
+export const NAVIGATION_TEMPLATES_CUSTOM_FILEDS = 'navigation.templates.customFileds';
 export const NAVIGATION_TEMPLATES_TABLE = 'navigation.templates.table';
 export const NAVIGATION_TEMPLATES_TASKS = 'navigation.templates.tasks';
 export const NAVIGATION_TEMPLATES_PROJECTS = 'navigation.templates.projects';

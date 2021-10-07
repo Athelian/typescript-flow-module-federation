@@ -2,25 +2,34 @@
 import React from 'react';
 import { Location } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
-import { ORDER_LIST } from 'modules/permission/constants/order';
-import { ORDER_ITEMS_LIST } from 'modules/permission/constants/orderItem';
-import { BATCH_LIST } from 'modules/permission/constants/batch';
-import { SHIPMENT_LIST } from 'modules/permission/constants/shipment';
-import { CONTAINER_LIST } from 'modules/permission/constants/container';
-import { PRODUCT_LIST } from 'modules/permission/constants/product';
-import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
-import { TAG_LIST } from 'modules/permission/constants/tag';
-import { CUSTOM_FIELD_DEFINITIONS_LIST } from 'modules/permission/constants/customFields';
-import { TEMPLATE_LIST } from 'modules/permission/constants/template';
-import { PARTNER_LIST } from 'modules/permission/constants/partner';
-import { STAFF_LIST } from 'modules/permission/constants/staff';
-import { PROJECT_LIST } from 'modules/permission/constants/project';
-import { DOCUMENT_LIST } from 'modules/permission/constants/file';
 import {
-  PROJECT_TEMPLATE_LIST,
-  TASK_LIST,
-  TASK_TEMPLATE_LIST,
-} from 'modules/permission/constants/task';
+  NAVIGATION_ORDERS_MAP,
+  NAVIGATION_ORDERS_TABLE,
+  NAVIGATION_ORDERS_CARD,
+  NAVIGATION_ORDER_ITEMS_CARD,
+  NAVIGATION_BATCH_TABLE,
+  NAVIGATION_BATCH_CARD,
+  NAVIGATION_SHIPMENTS_MAP,
+  NAVIGATION_SHIPMENTS_TABLE,
+  NAVIGATION_SHIPMENTS_TABLE_ΒETA,
+  NAVIGATION_SHIPMENTS_CARD,
+  NAVIGATION_CONTAINERS_CARD,
+  NAVIGATION_PRODUCTS_CARD,
+  NAVIGATION_PROJECTS_TABLE,
+  NAVIGATION_PROJECTS_TABLE_BETA,
+  NAVIGATION_PROJECTS_CARD,
+  NAVIGATION_TASKS_CARD,
+  NAVIGATION_DOCUMENTS_CARD,
+  NAVIGATION_NETWORK_WAREHOUSES,
+  NAVIGATION_NETWORK_PARTNERS,
+  NAVIGATION_NETWORK_USERS,
+  NAVIGATION_TEMPLATES_CUSTOM_FILEDS,
+  NAVIGATION_TEMPLATES_TABLE,
+  NAVIGATION_TEMPLATES_TASKS,
+  NAVIGATION_TEMPLATES_PROJECTS,
+  NAVIGATION_TAGS_CARD,
+} from 'modules/permission/constants/navigation';
+
 import { useViewerHasPermissions, type HasPermissions } from 'contexts/Permissions';
 import useUser from 'hooks/useUser';
 import { useUI } from 'contexts/UI';
@@ -56,22 +65,26 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.order} />,
     icon: 'ORDER',
     path: 'order',
-    permitted: hasPermissions => hasPermissions(ORDER_LIST),
+    permitted: hasPermissions =>
+      hasPermissions([NAVIGATION_ORDERS_MAP, NAVIGATION_ORDERS_TABLE, NAVIGATION_ORDERS_CARD]),
     submenu: [
       {
         label: <FormattedMessage {...messages.map} />,
         icon: 'MAP',
         path: 'map',
+        permitted: hasPermissions => hasPermissions(NAVIGATION_ORDERS_MAP),
       },
       {
         label: <FormattedMessage {...messages.table} />,
         icon: 'TABLE',
         path: 'table',
+        permitted: hasPermissions => hasPermissions(NAVIGATION_ORDERS_TABLE),
       },
       {
         label: <FormattedMessage {...messages.cards} />,
         icon: 'CARDS',
         path: 'cards',
+        permitted: hasPermissions => hasPermissions(NAVIGATION_ORDERS_CARD),
       },
     ],
   },
@@ -79,7 +92,7 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.orderItem} />,
     icon: 'ORDER_ITEM',
     path: 'order-item',
-    permitted: hasPermissions => hasPermissions(ORDER_ITEMS_LIST),
+    permitted: hasPermissions => hasPermissions(NAVIGATION_ORDER_ITEMS_CARD),
     submenu: [
       {
         label: <FormattedMessage {...messages.cards} />,
@@ -92,17 +105,19 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.batch} />,
     icon: 'BATCH',
     path: 'batch',
-    permitted: hasPermissions => hasPermissions(BATCH_LIST),
+    permitted: hasPermissions => hasPermissions([NAVIGATION_BATCH_TABLE, NAVIGATION_BATCH_CARD]),
     submenu: [
       {
         label: <FormattedMessage {...messages.table} />,
         icon: 'TABLE',
         path: 'table',
+        permitted: hasPermissions => hasPermissions(NAVIGATION_BATCH_TABLE),
       },
       {
         label: <FormattedMessage {...messages.cards} />,
         icon: 'CARDS',
         path: 'cards',
+        permitted: hasPermissions => hasPermissions(NAVIGATION_BATCH_CARD),
       },
     ],
   },
@@ -110,29 +125,38 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.shipment} />,
     icon: 'SHIPMENT',
     path: 'shipment',
-    permitted: hasPermissions => hasPermissions(SHIPMENT_LIST),
+    permitted: hasPermissions =>
+      hasPermissions([
+        NAVIGATION_SHIPMENTS_MAP,
+        NAVIGATION_SHIPMENTS_TABLE,
+        NAVIGATION_SHIPMENTS_TABLE_ΒETA,
+        NAVIGATION_SHIPMENTS_CARD,
+      ]),
     submenu: [
       {
         label: <FormattedMessage {...messages.map} />,
         icon: 'MAP',
         path: 'map',
+        permitted: hasPermissions => hasPermissions(NAVIGATION_SHIPMENTS_MAP),
       },
       {
         label: <FormattedMessage {...messages.table} />,
         icon: 'TABLE',
         path: 'table',
+        permitted: hasPermissions => hasPermissions(NAVIGATION_SHIPMENTS_TABLE),
       },
       {
         label: <FormattedMessage {...messages.newTable} />,
         icon: 'TABLE',
         path: 'newTable',
-        // hidden: !isEnableBetaFeature,
         href: `${window.location.origin}/new/shipment/table`,
+        permitted: hasPermissions => hasPermissions(NAVIGATION_SHIPMENTS_TABLE_ΒETA),
       },
       {
         label: <FormattedMessage {...messages.cards} />,
         icon: 'CARDS',
         path: 'cards',
+        permitted: hasPermissions => hasPermissions(NAVIGATION_SHIPMENTS_CARD),
       },
     ],
   },
@@ -140,7 +164,7 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.container} />,
     icon: 'CONTAINER',
     path: 'container',
-    permitted: hasPermissions => hasPermissions(CONTAINER_LIST),
+    permitted: hasPermissions => hasPermissions(NAVIGATION_CONTAINERS_CARD),
     submenu: [
       {
         label: <FormattedMessage {...messages.cards} />,
@@ -153,7 +177,7 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.product} />,
     icon: 'PRODUCT',
     path: 'product',
-    permitted: hasPermissions => hasPermissions(PRODUCT_LIST),
+    permitted: hasPermissions => hasPermissions(NAVIGATION_PRODUCTS_CARD),
     submenu: [
       {
         label: <FormattedMessage {...messages.cards} />,
@@ -166,25 +190,31 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.project} />,
     icon: 'PROJECT',
     path: 'project',
-    permitted: hasPermissions => hasPermissions(PROJECT_LIST),
+    permitted: hasPermissions =>
+      hasPermissions([
+        NAVIGATION_PROJECTS_TABLE,
+        NAVIGATION_PROJECTS_TABLE_BETA,
+        NAVIGATION_PROJECTS_CARD,
+      ]),
     submenu: [
       {
         label: <FormattedMessage {...messages.table} />,
         icon: 'TABLE',
         path: 'table',
-        permitted: hasPermissions => hasPermissions(PROJECT_LIST),
+        permitted: hasPermissions => hasPermissions(NAVIGATION_PROJECTS_TABLE),
       },
       {
         label: <FormattedMessage {...messages.newProject} />,
         icon: 'TABLE',
         path: 'newTable',
-        // hidden: !isEnableBetaFeature,
         href: `${window.location.origin}/new/project/table`,
+        permitted: hasPermissions => hasPermissions(NAVIGATION_PROJECTS_TABLE_BETA),
       },
       {
         label: <FormattedMessage {...messages.cards} />,
         icon: 'CARDS',
         path: 'cards',
+        permitted: hasPermissions => hasPermissions(NAVIGATION_PROJECTS_CARD),
       },
     ],
   },
@@ -192,7 +222,7 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.task} />,
     icon: 'TASK',
     path: 'task',
-    permitted: hasPermissions => hasPermissions(TASK_LIST),
+    permitted: hasPermissions => hasPermissions(NAVIGATION_TASKS_CARD),
     submenu: [
       {
         label: <FormattedMessage {...messages.cards} />,
@@ -205,7 +235,7 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.documents} />,
     icon: 'DOCUMENT',
     path: 'document',
-    permitted: hasPermissions => hasPermissions(DOCUMENT_LIST),
+    permitted: hasPermissions => hasPermissions(NAVIGATION_DOCUMENTS_CARD),
     submenu: [
       {
         label: <FormattedMessage {...messages.cards} />,
@@ -218,28 +248,33 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.network} />,
     icon: 'NETWORK',
     path: 'network',
-    permitted: hasPermissions => hasPermissions([WAREHOUSE_LIST, PARTNER_LIST, STAFF_LIST]),
+    permitted: hasPermissions =>
+      hasPermissions([
+        NAVIGATION_NETWORK_WAREHOUSES,
+        NAVIGATION_NETWORK_PARTNERS,
+        NAVIGATION_NETWORK_USERS,
+      ]),
     submenu: [
       {
         label: <FormattedMessage {...messages.warehouse} />,
         icon: 'WAREHOUSE',
         path: 'warehouse',
         overrideFullPath: 'warehouse',
-        permitted: hasPermissions => hasPermissions(WAREHOUSE_LIST),
+        permitted: hasPermissions => hasPermissions(NAVIGATION_NETWORK_WAREHOUSES),
       },
       {
         label: <FormattedMessage {...messages.partner} />,
         icon: 'PARTNER',
         path: 'partner',
         overrideFullPath: 'partner',
-        permitted: hasPermissions => hasPermissions(PARTNER_LIST),
+        permitted: hasPermissions => hasPermissions(NAVIGATION_NETWORK_PARTNERS),
       },
       {
         label: <FormattedMessage {...messages.staff} />,
         icon: 'STAFF',
         path: 'staff',
         overrideFullPath: 'staff',
-        permitted: hasPermissions => hasPermissions(STAFF_LIST),
+        permitted: hasPermissions => hasPermissions(NAVIGATION_NETWORK_USERS),
       },
     ],
   },
@@ -249,35 +284,35 @@ const menu: Array<MenuConfig> = [
     path: 'templates',
     permitted: hasPermissions =>
       hasPermissions([
-        CUSTOM_FIELD_DEFINITIONS_LIST,
-        TEMPLATE_LIST,
-        TASK_TEMPLATE_LIST,
-        PROJECT_TEMPLATE_LIST,
+        NAVIGATION_TEMPLATES_CUSTOM_FILEDS,
+        NAVIGATION_TEMPLATES_TABLE,
+        NAVIGATION_TEMPLATES_TASKS,
+        NAVIGATION_TEMPLATES_PROJECTS,
       ]),
     submenu: [
       {
         label: <FormattedMessage {...messages.metadata} />,
         icon: 'METADATA',
         path: 'metadata',
-        permitted: hasPermissions => hasPermissions(CUSTOM_FIELD_DEFINITIONS_LIST),
+        permitted: hasPermissions => hasPermissions(NAVIGATION_TEMPLATES_CUSTOM_FILEDS),
       },
       {
         label: <FormattedMessage {...messages.table} />,
         icon: 'EDIT_TABLE',
         path: 'table-template',
-        permitted: hasPermissions => hasPermissions(TEMPLATE_LIST),
+        permitted: hasPermissions => hasPermissions(NAVIGATION_TEMPLATES_TABLE),
       },
       {
         label: <FormattedMessage {...messages.task} />,
         icon: 'TASK',
         path: 'task-template',
-        permitted: hasPermissions => hasPermissions(TASK_TEMPLATE_LIST),
+        permitted: hasPermissions => hasPermissions(NAVIGATION_TEMPLATES_TASKS),
       },
       {
         label: <FormattedMessage {...messages.project} />,
         icon: 'PROJECT',
         path: 'project',
-        permitted: hasPermissions => hasPermissions(PROJECT_TEMPLATE_LIST),
+        permitted: hasPermissions => hasPermissions(NAVIGATION_TEMPLATES_PROJECTS),
       },
     ],
   },
@@ -285,7 +320,7 @@ const menu: Array<MenuConfig> = [
     label: <FormattedMessage {...messages.tags} />,
     icon: 'TAG',
     path: 'tags',
-    permitted: hasPermissions => hasPermissions(TAG_LIST),
+    permitted: hasPermissions => hasPermissions(NAVIGATION_TAGS_CARD),
     submenu: [
       {
         label: <FormattedMessage {...messages.cards} />,
