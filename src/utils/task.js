@@ -2,7 +2,8 @@
 import type { User, Task } from 'generated/graphql';
 import type { TaskCardEditableProps } from 'components/Cards/TaskCard/type.js.flow';
 import { sumBy } from 'lodash';
-import { PROJECT_FORM, PROJECT_LIST } from 'modules/permission/constants/project';
+import { NAVIGATION_PROJECTS_LIST } from 'modules/permission/constants/navigation';
+import { PROJECT_FORM } from 'modules/permission/constants/project';
 import {
   TASK_FORM,
   TASK_CREATE,
@@ -940,7 +941,7 @@ export const getTasksPermissions = (
         canOrderingTasks: hasPermission([ORDER_UPDATE, ORDER_SET_TASKS]),
         canDeleteTasks: hasPermission([ORDER_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission(ORDER_UPDATE) ||
             (hasPermission(ORDER_SET_MILESTONE) && hasPermission(ORDER_SET_TASKS))),
@@ -970,7 +971,7 @@ export const getTasksPermissions = (
         canOrderingTasks: hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]),
         canDeleteTasks: hasPermission([ORDER_ITEMS_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission(ORDER_ITEMS_UPDATE) ||
             (hasPermission(ORDER_ITEMS_SET_MILESTONE) && hasPermission(ORDER_ITEMS_SET_TASKS))),
@@ -1028,7 +1029,7 @@ export const getTasksPermissions = (
         canOrderingTasks: hasPermission([BATCH_UPDATE, BATCH_SET_TASKS]),
         canDeleteTasks: hasPermission([BATCH_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission(BATCH_UPDATE) ||
             (hasPermission(BATCH_SET_MILESTONE) && hasPermission(BATCH_SET_TASKS))),
@@ -1058,7 +1059,7 @@ export const getTasksPermissions = (
         canOrderingTasks: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]),
         canDeleteTasks: hasPermission([PRODUCT_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission(PRODUCT_UPDATE) ||
             (hasPermission(PRODUCT_SET_MILESTONE) && hasPermission(PRODUCT_SET_TASKS))),
@@ -1096,7 +1097,7 @@ export const getTasksPermissions = (
         canOrderingTasks: hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]),
         canDeleteTasks: hasPermission([PRODUCT_PROVIDER_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission(PRODUCT_PROVIDER_UPDATE) ||
             (hasPermission(PRODUCT_PROVIDER_SET_MILESTONE) &&
@@ -1159,7 +1160,7 @@ export const getTasksPermissions = (
         canOrderingTasks: hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]),
         canDeleteTasks: hasPermission([SHIPMENT_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
             (hasPermission(SHIPMENT_SET_MILESTONE) && hasPermission(SHIPMENT_SET_TASKS))),
