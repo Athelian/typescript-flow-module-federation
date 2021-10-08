@@ -27,6 +27,7 @@ export const NAVIGATION_SHIPMENTS_LIST = [
 ];
 
 export const NAVIGATION_CONTAINERS_CARD = 'navigation.containers.card';
+export const NAVIGATION_CONTAINERS_LIST = [NAVIGATION_CONTAINERS_CARD];
 
 export const NAVIGATION_PRODUCTS_CARD = 'navigation.products.card';
 export const NAVIGATION_PRODUCTS_LIST = [NAVIGATION_PRODUCTS_CARD];
@@ -53,3 +54,4 @@ export const NAVIGATION_TEMPLATES_TASKS = 'navigation.templates.tasks';
 export const NAVIGATION_TEMPLATES_PROJECTS = 'navigation.templates.projects';
 
 export const NAVIGATION_TAGS_CARD = 'navigation.tags.card';
+export const NAVIGATION_TAGS_LIST = [NAVIGATION_TAGS_CARD];
