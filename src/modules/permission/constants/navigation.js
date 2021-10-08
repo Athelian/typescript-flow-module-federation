@@ -3,6 +3,11 @@
 export const NAVIGATION_ORDERS_MAP = 'navigation.orders.map';
 export const NAVIGATION_ORDERS_TABLE = 'navigation.orders.table';
 export const NAVIGATION_ORDERS_CARD = 'navigation.orders.card';
+export const NAVIGATION_ORDERS_LIST = [
+  NAVIGATION_ORDERS_MAP,
+  NAVIGATION_ORDERS_TABLE,
+  NAVIGATION_ORDERS_CARD,
+];
 
 export const NAVIGATION_ORDER_ITEMS_CARD = 'navigation.orderItems.card';
 
@@ -13,10 +18,17 @@ export const NAVIGATION_SHIPMENTS_MAP = 'navigation.shipments.map';
 export const NAVIGATION_SHIPMENTS_TABLE = 'navigation.shipments.table';
 export const NAVIGATION_SHIPMENTS_TABLE_BETA = 'navigation.shipments.tableβ';
 export const NAVIGATION_SHIPMENTS_CARD = 'navigation.shipments.card';
+export const NAVIGATION_SHIPMENTS_LIST = [
+  NAVIGATION_SHIPMENTS_MAP,
+  NAVIGATION_SHIPMENTS_TABLE,
+  NAVIGATION_SHIPMENTS_TABLE_BETA,
+  NAVIGATION_SHIPMENTS_CARD,
+];
 
 export const NAVIGATION_CONTAINERS_CARD = 'navigation.containers.card';
 
 export const NAVIGATION_PRODUCTS_CARD = 'navigation.products.card';
+export const NAVIGATION_PRODUCTS_LIST = [NAVIGATION_PRODUCTS_CARD];
 
 export const NAVIGATION_PROJECTS_TABLE = 'navigation.projects.table';
 export const NAVIGATION_PROJECTS_TABLE_BETA = 'navigation.projects.tableβ';
