@@ -1,5 +1,4 @@
 // @flow
-export const PRODUCT_LIST = 'product.products.list';
 export const PRODUCT_EXPORT_LIST = 'product.products.exportList';
 export const PRODUCT_FORM = 'product.products.form';
 export const PRODUCT_CREATE = 'product.products.create';
