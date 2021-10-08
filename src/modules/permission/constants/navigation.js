@@ -4,7 +4,7 @@ export const NAVIGATION_ORDERS_MAP = 'navigation.orders.map';
 export const NAVIGATION_ORDERS_TABLE = 'navigation.orders.table';
 export const NAVIGATION_ORDERS_CARD = 'navigation.orders.card';
 
-export const NAVIGATION_ORDER_ITEMS_CARD = 'navigation.orderitems.card';
+export const NAVIGATION_ORDER_ITEMS_CARD = 'navigation.orderItems.card';
 
 export const NAVIGATION_BATCH_TABLE = 'navigation.batch.table';
 export const NAVIGATION_BATCH_CARD = 'navigation.batch.card';
