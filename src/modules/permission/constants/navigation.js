@@ -38,6 +38,7 @@ export const NAVIGATION_PROJECTS_LIST = [NAVIGATION_PROJECTS_TABLE, NAVIGATION_P
 export const NAVIGATION_PROJECTS_CARD = 'navigation.projects.card';
 
 export const NAVIGATION_TASKS_CARD = 'navigation.tasks.card';
+export const NAVIGATION_TASKS_LIST = [NAVIGATION_TASKS_CARD];
 
 export const NAVIGATION_DOCUMENTS_CARD = 'navigation.documents.card';
 
