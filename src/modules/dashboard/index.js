@@ -11,7 +11,7 @@ import {
 import LoadingIcon from 'components/LoadingIcon';
 import { useViewerHasPermissions, useViewerPermissions } from 'contexts/Permissions';
 
-const findRedirectUrlBaseOnPermission = (hasPermission: string => boolean) => {
+const findRedirectUrlBaseOnPermission = (hasPermission: (string | Array<string>) => boolean) => {
   if (hasPermission(NAVIGATION_SHIPMENTS_LIST)) return 'shipment';
   if (hasPermission(NAVIGATION_ORDERS_LIST)) return 'order';
   if (hasPermission(NAVIGATION_PRODUCTS_LIST)) return 'product';
