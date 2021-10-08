@@ -11,7 +11,7 @@ import {
   NAVIGATION_BATCH_CARD,
   NAVIGATION_SHIPMENTS_MAP,
   NAVIGATION_SHIPMENTS_TABLE,
-  NAVIGATION_SHIPMENTS_TABLE_ΒETA,
+  NAVIGATION_SHIPMENTS_TABLE_BETA,
   NAVIGATION_SHIPMENTS_CARD,
   NAVIGATION_CONTAINERS_CARD,
   NAVIGATION_PRODUCTS_CARD,
@@ -129,7 +129,7 @@ const menu: Array<MenuConfig> = [
       hasPermissions([
         NAVIGATION_SHIPMENTS_MAP,
         NAVIGATION_SHIPMENTS_TABLE,
-        NAVIGATION_SHIPMENTS_TABLE_ΒETA,
+        NAVIGATION_SHIPMENTS_TABLE_BETA,
         NAVIGATION_SHIPMENTS_CARD,
       ]),
     submenu: [
@@ -150,7 +150,7 @@ const menu: Array<MenuConfig> = [
         icon: 'TABLE',
         path: 'newTable',
         href: `${window.location.origin}/new/shipment/table`,
-        permitted: hasPermissions => hasPermissions(NAVIGATION_SHIPMENTS_TABLE_ΒETA),
+        permitted: hasPermissions => hasPermissions(NAVIGATION_SHIPMENTS_TABLE_BETA),
       },
       {
         label: <FormattedMessage {...messages.cards} />,

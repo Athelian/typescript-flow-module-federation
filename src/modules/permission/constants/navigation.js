@@ -11,7 +11,7 @@ export const NAVIGATION_BATCH_CARD = 'navigation.batch.card';
 
 export const NAVIGATION_SHIPMENTS_MAP = 'navigation.shipments.map';
 export const NAVIGATION_SHIPMENTS_TABLE = 'navigation.shipments.table';
-export const NAVIGATION_SHIPMENTS_TABLE_ΒETA = 'navigation.shipments.tableβ';
+export const NAVIGATION_SHIPMENTS_TABLE_BETA = 'navigation.shipments.tableβ';
 export const NAVIGATION_SHIPMENTS_CARD = 'navigation.shipments.card';
 
 export const NAVIGATION_CONTAINERS_CARD = 'navigation.containers.card';
