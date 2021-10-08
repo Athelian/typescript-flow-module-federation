@@ -16,7 +16,7 @@ import {
   WAREHOUSE_CREATE,
 } from 'modules/permission/constants/warehouse';
 import { WarehouseActivateDialog, WarehouseArchiveDialog } from 'modules/warehouse/common/Dialog';
-import { PARTNER_LIST } from 'modules/permission/constants/partner';
+import { NAVIGATION_NETWORK_PARTNERS } from 'modules/permission/constants/navigation';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import WarehouseInfoContainer from 'modules/warehouse/form/containers';
@@ -315,7 +315,7 @@ const WarehouseSection = ({ isNew, isClone, isLoading, warehouse }: Props) => {
                           <>
                             <div
                               onClick={() =>
-                                hasPermission(PARTNER_LIST) && allowUpdate
+                                hasPermission(NAVIGATION_NETWORK_PARTNERS) && allowUpdate
                                   ? slideToggle(true)
                                   : () => {}
                               }

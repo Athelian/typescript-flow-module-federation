@@ -3,14 +3,14 @@ import * as React from 'react';
 import { Redirect, Router } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
-import { BATCH_LIST } from 'modules/permission/constants/batch';
+import { NAVIGATION_BATCH_LIST } from 'modules/permission/constants/navigation';
 import BatchListModule from './index.list';
 import BatchFormModule from './index.form';
 import BatchSheetModule from './sheet';
 
 const BatchFormModuleWrapper = withNotFound(BatchFormModule, 'batchId');
-const BatchModuleListWrapper = withForbidden(BatchListModule, BATCH_LIST);
-const BatchSheetModuleWrapper = withForbidden(BatchSheetModule, BATCH_LIST);
+const BatchModuleListWrapper = withForbidden(BatchListModule, NAVIGATION_BATCH_LIST);
+const BatchSheetModuleWrapper = withForbidden(BatchSheetModule, NAVIGATION_BATCH_LIST);
 
 const BatchApp = () => (
   <Router>

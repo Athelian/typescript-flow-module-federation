@@ -75,7 +75,7 @@ import {
 import messages from 'modules/shipment/messages';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
-import { PARTNER_LIST } from 'modules/permission/constants/partner';
+import { NAVIGATION_NETWORK_PARTNERS } from 'modules/permission/constants/navigation';
 import { TAG_GET } from 'modules/permission/constants/tag';
 import SelectPartners from 'components/SelectPartners';
 import SelectPartner from 'components/SelectPartner';
@@ -626,7 +626,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         // base on initDataForSlideView
                         isNew &&
                         Object.keys(initDataForSlideView).length === 0 &&
-                        hasPermission(PARTNER_LIST) &&
+                        hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                         hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]) ? (
                           <BooleanValue>
                             {({ value: importerSelectorIsOpen, set: importerSelectorToggle }) => (
@@ -755,7 +755,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     input={
                       <>
                         {(isForwarder() || isImporter()) &&
-                        hasPermission(PARTNER_LIST) &&
+                        hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                         hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_EXPORTER]) ? (
                           <BooleanValue>
                             {({ value: exporterSelectorIsOpen, set: exporterSelectorToggle }) => (
@@ -858,7 +858,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             <div
                               onClick={() =>
                                 isImporter() &&
-                                hasPermission(PARTNER_LIST) &&
+                                hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                                 hasPermission([
                                   SHIPMENT_SET,
                                   SHIPMENT_UPDATE,

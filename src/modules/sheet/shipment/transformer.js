@@ -15,7 +15,7 @@ import {
   transformReadonlyField,
   transformValueField,
 } from 'components/Sheet';
-import { PARTNER_LIST } from 'modules/permission/constants/partner';
+import { NAVIGATION_NETWORK_PARTNERS } from 'modules/permission/constants/navigation';
 import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_SET_ARCHIVED,
@@ -198,7 +198,7 @@ export default function transformSheetShipment({
             shipment,
             'exporter',
             hasPermission =>
-              hasPermission(PARTNER_LIST) &&
+              hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
               (hasPermission(SHIPMENT_SET) ||
                 hasPermission(SHIPMENT_UPDATE) ||
                 hasPermission(SHIPMENT_SET_EXPORTER))

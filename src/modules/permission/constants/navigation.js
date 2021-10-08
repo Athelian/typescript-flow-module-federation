@@ -14,6 +14,7 @@ export const NAVIGATION_ORDER_ITEMS_LIST = [NAVIGATION_ORDER_ITEMS_CARD];
 
 export const NAVIGATION_BATCH_TABLE = 'navigation.batch.table';
 export const NAVIGATION_BATCH_CARD = 'navigation.batch.card';
+export const NAVIGATION_BATCH_LIST = [NAVIGATION_BATCH_TABLE, NAVIGATION_BATCH_CARD];
 
 export const NAVIGATION_SHIPMENTS_MAP = 'navigation.shipments.map';
 export const NAVIGATION_SHIPMENTS_TABLE = 'navigation.shipments.table';
