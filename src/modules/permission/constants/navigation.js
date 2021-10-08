@@ -41,6 +41,7 @@ export const NAVIGATION_TASKS_CARD = 'navigation.tasks.card';
 export const NAVIGATION_TASKS_LIST = [NAVIGATION_TASKS_CARD];
 
 export const NAVIGATION_DOCUMENTS_CARD = 'navigation.documents.card';
+export const NAVIGATION_DOCUMENTS_LIST = [NAVIGATION_DOCUMENTS_CARD];
 
 export const NAVIGATION_NETWORK_WAREHOUSES = 'navigation.network.warehouses';
 export const NAVIGATION_NETWORK_PARTNERS = 'navigation.network.partners';
