@@ -4,17 +4,10 @@ import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import {
-  NAVIGATION_ORDERS_MAP,
-  NAVIGATION_ORDERS_TABLE,
-  NAVIGATION_ORDERS_CARD,
-  NAVIGATION_ORDER_ITEMS_CARD,
-  NAVIGATION_SHIPMENTS_MAP,
-  NAVIGATION_SHIPMENTS_TABLE,
-  NAVIGATION_SHIPMENTS_TABLE_BETA,
-  NAVIGATION_SHIPMENTS_CARD,
-  NAVIGATION_PROJECTS_TABLE,
-  NAVIGATION_PROJECTS_TABLE_BETA,
-  NAVIGATION_PROJECTS_CARD,
+  NAVIGATION_ORDERS_LIST,
+  NAVIGATION_ORDER_ITEMS_LIST,
+  NAVIGATION_SHIPMENTS_LIST,
+  NAVIGATION_PROJECTS_LIST,
 } from 'modules/permission/constants/navigation';
 import {
   ORDER_DOCUMENT_CREATE,
@@ -60,27 +53,18 @@ const ParentNavbarTabs = ({ filterAndSort, onChangeFilter, activeType }: Props) 
 
   const canViewList = {
     orders:
-      hasPermission([NAVIGATION_ORDERS_MAP, NAVIGATION_ORDERS_TABLE, NAVIGATION_ORDERS_CARD]) &&
+      hasPermission(NAVIGATION_ORDERS_LIST) &&
       (hasPermission(ORDER_UPDATE) || hasPermission([ORDER_DOCUMENT_CREATE, ORDER_SET_DOCUMENTS])),
     orderItems:
-      hasPermission([NAVIGATION_ORDER_ITEMS_CARD]) &&
+      hasPermission(NAVIGATION_ORDER_ITEMS_LIST) &&
       (hasPermission(ORDER_ITEMS_UPDATE) ||
         hasPermission([ORDER_ITEMS_DOCUMENT_CREATE, ORDER_ITEMS_SET_DOCUMENTS])),
     shipments:
-      hasPermission([
-        NAVIGATION_SHIPMENTS_MAP,
-        NAVIGATION_SHIPMENTS_TABLE,
-        NAVIGATION_SHIPMENTS_TABLE_BETA,
-        NAVIGATION_SHIPMENTS_CARD,
-      ]) &&
+      hasPermission(NAVIGATION_SHIPMENTS_LIST) &&
       (hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
         hasPermission([SHIPMENT_DOCUMENT_CREATE, SHIPMENT_DOCUMENT_SET])),
     projects:
-      hasPermission([
-        NAVIGATION_PROJECTS_TABLE,
-        NAVIGATION_PROJECTS_TABLE_BETA,
-        NAVIGATION_PROJECTS_CARD,
-      ]) &&
+      hasPermission(NAVIGATION_PROJECTS_LIST) &&
       hasPermission(MILESTONE_LIST) &&
       hasPermission(PROJECT_UPDATE) &&
       (hasPermission(MILESTONE_UPDATE) ||

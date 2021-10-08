@@ -10,6 +10,7 @@ export const NAVIGATION_ORDERS_LIST = [
 ];
 
 export const NAVIGATION_ORDER_ITEMS_CARD = 'navigation.orderItems.card';
+export const NAVIGATION_ORDER_ITEMS_LIST = [NAVIGATION_ORDER_ITEMS_CARD];
 
 export const NAVIGATION_BATCH_TABLE = 'navigation.batch.table';
 export const NAVIGATION_BATCH_CARD = 'navigation.batch.card';
@@ -32,6 +33,7 @@ export const NAVIGATION_PRODUCTS_LIST = [NAVIGATION_PRODUCTS_CARD];
 
 export const NAVIGATION_PROJECTS_TABLE = 'navigation.projects.table';
 export const NAVIGATION_PROJECTS_TABLE_BETA = 'navigation.projects.tableβ';
+export const NAVIGATION_PROJECTS_LIST = [NAVIGATION_PROJECTS_TABLE, NAVIGATION_PROJECTS_TABLE_BETA];
 
 export const NAVIGATION_PROJECTS_CARD = 'navigation.projects.card';
 
