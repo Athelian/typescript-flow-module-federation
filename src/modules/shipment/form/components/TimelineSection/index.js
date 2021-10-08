@@ -8,6 +8,7 @@ import usePrevious from 'hooks/usePrevious';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { getByPath } from 'utils/fp';
+import { NAVIGATION_NETWORK_WAREHOUSES } from 'modules/permission/constants/navigation';
 import {
   SHIPMENT_SET,
   SHIPMENT_UPDATE,
@@ -26,7 +27,7 @@ import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import { ShipmentWarehouseCard } from 'components/Cards';
 import { Tooltip } from 'components/Tooltip';
-import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
+
 import { getTransportIcon } from './components/Timeline/helpers';
 import {
   VerticalLayout,
@@ -55,7 +56,7 @@ const TimelineSection = ({ isNew, isTaskReadyForBinding }: Props) => {
 
   const allowSetWarehouse =
     hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) &&
-    hasPermission(WAREHOUSE_LIST);
+    hasPermission(NAVIGATION_NETWORK_WAREHOUSES);
 
   const prevValue = usePrevious(isTaskReadyForBinding);
   React.useEffect(() => {
