@@ -7,7 +7,7 @@ import {
   NAVIGATION_ORDERS_LIST,
   NAVIGATION_ORDER_ITEMS_LIST,
   NAVIGATION_SHIPMENTS_LIST,
-  NAVIGATION_PROJECT_LIST,
+  NAVIGATION_PROJECTS_LIST,
 } from 'modules/permission/constants/navigation';
 import {
   ORDER_DOCUMENT_CREATE,
@@ -64,7 +64,7 @@ const ParentNavbarTabs = ({ filterAndSort, onChangeFilter, activeType }: Props) 
       (hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
         hasPermission([SHIPMENT_DOCUMENT_CREATE, SHIPMENT_DOCUMENT_SET])),
     projects:
-      hasPermission(NAVIGATION_PROJECT_LIST) &&
+      hasPermission(NAVIGATION_PROJECTS_LIST) &&
       hasPermission(MILESTONE_LIST) &&
       hasPermission(PROJECT_UPDATE) &&
       (hasPermission(MILESTONE_UPDATE) ||
