@@ -476,7 +476,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                           <>
                             <div
                               onClick={() =>
-                                hasPermission(PARTNER_LIST) &&
+                                hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                                 hasPermission([PRODUCT_PROVIDER_UPDATE])
                                   ? partnerSelectorToggle(true)
                                   : () => {}
@@ -485,7 +485,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                             >
                               {renderPartners(
                                 values?.organizations,
-                                hasPermission(PARTNER_LIST) &&
+                                hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                                   hasPermission([PRODUCT_PROVIDER_UPDATE])
                               )}
                             </div>

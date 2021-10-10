@@ -991,7 +991,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             <div
                               onClick={() =>
                                 isImporter() &&
-                                hasPermission(PARTNER_LIST) &&
+                                hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                                 hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE])
                                   ? partnerSelectorToggle(true)
                                   : () => {}
@@ -1000,7 +1000,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             >
                               {renderPartners(
                                 organizations,
-                                hasPermission(PARTNER_LIST) &&
+                                hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                                   hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE])
                               )}
                             </div>
