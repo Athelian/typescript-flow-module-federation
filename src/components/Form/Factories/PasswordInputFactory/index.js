@@ -40,6 +40,7 @@ const PasswordInputFactory = ({
   value,
   name,
   label,
+  subLabel,
   placeholder,
   required,
   disabled,
@@ -102,6 +103,7 @@ const PasswordInputFactory = ({
     <FieldItem
       vertical={vertical}
       label={<Label {...labelConfig}>{label}</Label>}
+      subLabel={subLabel}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
       input={(() => {
         if (blackout) {

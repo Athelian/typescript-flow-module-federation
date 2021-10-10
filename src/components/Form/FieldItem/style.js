@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout } from 'styles/common';
+import { layout, colors } from 'styles/common';
 
 export const FieldItemWrapperStyle = (vertical: boolean, verticalGap: string): string => css`
   position: relative;
@@ -20,6 +20,12 @@ export const FieldItemWrapperStyle = (vertical: boolean, verticalGap: string): s
 export const LabelTooltipWrapperStyle: string = css`
   position: relative;
   height: min-content;
+`;
+
+export const SubLabelStyle = css`
+  color: ${colors.GRAY_DARK};
+  margin-left: 4px;
+  font-size: 12px;
 `;
 
 export const TooltipAbsoluteWrapperStyle: string = css`

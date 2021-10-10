@@ -16,6 +16,7 @@ import validator from './validator';
 
 export default function Security() {
   const intl = useIntl();
+
   return (
     <div className={FormWrapperStyle}>
       <SectionWrapper id="reset_password_section">
@@ -85,6 +86,12 @@ export default function Security() {
                           forceHoverStyle
                           editable
                           {...inputHandlers}
+                          subLabel={
+                            <FormattedMessage
+                              id="modules.resetPassword.passwordInvalid"
+                              defaultMessage="Must Contain 8 Characters, One Uppercase, One Lowercase and One Number"
+                            />
+                          }
                           label={
                             <FormattedMessage
                               id="modules.profile.newPassword"
