@@ -12,7 +12,7 @@ type OptionalProps = {
   verticalGap: string,
   tooltip: React.Node,
   label: React.Node,
-  subLabel: React.Node,
+  subLabel?: React.Node,
   input: React.Node,
 };
 

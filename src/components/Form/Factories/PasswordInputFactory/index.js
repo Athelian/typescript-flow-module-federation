@@ -20,6 +20,7 @@ type Props = LabelProps &
     vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
+    subLabel?: React.Node,
     editable: boolean,
     blackout: boolean,
   };
