@@ -1,11 +1,13 @@
 // @flow
+export const SHIPMENT_UPDATE = 'shipment.shipments.update'; // deprecated
+export const SHIPMENT_EDIT = 'shipment.shipments.edit';
+export const SHIPMENT_CREATE = 'shipment.shipments.create';
+export const SHIPMENT_SET_ARCHIVED = 'shipment.shipments.setArchived'; // deprecated
+export const SHIPMENT_ARCHIVE = 'shipment.shipments.archive';
+export const SHIPMENT_EXPORT = 'shipment.shipments.export';
 export const SHIPMENT_ORDER_LIST = 'shipment.orders.list';
 export const SHIPMENT_FORM = 'shipment.shipments.form';
-export const SHIPMENT_CREATE = 'shipment.shipments.create';
-export const SHIPMENT_UPDATE = 'shipment.shipments.update';
 export const SHIPMENT_SET = 'shipment.shipments.set';
-/** @deprecated */
-export const SHIPMENT_DOWNLOAD_DOCUMENTS = 'shipment.shipments.download';
 export const SHIPMENT_DOCUMENT_GET = 'shipment.files.get';
 export const SHIPMENT_DOCUMENT_DOWNLOAD = 'shipment.files.download';
 export const SHIPMENT_DOCUMENT_UPDATE = 'shipment.files.update';
@@ -44,7 +46,6 @@ export const SHIPMENT_DOCUMENT_SET_WAREHOUSE_INSPECTION =
 export const SHIPMENT_DOCUMENT_SET_MISCELLANEOUS = 'shipment.files.setByTypeMiscellaneous';
 
 export const SHIPMENT_SET_FOLLOWERS = 'shipment.shipments.setFollowers';
-export const SHIPMENT_SET_ARCHIVED = 'shipment.shipments.setArchived';
 export const SHIPMENT_SET_IMPORTER = 'shipment.shipments.setImporter';
 export const SHIPMENT_SET_EXPORTER = 'shipment.shipments.setExporter';
 export const SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY =
