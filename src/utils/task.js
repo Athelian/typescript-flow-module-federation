@@ -152,8 +152,7 @@ import {
   PRODUCT_PROVIDER_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/product';
 import {
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
+  SHIPMENT_EDIT,
   SHIPMENT_TASK_CREATE,
   SHIPMENT_TASK_DELETE,
   SHIPMENT_TASK_UPDATE,
@@ -1159,16 +1158,16 @@ export const getTasksPermissions = (
         canViewList: hasPermission([SHIPMENT_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([SHIPMENT_TASK_FORM, TASK_FORM]),
         canAddTasks: hasPermission([SHIPMENT_TASK_CREATE, SHIPMENT_SET_TASKS, TASK_CREATE]),
-        canOrderingTasks: hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]),
+        canOrderingTasks: hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_TASKS]),
         canDeleteTasks: hasPermission([SHIPMENT_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
           hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
-          (hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
+          (hasPermission(SHIPMENT_EDIT) ||
             (hasPermission(SHIPMENT_SET_MILESTONE) && hasPermission(SHIPMENT_SET_TASKS))),
         canUpdateTaskTemplate:
-          hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_TASK_TEMPLATE]) &&
-          hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]) &&
+          hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_TASK_TEMPLATE]) &&
+          hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_TASKS]) &&
           hasPermission([SHIPMENT_TASK_CREATE, TASK_CREATE]) &&
           hasPermission([SHIPMENT_TASK_DELETE, TASK_DELETE]),
         tasksContainer: ShipmentTasksContainer,

@@ -4,8 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import {
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
+  SHIPMENT_EDIT,
   SHIPMENT_SET_PORT,
   SHIPMENT_SET_VOYAGE_NO,
   SHIPMENT_SET_VESSEL_NAME,
@@ -175,7 +174,7 @@ const VoyageInfoSection = ({
               <PortSearchSelectInputFactory
                 {...inputHandlers}
                 transportType={transportType}
-                readOnly={!hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
+                readOnly={!hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_PORT])}
                 originalValue={initialVoyage?.departurePort?.[deepField]}
                 name={name}
                 isNew={isNew}
@@ -232,7 +231,7 @@ const VoyageInfoSection = ({
               <PortSearchSelectInputFactory
                 {...inputHandlers}
                 transportType={transportType}
-                readOnly={!hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
+                readOnly={!hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_PORT])}
                 originalValue={initialVoyage?.arrivalPort?.[deepField]}
                 name={name}
                 isNew={isNew}
@@ -282,7 +281,7 @@ const VoyageInfoSection = ({
           {({ name, ...inputHandlers }) => (
             <TextInputFactory
               {...inputHandlers}
-              editable={hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_VOYAGE_NO])}
+              editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_VOYAGE_NO])}
               originalValue={initialVoyage.no}
               name={name}
               isNew={isNew}
@@ -299,7 +298,7 @@ const VoyageInfoSection = ({
           {({ name, ...inputHandlers }) => (
             <TextInputFactory
               {...inputHandlers}
-              editable={hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_VESSEL_NAME])}
+              editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_VESSEL_NAME])}
               originalValue={initialVoyage.vesselName}
               name={name}
               isNew={isNew}
@@ -318,7 +317,7 @@ const VoyageInfoSection = ({
           {({ name, ...inputHandlers }) => (
             <TextInputFactory
               {...inputHandlers}
-              editable={hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_VESSEL_CODE])}
+              editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_VESSEL_CODE])}
               originalValue={initialVoyage.vesselCode}
               name={name}
               isNew={isNew}

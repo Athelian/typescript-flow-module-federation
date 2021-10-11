@@ -9,9 +9,7 @@ import GridView from 'components/GridView';
 import { ShipmentCard, CardAction } from 'components/Cards';
 import {
   SHIPMENT_CREATE,
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
-  SHIPMENT_SET_ARCHIVED,
+  SHIPMENT_ARCHIVE,
   SHIPMENT_GET,
 } from 'modules/permission/constants/shipment';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
@@ -55,10 +53,7 @@ const defaultRenderItem = item => (
                     onClick={() => navigate(`/shipment/clone/${encodeId(item.id)}`)}
                   />
                 ),
-                (permissions.some(permission =>
-                  [SHIPMENT_SET, SHIPMENT_UPDATE].includes(permission)
-                ) ||
-                  permissions.includes(SHIPMENT_SET_ARCHIVED)) && (
+                permissions.includes(SHIPMENT_ARCHIVE) && (
                   <CardAction
                     icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
                     onClick={() => dialogToggle(true)}

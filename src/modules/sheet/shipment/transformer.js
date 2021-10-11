@@ -18,7 +18,7 @@ import {
 import { NAVIGATION_NETWORK_PARTNERS } from 'modules/permission/constants/navigation';
 import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
-  SHIPMENT_SET_ARCHIVED,
+  SHIPMENT_ARCHIVE,
   SHIPMENT_SET_BL_DATE,
   SHIPMENT_SET_BL_NO,
   SHIPMENT_SET_BOOKED,
@@ -50,8 +50,7 @@ import {
   SHIPMENT_SET_VESSEL_CODE,
   SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_SET_FOLLOWERS,
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
+  SHIPMENT_EDIT,
   SHIPMENT_DOCUMENT_GET_TYPE_BL,
   SHIPMENT_DOCUMENT_GET_TYPE_INVOICE,
   SHIPMENT_DOCUMENT_GET_TYPE_PACKING_LIST,
@@ -140,14 +139,8 @@ export default function transformSheetShipment({
     {
       columnKey: 'shipment.archived',
       type: 'status',
-      ...transformValueField(
-        basePath,
-        shipment,
-        'archived',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_ARCHIVED)
+      ...transformValueField(basePath, shipment, 'archived', hasPermission =>
+        hasPermission(SHIPMENT_ARCHIVE)
       ),
     },
     {
@@ -165,10 +158,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'followers',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_FOLLOWERS)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_FOLLOWERS)
       ),
     },
     {
@@ -178,10 +168,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'no',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_NO)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_NO)
       ),
     },
     {
@@ -199,9 +186,7 @@ export default function transformSheetShipment({
             'exporter',
             hasPermission =>
               hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
-              (hasPermission(SHIPMENT_SET) ||
-                hasPermission(SHIPMENT_UPDATE) ||
-                hasPermission(SHIPMENT_SET_EXPORTER))
+              (hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_EXPORTER))
           ),
         }
       : {
@@ -238,10 +223,7 @@ export default function transformSheetShipment({
             basePath,
             shipment,
             'forwarders',
-            hasPermission =>
-              hasPermission(SHIPMENT_SET) ||
-              hasPermission(SHIPMENT_UPDATE) ||
-              hasPermission(SHIPMENT_SET_FORWARDERS)
+            hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_FORWARDERS)
           ),
         }
       : {
@@ -256,10 +238,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'blNo',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_BL_NO)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_BL_NO)
       ),
     },
     {
@@ -269,10 +248,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'blDate',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_BL_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_BL_DATE)
       ),
     },
     {
@@ -282,10 +258,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'bookingNo',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_BOOKING_NO)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_BOOKING_NO)
       ),
     },
     {
@@ -295,10 +268,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'booked',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_BOOKED)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_BOOKED)
       ),
     },
     {
@@ -308,10 +278,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'bookingDate',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_BOOKING_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_BOOKING_DATE)
       ),
     },
     {
@@ -321,10 +288,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'invoiceNo',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_INVOICE_NO)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_INVOICE_NO)
       ),
     },
     {
@@ -334,10 +298,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'contractNo',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_CONTRACT_NO)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_CONTRACT_NO)
       ),
     },
     {
@@ -347,10 +308,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'transportType',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TRANSPORT_TYPE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TRANSPORT_TYPE)
       ),
     },
     {
@@ -360,10 +318,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'loadType',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_LOAD_TYPE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_LOAD_TYPE)
       ),
     },
     {
@@ -373,10 +328,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'incoterm',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_INCOTERM)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_INCOTERM)
       ),
     },
     {
@@ -386,10 +338,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'carrier',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_CARRIER)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_CARRIER)
       ),
     },
     {
@@ -402,10 +351,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'tags',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TAGS)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TAGS)
       ),
     },
     {
@@ -415,10 +361,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'memo',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_MEMO)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_MEMO)
       ),
     },
     {
@@ -524,9 +467,7 @@ export default function transformSheetShipment({
         shipment,
         'totalPackages',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TOTAL_PACKAGE_QUANTITY)
       ),
     },
     {
@@ -552,10 +493,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'totalWeight',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TOTAL_WEIGHT)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TOTAL_WEIGHT)
       ),
     },
     staticComputedFields
@@ -603,9 +541,7 @@ export default function transformSheetShipment({
             shipment,
             'totalVolume',
             hasPermission =>
-              hasPermission(SHIPMENT_SET) ||
-              hasPermission(SHIPMENT_UPDATE) ||
-              hasPermission(SHIPMENT_SET_TOTAL_VOLUME)
+              hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TOTAL_VOLUME)
           ),
         },
     {
@@ -643,10 +579,7 @@ export default function transformSheetShipment({
         `${basePath}.cargoReady`,
         shipment?.cargoReady ?? null,
         'date',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
     {
@@ -657,9 +590,7 @@ export default function transformSheetShipment({
         shipment?.cargoReady ?? null,
         'timelineDateRevisions',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
     {
@@ -670,9 +601,7 @@ export default function transformSheetShipment({
         shipment?.cargoReady ?? null,
         'approved',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
       ),
     },
     {
@@ -686,10 +615,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.0`,
         shipment?.voyages?.[0] ?? null,
         'departurePort',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_PORT)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_PORT)
       ),
     },
     {
@@ -729,10 +655,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.0.departure`,
         shipment?.voyages?.[0]?.departure ?? null,
         'date',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
     {
@@ -743,9 +666,7 @@ export default function transformSheetShipment({
         shipment?.voyages?.[0]?.departure ?? null,
         'timelineDateRevisions',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
     {
@@ -756,9 +677,7 @@ export default function transformSheetShipment({
         shipment?.voyages?.[0]?.departure ?? null,
         'approved',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
       ),
     },
     {
@@ -768,10 +687,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.0`,
         shipment?.voyages?.[0] ?? null,
         'no',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_VOYAGE_NO)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_VOYAGE_NO)
       ),
     },
     {
@@ -781,10 +697,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.0`,
         shipment?.voyages?.[0] ?? null,
         'vesselName',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_VESSEL_NAME)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
       ),
     },
     {
@@ -794,10 +707,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.0`,
         shipment?.voyages?.[0] ?? null,
         'vesselCode',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_VESSEL_CODE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_VESSEL_CODE)
       ),
     },
     {
@@ -811,10 +721,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.0`,
         nbOfVoyages > 1 ? shipment?.voyages?.[0] ?? null : null,
         'arrivalPort',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_PORT)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_PORT)
       ),
     },
     {
@@ -854,10 +761,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.0.arrival`,
         nbOfVoyages > 1 ? shipment?.voyages?.[0]?.arrival ?? null : null,
         'date',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
     {
@@ -868,9 +772,7 @@ export default function transformSheetShipment({
         nbOfVoyages > 1 ? shipment?.voyages?.[0]?.arrival ?? null : null,
         'timelineDateRevisions',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
     {
@@ -881,9 +783,7 @@ export default function transformSheetShipment({
         nbOfVoyages > 1 ? shipment?.voyages?.[0]?.arrival ?? null : null,
         'approved',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
       ),
     },
     {
@@ -923,10 +823,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.1.departure`,
         nbOfVoyages > 1 ? shipment?.voyages?.[1]?.departure ?? null : null,
         'date',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
     {
@@ -937,9 +834,7 @@ export default function transformSheetShipment({
         nbOfVoyages > 1 ? shipment?.voyages?.[1]?.departure ?? null : null,
         'timelineDateRevisions',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
     {
@@ -950,9 +845,7 @@ export default function transformSheetShipment({
         nbOfVoyages > 1 ? shipment?.voyages?.[1]?.departure ?? null : null,
         'approved',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
       ),
     },
     {
@@ -962,10 +855,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.1`,
         shipment?.voyages?.[1] ?? null,
         'no',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_VOYAGE_NO)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_VOYAGE_NO)
       ),
     },
     {
@@ -975,10 +865,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.1`,
         shipment?.voyages?.[1] ?? null,
         'vesselName',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_VESSEL_NAME)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
       ),
     },
     {
@@ -988,10 +875,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.1`,
         shipment?.voyages?.[1] ?? null,
         'vesselCode',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_VESSEL_CODE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_VESSEL_CODE)
       ),
     },
     {
@@ -1005,10 +889,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.1`,
         nbOfVoyages > 2 ? shipment?.voyages?.[1] ?? null : null,
         'arrivalPort',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_PORT)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_PORT)
       ),
     },
     {
@@ -1048,10 +929,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.1.arrival`,
         nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
         'date',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
     {
@@ -1062,9 +940,7 @@ export default function transformSheetShipment({
         nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
         'timelineDateRevisions',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
     {
@@ -1075,9 +951,7 @@ export default function transformSheetShipment({
         nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
         'approved',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
       ),
     },
     {
@@ -1117,10 +991,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.2.departure`,
         nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
         'date',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
     {
@@ -1131,9 +1002,7 @@ export default function transformSheetShipment({
         nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
         'timelineDateRevisions',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
     {
@@ -1144,9 +1013,7 @@ export default function transformSheetShipment({
         nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
         'approved',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
       ),
     },
     {
@@ -1156,10 +1023,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.2`,
         shipment?.voyages?.[2] ?? null,
         'no',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_VOYAGE_NO)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_VOYAGE_NO)
       ),
     },
     {
@@ -1169,10 +1033,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.2`,
         shipment?.voyages?.[2] ?? null,
         'vesselName',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_VESSEL_NAME)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_VESSEL_NAME)
       ),
     },
     {
@@ -1182,10 +1043,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.2`,
         shipment?.voyages?.[2] ?? null,
         'vesselCode',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_VESSEL_CODE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_VESSEL_CODE)
       ),
     },
     {
@@ -1199,10 +1057,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}`,
         shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1] ?? null,
         'arrivalPort',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_PORT)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_PORT)
       ),
     },
     {
@@ -1247,10 +1102,7 @@ export default function transformSheetShipment({
         `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}.arrival`,
         shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
         'date',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
     {
@@ -1261,9 +1113,7 @@ export default function transformSheetShipment({
         shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
         'timelineDateRevisions',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
     {
@@ -1274,9 +1124,7 @@ export default function transformSheetShipment({
         shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
         'approved',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
       ),
     },
     {
@@ -1317,10 +1165,7 @@ export default function transformSheetShipment({
         `${basePath}.containerGroups.0.customClearance`,
         shipment?.containerGroups?.[0]?.customClearance ?? null,
         'date',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
     {
@@ -1331,9 +1176,7 @@ export default function transformSheetShipment({
         shipment?.containerGroups?.[0]?.customClearance ?? null,
         'timelineDateRevisions',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
     {
@@ -1344,9 +1187,7 @@ export default function transformSheetShipment({
         shipment?.containerGroups?.[0]?.customClearance ?? null,
         'approved',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
       ),
     },
     {
@@ -1364,10 +1205,7 @@ export default function transformSheetShipment({
         `${basePath}.containerGroups.0`,
         shipment?.containerGroups?.[0] ?? null,
         'warehouse',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_WAREHOUSE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_WAREHOUSE)
       ),
     },
     {
@@ -1434,10 +1272,7 @@ export default function transformSheetShipment({
         `${basePath}.containerGroups.0.warehouseArrival`,
         shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
         'date',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
     {
@@ -1456,9 +1291,7 @@ export default function transformSheetShipment({
         shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
         'timelineDateRevisions',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
     {
@@ -1477,9 +1310,7 @@ export default function transformSheetShipment({
         shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
         'approved',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
       ),
     },
     {
@@ -1536,10 +1367,7 @@ export default function transformSheetShipment({
         `${basePath}.containerGroups.0.deliveryReady`,
         shipment?.containerGroups?.[0]?.deliveryReady ?? null,
         'date',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
     {
@@ -1550,9 +1378,7 @@ export default function transformSheetShipment({
         shipment?.containerGroups?.[0]?.deliveryReady ?? null,
         'timelineDateRevisions',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_REVISE_TIMELINE_DATE)
       ),
     },
     {
@@ -1563,9 +1389,7 @@ export default function transformSheetShipment({
         shipment?.containerGroups?.[0]?.deliveryReady ?? null,
         'approved',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_APPROVE_TIMELINE_DATE)
       ),
     },
     {
@@ -1576,9 +1400,8 @@ export default function transformSheetShipment({
         shipment,
         'files',
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
           hasPermission(SHIPMENT_DOCUMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
+          hasPermission(SHIPMENT_EDIT) ||
           hasPermission(SHIPMENT_DOCUMENT_GET_TYPE_BL) ||
           hasPermission(SHIPMENT_DOCUMENT_GET_TYPE_INVOICE) ||
           hasPermission(SHIPMENT_DOCUMENT_GET_TYPE_PACKING_LIST) ||
@@ -1608,10 +1431,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'todo',
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_TASKS)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TASKS)
       ),
     },
     {
@@ -1629,9 +1449,7 @@ export default function transformSheetShipment({
         'mask',
         shipment?.customFields?.mask ?? null,
         hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_CUSTOM_FIELDS_MASK)
+          hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_CUSTOM_FIELDS_MASK)
       ),
     },
     ...fieldDefinitions.map(fieldDefinition => ({
@@ -1646,10 +1464,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         fieldDefinition.id,
-        hasPermission =>
-          hasPermission(SHIPMENT_SET) ||
-          hasPermission(SHIPMENT_UPDATE) ||
-          hasPermission(SHIPMENT_SET_CUSTOM_FIELDS)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_CUSTOM_FIELDS)
       ),
     })),
   ];
