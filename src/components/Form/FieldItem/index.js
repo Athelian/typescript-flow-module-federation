@@ -12,7 +12,7 @@ type OptionalProps = {
   verticalGap: string,
   tooltip: React.Node,
   label: React.Node,
-  subLabel?: React.Portal,
+  subLabel?: React.Node,
   tooltipTop: boolean,
   input: React.Node,
 };
