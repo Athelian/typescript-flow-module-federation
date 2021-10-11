@@ -85,6 +85,7 @@ export default function Security() {
                           required
                           forceHoverStyle
                           editable
+                          tooltipTop
                           {...inputHandlers}
                           subLabel={
                             <FormattedMessage

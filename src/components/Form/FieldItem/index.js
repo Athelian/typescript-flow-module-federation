@@ -12,7 +12,8 @@ type OptionalProps = {
   verticalGap: string,
   tooltip: React.Node,
   label: React.Node,
-  subLabel?: React.Node,
+  subLabel?: React.Portal,
+  tooltipTop: boolean,
   input: React.Node,
 };
 
@@ -23,11 +24,19 @@ const defaultProps = {
   verticalGap: '5px',
 };
 
-const FieldItem = ({ vertical, verticalGap, tooltip, label, subLabel, input }: Props) => (
+const FieldItem = ({
+  vertical,
+  verticalGap,
+  tooltip,
+  label,
+  subLabel,
+  tooltipTop,
+  input,
+}: Props) => (
   <div className={FieldItemWrapperStyle(vertical, verticalGap)}>
     {tooltip && label ? (
       <div className={LabelTooltipWrapperStyle}>
-        <div className={TooltipAbsoluteWrapperStyle}>{tooltip}</div>
+        <div className={TooltipAbsoluteWrapperStyle(tooltipTop)}>{tooltip}</div>
         {label}
         {subLabel && <span className={SubLabelStyle}>{subLabel}</span>}
       </div>

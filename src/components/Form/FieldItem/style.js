@@ -28,12 +28,19 @@ export const SubLabelStyle = css`
   font-size: 12px;
 `;
 
-export const TooltipAbsoluteWrapperStyle: string = css`
+export const TooltipAbsoluteWrapperStyle = (tooltipTop: boolean): string => css`
   position: absolute;
-  left: -20px;
   height: 100%;
   width: 20px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  ${tooltipTop
+    ? `
+    top: -10px;
+    left: -17px;
+  `
+    : `
+    left: -20px;
+    align-items: center;
+    justify-content: center;
+  `};
 `;

@@ -21,6 +21,7 @@ type Props = LabelProps &
     isTouched: boolean,
     label?: React.Node,
     subLabel?: React.Node,
+    tooltipTop?: boolean,
     editable: boolean,
     blackout: boolean,
   };
@@ -42,6 +43,7 @@ const PasswordInputFactory = ({
   name,
   label,
   subLabel,
+  tooltipTop,
   placeholder,
   required,
   disabled,
@@ -105,6 +107,7 @@ const PasswordInputFactory = ({
       vertical={vertical}
       label={<Label {...labelConfig}>{label}</Label>}
       subLabel={subLabel}
+      tooltipTop={tooltipTop}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
       input={(() => {
         if (blackout) {
