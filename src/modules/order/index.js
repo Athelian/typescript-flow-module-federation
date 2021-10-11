@@ -3,7 +3,8 @@ import * as React from 'react';
 import { Redirect, Router, Location } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
-import { ORDER_CREATE, ORDER_LIST } from 'modules/permission/constants/order';
+import { NAVIGATION_ORDERS_LIST } from 'modules/permission/constants/navigation';
+import { ORDER_CREATE } from 'modules/permission/constants/order';
 import OrderRelationalMapModule from 'modules/relationMapV2/order';
 import OrderListModule from './index.list';
 import OrderFormModule from './index.form';
@@ -11,9 +12,12 @@ import OrderSheetModule from './sheet';
 
 const OrderFormModuleWrapper = withNotFound(OrderFormModule, 'orderId');
 const OrderFormModuleCreationWrapper = withForbidden(OrderFormModuleWrapper, ORDER_CREATE);
-const OrderListModuleWrapper = withForbidden(OrderListModule, ORDER_LIST);
-const OrderSheetModuleWrapper = withForbidden(OrderSheetModule, ORDER_LIST);
-const OrderRelationalMapModuleWrapper = withForbidden(OrderRelationalMapModule, ORDER_LIST);
+const OrderListModuleWrapper = withForbidden(OrderListModule, NAVIGATION_ORDERS_LIST);
+const OrderSheetModuleWrapper = withForbidden(OrderSheetModule, NAVIGATION_ORDERS_LIST);
+const OrderRelationalMapModuleWrapper = withForbidden(
+  OrderRelationalMapModule,
+  NAVIGATION_ORDERS_LIST
+);
 
 const OrderApp = () => (
   <Location>

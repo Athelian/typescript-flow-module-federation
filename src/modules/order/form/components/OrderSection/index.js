@@ -57,7 +57,7 @@ import {
 import messages from 'modules/order/messages';
 import SelectExporter from 'modules/order/common/SelectExporter';
 import SelectPartners from 'components/SelectPartners';
-import { PARTNER_LIST } from 'modules/permission/constants/partner';
+import { NAVIGATION_NETWORK_PARTNERS } from 'modules/permission/constants/navigation';
 import { PartnerCard, GrayCard } from 'components/Cards';
 import { TAG_GET } from 'modules/permission/constants/tag';
 import renderPartners from './helpers';
@@ -507,7 +507,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                               >
                                 {renderPartners(
                                   values?.organizations,
-                                  hasPermission(PARTNER_LIST) &&
+                                  hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                                     hasPermission([ORDER_UPDATE, ORDER_SET_IMPORTER])
                                 )}
                               </div>

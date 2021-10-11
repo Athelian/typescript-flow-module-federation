@@ -27,7 +27,10 @@ import {
   SHIPMENT_REMOVE_BATCH,
 } from 'modules/permission/constants/shipment';
 import {
-  BATCH_LIST,
+  NAVIGATION_BATCH_LIST,
+  NAVIGATION_ORDER_ITEMS_LIST,
+} from 'modules/permission/constants/navigation';
+import {
   BATCH_CREATE,
   BATCH_SET_NO,
   BATCH_SET_QUANTITY,
@@ -36,8 +39,9 @@ import {
   BATCH_UPDATE,
   BATCH_TASK_LIST,
 } from 'modules/permission/constants/batch';
+
 import { ORDER_FORM } from 'modules/permission/constants/order';
-import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
   calculatePackageQuantity,
   generateCloneBatch,
@@ -220,7 +224,7 @@ function BatchesArea({
             : true);
 
         const allowSelectBatches =
-          hasPermission(BATCH_LIST) &&
+          hasPermission(NAVIGATION_BATCH_LIST) &&
           (hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
             (hasPermission(SHIPMENT_ADD_BATCH) && isFocusedContainer
               ? hasPermission(CONTAINER_BATCHES_ADD)
@@ -228,7 +232,7 @@ function BatchesArea({
 
         const allowNewBatches =
           hasPermission(BATCH_CREATE) &&
-          hasPermission(ORDER_ITEMS_LIST) &&
+          hasPermission(NAVIGATION_ORDER_ITEMS_LIST) &&
           (hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
             (hasPermission(SHIPMENT_ADD_BATCH) && isFocusedContainer
               ? hasPermission(CONTAINER_BATCHES_ADD)

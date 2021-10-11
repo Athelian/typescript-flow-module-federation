@@ -23,12 +23,16 @@ import {
 import { SHIPMENT_FORM, SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ORDER_FORM } from 'modules/permission/constants/order';
-import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import {
+  NAVIGATION_ORDER_ITEMS_LIST,
+  NAVIGATION_BATCH_LIST,
+} from 'modules/permission/constants/navigation';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { initDatetimeToContainer } from 'utils/date';
 import useUser from 'hooks/useUser';
+
 import {
   BATCH_CREATE,
-  BATCH_LIST,
   BATCH_FORM,
   BATCH_UPDATE,
   BATCH_SET_NO,
@@ -75,11 +79,11 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId, exporter
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
 
   const allowAddBatches =
-    hasPermission(BATCH_LIST) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
+    hasPermission(NAVIGATION_BATCH_LIST) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
 
   const allowCreateBatches =
     hasPermission(BATCH_CREATE) &&
-    hasPermission(ORDER_ITEMS_LIST) &&
+    hasPermission(NAVIGATION_ORDER_ITEMS_LIST) &&
     (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
 
   const allowCloneBatches =

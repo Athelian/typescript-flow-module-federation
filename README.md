@@ -137,9 +137,9 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
 
 - **lint**
 
-  ```
-  yarn lint
-  ```
+```bash
+yarn lint
+```
 
 [eslint](https://github.com/eslint/eslint) to check all linting errors.
 
