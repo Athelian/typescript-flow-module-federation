@@ -1,9 +1,12 @@
+/* eslint-disable */
+
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { Display, Label } from 'components/Form';
+import LoadingIcon from 'components/LoadingIcon';
 import FilterHitBorder from 'modules/relationMapV2/components/FilterHitBorder';
 import {
   HeadingWrapperStyle,
@@ -12,6 +15,7 @@ import {
   SelectAllButtonStyle,
   ExpandedIconWrapperStyle,
   ItemHeadingSelectedStyle,
+  LoadingBackgroundStyle,
 } from './style';
 
 type Props = {|
@@ -43,6 +47,9 @@ export default function Heading({
 
   return (
     <div className={HeadingWrapperStyle(isExpanded, width)} onClick={onClick} role="presentation">
+      {/* <div className={LoadingBackgroundStyle}>
+        <LoadingIcon />
+      </div> */}
       <div className={LeftWrapperStyle}>
         <div className={TotalWrapperStyle}>
           <Label width="min-content">

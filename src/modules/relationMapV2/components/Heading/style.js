@@ -45,6 +45,12 @@ export const HeadingWrapperStyle = (isExpanded: boolean, width: string): string 
   `};
 `;
 
+export const LoadingBackgroundStyle: string = css`
+  position: absolute;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.1);
+`;
+
 export const LeftWrapperStyle: string = css`
   display: grid;
   grid-template-rows: 20px 20px;

@@ -1,7 +1,6 @@
 // @flow
 import type { OrderPayload } from 'generated/graphql';
 import memoize from 'memoize-one';
-import { getByPathWithDefault } from 'utils/fp';
 import { TOTAL_COLUMNS } from 'modules/relationMapV2/constants';
 import { shipmentCoordinates } from './helpers';
 
@@ -24,11 +23,9 @@ const generateCells = memoize(
   |}) => {
     const onClick = () => {
       if (!isExpand) {
-        onExpand(expandIds => [...expandIds, getByPathWithDefault('', 'id', shipment)]);
+        onExpand(expandIds => [...expandIds, shipment?.id ?? '']);
       } else {
-        onExpand(expandIds =>
-          expandIds.filter(id => id !== getByPathWithDefault('', 'id', shipment))
-        );
+        onExpand(expandIds => expandIds.filter(id => id !== (shipment?.id ?? '')));
       }
     };
     const cells = shipmentCoordinates({ isExpand, shipment, ...helpers });
@@ -53,42 +50,17 @@ const generateListData = memoize(
     newBatchIDs: Array<string>,
     newContainerIDs: Array<string>,
   |}) => {
-    const result = [
-      [
-        {
-          cell: null,
-          isExpand: false,
-          onClick: () => {},
-          shipment: {},
-        },
-        {
-          cell: null,
-          isExpand: false,
-          onClick: () => {},
-          shipment: {},
-        },
-        {
-          cell: null,
-          isExpand: false,
-          onClick: () => {},
-          shipment: {},
-        },
-        {
-          cell: null,
-          isExpand: false,
-          onClick: () => {},
-          shipment: {},
-        },
-        {
-          cell: null,
-          isExpand: false,
-          onClick: () => {},
-          shipment: {},
-        },
-      ],
-    ]; // empty 1st cell for header
+    const emptyFirstCells = [...Array(5)].map(() => ({
+      cell: null,
+      isExpand: false,
+      onClick: () => {},
+      shipment: {},
+    }));
+
+    const result = [emptyFirstCells]; // empty 1st cell for header
+
     shipments.forEach(shipment => {
-      const isExpand = expandRows.includes(getByPathWithDefault('', 'id', shipment));
+      const isExpand = expandRows.includes(shipment?.id ?? '');
       const { cells, onClick } = generateCells({
         shipment,
         isExpand,
@@ -97,6 +69,7 @@ const generateListData = memoize(
       });
       let counter = 0;
       let row = [];
+      // console.log('cells are', cells);
       cells.forEach(cell => {
         counter += 1;
         row.push({

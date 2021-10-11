@@ -11,6 +11,9 @@ import Heading from 'modules/relationMapV2/components/Heading';
 import { targetedIds } from 'modules/relationMapV2/helpers';
 import { RightWrapperStyle, DatesWrapperStyle, DashStyle } from './style';
 
+/**
+ * gets the oldest and newest delivery dates from shipment's containers
+ */
 const getContainerDateRanges = (containers: Array<Object>) => {
   let oldestDelivery = null;
   let newestDelivery = null;
