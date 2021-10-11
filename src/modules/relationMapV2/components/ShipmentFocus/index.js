@@ -291,6 +291,7 @@ export default function ShipmentFocus() {
                               payload: {
                                 type: '',
                                 selectedId: '',
+                                defaultSection: '',
                               },
                             });
                           },

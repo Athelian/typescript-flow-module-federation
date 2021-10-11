@@ -20,6 +20,8 @@ type Props = LabelProps &
     vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
+    subLabel?: React.Node,
+    tooltipTop?: boolean,
     editable: boolean,
     blackout: boolean,
   };
@@ -40,6 +42,8 @@ const PasswordInputFactory = ({
   value,
   name,
   label,
+  subLabel,
+  tooltipTop,
   placeholder,
   required,
   disabled,
@@ -102,6 +106,8 @@ const PasswordInputFactory = ({
     <FieldItem
       vertical={vertical}
       label={<Label {...labelConfig}>{label}</Label>}
+      subLabel={subLabel}
+      tooltipTop={tooltipTop}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
       input={(() => {
         if (blackout) {

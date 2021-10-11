@@ -35,7 +35,8 @@ import {
   ShipmentBatchesContainer,
   ShipmentTimelineContainer,
 } from 'modules/shipment/form/containers';
-import { WAREHOUSE_FORM, WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
+import { NAVIGATION_NETWORK_WAREHOUSES } from 'modules/permission/constants/navigation';
+import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
 import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
 import { getBatchesInPool } from 'modules/shipment/helpers';
@@ -123,7 +124,8 @@ function ContainersArea({
   const { hasPermission } = usePermission(isOwner);
 
   const allowSetWarehouse =
-    hasPermission([CONTAINER_UPDATE, CONTAINER_SET_WAREHOUSE]) && hasPermission(WAREHOUSE_LIST);
+    hasPermission([CONTAINER_UPDATE, CONTAINER_SET_WAREHOUSE]) &&
+    hasPermission(NAVIGATION_NETWORK_WAREHOUSES);
 
   return (
     <Subscribe

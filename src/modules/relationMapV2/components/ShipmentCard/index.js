@@ -12,7 +12,7 @@ import { FocusedView, GlobalShipmentPoint } from 'modules/relationMapV2/store';
 import { useHasPermissions } from 'contexts/Permissions';
 import { CONTAINER_CREATE } from 'modules/permission/constants/container';
 import { getAgreedArrivalDates, getActualArrivalDates } from 'modules/shipment/helpers';
-import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
+import { SHIPMENT_GET } from 'modules/permission/constants/shipment';
 import { getPort } from 'utils/shipment';
 import { earliest, latest, differenceInCalendarDays } from 'utils/date';
 import MiniShipmentTimeline from 'modules/relationMapV2/components/MiniShipmentTimeline';
@@ -70,7 +70,7 @@ export default function ShipmentCard({
   organizationId,
 }: Props) {
   const hasPermissions = useHasPermissions(organizationId);
-  const allowToViewForm = hasPermissions(SHIPMENT_FORM);
+  const allowToViewForm = hasPermissions(SHIPMENT_GET);
   const allowToCreateContainer = hasPermissions(CONTAINER_CREATE);
 
   const { globalShipmentPoint } = GlobalShipmentPoint.useContainer();

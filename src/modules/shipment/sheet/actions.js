@@ -18,8 +18,7 @@ import {
 import { CONTAINER_CREATE } from 'modules/permission/constants/container';
 import {
   SHIPMENT_CREATE,
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
+  SHIPMENT_EDIT,
   SHIPMENT_ADD_BATCH,
 } from 'modules/permission/constants/shipment';
 import { unDecorateBatch, unDecorateContainer } from './decorator';
@@ -93,26 +92,21 @@ export default {
   batch_move_order: AC(
     BatchMoveToExistingOrderAction,
     hasPermissions =>
-      hasPermissions(ORDER_ITEMS_CREATE) &&
-      (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM))
+      hasPermissions(ORDER_ITEMS_CREATE) && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
   ),
   batch_move_new_order: AC(
     BatchMoveToNewOrderAction,
     hasPermissions =>
-      hasPermissions(ORDER_CREATE) &&
-      (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM))
+      hasPermissions(ORDER_CREATE) && hasPermissions([BATCH_UPDATE, BATCH_SET_ORDER_ITEM])
   ),
-  batch_move_container: AC(
-    BatchMoveToExistingContainerAction,
-    hasPermissions => hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_CONTAINER)
+  batch_move_container: AC(BatchMoveToExistingContainerAction, hasPermissions =>
+    hasPermissions([BATCH_UPDATE, BATCH_SET_CONTAINER])
   ),
   batch_move_new_container: AC(
     BatchMoveToNewContainerOnExistShipmentAction,
     hasPermissions =>
       hasPermissions(CONTAINER_CREATE) &&
-      (hasPermissions(SHIPMENT_UPDATE) ||
-        hasPermissions(SHIPMENT_SET) ||
-        hasPermissions(SHIPMENT_ADD_BATCH)) &&
+      hasPermissions([SHIPMENT_EDIT, SHIPMENT_ADD_BATCH]) &&
       (hasPermissions(BATCH_UPDATE) ||
         (hasPermissions(BATCH_SET_SHIPMENT) && hasPermissions(BATCH_SET_CONTAINER)))
   ),

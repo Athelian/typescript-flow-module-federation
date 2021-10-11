@@ -3,11 +3,11 @@ import * as React from 'react';
 import { Provider } from 'unstated';
 import { Router, Redirect } from '@reach/router';
 import withForbidden from 'hoc/withForbidden';
-import { TASK_LIST } from 'modules/permission/constants/task';
+import { NAVIGATION_TASKS_LIST } from 'modules/permission/constants/navigation';
 import TaskListModule from './index.list';
 import TaskFormModule from './index.form';
 
-const TaskModuleListWrapper = withForbidden(TaskListModule, TASK_LIST);
+const TaskModuleListWrapper = withForbidden(TaskListModule, NAVIGATION_TASKS_LIST);
 
 const TaskApp = () => (
   <Provider>

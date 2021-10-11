@@ -9,7 +9,7 @@ export type ActionComponentProps = {|
 
 export type ActionConfig = {|
   component: ActionComponentProps => React.Node,
-  permissions: ((string) => boolean) => boolean,
+  permissions: ((string | Array<string>) => boolean) => boolean,
 |};
 
 export type ActionRequest = {|

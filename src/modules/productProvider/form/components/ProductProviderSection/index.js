@@ -28,7 +28,7 @@ import {
   FormTooltip,
   TextAreaInputFactory,
 } from 'components/Form';
-import { PARTNER_LIST } from 'modules/permission/constants/partner';
+import { NAVIGATION_NETWORK_PARTNERS } from 'modules/permission/constants/navigation';
 import {
   PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_SET_EXPORTER,
@@ -181,7 +181,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     }
                   />
                   {values.isNew &&
-                  hasPermission(PARTNER_LIST) &&
+                  hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                   hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_EXPORTER]) ? (
                     <BooleanValue>
                       {({ value: opened, set: exporterSlideToggle }) => (
@@ -278,7 +278,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     }
                   />
                   {values.isNew &&
-                  hasPermission(PARTNER_LIST) &&
+                  hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                   hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_SUPPLIER]) ? (
                     <BooleanValue>
                       {({ value: opened, set: supplierSlideToggle }) => (
@@ -386,7 +386,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                             ) : (
                               <div
                                 onClick={() =>
-                                  hasPermission(PARTNER_LIST) &&
+                                  hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                                   hasPermission([
                                     PRODUCT_PROVIDER_UPDATE,
                                     PRODUCT_PROVIDER_SET_IMPORTER,
@@ -476,7 +476,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                           <>
                             <div
                               onClick={() =>
-                                hasPermission(PARTNER_LIST) &&
+                                hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                                 hasPermission([PRODUCT_PROVIDER_UPDATE])
                                   ? partnerSelectorToggle(true)
                                   : () => {}
@@ -485,7 +485,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                             >
                               {renderPartners(
                                 values?.organizations,
-                                hasPermission(PARTNER_LIST) &&
+                                hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                                   hasPermission([PRODUCT_PROVIDER_UPDATE])
                               )}
                             </div>

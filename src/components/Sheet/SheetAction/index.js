@@ -59,7 +59,7 @@ export const useSheetActionAutoProcess = (
 
 export const AC = (
   component: ActionComponentProps => React.Node,
-  permissions: ((string) => boolean) => boolean = () => true
+  permissions: ((string | Array<string>) => boolean) => boolean = () => true
 ): ActionConfig => ({
   component,
   permissions,

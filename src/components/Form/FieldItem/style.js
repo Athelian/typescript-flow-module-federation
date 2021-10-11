@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout } from 'styles/common';
+import { layout, colors } from 'styles/common';
 
 export const FieldItemWrapperStyle = (vertical: boolean, verticalGap: string): string => css`
   position: relative;
@@ -22,12 +22,25 @@ export const LabelTooltipWrapperStyle: string = css`
   height: min-content;
 `;
 
-export const TooltipAbsoluteWrapperStyle: string = css`
+export const SubLabelStyle = css`
+  color: ${colors.GRAY_DARK};
+  margin-left: 4px;
+  font-size: 12px;
+`;
+
+export const TooltipAbsoluteWrapperStyle = (tooltipTop: boolean): string => css`
   position: absolute;
-  left: -20px;
   height: 100%;
   width: 20px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  ${tooltipTop
+    ? `
+    top: -10px;
+    left: -17px;
+  `
+    : `
+    left: -20px;
+    align-items: center;
+    justify-content: center;
+  `};
 `;

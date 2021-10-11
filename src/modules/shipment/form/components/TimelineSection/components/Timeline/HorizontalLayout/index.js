@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { ShipmentPayload } from 'generated/graphql';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
-import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
+import { SHIPMENT_GET } from 'modules/permission/constants/shipment';
 import HorizontalPortNames from './HorizontalPortNames';
 import HorizontalTimeline from './HorizontalTimeline';
 import HorizontalDates from './HorizontalDates';
@@ -22,7 +22,7 @@ const HorizontalLayout = ({ shipment, navigable }: Props) => {
           <HorizontalTimeline
             shipment={shipment}
             navigable={{
-              form: navigable && permissions.includes(SHIPMENT_FORM),
+              form: navigable && permissions.includes(SHIPMENT_GET),
             }}
           />
           <HorizontalDates shipment={shipment} />

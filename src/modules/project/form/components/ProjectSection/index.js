@@ -17,7 +17,7 @@ import Icon from 'components/Icon';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import FormattedName from 'components/FormattedName';
-import { PARTNER_LIST } from 'modules/permission/constants/partner';
+import { NAVIGATION_NETWORK_PARTNERS } from 'modules/permission/constants/navigation';
 import { BooleanValue } from 'react-values';
 import {
   FieldItem,
@@ -315,7 +315,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                                   <>
                                     <div
                                       onClick={
-                                        hasPermission(PARTNER_LIST) && allowUpdate
+                                        hasPermission(NAVIGATION_NETWORK_PARTNERS) && allowUpdate
                                           ? () => slideToggle(true)
                                           : () => {}
                                       }

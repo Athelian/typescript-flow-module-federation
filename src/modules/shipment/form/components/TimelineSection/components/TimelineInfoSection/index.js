@@ -6,8 +6,7 @@ import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
+  SHIPMENT_EDIT,
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_SET_REVISE_TIMELINE_DATE,
   SHIPMENT_SET_TIMELINE_DATE,
@@ -92,16 +91,12 @@ const TimelineInfoSection = (props: Props) => {
           approvedByName={`${sourceName}.approvedBy`}
           approvedBy={approvedBy}
           setFieldValue={setFieldDeepValue}
-          approvable={hasPermission([
-            SHIPMENT_SET,
-            SHIPMENT_UPDATE,
-            SHIPMENT_APPROVE_TIMELINE_DATE,
-          ])}
+          approvable={hasPermission([SHIPMENT_EDIT, SHIPMENT_APPROVE_TIMELINE_DATE])}
           handleTimezone
         />
         <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
           <div className={AddDateButtonWrapperStyle}>
-            {hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_REVISE_TIMELINE_DATE]) && (
+            {hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_REVISE_TIMELINE_DATE]) && (
               <>
                 {timelineDateRevisions.length < 5 ? (
                   <NewButton
@@ -154,11 +149,7 @@ const TimelineInfoSection = (props: Props) => {
                 adjustment && (
                   <DefaultAdjustmentStyle
                     isNew={isNew}
-                    editable={hasPermission([
-                      SHIPMENT_SET,
-                      SHIPMENT_UPDATE,
-                      SHIPMENT_SET_REVISE_TIMELINE_DATE,
-                    ])}
+                    editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_REVISE_TIMELINE_DATE])}
                     index={timelineDateRevisions.length - 1 - index}
                     adjustment={adjustment}
                     key={adjustment.id}
@@ -183,8 +174,7 @@ const TimelineInfoSection = (props: Props) => {
                             name={name}
                             isNew={isNew}
                             editable={hasPermission([
-                              SHIPMENT_SET,
-                              SHIPMENT_UPDATE,
+                              SHIPMENT_EDIT,
                               SHIPMENT_SET_REVISE_TIMELINE_DATE,
                             ])}
                             required
@@ -203,11 +193,7 @@ const TimelineInfoSection = (props: Props) => {
                 {...inputHandlers}
                 name={name}
                 isNew={isNew}
-                editable={hasPermission([
-                  SHIPMENT_SET,
-                  SHIPMENT_UPDATE,
-                  SHIPMENT_SET_TIMELINE_DATE,
-                ])}
+                editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_TIMELINE_DATE])}
                 label={
                   <FormattedMessage
                     id="modules.Shipments.initialDate"

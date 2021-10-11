@@ -21,7 +21,7 @@ import { BATCH_FORM } from 'modules/permission/constants/batch';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
-import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
+import { SHIPMENT_GET } from 'modules/permission/constants/shipment';
 import { UserConsumer } from 'contexts/Viewer';
 import {
   Label,
@@ -177,7 +177,7 @@ const TaskCard = ({
     order: hasPermission(ORDER_FORM),
     orderItem: hasPermission(ORDER_ITEMS_FORM),
     batch: hasPermission(BATCH_FORM),
-    shipment: hasPermission(SHIPMENT_FORM),
+    shipment: hasPermission(SHIPMENT_GET),
     product: hasPermission(PRODUCT_FORM),
   };
 

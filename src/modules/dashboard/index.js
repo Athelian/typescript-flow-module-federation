@@ -1,16 +1,20 @@
 // @flow
 import * as React from 'react';
 import { Redirect } from '@reach/router';
-import { ORDER_LIST } from 'modules/permission/constants/order';
-import { SHIPMENT_LIST } from 'modules/permission/constants/shipment';
-import { PRODUCT_LIST } from 'modules/permission/constants/product';
+
+import {
+  NAVIGATION_ORDERS_LIST,
+  NAVIGATION_SHIPMENTS_LIST,
+  NAVIGATION_PRODUCTS_LIST,
+} from 'modules/permission/constants/navigation';
+
 import LoadingIcon from 'components/LoadingIcon';
 import { useViewerHasPermissions, useViewerPermissions } from 'contexts/Permissions';
 
-const findRedirectUrlBaseOnPermission = (hasPermission: string => boolean) => {
-  if (hasPermission(SHIPMENT_LIST)) return 'shipment';
-  if (hasPermission(ORDER_LIST)) return 'order';
-  if (hasPermission(PRODUCT_LIST)) return 'product';
+const findRedirectUrlBaseOnPermission = (hasPermission: (string | Array<string>) => boolean) => {
+  if (hasPermission(NAVIGATION_SHIPMENTS_LIST)) return 'shipment';
+  if (hasPermission(NAVIGATION_ORDERS_LIST)) return 'order';
+  if (hasPermission(NAVIGATION_PRODUCTS_LIST)) return 'product';
   return '403';
 };
 

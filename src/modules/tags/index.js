@@ -2,12 +2,13 @@
 import * as React from 'react';
 import { Router, Redirect } from '@reach/router';
 import withForbidden from 'hoc/withForbidden';
-import { TAG_CREATE, TAG_LIST } from 'modules/permission/constants/tag';
+import { NAVIGATION_TAGS_LIST } from 'modules/permission/constants/navigation';
+import { TAG_CREATE } from 'modules/permission/constants/tag';
 import TagListModule from './index.list';
 import TagFormModule from './index.form';
 
 const TagFormModuleCreationWrapper = withForbidden(TagFormModule, TAG_CREATE);
-const TagModuleListWrapper = withForbidden(TagListModule, TAG_LIST);
+const TagModuleListWrapper = withForbidden(TagListModule, NAVIGATION_TAGS_LIST);
 
 const TagApp = () => (
   <Router>

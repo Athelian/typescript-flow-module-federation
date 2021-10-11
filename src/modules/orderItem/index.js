@@ -4,11 +4,8 @@ import { Provider } from 'unstated';
 import { Router, Redirect } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
-import {
-  ORDER_ITEMS_CREATE,
-  ORDER_ITEMS_FORM,
-  ORDER_ITEMS_LIST,
-} from 'modules/permission/constants/orderItem';
+import { NAVIGATION_ORDER_ITEMS_LIST } from 'modules/permission/constants/navigation';
+import { ORDER_ITEMS_CREATE, ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
 import OrderItemListModule from './index.list';
 import OrderItemFormModule from './index.form';
 
@@ -21,7 +18,7 @@ const OrderItemFormDetailModuleWrapper = withForbidden(
   OrderItemFormModuleWrapper,
   ORDER_ITEMS_FORM
 );
-const OrderItemModuleListWrapper = withForbidden(OrderItemListModule, ORDER_ITEMS_LIST);
+const OrderItemModuleListWrapper = withForbidden(OrderItemListModule, NAVIGATION_ORDER_ITEMS_LIST);
 
 const OrderItemApp = () => (
   <Provider>

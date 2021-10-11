@@ -43,8 +43,7 @@ import {
 import { CONTAINER_CREATE } from 'modules/permission/constants/container';
 import {
   SHIPMENT_CREATE,
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
+  SHIPMENT_EDIT,
   SHIPMENT_ADD_BATCH,
 } from 'modules/permission/constants/shipment';
 import { PRODUCT_PROVIDER_LIST } from 'modules/permission/constants/product';
@@ -299,29 +298,24 @@ export default {
       hasPermissions(ORDER_CREATE) &&
       (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_ORDER_ITEM))
   ),
-  batch_move_container: AC(
-    BatchMoveToExistingContainerAction,
-    hasPermissions => hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_CONTAINER)
+  batch_move_container: AC(BatchMoveToExistingContainerAction, hasPermissions =>
+    hasPermissions([BATCH_UPDATE, BATCH_SET_CONTAINER])
   ),
   batch_move_new_container: AC(
     BatchMoveToNewContainerOnExistShipmentAction,
     hasPermissions =>
       hasPermissions(CONTAINER_CREATE) &&
-      (hasPermissions(SHIPMENT_SET) ||
-        hasPermissions(SHIPMENT_UPDATE) ||
-        hasPermissions(SHIPMENT_ADD_BATCH)) &&
+      hasPermissions([SHIPMENT_EDIT, SHIPMENT_ADD_BATCH]) &&
       (hasPermissions(BATCH_UPDATE) ||
         (hasPermissions(BATCH_SET_SHIPMENT) && hasPermissions(BATCH_SET_CONTAINER)))
   ),
-  batch_move_shipment: AC(
-    BatchMoveToExistingShipmentAction,
-    hasPermissions => hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_SHIPMENT)
+  batch_move_shipment: AC(BatchMoveToExistingShipmentAction, hasPermissions =>
+    hasPermissions([BATCH_UPDATE, BATCH_SET_SHIPMENT])
   ),
   batch_move_new_shipment: AC(
     BatchMoveToNewShipmentAction,
     hasPermissions =>
-      hasPermissions(SHIPMENT_CREATE) &&
-      (hasPermissions(BATCH_UPDATE) || hasPermissions(BATCH_SET_SHIPMENT))
+      hasPermissions(SHIPMENT_CREATE) && hasPermissions([BATCH_UPDATE, BATCH_SET_SHIPMENT])
   ),
   batch_split: AC(BatchSplitAction, perm => perm(BATCH_CREATE)),
   batch_delete_remove: AC(

@@ -16,11 +16,7 @@ import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
 import { BATCH_UPDATE, BATCH_SET_ORDER_ITEM } from 'modules/permission/constants/batch';
 import { CONTAINER_BATCHES_ADD } from 'modules/permission/constants/container';
-import {
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
-  SHIPMENT_ADD_BATCH,
-} from 'modules/permission/constants/shipment';
+import { SHIPMENT_EDIT, SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
 import { findParentIdsByBatch, findOrderIdByItem } from 'modules/relationMapV2/helpers';
 
 // NOTE: only support for drag and drop a batch and order item
@@ -43,12 +39,7 @@ export const hasPermissionToMove = ({
     }
 
     case SHIPMENT: {
-      return hasPermissions([
-        CONTAINER_BATCHES_ADD,
-        SHIPMENT_SET,
-        SHIPMENT_UPDATE,
-        SHIPMENT_ADD_BATCH,
-      ]);
+      return hasPermissions([CONTAINER_BATCHES_ADD, SHIPMENT_EDIT, SHIPMENT_ADD_BATCH]);
     }
 
     default:

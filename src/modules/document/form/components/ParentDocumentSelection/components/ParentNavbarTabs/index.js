@@ -4,25 +4,27 @@ import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import {
-  ORDER_LIST,
+  NAVIGATION_ORDERS_LIST,
+  NAVIGATION_ORDER_ITEMS_LIST,
+  NAVIGATION_SHIPMENTS_LIST,
+  NAVIGATION_PROJECTS_LIST,
+} from 'modules/permission/constants/navigation';
+import {
   ORDER_DOCUMENT_CREATE,
   ORDER_SET_DOCUMENTS,
   ORDER_UPDATE,
 } from 'modules/permission/constants/order';
 import {
-  ORDER_ITEMS_LIST,
   ORDER_ITEMS_DOCUMENT_CREATE,
   ORDER_ITEMS_SET_DOCUMENTS,
   ORDER_ITEMS_UPDATE,
 } from 'modules/permission/constants/orderItem';
 import {
-  SHIPMENT_LIST,
   SHIPMENT_DOCUMENT_CREATE,
   SHIPMENT_DOCUMENT_SET,
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
+  SHIPMENT_EDIT,
 } from 'modules/permission/constants/shipment';
-import { PROJECT_LIST, PROJECT_UPDATE } from 'modules/permission/constants/project';
+import { PROJECT_UPDATE } from 'modules/permission/constants/project';
 import {
   MILESTONE_LIST,
   MILESTONE_UPDATE,
@@ -50,18 +52,18 @@ const ParentNavbarTabs = ({ filterAndSort, onChangeFilter, activeType }: Props) 
 
   const canViewList = {
     orders:
-      hasPermission(ORDER_LIST) &&
+      hasPermission(NAVIGATION_ORDERS_LIST) &&
       (hasPermission(ORDER_UPDATE) || hasPermission([ORDER_DOCUMENT_CREATE, ORDER_SET_DOCUMENTS])),
     orderItems:
-      hasPermission(ORDER_ITEMS_LIST) &&
+      hasPermission(NAVIGATION_ORDER_ITEMS_LIST) &&
       (hasPermission(ORDER_ITEMS_UPDATE) ||
         hasPermission([ORDER_ITEMS_DOCUMENT_CREATE, ORDER_ITEMS_SET_DOCUMENTS])),
     shipments:
-      hasPermission(SHIPMENT_LIST) &&
-      (hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
+      hasPermission(NAVIGATION_SHIPMENTS_LIST) &&
+      (hasPermission(SHIPMENT_EDIT) ||
         hasPermission([SHIPMENT_DOCUMENT_CREATE, SHIPMENT_DOCUMENT_SET])),
     projects:
-      hasPermission(PROJECT_LIST) &&
+      hasPermission(NAVIGATION_PROJECTS_LIST) &&
       hasPermission(MILESTONE_LIST) &&
       hasPermission(PROJECT_UPDATE) &&
       (hasPermission(MILESTONE_UPDATE) ||

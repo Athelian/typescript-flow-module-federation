@@ -3,6 +3,7 @@ import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
+import { NAVIGATION_NETWORK_WAREHOUSES } from 'modules/permission/constants/navigation';
 import {
   CONTAINER_SET_WAREHOUSE,
   CONTAINER_UPDATE,
@@ -14,7 +15,7 @@ import {
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
 } from 'modules/permission/constants/container';
-import { WAREHOUSE_FORM, WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
+import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import { ShipmentContainerCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
@@ -48,7 +49,7 @@ export default function ContainerList({ containers, setDeepFieldValue }: Props) 
                     CONTAINER_SET_CONTAINER_OPTION,
                   ]),
                   warehouse:
-                    hasPermission(WAREHOUSE_LIST) &&
+                    hasPermission(NAVIGATION_NETWORK_WAREHOUSES) &&
                     hasPermission([CONTAINER_UPDATE, CONTAINER_SET_WAREHOUSE]),
                   viewWarehouse: hasPermission([WAREHOUSE_FORM]),
                   warehouseArrivalAgreedDate: hasPermission([
