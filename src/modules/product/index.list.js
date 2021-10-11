@@ -12,7 +12,7 @@ import {
   Sort,
 } from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
-import { PRODUCT_CREATE, PRODUCT_EXPORT_LIST } from 'modules/permission/constants/product';
+import { PRODUCT_CREATE, PRODUCT_EXPORT } from 'modules/permission/constants/product';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import useFilterSort from 'hooks/useFilterSort';
 import ProductList from './list';
@@ -43,7 +43,7 @@ const ProductListModule = () => {
           </Link>
         )}
 
-        {hasPermissions(PRODUCT_EXPORT_LIST) && (
+        {hasPermissions(PRODUCT_EXPORT) && (
           <ExportButton
             type="Products"
             exportQuery={productsExportQuery}
