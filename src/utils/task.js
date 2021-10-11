@@ -2,13 +2,16 @@
 import type { User, Task } from 'generated/graphql';
 import type { TaskCardEditableProps } from 'components/Cards/TaskCard/type.js.flow';
 import { sumBy } from 'lodash';
-import { PROJECT_FORM, PROJECT_LIST } from 'modules/permission/constants/project';
+import {
+  NAVIGATION_PROJECTS_LIST,
+  NAVIGATION_TASKS_LIST,
+} from 'modules/permission/constants/navigation';
+import { PROJECT_FORM } from 'modules/permission/constants/project';
 import {
   TASK_FORM,
   TASK_CREATE,
   TASK_UPDATE,
   TASK_DELETE,
-  TASK_LIST,
 } from 'modules/permission/constants/task';
 import {
   ORDER_UPDATE,
@@ -934,13 +937,13 @@ export const getTasksPermissions = (
     case 'Order':
       return {
         canViewProjectForm: hasPermission(PROJECT_FORM),
-        canViewList: hasPermission([ORDER_TASK_LIST, TASK_LIST]),
+        canViewList: hasPermission([ORDER_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([TASK_FORM, ORDER_TASK_FORM]),
         canAddTasks: hasPermission([ORDER_TASK_CREATE, ORDER_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission([ORDER_UPDATE, ORDER_SET_TASKS]),
         canDeleteTasks: hasPermission([ORDER_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission(ORDER_UPDATE) ||
             (hasPermission(ORDER_SET_MILESTONE) && hasPermission(ORDER_SET_TASKS))),
@@ -964,13 +967,13 @@ export const getTasksPermissions = (
     case 'OrderItem':
       return {
         canViewProjectForm: hasPermission(PROJECT_FORM),
-        canViewList: hasPermission([ORDER_ITEMS_TASK_LIST, TASK_LIST]),
+        canViewList: hasPermission([ORDER_ITEMS_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([ORDER_ITEMS_TASK_FORM, TASK_FORM]),
         canAddTasks: hasPermission([ORDER_ITEMS_TASK_CREATE, ORDER_ITEMS_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]),
         canDeleteTasks: hasPermission([ORDER_ITEMS_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission(ORDER_ITEMS_UPDATE) ||
             (hasPermission(ORDER_ITEMS_SET_MILESTONE) && hasPermission(ORDER_ITEMS_SET_TASKS))),
@@ -1022,13 +1025,13 @@ export const getTasksPermissions = (
     case 'Batch':
       return {
         canViewProjectForm: hasPermission(PROJECT_FORM),
-        canViewList: hasPermission([BATCH_TASK_LIST, TASK_LIST]),
+        canViewList: hasPermission([BATCH_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([BATCH_TASK_FORM, TASK_FORM]),
         canAddTasks: hasPermission([BATCH_TASK_CREATE, BATCH_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission([BATCH_UPDATE, BATCH_SET_TASKS]),
         canDeleteTasks: hasPermission([BATCH_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission(BATCH_UPDATE) ||
             (hasPermission(BATCH_SET_MILESTONE) && hasPermission(BATCH_SET_TASKS))),
@@ -1052,13 +1055,13 @@ export const getTasksPermissions = (
     case 'Product':
       return {
         canViewProjectForm: hasPermission(PROJECT_FORM),
-        canViewList: hasPermission([PRODUCT_TASK_LIST, TASK_LIST]),
+        canViewList: hasPermission([PRODUCT_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([PRODUCT_TASK_FORM, TASK_FORM]),
         canAddTasks: hasPermission([PRODUCT_TASK_CREATE, PRODUCT_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]),
         canDeleteTasks: hasPermission([PRODUCT_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission(PRODUCT_UPDATE) ||
             (hasPermission(PRODUCT_SET_MILESTONE) && hasPermission(PRODUCT_SET_TASKS))),
@@ -1086,7 +1089,7 @@ export const getTasksPermissions = (
     case 'ProductProvider':
       return {
         canViewProjectForm: hasPermission(PROJECT_FORM),
-        canViewList: hasPermission([PRODUCT_PROVIDER_TASK_LIST, TASK_LIST]),
+        canViewList: hasPermission([PRODUCT_PROVIDER_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([PRODUCT_PROVIDER_TASK_FORM, TASK_FORM]),
         canAddTasks: hasPermission([
           PRODUCT_PROVIDER_TASK_CREATE,
@@ -1096,7 +1099,7 @@ export const getTasksPermissions = (
         canOrderingTasks: hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]),
         canDeleteTasks: hasPermission([PRODUCT_PROVIDER_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission(PRODUCT_PROVIDER_UPDATE) ||
             (hasPermission(PRODUCT_PROVIDER_SET_MILESTONE) &&
@@ -1153,13 +1156,13 @@ export const getTasksPermissions = (
     default:
       return {
         canViewProjectForm: hasPermission(PROJECT_FORM),
-        canViewList: hasPermission([SHIPMENT_TASK_LIST, TASK_LIST]),
+        canViewList: hasPermission([SHIPMENT_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([SHIPMENT_TASK_FORM, TASK_FORM]),
         canAddTasks: hasPermission([SHIPMENT_TASK_CREATE, SHIPMENT_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]),
         canDeleteTasks: hasPermission([SHIPMENT_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PROJECT_LIST) &&
+          hasPermission(NAVIGATION_PROJECTS_LIST) &&
           hasPermission(MILESTONE_LIST) &&
           (hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
             (hasPermission(SHIPMENT_SET_MILESTONE) && hasPermission(SHIPMENT_SET_TASKS))),

@@ -18,7 +18,6 @@ import { PartnerCard } from 'components/Cards';
 import { FormField } from 'modules/form';
 import SelectPartners from 'components/SelectPartners';
 import FormattedNumber from 'components/FormattedNumber';
-import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import Icon from 'components/Icon';
 import {
   ProductInfoContainer,
@@ -27,6 +26,7 @@ import {
 } from 'modules/product/form/containers';
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
+import { NAVIGATION_NETWORK_PARTNERS } from 'modules/permission/constants/navigation';
 import { TAG_GET } from 'modules/permission/constants/tag';
 import { DOCUMENT_CREATE, DOCUMENT_DELETE } from 'modules/permission/constants/file';
 import {
@@ -472,7 +472,8 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                           <>
                             <div
                               onClick={() =>
-                                hasPermission(PARTNER_LIST) && hasPermission([PRODUCT_UPDATE])
+                                hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
+                                hasPermission([PRODUCT_UPDATE])
                                   ? partnerSelectorToggle(true)
                                   : () => {}
                               }
@@ -480,7 +481,8 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                             >
                               {renderPartners(
                                 values?.organizations,
-                                hasPermission(PARTNER_LIST) && hasPermission([PRODUCT_UPDATE])
+                                hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
+                                  hasPermission([PRODUCT_UPDATE])
                               )}
                             </div>
 

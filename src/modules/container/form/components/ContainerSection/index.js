@@ -8,7 +8,7 @@ import { isNullOrUndefined, getByPathWithDefault, getByPath } from 'utils/fp';
 import FormattedDateTZ from 'components/FormattedDateTZ';
 import FormattedNumber from 'components/FormattedNumber';
 import { Tooltip } from 'components/Tooltip';
-import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
+import { NAVIGATION_NETWORK_WAREHOUSES } from 'modules/permission/constants/navigation';
 import useUser from 'hooks/useUser';
 import {
   CONTAINER_UPDATE,
@@ -128,7 +128,8 @@ const ContainerSection = ({ container }: Props) => {
   const { user } = useUser();
 
   const allowSetWarehouse =
-    hasPermission([CONTAINER_UPDATE, CONTAINER_SET_WAREHOUSE]) && hasPermission(WAREHOUSE_LIST);
+    hasPermission([CONTAINER_UPDATE, CONTAINER_SET_WAREHOUSE]) &&
+    hasPermission(NAVIGATION_NETWORK_WAREHOUSES);
 
   return (
     <>
