@@ -1,5 +1,10 @@
 // @flow
-export const SHIPMENT_GET = 'shipment.shipments.get';
+export const SHIPMENT_GET = [
+  'shipment.shipments.get',
+  'shipment.shipments.getByAssignedExporter',
+  'shipment.shipments.getByAssignedForwarder',
+  'shipment.shipments.getByUsedWarehouse',
+];
 export const SHIPMENT_EDIT = 'shipment.shipments.edit';
 export const SHIPMENT_CREATE = 'shipment.shipments.create';
 export const SHIPMENT_ARCHIVE = 'shipment.shipments.archive';
