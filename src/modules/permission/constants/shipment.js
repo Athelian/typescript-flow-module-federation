@@ -1,13 +1,13 @@
 // @flow
-export const SHIPMENT_UPDATE = 'shipment.shipments.update'; // deprecated
+export const SHIPMENT_GET = 'shipment.shipments.get';
 export const SHIPMENT_EDIT = 'shipment.shipments.edit';
+export const SHIPMENT_UPDATE = 'shipment.shipments.update'; // deprecated by shipment.shipments.edit
 export const SHIPMENT_CREATE = 'shipment.shipments.create';
-export const SHIPMENT_SET_ARCHIVED = 'shipment.shipments.setArchived'; // deprecated
 export const SHIPMENT_ARCHIVE = 'shipment.shipments.archive';
+export const SHIPMENT_SET_ARCHIVED = 'shipment.shipments.setArchived'; // deprecated by shipment.shipments.archive
 export const SHIPMENT_EXPORT = 'shipment.shipments.export';
+export const SHIPMENT_SET = 'shipment.shipments.set'; // deprecated by shipment.shipments.get shipment.shipments.edit
 export const SHIPMENT_ORDER_LIST = 'shipment.orders.list';
-export const SHIPMENT_FORM = 'shipment.shipments.form';
-export const SHIPMENT_SET = 'shipment.shipments.set';
 export const SHIPMENT_DOCUMENT_GET = 'shipment.files.get';
 export const SHIPMENT_DOCUMENT_DOWNLOAD = 'shipment.files.download';
 export const SHIPMENT_DOCUMENT_UPDATE = 'shipment.files.update';

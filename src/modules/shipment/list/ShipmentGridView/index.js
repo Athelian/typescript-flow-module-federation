@@ -12,7 +12,7 @@ import {
   SHIPMENT_SET,
   SHIPMENT_UPDATE,
   SHIPMENT_SET_ARCHIVED,
-  SHIPMENT_FORM,
+  SHIPMENT_GET,
 } from 'modules/permission/constants/shipment';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
 
@@ -67,7 +67,7 @@ const defaultRenderItem = item => (
               ].filter(Boolean)}
               showActionsOnHover
               onClick={() => {
-                if (permissions.includes(SHIPMENT_FORM)) {
+                if (permissions.includes(SHIPMENT_GET)) {
                   navigate(`/shipment/${encodeId(item.id)}`);
                 }
               }}
