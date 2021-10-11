@@ -622,10 +622,10 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     input={
                       <>
                         {(isForwarder() || isExporter()) &&
-                        // Disable to changed importer if there is data send from RM
-                        // base on initDataForSlideView
+                        // Disable to changed importer if there is importer data sent
+                        // from RM base on initDataForSlideView
                         isNew &&
-                        Object.keys(initDataForSlideView).length === 0 &&
+                        !initDataForSlideView?.importer &&
                         hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                         hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]) ? (
                           <BooleanValue>
@@ -715,8 +715,14 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                       partnerTypes={['Importer']}
                                       selected={values.importer}
                                       onCancel={() => importerSelectorToggle(false)}
-                                      onSelect={selected => {
-                                        setFieldValue('importer', selected);
+                                      onSelect={({ organization, ...partner }) => {
+                                        const assembledOrg = {
+                                          ...organization,
+                                          partner: {
+                                            ...partner,
+                                          },
+                                        };
+                                        setFieldValue('importer', assembledOrg);
                                         importerSelectorToggle(false);
                                       }}
                                     />
