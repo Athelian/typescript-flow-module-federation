@@ -10,8 +10,7 @@ import usePermission from 'hooks/usePermission';
 import { getByPath } from 'utils/fp';
 import { NAVIGATION_NETWORK_WAREHOUSES } from 'modules/permission/constants/navigation';
 import {
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
+  SHIPMENT_EDIT,
   SHIPMENT_SET_VOYAGES,
   SHIPMENT_SET_WAREHOUSE,
 } from 'modules/permission/constants/shipment';
@@ -52,10 +51,10 @@ type Props = {|
 const TimelineSection = ({ isNew, isTaskReadyForBinding }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const allowToUpdate = hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]);
+  const allowToUpdate = hasPermission(SHIPMENT_EDIT);
 
   const allowSetWarehouse =
-    hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) &&
+    hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_WAREHOUSE]) &&
     hasPermission(NAVIGATION_NETWORK_WAREHOUSES);
 
   const prevValue = usePrevious(isTaskReadyForBinding);
@@ -102,7 +101,7 @@ const TimelineSection = ({ isNew, isTaskReadyForBinding }: Props) => {
               <div className={TimelineWrapperStyle}>
                 <VerticalLayout shipment={values} />
                 <VoyageSelector
-                  editable={hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_VOYAGES])}
+                  editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_VOYAGES])}
                   shipment={values}
                   setFieldDeepValue={setFieldDeepValue}
                   setShipmentContainers={setShipmentContainers}

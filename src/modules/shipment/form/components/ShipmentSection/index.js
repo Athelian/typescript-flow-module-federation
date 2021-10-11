@@ -12,10 +12,9 @@ import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
 import {
   SHIPMENT_CREATE,
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
+  SHIPMENT_EDIT,
   SHIPMENT_SET_FOLLOWERS,
-  SHIPMENT_SET_ARCHIVED,
+  SHIPMENT_ARCHIVE,
   SHIPMENT_SET_IMPORTER,
   SHIPMENT_SET_EXPORTER,
   SHIPMENT_SET_TAGS,
@@ -133,7 +132,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                   values?.exporter?.id,
                   ...(values?.forwarders ?? []).map(forwarder => forwarder?.id),
                 ].filter(Boolean)}
-                editable={hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_FOLLOWERS])}
+                editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_FOLLOWERS])}
               />
 
               {!isNew && (
@@ -141,9 +140,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                   <BooleanValue>
                     {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                       <StatusToggle
-                        readOnly={
-                          !hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_ARCHIVED])
-                        }
+                        readOnly={!hasPermission(SHIPMENT_ARCHIVE)}
                         archived={archived}
                         openStatusDialog={() => dialogToggle(true)}
                         activateDialog={
@@ -186,7 +183,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_NO])}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_NO])}
                         name={name}
                         isNew={isNew}
                         required
@@ -205,11 +202,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={hasPermission([
-                          SHIPMENT_SET,
-                          SHIPMENT_UPDATE,
-                          SHIPMENT_SET_BL_NO,
-                        ])}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BL_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -236,11 +229,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                 taskContainer.waitForTasksSectionReady(name, inputHandlers.value);
                               }
                             }}
-                            editable={hasPermission([
-                              SHIPMENT_SET,
-                              SHIPMENT_UPDATE,
-                              SHIPMENT_SET_BL_DATE,
-                            ])}
+                            editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BL_DATE])}
                             name={name}
                             isNew={isNew}
                             originalValue={initialValues[name]}
@@ -273,11 +262,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             }
                           },
                         }}
-                        editable={hasPermission([
-                          SHIPMENT_SET,
-                          SHIPMENT_UPDATE,
-                          SHIPMENT_SET_BOOKING_NO,
-                        ])}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BOOKING_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -292,7 +277,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       onToggle={() => {
                         setFieldValue('booked', !values.booked);
                       }}
-                      editable={hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_BOOKED])}
+                      editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BOOKED])}
                     >
                       {values.booked ? (
                         <div className={BookedStyle(true)}>
@@ -327,11 +312,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                 taskContainer.waitForTasksSectionReady(name, inputHandlers.value);
                               }
                             }}
-                            editable={hasPermission([
-                              SHIPMENT_SET,
-                              SHIPMENT_UPDATE,
-                              SHIPMENT_SET_BOOKING_DATE,
-                            ])}
+                            editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BOOKING_DATE])}
                             name={name}
                             isNew={isNew}
                             originalValue={initialValues[name]}
@@ -352,11 +333,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={hasPermission([
-                          SHIPMENT_SET,
-                          SHIPMENT_UPDATE,
-                          SHIPMENT_SET_INVOICE_NO,
-                        ])}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_INVOICE_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -374,11 +351,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={hasPermission([
-                          SHIPMENT_SET,
-                          SHIPMENT_UPDATE,
-                          SHIPMENT_SET_CONTRACT_NO,
-                        ])}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_CONTRACT_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -417,7 +390,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             <EnumSelectInputFactory
                               {...inputHandlers}
                               editable={
-                                hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
+                                hasPermission(SHIPMENT_EDIT) ||
                                 (hasPermission(SHIPMENT_SET_TRANSPORT_TYPE) &&
                                   hasPermission(SHIPMENT_SET_PORT))
                               }
@@ -449,11 +422,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       <EnumSelectInputFactory
                         {...inputHandlers}
                         enumType="LoadType"
-                        editable={hasPermission([
-                          SHIPMENT_SET,
-                          SHIPMENT_UPDATE,
-                          SHIPMENT_SET_LOAD_TYPE,
-                        ])}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_LOAD_TYPE])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -477,11 +446,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       <EnumSearchSelectInputFactory
                         {...inputHandlers}
                         enumType="Incoterm"
-                        editable={hasPermission([
-                          SHIPMENT_SET,
-                          SHIPMENT_UPDATE,
-                          SHIPMENT_SET_INCOTERM,
-                        ])}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_INCOTERM])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -505,11 +470,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       <TextInputFactory
                         {...inputHandlers}
                         name={name}
-                        editable={hasPermission([
-                          SHIPMENT_SET,
-                          SHIPMENT_UPDATE,
-                          SHIPMENT_SET_CARRIER,
-                        ])}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_CARRIER])}
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.carrier} />}
@@ -522,16 +483,8 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
                     editable={{
-                      values: hasPermission([
-                        SHIPMENT_SET,
-                        SHIPMENT_UPDATE,
-                        SHIPMENT_SET_CUSTOM_FIELDS,
-                      ]),
-                      mask: hasPermission([
-                        SHIPMENT_SET,
-                        SHIPMENT_UPDATE,
-                        SHIPMENT_SET_CUSTOM_FIELDS_MASK,
-                      ]),
+                      values: hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_CUSTOM_FIELDS]),
+                      mask: hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_CUSTOM_FIELDS_MASK]),
                     }}
                   />
 
@@ -563,12 +516,8 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             editable={{
                               set:
                                 hasPermission(TAG_GET) &&
-                                hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_TAGS]),
-                              remove: hasPermission([
-                                SHIPMENT_SET,
-                                SHIPMENT_UPDATE,
-                                SHIPMENT_SET_TAGS,
-                              ]),
+                                hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_TAGS]),
+                              remove: hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_TAGS]),
                             }}
                           />
                         }
@@ -586,7 +535,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     {({ name, ...inputHandlers }) => (
                       <TextAreaInputFactory
                         {...inputHandlers}
-                        editable={hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_MEMO])}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_MEMO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -627,7 +576,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         isNew &&
                         !initDataForSlideView?.importer &&
                         hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
-                        hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]) ? (
+                        hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_IMPORTER]) ? (
                           <BooleanValue>
                             {({ value: importerSelectorIsOpen, set: importerSelectorToggle }) => (
                               <>
@@ -762,7 +711,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       <>
                         {(isForwarder() || isImporter()) &&
                         hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
-                        hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_SET_EXPORTER]) ? (
+                        hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_EXPORTER]) ? (
                           <BooleanValue>
                             {({ value: exporterSelectorIsOpen, set: exporterSelectorToggle }) => (
                               <>
@@ -865,11 +814,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                               onClick={() =>
                                 isImporter() &&
                                 hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
-                                hasPermission([
-                                  SHIPMENT_SET,
-                                  SHIPMENT_UPDATE,
-                                  SHIPMENT_SET_FORWARDERS,
-                                ])
+                                hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_FORWARDERS])
                                   ? forwardersSelectorToggle(true)
                                   : () => {}
                               }
@@ -877,11 +822,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             >
                               {renderForwarders(
                                 forwarders,
-                                hasPermission([
-                                  SHIPMENT_SET,
-                                  SHIPMENT_UPDATE,
-                                  SHIPMENT_SET_FORWARDERS,
-                                ])
+                                hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_FORWARDERS])
                               )}
                             </div>
 
@@ -998,7 +939,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                               onClick={() =>
                                 isImporter() &&
                                 hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
-                                hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE])
+                                hasPermission(SHIPMENT_EDIT)
                                   ? partnerSelectorToggle(true)
                                   : () => {}
                               }
@@ -1007,7 +948,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                               {renderPartners(
                                 organizations,
                                 hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
-                                  hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE])
+                                  hasPermission(SHIPMENT_EDIT)
                               )}
                             </div>
 

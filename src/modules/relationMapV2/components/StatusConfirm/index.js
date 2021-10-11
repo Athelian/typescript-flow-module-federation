@@ -7,7 +7,7 @@ import { Entities, FocusedView } from 'modules/relationMapV2/store';
 import { targetedIds, findShipmentIdsByOrder } from 'modules/relationMapV2/helpers';
 import { ORDER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
-import { SHIPMENT_SET, SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
+import { SHIPMENT_EDIT } from 'modules/permission/constants/shipment';
 import { ArchiveButton, ActivateButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import { Tooltip } from 'components/Tooltip';
@@ -66,7 +66,7 @@ export default function StatusConfirm({ onSuccess }: Props) {
       case ORDER:
         return hasPermission([ORDER_UPDATE]);
       case SHIPMENT:
-        return hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]);
+        return hasPermission(SHIPMENT_EDIT);
       default:
         return false;
     }

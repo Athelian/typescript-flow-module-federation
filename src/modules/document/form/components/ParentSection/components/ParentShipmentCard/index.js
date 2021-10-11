@@ -4,7 +4,7 @@ import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { ShipmentCard } from 'components/Cards';
 import { useEntityHasPermissions } from 'contexts/Permissions';
-import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
+import { SHIPMENT_GET } from 'modules/permission/constants/shipment';
 
 type Props = {
   shipment: Object,
@@ -17,7 +17,7 @@ const ParentShipmentCard = ({ shipment }: Props) => {
     <ShipmentCard
       shipment={shipment}
       onClick={() => {
-        if (hasPermissions(SHIPMENT_FORM) && !!shipment?.id) {
+        if (hasPermissions(SHIPMENT_GET) && !!shipment?.id) {
           navigate(`/shipment/${encodeId(shipment?.id)}`);
         }
       }}

@@ -21,8 +21,7 @@ import {
   CONTAINER_BATCHES_REMOVE,
 } from 'modules/permission/constants/container';
 import {
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
+  SHIPMENT_EDIT,
   SHIPMENT_ADD_BATCH,
   SHIPMENT_REMOVE_BATCH,
 } from 'modules/permission/constants/shipment';
@@ -218,14 +217,14 @@ function BatchesArea({
         }
 
         const allowMoveBatches =
-          hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
+          hasPermission(SHIPMENT_EDIT) ||
           (hasPermission(CONTAINER_BATCHES_ADD) && isFocusedContainer
             ? hasPermission(CONTAINER_BATCHES_REMOVE)
             : true);
 
         const allowSelectBatches =
           hasPermission(NAVIGATION_BATCH_LIST) &&
-          (hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
+          (hasPermission(SHIPMENT_EDIT) ||
             (hasPermission(SHIPMENT_ADD_BATCH) && isFocusedContainer
               ? hasPermission(CONTAINER_BATCHES_ADD)
               : true));
@@ -233,7 +232,7 @@ function BatchesArea({
         const allowNewBatches =
           hasPermission(BATCH_CREATE) &&
           hasPermission(NAVIGATION_ORDER_ITEMS_LIST) &&
-          (hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
+          (hasPermission(SHIPMENT_EDIT) ||
             (hasPermission(SHIPMENT_ADD_BATCH) && isFocusedContainer
               ? hasPermission(CONTAINER_BATCHES_ADD)
               : true));
@@ -321,16 +320,16 @@ function BatchesArea({
                   <div className={BatchesGridStyle}>
                     {currentBatches.map(batch => {
                       const allowRemoveBatch = getByPath('container', batch)
-                        ? hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE]) ||
+                        ? hasPermission(SHIPMENT_EDIT) ||
                           (hasPermission(CONTAINER_BATCHES_REMOVE) &&
                             hasPermission(SHIPMENT_REMOVE_BATCH))
-                        : hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_REMOVE_BATCH]);
+                        : hasPermission([SHIPMENT_EDIT, SHIPMENT_REMOVE_BATCH]);
 
                       const allowCloneBatch = getByPath('container', batch)
                         ? hasPermission(BATCH_CREATE) &&
-                          hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, CONTAINER_BATCHES_ADD])
+                          hasPermission([SHIPMENT_EDIT, CONTAINER_BATCHES_ADD])
                         : hasPermission(BATCH_CREATE) &&
-                          hasPermission([SHIPMENT_SET, SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]);
+                          hasPermission([SHIPMENT_EDIT, SHIPMENT_ADD_BATCH]);
 
                       return (
                         <React.Fragment key={getByPath('id', batch)}>

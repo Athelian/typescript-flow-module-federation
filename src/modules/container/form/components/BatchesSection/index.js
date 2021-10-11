@@ -20,7 +20,7 @@ import {
   CONTAINER_BATCHES_REMOVE,
   CONTAINER_BATCHES_LIST,
 } from 'modules/permission/constants/container';
-import { SHIPMENT_FORM, SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
+import { SHIPMENT_GET, SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import {
@@ -355,7 +355,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId, exporter
                                   navigable={{
                                     product: hasPermission(PRODUCT_FORM),
                                     order: hasPermission(ORDER_FORM),
-                                    shipment: hasPermission(SHIPMENT_FORM),
+                                    shipment: hasPermission(SHIPMENT_GET),
                                   }}
                                   batch={batch}
                                   saveOnBlur={updatedBatch => {

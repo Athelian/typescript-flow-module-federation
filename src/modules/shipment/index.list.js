@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Link } from '@reach/router';
-import { SHIPMENT_CREATE } from 'modules/permission/constants/shipment';
+import { SHIPMENT_CREATE, SHIPMENT_EXPORT } from 'modules/permission/constants/shipment';
 import { Content } from 'components/Layout';
 import {
   EntityIcon,
@@ -43,14 +43,16 @@ const ShipmentListModule = () => {
           </Link>
         )}
 
-        <ExportButton
-          type="Shipments"
-          exportQuery={shipmentsExportQuery}
-          variables={{
-            filterBy: { query, ...filterBy },
-            sortBy,
-          }}
-        />
+        {hasPermissions(SHIPMENT_EXPORT) && (
+          <ExportButton
+            type="Shipments"
+            exportQuery={shipmentsExportQuery}
+            variables={{
+              filterBy: { query, ...filterBy },
+              sortBy,
+            }}
+          />
+        )}
       </NavBar>
       <ShipmentList filterBy={{ query, ...filterBy }} sortBy={sortBy} page={1} perPage={10} />
     </Content>

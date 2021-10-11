@@ -4,8 +4,7 @@ import { Subscribe } from 'unstated';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
-  SHIPMENT_SET,
-  SHIPMENT_UPDATE,
+  SHIPMENT_EDIT,
   SHIPMENT_DOCUMENT_SET,
   SHIPMENT_DOCUMENT_DOWNLOAD,
   SHIPMENT_DOCUMENT_DELETE,
@@ -39,34 +38,29 @@ function DocumentsSection({ entityId, isLoading }: Props) {
     DOCUMENT_SET,
     DOCUMENT_UPDATE,
     SHIPMENT_DOCUMENT_SET,
-    SHIPMENT_SET,
-    SHIPMENT_UPDATE,
+
+    SHIPMENT_EDIT,
   ]);
-  const canAddOrphan = hasPermission([
-    DOCUMENT_SET,
-    SHIPMENT_DOCUMENT_SET,
-    SHIPMENT_SET,
-    SHIPMENT_UPDATE,
-  ]);
+  const canAddOrphan = hasPermission([DOCUMENT_SET, SHIPMENT_DOCUMENT_SET, SHIPMENT_EDIT]);
   const canViewForm = hasPermission([
     DOCUMENT_GET,
     DOCUMENT_SET,
-    SHIPMENT_SET,
-    SHIPMENT_UPDATE,
+
+    SHIPMENT_EDIT,
     SHIPMENT_DOCUMENT_FORM,
   ]);
   const canDownload = hasPermission([
     DOCUMENT_SET,
-    SHIPMENT_SET,
-    SHIPMENT_UPDATE,
+
+    SHIPMENT_EDIT,
     DOCUMENT_DOWNLOAD,
     SHIPMENT_DOCUMENT_SET,
     SHIPMENT_DOCUMENT_DOWNLOAD,
   ]);
   const canChangeType = hasPermission([
     DOCUMENT_SET,
-    SHIPMENT_SET,
-    SHIPMENT_UPDATE,
+
+    SHIPMENT_EDIT,
     SHIPMENT_DOCUMENT_SET,
     DOCUMENT_SET_TYPE,
     SHIPMENT_DOCUMENT_SET_TYPE,
@@ -74,8 +68,8 @@ function DocumentsSection({ entityId, isLoading }: Props) {
   ]);
   const canDelete = hasPermission([
     DOCUMENT_SET,
-    SHIPMENT_SET,
-    SHIPMENT_UPDATE,
+
+    SHIPMENT_EDIT,
     SHIPMENT_DOCUMENT_SET,
     SHIPMENT_DOCUMENT_DELETE,
     DOCUMENT_DELETE,
