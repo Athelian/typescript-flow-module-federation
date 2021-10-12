@@ -16,7 +16,7 @@ import {
   PROJECT_UPDATE,
   PROJECT_SET_FOLLOWERS,
   PROJECT_ARCHIVE,
-  PROJECT_SET_ORGANIZATIONS,
+  PROJECT_SET_SHARED_PARTNER,
 } from 'modules/permission/constants/project';
 import {
   MILESTONE_SET_COMPLETED,
@@ -246,7 +246,7 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
         basePath,
         project,
         'organizations',
-        hasPermission => hasPermission(PROJECT_UPDATE) || hasPermission(PROJECT_SET_ORGANIZATIONS)
+        hasPermission => hasPermission(PROJECT_UPDATE) || hasPermission(PROJECT_SET_SHARED_PARTNER)
       ),
     },
     {

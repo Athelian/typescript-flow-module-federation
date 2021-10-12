@@ -1,13 +1,13 @@
 // @flow
 export const PROJECT_GET = 'project.projects.get';
-export const PROJECT_CREATE = 'task.projects.create';
-export const PROJECT_UPDATE = 'task.projects.update';
-export const PROJECT_DELETE = 'task.projects.delete';
-export const PROJECT_SET_NAME = 'task.projects.setName';
-export const PROJECT_SET_DUE_DATE = 'task.projects.setDueDate';
-export const PROJECT_SET_DESCRIPTION = 'task.projects.setDescription';
-export const PROJECT_SET_TAGS = 'task.projects.setTags';
-export const PROJECT_SET_MILESTONES = 'task.projects.setMilestones';
+export const PROJECT_CREATE = 'project.projects.create';
+export const PROJECT_UPDATE = 'project.projects.edit';
+export const PROJECT_DELETE = 'project.projects.delete';
+export const PROJECT_SET_NAME = 'project.projects.editName';
+export const PROJECT_SET_DUE_DATE = 'project.projects.editDueDate';
+export const PROJECT_SET_DESCRIPTION = 'project.projects.editDescription';
+export const PROJECT_SET_TAGS = 'project.projects.editTags';
+export const PROJECT_SET_MILESTONES = 'project.projects.editMilestones';
 export const PROJECT_ARCHIVE = 'project.projects.archive';
-export const PROJECT_SET_FOLLOWERS = 'task.projects.setFollowers';
-export const PROJECT_SET_ORGANIZATIONS = 'task.projects.setOrganizations';
+export const PROJECT_SET_FOLLOWERS = 'project.projects.editFollowers';
+export const PROJECT_SET_SHARED_PARTNER = 'project.projects.editSharedPartner';
