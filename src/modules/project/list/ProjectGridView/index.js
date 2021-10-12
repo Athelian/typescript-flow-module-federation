@@ -1,11 +1,7 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import {
-  PROJECT_UPDATE,
-  PROJECT_DELETE,
-  PROJECT_SET_ARCHIVED,
-} from 'modules/permission/constants/project';
+import { PROJECT_DELETE, PROJECT_ARCHIVE } from 'modules/permission/constants/project';
 import usePermission from 'hooks/usePermission';
 import GridView from 'components/GridView';
 import ProjectGridItem from '../ProjectGridItem';
@@ -21,7 +17,7 @@ const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
   const { hasPermission } = usePermission();
   const [deletedIds, setDeletedIds] = React.useState([]);
   const allowDelete = hasPermission(PROJECT_DELETE);
-  const allowChangeStatus = hasPermission(PROJECT_UPDATE) || hasPermission(PROJECT_SET_ARCHIVED);
+  const allowArchive = hasPermission(PROJECT_ARCHIVE);
 
   const onDeleteItemSuccess = React.useCallback((deletedProjectId: string) => {
     setDeletedIds(_deletedIds => [..._deletedIds, deletedProjectId]);
@@ -46,7 +42,7 @@ const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
             item={item}
             onDeleteItemSuccess={onDeleteItemSuccess}
             allowDelete={allowDelete}
-            allowChangeStatus={allowChangeStatus}
+            allowChangeStatus={allowArchive}
           />
         ))}
     </GridView>

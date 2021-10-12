@@ -15,7 +15,7 @@ import {
   PROJECT_SET_TAGS,
   PROJECT_UPDATE,
   PROJECT_SET_FOLLOWERS,
-  PROJECT_SET_ARCHIVED,
+  PROJECT_ARCHIVE,
   PROJECT_SET_ORGANIZATIONS,
 } from 'modules/permission/constants/project';
 import {
@@ -252,11 +252,8 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
     {
       columnKey: 'project.archived',
       type: 'status',
-      ...transformValueField(
-        basePath,
-        project,
-        'archived',
-        hasPermission => hasPermission(PROJECT_UPDATE) || hasPermission(PROJECT_SET_ARCHIVED)
+      ...transformValueField(basePath, project, 'archived', hasPermission =>
+        hasPermission(PROJECT_ARCHIVE)
       ),
     },
     {

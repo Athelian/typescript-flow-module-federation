@@ -40,7 +40,7 @@ import {
   PROJECT_SET_DESCRIPTION,
   PROJECT_SET_DUE_DATE,
   PROJECT_SET_TAGS,
-  PROJECT_SET_ARCHIVED,
+  PROJECT_ARCHIVE,
   PROJECT_SET_FOLLOWERS,
 } from 'modules/permission/constants/project';
 import { TAG_GET } from 'modules/permission/constants/tag';
@@ -216,10 +216,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                             <BooleanValue>
                               {({ value: isDialogOpen, set: dialogToggle }) => (
                                 <StatusToggle
-                                  readOnly={
-                                    !hasPermission(PROJECT_UPDATE) &&
-                                    !hasPermission(PROJECT_SET_ARCHIVED)
-                                  }
+                                  readOnly={!hasPermission(PROJECT_ARCHIVE)}
                                   archived={archived}
                                   openStatusDialog={() => dialogToggle(true)}
                                   activateDialog={

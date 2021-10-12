@@ -6,7 +6,7 @@ import {
   NAVIGATION_PROJECTS_LIST,
   NAVIGATION_TASKS_LIST,
 } from 'modules/permission/constants/navigation';
-import { PROJECT_FORM } from 'modules/permission/constants/project';
+import { PROJECT_GET } from 'modules/permission/constants/project';
 import {
   TASK_FORM,
   TASK_CREATE,
@@ -935,7 +935,7 @@ export const getTasksPermissions = (
   switch (type) {
     case 'Order':
       return {
-        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewProjectForm: hasPermission(PROJECT_GET),
         canViewList: hasPermission([ORDER_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([TASK_FORM, ORDER_TASK_FORM]),
         canAddTasks: hasPermission([ORDER_TASK_CREATE, ORDER_SET_TASKS, TASK_CREATE]),
@@ -965,7 +965,7 @@ export const getTasksPermissions = (
       };
     case 'OrderItem':
       return {
-        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewProjectForm: hasPermission(PROJECT_GET),
         canViewList: hasPermission([ORDER_ITEMS_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([ORDER_ITEMS_TASK_FORM, TASK_FORM]),
         canAddTasks: hasPermission([ORDER_ITEMS_TASK_CREATE, ORDER_ITEMS_SET_TASKS, TASK_CREATE]),
@@ -1023,7 +1023,7 @@ export const getTasksPermissions = (
       };
     case 'Batch':
       return {
-        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewProjectForm: hasPermission(PROJECT_GET),
         canViewList: hasPermission([BATCH_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([BATCH_TASK_FORM, TASK_FORM]),
         canAddTasks: hasPermission([BATCH_TASK_CREATE, BATCH_SET_TASKS, TASK_CREATE]),
@@ -1053,7 +1053,7 @@ export const getTasksPermissions = (
       };
     case 'Product':
       return {
-        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewProjectForm: hasPermission(PROJECT_GET),
         canViewList: hasPermission([PRODUCT_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([PRODUCT_TASK_FORM, TASK_FORM]),
         canAddTasks: hasPermission([PRODUCT_TASK_CREATE, PRODUCT_SET_TASKS, TASK_CREATE]),
@@ -1087,7 +1087,7 @@ export const getTasksPermissions = (
       };
     case 'ProductProvider':
       return {
-        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewProjectForm: hasPermission(PROJECT_GET),
         canViewList: hasPermission([PRODUCT_PROVIDER_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([PRODUCT_PROVIDER_TASK_FORM, TASK_FORM]),
         canAddTasks: hasPermission([
@@ -1154,7 +1154,7 @@ export const getTasksPermissions = (
       };
     default:
       return {
-        canViewProjectForm: hasPermission(PROJECT_FORM),
+        canViewProjectForm: hasPermission(PROJECT_GET),
         canViewList: hasPermission([SHIPMENT_TASK_LIST, NAVIGATION_TASKS_LIST]),
         canViewForm: hasPermission([SHIPMENT_TASK_FORM, TASK_FORM]),
         canAddTasks: hasPermission([SHIPMENT_TASK_CREATE, SHIPMENT_SET_TASKS, TASK_CREATE]),
