@@ -22,7 +22,7 @@ const HorizontalLayout = ({ shipment, navigable }: Props) => {
           <HorizontalTimeline
             shipment={shipment}
             navigable={{
-              form: navigable && permissions.includes(SHIPMENT_GET),
+              form: navigable && permissions.filter(p => SHIPMENT_GET.includes(p)).length > 0,
             }}
           />
           <HorizontalDates shipment={shipment} />
