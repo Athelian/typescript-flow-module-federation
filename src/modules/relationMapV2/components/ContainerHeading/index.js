@@ -45,6 +45,7 @@ type Props = {|
   hasSelectedChildren: boolean,
   hasFilterHits: boolean,
   isExpanded: boolean,
+  isLoadingData?: boolean,
   onClick: Function,
   total: number,
   onSelectAll: Function,
@@ -56,6 +57,7 @@ export default function ContainerHeading({
   hasSelectedChildren,
   hasFilterHits,
   isExpanded,
+  isLoadingData,
   onClick,
   total,
   onSelectAll,
@@ -65,7 +67,6 @@ export default function ContainerHeading({
 
   // TODO: Replace with real permissions
   const canViewDelivery = true;
-
   const { state } = FocusedView.useContainer();
   const containerIds = targetedIds(state.targets, CONTAINER);
   const selectedItemsCount = containers.filter(item => containerIds.includes(item.id)).length;
@@ -76,6 +77,7 @@ export default function ContainerHeading({
       hasSelectedChildren={hasSelectedChildren}
       hasFilterHits={hasFilterHits}
       isExpanded={isExpanded}
+      isLoading={isLoadingData}
       onClick={onClick}
       total={total}
       selectedItemsCount={selectedItemsCount}

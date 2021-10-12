@@ -58,17 +58,22 @@ type Props = {|
   hasSelectedChildren: boolean,
   hasFilterHits: boolean,
   isExpanded: boolean,
+  isLoadingData?: boolean,
   onClick: Function,
   total: number,
   onSelectAll: Function,
   user: UserPayload,
 |};
 
+/**
+ * batches only need id, deliveredAt and desiredAt
+ */
 export default function BatchHeading({
   batches,
   hasSelectedChildren,
   hasFilterHits,
   isExpanded,
+  isLoadingData,
   onClick,
   total,
   onSelectAll,
@@ -83,7 +88,7 @@ export default function BatchHeading({
   const canViewDesired = true;
   const { state } = FocusedView.useContainer();
   const batchIds = targetedIds(state.targets, BATCH);
-  const selectedItemsCount = batches.filter(item => batchIds.includes(item.id)).length;
+  const selectedBatchesCount = batches.filter(item => batchIds.includes(item.id)).length;
 
   return (
     <Heading
@@ -91,9 +96,10 @@ export default function BatchHeading({
       hasSelectedChildren={hasSelectedChildren}
       hasFilterHits={hasFilterHits}
       isExpanded={isExpanded}
+      isLoading={isLoadingData}
       onClick={onClick}
       total={total}
-      selectedItemsCount={selectedItemsCount}
+      selectedItemsCount={selectedBatchesCount}
       onSelectAll={onSelectAll}
       renderRightSide={() => (
         <div className={RightWrapperStyle}>

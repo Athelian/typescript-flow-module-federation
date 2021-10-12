@@ -64,6 +64,7 @@ import {
 
 type CellProps = {
   data: Object,
+  isLoadingData?: boolean,
   beforeConnector?: ?LINE_CONNECTOR,
   afterConnector?: ?LINE_CONNECTOR,
 };
@@ -77,6 +78,7 @@ function OrderCell({ data, beforeConnector }: CellProps) {
   const hasPermissions = useEntityHasPermissions(data);
   const orderId = order?.id;
   const itemId = data?.orderItem?.id;
+
   const [{ isOver, canDrop, dropMessage }, drop] = useDrop({
     accept: [BATCH, ORDER_ITEM],
     canDrop: item => {
@@ -1335,6 +1337,7 @@ function ItemSummaryCell({
   data, // this is Shipment type
   onClick,
   isExpand,
+  isLoadingData = false,
   beforeConnector,
   afterConnector,
 }: CellProps & { isExpand: boolean, onClick: Function }) {
@@ -1383,12 +1386,13 @@ function ItemSummaryCell({
         )}
       </div>
 
-      <CellWrapper isExpandedHeading={isExpand}>
+      <CellWrapper isExpandedHeading={isExpand && !isLoadingData}>
         <OrderItemHeading
           orderItems={orderItems}
           hasSelectedChildren={selected}
           hasFilterHits={isMatched}
           isExpanded={isExpand}
+          isLoadingData={isLoadingData}
           onClick={onClick}
           total={orderItemCount}
           onSelectAll={() => {
@@ -1416,11 +1420,13 @@ function ItemSummaryCell({
   );
 }
 
+//
 function BatchSummaryCell({
   onClick,
   // $FlowIgnore: does not support
   shipment,
   isExpand,
+  isLoadingData = false,
   beforeConnector,
   afterConnector,
 }: CellProps & { shipment: ?ShipmentPayload, isExpand: boolean, onClick: Function }) {
@@ -1429,8 +1435,9 @@ function BatchSummaryCell({
   const { matches } = Hits.useContainer();
   const { user } = useUser();
   const batches = shipment?.batches ?? [];
-  const orderItemIds = batches.map(batch => batch.orderItem?.id).filter(Boolean);
   const batchIds = batches.map(batch => batch.id).filter(Boolean);
+
+  const orderItemIds = batches.map(batch => batch.orderItem?.id).filter(Boolean);
   const isTargetedAnyItems = orderItemIds.some(itemId =>
     state.targets.includes(`${ORDER_ITEM}-${itemId}`)
   );
@@ -1465,13 +1472,14 @@ function BatchSummaryCell({
       </div>
 
       {batchCount ? (
-        <CellWrapper isExpandedHeading={isExpand}>
+        <CellWrapper isExpandedHeading={isExpand && !isLoadingData}>
           <BatchHeading
             user={user}
             batches={batches}
             hasSelectedChildren={isTargetedAnyBatches}
             hasFilterHits={isMatched}
             isExpanded={isExpand}
+            isLoadingData={isLoadingData}
             onClick={onClick}
             total={batchCount}
             onSelectAll={() => {
@@ -1513,6 +1521,7 @@ function ContainerSummaryCell({
   onClick,
   // $FlowIgnore: does not support
   shipment,
+  isLoadingData = false,
   isExpand,
   beforeConnector,
   afterConnector,
@@ -1565,13 +1574,14 @@ function ContainerSummaryCell({
       {(() => {
         if (containerCount) {
           return (
-            <CellWrapper isExpandedHeading={isExpand}>
+            <CellWrapper isExpandedHeading={isExpand && !isLoadingData}>
               <ContainerHeading
                 containers={containers}
                 user={user}
                 hasSelectedChildren={isTargetedAnyContainers}
                 hasFilterHits={isMatched}
                 isExpanded={isExpand}
+                isLoadingData={isLoadingData}
                 onClick={onClick}
                 total={containerCount}
                 onSelectAll={() => {
@@ -1623,6 +1633,7 @@ function OrderSummaryCell({
   onClick,
   shipment,
   isExpand,
+  isLoadingData = false,
   beforeConnector,
 }: CellProps & { shipment: ?ShipmentPayload, isExpand: boolean, onClick: Function }) {
   const { state, dispatch } = FocusedView.useContainer();
@@ -1656,12 +1667,13 @@ function OrderSummaryCell({
         )}
       </div>
       {orderIds.length ? (
-        <CellWrapper isExpandedHeading={isExpand}>
+        <CellWrapper isExpandedHeading={isExpand && !isLoadingData}>
           <OrderHeading
             orders={orders}
             hasSelectedChildren={isTargetedAnyOrders}
             hasFilterHits={isMatched}
             isExpanded={isExpand}
+            isLoadingData={isLoadingData}
             onClick={onClick}
             total={orderCount}
             onSelectAll={() => {
@@ -1898,7 +1910,8 @@ const cellRenderer = (
         <div className={ContentStyle} />
       </div>
     );
-  const { beforeConnector, type, data, entity, afterConnector } = cell;
+  const { beforeConnector, type, isLoadingData, data, entity, afterConnector } = cell;
+
   let content = <div className={ContentStyle} />;
   switch (type) {
     case 'placeholder': {
@@ -1994,6 +2007,7 @@ const cellRenderer = (
           data={data}
           onClick={onClick}
           isExpand={isExpand}
+          isLoadingData={isLoadingData}
           beforeConnector={beforeConnector}
           afterConnector={afterConnector}
         />
@@ -2007,6 +2021,7 @@ const cellRenderer = (
           shipment={shipment}
           onClick={onClick}
           isExpand={isExpand}
+          isLoadingData={isLoadingData}
           beforeConnector={beforeConnector}
           afterConnector={afterConnector}
         />
@@ -2020,6 +2035,7 @@ const cellRenderer = (
           shipment={shipment}
           onClick={onClick}
           isExpand={isExpand}
+          isLoadingData={isLoadingData}
           beforeConnector={beforeConnector}
           afterConnector={afterConnector}
         />
@@ -2033,6 +2049,7 @@ const cellRenderer = (
           shipment={shipment}
           onClick={onClick}
           isExpand={isExpand}
+          isLoadingData={isLoadingData}
           beforeConnector={beforeConnector}
         />
       );

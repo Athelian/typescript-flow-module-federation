@@ -33,6 +33,7 @@ class ShipmentFocusedRow extends React.PureComponent<Props> {
         </div>
       );
     }
+
     return (
       <div className={RowStyle} style={style}>
         {cells.map(({ cell, order, shipment, onClick, isExpand }) =>

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // @flow
 /* eslint-disable no-param-reassign */
 import type { Hit, Order, Shipment, Batch, OrderItem, Container } from 'generated/graphql';
@@ -224,7 +226,8 @@ const useSortAndFilter = (type: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') => {
         field: 'updatedAt',
         direction: 'DESCENDING',
       },
-      perPage: 5,
+      // perPage: 10,
+      perPage: 1,
       page: 1,
     },
     type
@@ -650,6 +653,24 @@ function useExpandRow() {
 }
 
 export const ExpandRows = createContainer(useExpandRow);
+
+export type LoadedStatuses = 'none' | 'loading' | 'loaded';
+
+export type EntityLoadedStatus = {
+  [entityId: string]: LoadedStatuses,
+};
+
+function useLoadedRows() {
+  const [loadedRows, setLoadedRows] = useState<EntityLoadedStatus>({});
+  const rowsToLoad = useRef({});
+
+  return {
+    loadedRows,
+    setLoadedRows,
+  };
+}
+
+export const LoadedRows = createContainer(useLoadedRows);
 
 function useGlobalExpanded() {
   const [expandAll, setExpandAll] = useState(false);
