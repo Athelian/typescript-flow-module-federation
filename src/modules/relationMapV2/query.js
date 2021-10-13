@@ -429,7 +429,12 @@ export const shipmentSummaryQuery = gql`
               id
               warehouseArrivalActualDate
               warehouseArrivalAgreedDate
-
+              # shipment {
+              #   ... on Shipment {
+              #     id # for addTags. but can remove if we just loop through
+              #     # the available shipments
+              #   }
+              # }
               # warehouseArrivalActualDateApprovedAt
             }
           }
@@ -658,6 +663,76 @@ export const shipmentFullFocusDetailQuery = gql`
   query shipmentFullFocusDetailQuery($ids: [ID!]!, $skipOrderCounts: Boolean = true) {
     shipmentsByIDs(ids: $ids) {
       ...shipmentCardFullFragment
+    }
+  }
+
+  ${shipmentCardFullFragment}
+  ${shipmentEntityCardFragment}
+  ${containerEntityCardFragment}
+  ${batchEntityCardFragment}
+  ${itemEntityCardFragment}
+  ${orderEntityCardFragment}
+  ${tagFragment}
+  ${metricFragment}
+  ${taskCountFragment}
+  ${ownedByFragment}
+  ${timelineDateFragment}
+  ${forbiddenFragment}
+`;
+
+// for action modals that need specific data
+export const shipmentPartialQuery = gql`
+  query shipmentPartialQuery($ids: [ID!]!) {
+    shipmentsByIDs(ids: $ids) {
+      id
+      ownedBy {
+        ...ownedByFragment
+      }
+
+      containers {
+        ... on Container {
+          id
+          shipment {
+            ... on Shipment {
+              id # for addTags. but can remove if we just loop through the available shipments
+            }
+          }
+          ...ownedByFragment
+        }
+      }
+
+      batches {
+        ... on Batch {
+          id
+          ...ownedByFragment
+
+          orderItem {
+            ... on OrderItem {
+              id
+              ...ownedByFragment
+              order {
+                ... on Order {
+                  id
+                  ...ownedByFragment
+                }
+              }
+
+              productProvider {
+                ... on ProductProvider {
+                  id
+                  ...ownedByFragment
+                  product {
+                    ... on Product {
+                      id
+                      ...ownedByFragment
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 

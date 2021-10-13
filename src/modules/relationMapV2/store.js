@@ -172,6 +172,7 @@ function useEntities(
 
   const initMapping = (newMapping: RelationMapEntities) => {
     if (!isEquals(newMapping, mapping)) {
+      console.log('[debug] new mapping is now', newMapping);
       setMapping(newMapping);
     }
   };
@@ -226,6 +227,7 @@ const useSortAndFilter = (type: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') => {
         field: 'updatedAt',
         direction: 'DESCENDING',
       },
+      //
       // perPage: 10,
       perPage: 1,
       page: 1,
@@ -654,7 +656,7 @@ function useExpandRow() {
 
 export const ExpandRows = createContainer(useExpandRow);
 
-export type LoadedStatuses = 'none' | 'loading' | 'loaded';
+export type LoadedStatuses = 'loading' | 'loaded';
 
 export type EntityLoadedStatus = {
   [entityId: string]: LoadedStatuses,
@@ -662,11 +664,41 @@ export type EntityLoadedStatus = {
 
 function useLoadedRows() {
   const [loadedRows, setLoadedRows] = useState<EntityLoadedStatus>({});
-  const rowsToLoad = useRef({});
+
+  const setLoadedRowStatuses = useCallback(
+    ({
+      entities,
+      newStatus,
+      override = false,
+    }: {
+      entities: string[],
+      newStatus: LoadedStatuses,
+      // if entity is already loaded or loading then ideally should not override
+      override?: boolean,
+    }) => {
+      setLoadedRows(oldRows => {
+        const newRows = shipmentIds.reduce((arr, id) => {
+          if (!override && oldRows[id] === 'loaded') {
+            return arr;
+          }
+
+          arr[id] = newStatus;
+          return arr;
+        }, {});
+
+        return {
+          ...oldRows,
+          ...newRows,
+        };
+      });
+    },
+    []
+  );
 
   return {
     loadedRows,
     setLoadedRows,
+    setLoadedRowStatuses,
   };
 }
 
@@ -987,8 +1019,11 @@ function orderReducer(
       };
     // on single card select
     case 'TARGET':
+      //
       return produce(state, draft => {
         const { entity = '', mapping } = action.payload; // entity = Batch-15867
+
+        console.log('[debug] entity is ', entity);
 
         if (draft.targets.includes(entity)) {
           draft.targets.splice(draft.targets.indexOf(entity), 1);
@@ -1030,6 +1065,7 @@ function orderReducer(
       return produce(state, draft => {
         const { targets = [], entity: sourceEntity = '', mapping } = action.payload;
         const isTargetAll = targets.every(entity => draft.targets.includes(entity));
+        console.log('[debug] TARGET_TREE ', targets);
 
         targets.forEach(entity => {
           if (isTargetAll) {
@@ -1109,6 +1145,7 @@ function orderReducer(
       return produce(state, draft => {
         const { targets = [], mapping } = action.payload;
         const isTargetAll = targets.every(entity => draft.targets.includes(entity));
+        console.log('[debug] target all', targets);
         targets.forEach(entity => {
           // if all items are selected then unselect the items
           if (isTargetAll) {
