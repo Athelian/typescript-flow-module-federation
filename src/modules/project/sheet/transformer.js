@@ -15,8 +15,8 @@ import {
   PROJECT_SET_TAGS,
   PROJECT_UPDATE,
   PROJECT_SET_FOLLOWERS,
-  PROJECT_SET_ARCHIVED,
-  PROJECT_SET_ORGANIZATIONS,
+  PROJECT_ARCHIVE,
+  PROJECT_SET_SHARED_PARTNER,
 } from 'modules/permission/constants/project';
 import {
   MILESTONE_SET_COMPLETED,
@@ -246,17 +246,14 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
         basePath,
         project,
         'organizations',
-        hasPermission => hasPermission(PROJECT_UPDATE) || hasPermission(PROJECT_SET_ORGANIZATIONS)
+        hasPermission => hasPermission(PROJECT_UPDATE) || hasPermission(PROJECT_SET_SHARED_PARTNER)
       ),
     },
     {
       columnKey: 'project.archived',
       type: 'status',
-      ...transformValueField(
-        basePath,
-        project,
-        'archived',
-        hasPermission => hasPermission(PROJECT_UPDATE) || hasPermission(PROJECT_SET_ARCHIVED)
+      ...transformValueField(basePath, project, 'archived', hasPermission =>
+        hasPermission(PROJECT_ARCHIVE)
       ),
     },
     {

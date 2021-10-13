@@ -1094,7 +1094,7 @@
   "modules.profile.passwordInvalid": "Must Contain 8 Characters, One Uppercase, One Lowercase and One Number",
   "modules.Projects.form.activateDialog.confirmMsg": "Are you sure you want to activate this {project}?",
   "global.project": "project",
-  "modules.Projects.form.archiveDialog.confirmMsg": "Are you sure you want to activate this {project}?",
+  "modules.Projects.form.archiveDialog.confirmMsg": "Are you sure you want to archive this {project}?",
   "modules.Project.deleteProject.deleting": "Deleting {projectLabel} ...",
   "modules.Project.deleteProject.message1": "Are you sure you want to delete this {projectLabel}?",
   "modules.Project.deleteProject.message2": "All {milestonesLabel} inside will be deleted and all {tasksLabel} inside will be removed but not deleted.",

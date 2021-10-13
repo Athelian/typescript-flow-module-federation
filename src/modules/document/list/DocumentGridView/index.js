@@ -25,7 +25,7 @@ import {
   PRODUCT_PROVIDER_DOCUMENT_DELETE,
 } from 'modules/permission/constants/product';
 import { SHIPMENT_GET, SHIPMENT_DOCUMENT_DELETE } from 'modules/permission/constants/shipment';
-import { PROJECT_FORM } from 'modules/permission/constants/project';
+import { PROJECT_GET } from 'modules/permission/constants/project';
 import { MILESTONE_DOCUMENT_DELETE } from 'modules/permission/constants/milestone';
 import { DOCUMENT_FORM, DOCUMENT_DELETE } from 'modules/permission/constants/file';
 import { getParentInfo } from 'utils/task';
@@ -79,7 +79,7 @@ const defaultRenderItem = ({
           shipment: hasPermission(SHIPMENT_GET),
           product: hasPermission(PRODUCT_FORM),
           productProvider: hasPermission(PRODUCT_FORM),
-          project: hasPermission(PROJECT_FORM),
+          project: hasPermission(PROJECT_GET),
         };
         const deletePermissions = {
           order: hasPermission(ORDER_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),

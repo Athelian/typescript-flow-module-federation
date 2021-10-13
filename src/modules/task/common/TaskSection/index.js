@@ -17,7 +17,7 @@ import { TemplateCard, GrayCard } from 'components/Cards';
 import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { PROJECT_FORM } from 'modules/permission/constants/project';
+import { PROJECT_GET } from 'modules/permission/constants/project';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';
 import { TasksSectionWrapperStyle, TasksSectionStyle, TemplateItemStyle } from './style';
@@ -44,7 +44,7 @@ function TaskSection({ type, entityId, entityOwnerId, intl, groupIds }: Props) {
   const { isOwner } = usePartnerPermission();
   const { user } = useUser();
   const { hasPermission } = usePermission(isOwner);
-  const canViewProjectForm = hasPermission(PROJECT_FORM);
+  const canViewProjectForm = hasPermission(PROJECT_GET);
 
   const {
     canViewList,
