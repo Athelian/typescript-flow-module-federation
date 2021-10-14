@@ -1088,7 +1088,7 @@
   "modules.profile.passwordInvalid": "必须包含8个字符，一个大写字母，一个小写字母和一个数字",
   "modules.Projects.form.activateDialog.confirmMsg": "Are you sure you want to activate this {project}?",
   "global.project": "project",
-  "modules.Projects.form.archiveDialog.confirmMsg": "Are you sure you want to activate this {project}?",
+  "modules.Projects.form.archiveDialog.confirmMsg": "Are you sure you want to archive this {project}?",
   "modules.Project.deleteProject.deleting": "Deleting {projectLabel} ...",
   "modules.Project.deleteProject.message1": "Are you sure you want to delete this {projectLabel}?",
   "modules.Project.deleteProject.message2": "All {milestonesLabel} inside will be deleted and all {tasksLabel} inside will be removed but not deleted.",

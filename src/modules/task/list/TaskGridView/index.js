@@ -6,7 +6,7 @@ import GridView from 'components/GridView';
 import { TaskCard } from 'components/Cards';
 import { encodeId } from 'utils/id';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
-import { PROJECT_FORM } from 'modules/permission/constants/project';
+import { PROJECT_GET } from 'modules/permission/constants/project';
 
 type Props = {
   items: Array<Object>,
@@ -22,7 +22,7 @@ const defaultRenderItem = (item: Object) => (
       <TaskCard
         entity={item.entity}
         task={item}
-        navigable={{ project: permissions.includes(PROJECT_FORM) }}
+        navigable={{ project: permissions.includes(PROJECT_GET) }}
         onClick={() => navigate(`/task/${encodeId(item.id)}`)}
         showActionsOnHover
       />
