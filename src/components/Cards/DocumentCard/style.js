@@ -60,6 +60,7 @@ export const DocumentParentWrapperStyle: string = css`
 
 export const CreatedAtStyle: string = css`
   color: ${colors.BLACK};
+  margin-bottom: 14px;
   ${fontSizes.SMALL};
   line-height: 20px;
   padding: 0 5px 0 0;
