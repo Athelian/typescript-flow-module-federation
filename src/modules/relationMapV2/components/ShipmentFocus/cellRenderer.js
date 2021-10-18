@@ -1420,7 +1420,6 @@ function ItemSummaryCell({
   );
 }
 
-//
 function BatchSummaryCell({
   onClick,
   // $FlowIgnore: does not support

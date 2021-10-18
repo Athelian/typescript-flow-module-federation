@@ -30,7 +30,10 @@ const generateCells = memoize(
     const onClick = () => {
       if (!isExpand) {
         onExpand(expandIds => [...expandIds, shipment?.id ?? '']);
-        if (loadStatuses[shipment?.id] !== 'loaded' && loadStatuses[shipment?.id] !== 'loading') {
+        if (
+          loadStatuses[shipment?.id]?.full !== 'loaded' &&
+          loadStatuses[shipment?.id]?.full !== 'loading'
+        ) {
           queryShipmentsDetail([shipment?.id]);
         }
       } else {
