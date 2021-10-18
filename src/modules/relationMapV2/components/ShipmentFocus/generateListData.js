@@ -65,6 +65,7 @@ const generateListData = memoize(
     newBatchIDs: Array<string>,
     newContainerIDs: Array<string>,
   |}) => {
+    // $FlowIgnore: doesn't support
     const emptyFirstCells = [...Array(5)].map(() => ({
       cell: null,
       isExpand: false,

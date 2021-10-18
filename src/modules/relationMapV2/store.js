@@ -213,9 +213,9 @@ function useEntities(
       type,
       view,
     }: {
-      ids: string,
+      ids: string[],
       view: 'Order' | 'Shipment',
-      type: ORDER | ORDER_ITEM | BATCH | CONTAINER | SHIPMENT,
+      type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT,
     }) => {
       if (view === 'Order') {
         return [];
@@ -244,7 +244,7 @@ function useEntities(
       }
 
       const rootEntityIds = ids.reduce((set, id) => {
-        if (mapping.relations[key][id].shipment) {
+        if (mapping.relations?.[key][id].shipment) {
           set.add(mapping.relations[key][id].shipment);
         }
 
@@ -731,7 +731,7 @@ function useLoadStatuses() {
       entities,
       newStatus,
       override = false,
-      dataType = 'full',
+      dataType,
     }: {
       entities: string[],
       newStatus: LoadStatusType,
@@ -739,18 +739,22 @@ function useLoadStatuses() {
       // if entity is already loaded or loading then ideally should not override
       override?: boolean,
     }) => {
+      if (!dataType) {
+        dataType = 'full';
+      }
+
       setLoadStatuses(oldRows => {
         const newRows = entities.reduce((arr, id) => {
           if (
             !override &&
+            // $FlowIgnore: does not support
             (oldRows[id]?.[dataType] === 'loaded' || oldRows[id]?.['full'] === 'loaded')
           ) {
             return arr;
           }
 
-          arr[id] = {
-            [dataType]: newStatus,
-          };
+          // $FlowIgnore: does not support
+          arr[id] = { [dataType]: newStatus };
 
           return arr;
         }, {});

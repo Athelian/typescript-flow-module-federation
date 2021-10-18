@@ -5,6 +5,7 @@ import { navigate } from '@reach/router';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { Entities, FocusedView, LoadStatuses } from 'modules/relationMapV2/store';
+import type { OrderReducerTypes } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import {
   targetedIds,
@@ -37,12 +38,12 @@ type LoadingTypes =
 
 type Props = {
   targets: Array<string>,
-  onActionClick: Function,
+  onActionClick?: (string[], Function) => void,
 };
 
-export default function Actions({ targets, onActionClick }: Props) {
+function Actions({ targets, onActionClick }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
-  const [loadingType, setLoadingType] = React.useState<LoadingTypes>(null);
+  const [loadingType, setLoadingType] = React.useState<?LoadingTypes>(null);
   const { state, dispatch, selectors } = FocusedView.useContainer();
   const { mapping, getRootEntities } = Entities.useContainer();
   const { loadStatuses, getNotLoadedEntities } = LoadStatuses.useContainer();
@@ -170,7 +171,9 @@ export default function Actions({ targets, onActionClick }: Props) {
       dispatchFunction();
     } else {
       setLoadingType(newLoadingType);
-      onActionClick(notLoadedEntityIds, dispatchFunction);
+      if (onActionClick) {
+        onActionClick(notLoadedEntityIds, dispatchFunction);
+      }
     }
   };
 
@@ -1015,3 +1018,7 @@ export default function Actions({ targets, onActionClick }: Props) {
     </>
   );
 }
+
+Actions.defaultProps = {};
+
+export default Actions;
