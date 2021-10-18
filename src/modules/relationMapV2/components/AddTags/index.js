@@ -6,7 +6,7 @@ import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { useApolloClient } from '@apollo/react-hooks';
 import { extractForbiddenId } from 'utils/data';
 import { useAllHasPermission } from 'contexts/Permissions';
-import { Entities, FocusedView } from 'modules/relationMapV2/store';
+import { Entities, FocusedView, LoadStatuses } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import { TAG_GET } from 'modules/permission/constants/tag';
 import { ORDER_UPDATE, ORDER_SET_TAGS } from 'modules/permission/constants/order';
@@ -54,14 +54,16 @@ import { shipmentPartialQuery } from './../../query';
 import { entitiesUpdateManyMutation } from './mutation';
 
 type Props = {|
+  queryShipmentsPartialDetail?: Function,
   onSuccess: (ids: Array<string>) => void,
 |};
 
 /**
  * Used on shipments, containers, orders and order items
  */
-export default function AddTags({ onSuccess }: Props) {
+export default function AddTags({ queryShipmentsPartialDetail, onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
+  const { loadStatuses } = LoadStatuses.useContainer();
   const client = useApolloClient();
   const [tags, setTags] = React.useState([]);
   const { dispatch, state, selectors } = FocusedView.useContainer();
@@ -76,6 +78,7 @@ export default function AddTags({ onSuccess }: Props) {
     targets,
     tags: { isOpen, isProcessing, source },
   } = state;
+
   const isOpenRef = React.useRef(isOpen);
   isOpenRef.current = isOpen;
 
@@ -96,21 +99,51 @@ export default function AddTags({ onSuccess }: Props) {
     };
   }, [targets]);
 
+  // get parent shipment ids to check if all their have been loaded or not
+  const parentShipmentIds = React.useMemo(() => {
+    if (!isOpen) {
+      return [];
+    }
+
+    if (state.viewer === 'Order') {
+      return [];
+    }
+
+    let shipmentIds = [];
+
+    switch (source) {
+      case ORDER:
+        break;
+      case ORDER_ITEM:
+        break;
+      case BATCH:
+        break;
+      case CONTAINER:
+        shipmentIds = Object.keys(mapping?.entities?.shipments).reduce((set, shipmentId) => {
+          // TODO: can improve perf here
+          const shipmentHasContainer = mapping?.entities?.shipments[
+            shipmentId
+          ]?.containers.some(containerId => containerIds.includes(containerId));
+
+          if (shipmentHasContainer) {
+            set.add(shipmentId);
+          }
+
+          return set;
+        }, new Set());
+        break;
+      case SHIPMENT:
+        break;
+    }
+
+    return [...shipmentIds];
+  }, [containerIds, isOpen]);
+
   React.useEffect(() => {
     // if open and tag data for chosen entities are not ready
     if (!isOpen) {
       return;
     }
-    // orderIds
-    // orderIds.map(id => mapping.entities?.orders?.[id]?.ownedBy).filter(Boolean)
-    // itemIds
-    // itemIds.map(id => mapping.entities?.orderItems?.[id]?.ownedBy)
-    // batchIds
-    // batchIds.map(id => mapping.entities?.batches?.[id]?.ownedBy)
-    // containerIds
-    // containerIds.map(id => mapping.entities?.containers?.[id]?.ownedBy)
-    // shipmentIds
-    // shipmentIds.map(id => mapping.entities?.shipments?.[id]?.ownedBy)
 
     const orderOwners = orderIds.map(id => mapping.entities?.orders?.[id]?.ownedBy);
     const itemOwners = itemIds.map(id => mapping.entities?.orderItems?.[id]?.ownedBy);
@@ -118,61 +151,32 @@ export default function AddTags({ onSuccess }: Props) {
     const containerOwners = containerIds.map(id => mapping.entities?.containers?.[id]?.ownedBy);
     const shipmentOwners = shipmentIds.map(id => mapping.entities?.shipments?.[id]?.ownedBy);
 
-    console.log(
-      'owners are',
-      orderOwners,
-      itemOwners,
-      batchOwners,
-      containerOwners,
-      shipmentOwners
-    );
-
     const hasUndefined =
       orderOwners.some(owner => !owner) ||
       itemOwners.some(owner => !owner) ||
       batchOwners.some(owner => !owner) ||
       shipmentOwners.some(owner => !owner) ||
       containerOwners.some(owner => !owner);
-    console.log('hasUndefined', hasUndefined);
 
     // if undefined then means that it either parent is forbidden
     // or parent is from summary query
     if (hasUndefined) {
-      console.log('mapping.entities', mapping.entities);
-      console.log(containerIds);
       // TODO: check if shipment view or order view here
       const isShipmentView = true;
 
-      const shipmentIds = Object.keys(mapping?.entities?.shipments).reduce((set, shipmentId) => {
-        // TODO: can improve perf here
-        const shipmentHasContainer = mapping?.entities?.shipments[
-          shipmentId
-        ]?.containers.some(containerId => containerIds.includes(containerId));
+      // if shipment is already loading or loaded then dont need to requery it
+      const filteredShipmentIds = parentShipmentIds.filter(shipmentId => {
+        return !(
+          loadStatuses[shipmentId]?.full === 'loaded' ||
+          loadStatuses[shipmentId]?.full === 'loading' ||
+          loadStatuses[shipmentId]?.tags === 'loaded' ||
+          loadStatuses[shipmentId]?.tags === 'loading'
+        );
+      });
 
-        if (shipmentHasContainer) {
-          set.add(shipmentId);
-        }
-
-        return set;
-      }, new Set());
-
-      console.log('shipment ids are ', [...shipmentIds]);
-
-      if (shipmentIds.size) {
-        console.log('shipment ids are ', [...shipmentIds]);
-        client
-          .query({
-            query: shipmentPartialQuery,
-            variables: {
-              ids: [...shipmentIds],
-            },
-            fetchPolicy: 'network-only',
-          })
-          .then(result => {
-            console.log('result is ', result);
-          });
+      if (filteredShipmentIds.length) {
+        queryShipmentsPartialDetail(filteredShipmentIds, 'tags');
       }
-      // TODO: set loading to true somewhere
     }
     /* 
       entities that are needed to load
@@ -198,27 +202,15 @@ export default function AddTags({ onSuccess }: Props) {
     batchIds.map(id => mapping.entities?.batches?.[id]?.ownedBy).filter(Boolean)
   );
   const totalBatches = batchIds.length;
-  console.log('[debug] targets', targets);
-  console.log('[debug] container Ids are', containerIds);
 
   // TODO: take note of permissions
   const hasContainerPermissions = useAllHasPermission(
     containerIds.map(id => mapping.entities?.containers?.[id]?.ownedBy).filter(Boolean)
   );
 
-  console.log(
-    '[debug] hasContainerPermissions ',
-    containerIds.map(id => mapping.entities?.containers?.[id]?.ownedBy)
-  );
-
   const totalContainers = containerIds.length;
   const hasShipmentPermissions = useAllHasPermission(
     shipmentIds.map(id => mapping.entities?.shipments?.[id]?.ownedBy).filter(Boolean)
-  );
-
-  console.log(
-    '[debug] hasShipmentPermissions ',
-    shipmentIds.map(id => mapping.entities?.shipments?.[id]?.ownedBy)
   );
 
   const totalShipments = shipmentIds.length;
@@ -416,12 +408,10 @@ export default function AddTags({ onSuccess }: Props) {
               shipment => shipment.id
             );
 
-            console.log('[debug] update shipment ids are', JSON.parse(JSON.stringify(ids)));
             if ((result.data?.entitiesUpdateMany?.containers ?? []).length) {
               (result.data?.entitiesUpdateMany?.containers ?? []).forEach(container =>
                 ids.push(findShipmentIdByContainer(container.id, mapping.entities))
               );
-              console.log('[debug] update containers ids are', JSON.parse(JSON.stringify(ids)));
             }
             if ((result.data?.entitiesUpdateMany?.batches ?? []).length) {
               ids.push(
@@ -492,7 +482,6 @@ export default function AddTags({ onSuccess }: Props) {
         loadBatches({ variables: { ids: batchIds } });
         break;
       case CONTAINER:
-        console.log('load containers', containerIds);
         loadContainers({ variables: { ids: containerIds } });
         break;
       case SHIPMENT:
@@ -505,6 +494,11 @@ export default function AddTags({ onSuccess }: Props) {
   };
 
   const noPermission = !allowToUpdate();
+  const areParentEntitiesLoaded = parentShipmentIds.every(shipmentId => {
+    return (
+      loadStatuses[shipmentId]?.full === 'loaded' || loadStatuses[shipmentId]?.tags === 'loaded'
+    );
+  });
 
   let dialogMessage = null;
   let dialogSubMessage = null;
@@ -617,7 +611,7 @@ export default function AddTags({ onSuccess }: Props) {
             <FormattedMessage id="modules.RelationMap.label.addTags" defaultMessage="ADD TAGS" />
           }
           icon="TAG"
-          disabled={noPermission || tags.length === 0}
+          disabled={noPermission || !areParentEntitiesLoaded || tags.length === 0}
           onClick={onConfirm}
         />
       }

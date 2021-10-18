@@ -14,7 +14,7 @@ import {
   ClientSorts,
   GlobalShipmentPoint,
   ExpandRows,
-  LoadedRows,
+  LoadStatuses,
   GlobalExpanded,
 } from './store';
 
@@ -23,7 +23,7 @@ const RelationMap = () => {
     <Provider>
       <FocusedView.Provider initialState="Shipment">
         <GlobalExpanded.Provider>
-          <LoadedRows.Provider>
+          <LoadStatuses.Provider>
             <ExpandRows.Provider>
               <GlobalShipmentPoint.Provider>
                 <Hits.Provider>
@@ -44,7 +44,7 @@ const RelationMap = () => {
                 </Hits.Provider>
               </GlobalShipmentPoint.Provider>
             </ExpandRows.Provider>
-          </LoadedRows.Provider>
+          </LoadStatuses.Provider>
         </GlobalExpanded.Provider>
       </FocusedView.Provider>
     </Provider>

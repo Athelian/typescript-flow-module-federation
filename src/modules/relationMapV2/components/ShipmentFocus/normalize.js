@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { normalize, schema } from 'normalizr';
 import memoize from 'memoize-one';
 import isDeepEqual from 'react-fast-compare';
@@ -57,4 +58,88 @@ export default memoize(originalData => {
 export const normalizeEntity = memoize(originalData => {
   const { entities } = normalize(originalData, { hits: [hit] });
   return entities;
+}, isDeepEqual);
+
+/**
+ * Return an object which shows the relation of an entity to other entites
+ */
+export const getRelations = memoize(originalData => {
+  const relations = originalData.reduce(
+    (arr, shipmentEntity) => {
+      const shipmentId = shipmentEntity.id;
+
+      const containerMap = shipmentEntity.containers.reduce((containerArr, containerEntity) => {
+        // eslint-disable-next-line
+        containerArr[containerEntity.id] = {
+          shipment: shipmentId,
+        };
+        return containerArr;
+      }, {});
+
+      const { batches, orderItems, orders } = shipmentEntity.batches.reduce(
+        (mapArr, batchEntity) => {
+          const { container: containerEntity, orderItem: orderItemEntity } = batchEntity;
+
+          mapArr.batches[batchEntity.id] = {
+            shipment: shipmentId,
+            container: containerEntity?.id,
+            // orderItem: orderItemEntity?.id,
+            // order: orderItemEntity?.orderEntity?.id,
+            // productProvider: orderItemEntity?.productProvider?.id,
+            // product: orderItemEntity?.productProvider?.product?.id,
+          };
+
+          mapArr.orderItems[orderItemEntity.id] = {
+            shipment: shipmentId,
+            container: containerEntity?.id,
+          };
+
+          mapArr.orders[orderItemEntity?.order?.id] = {
+            shipment: shipmentId,
+            container: containerEntity?.id,
+          };
+
+          return mapArr;
+        },
+        {
+          batches: {},
+          orderItems: {},
+          orders: {},
+        }
+      );
+
+      arr.batches = {
+        ...arr.batches,
+        ...batches,
+      };
+
+      arr.containers = {
+        ...arr.containers,
+        ...containerMap,
+      };
+
+      arr.orderItems = {
+        ...arr.orderItems,
+        ...containerMap,
+      };
+
+      arr.orders = {
+        ...arr.orders,
+        ...orders,
+      };
+
+      return arr;
+    },
+    {
+      containers: {},
+      shipments: {},
+      batches: {},
+      orders: {},
+      orderItems: {},
+      product: {},
+      productProvider: {},
+    }
+  );
+
+  return relations;
 }, isDeepEqual);

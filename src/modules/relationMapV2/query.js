@@ -317,6 +317,154 @@ export const orderCardFullFragment = gql`
   }
 `;
 
+const shipmentSummaryFragment = gql`
+  fragment shipmentSummaryFragment on Shipment {
+    ... on Shipment {
+      id
+      orderCount
+      totalVolumeOverride {
+        ...metricFragment
+      }
+      totalVolumeOverriding
+      totalVolume {
+        ...metricFragment
+      }
+      ... on Followed {
+        notificationUnseenCount
+      }
+      filesUnreadCount
+      timeline {
+        unreadMessageCount
+      }
+      exporter {
+        ... on Organization {
+          id
+          name
+        }
+      }
+      importer {
+        ... on Organization {
+          id
+          name
+        }
+      }
+      archived
+      no
+      blNo
+      ownedBy {
+        ...ownedByFragment
+      }
+      tags {
+        ...tagFragment
+        ...forbiddenFragment
+      }
+      exporter {
+        ... on Organization {
+          id
+          name
+        }
+      }
+      importer {
+        ... on Organization {
+          id
+          name
+        }
+      }
+      transportType
+
+      cargoReady {
+        ...timelineDateFragment
+      }
+
+      earliestWarehouseAgreedArrival
+      latestWarehouseAgreedArrival
+      earliestWarehouseActualArrival
+      latestWarehouseActualArrival
+      voyages {
+        ... on Voyage {
+          id
+          departurePort {
+            seaportName
+            airportName
+          }
+          arrivalPort {
+            seaportName
+            airportName
+          }
+          departure {
+            ...timelineDateFragment
+          }
+          arrival {
+            ...timelineDateFragment
+          }
+        }
+      }
+      containerGroups {
+        ... on ContainerGroup {
+          id
+          warehouse {
+            ... on Warehouse {
+              id
+              name
+            }
+          }
+          customClearance {
+            ...timelineDateFragment
+          }
+          warehouseArrival {
+            ...timelineDateFragment
+          }
+          deliveryReady {
+            ...timelineDateFragment
+          }
+        }
+      }
+
+      containers {
+        ... on Container {
+          id
+          warehouseArrivalActualDate
+          warehouseArrivalAgreedDate
+        }
+      }
+
+      batches {
+        ... on Batch {
+          id
+          deliveredAt
+          desiredAt
+          container {
+            ... on Container {
+              id
+            }
+          }
+          orderItem {
+            ... on OrderItem {
+              id
+              order {
+                ... on Order {
+                  id
+                }
+              }
+
+              productProvider {
+                ... on ProductProvider {
+                  id
+                  product {
+                    ... on Product {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const shipmentSummaryQuery = gql`
   query shipmentSummaryQuery(
     $page: Int!
@@ -326,179 +474,7 @@ export const shipmentSummaryQuery = gql`
   ) {
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ... on Shipment {
-          id
-          orderCount
-          totalVolumeOverride {
-            ...metricFragment
-          }
-          totalVolumeOverriding
-          totalVolume {
-            ...metricFragment
-          }
-          ... on Followed {
-            notificationUnseenCount
-          }
-          filesUnreadCount
-          timeline {
-            unreadMessageCount
-          }
-          exporter {
-            ... on Organization {
-              id
-              name
-            }
-          }
-          importer {
-            ... on Organization {
-              id
-              name
-            }
-          }
-          archived
-          no
-          blNo
-          ownedBy {
-            ...ownedByFragment
-          }
-          tags {
-            ...tagFragment
-            ...forbiddenFragment
-          }
-          exporter {
-            ... on Organization {
-              id
-              name
-            }
-          }
-          importer {
-            ... on Organization {
-              id
-              name
-            }
-          }
-          transportType
-          cargoReady {
-            ...timelineDateFragment
-          }
-          voyages {
-            ... on Voyage {
-              id
-              departurePort {
-                seaportName
-                airportName
-              }
-              arrivalPort {
-                seaportName
-                airportName
-              }
-              departure {
-                ...timelineDateFragment
-              }
-              arrival {
-                ...timelineDateFragment
-              }
-            }
-          }
-          containerGroups {
-            ... on ContainerGroup {
-              id
-              warehouse {
-                ... on Warehouse {
-                  id
-                  name
-                }
-              }
-              customClearance {
-                ...timelineDateFragment
-              }
-              warehouseArrival {
-                ...timelineDateFragment
-              }
-              deliveryReady {
-                ...timelineDateFragment
-              }
-            }
-          }
-          # containers {
-          #   ...containerEntityCardFragment
-          # }
-
-          containers {
-            ... on Container {
-              id
-              warehouseArrivalActualDate
-              warehouseArrivalAgreedDate
-              # shipment {
-              #   ... on Shipment {
-              #     id # for addTags. but can remove if we just loop through
-              #     # the available shipments
-              #   }
-              # }
-              # warehouseArrivalActualDateApprovedAt
-            }
-          }
-          # batches {
-          #   ... on Batch {
-          #     ...batchEntityCardFragment
-          #     orderItem {
-          #       ... on OrderItem {
-          #         ...itemEntityCardFragment
-          #         order {
-          #           ...orderEntityCardFragment
-          #         }
-          #       }
-          #     }
-          #   }
-          # }
-
-          batches {
-            ... on Batch {
-              id
-              # updatedAt
-              # createdAt
-              deliveredAt
-              desiredAt
-              # expiredAt
-
-              # ...batchEntityCardFragment
-              orderItem {
-                ... on OrderItem {
-                  id
-                  order {
-                    ... on Order {
-                      id
-                    }
-                  }
-
-                  productProvider {
-                    ... on ProductProvider {
-                      id
-                      product {
-                        ... on Product {
-                          id
-                        }
-                      }
-                    }
-                  }
-
-                  # ...itemEntityCardFragment
-                  # order {
-                  #   ... on Order {
-
-                  # }
-                  #   ...orderEntityCardFragment
-                  # }
-                }
-              }
-            }
-          }
-
-          earliestWarehouseAgreedArrival
-          latestWarehouseAgreedArrival
-          earliestWarehouseActualArrival
-          latestWarehouseActualArrival
-        }
+        ...shipmentSummaryFragment
       }
       hits {
         ... on Hit {
@@ -522,6 +498,7 @@ export const shipmentSummaryQuery = gql`
   ${tagFragment}
   ${metricFragment}
   ${ownedByFragment}
+  ${shipmentSummaryFragment}
   ${timelineDateFragment}
   ${forbiddenFragment}
 `;
@@ -684,47 +661,60 @@ export const shipmentFullFocusDetailQuery = gql`
 export const shipmentPartialQuery = gql`
   query shipmentPartialQuery($ids: [ID!]!) {
     shipmentsByIDs(ids: $ids) {
-      id
-      ownedBy {
-        ...ownedByFragment
-      }
-
-      containers {
-        ... on Container {
-          id
-          shipment {
-            ... on Shipment {
-              id # for addTags. but can remove if we just loop through the available shipments
-            }
-          }
+      ...shipmentSummaryFragment
+      ... on Shipment {
+        ownedBy {
           ...ownedByFragment
         }
-      }
-
-      batches {
-        ... on Batch {
-          id
-          ...ownedByFragment
-
-          orderItem {
-            ... on OrderItem {
-              id
+        containers {
+          ... on Container {
+            id
+            shipment {
+              ... on Shipment {
+                id # for addTags. but can remove if we just loop through the available shipments
+              }
+            }
+            ownedBy {
               ...ownedByFragment
-              order {
-                ... on Order {
-                  id
+            }
+          }
+        }
+
+        batches {
+          ... on Batch {
+            id
+            ownedBy {
+              ...ownedByFragment
+            }
+
+            orderItem {
+              ... on OrderItem {
+                id
+                ownedBy {
                   ...ownedByFragment
                 }
-              }
-
-              productProvider {
-                ... on ProductProvider {
-                  id
-                  ...ownedByFragment
-                  product {
-                    ... on Product {
-                      id
+                order {
+                  ... on Order {
+                    id
+                    ownedBy {
                       ...ownedByFragment
+                    }
+                  }
+                }
+
+                productProvider {
+                  ... on ProductProvider {
+                    id
+                    ownedBy {
+                      ...ownedByFragment
+                    }
+                    product {
+                      ... on Product {
+                        id
+                        ownedBy {
+                          ...ownedByFragment
+                        }
+                      }
                     }
                   }
                 }
@@ -736,16 +726,21 @@ export const shipmentPartialQuery = gql`
     }
   }
 
-  ${shipmentCardFullFragment}
-  ${shipmentEntityCardFragment}
-  ${containerEntityCardFragment}
-  ${batchEntityCardFragment}
-  ${itemEntityCardFragment}
-  ${orderEntityCardFragment}
   ${tagFragment}
   ${metricFragment}
-  ${taskCountFragment}
   ${ownedByFragment}
+  ${shipmentSummaryFragment}
   ${timelineDateFragment}
   ${forbiddenFragment}
 `;
+// # ${timelineDateFragment}
+// # ${forbiddenFragment}
+// # ${shipmentCardFullFragment}
+// # ${shipmentEntityCardFragment}
+// # ${containerEntityCardFragment}
+// # ${batchEntityCardFragment}
+// # ${itemEntityCardFragment}
+// # ${orderEntityCardFragment}
+// # ${tagFragment}
+// # ${metricFragment}
+// # ${taskCountFragment}

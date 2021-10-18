@@ -11,13 +11,13 @@ const generateCells = memoize(
     isExpand,
     onExpand,
     queryShipmentsDetail,
-    loadedRows,
+    loadStatuses,
     ...helpers
   }: {|
     shipment: Object,
     isExpand: boolean,
     onExpand: Function,
-    loadedRows: EntityLoadedStatus,
+    loadStatuses: EntityLoadedStatus,
     queryShipmentsDetail: Function,
     getContainersSortByShipmentId: Function,
     getBatchesSortByShipmentId: Function,
@@ -30,7 +30,7 @@ const generateCells = memoize(
     const onClick = () => {
       if (!isExpand) {
         onExpand(expandIds => [...expandIds, shipment?.id ?? '']);
-        if (loadedRows[shipment?.id] !== 'loaded' && loadedRows[shipment?.id] !== 'loading') {
+        if (loadStatuses[shipment?.id] !== 'loaded' && loadStatuses[shipment?.id] !== 'loading') {
           queryShipmentsDetail([shipment?.id]);
         }
       } else {
@@ -47,13 +47,13 @@ const generateListData = memoize(
     shipments,
     expandRows,
     setExpandRows,
-    loadedRows,
+    loadStatuses,
     ...helpers
   }: {|
     shipments: Array<OrderPayload>,
     expandRows: Array<string>,
     setExpandRows: Function,
-    loadedRows: EntityLoadedStatus,
+    loadStatuses: EntityLoadedStatus,
     queryShipmentsDetail: Function,
     getContainersSortByShipmentId: Function,
     getBatchesSortByShipmentId: Function,
@@ -81,8 +81,8 @@ const generateListData = memoize(
         shipment,
         isExpand,
         onExpand: setExpandRows,
-        loadedRows,
-        isLoadingData: loadedRows[shipment?.id] === 'loading',
+        loadStatuses,
+        isLoadingData: loadStatuses[shipment?.id]?.full === 'loading',
         ...helpers,
       });
       let counter = 0;
