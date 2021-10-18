@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { normalize, schema } from 'normalizr';
 import memoize from 'memoize-one';
 import isDeepEqual from 'react-fast-compare';
@@ -80,6 +79,7 @@ export const getRelations = memoize(originalData => {
         (mapArr, batchEntity) => {
           const { container: containerEntity, orderItem: orderItemEntity } = batchEntity;
 
+          // eslint-disable-next-line no-param-reassign
           mapArr.batches[batchEntity.id] = {
             shipment: shipmentId,
             container: containerEntity?.id,
@@ -89,11 +89,13 @@ export const getRelations = memoize(originalData => {
             // product: orderItemEntity?.productProvider?.product?.id,
           };
 
+          // eslint-disable-next-line no-param-reassign
           mapArr.orderItems[orderItemEntity.id] = {
             shipment: shipmentId,
             container: containerEntity?.id,
           };
 
+          // eslint-disable-next-line no-param-reassign
           mapArr.orders[orderItemEntity?.order?.id] = {
             shipment: shipmentId,
             container: containerEntity?.id,
@@ -108,21 +110,25 @@ export const getRelations = memoize(originalData => {
         }
       );
 
+      // eslint-disable-next-line no-param-reassign
       arr.batches = {
         ...arr.batches,
         ...batches,
       };
 
+      // eslint-disable-next-line no-param-reassign
       arr.containers = {
         ...arr.containers,
         ...containerMap,
       };
 
+      // eslint-disable-next-line no-param-reassign
       arr.orderItems = {
         ...arr.orderItems,
-        ...containerMap,
+        ...orderItems,
       };
 
+      // eslint-disable-next-line no-param-reassign
       arr.orders = {
         ...arr.orders,
         ...orders,

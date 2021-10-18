@@ -280,9 +280,7 @@ const useSortAndFilter = (type: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') => {
         field: 'updatedAt',
         direction: 'DESCENDING',
       },
-      //
-      // perPage: 10,
-      perPage: 1,
+      perPage: 10,
       page: 1,
     },
     type

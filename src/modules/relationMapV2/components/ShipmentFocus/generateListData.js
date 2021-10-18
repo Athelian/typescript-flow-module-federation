@@ -73,10 +73,7 @@ const generateListData = memoize(
 
     shipments.forEach(shipment => {
       const isExpand = expandRows.includes(shipment?.id ?? '');
-      // const isExpand = expandRows.includes(shipment?.id ?? '');
 
-      // TODO: if shipment is expanded then this needs to
-      // generate the loading summary cell
       const { cells, onClick } = generateCells({
         shipment,
         isExpand,

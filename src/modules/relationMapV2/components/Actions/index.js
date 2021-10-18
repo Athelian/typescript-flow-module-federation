@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -47,8 +45,6 @@ export default function Actions({ targets, onActionClick }: Props) {
   const [loadingType, setLoadingType] = React.useState<LoadingTypes>(null);
   const { state, dispatch, selectors } = FocusedView.useContainer();
   const { mapping, getRootEntities } = Entities.useContainer();
-  const { relations } = mapping;
-
   const { loadStatuses, getNotLoadedEntities } = LoadStatuses.useContainer();
 
   const orderIds = targetedIds(targets, ORDER);
@@ -550,14 +546,6 @@ export default function Actions({ targets, onActionClick }: Props) {
                         },
                         newLoadingType: 'ordersAddFollowers',
                       });
-                      // setCurrentMenu(null);
-                      // dispatch({
-                      //   type: 'FOLLOWERS',
-                      //   payload: {
-                      //     source: ORDER,
-                      //     ids: orderIds,
-                      //   },
-                      // });
                     }}
                   >
                     <Icon icon="STAFF" />

@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* eslint-disable react/no-unused-prop-types */
 // @flow
 import * as React from 'react';
@@ -15,11 +14,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
 import { SHIPMENT, CONTAINER, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMapV2/constants';
-import {
-  shipmentFullFocusDetailQuery,
-  shipmentSummaryQuery,
-  shipmentPartialQuery,
-} from 'modules/relationMapV2/query';
+import { shipmentFullFocusDetailQuery, shipmentSummaryQuery } from 'modules/relationMapV2/query';
 import {
   loadMore,
   findShipmentIdByContainer,
@@ -180,43 +175,6 @@ export default function ShipmentFocus() {
     [dispatch, setEntityLoadStatuses]
   );
 
-  const queryShipmentsPartialDetail = React.useCallback(
-    (shipmentIds: Array<string>, dataType?: LoadStatusFunctionType) => {
-      if (!shipmentIds.length) {
-        return;
-      }
-
-      setEntityLoadStatuses({
-        entities: shipmentIds,
-        newStatus: 'loading',
-        dataType: dataType || 'full',
-      });
-
-      apolloClient
-        .query({
-          query: shipmentPartialQuery,
-          variables: {
-            ids: shipmentIds,
-          },
-        })
-        .then(result => {
-          setEntityLoadStatuses({
-            entities: shipmentIds,
-            newStatus: 'loaded',
-            dataType: dataType || 'full',
-          });
-
-          dispatch({
-            type: 'FETCH_SHIPMENTS',
-            payload: {
-              shipments: result.data.shipmentsByIDs,
-            },
-          });
-        });
-    },
-    [dispatch, setEntityLoadStatuses]
-  );
-
   return (
     <>
       <div className={WrapperStyle}>
@@ -297,8 +255,6 @@ export default function ShipmentFocus() {
                 if (loading || isLoadingMore) {
                   return;
                 }
-
-                return;
 
                 setIsLoadingMore(true);
                 loadMore(
@@ -724,7 +680,6 @@ export default function ShipmentFocus() {
                     }}
                   />
                   <AddTags
-                    queryShipmentsPartialDetail={queryShipmentsPartialDetail}
                     onSuccess={ids => {
                       queryShipmentsDetail(ids);
 
