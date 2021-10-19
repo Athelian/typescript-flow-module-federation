@@ -61,7 +61,7 @@ const ShipmentForm = ({
           requestAnimationFrame(retryFindElement);
         } else {
           // scroll to element after rendering
-          scrollIntoView({ targetId: sectionId });
+          setTimeout(() => scrollIntoView({ targetId: sectionId }), 500);
         }
       };
       requestAnimationFrame(retryFindElement);
@@ -79,7 +79,9 @@ const ShipmentForm = ({
         } else {
           // scroll to element after rendering
           scrollIntoView({ targetId: sectionId });
-          setTimeout(() => scrollIntoView({ targetId: anchor, boundaryId: sectionId }), 200);
+
+          // set to 350 because slideview animation is 300ms
+          setTimeout(() => scrollIntoView({ targetId: anchor, boundaryId: sectionId }), 350);
         }
       };
       requestAnimationFrame(retryFindElement);
