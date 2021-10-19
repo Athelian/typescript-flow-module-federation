@@ -94,6 +94,7 @@ export default function ShipmentFocus() {
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
   const {
+    mapping,
     initMapping,
     getRelatedBy,
     onSetBadges,
@@ -175,17 +176,28 @@ export default function ShipmentFocus() {
     [dispatch, setEntityLoadStatuses]
   );
 
+  React.useEffect(() => {
+    if (!expandAll) {
+      return;
+    }
+
+    const shipmentIds = Object.keys(mapping.entities?.shipments ?? {}).filter(
+      shipmentId =>
+        (mapping.entities?.shipments?.[shipmentId]?.containers?.length ||
+          mapping.entities?.shipments?.[shipmentId]?.batches?.length) &&
+        loadStatuses[shipmentId]?.full !== 'loaded' &&
+        loadStatuses[shipmentId]?.full !== 'loading'
+    );
+
+    queryShipmentsDetail(shipmentIds);
+  }, [loadStatuses, mapping, expandAll, queryShipmentsDetail]);
+
   return (
     <>
       <div className={WrapperStyle}>
         <HotKeyHandlers />
         <DndProvider backend={HTML5Backend}>
-          <Query
-            // query={shipmentFocusedListQuery}
-            query={shipmentSummaryQuery}
-            variables={queryVariables}
-            fetchPolicy="network-only"
-          >
+          <Query query={shipmentSummaryQuery} variables={queryVariables} fetchPolicy="network-only">
             {({ loading, data, error, fetchMore }) => {
               if (error) {
                 return error.message;
