@@ -61,7 +61,7 @@ const ShipmentForm = ({
           requestAnimationFrame(retryFindElement);
         } else {
           // scroll to element after rendering
-          setTimeout(() => scrollIntoView({ targetId: sectionId }), 500);
+          setTimeout(() => scrollIntoView({ targetId: sectionId }), 350);
         }
       };
       requestAnimationFrame(retryFindElement);
