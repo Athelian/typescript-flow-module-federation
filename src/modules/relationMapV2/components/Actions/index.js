@@ -145,10 +145,12 @@ function Actions({ targets, onActionClick }: Props) {
     payload,
     newLoadingType,
   }: {
-    ids: string[],
+    /* eslint-disable */
+    ids: Array<string>,
     dispatchType: OrderReducerTypes,
-    payload: any,
+    payload: Object,
     newLoadingType: LoadingTypes,
+    /* eslint-enable */
   }) => {
     const rootEntityIds = getRootEntities({
       ids,
