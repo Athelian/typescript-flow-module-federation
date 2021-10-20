@@ -68,10 +68,13 @@ export const getRelations = memoize(originalData => {
       const shipmentId = shipmentEntity.id;
 
       const containerMap = shipmentEntity.containers.reduce((containerArr, containerEntity) => {
-        // eslint-disable-next-line
-        containerArr[containerEntity.id] = {
-          shipment: shipmentId,
-        };
+        if (containerEntity?.id) {
+          // eslint-disable-next-line
+          containerArr[containerEntity.id] = {
+            shipment: shipmentId,
+          };
+        }
+
         return containerArr;
       }, {});
 
@@ -79,27 +82,33 @@ export const getRelations = memoize(originalData => {
         (mapArr, batchEntity) => {
           const { container: containerEntity, orderItem: orderItemEntity } = batchEntity;
 
-          // eslint-disable-next-line no-param-reassign
-          mapArr.batches[batchEntity.id] = {
-            shipment: shipmentId,
-            container: containerEntity?.id,
-            // orderItem: orderItemEntity?.id,
-            // order: orderItemEntity?.orderEntity?.id,
-            // productProvider: orderItemEntity?.productProvider?.id,
-            // product: orderItemEntity?.productProvider?.product?.id,
-          };
+          if (batchEntity?.id) {
+            // eslint-disable-next-line no-param-reassign
+            mapArr.batches[batchEntity.id] = {
+              shipment: shipmentId,
+              container: containerEntity?.id,
+              // orderItem: orderItemEntity?.id,
+              // order: orderItemEntity?.orderEntity?.id,
+              // productProvider: orderItemEntity?.productProvider?.id,
+              // product: orderItemEntity?.productProvider?.product?.id,
+            };
+          }
 
-          // eslint-disable-next-line no-param-reassign
-          mapArr.orderItems[orderItemEntity.id] = {
-            shipment: shipmentId,
-            container: containerEntity?.id,
-          };
+          if (orderItemEntity?.id) {
+            // eslint-disable-next-line no-param-reassign
+            mapArr.orderItems[orderItemEntity.id] = {
+              shipment: shipmentId,
+              container: containerEntity?.id,
+            };
+          }
 
-          // eslint-disable-next-line no-param-reassign
-          mapArr.orders[orderItemEntity?.order?.id] = {
-            shipment: shipmentId,
-            container: containerEntity?.id,
-          };
+          if (orderItemEntity?.order?.id) {
+            // eslint-disable-next-line no-param-reassign
+            mapArr.orders[orderItemEntity?.order?.id] = {
+              shipment: shipmentId,
+              container: containerEntity?.id,
+            };
+          }
 
           return mapArr;
         },
