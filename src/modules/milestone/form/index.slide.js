@@ -105,7 +105,7 @@ const MilestoneFormSlide = ({ milestone, inTemplate, onSave }: Props) => {
             <div className={FormWrapperStyle}>
               <MilestoneSection />
 
-              {!inTemplate && <DocumentsSection />}
+              {!inTemplate && <DocumentsSection type="Milestone" />}
             </div>
           </Content>
         </SlideViewLayout>

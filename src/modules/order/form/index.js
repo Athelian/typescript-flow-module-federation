@@ -51,7 +51,11 @@ const OrderForm = ({
       </SectionWrapper>
 
       <SectionWrapper id="order_documentsSection">
-        <DocumentsSection entityId={!isClone && order.id ? order.id : ''} isLoading={loading} />
+        <DocumentsSection
+          entityId={!isClone && order.id ? order.id : ''}
+          isLoading={loading}
+          type="Order"
+        />
       </SectionWrapper>
 
       <SectionWrapper id="order_taskSection">
