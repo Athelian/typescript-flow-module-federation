@@ -4,7 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import { Entities, FocusedView } from 'modules/relationMapV2/store';
+import { Entities, FocusedView, LoadStatuses } from 'modules/relationMapV2/store';
+import type { OrderReducerTypes } from 'modules/relationMapV2/store';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT } from 'modules/relationMapV2/constants';
 import {
   targetedIds,
@@ -20,24 +21,49 @@ import ActionSubMenu from './components/ActionSubMenu';
 import ActionLabel from './components/ActionLabel';
 import { ActionsWrapperStyle, LeftActionsWrapperStyle } from './style';
 
+type LoadingTypes =
+  | 'containerDelete'
+  | 'containerAddTags'
+  | 'containerClone'
+  | 'batchDelete'
+  | 'batchAddTags'
+  | 'batchMove'
+  | 'batchSplit'
+  | 'batchClone'
+  | 'itemsDelete'
+  | 'itemsAddTags'
+  | 'ordersAddFollowers'
+  | 'ordersArchive'
+  | 'ordersAddTags';
+
 type Props = {
   targets: Array<string>,
+  onActionClick?: (string[], Function) => void,
 };
 
-export default function Actions({ targets }: Props) {
+function Actions({ targets, onActionClick }: Props) {
   const [currentMenu, setCurrentMenu] = React.useState(null);
+  const [loadingType, setLoadingType] = React.useState<?LoadingTypes>(null);
   const { state, dispatch, selectors } = FocusedView.useContainer();
-  const { mapping } = Entities.useContainer();
+  const { mapping, getRootEntities } = Entities.useContainer();
+  const { loadStatuses, getNotLoadedEntities } = LoadStatuses.useContainer();
+
   const orderIds = targetedIds(targets, ORDER);
   const orderItemIds = targetedIds(targets, ORDER_ITEM);
   const batchIds = targetedIds(targets, BATCH);
   const containerIds = targetedIds(targets, CONTAINER);
   const shipmentIds = targetedIds(targets, SHIPMENT);
-  const orderIsDisabled = orderIds.length === 0;
-  const itemIsDisabled = orderItemIds.length === 0;
-  const batchIsDisabled = batchIds.length === 0;
-  const containerIsDisabled = containerIds.length === 0;
-  const shipmentIsDisabled = shipmentIds.length === 0;
+
+  const isLoadingData = Object.keys(loadStatuses).some(
+    entity => loadStatuses[entity]?.full === 'loading'
+  );
+
+  const orderIsDisabled = orderIds.length === 0 || isLoadingData;
+  const itemIsDisabled = orderItemIds.length === 0 || isLoadingData;
+  const batchIsDisabled = batchIds.length === 0 || isLoadingData;
+  const containerIsDisabled = containerIds.length === 0 || isLoadingData;
+  const shipmentIsDisabled = shipmentIds.length === 0 || isLoadingData;
+
   const navigateToGTV = () => {
     if (selectors.isOrderFocus) {
       const ids = [...orderIds];
@@ -110,6 +136,46 @@ export default function Actions({ targets }: Props) {
       navigate('/shipment/table', {
         state: { shipmentIds: [...new Set(ids)] },
       });
+    }
+  };
+
+  const onActionButtonClick = ({
+    ids,
+    dispatchType,
+    payload,
+    newLoadingType,
+  }: {
+    /* eslint-disable */
+    ids: Array<string>,
+    dispatchType: OrderReducerTypes,
+    payload: Object,
+    newLoadingType: LoadingTypes,
+    /* eslint-enable */
+  }) => {
+    const rootEntityIds = getRootEntities({
+      ids,
+      type: payload.source, // ORDER | ORDER_ITEM | BATCH | CONTAINER | SHIPMENT
+      view: state.viewer,
+    });
+
+    const notLoadedEntityIds = getNotLoadedEntities(rootEntityIds);
+
+    const dispatchFunction = () => {
+      setCurrentMenu(null);
+      dispatch({
+        type: dispatchType,
+        payload,
+      });
+      setLoadingType(null);
+    };
+
+    if (notLoadedEntityIds.length === 0) {
+      dispatchFunction();
+    } else {
+      setLoadingType(newLoadingType);
+      if (onActionClick) {
+        onActionClick(notLoadedEntityIds, dispatchFunction);
+      }
     }
   };
 
@@ -246,13 +312,14 @@ export default function Actions({ targets }: Props) {
                 <Icon icon="CONTAINER" />
                 <ActionSubMenu isCollapsed={currentMenu !== CONTAINER}>
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'containerDelete'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'DELETE',
-                        payload: {
-                          source: CONTAINER,
-                        },
+                      onActionButtonClick({
+                        ids: containerIds,
+                        dispatchType: 'DELETE',
+                        payload: { source: CONTAINER },
+                        newLoadingType: 'containerDelete',
                       });
                     }}
                   >
@@ -262,13 +329,14 @@ export default function Actions({ targets }: Props) {
                     </ActionLabel>
                   </ActionButton>
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'containerAddTags'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'TAGS',
-                        payload: {
-                          source: CONTAINER,
-                        },
+                      onActionButtonClick({
+                        ids: containerIds,
+                        dispatchType: 'TAGS',
+                        payload: { source: CONTAINER },
+                        newLoadingType: 'containerAddTags',
                       });
                     }}
                   >
@@ -281,13 +349,14 @@ export default function Actions({ targets }: Props) {
                     </ActionLabel>
                   </ActionButton>
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'containerClone'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'CLONE',
-                        payload: {
-                          source: CONTAINER,
-                        },
+                      onActionButtonClick({
+                        ids: containerIds,
+                        dispatchType: 'CLONE',
+                        payload: { source: CONTAINER },
+                        newLoadingType: 'containerClone',
                       });
                     }}
                   >
@@ -312,13 +381,14 @@ export default function Actions({ targets }: Props) {
                 <Icon icon="BATCH" />
                 <ActionSubMenu isCollapsed={currentMenu !== BATCH}>
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'batchDelete'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'DELETE_BATCHES',
-                        payload: {
-                          source: BATCH,
-                        },
+                      onActionButtonClick({
+                        ids: batchIds,
+                        dispatchType: 'DELETE_BATCHES',
+                        payload: { source: BATCH },
+                        newLoadingType: 'batchDelete',
                       });
                     }}
                   >
@@ -330,13 +400,14 @@ export default function Actions({ targets }: Props) {
                     </ActionLabel>
                   </ActionButton>
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'batchAddTags'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'TAGS',
-                        payload: {
-                          source: BATCH,
-                        },
+                      onActionButtonClick({
+                        ids: batchIds,
+                        dispatchType: 'TAGS',
+                        payload: { source: BATCH },
+                        newLoadingType: 'batchAddTags',
                       });
                     }}
                   >
@@ -349,11 +420,14 @@ export default function Actions({ targets }: Props) {
                     </ActionLabel>
                   </ActionButton>
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'batchMove'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'MOVE_BATCH',
-                        payload: {},
+                      onActionButtonClick({
+                        ids: batchIds,
+                        dispatchType: 'MOVE_BATCH',
+                        payload: { source: BATCH },
+                        newLoadingType: 'batchMove',
                       });
                     }}
                   >
@@ -363,13 +437,15 @@ export default function Actions({ targets }: Props) {
                     </ActionLabel>
                   </ActionButton>
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'batchSplit'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'SPLIT',
-                        payload: {
-                          source: BATCH,
-                        },
+                      onActionButtonClick({
+                        ids: batchIds,
+                        type: 'batch',
+                        dispatchType: 'SPLIT',
+                        payload: { source: BATCH },
+                        newLoadingType: 'batchSplit',
                       });
                     }}
                   >
@@ -379,13 +455,15 @@ export default function Actions({ targets }: Props) {
                     </ActionLabel>
                   </ActionButton>
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'batchClone'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'CLONE',
-                        payload: {
-                          source: BATCH,
-                        },
+                      onActionButtonClick({
+                        ids: batchIds,
+                        type: 'batch',
+                        dispatchType: 'CLONE',
+                        payload: { source: BATCH },
+                        newLoadingType: 'batchClone',
                       });
                     }}
                   >
@@ -410,13 +488,15 @@ export default function Actions({ targets }: Props) {
                 <Icon icon="ORDER_ITEM" />
                 <ActionSubMenu isCollapsed={currentMenu !== ORDER_ITEM}>
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'itemsDelete'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'DELETE',
-                        payload: {
-                          source: ORDER_ITEM,
-                        },
+                      onActionButtonClick({
+                        ids: orderItemIds,
+                        type: 'orderItems',
+                        dispatchType: 'DELETE',
+                        payload: { source: ORDER_ITEM },
+                        newLoadingType: 'itemsDelete',
                       });
                     }}
                   >
@@ -426,13 +506,15 @@ export default function Actions({ targets }: Props) {
                     </ActionLabel>
                   </ActionButton>
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'itemsAddTags'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'TAGS',
-                        payload: {
-                          source: ORDER_ITEM,
-                        },
+                      onActionButtonClick({
+                        ids: orderItemIds,
+                        type: 'orderItems',
+                        dispatchType: 'TAGS',
+                        payload: { source: ORDER_ITEM },
+                        newLoadingType: 'itemsAddTags',
                       });
                     }}
                   >
@@ -448,7 +530,8 @@ export default function Actions({ targets }: Props) {
               </ActionButton>
 
               <ActionButton
-                isDisabled={orderIsDisabled}
+                isDisabled={orderIsDisabled || isLoadingData}
+                isLoading={loadingType === 'ordersAddFollowers'}
                 onClick={() => {
                   if (currentMenu === ORDER) setCurrentMenu(null);
                   else setCurrentMenu(ORDER);
@@ -459,13 +542,14 @@ export default function Actions({ targets }: Props) {
                 <ActionSubMenu isCollapsed={currentMenu !== ORDER}>
                   <ActionButton
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'FOLLOWERS',
+                      onActionButtonClick({
+                        ids: orderIds,
+                        dispatchType: 'FOLLOWERS',
                         payload: {
                           source: ORDER,
                           ids: orderIds,
                         },
+                        newLoadingType: 'ordersAddFollowers',
                       });
                     }}
                   >
@@ -478,13 +562,14 @@ export default function Actions({ targets }: Props) {
                     </ActionLabel>
                   </ActionButton>
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'ordersArchive'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'STATUS',
-                        payload: {
-                          source: ORDER,
-                        },
+                      onActionButtonClick({
+                        ids: orderIds,
+                        dispatchType: 'STATUS',
+                        payload: { source: ORDER },
+                        newLoadingType: 'ordersArchive',
                       });
                     }}
                   >
@@ -498,13 +583,14 @@ export default function Actions({ targets }: Props) {
                   </ActionButton>
 
                   <ActionButton
+                    isDisabled={isLoadingData}
+                    isLoading={loadingType === 'ordersAddTags'}
                     onClick={() => {
-                      setCurrentMenu(null);
-                      dispatch({
-                        type: 'TAGS',
-                        payload: {
-                          source: ORDER,
-                        },
+                      onActionButtonClick({
+                        ids: orderIds,
+                        dispatchType: 'TAGS',
+                        payload: { source: ORDER },
+                        newLoadingType: 'ordersAddTags',
                       });
                     }}
                   >
@@ -934,3 +1020,7 @@ export default function Actions({ targets }: Props) {
     </>
   );
 }
+
+Actions.defaultProps = {};
+
+export default Actions;

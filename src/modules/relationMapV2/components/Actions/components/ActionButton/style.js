@@ -32,5 +32,6 @@ export const ActionButtonWrapperStyle = (isDisabled: boolean) => css`
     }
   `}
 `;
-
-export default ActionButtonWrapperStyle;
+export const LoadingIconStyle = css`
+  position: absolute;
+`;

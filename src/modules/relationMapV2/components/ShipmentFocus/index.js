@@ -14,10 +14,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { Display } from 'components/Form';
 import { SHIPMENT, CONTAINER, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMapV2/constants';
-import {
-  shipmentFocusedListQuery,
-  shipmentFullFocusDetailQuery,
-} from 'modules/relationMapV2/query';
+import { shipmentFullFocusDetailQuery, shipmentSummaryQuery } from 'modules/relationMapV2/query';
 import {
   loadMore,
   findShipmentIdByContainer,
@@ -30,6 +27,7 @@ import {
   Entities,
   SortAndFilter,
   ExpandRows,
+  LoadStatuses,
   GlobalExpanded,
   FocusedView,
   ClientSorts,
@@ -55,7 +53,7 @@ import HotKeyHandlers from '../HotKeyHandlers';
 import { ShipmentFocusedRow } from '../Row';
 import InitLoadingPlaceholder from '../InitLoadingPlaceholder';
 import generateListData from './generateListData';
-import normalize from './normalize';
+import normalize, { getRelations } from './normalize';
 import { WrapperStyle, ListStyle, ActionsBackdropStyle, NoShipmentsFoundStyle } from './style';
 
 const hasMoreItems = (data: Object, model: string = 'shipments') => {
@@ -73,6 +71,10 @@ const innerElementType = React.forwardRef(
   )
 );
 
+/**
+ * Code for shipment map view.
+ * Beware ye who enter! May you have favor in your journey
+ */
 export default function ShipmentFocus() {
   const [, innerHeight] = useWindowSize();
   const listRef = React.createRef();
@@ -81,6 +83,7 @@ export default function ShipmentFocus() {
     id: '',
   });
   const { expandRows, setExpandRows } = ExpandRows.useContainer();
+  const { loadStatuses, setLoadStatuses, setEntityLoadStatuses } = LoadStatuses.useContainer();
   const {
     getContainersSortByShipmentId,
     getBatchesSortByShipmentId,
@@ -91,6 +94,7 @@ export default function ShipmentFocus() {
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const { initHits } = Hits.useContainer();
   const {
+    mapping,
     initMapping,
     getRelatedBy,
     onSetBadges,
@@ -102,8 +106,9 @@ export default function ShipmentFocus() {
   React.useEffect(() => {
     if (!isEquals(lastQueryVariables, queryVariables)) {
       setExpandRows([]);
+      setLoadStatuses({});
     }
-  }, [lastQueryVariables, queryVariables, setExpandRows]);
+  }, [lastQueryVariables, queryVariables, setExpandRows, setLoadStatuses]);
 
   const scrollToRow = React.useCallback(
     ({ position, id, type }: { position: number, id: string, type: string }) => {
@@ -135,8 +140,13 @@ export default function ShipmentFocus() {
 
   const { state, dispatch } = FocusedView.useContainer();
   const queryShipmentsDetail = React.useCallback(
-    (shipmentIds: Array<string>) => {
+    (shipmentIds: Array<string>, postQueryFunction?: Function) => {
       if (shipmentIds.length) {
+        setEntityLoadStatuses({
+          entities: shipmentIds,
+          newStatus: 'loading',
+        });
+
         apolloClient
           .query({
             query: shipmentFullFocusDetailQuery,
@@ -145,28 +155,49 @@ export default function ShipmentFocus() {
             },
           })
           .then(result => {
+            setEntityLoadStatuses({
+              entities: shipmentIds,
+              newStatus: 'loaded',
+            });
+
             dispatch({
               type: 'FETCH_SHIPMENTS',
               payload: {
                 shipments: result.data.shipmentsByIDs,
               },
             });
+
+            if (postQueryFunction) {
+              postQueryFunction();
+            }
           });
       }
     },
-    [dispatch]
+    [dispatch, setEntityLoadStatuses]
   );
+
+  React.useEffect(() => {
+    if (!expandAll) {
+      return;
+    }
+
+    const shipmentIds = Object.keys(mapping.entities?.shipments ?? {}).filter(
+      shipmentId =>
+        (mapping.entities?.shipments?.[shipmentId]?.containers?.length ||
+          mapping.entities?.shipments?.[shipmentId]?.batches?.length) &&
+        loadStatuses[shipmentId]?.full !== 'loaded' &&
+        loadStatuses[shipmentId]?.full !== 'loading'
+    );
+
+    queryShipmentsDetail(shipmentIds);
+  }, [loadStatuses, mapping, expandAll, queryShipmentsDetail]);
 
   return (
     <>
       <div className={WrapperStyle}>
         <HotKeyHandlers />
         <DndProvider backend={HTML5Backend}>
-          <Query
-            query={shipmentFocusedListQuery}
-            variables={queryVariables}
-            fetchPolicy="network-only"
-          >
+          <Query query={shipmentSummaryQuery} variables={queryVariables} fetchPolicy="network-only">
             {({ loading, data, error, fetchMore }) => {
               if (error) {
                 return error.message;
@@ -181,17 +212,18 @@ export default function ShipmentFocus() {
                 );
               }
 
-              const baseShipments = getByPathWithDefault([], 'shipments.nodes', data).map(
-                shipment =>
-                  state.shipment[getByPathWithDefault('', 'id', shipment)]
-                    ? {
-                        ...shipment,
-                        ...state.shipment[getByPathWithDefault('', 'id', shipment)],
-                      }
-                    : shipment
+              const baseShipments = (data?.shipments.nodes ?? []).map(shipment =>
+                state.shipment[shipment?.id ?? '']
+                  ? {
+                      ...shipment,
+                      ...state.shipment[shipment?.id ?? ''],
+                    }
+                  : shipment
               );
               const loadedShipments = Object.values(state.shipment || {});
+
               const shipments = state.newShipments.map(orderId => state.shipment[orderId]);
+
               const processShipmentIds = shipments.map(shipment => shipment?.id).filter(Boolean);
               baseShipments.forEach(shipment => {
                 if (!processShipmentIds.includes(shipment.id)) {
@@ -216,6 +248,8 @@ export default function ShipmentFocus() {
               initHits(getByPathWithDefault([], 'shipments.hits', data));
               const shipmentsData = generateListData({
                 shipments,
+                loadStatuses,
+                queryShipmentsDetail,
                 expandRows,
                 setExpandRows,
                 getContainersSortByShipmentId,
@@ -226,37 +260,38 @@ export default function ShipmentFocus() {
                 newContainerIDs: state.newContainerIDs,
               });
               const rowCount = shipmentsData.length;
+
               const isItemLoaded = (index: number) =>
                 !hasMoreItems(data, 'shipments') || index < rowCount;
-              const loadMoreItems =
-                loading || isLoadingMore
-                  ? () => {}
-                  : () => {
-                      setIsLoadingMore(true);
-                      loadMore(
-                        'shipments',
-                        {
-                          fetchMore,
-                          data,
-                          onSuccess: () => {
-                            setIsLoadingMore(false);
-                          },
-                        },
-                        queryVariables
-                      ).then((res: any) => {
-                        const moreShipments = res?.data?.shipments?.nodes ?? [];
-                        if (expandAll) {
-                          setExpandRows([
-                            ...expandRows,
-                            ...moreShipments.map(shipment => shipment?.id),
-                          ]);
-                        }
-                      });
-                    };
+              const loadMoreItems = () => {
+                if (loading || isLoadingMore) {
+                  return;
+                }
+
+                setIsLoadingMore(true);
+                loadMore(
+                  'shipments',
+                  {
+                    fetchMore,
+                    data,
+                    onSuccess: () => {
+                      setIsLoadingMore(false);
+                    },
+                  },
+                  queryVariables
+                ).then((res: any) => {
+                  const moreShipments = res?.data?.shipments?.nodes ?? [];
+                  if (expandAll) {
+                    setExpandRows([...expandRows, ...moreShipments.map(shipment => shipment?.id)]);
+                  }
+                });
+              };
               const entities = normalize({ shipments });
+              const relations = getRelations(shipments);
               initMapping({
                 shipments,
                 entities,
+                relations,
               });
               return (
                 <>
@@ -659,6 +694,7 @@ export default function ShipmentFocus() {
                   <AddTags
                     onSuccess={ids => {
                       queryShipmentsDetail(ids);
+
                       dispatch({
                         type: 'TAGS_END',
                         payload: { ids },
@@ -701,7 +737,7 @@ export default function ShipmentFocus() {
                         <>
                           <div className={ActionsBackdropStyle} />
                           <SelectedEntity />
-                          <Actions targets={state.targets} />
+                          <Actions onActionClick={queryShipmentsDetail} targets={state.targets} />
                         </>
                       )}
                     </>

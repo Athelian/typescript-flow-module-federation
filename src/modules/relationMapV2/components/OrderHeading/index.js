@@ -10,6 +10,7 @@ type Props = {|
   hasSelectedChildren: boolean,
   hasFilterHits: boolean,
   isExpanded: boolean,
+  isLoadingData?: boolean,
   onClick: Function,
   total: number,
   onSelectAll: Function,
@@ -20,6 +21,7 @@ export default function OrderHeading({
   hasSelectedChildren,
   hasFilterHits,
   isExpanded,
+  isLoadingData = false,
   onClick,
   total,
   onSelectAll,
@@ -34,6 +36,7 @@ export default function OrderHeading({
       hasSelectedChildren={hasSelectedChildren}
       hasFilterHits={hasFilterHits}
       isExpanded={isExpanded}
+      isLoading={isLoadingData}
       onClick={onClick}
       total={total}
       selectedItemsCount={selectedItemsCount}

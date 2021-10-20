@@ -38,6 +38,7 @@ type RelationMapEntities = {
   orders?: Array<Order>,
   shipments?: Array<Shipment>,
   entities: Object,
+  relations?: Object,
 };
 
 function useEntities(
@@ -45,6 +46,7 @@ function useEntities(
     orders: [],
     shipments: [],
     entities: {},
+    relations: {},
   }
 ) {
   const [mapping, setMapping] = useState<RelationMapEntities>(initialState);
@@ -201,12 +203,66 @@ function useEntities(
     return findRelateIds(relatedIds, type);
   };
 
+  /**
+   * Returns the root entity of a child entity. Shipment for shipment view
+   * order for order view
+   */
+  const getRootEntities = useCallback(
+    ({
+      ids,
+      type,
+      view,
+    }: {
+      ids: string[],
+      view: 'Order' | 'Shipment',
+      type: typeof ORDER | typeof ORDER_ITEM | typeof BATCH | typeof CONTAINER | typeof SHIPMENT,
+    }) => {
+      if (view === 'Order') {
+        return [];
+      }
+
+      let key = '';
+
+      switch (type) {
+        case CONTAINER:
+          key = 'containers';
+          break;
+        case BATCH:
+          key = 'batches';
+          break;
+        case ORDER:
+          key = 'orders';
+          break;
+        case ORDER_ITEM:
+          key = 'orderItems';
+          break;
+        default:
+      }
+
+      if (!key) {
+        return [];
+      }
+
+      const rootEntityIds = ids.reduce((set, id) => {
+        if (mapping.relations?.[key][id].shipment) {
+          set.add(mapping.relations[key][id].shipment);
+        }
+
+        return set;
+      }, new Set());
+
+      return [...rootEntityIds];
+    },
+    [mapping.relations]
+  );
+
   return {
     mapping,
     initMapping,
     badge,
     onSetBadges,
     getRelatedBy,
+    getRootEntities,
     onSetCloneRelated,
     onSetSplitBatchRelated,
   };
@@ -224,7 +280,7 @@ const useSortAndFilter = (type: 'NRMOrder' | 'NRMShipment' = 'NRMOrder') => {
         field: 'updatedAt',
         direction: 'DESCENDING',
       },
-      perPage: 5,
+      perPage: 10,
       page: 1,
     },
     type
@@ -651,6 +707,108 @@ function useExpandRow() {
 
 export const ExpandRows = createContainer(useExpandRow);
 
+export type LoadStatusType = 'loading' | 'loaded';
+export type LoadStatusFunctionType = 'full' | 'tags';
+
+export type EntityLoadedStatus = {
+  [entityId: string]: {
+    full: LoadStatusType,
+    tags: LoadStatusType,
+  },
+};
+
+function useLoadStatuses() {
+  // ideally should only contain root entities such as order and shipment
+  // since they are the only views we have
+  const [loadStatuses, setLoadStatuses] = useState<EntityLoadedStatus>({});
+
+  /**
+   * @param dataType for checking if data needed for a specific action has been loaded
+   * @param override if entity is already loaded or loading then ideally should not load again
+   */
+  const setEntityLoadStatuses = useCallback(
+    ({
+      entities,
+      newStatus,
+      override = false,
+      dataType,
+    }: {
+      entities: string[],
+      newStatus: LoadStatusType,
+      dataType: LoadStatusFunctionType,
+      // if entity is already loaded or loading then ideally should not override
+      override?: boolean,
+    }) => {
+      if (!dataType) {
+        dataType = 'full';
+      }
+
+      setLoadStatuses(oldRows => {
+        const newRows = entities.reduce((arr, id) => {
+          if (
+            !override &&
+            // $FlowIgnore: does not support
+            (oldRows[id]?.[dataType] === 'loaded' || oldRows[id]?.['full'] === 'loaded')
+          ) {
+            return arr;
+          }
+
+          // $FlowIgnore: does not support
+          arr[id] = { [dataType]: newStatus };
+
+          return arr;
+        }, {});
+
+        return {
+          ...oldRows,
+          ...newRows,
+        };
+      });
+    },
+    []
+  );
+
+  const getNotLoadedEntities = useCallback(
+    (ids: string[]) => {
+      const notLoaded = ids.reduce((arr, id) => {
+        if (loadStatuses[id]?.full !== 'loaded') {
+          arr.push(id);
+        }
+
+        return arr;
+      }, []);
+
+      return notLoaded;
+    },
+    [loadStatuses]
+  );
+
+  const getLoadStatus = useCallback(
+    (id: string, type: LoadStatusFunctionType) => {
+      if (loadStatuses[id]?.[type] === 'loaded' || loadStatuses[id]?.full === 'loaded') {
+        return 'loaded';
+      }
+
+      if (loadStatuses[id]?.[type] === 'loading' || loadStatuses[id]?.full === 'loading') {
+        return 'loading';
+      }
+
+      return null;
+    },
+    [loadStatuses]
+  );
+
+  return {
+    loadStatuses,
+    setLoadStatuses,
+    getLoadStatus,
+    setEntityLoadStatuses,
+    getNotLoadedEntities,
+  };
+}
+
+export const LoadStatuses = createContainer(useLoadStatuses);
+
 function useGlobalExpanded() {
   const [expandAll, setExpandAll] = useState(false);
 
@@ -797,96 +955,100 @@ const initialState: State = {
   newContainerIDs: [],
 };
 
+export type OrderReducerTypes =
+  | 'NEW_ORDER'
+  | 'NEW_SHIPMENT'
+  | 'RESET_NEW_ORDERS'
+  | 'RESET_NEW_SHIPMENTS'
+  | 'FETCH_ORDERS'
+  | 'FETCH_SHIPMENTS'
+  | 'FETCH_PARTIAL_SHIPMENTS'
+  | 'TARGET'
+  | 'TARGET_ALL'
+  | 'TARGET_TREE'
+  | 'REMOVE_TARGETS'
+  | 'DND'
+  | 'START_DND'
+  | 'END_DND'
+  | 'CANCEL_MOVE'
+  | 'CONFIRM_MOVE'
+  | 'CONFIRM_MOVE_START'
+  | 'CONFIRM_MOVE_END'
+  | 'CREATE_BATCH'
+  | 'CREATE_BATCH_START'
+  | 'CREATE_BATCH_END'
+  | 'CREATE_BATCH_CLOSE'
+  | 'DELETE_BATCH'
+  | 'DELETE_BATCH_START'
+  | 'DELETE_BATCH_CLOSE'
+  | 'DELETE_BATCHES'
+  | 'DELETE_BATCHES_START'
+  | 'DELETE_BATCHES_CLOSE'
+  | 'DELETE_ITEM'
+  | 'DELETE_ITEM_START'
+  | 'DELETE_ITEM_CLOSE'
+  | 'CREATE_CONTAINER'
+  | 'CREATE_CONTAINER_START'
+  | 'CREATE_CONTAINER_END'
+  | 'CREATE_CONTAINER_CLOSE'
+  | 'DELETE_CONTAINER'
+  | 'DELETE_CONTAINER_START'
+  | 'DELETE_CONTAINER_CLOSE'
+  | 'CREATE_ITEM'
+  | 'CREATE_ITEM_START'
+  | 'CREATE_ITEM_END'
+  | 'CREATE_ITEM_CLOSE'
+  | 'CLONE'
+  | 'CLONE_START'
+  | 'CLONE_END'
+  | 'AUTO_FILL'
+  | 'AUTO_FILL_START'
+  | 'AUTO_FILL_END'
+  | 'AUTO_FILL_CLOSE'
+  | 'SPLIT'
+  | 'SPLIT_START'
+  | 'SPLIT_END'
+  | 'SPLIT_CLOSE'
+  | 'FOLLOWERS'
+  | 'FOLLOWERS_START'
+  | 'FOLLOWERS_CLOSE'
+  | 'STATUS'
+  | 'STATUS_START'
+  | 'STATUS_END'
+  | 'STATUS_CLOSE'
+  | 'DELETE'
+  | 'DELETE_START'
+  | 'DELETE_END'
+  | 'DELETE_CLOSE'
+  | 'TAGS'
+  | 'TAGS_START'
+  | 'TAGS_END'
+  | 'REMOVE_BATCH'
+  | 'REMOVE_BATCH_START'
+  | 'REMOVE_BATCH_CLOSE'
+  | 'MOVE_ITEM'
+  | 'MOVE_ITEM_START'
+  | 'MOVE_ITEM_CLOSE'
+  | 'MOVE_ITEM_END'
+  | 'MOVE_ITEM_TO_NEW_ENTITY'
+  | 'MOVE_BATCH'
+  | 'MOVE_BATCH_START'
+  | 'MOVE_BATCH_CLOSE'
+  | 'MOVE_BATCH_END'
+  | 'MOVE_TO_ORDER_START'
+  | 'MOVE_TO_ORDER_CLOSE'
+  | 'MOVE_TO_CONTAINER_START'
+  | 'MOVE_TO_CONTAINER_CLOSE'
+  | 'MOVE_TO_SHIPMENT_START'
+  | 'MOVE_TO_SHIPMENT_CLOSE'
+  | 'MOVE_BATCH_TO_NEW_ENTITY'
+  | 'EDIT';
+
 function orderReducer(
   state: State,
   action: {
     // prettier-ignore
-    type: | 'NEW_ORDER'
-      | 'NEW_SHIPMENT'
-      | 'RESET_NEW_ORDERS'
-      | 'RESET_NEW_SHIPMENTS'
-      | 'FETCH_ORDERS'
-      | 'FETCH_SHIPMENTS'
-      | 'TARGET'
-      | 'TARGET_ALL'
-      | 'TARGET_TREE'
-      | 'REMOVE_TARGETS'
-      | 'DND'
-      | 'START_DND'
-      | 'END_DND'
-      | 'CANCEL_MOVE'
-      | 'CONFIRM_MOVE'
-      | 'CONFIRM_MOVE_START'
-      | 'CONFIRM_MOVE_END'
-      | 'CREATE_BATCH'
-      | 'CREATE_BATCH_START'
-      | 'CREATE_BATCH_END'
-      | 'CREATE_BATCH_CLOSE'
-      | 'DELETE_BATCH'
-      | 'DELETE_BATCH_START'
-      | 'DELETE_BATCH_CLOSE'
-      | 'DELETE_BATCHES'
-      | 'DELETE_BATCHES_START'
-      | 'DELETE_BATCHES_CLOSE'
-      | 'DELETE_ITEM'
-      | 'DELETE_ITEM_START'
-      | 'DELETE_ITEM_CLOSE'
-      | 'CREATE_CONTAINER'
-      | 'CREATE_CONTAINER_START'
-      | 'CREATE_CONTAINER_END'
-      | 'CREATE_CONTAINER_CLOSE'
-      | 'DELETE_CONTAINER'
-      | 'DELETE_CONTAINER_START'
-      | 'DELETE_CONTAINER_CLOSE'
-      | 'CREATE_ITEM'
-      | 'CREATE_ITEM_START'
-      | 'CREATE_ITEM_END'
-      | 'CREATE_ITEM_CLOSE'
-      | 'CLONE'
-      | 'CLONE_START'
-      | 'CLONE_END'
-      | 'AUTO_FILL'
-      | 'AUTO_FILL_START'
-      | 'AUTO_FILL_END'
-      | 'AUTO_FILL_CLOSE'
-      | 'SPLIT'
-      | 'SPLIT_START'
-      | 'SPLIT_END'
-      | 'SPLIT_CLOSE'
-      | 'FOLLOWERS'
-      | 'FOLLOWERS_START'
-      | 'FOLLOWERS_CLOSE'
-      | 'STATUS'
-      | 'STATUS_START'
-      | 'STATUS_END'
-      | 'STATUS_CLOSE'
-      | 'DELETE'
-      | 'DELETE_START'
-      | 'DELETE_END'
-      | 'DELETE_CLOSE'
-      | 'TAGS'
-      | 'TAGS_START'
-      | 'TAGS_END'
-      | 'REMOVE_BATCH'
-      | 'REMOVE_BATCH_START'
-      | 'REMOVE_BATCH_CLOSE'
-      | 'MOVE_ITEM'
-      | 'MOVE_ITEM_START'
-      | 'MOVE_ITEM_CLOSE'
-      | 'MOVE_ITEM_END'
-      | 'MOVE_ITEM_TO_NEW_ENTITY'
-      | 'MOVE_BATCH'
-      | 'MOVE_BATCH_START'
-      | 'MOVE_BATCH_CLOSE'
-      | 'MOVE_BATCH_END'
-      | 'MOVE_TO_ORDER_START'
-      | 'MOVE_TO_ORDER_CLOSE'
-      | 'MOVE_TO_CONTAINER_START'
-      | 'MOVE_TO_CONTAINER_CLOSE'
-      | 'MOVE_TO_SHIPMENT_START'
-      | 'MOVE_TO_SHIPMENT_CLOSE'
-      | 'MOVE_BATCH_TO_NEW_ENTITY'
-      | 'EDIT',
+    type: OrderReducerTypes,
     payload: {
       entity?: string,
       targets?: Array<string>,
@@ -944,6 +1106,19 @@ function orderReducer(
         shipments.forEach(shipment => {
           if (shipment.id) {
             draft.shipment[shipment.id] = shipment;
+          }
+        });
+      });
+    }
+    case 'FETCH_PARTIAL_SHIPMENTS': {
+      return produce(state, draft => {
+        const { shipments = [] } = action.payload;
+        shipments.forEach(shipment => {
+          if (shipment.id) {
+            draft.shipment[shipment.id] = {
+              ...shipment,
+              ...draft.shipment[shipment.id],
+            };
           }
         });
       });
