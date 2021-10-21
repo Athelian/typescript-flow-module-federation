@@ -143,6 +143,13 @@ export const ProductProviderFilterConfig: Array<FilterConfig> = [
 export const OrderFilterConfig: Array<FilterConfig> = [
   {
     entity: 'ORDER',
+    field: 'ids',
+    type: 'order_ids',
+    message: orderMessages.order,
+    defaultValue: [],
+  },
+  {
+    entity: 'ORDER',
     field: 'archived',
     type: 'archived',
     message: orderMessages.status,
@@ -189,14 +196,6 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     type: 'order_tags',
     message: orderMessages.tagsWithout,
     defaultValue: [],
-  },
-  {
-    entity: 'ORDER',
-    field: 'ids',
-    type: 'order_ids',
-    message: orderMessages.order,
-    defaultValue: [],
-    hidden: true,
   },
   {
     entity: 'ORDER',
@@ -665,7 +664,6 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
     type: 'shipment_ids',
     message: shipmentMessages.shipment,
     defaultValue: [],
-    hidden: true,
   },
   {
     entity: 'SHIPMENT',
