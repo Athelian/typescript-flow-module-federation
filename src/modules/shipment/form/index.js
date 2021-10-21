@@ -117,7 +117,6 @@ const ShipmentForm = ({
           <DocumentsSection
             entityId={!isClone && shipment.id ? shipment.id : ''}
             isLoading={loading}
-            type="Shipment"
           />
           {// This will fire the mutation when scrolled to
           !isNew && !isClone && (
