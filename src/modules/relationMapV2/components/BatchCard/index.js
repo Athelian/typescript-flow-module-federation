@@ -4,6 +4,7 @@ import type {
   BatchPayload,
   ContainerPayload,
   ShipmentPayload,
+  OrderPayload,
   UserPayload,
 } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
@@ -34,6 +35,7 @@ type Props = {|
   batch: BatchPayload,
   container: ContainerPayload,
   shipment: ShipmentPayload,
+  order: OrderPayload,
   onViewForm: Event => void,
   onDeleteBatch: Event => void,
   organizationId: string,
@@ -50,6 +52,7 @@ export default function BatchCard({
   batch,
   container,
   shipment,
+  // order,
   onViewForm,
   onDeleteBatch,
   organizationId,
@@ -59,7 +62,21 @@ export default function BatchCard({
   const allowToViewForm = hasPermissions(BATCH_FORM);
   const allowToDeleteBatch = hasPermissions(BATCH_DELETE);
 
-  const { no, tags = [], deliveredAt, latestQuantity, totalVolume, desiredAt, todo = {} } = batch;
+  const {
+    no,
+    tags = [],
+    deliveredAt,
+    latestQuantity,
+    totalVolume,
+    desiredAt,
+    todo = {},
+    orderItem: {
+      order: { incoterm: orderIncoterm },
+    },
+  } = batch;
+  // const { incoterm: shipmentIncoterm } = shipment;
+
+  console.log(orderIncoterm, shipment?.incoterm);
 
   // TODO: Replace with real permissions
   const canViewNo = true;
@@ -99,6 +116,13 @@ export default function BatchCard({
             />
           </div>
           <FormattedDateTZ value={deliveredAt} user={user} />
+
+          <div className={TooltipLabelStyle}>
+            <FormattedMessage id="modulues.Orders.incoterms" defaultMessage="Incoterms" />
+          </div>
+          {shipment?.incoterm && orderIncoterm && `${shipment.incoterm}, ${orderIncoterm}`}
+          {shipment?.incoterm && !orderIncoterm && `${shipment.incoterm}`}
+          {!shipment?.incoterm && orderIncoterm && `${orderIncoterm}`}
 
           <div className={TooltipLabelStyle}>
             <FormattedMessage id="components.cards.difference" defaultMessage="Difference" />
