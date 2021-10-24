@@ -70,13 +70,10 @@ export default function BatchCard({
     totalVolume,
     desiredAt,
     todo = {},
-    orderItem: {
-      order: { incoterm: orderIncoterm },
-    },
+    // orderItem: {
+    //   order: { incoterm: orderIncoterm },
+    // },
   } = batch;
-  // const { incoterm: shipmentIncoterm } = shipment;
-
-  console.log(orderIncoterm, shipment?.incoterm);
 
   // TODO: Replace with real permissions
   const canViewNo = true;
@@ -92,13 +89,41 @@ export default function BatchCard({
   let desiredAtDiffMsg = null;
   let deliveredAtDiffMsg = null;
 
+  const determineDateBasedOnIncoterms = () => {
+    const term = shipment?.incoterm;
+    const latestLoadPortDepartureDate = latestDate(shipment?.voyages?.[0]?.departure);
+    const cargoReadyLatestDate = latestDate(shipment?.cargoReady);
+    let date = '';
+    if (term === 'FOB' || term === 'CFR' || term === 'CIF' || term === null) {
+      date = latestLoadPortDepartureDate;
+    }
+    if (term === 'EXW' || term === 'FAS' || term === 'FCA' || term === 'CPT' || term === 'CIP') {
+      date = cargoReadyLatestDate;
+    }
+    if (term === 'DDP' || term === 'DAP' || term === 'DAT') {
+      if (container?.warehouseArrivalActualDate) {
+        return container?.warehouseArrivalActualDate;
+      }
+      if (container?.warehouseArrivalAgreedDate) {
+        return container?.warehouseArrivalAgreedDate;
+      }
+      if (
+        !container?.warehouseArrivalActualDate &&
+        !container?.warehouseArrivalAgreedDate &&
+        shipment?.latestWarehouseActualArrival
+      ) {
+        return shipment?.latestWarehouseActualArrival;
+      }
+    }
+    return date;
+  };
+
   if (shipment) {
     const latestLoadPortDepartureDate = latestDate(shipment.voyages?.[0]?.departure);
-    if (latestLoadPortDepartureDate && deliveredAt) {
-      deliveredAtDiff = differenceInCalendarDays(
-        new Date(deliveredAt),
-        new Date(latestLoadPortDepartureDate)
-      );
+    const incotermDate = determineDateBasedOnIncoterms();
+
+    if (incotermDate !== '' && deliveredAt) {
+      deliveredAtDiff = differenceInCalendarDays(new Date(incotermDate), new Date(deliveredAt));
       deliveredAtDiffMsg = (
         <div>
           <div className={TooltipLabelStyle}>
@@ -118,16 +143,19 @@ export default function BatchCard({
           <FormattedDateTZ value={deliveredAt} user={user} />
 
           <div className={TooltipLabelStyle}>
-            <FormattedMessage id="modulues.Orders.incoterms" defaultMessage="Incoterms" />
-          </div>
-          {shipment?.incoterm && orderIncoterm && `${shipment.incoterm}, ${orderIncoterm}`}
-          {shipment?.incoterm && !orderIncoterm && `${shipment.incoterm}`}
-          {!shipment?.incoterm && orderIncoterm && `${orderIncoterm}`}
-
-          <div className={TooltipLabelStyle}>
             <FormattedMessage id="components.cards.difference" defaultMessage="Difference" />
           </div>
           {deliveredAtDiff}
+
+          <div className={TooltipLabelStyle}>
+            <FormattedMessage id="modulues.Orders.incoterms" defaultMessage="Incoterms" /> (
+            <FormattedMessage id="modulues.Shipments.shipment" defaultMessage="Shipment" />)
+          </div>
+          {shipment.incoterm && shipment.incoterm}
+          {/* Only shipment incoterm for now */}
+          {/* {shipment?.incoterm && orderIncoterm && `${shipment.incoterm}, ${orderIncoterm}`}
+          {shipment?.incoterm && !orderIncoterm && `${shipment.incoterm}`}
+          {!shipment?.incoterm && orderIncoterm && `${orderIncoterm}`} */}
         </div>
       );
     }
