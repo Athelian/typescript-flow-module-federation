@@ -110,7 +110,11 @@ export default function BatchCard({
       if (warehouseArrivalAgreedDate) {
         date = warehouseArrivalAgreedDate;
       }
-      if (latestWarehouseActualArrival) {
+      if (
+        !warehouseArrivalActualDate &&
+        !warehouseArrivalAgreedDate &&
+        latestWarehouseActualArrival
+      ) {
         date = latestWarehouseActualArrival;
       }
     }
@@ -200,10 +204,7 @@ export default function BatchCard({
       (incotermsExist !== null || incotermsExist !== undefined || incotermsExist !== '') &&
       deliveredAt
     ) {
-      deliveredAtDiff = differenceInCalendarDays(
-        new Date(determineDateBasedOnIncoterms()),
-        new Date(deliveredAt)
-      );
+      deliveredAtDiff = differenceInCalendarDays(new Date(incotermsExist), new Date(deliveredAt));
       deliveredAtDiffMsg = (
         <div>
           {determineHeader()}
