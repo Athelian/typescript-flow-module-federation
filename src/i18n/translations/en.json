@@ -546,7 +546,7 @@
   "modules.Import.errors": "{count} ERRORS IS FOUND.",
   "modules.Import.noErrors": "NO ERROR HAS BEEN FOUND.",
   "modules.Import.error": "Data on Cell {location} as error: {error}",
-  "modules.login.forgotPassword": "forgot password?",
+  "modules.login.resetPassword": "Reset password",
   "modules.Login.error": "Invalid username/password",
   "modules.Login.validation.email": "Please enter a valid email address",
   "modules.Login.validation.required": "Required",

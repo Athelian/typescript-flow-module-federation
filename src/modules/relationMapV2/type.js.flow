@@ -29,6 +29,7 @@ export type CellRender = {
   entity?: Entity,
   beforeConnector?: ?LINE_CONNECTOR,
   afterConnector?: ?LINE_CONNECTOR,
+  isLoadingData?: boolean,
   isLoadedData?: boolean,
 };
 

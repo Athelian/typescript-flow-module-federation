@@ -70,7 +70,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => {
             </Layout>
           </Authorized>
           <AsyncLogin path="/login" />
-          <AsyncForgotPassword path="/forgot-password" />
+          <AsyncForgotPassword path="/reset-password" />
           <AsyncResetPassword path="/reset-password/:token" />
           <PageNotFound path="/403" />
         </Router>

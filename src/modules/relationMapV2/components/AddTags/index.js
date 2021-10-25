@@ -54,6 +54,9 @@ type Props = {|
   onSuccess: (ids: Array<string>) => void,
 |};
 
+/**
+ * Used on shipments, containers, orders and order items
+ */
 export default function AddTags({ onSuccess }: Props) {
   const { mapping } = Entities.useContainer();
   const [tags, setTags] = React.useState([]);
@@ -68,36 +71,46 @@ export default function AddTags({ onSuccess }: Props) {
     targets,
     tags: { isOpen, isProcessing, source },
   } = state;
+
+  const isOpenRef = React.useRef(isOpen);
+  isOpenRef.current = isOpen;
+
   React.useEffect(() => {
     return () => {
+      // runs when tags modal closes
       if (isOpen) setTags([]);
     };
   }, [isOpen]);
 
   const orderIds = targetedIds(targets, ORDER);
+  const itemIds = targetedIds(targets, ORDER_ITEM);
+  const batchIds = targetedIds(targets, BATCH);
+  const containerIds = targetedIds(targets, CONTAINER);
+  const shipmentIds = targetedIds(targets, SHIPMENT);
+
   const hasOrderPermissions = useAllHasPermission(
     orderIds.map(id => mapping.entities?.orders?.[id]?.ownedBy).filter(Boolean)
   );
+
   const totalOrders = orderIds.length;
-  const itemIds = targetedIds(targets, ORDER_ITEM);
   const hasItemPermissions = useAllHasPermission(
     itemIds.map(id => mapping.entities?.orderItems?.[id]?.ownedBy).filter(Boolean)
   );
   const totalOrderItems = itemIds.length;
-  const batchIds = targetedIds(targets, BATCH);
   const hasBatchPermissions = useAllHasPermission(
     batchIds.map(id => mapping.entities?.batches?.[id]?.ownedBy).filter(Boolean)
   );
   const totalBatches = batchIds.length;
-  const containerIds = targetedIds(targets, CONTAINER);
+
   const hasContainerPermissions = useAllHasPermission(
     containerIds.map(id => mapping.entities?.containers?.[id]?.ownedBy).filter(Boolean)
   );
+
   const totalContainers = containerIds.length;
-  const shipmentIds = targetedIds(targets, SHIPMENT);
   const hasShipmentPermissions = useAllHasPermission(
     shipmentIds.map(id => mapping.entities?.shipments?.[id]?.ownedBy).filter(Boolean)
   );
+
   const totalShipments = shipmentIds.length;
 
   const hasPermission = (permission: string | Array<string>) => {
@@ -292,6 +305,7 @@ export default function AddTags({ onSuccess }: Props) {
             const ids = (result.data?.entitiesUpdateMany?.shipments ?? []).map(
               shipment => shipment.id
             );
+
             if ((result.data?.entitiesUpdateMany?.containers ?? []).length) {
               (result.data?.entitiesUpdateMany?.containers ?? []).forEach(container =>
                 ids.push(findShipmentIdByContainer(container.id, mapping.entities))

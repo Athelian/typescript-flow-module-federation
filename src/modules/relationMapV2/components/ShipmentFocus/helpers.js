@@ -59,9 +59,11 @@ export function shipmentCell({
   };
 }
 
+// TODO: pass loading state here
 export const shipmentCoordinates = memoize(
   ({
     isExpand,
+    isLoadingData,
     shipment,
     getContainersSortByShipmentId,
     getBatchesSortByShipmentId,
@@ -71,6 +73,7 @@ export const shipmentCoordinates = memoize(
     newContainerIDs,
   }: {
     isExpand: boolean,
+    isLoadingData?: boolean,
     shipment: Object,
     getContainersSortByShipmentId: Function,
     getBatchesSortByShipmentId: Function,
@@ -84,13 +87,17 @@ export const shipmentCoordinates = memoize(
 
     const batches = shipment?.batches ?? [];
     const containers = shipment?.containers ?? [];
-    if (!isExpand) {
+
+    // if not expanded, return summary cells
+    // TODO: add the loading logic here
+    if (!isExpand || isLoadingData) {
       return batchCount || containerCount
         ? [
             {
               type: SHIPMENT,
               data: shipment,
               afterConnector: 'HORIZONTAL',
+              isLoadingData: false,
             },
             {
               /* $FlowFixMe This comment suppresses an error found when
@@ -99,6 +106,7 @@ export const shipmentCoordinates = memoize(
               ...(containerCount || batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
               type: 'containerSummary',
               data: shipment,
+              isLoadingData,
               ...(batchCount ? { afterConnector: 'HORIZONTAL' } : {}),
             },
             {
@@ -108,6 +116,7 @@ export const shipmentCoordinates = memoize(
               ...(batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
               type: 'batchSummary',
               data: shipment,
+              isLoadingData,
               ...(batchCount ? { afterConnector: 'HORIZONTAL' } : {}),
             },
             batchCount
@@ -118,6 +127,7 @@ export const shipmentCoordinates = memoize(
                   ...(batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
                   type: 'itemSummary',
                   data: shipment,
+                  isLoadingData,
                   ...(batchCount ? { afterConnector: 'HORIZONTAL' } : {}),
                 }
               : null,
@@ -126,6 +136,7 @@ export const shipmentCoordinates = memoize(
                   ...(batchCount ? { beforeConnector: 'HORIZONTAL' } : {}),
                   type: 'orderSummary',
                   data: shipment,
+                  isLoadingData,
                 }
               : null,
           ]
@@ -133,6 +144,7 @@ export const shipmentCoordinates = memoize(
             {
               type: SHIPMENT,
               data: shipment,
+              isLoadingData: false,
             },
             null,
             null,
@@ -140,6 +152,8 @@ export const shipmentCoordinates = memoize(
             null,
           ];
     }
+
+    // code after here is for calculating the expanded cells
     const result =
       batchCount || containerCount
         ? [

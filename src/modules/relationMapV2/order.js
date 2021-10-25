@@ -15,6 +15,7 @@ import {
   GlobalShipmentPoint,
   GlobalExpanded,
   ExpandRows,
+  LoadStatuses,
 } from './store';
 
 const RelationMap = () => {
@@ -22,26 +23,28 @@ const RelationMap = () => {
     <Provider>
       <FocusedView.Provider initialState="Order">
         <GlobalExpanded.Provider>
-          <ExpandRows.Provider>
-            <GlobalShipmentPoint.Provider>
-              <Hits.Provider>
-                <Entities.Provider>
-                  <SortAndFilter.Provider initialState="NRMOrder">
-                    <NavBar>
-                      <EntityIcon icon="ORDER" color="ORDER" subIcon="MAP" />
-                      <AdvanceFilter />
-                      <ExpandButton />
-                    </NavBar>
-                    <Content>
-                      <ClientSorts.Provider initialState="NRMOrder">
-                        <OrderFocus />
-                      </ClientSorts.Provider>
-                    </Content>
-                  </SortAndFilter.Provider>
-                </Entities.Provider>
-              </Hits.Provider>
-            </GlobalShipmentPoint.Provider>
-          </ExpandRows.Provider>
+          <LoadStatuses.Provider>
+            <ExpandRows.Provider>
+              <GlobalShipmentPoint.Provider>
+                <Hits.Provider>
+                  <Entities.Provider>
+                    <SortAndFilter.Provider initialState="NRMOrder">
+                      <NavBar>
+                        <EntityIcon icon="ORDER" color="ORDER" subIcon="MAP" />
+                        <AdvanceFilter />
+                        <ExpandButton />
+                      </NavBar>
+                      <Content>
+                        <ClientSorts.Provider initialState="NRMOrder">
+                          <OrderFocus />
+                        </ClientSorts.Provider>
+                      </Content>
+                    </SortAndFilter.Provider>
+                  </Entities.Provider>
+                </Hits.Provider>
+              </GlobalShipmentPoint.Provider>
+            </ExpandRows.Provider>
+          </LoadStatuses.Provider>
         </GlobalExpanded.Provider>
       </FocusedView.Provider>
     </Provider>

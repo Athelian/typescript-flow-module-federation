@@ -317,6 +317,192 @@ export const orderCardFullFragment = gql`
   }
 `;
 
+const shipmentSummaryFragment = gql`
+  fragment shipmentSummaryFragment on Shipment {
+    ... on Shipment {
+      id
+      orderCount
+      totalVolumeOverride {
+        ...metricFragment
+      }
+      totalVolumeOverriding
+      totalVolume {
+        ...metricFragment
+      }
+      ... on Followed {
+        notificationUnseenCount
+      }
+      filesUnreadCount
+      timeline {
+        unreadMessageCount
+      }
+      exporter {
+        ... on Organization {
+          id
+          name
+        }
+      }
+      importer {
+        ... on Organization {
+          id
+          name
+        }
+      }
+      archived
+      no
+      blNo
+      ownedBy {
+        ...ownedByFragment
+      }
+      tags {
+        ...tagFragment
+        ...forbiddenFragment
+      }
+      exporter {
+        ... on Organization {
+          id
+          name
+        }
+      }
+      importer {
+        ... on Organization {
+          id
+          name
+        }
+      }
+      transportType
+
+      cargoReady {
+        ...timelineDateFragment
+      }
+
+      earliestWarehouseAgreedArrival
+      latestWarehouseAgreedArrival
+      earliestWarehouseActualArrival
+      latestWarehouseActualArrival
+      voyages {
+        ... on Voyage {
+          id
+          departurePort {
+            seaportName
+            airportName
+          }
+          arrivalPort {
+            seaportName
+            airportName
+          }
+          departure {
+            ...timelineDateFragment
+          }
+          arrival {
+            ...timelineDateFragment
+          }
+        }
+      }
+      containerGroups {
+        ... on ContainerGroup {
+          id
+          warehouse {
+            ... on Warehouse {
+              id
+              name
+            }
+          }
+          customClearance {
+            ...timelineDateFragment
+          }
+          warehouseArrival {
+            ...timelineDateFragment
+          }
+          deliveryReady {
+            ...timelineDateFragment
+          }
+        }
+      }
+
+      containers {
+        ... on Container {
+          id
+          warehouseArrivalActualDate
+          warehouseArrivalAgreedDate
+        }
+      }
+
+      batches {
+        ... on Batch {
+          id
+          deliveredAt
+          desiredAt
+          container {
+            ... on Container {
+              id
+            }
+          }
+          orderItem {
+            ... on OrderItem {
+              id
+              order {
+                ... on Order {
+                  id
+                }
+              }
+
+              productProvider {
+                ... on ProductProvider {
+                  id
+                  product {
+                    ... on Product {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const shipmentSummaryQuery = gql`
+  query shipmentSummaryQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: ShipmentFilterInput
+    $sortBy: ShipmentSortInput
+  ) {
+    shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
+      nodes {
+        ...shipmentSummaryFragment
+      }
+      hits {
+        ... on Hit {
+          entityHits {
+            ... on EntityHit {
+              field
+              entity {
+                ... on Model {
+                  id
+                }
+              }
+            }
+          }
+        }
+      }
+      page
+      totalPage
+    }
+  }
+
+  ${tagFragment}
+  ${metricFragment}
+  ${ownedByFragment}
+  ${shipmentSummaryFragment}
+  ${timelineDateFragment}
+  ${forbiddenFragment}
+`;
+
 export const shipmentCardFullFragment = gql`
   fragment shipmentCardFullFragment on Shipment {
     ...shipmentEntityCardFragment
