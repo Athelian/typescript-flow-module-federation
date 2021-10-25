@@ -92,11 +92,9 @@ export default function BatchCard({
   const term = shipment?.incoterm;
   const latestLoadPortDepartureDate = latestDate(shipment?.voyages?.[0]?.departure);
   const cargoReadyLatestDate = latestDate(shipment?.cargoReady);
+  const latestWarehouseActualArrival = shipment?.latestWarehouseActualArrival;
+  const { warehouseArrivalActualDate, warehouseArrivalAgreedDate } = container || {};
 
-  const { warehouseArrivalActualDate, warehouseArrivalAgreedDate, latestWarehouseActualArrival } =
-    container || {};
-
-  console.log(warehouseArrivalActualDate, warehouseArrivalAgreedDate, latestWarehouseActualArrival);
   const determineDateBasedOnIncoterms = () => {
     let date = '';
     if (term === 'FOB' || term === 'CFR' || term === 'CIF' || term === null) {
@@ -105,19 +103,20 @@ export default function BatchCard({
     if (term === 'EXW' || term === 'FAS' || term === 'FCA' || term === 'CPT' || term === 'CIP') {
       date = cargoReadyLatestDate;
     }
-    if (container && (term === 'DDP' || term === 'DAP' || term === 'DAT')) {
+    if (term === 'DDP' || term === 'DAP' || term === 'DAT') {
+      console.log(
+        warehouseArrivalActualDate,
+        warehouseArrivalAgreedDate,
+        latestWarehouseActualArrival
+      );
       if (warehouseArrivalActualDate) {
-        return container?.warehouseArrivalActualDate;
+        date = warehouseArrivalActualDate;
       }
       if (warehouseArrivalAgreedDate) {
-        return container?.warehouseArrivalAgreedDate;
+        date = warehouseArrivalAgreedDate;
       }
-      if (
-        !warehouseArrivalActualDate &&
-        !warehouseArrivalAgreedDate &&
-        latestWarehouseActualArrival
-      ) {
-        return shipment?.latestWarehouseActualArrival;
+      if (latestWarehouseActualArrival) {
+        date = latestWarehouseActualArrival;
       }
     }
     return date;
@@ -202,7 +201,7 @@ export default function BatchCard({
 
   if (shipment) {
     const incotermsExist = determineDateBasedOnIncoterms();
-    if (incotermsExist !== '' && deliveredAt) {
+    if (incotermsExist && deliveredAt) {
       deliveredAtDiff = differenceInCalendarDays(
         new Date(determineDateBasedOnIncoterms()),
         new Date(deliveredAt)
@@ -210,7 +209,6 @@ export default function BatchCard({
       deliveredAtDiffMsg = (
         <div>
           {determineHeader()}
-
           <div className={TooltipLabelStyle}>
             <FormattedMessage
               id="components.cards.batchDelivery"
@@ -239,7 +237,6 @@ export default function BatchCard({
     }
 
     if (container) {
-      // const { warehouseArrivalActualDate } = container;
       if (warehouseArrivalActualDate && desiredAt) {
         desiredAtDiff = differenceInCalendarDays(
           new Date(desiredAt),
