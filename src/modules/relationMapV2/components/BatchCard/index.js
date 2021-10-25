@@ -200,10 +200,7 @@ export default function BatchCard({
 
   if (shipment) {
     const incotermsExist = determineDateBasedOnIncoterms();
-    if (
-      (incotermsExist !== null || incotermsExist !== undefined || incotermsExist !== '') &&
-      deliveredAt
-    ) {
+    if ((incotermsExist || incotermsExist !== '') && deliveredAt) {
       deliveredAtDiff = differenceInCalendarDays(new Date(incotermsExist), new Date(deliveredAt));
       deliveredAtDiffMsg = (
         <div>
