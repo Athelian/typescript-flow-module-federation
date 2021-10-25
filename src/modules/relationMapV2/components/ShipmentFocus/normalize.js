@@ -65,6 +65,10 @@ export const normalizeEntity = memoize(originalData => {
 export const getRelations = memoize(originalData => {
   const relations = originalData.reduce(
     (arr, shipmentEntity) => {
+      if (!shipmentEntity) {
+        return arr;
+      }
+
       const shipmentId = shipmentEntity.id;
 
       const containerMap = shipmentEntity.containers.reduce((containerArr, containerEntity) => {

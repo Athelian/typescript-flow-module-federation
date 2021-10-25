@@ -244,7 +244,7 @@ function useEntities(
       }
 
       const rootEntityIds = ids.reduce((set, id) => {
-        if (mapping.relations?.[key][id].shipment) {
+        if (mapping.relations?.[key]?.[id]?.shipment) {
           set.add(mapping.relations[key][id].shipment);
         }
 
