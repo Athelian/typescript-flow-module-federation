@@ -104,11 +104,6 @@ export default function BatchCard({
       date = cargoReadyLatestDate;
     }
     if (term === 'DDP' || term === 'DAP' || term === 'DAT') {
-      console.log(
-        warehouseArrivalActualDate,
-        warehouseArrivalAgreedDate,
-        latestWarehouseActualArrival
-      );
       if (warehouseArrivalActualDate) {
         date = warehouseArrivalActualDate;
       }
@@ -201,7 +196,10 @@ export default function BatchCard({
 
   if (shipment) {
     const incotermsExist = determineDateBasedOnIncoterms();
-    if (incotermsExist && deliveredAt) {
+    if (
+      (incotermsExist !== null || incotermsExist !== undefined || incotermsExist !== '') &&
+      deliveredAt
+    ) {
       deliveredAtDiff = differenceInCalendarDays(
         new Date(determineDateBasedOnIncoterms()),
         new Date(deliveredAt)
