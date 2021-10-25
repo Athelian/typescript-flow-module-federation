@@ -4,7 +4,7 @@ import type {
   BatchPayload,
   ContainerPayload,
   ShipmentPayload,
-  OrderPayload,
+  // OrderPayload,
   UserPayload,
 } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
@@ -35,7 +35,7 @@ type Props = {|
   batch: BatchPayload,
   container: ContainerPayload,
   shipment: ShipmentPayload,
-  order: OrderPayload,
+  // order: OrderPayload,
   onViewForm: Event => void,
   onDeleteBatch: Event => void,
   organizationId: string,
