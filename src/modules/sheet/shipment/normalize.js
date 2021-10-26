@@ -85,40 +85,51 @@ export function normalizeSheetVoyageInput(
 ): Object {
   const voyageIdx = shipment.voyages.findIndex(v => v.id === voyageId);
 
+  const newVoyages = shipment.voyages.map((v, idx) => {
+    let input = { id: v.id };
+
+    if (v.id === voyageId) {
+      input = {
+        ...input,
+        [field]: value,
+      };
+    }
+
+    switch (field) {
+      case 'departurePort':
+        if (voyageIdx > 0 && idx + 1 === voyageIdx) {
+          input = {
+            ...input,
+            arrivalPort: value,
+          };
+        }
+        break;
+      case 'arrivalPort':
+        if (voyageIdx > 0 && idx - 1 === voyageIdx) {
+          input = {
+            ...input,
+            departurePort: value,
+          };
+        }
+        break;
+      default:
+        break;
+    }
+
+    return input;
+  });
+
+  for (let x = 0; x < newVoyages.length; x += 1) {
+    const voyage = newVoyages[x];
+    // if arrival port changes then need to update departure
+    // port of the following voyage
+    if (voyage.arrivalPort && newVoyages[x + 1]) {
+      newVoyages[x + 1].departurePort = { ...voyage.arrivalPort };
+    }
+  }
+
   return {
-    voyages: shipment.voyages.map((v, idx) => {
-      let input = { id: v.id };
-
-      if (v.id === voyageId) {
-        input = {
-          ...input,
-          [field]: value,
-        };
-      }
-
-      switch (field) {
-        case 'departurePort':
-          if (voyageIdx > 0 && idx + 1 === voyageIdx) {
-            input = {
-              ...input,
-              arrivalPort: value,
-            };
-          }
-          break;
-        case 'arrivalPort':
-          if (voyageIdx > 0 && idx - 1 === voyageIdx) {
-            input = {
-              ...input,
-              departurePort: value,
-            };
-          }
-          break;
-        default:
-          break;
-      }
-
-      return input;
-    }),
+    voyages: newVoyages,
   };
 }
 
