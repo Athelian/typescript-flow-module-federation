@@ -4,6 +4,7 @@ import type {
   BatchPayload,
   ContainerPayload,
   ShipmentPayload,
+  // OrderPayload,
   UserPayload,
 } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
@@ -34,6 +35,7 @@ type Props = {|
   batch: BatchPayload,
   container: ContainerPayload,
   shipment: ShipmentPayload,
+  // order: OrderPayload,
   onViewForm: Event => void,
   onDeleteBatch: Event => void,
   organizationId: string,
@@ -50,6 +52,7 @@ export default function BatchCard({
   batch,
   container,
   shipment,
+  // order,
   onViewForm,
   onDeleteBatch,
   organizationId,
@@ -59,7 +62,18 @@ export default function BatchCard({
   const allowToViewForm = hasPermissions(BATCH_FORM);
   const allowToDeleteBatch = hasPermissions(BATCH_DELETE);
 
-  const { no, tags = [], deliveredAt, latestQuantity, totalVolume, desiredAt, todo = {} } = batch;
+  const {
+    no,
+    tags = [],
+    deliveredAt,
+    latestQuantity,
+    totalVolume,
+    desiredAt,
+    todo = {},
+    // orderItem: {
+    //   order: { incoterm: orderIncoterm },
+    // },
+  } = batch;
 
   // TODO: Replace with real permissions
   const canViewNo = true;
@@ -75,15 +89,36 @@ export default function BatchCard({
   let desiredAtDiffMsg = null;
   let deliveredAtDiffMsg = null;
 
-  if (shipment) {
-    const latestLoadPortDepartureDate = latestDate(shipment.voyages?.[0]?.departure);
-    if (latestLoadPortDepartureDate && deliveredAt) {
-      deliveredAtDiff = differenceInCalendarDays(
-        new Date(deliveredAt),
-        new Date(latestLoadPortDepartureDate)
-      );
-      deliveredAtDiffMsg = (
-        <div>
+  const term = shipment?.incoterm;
+  const latestLoadPortDepartureDate = latestDate(shipment?.voyages?.[0]?.departure);
+  const cargoReadyLatestDate = latestDate(shipment?.cargoReady);
+  const latestWarehouseActualArrival = shipment?.latestWarehouseActualArrival;
+  const { warehouseArrivalActualDate, warehouseArrivalAgreedDate } = container || {};
+
+  const determineDateBasedOnIncoterms = () => {
+    let date = '';
+    if (term === 'FOB' || term === 'CFR' || term === 'CIF' || term === null) {
+      date = latestLoadPortDepartureDate;
+    }
+    if (term === 'EXW' || term === 'FAS' || term === 'FCA' || term === 'CPT' || term === 'CIP') {
+      date = cargoReadyLatestDate;
+    }
+    if (term === 'DDP' || term === 'DAP' || term === 'DAT') {
+      date =
+        warehouseArrivalActualDate ||
+        warehouseArrivalAgreedDate ||
+        latestWarehouseActualArrival ||
+        undefined;
+    }
+    return (date: any);
+  };
+
+  const determineHeader = () => {
+    let header = '';
+
+    if (term === 'FOB' || term === 'CFR' || term === 'CIF' || term === null) {
+      header = (
+        <>
           <div className={TooltipLabelStyle}>
             <FormattedMessage
               id="components.cards.shipmentLatestLoadPortDeparture"
@@ -91,7 +126,66 @@ export default function BatchCard({
             />
           </div>
           <FormattedDateTZ value={latestLoadPortDepartureDate} user={user} />
+        </>
+      );
+    }
+    if (term === 'EXW' || term === 'FAS' || term === 'FCA' || term === 'CPT' || term === 'CIP') {
+      header = (
+        <>
+          <div className={TooltipLabelStyle}>
+            <FormattedMessage
+              id="modules.Orders.shipment.cargoReady"
+              defaultMessage="Cargo Ready"
+            />
+          </div>
+          <FormattedDateTZ value={cargoReadyLatestDate} user={user} />
+        </>
+      );
+    }
+    if (term === 'DDP' || term === 'DAP' || term === 'DAT') {
+      let message = null;
+      let dateValue = null;
+      if (warehouseArrivalActualDate) {
+        message = {
+          id: 'modules.container.warehouseArrivalActualDate',
+          defaultMessage: 'Actual Arrival Date',
+        };
+        dateValue = warehouseArrivalActualDate;
+      } else if (warehouseArrivalAgreedDate) {
+        message = {
+          id: 'modules.Containers.warehouseArrivalAgreedDate',
+          defaultMessage: 'Agreed Arrival Date',
+        };
+        dateValue = warehouseArrivalAgreedDate;
+      } else if (latestWarehouseActualArrival) {
+        message = {
+          id: 'components.cards.shipmentLatestWarehouseArrivalDate',
+          defaultMessage: "Shipment's Latest Warehouse Arrival Date",
+        };
+        dateValue = latestWarehouseActualArrival;
+      }
 
+      if (message && dateValue) {
+        header = (
+          <>
+            <div className={TooltipLabelStyle}>
+              <FormattedMessage {...message} />
+            </div>
+            <FormattedDateTZ value={dateValue} user={user} />
+          </>
+        );
+      }
+    }
+    return header;
+  };
+
+  if (shipment) {
+    const incotermsExist = determineDateBasedOnIncoterms();
+    if (deliveredAt) {
+      deliveredAtDiff = differenceInCalendarDays(new Date(incotermsExist), new Date(deliveredAt));
+      deliveredAtDiffMsg = (
+        <div>
+          {determineHeader()}
           <div className={TooltipLabelStyle}>
             <FormattedMessage
               id="components.cards.batchDelivery"
@@ -104,12 +198,22 @@ export default function BatchCard({
             <FormattedMessage id="components.cards.difference" defaultMessage="Difference" />
           </div>
           {deliveredAtDiff}
+          {term && (
+            <div className={TooltipLabelStyle}>
+              <FormattedMessage id="modulues.Orders.incoterms" defaultMessage="Incoterms" /> (
+              <FormattedMessage id="modulues.Shipments.shipment" defaultMessage="Shipment" />)
+            </div>
+          )}
+          {term && term}
+          {/* Only shipment incoterm for now */}
+          {/* {shipment?.incoterm && orderIncoterm && `${shipment.incoterm}, ${orderIncoterm}`}
+          {shipment?.incoterm && !orderIncoterm && `${shipment.incoterm}`}
+          {!shipment?.incoterm && orderIncoterm && `${orderIncoterm}`} */}
         </div>
       );
     }
 
     if (container) {
-      const { warehouseArrivalActualDate } = container;
       if (warehouseArrivalActualDate && desiredAt) {
         desiredAtDiff = differenceInCalendarDays(
           new Date(desiredAt),
