@@ -48,6 +48,7 @@ const shipmentEntityCardFragment = gql`
         name
       }
     }
+    incoterm
     archived
     no
     blNo
@@ -263,6 +264,7 @@ const orderEntityCardFragment = gql`
     archived
     currency
     poNo
+    incoterm
     batchCount @skip(if: $skipOrderCounts)
     containerCount @skip(if: $skipOrderCounts)
     shipmentCount @skip(if: $skipOrderCounts)
