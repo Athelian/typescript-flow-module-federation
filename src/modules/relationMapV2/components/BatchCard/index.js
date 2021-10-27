@@ -104,19 +104,11 @@ export default function BatchCard({
       date = cargoReadyLatestDate;
     }
     if (term === 'DDP' || term === 'DAP' || term === 'DAT') {
-      if (warehouseArrivalActualDate) {
-        date = warehouseArrivalActualDate;
-      }
-      if (warehouseArrivalAgreedDate) {
-        date = warehouseArrivalAgreedDate;
-      }
-      if (
-        !warehouseArrivalActualDate &&
-        !warehouseArrivalAgreedDate &&
-        latestWarehouseActualArrival
-      ) {
-        date = latestWarehouseActualArrival;
-      }
+      date =
+        warehouseArrivalActualDate ||
+        warehouseArrivalAgreedDate ||
+        latestWarehouseActualArrival ||
+        undefined;
     }
     return (date: any);
   };
@@ -151,46 +143,35 @@ export default function BatchCard({
       );
     }
     if (term === 'DDP' || term === 'DAP' || term === 'DAT') {
+      let message = null;
+      let dateValue = null;
       if (warehouseArrivalActualDate) {
-        header = (
-          <>
-            <div className={TooltipLabelStyle}>
-              <FormattedMessage
-                id="modules.container.warehouseArrivalActualDate"
-                defaultMessage="Actual Arrival Date"
-              />
-            </div>
-            <FormattedDateTZ value={warehouseArrivalActualDate} user={user} />
-          </>
-        );
+        message = {
+          id: 'modules.container.warehouseArrivalActualDate',
+          defaultMessage: 'Actual Arrival Date',
+        };
+        dateValue = warehouseArrivalActualDate;
+      } else if (warehouseArrivalAgreedDate) {
+        message = {
+          id: 'modules.Containers.warehouseArrivalAgreedDate',
+          defaultMessage: 'Agreed Arrival Date',
+        };
+        dateValue = warehouseArrivalAgreedDate;
+      } else if (latestWarehouseActualArrival) {
+        message = {
+          id: 'components.cards.shipmentLatestWarehouseArrivalDate',
+          defaultMessage: "Shipment's Latest Warehouse Arrival Date",
+        };
+        dateValue = latestWarehouseActualArrival;
       }
-      if (warehouseArrivalAgreedDate) {
+
+      if (message && dateValue) {
         header = (
           <>
             <div className={TooltipLabelStyle}>
-              <FormattedMessage
-                id="modules.Containers.warehouseArrivalAgreedDate"
-                defaultMessage="Agreed Arrival Date"
-              />
+              <FormattedMessage {...message} />
             </div>
-            <FormattedDateTZ value={warehouseArrivalAgreedDate} user={user} />
-          </>
-        );
-      }
-      if (
-        !warehouseArrivalActualDate &&
-        !warehouseArrivalAgreedDate &&
-        latestWarehouseActualArrival
-      ) {
-        header = (
-          <>
-            <div className={TooltipLabelStyle}>
-              <FormattedMessage
-                id="components.cards.shipmentLatestWarehouseArrivalDate"
-                defaultMessage="Shipment's Latest Warehouse Arrival Date"
-              />
-            </div>
-            <FormattedDateTZ value={latestWarehouseActualArrival} user={user} />
+            <FormattedDateTZ value={dateValue} user={user} />
           </>
         );
       }
