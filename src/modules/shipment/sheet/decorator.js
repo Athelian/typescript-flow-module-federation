@@ -98,8 +98,8 @@ function decorateShipment(shipment: Object): Object {
     cargoReady: {
       ...shipment.cargoReady,
       approved: {
-        user: shipment.cargoReady.approvedBy,
-        date: shipment.cargoReady.approvedAt,
+        user: shipment.cargoReady?.approvedBy,
+        date: shipment.cargoReady?.approvedAt,
       },
     },
     containerGroups: shipment.containerGroups.map(containerGroup => ({
@@ -107,22 +107,22 @@ function decorateShipment(shipment: Object): Object {
       customClearance: {
         ...containerGroup.customClearance,
         approved: {
-          user: containerGroup.customClearance.approvedBy,
-          date: containerGroup.customClearance.approvedAt,
+          user: containerGroup.customClearance?.approvedBy,
+          date: containerGroup.customClearance?.approvedAt,
         },
       },
       warehouseArrival: {
         ...containerGroup.warehouseArrival,
         approved: {
-          user: containerGroup.warehouseArrival.approvedBy,
-          date: containerGroup.warehouseArrival.approvedAt,
+          user: containerGroup.warehouseArrival?.approvedBy,
+          date: containerGroup.warehouseArrival?.approvedAt,
         },
       },
       deliveryReady: {
         ...containerGroup.deliveryReady,
         approved: {
-          user: containerGroup.deliveryReady.approvedBy,
-          date: containerGroup.deliveryReady.approvedAt,
+          user: containerGroup.deliveryReady?.approvedBy,
+          date: containerGroup.deliveryReady?.approvedAt,
         },
       },
     })),
