@@ -19,6 +19,7 @@ import { Display } from 'components/Form';
 import Selector from 'components/Selector';
 import useFilterSort from 'hooks/useFilterSort';
 import useQueryList from 'hooks/useQueryList';
+import HeaderFilter from '../../../BulkFilters/HeaderFilter';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
 import Ids, { type SelectorProps } from '../Common/Ids';
@@ -41,6 +42,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
   );
 
   return (
+    // <div id="modalContainer">
     <SlideView isOpen={open} onRequestClose={onClose}>
       <Selector.Many selected={selected.map(id => ({ id }))}>
         {({ value, dirty, getItemProps }) => (
@@ -53,6 +55,13 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
                 onChange={setFilterBy}
               />
               <Search query={query} onChange={setQuery} />
+
+              <HeaderFilter
+                filterBy={filterBy}
+                setFilterBy={setFilterBy}
+                type="SHIPMENT"
+                modalContainer="#antd-modal"
+              />
               <Sort sortBy={sortBy} onChange={setSortBy} config={OrderSortConfig} />
               <CancelButton onClick={onClose} />
               <SaveButton
@@ -61,7 +70,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
               />
             </SlideViewNavBar>
 
-            <Content>
+            <Content id="antd-modal">
               <GridView
                 isLoading={loading}
                 hasMore={hasMore}
@@ -79,6 +88,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
         )}
       </Selector.Many>
     </SlideView>
+    // </div>
   );
 };
 
