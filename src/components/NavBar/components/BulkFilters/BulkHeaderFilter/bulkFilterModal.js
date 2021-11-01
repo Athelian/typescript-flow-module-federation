@@ -7,13 +7,11 @@ import Dialog from 'components/Dialog';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Tooltip } from 'components/Tooltip';
 import { ApplyButton, ClearAllButton } from 'components/Buttons';
-import { CheckboxInput, Label } from 'components/Form';
+import { CheckboxInput, Label, SelectInput, DefaultOptions, DefaultSelect } from 'components/Form';
 import Icon from 'components/Icon';
-
-// import Modal from 'components/Modal';
 import type { FilterBy } from 'types';
+import BulkFilterConfig from './configs';
 
-// import { InputWrapper } from './styles';
 import {
   ButtonContainer,
   RightButtonsContainer,
@@ -21,6 +19,7 @@ import {
   InputWrapper,
   Container,
   StyledTextArea,
+  SelectWrapper,
 } from './styles';
 
 type Props = {
@@ -28,62 +27,62 @@ type Props = {
   closeModal: () => void,
   filterBy: FilterBy,
   setFilterBy: FilterBy => void,
-  type: 'SHIPMENT' | 'ORDER',
+  type: 'SHIPMENT' | 'ORDER' | 'PRODUCT',
 };
 
-const BulkFilterModal = ({
-  isModalOpen,
-  closeModal,
-  filterBy,
-  // setFilterBy,
-  type,
-}: Props) => {
+const BulkFilterModal = ({ isModalOpen, closeModal, filterBy, setFilterBy, type }: Props) => {
   const [value, setValue] = useState('');
   const [exact, setExact] = useState(false);
+  const [filterType, setFilterType] = useState();
+  const [options, setOptions] = useState([]);
 
   const intl = useIntl();
 
   // Set value if filter exists
   useEffect(() => {
+    if (!isModalOpen) {
+      setFilterType(null);
+    }
+
+    // Set options for select
+    setOptions(BulkFilterConfig.filter(c => c.entity === type));
+
     if (filterBy?.keywords?.values) {
       const displayValues = filterBy?.keywords?.values.join(';').replace(/;/g, '\n');
       setValue(displayValues);
     }
-  }, [filterBy]);
+  }, [filterBy, type, isModalOpen]);
 
   const toggleExact = () => {
     setExact(!exact);
   };
 
-  // const handleClearAll = () => {
-  //   setFilterBy((oldFilters: FilterBy) => {
-  //     const currentFilters = { ...oldFilters };
-  //     if ('keywords' in currentFilters) {
-  //       delete currentFilters.keywords;
-  //     }
-  //     return currentFilters;
-  //   });
-  //   setValue('');
-  //   closeModal();
-  // };
+  const handleClearAll = () => {
+    setFilterBy({});
+    setValue('');
+    closeModal();
+  };
 
-  // const handleApply = () => {
-  //   setFilterBy((oldFilters: FilterBy) => {
-  //     const currentFilters = { ...oldFilters };
-  //     const keywords = {
-  //       // Replace new lines with semi-colon and split into array
-  //       // Filter any empty strings that may of be added
-  //       values: value
-  //         .replace(/(\r\n|\n|\r|\t)/gm, ';')
-  //         .split(';')
-  //         .filter((e: string) => e),
-  //       matchMode: exact ? 'Exactly' : 'Partial',
-  //     };
-  //     return { ...currentFilters, keywords };
-  //   });
-  //   closeModal();
-  // };
+  const handleApply = () => {
+    const selectedFilter = (filterType: any);
+    const data = {
+      // Replace new lines with semi-colon and split into array
+      // Filter any empty strings that may of be added
+      bulkFilter: {
+        [selectedFilter]: {
+          values: value
+            .replace(/(\r\n|\n|\r|\t)/gm, ';')
+            .split(';')
+            .filter((e: string) => e),
+          matchMode: exact ? 'Exactly' : 'Partial',
+        },
+      },
+    };
+    setFilterBy(data);
+    closeModal();
+  };
 
+  console.log(filterBy);
   const getTooltip = () => {
     let message = null;
     // let tooltip = null;
@@ -94,6 +93,12 @@ const BulkFilterModal = ({
           'You can paste the following values from Excel: Shipment ID, Container No., Product Name, Product Serial, Order PoNo, Batch ID, Order Item No.',
       };
     } else if (type === 'ORDER') {
+      message = {
+        id: 'components.Header.bulkFilter.shipmentTooltip',
+        defaultMessage:
+          'You can paste the following values from Excel: Shipment ID, Container No., Product Name, Product Serial, Order PoNo, Batch ID, Order Item No.',
+      };
+    } else if (type === 'PRODUCT') {
       message = {
         id: 'components.Header.bulkFilter.shipmentTooltip',
         defaultMessage:
@@ -113,49 +118,34 @@ const BulkFilterModal = ({
 
   console.log(getTooltip());
 
-  // const modalFooter = [
-  //   <CheckboxWrapper key="exact-input" onClick={toggleExact}>
-  //     <CheckboxInput checked={exact} />
-  //     <Label>
-  //       {intl.formatMessage({
-  //         id: 'components.Header.bulkFilter.exactMatches',
-  //         defaultMessage: 'Exact matches only',
-  //       })}
-  //     </Label>
-  //   </CheckboxWrapper>,
-  //   <div key="buttons">
-  //     <Button type="text" onClick={handleClearAll}>
-  //       {intl
-  //         .formatMessage({
-  //           id: 'components.NavBar.Filter.clearAll',
-  //           defaultMessage: 'Clear All',
-  //         })
-  //         .toUpperCase()}
-  //     </Button>
-  //     <Button type="primary" onClick={handleApply} disabled={value === ''}>
-  //       {intl
-  //         .formatMessage({
-  //           id: 'components.button.apply',
-  //           defaultMessage: 'Apply',
-  //         })
-  //         .toUpperCase()}
-  //     </Button>
-  //   </div>,
-  // ];
+  const fields = BulkFilterConfig.filter(c => c.entity === type).map(c => c.value);
+
   return (
-    <Dialog
-      // footer={modalFooter}
-      isOpen={isModalOpen}
-      onRequestClose={closeModal}
-      // closable={false}
-      // modalContainer={modalContainer}
-      width="490px"
-      // hideFooterBorder
-      // buttonsRight
-      // padding="0"
-    >
+    <Dialog isOpen={isModalOpen} onRequestClose={closeModal} width="490px">
       <div className={Container}>
         <InputWrapper>
+          <div className={SelectWrapper}>
+            <div>
+              <Label height="30px" required>
+                Filter
+              </Label>
+              <SelectInput
+                value={filterType}
+                items={[...fields]}
+                onChange={i => setFilterType(i)}
+                name="filter"
+                itemToString={i => {
+                  const message = options.find(c => c.entity === type && c.value === i)?.message;
+                  const itemValue = message ? intl.formatMessage(message) : i;
+
+                  return itemValue?.toUpperCase() ?? '';
+                }}
+                itemToValue={i => i}
+                renderSelect={({ ...rest }) => <DefaultSelect hideClearIcon {...rest} />}
+                renderOptions={({ ...rest }) => <DefaultOptions {...rest} width="220px" />}
+              />
+            </div>
+          </div>
           <Label>
             {intl.formatMessage({
               id: 'modules.Products.metadataValue',
@@ -166,6 +156,7 @@ const BulkFilterModal = ({
           } */}
           </Label>
           <textarea
+            disabled={!filterType}
             className={StyledTextArea}
             value={value}
             placeholder={intl.formatMessage({
@@ -187,22 +178,8 @@ const BulkFilterModal = ({
             </Label>
           </div>
           <div className={RightButtonsContainer}>
-            <ClearAllButton />
-            <ApplyButton borderRadius="5px" hideIcon />
-            {/* {intl
-            .formatMessage({
-              id: 'components.NavBar.Filter.clearAll',
-              defaultMessage: 'Clear All',
-            })
-            .toUpperCase()} */}
-            {/* <button type="primary" disabled={value === ''}>
-          {intl
-            .formatMessage({
-              id: 'components.button.apply',
-              defaultMessage: 'Apply',
-            })
-            .toUpperCase()}
-        </button> */}
+            <ClearAllButton onClick={handleClearAll} />
+            <ApplyButton borderRadius="5px" hideIcon onClick={handleApply} disabled={!filterType} />
           </div>
         </div>
       </div>

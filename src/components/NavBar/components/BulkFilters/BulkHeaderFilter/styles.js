@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, colors, presets, transitions } from 'styles/common';
+import { layout, borderRadiuses, colors, presets, transitions } from 'styles/common';
 
 export const Container: string = css`
   padding: 20px;
@@ -78,4 +78,15 @@ export const ButtonWrapper: string = css`
   .ant-btn: {
     margin: 0 !important;
   }
+`;
+
+export const SelectWrapper: string = css`
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 220px;
+  grid-gap: 10px;
+  & > div {
+    ${layout.VERTICAL};
+  }
+  margin-bottom: 10px;
 `;

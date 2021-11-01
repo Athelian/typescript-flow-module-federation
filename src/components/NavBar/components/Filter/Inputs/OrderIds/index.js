@@ -8,6 +8,7 @@ import {
   Sort,
   OrderSortConfig,
   OrderFilterConfig,
+  BulkHeaderFilter,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
@@ -19,7 +20,6 @@ import { Display } from 'components/Form';
 import Selector from 'components/Selector';
 import useFilterSort from 'hooks/useFilterSort';
 import useQueryList from 'hooks/useQueryList';
-import HeaderFilter from '../../../BulkFilters/HeaderFilter';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
 import Ids, { type SelectorProps } from '../Common/Ids';
@@ -56,12 +56,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
               />
               <Search query={query} onChange={setQuery} />
 
-              <HeaderFilter
-                filterBy={filterBy}
-                setFilterBy={setFilterBy}
-                type="SHIPMENT"
-                modalContainer="#antd-modal"
-              />
+              <BulkHeaderFilter filterBy={filterBy} setFilterBy={setFilterBy} type="ORDER" />
               <Sort sortBy={sortBy} onChange={setSortBy} config={OrderSortConfig} />
               <CancelButton onClick={onClose} />
               <SaveButton

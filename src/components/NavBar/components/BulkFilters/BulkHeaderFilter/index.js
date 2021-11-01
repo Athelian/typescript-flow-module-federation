@@ -12,8 +12,7 @@ import { StyledButton } from './styles';
 type Props = {
   filterBy: FilterBy => void,
   setFilterBy: FilterBy => void,
-  type: 'SHIPMENT' | 'ORDER',
-  modalContainer?: string,
+  type: 'SHIPMENT' | 'ORDER' | 'PRODUCT',
 };
 
 const HeaderFilter = ({ filterBy, setFilterBy, type }: Props) => {
@@ -22,7 +21,6 @@ const HeaderFilter = ({ filterBy, setFilterBy, type }: Props) => {
   // const intl = useIntl();
 
   const handleModal = () => {
-    console.log('modal fired');
     setOpen(!open);
   };
 

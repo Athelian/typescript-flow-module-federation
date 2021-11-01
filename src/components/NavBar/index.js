@@ -2,6 +2,7 @@
 import NavBar from './NavBar';
 import SectionNavBar from './SectionNavBar';
 import GenericNavBar from './GenericNavBar';
+import BulkHeaderFilter from './components/BulkFilters/BulkHeaderFilter';
 import EntityIcon from './components/EntityIcon';
 import SortInput from './components/SortInput';
 import Filter from './components/Filter';
@@ -54,6 +55,7 @@ export {
   EntityIcon,
   SortInput,
   Filter,
+  BulkHeaderFilter,
   Sort,
   Search,
   StatusToggleTabs,
