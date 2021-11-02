@@ -8,6 +8,7 @@ import {
   Sort,
   ShipmentSortConfig,
   ShipmentFilterConfig,
+  BulkHeaderFilter,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
@@ -53,6 +54,7 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
                 onChange={setFilterBy}
               />
               <Search query={query} onChange={setQuery} />
+              <BulkHeaderFilter filterBy={filterBy} setFilterBy={setFilterBy} type="SHIPMENT" />
               <Sort sortBy={sortBy} onChange={setSortBy} config={ShipmentSortConfig} />
               <CancelButton onClick={onClose} />
               <SaveButton

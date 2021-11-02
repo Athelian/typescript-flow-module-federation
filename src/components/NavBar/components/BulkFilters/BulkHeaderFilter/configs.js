@@ -18,6 +18,16 @@ const BulkFilterConfig: Array<FilterConfig> = [
     value: 'serials',
     message: messages.serial,
   },
+  {
+    entity: 'SHIPMENT',
+    value: 'nos',
+    message: messages.shipmentNo,
+  },
+  {
+    entity: 'CONTAINER',
+    value: 'nos',
+    message: messages.containerNo,
+  },
 ];
 
 export default BulkFilterConfig;

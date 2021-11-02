@@ -1,24 +1,23 @@
 // @flow
 import React, { useState } from 'react';
-// import { useIntl } from 'react-intl';
-// import { Tooltip } from 'components/Tooltip';
+import { useIntl } from 'react-intl';
+import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import type { FilterBy } from 'types';
 
 import BulkFilterModal from './bulkFilterModal';
-import { StyledButton } from './styles';
-// import { ActiveStyle, StyledButton } from './styles';
+import { ActiveStyle, StyledButton } from './styles';
 
 type Props = {
-  filterBy: FilterBy => void,
+  filterBy: FilterBy,
   setFilterBy: FilterBy => void,
-  type: 'SHIPMENT' | 'ORDER' | 'PRODUCT',
+  type: 'SHIPMENT' | 'ORDER' | 'PRODUCT' | 'CONTAINER',
 };
 
 const HeaderFilter = ({ filterBy, setFilterBy, type }: Props) => {
   const [open, setOpen] = useState(false);
-  // const isActive = filterBy?.keywords;
-  // const intl = useIntl();
+  const isActive = filterBy?.bulkFilter;
+  const intl = useIntl();
 
   const handleModal = () => {
     setOpen(!open);
@@ -27,18 +26,19 @@ const HeaderFilter = ({ filterBy, setFilterBy, type }: Props) => {
   return (
     <>
       <button className={StyledButton} type="button" onClick={handleModal}>
-        {/* {isActive && <ActiveStyle />} */}
-        {/* <Tooltip
+        {isActive && <div className={ActiveStyle} />}
+        <Tooltip
           message={intl.formatMessage({
             id: 'components.Header.bulkFilter.paste',
             defaultMessage: 'Paste values from Excel',
           })}
-        > */}
-        <Icon icon="PASTE" />
-        {/* </Tooltip> */}
+        >
+          <div>
+            <Icon icon="PASTE" />
+          </div>
+        </Tooltip>
       </button>
       <BulkFilterModal
-        // modalContainer={modalContainer}
         isModalOpen={open}
         closeModal={handleModal}
         filterBy={filterBy}

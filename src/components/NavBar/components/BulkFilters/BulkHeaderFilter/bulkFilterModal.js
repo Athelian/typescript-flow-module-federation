@@ -1,14 +1,10 @@
 // @flow
 import * as React from 'react';
-// import { Input } from 'antd';
-// import { Button } from 'antd';
 import { useEffect, useState } from 'react';
 import Dialog from 'components/Dialog';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Tooltip } from 'components/Tooltip';
 import { ApplyButton, ClearAllButton } from 'components/Buttons';
 import { CheckboxInput, Label, SelectInput, DefaultOptions, DefaultSelect } from 'components/Form';
-import Icon from 'components/Icon';
 import type { FilterBy } from 'types';
 import BulkFilterConfig from './configs';
 
@@ -21,13 +17,14 @@ import {
   StyledTextArea,
   SelectWrapper,
 } from './styles';
+import messages from './messages';
 
 type Props = {
   isModalOpen: boolean,
   closeModal: () => void,
   filterBy: FilterBy,
   setFilterBy: FilterBy => void,
-  type: 'SHIPMENT' | 'ORDER' | 'PRODUCT',
+  type: 'SHIPMENT' | 'ORDER' | 'PRODUCT' | 'CONTAINER',
 };
 
 const BulkFilterModal = ({ isModalOpen, closeModal, filterBy, setFilterBy, type }: Props) => {
@@ -38,36 +35,31 @@ const BulkFilterModal = ({ isModalOpen, closeModal, filterBy, setFilterBy, type 
 
   const intl = useIntl();
 
-  // Set value if filter exists
   useEffect(() => {
-    if (!isModalOpen) {
-      setFilterType(null);
-    }
-
     // Set options for select
     setOptions(BulkFilterConfig.filter(c => c.entity === type));
-
-    if (filterBy?.keywords?.values) {
-      const displayValues = filterBy?.keywords?.values.join(';').replace(/;/g, '\n');
-      setValue(displayValues);
-    }
-  }, [filterBy, type, isModalOpen]);
+  }, [type]);
 
   const toggleExact = () => {
     setExact(!exact);
   };
 
+  // Clear out filter
   const handleClearAll = () => {
-    setFilterBy({});
+    const currentFilters = { ...filterBy };
+    delete currentFilters.bulkFilter;
+    setFilterBy(currentFilters);
     setValue('');
     closeModal();
   };
 
   const handleApply = () => {
     const selectedFilter = (filterType: any);
+    const currentFilters = { ...filterBy };
     const data = {
       // Replace new lines with semi-colon and split into array
       // Filter any empty strings that may of be added
+      ...currentFilters,
       bulkFilter: {
         [selectedFilter]: {
           values: value
@@ -82,42 +74,6 @@ const BulkFilterModal = ({ isModalOpen, closeModal, filterBy, setFilterBy, type 
     closeModal();
   };
 
-  console.log(filterBy);
-  const getTooltip = () => {
-    let message = null;
-    // let tooltip = null;
-    if (type === 'SHIPMENT') {
-      message = {
-        id: 'components.Header.bulkFilter.shipmentTooltip',
-        defaultMessage:
-          'You can paste the following values from Excel: Shipment ID, Container No., Product Name, Product Serial, Order PoNo, Batch ID, Order Item No.',
-      };
-    } else if (type === 'ORDER') {
-      message = {
-        id: 'components.Header.bulkFilter.shipmentTooltip',
-        defaultMessage:
-          'You can paste the following values from Excel: Shipment ID, Container No., Product Name, Product Serial, Order PoNo, Batch ID, Order Item No.',
-      };
-    } else if (type === 'PRODUCT') {
-      message = {
-        id: 'components.Header.bulkFilter.shipmentTooltip',
-        defaultMessage:
-          'You can paste the following values from Excel: Shipment ID, Container No., Product Name, Product Serial, Order PoNo, Batch ID, Order Item No.',
-      };
-    }
-    if (message) {
-      return (
-        <Tooltip message={<FormattedMessage {...message} />}>
-          <Icon icon="INFO" />
-        </Tooltip>
-      );
-    }
-
-    return null;
-  };
-
-  console.log(getTooltip());
-
   const fields = BulkFilterConfig.filter(c => c.entity === type).map(c => c.value);
 
   return (
@@ -127,7 +83,7 @@ const BulkFilterModal = ({ isModalOpen, closeModal, filterBy, setFilterBy, type 
           <div className={SelectWrapper}>
             <div>
               <Label height="30px" required>
-                Filter
+                <FormattedMessage {...messages.filter} />
               </Label>
               <SelectInput
                 value={filterType}
@@ -146,23 +102,14 @@ const BulkFilterModal = ({ isModalOpen, closeModal, filterBy, setFilterBy, type 
               />
             </div>
           </div>
-          <Label>
-            {intl.formatMessage({
-              id: 'modules.Products.metadataValue',
-              defaultMessage: 'Value',
-            })}
-            {/* {
-            getTooltip()
-          } */}
+          <Label required>
+            <FormattedMessage {...messages.value} />
           </Label>
           <textarea
             disabled={!filterType}
             className={StyledTextArea}
             value={value}
-            placeholder={intl.formatMessage({
-              id: 'components.Header.bulkFilter.pasteHere',
-              defaultMessage: 'Paste values from Excel here',
-            })}
+            placeholder={intl.formatMessage(messages.pasteHere)}
             rows={4}
             onChange={e => setValue(e.target.value)}
           />
@@ -171,10 +118,7 @@ const BulkFilterModal = ({ isModalOpen, closeModal, filterBy, setFilterBy, type 
           <div className={CheckboxWrapper}>
             <CheckboxInput checked={exact} onToggle={toggleExact} />
             <Label>
-              {intl.formatMessage({
-                id: 'components.Header.bulkFilter.exactMatches',
-                defaultMessage: 'Exact matches only',
-              })}
+              <FormattedMessage {...messages.exactMatches} />
             </Label>
           </div>
           <div className={RightButtonsContainer}>
