@@ -36,9 +36,27 @@ const BulkFilterModal = ({ isModalOpen, closeModal, filterBy, setFilterBy, type 
   const intl = useIntl();
 
   useEffect(() => {
+    // Clear out filters
+    if (!isModalOpen) {
+      setFilterType();
+      setValue('');
+    }
     // Set options for select
     setOptions(BulkFilterConfig.filter(c => c.entity === type));
-  }, [type]);
+    // Set value if filter exists
+    if (filterBy?.bulkFilter) {
+      const currentBulkFilter = (Object.values(filterBy?.bulkFilter)?.[0]: Object) || {};
+      if (currentBulkFilter?.values) {
+        const bulkFilterKey = Object.keys(filterBy?.bulkFilter)?.[0];
+        const displayValues = currentBulkFilter?.values.join(';').replace(/;/g, '\n');
+        const matchMode = currentBulkFilter?.matchMode;
+        console.log(matchMode);
+        setExact(matchMode === 'Exactly');
+        setValue(displayValues);
+        setFilterType(bulkFilterKey);
+      }
+    }
+  }, [filterBy, type, isModalOpen]);
 
   const toggleExact = () => {
     setExact(!exact);
