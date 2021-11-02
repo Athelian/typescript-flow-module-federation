@@ -50,7 +50,6 @@ const BulkFilterModal = ({ isModalOpen, closeModal, filterBy, setFilterBy, type 
         const bulkFilterKey = Object.keys(filterBy?.bulkFilter)?.[0];
         const displayValues = currentBulkFilter?.values.join(';').replace(/;/g, '\n');
         const matchMode = currentBulkFilter?.matchMode;
-        console.log(matchMode);
         setExact(matchMode === 'Exactly');
         setValue(displayValues);
         setFilterType(bulkFilterKey);

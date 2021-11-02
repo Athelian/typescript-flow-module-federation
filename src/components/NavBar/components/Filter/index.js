@@ -150,7 +150,8 @@ const computeFilterStates = (
   config: Array<FilterConfig>,
   filters: FilterBy
 ): Array<FilterState> => {
-  return Object.keys(filters).map(field => {
+  const cleanFilter = Object.keys(filters).filter(key => !key.includes('bulkFilter'));
+  return cleanFilter.map(field => {
     return {
       ...config.find(c => c.field === field),
       value: filters[field],
@@ -172,7 +173,6 @@ const cleanFilterStates = (filters: Array<FilterState>): Array<FilterState> =>
           return filter;
       }
     });
-
 const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
   const intl = useIntl();
   const buttonRef = React.useRef(null);
@@ -180,7 +180,6 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
   const [filterStates, setFilterStates] = React.useState<Array<FilterState>>(
     computeFilterStates(config, filterBy)
   );
-
   const onSave = () => {
     const states = cleanFilterStates(filterStates);
 
