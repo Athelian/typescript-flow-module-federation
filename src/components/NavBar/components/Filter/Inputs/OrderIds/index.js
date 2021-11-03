@@ -42,7 +42,6 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
   );
 
   return (
-    // <div id="modalContainer">
     <SlideView isOpen={open} onRequestClose={onClose}>
       <Selector.Many selected={selected.map(id => ({ id }))}>
         {({ value, dirty, getItemProps }) => (
