@@ -82,7 +82,6 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
         )}
       </Selector.Many>
     </SlideView>
-    // </div>
   );
 };
 
