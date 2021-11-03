@@ -150,8 +150,7 @@ const computeFilterStates = (
   config: Array<FilterConfig>,
   filters: FilterBy
 ): Array<FilterState> => {
-  const cleanFilter = Object.keys(filters).filter(key => !key.includes('bulkFilter'));
-  return cleanFilter.map(field => {
+  return Object.keys(filters).map(field => {
     return {
       ...config.find(c => c.field === field),
       value: filters[field],
@@ -182,7 +181,6 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
   );
   const onSave = () => {
     const states = cleanFilterStates(filterStates);
-
     onChange({
       ...states.reduce(
         (f, state) => ({
@@ -215,8 +213,8 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
   const onClearAll = () => {
     setFilterStates(filterStates.filter(fs => (staticFilters || []).includes(fs.field)));
   };
-
-  const isActive = filterStates.length > 0;
+  // We need to filter out the bulk filter here so it doesnt cause the icon to be active.
+  const isActive = filterStates.filter(b => b.field !== 'bulkFilter').length > 0;
   const hasWeakFilter = !!filterStates.find(f => !f.entity || !f.field || !f.type);
   const availableConfig = config.filter(
     (c: FilterConfig) =>
@@ -314,6 +312,9 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
               );
             })}
             {filterStates.map((state, index) => {
+              if (state.field === 'bulkFilter') {
+                return null;
+              }
               if ((staticFilters || []).includes(state.field)) {
                 return null;
               }
