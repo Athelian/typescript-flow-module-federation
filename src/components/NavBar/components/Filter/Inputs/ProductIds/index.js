@@ -8,6 +8,7 @@ import {
   Sort,
   ProductSortConfig,
   ProductFilterConfig,
+  BulkHeaderFilter,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
@@ -49,6 +50,7 @@ const ProductSelector = ({ open, onClose, selected, setSelected }: SelectorProps
               <EntityIcon icon="PRODUCT" color="PRODUCT" />
               <Filter config={ProductFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
               <Search query={query} onChange={setQuery} />
+              <BulkHeaderFilter filterBy={filterBy} setFilterBy={setFilterBy} type="PRODUCT" />
               <Sort config={ProductSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
               <SaveButton
