@@ -181,3 +181,14 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
     newValues.todo
   ),
 });
+
+export const fileMarkAsReadMutation = gql`
+  mutation fileMarkAsRead($entity: EntityInput!) {
+    fileMarkAsRead(entity: $entity) {
+      ...badRequestFragment
+      ...forbiddenFragment
+    }
+  }
+  ${forbiddenFragment}
+  ${badRequestFragment}
+`;
