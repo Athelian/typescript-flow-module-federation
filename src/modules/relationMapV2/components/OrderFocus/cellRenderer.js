@@ -276,9 +276,47 @@ function OrderCell({ data, afterConnector }: CellProps) {
             selected={state.targets.includes(`${ORDER}-${data?.id}`)}
             selectable={state.targets.includes(`${ORDER}-${data?.id}`)}
             onClick={handleClick}
+            onCommentIconClick={evt => {
+              evt.stopPropagation();
+              dispatch({
+                type: 'EDIT',
+                payload: {
+                  type: ORDER,
+                  selectedId: data?.id,
+                  // orderItemIds,
+                  defaultSection: 'logs',
+                },
+              });
+            }}
+            onDocumentIconClick={evt => {
+              evt.stopPropagation();
+              dispatch({
+                type: 'EDIT',
+                payload: {
+                  type: ORDER,
+                  selectedId: data?.id,
+                  // orderItemIds,
+                  defaultSection: 'documents',
+                },
+              });
+            }}
+            onNotificationIconClick={evt => {
+              evt.stopPropagation();
+              dispatch({
+                type: 'EDIT',
+                payload: {
+                  type: ORDER,
+                  selectedId: data?.id,
+                  // orderItemIds,
+                },
+              });
+            }}
             flattenCornerIcon
             id={`${ORDER}-${orderId}`}
-            showBadge={data?.notificationUnseenCount > 0}
+            filesUnreadCount={data?.filesUnreadCount}
+            notificationUnseenCount={data?.notificationUnseenCount}
+            unreadMessageCount={data?.timeline?.unreadMessageCount}
+            notificationPosition="18px"
           >
             <OrderCard
               organizationId={data?.ownedBy?.id}

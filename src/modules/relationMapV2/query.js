@@ -271,6 +271,10 @@ const orderEntityCardFragment = gql`
     ... on Followed {
       notificationUnseenCount
     }
+    filesUnreadCount
+    timeline {
+      unreadMessageCount
+    }
     todo {
       taskCount {
         ...taskCountFragment

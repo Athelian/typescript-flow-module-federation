@@ -51,6 +51,8 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   intl: IntlShape,
+  defaultSection: string,
+  location: Location,
 };
 
 const defaultProps = {
@@ -299,6 +301,25 @@ class OrderFormModule extends React.PureComponent<Props> {
     }
   };
 
+  getDefaultParam = () => {
+    const { location, defaultSection } = this.props;
+
+    if (defaultSection) {
+      return defaultSection;
+    }
+
+    // order/asdf?foo=123&default=logs
+    const query = location?.search?.split('?')?.[1] ?? null;
+
+    // foo=123&default=logs
+    const queryParams = query?.split('&') ?? [];
+
+    // ['foo=123', 'default=logs']
+    const defaultParam = queryParams.find(queryParam => queryParam.startsWith('default'));
+
+    return defaultParam ? defaultParam?.split('=')?.[1] : null;
+  };
+
   render() {
     const { orderId, isSlideView, onCancel, initDataForSlideView } = this.props;
     const isNewOrClone = this.isNewOrClone();
@@ -309,6 +330,8 @@ class OrderFormModule extends React.PureComponent<Props> {
 
     const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
     const CurrentLayout = isSlideView ? SlideViewLayout : React.Fragment;
+
+    const defaultParam = this.getDefaultParam();
 
     return (
       <UserConsumer>
@@ -414,6 +437,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                       <LogsButton
                                         entityType="order"
                                         entityId={orderId}
+                                        openByDefault={defaultParam === 'logs'}
                                         onClick={() => slideToggle(true)}
                                       />
                                       <SlideView
@@ -616,7 +640,12 @@ class OrderFormModule extends React.PureComponent<Props> {
                           entityType="order"
                           render={(order, loading) => (
                             <>
-                              <OrderForm order={order} loading={loading} isClone={this.isClone()} />
+                              <OrderForm
+                                order={order}
+                                loading={loading}
+                                skipToSection={defaultParam}
+                                isClone={this.isClone()}
+                              />
                               <Subscribe
                                 to={[
                                   OrderItemsContainer,

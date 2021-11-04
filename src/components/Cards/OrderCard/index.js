@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
+import { encodeId } from 'utils/id';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
@@ -56,7 +58,10 @@ const OrderCard = ({ order, actions, onClick, onSelect, ...rest }: Props) => {
 
   return (
     <BaseCard
-      showBadge={order?.notificationUnseenCount > 0}
+      // showBadge={order?.notificationUnseenCount > 0}
+      filesUnreadCount={order?.filesUnreadCount}
+      unreadMessageCount={order?.timeline?.unreadMessageCount}
+      notificationUnseenCount={order?.notificationUnseenCount}
       icon="ORDER"
       color="ORDER"
       actions={actions}
@@ -66,6 +71,15 @@ const OrderCard = ({ order, actions, onClick, onSelect, ...rest }: Props) => {
         if (onSelect) {
           onSelect(order);
         }
+      }}
+      onCommentIconClick={() => {
+        navigate(`/shipment/${encodeId(order.id)}?default=logs`);
+      }}
+      onDocumentIconClick={() => {
+        navigate(`/shipment/${encodeId(order.id)}?default=documents`);
+      }}
+      onNotificationIconClick={() => {
+        navigate(`/shipment/${encodeId(order.id)}`);
       }}
       {...rest}
     >

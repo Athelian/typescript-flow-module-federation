@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { getByPath } from 'utils/fp';
 import useUser from 'hooks/useUser';
+import scrollIntoView from 'utils/scrollIntoView';
 import { SectionWrapper } from 'components/Form';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import OrderSection from './components/OrderSection';
@@ -20,6 +21,7 @@ type OptionalProps = {
   isNew?: boolean,
   loading?: boolean,
   isClone?: boolean,
+  skipToSection?: ?string, // only documents for now
   order?: Object,
 };
 
@@ -32,8 +34,28 @@ const OrderForm = ({
   isClone = false,
   loading = false,
   order = defaultOrder,
+  skipToSection,
 }: Props) => {
   const { organization } = useUser();
+
+  React.useEffect(() => {
+    if (skipToSection === 'documents') {
+      // wait for the element is rendering on DOM
+      const sectionId = 'order_documentsSection';
+
+      const retryFindElement = () => {
+        const foundElement = document.querySelector(`#${sectionId}`);
+
+        if (!foundElement) {
+          requestAnimationFrame(retryFindElement);
+        } else {
+          // scroll to element after rendering
+          setTimeout(() => scrollIntoView({ targetId: sectionId }), 350);
+        }
+      };
+      requestAnimationFrame(retryFindElement);
+    }
+  }, [skipToSection]);
 
   return (
     <div className={OrderFormWrapperStyle}>
