@@ -8,6 +8,7 @@ import {
   Sort,
   ContainerSortConfig,
   ContainerFilterConfig,
+  BulkHeaderFilter,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
@@ -50,6 +51,7 @@ const ContainerSelector = ({ open, onClose, selected, setSelected }: SelectorPro
               <EntityIcon icon="CONTAINER" color="CONTAINER" />
               <Filter config={ContainerFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
               <Search query={query} onChange={setQuery} />
+              <BulkHeaderFilter filterBy={filterBy} setFilterBy={setFilterBy} type="CONTAINER" />
               <Sort config={ContainerSortConfig} sortBy={sortBy} onChange={setSortBy} />
               <CancelButton onClick={onClose} />
               <SaveButton

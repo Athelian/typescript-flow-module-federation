@@ -4,11 +4,19 @@ import { Mutation } from 'react-apollo';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 import { Subscribe } from 'unstated';
-import { SectionWrapper, SectionHeader, PasswordInputFactory } from 'components/Form';
+import {
+  FieldItem,
+  Label,
+  Display,
+  SectionWrapper,
+  SectionHeader,
+  PasswordInputFactory,
+} from 'components/Form';
 import { FormField, FormContainer } from 'modules/form';
 import GridColumn from 'components/GridColumn';
 import { BaseButton } from 'components/Buttons';
 import SaveFormButton from 'components/SaveFormButton';
+import useUser from 'hooks/useUser';
 import { FormWrapperStyle, SectionWrapperStyle, ButtonWrapperStyle } from './style';
 import { changePasswordMutation, requestResetPasswordMutation } from './mutation';
 import { ChangePasswordContainer } from './containers';
@@ -16,9 +24,28 @@ import validator from './validator';
 
 export default function Security() {
   const intl = useIntl();
+  const { user } = useUser();
 
   return (
     <div className={FormWrapperStyle}>
+      <SectionWrapper id="details_section">
+        <SectionHeader
+          icon="PROFILE"
+          title={<FormattedMessage id="modules.profile.details" defaultMessage="PROFILE" />}
+        />
+        <div className={SectionWrapperStyle}>
+          <GridColumn>
+            <FieldItem
+              label={
+                <Label width="150px">
+                  <FormattedMessage id="modules.profile.email" defaultMessage="Email" />
+                </Label>
+              }
+              input={<Display>{user?.email}</Display>}
+            />
+          </GridColumn>
+        </div>
+      </SectionWrapper>
       <SectionWrapper id="reset_password_section">
         <SectionHeader
           icon="PASSWORD"

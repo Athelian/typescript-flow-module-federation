@@ -172,7 +172,6 @@ const cleanFilterStates = (filters: Array<FilterState>): Array<FilterState> =>
           return filter;
       }
     });
-
 const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
   const intl = useIntl();
   const buttonRef = React.useRef(null);
@@ -180,10 +179,8 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
   const [filterStates, setFilterStates] = React.useState<Array<FilterState>>(
     computeFilterStates(config, filterBy)
   );
-
   const onSave = () => {
     const states = cleanFilterStates(filterStates);
-
     onChange({
       ...states.reduce(
         (f, state) => ({
@@ -216,8 +213,8 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
   const onClearAll = () => {
     setFilterStates(filterStates.filter(fs => (staticFilters || []).includes(fs.field)));
   };
-
-  const isActive = filterStates.length > 0;
+  // We need to filter out the bulk filter here so it doesnt cause the icon to be active.
+  const isActive = filterStates.filter(b => b.field !== 'bulkFilter').length > 0;
   const hasWeakFilter = !!filterStates.find(f => !f.entity || !f.field || !f.type);
   const availableConfig = config.filter(
     (c: FilterConfig) =>
@@ -315,6 +312,9 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
               );
             })}
             {filterStates.map((state, index) => {
+              if (state.field === 'bulkFilter') {
+                return null;
+              }
               if ((staticFilters || []).includes(state.field)) {
                 return null;
               }
