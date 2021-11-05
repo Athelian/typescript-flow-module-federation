@@ -1076,6 +1076,8 @@
   "modules.ProductProviders.sharedPartners.tooltip": "共有組織に選ばれた組織は、このエンドプロダクトにアクセスできます",
   "modules.profile.security": "セキュリティー",
   "modules.profile.changePassword": "パスワード変更",
+  "modules.profile.details": "詳細",
+  "modules.profile.email": "Eメール",
   "modules.profile.passwordUpdated": "パスワードは変更されました",
   "modules.profile.currentPassword": "現在のパスワード",
   "modules.profile.newPassword": "新しいパスワード",
