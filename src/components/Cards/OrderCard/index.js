@@ -73,13 +73,13 @@ const OrderCard = ({ order, actions, onClick, onSelect, ...rest }: Props) => {
         }
       }}
       onCommentIconClick={() => {
-        navigate(`/shipment/${encodeId(order.id)}?default=logs`);
+        navigate(`/order/${encodeId(order.id)}?default=logs`);
       }}
       onDocumentIconClick={() => {
-        navigate(`/shipment/${encodeId(order.id)}?default=documents`);
+        navigate(`/order/${encodeId(order.id)}?default=documents`);
       }}
       onNotificationIconClick={() => {
-        navigate(`/shipment/${encodeId(order.id)}`);
+        navigate(`/order/${encodeId(order.id)}`);
       }}
       {...rest}
     >
