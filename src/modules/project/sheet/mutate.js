@@ -1,6 +1,6 @@
 // @flow
 import ApolloClient from 'apollo-client';
-import { parseTagsField } from 'utils/data';
+import { parseTagsField, parseFilesField } from 'utils/data';
 import { projectMutation, milestoneMutation, taskMutation } from './query';
 
 const mutations = {
@@ -91,34 +91,16 @@ function normalizedInput(
             estimatedCompletionDateInterval: value?.interval ?? null,
             estimatedCompletionDateBinding: value?.binding ?? null,
           };
-        case 'files':
-          return {
-            files: value.map(
-              ({
-                __typename,
-                entity: e,
-                ownedBy,
-                tags,
-                path,
-                uploading,
-                progress,
-                size,
-                isNew,
-                createdAt,
-                order: o,
-                orderItem,
-                shipment,
-                productProvider,
-                milestone,
-                updatedAt,
-                updatedBy,
-                ...rest
-              }) => ({
-                ...rest,
-                tagIds: tags.map(tag => tag.id),
-              })
-            ),
-          };
+        case 'files': {
+          const newFiles = parseFilesField({
+            key: 'files',
+            originalFiles: oldValue,
+            newFiles: value,
+            isNewFormat: true,
+          });
+
+          return newFiles;
+        }
         default:
           return {
             [field]: value,

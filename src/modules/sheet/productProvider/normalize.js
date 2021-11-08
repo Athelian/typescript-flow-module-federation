@@ -1,5 +1,6 @@
 // @flow
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
+import { parseFilesField } from 'utils/data';
 
 export default function normalizeSheetProductProviderInput(
   productProvider: Object,
@@ -18,34 +19,16 @@ export default function normalizeSheetProductProviderInput(
           currency: newValue.metric,
         },
       };
-    case 'files':
-      return {
-        files: newValue.map(
-          ({
-            __typename,
-            entity: e,
-            ownedBy,
-            tags,
-            path,
-            uploading,
-            progress,
-            size,
-            isNew,
-            createdAt,
-            order,
-            orderItem,
-            shipment,
-            productProvider: pp,
-            milestone,
-            updatedAt,
-            updatedBy,
-            ...rest
-          }) => ({
-            ...rest,
-            tagIds: tags.map(tag => tag.id),
-          })
-        ),
-      };
+    case 'files': {
+      const newFiles = parseFilesField({
+        key: 'files',
+        originalFiles: oldValue,
+        newFiles: newValue,
+        isNewFormat: true,
+      });
+
+      return newFiles;
+    }
     case 'mask':
       return {
         customFields: {
