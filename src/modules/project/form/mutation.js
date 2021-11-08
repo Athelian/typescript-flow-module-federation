@@ -120,6 +120,7 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
     key: 'files',
     originalFiles: originalValues?.files ?? [],
     newFiles: newValues.files,
+    isNewFormat: true,
   }),
 });
 
