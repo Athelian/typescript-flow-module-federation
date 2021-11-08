@@ -8,6 +8,8 @@ type Props = {|
   disabled: boolean,
   onClick: Function,
   id?: string,
+  borderRadius?: string,
+  hideIcon?: boolean,
 |};
 
 const defaultProps = {
@@ -16,9 +18,17 @@ const defaultProps = {
   onClick: () => {},
 };
 
-const ApplyButton = ({ label, disabled, onClick, ...rest }: Props): React.Node => (
+const ApplyButton = ({
+  label,
+  disabled,
+  onClick,
+  hideIcon,
+  borderRadius,
+  ...rest
+}: Props): React.Node => (
   <BaseButton
-    icon="CONFIRM"
+    icon={hideIcon ? '' : 'CONFIRM'}
+    borderRadius={borderRadius}
     label={label}
     backgroundColor="TEAL"
     hoverBackgroundColor="TEAL_DARK"

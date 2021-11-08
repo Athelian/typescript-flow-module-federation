@@ -1,11 +1,14 @@
 // @flow
-
 import * as React from 'react';
+import { Waypoint } from 'react-waypoint';
+import { useMutation } from '@apollo/react-hooks';
 import { Subscribe } from 'unstated';
 import { getByPath } from 'utils/fp';
 import useUser from 'hooks/useUser';
+import scrollIntoView from 'utils/scrollIntoView';
 import { SectionWrapper } from 'components/Form';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
+import { fileMarkAsReadMutation } from './mutation';
 import OrderSection from './components/OrderSection';
 import ItemsSection from './components/ItemsSection';
 import DocumentsSection from './components/DocumentsSection';
@@ -20,6 +23,7 @@ type OptionalProps = {
   isNew?: boolean,
   loading?: boolean,
   isClone?: boolean,
+  skipToSection?: ?string, // only documents for now
   order?: Object,
 };
 
@@ -32,8 +36,30 @@ const OrderForm = ({
   isClone = false,
   loading = false,
   order = defaultOrder,
+  skipToSection,
 }: Props) => {
   const { organization } = useUser();
+
+  const [fileMarkAsRead] = useMutation(fileMarkAsReadMutation);
+
+  React.useEffect(() => {
+    if (skipToSection === 'documents') {
+      // wait for the element is rendering on DOM
+      const sectionId = 'order_documentsSection';
+
+      const retryFindElement = () => {
+        const foundElement = document.querySelector(`#${sectionId}`);
+
+        if (!foundElement) {
+          requestAnimationFrame(retryFindElement);
+        } else {
+          // scroll to element after rendering
+          setTimeout(() => scrollIntoView({ targetId: sectionId }), 350);
+        }
+      };
+      requestAnimationFrame(retryFindElement);
+    }
+  }, [skipToSection]);
 
   return (
     <div className={OrderFormWrapperStyle}>
@@ -51,11 +77,29 @@ const OrderForm = ({
       </SectionWrapper>
 
       <SectionWrapper id="order_documentsSection">
-        <DocumentsSection
-          entityId={!isClone && order.id ? order.id : ''}
-          isLoading={loading}
-          type="Order"
-        />
+        <div>
+          <DocumentsSection
+            entityId={!isClone && order.id ? order.id : ''}
+            isLoading={loading}
+            type="Order"
+          />
+          {// This will fire the mutation when scrolled to
+          !isNew && !isClone && (
+            <Waypoint
+              onEnter={({ event }) => {
+                if (event) {
+                  fileMarkAsRead({
+                    variables: {
+                      entity: {
+                        orderId: order.id,
+                      },
+                    },
+                  });
+                }
+              }}
+            />
+          )}
+        </div>
       </SectionWrapper>
 
       <SectionWrapper id="order_taskSection">

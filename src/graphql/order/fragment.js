@@ -211,6 +211,11 @@ export const orderCardFragment = gql`
     ... on Followed {
       notificationUnseenCount
     }
+    filesUnreadCount
+    timeline {
+      unreadCount
+      unreadMessageCount
+    }
   }
 `;
 

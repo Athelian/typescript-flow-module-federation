@@ -8,6 +8,7 @@ import {
   Sort,
   OrderSortConfig,
   OrderFilterConfig,
+  BulkHeaderFilter,
 } from 'components/NavBar';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
@@ -53,6 +54,8 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
                 onChange={setFilterBy}
               />
               <Search query={query} onChange={setQuery} />
+
+              <BulkHeaderFilter filterBy={filterBy} setFilterBy={setFilterBy} type="ORDER" />
               <Sort sortBy={sortBy} onChange={setSortBy} config={OrderSortConfig} />
               <CancelButton onClick={onClose} />
               <SaveButton
@@ -61,7 +64,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
               />
             </SlideViewNavBar>
 
-            <Content>
+            <Content id="antd-modal">
               <GridView
                 isLoading={loading}
                 hasMore={hasMore}

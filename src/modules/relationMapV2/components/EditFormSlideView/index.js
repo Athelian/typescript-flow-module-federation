@@ -202,7 +202,7 @@ const EditFormSlideView = ({ onClose }: Props) => {
   let isNewEntity = false;
   switch (type) {
     case ORDER: {
-      form = <OrderForm orderId={encodeId(id)} isSlideView />;
+      form = <OrderForm orderId={encodeId(id)} defaultSection={defaultSection} isSlideView />;
       break;
     }
     case ORDER_ITEM: {

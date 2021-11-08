@@ -24,6 +24,15 @@ export const ProductFilterConfig: Array<FilterConfig> = [
     message: productMessages.status,
     defaultValue: false,
   },
+  // Add this for bulk filter
+  {
+    entity: 'PRODUCT',
+    field: 'bulkFilter',
+    type: 'bulkFilter',
+    message: '',
+    defaultValue: {},
+    hidden: true,
+  },
   {
     entity: 'PRODUCT',
     field: 'createdAt',
@@ -147,6 +156,15 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     type: 'order_ids',
     message: orderMessages.order,
     defaultValue: [],
+  },
+  // Add this for bulk filter
+  {
+    entity: 'ORDER',
+    field: 'bulkFilter',
+    type: 'bulkFilter',
+    message: '',
+    defaultValue: {},
+    hidden: true,
   },
   {
     entity: 'ORDER',
@@ -665,6 +683,15 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
     message: shipmentMessages.shipment,
     defaultValue: [],
   },
+  // Add this for bulk filter
+  {
+    entity: 'SHIPMENT',
+    field: 'bulkFilter',
+    type: 'bulkFilter',
+    message: '',
+    defaultValue: {},
+    hidden: true,
+  },
   {
     entity: 'SHIPMENT',
     field: 'archived',
@@ -1063,6 +1090,15 @@ export const ContainerFilterConfig: Array<FilterConfig> = [
     type: 'archived',
     message: containerMessages.status,
     defaultValue: false,
+  },
+  // Add this for bulk filter
+  {
+    entity: 'CONTAINER',
+    field: 'bulkFilter',
+    type: 'bulkFilter',
+    message: '',
+    defaultValue: {},
+    hidden: true,
   },
   {
     entity: 'CONTAINER',
