@@ -259,6 +259,7 @@ const prepareParsedProductProviderInput = (
           key: 'files',
           originalFiles: getByPathWithDefault([], 'files', oldProductProvider),
           newFiles: getByPathWithDefault([], 'files', newProductProvider),
+          isNewFormat: true,
         }),
         ...parseTodoField(
           getByPathWithDefault(
@@ -301,6 +302,7 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
     key: 'files',
     originalFiles: getByPathWithDefault([], 'files', originalValues),
     newFiles: newValues.files,
+    isNewFormat: true,
   }),
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
   ...parseGenericField(

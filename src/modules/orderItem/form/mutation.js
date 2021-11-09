@@ -116,6 +116,7 @@ export const prepareParseOrderItem = (originalValues: Object, newValues: Object)
     key: 'files',
     originalFiles: getByPathWithDefault([], 'files', originalValues),
     newFiles: newValues.files,
+    isNewFormat: true,
   }),
   ...parseCustomFieldsField(
     'customFields',
