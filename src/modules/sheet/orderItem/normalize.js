@@ -1,5 +1,5 @@
 // @flow
-import { parseTodoField, removeTypename, parseTagsField } from 'utils/data';
+import { parseTodoField, removeTypename, parseTagsField, parseFilesField } from 'utils/data';
 import { normalizeSheetInput } from 'modules/sheet/common/normalize';
 
 export default function normalizeSheetOrderItemInput(
@@ -25,34 +25,16 @@ export default function normalizeSheetOrderItemInput(
       };
     case 'tags':
       return parseTagsField('tags', oldValue, newValue);
-    case 'files':
-      return {
-        files: newValue.map(
-          ({
-            __typename,
-            entity: e,
-            ownedBy,
-            tags = [],
-            path,
-            uploading,
-            progress,
-            size,
-            isNew,
-            createdAt,
-            order,
-            orderItem: oi,
-            shipment,
-            productProvider,
-            milestone,
-            updatedAt,
-            updatedBy,
-            ...rest
-          }) => ({
-            ...rest,
-            tagIds: tags.map(tag => tag.id),
-          })
-        ),
-      };
+    case 'files': {
+      const newFiles = parseFilesField({
+        key: 'files',
+        originalFiles: oldValue,
+        newFiles: newValue,
+        isNewFormat: true,
+      });
+
+      return newFiles;
+    }
     case 'todo':
       return parseTodoField(removeTypename(oldValue), removeTypename(newValue));
     case 'mask':

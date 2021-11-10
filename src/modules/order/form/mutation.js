@@ -171,6 +171,7 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
     key: 'files',
     originalFiles: getByPathWithDefault(null, 'files', originalValues),
     newFiles: newValues.files,
+    isNewFormat: true,
   }),
   ...parseTodoField(
     getByPathWithDefault(

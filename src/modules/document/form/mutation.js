@@ -272,6 +272,7 @@ export const prepareParsedDocumentParentInput = (
           key: 'files',
           originalFiles: originalEntity[loweredTypename].files,
           newFiles: entity.files,
+          isNewFormat: true,
         }),
       };
       break;
