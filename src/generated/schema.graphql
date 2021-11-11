@@ -26979,6 +26979,10 @@ input ContainerBatchInput {
   orderItemId: ID
 }
 
+input ContainerBulkFilterInput {
+  nos: ValuesWithMatchModeInput
+}
+
 input ContainerCreateInput {
   no: String!
   warehouseId: ID
@@ -27017,6 +27021,7 @@ input ContainerFilterInput {
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
+  bulkFilter: ContainerBulkFilterInput
   archived: Boolean
   shipmentId: ID
   productId: ID
@@ -28646,6 +28651,7 @@ type FieldDefinition implements Model & Owned & Sortable {
 input FieldDefinitionInput {
   id: ID
   name: String
+  type: FieldDefinitionType
 }
 
 union FieldDefinitionPayload = FieldDefinition | BadRequest | Forbidden | NotFound
@@ -28748,6 +28754,8 @@ input FileFilterInput {
   tagIds: [ID!]
   tagIdsWithOperator: IdsWithOperatorInput
   notTagIds: [ID!]
+  entityId: ID
+  entityType: String
 }
 
 input FileInput {
@@ -30061,6 +30069,8 @@ type Mutation {
   changePassword(input: ChangePasswordInput!): EmptyPayload
   requestResetPassword(input: RequestResetPasswordInput!): EmptyPayload
   resetPassword(input: ResetPasswordInput!): EmptyPayload
+  refreshToken: TokenPayload!
+  verifyToken: TokenPayload!
   userUpdate(id: ID!, input: UserUpdateInput!): UserPayload!
   userAddRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
   userRemoveRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
@@ -30447,6 +30457,10 @@ type Order implements Model & Owned & Tagged & Followed & Supervised & Documente
   memo: String
 }
 
+input OrderBulkFilterInput {
+  poNos: ValuesWithMatchModeInput
+}
+
 input OrderCreateInput {
   importerId: ID
   exporterId: ID!
@@ -30476,6 +30490,7 @@ input OrderFilterInput {
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
+  bulkFilter: OrderBulkFilterInput
   archived: Boolean
   ids: [ID!]
   poNos: [String!]
@@ -30760,6 +30775,7 @@ type Organization implements Model {
   types: [OrganizationType!]!
   name: String!
   name2: String
+  prefix: String
   tel: String
   street: String
   locality: String
@@ -30912,6 +30928,8 @@ input PartnerFilterInput {
   types: [OrganizationType!]
   name: String
   confirmed: Boolean
+  leftOrganizationId: String
+  rightOrganizationId: String
   showRightPartners: Boolean
   showLeftPartners: Boolean
 }
@@ -31045,6 +31063,11 @@ type Product implements Model & Owned & Tagged & Followed & Documented & Memoriz
   customFields: CustomFields!
 }
 
+input ProductBulkFilterInput {
+  names: ValuesWithMatchModeInput
+  serials: ValuesWithMatchModeInput
+}
+
 input ProductCreateInput {
   """Deprecated"""
   importerId: ID
@@ -31072,6 +31095,7 @@ input ProductFilterInput {
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
+  bulkFilter: ProductBulkFilterInput
   archived: Boolean
   name: String
   serial: String
@@ -31454,6 +31478,7 @@ input ProjectFilterInput {
   archived: Boolean
   milestones: [ProjectMilestoneFilterInput!]
   tasks: [ProjectTaskFilterInput!]
+  keywords: ValuesWithMatchModeInput
 }
 
 input ProjectMilestoneCreateInput {
@@ -31692,7 +31717,7 @@ type Query {
   warehousesByIDs(ids: [ID!]!): [WarehousePayload!]!
   tag(id: ID!): TagPayload!
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPaginatedSearch!
-  tagsForEntity(entityOwnerId: ID!, entityType: TagEntityType!, filterBy: TagFilterInput, sortBy: TagSortInput, page: Int! = 1, perPage: Int! = 10): TagPayloadPaginatedSearch!
+  tagsForEntity(entityOwnerId: ID!, entityType: TagEntityType!, filterBy: TagFilterInput, sortBy: TagSortInput, page: Int! = 1, perPage: Int! = 10): TagPayloadPaginatedSearch! @deprecated(reason: "Use tags with filter instead.")
   tagsByIDs(ids: [ID!]!): [TagPayload!]!
   tagExport(id: ID!, templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!]): ExportPayload!
   tagsExport(templateId: ID!, columns: [String!], localSortBy: [GenericSortInput!], filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
@@ -31743,15 +31768,15 @@ type Query {
   exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplatePayload!]!
   exportExtensions: [ExportExtensionPayload!]!
   genericExport(extension: String!, columns: [String!]!, rows: [[String]!]!): ExportPayload!
-  role(id: ID!): RolePayload!
-  roles(page: Int! = 1, perPage: Int! = 10): RolePayloadPaginatedList!
-  permissions: [String!]!
   focuses(id: ID!, entities: [EntityInput!]!): [FocusPayload!]!
   shipmentAggregate(id: ID!): ShipmentAggregatePayload!
   shipmentAggregates(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentAggregateFilterInput, sortBy: ShipmentAggregateSortInput): ShipmentAggregatePayloadPaginatedSearch!
   shipmentAggregatesByIDs(ids: [ID!]!): [ShipmentAggregatePayload!]!
   shipmentPackageList(id: ID!): ShipmentPackageListPayload!
   shipmentPackageListsByIDs(ids: [ID!]!): [ShipmentPackageListPayload!]!
+  timelineEntriesByIDs(ids: [ID!]!): [TimelineEntry!]!
+  timelineEntries(page: Int! = 1, perPage: Int! = 10, filterBy: TimelineEntryFilterInput, sortBy: TimelineEntrySortInput): TimelineEntryPaginatedSearch!
+  timelineEntry(id: ID!): TimelineEntry!
 }
 
 type Reference {
@@ -31828,15 +31853,6 @@ input RoleCreateInput {
 }
 
 union RolePayload = Role | BadRequest | Forbidden | NotFound
-
-type RolePayloadPaginatedList implements Paginated {
-  nodes: [RolePayload!]!
-  page: Int!
-  perPage: Int!
-  totalPage: Int!
-  count: Int!
-  totalCount: Int!
-}
 
 input RoleUpdateInput {
   name: String
@@ -87632,6 +87648,10 @@ type ShipmentBookingNumberSetEvent implements ShipmentEventInterface & EventInte
   user: UserPayload
 }
 
+input ShipmentBulkFilterInput {
+  nos: ValuesWithMatchModeInput
+}
+
 type ShipmentConsigneeAppointedEvent implements ShipmentEventInterface & EventInterface {
   consignee: OrganizationPayload!
   shipmentAggregate: ShipmentAggregatePayload!
@@ -87761,6 +87781,8 @@ input ShipmentFilterInput {
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
+  bulkFilter: ShipmentBulkFilterInput
+  keywords: ValuesWithMatchModeInput
   archived: Boolean
   ids: [ID!]
   importerId: ID
@@ -87777,6 +87799,7 @@ input ShipmentFilterInput {
   firstTransitPorts: [PortInput!]
   secondTransitPorts: [PortInput!]
   dischargePorts: [PortInput!]
+  firstDepartureArrivalUpdatedAt: DateRangeInput
   cargoReady: DateRangeInput
   loadPortDeparture: DateRangeInput
   firstTransitPortArrival: DateRangeInput
@@ -88294,6 +88317,10 @@ input TagFilterInput {
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
+  organizationId: ID
+  organizationIds: [ID!]
+  includeAllShared: Boolean
+  name: String
   entityTypes: [TagEntityType!]
 }
 
@@ -88725,7 +88752,8 @@ input TaskUpdateWrapperInput {
 type Timeline {
   unreadCount: Int!
   unreadMessageCount: Int!
-  entries(page: Int! = 1, perPage: Int! = 10): TimelineEntryPaginatedList!
+  entries(page: Int! = 1, perPage: Int! = 10): TimelineEntryPaginatedList! @deprecated(reason: "use `timelineEntries with custom filter` instead")
+  timelineEntries(page: Int! = 1, perPage: Int! = 10, filterBy: TimelineEntryFilterInput, sortBy: TimelineEntrySortInput): TimelineEntryPaginatedSearch!
 }
 
 type TimelineComment implements Model & Owned {
@@ -88811,6 +88839,18 @@ enum TimelineDateRevisionType {
 
 union TimelineEntry = TimelineEvent | TimelineComment | BadRequest | Forbidden | NotFound
 
+input TimelineEntryFilterInput {
+  query: String
+  ownerId: ID
+  excludeIds: [ID!]
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  isComment: Boolean
+  isEntityRemoved: Boolean
+  entityId: ID
+  entityType: String
+}
+
 type TimelineEntryPaginatedList implements Paginated {
   nodes: [TimelineEntry!]!
   page: Int!
@@ -88818,6 +88858,21 @@ type TimelineEntryPaginatedList implements Paginated {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+type TimelineEntryPaginatedSearch implements Paginated {
+  nodes: [TimelineEntry!]!
+  hits: [Hit!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input TimelineEntrySortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
 }
 
 type TimelineEvent implements Model & Owned {
@@ -88925,12 +88980,17 @@ type User implements Model & Tagged & Memorizable {
   memo: String
 }
 
+input UserBulkFilterInput {
+  emails: ValuesWithMatchModeInput
+}
+
 input UserFilterInput {
   query: String
   ownerId: ID
   excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
+  bulkFilter: UserBulkFilterInput
   organizationId: ID
   organizationIds: [ID!]
 
@@ -89002,6 +89062,19 @@ input ValueInput {
 
 type Values {
   values: [Value]!
+}
+
+enum ValuesWithMatchMode {
+  """Partial"""
+  Partial
+
+  """Exactly"""
+  Exactly
+}
+
+input ValuesWithMatchModeInput {
+  values: [String!]
+  matchMode: ValuesWithMatchMode
 }
 
 type Viewer {
