@@ -18,6 +18,9 @@ export const tagsQuery = gql`
   }
 `;
 
+/**
+ * @deprecated
+ */
 export const tagsForEntityQuery = gql`
   query tagsForEntity(
     $entityOwnerId: ID!
