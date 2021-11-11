@@ -139,7 +139,6 @@ const TagsInput = (entityType: string) => ({
       <BaseTagsInput
         entityType={entityType}
         organizationIds={extra?.organizationIds}
-        entityOwnerId={extra?.entityOwnerId}
         value={value || []}
         disabled={readonly}
         onChange={onChange}

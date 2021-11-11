@@ -116,7 +116,6 @@ const DocumentSection = () => {
               <TagsInput
                 name="tags"
                 tagType="File"
-                entityOwnerId={state.ownedBy?.id}
                 organizationIds={organizationIds}
                 values={state.tags}
                 onChange={value => {

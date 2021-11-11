@@ -1,4 +1,3 @@
-/* eslint-disable */
 // @flow
 
 import * as React from 'react';
@@ -7,7 +6,6 @@ import useDebounce from 'hooks/useDebounce';
 
 type Props = {
   tagType: string,
-  entityOwnerId?: string,
   organizationIds?: string[],
   queryString?: string,
   query?: any,
@@ -15,7 +13,7 @@ type Props = {
 
 const requeryThreshold = 100;
 
-const useTagList = ({ tagType, entityOwnerId, organizationIds, queryString, query }: Props) => {
+const useTagList = ({ tagType, organizationIds, queryString, query }: Props) => {
   const isMounted = React.useRef(true);
   const debouncedQueryString = useDebounce(queryString, 100);
 
@@ -74,6 +72,7 @@ const useTagList = ({ tagType, entityOwnerId, organizationIds, queryString, quer
         return arr;
       }
 
+      // eslint-disable-next-line
       arr[tag.id] = tag;
 
       return arr;

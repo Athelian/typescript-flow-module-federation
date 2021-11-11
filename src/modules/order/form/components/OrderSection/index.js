@@ -80,7 +80,7 @@ type Props = {
 const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { archived, ownedBy } = order;
+  const { archived } = order;
 
   return (
     <MainSectionPlaceholder height={961} isLoading={isLoading}>
@@ -346,7 +346,6 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                               name="tags"
                               tagType="Order"
                               organizationIds={getEntityRelatedOrganizations(order)}
-                              entityOwnerId={ownedBy?.id}
                               values={tags}
                               onChange={value => {
                                 changeTags('tags', value);

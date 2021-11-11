@@ -28,7 +28,6 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  entityOwnerId?: string,
   organizationIds?: string[],
   ownedBy?: Object,
   tagType: TagsQueryType,
@@ -158,7 +157,6 @@ export default class TagsInput extends React.Component<Props, State> {
 
   render() {
     const {
-      entityOwnerId,
       organizationIds,
       editable,
       width,
@@ -298,7 +296,6 @@ export default class TagsInput extends React.Component<Props, State> {
                     queryString={inputValue}
                     tagType={tagType}
                     organizationIds={organizationIds}
-                    entityOwnerId={entityOwnerId}
                   >
                     {({ data: tags, onScroll }) => {
                       return (

@@ -104,7 +104,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
   const { isOwner } = usePartnerPermission();
   const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
-  const { id: shipmentId, archived, ownedBy } = shipment;
+  const { id: shipmentId, archived } = shipment;
   return (
     <Subscribe to={[ShipmentInfoContainer]}>
       {({
@@ -504,7 +504,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             name="tags"
                             tagType="Shipment"
                             organizationIds={getEntityRelatedOrganizations(shipment)}
-                            entityOwnerId={ownedBy?.id}
                             values={tags}
                             onChange={value => {
                               changeTags('tags', value);
