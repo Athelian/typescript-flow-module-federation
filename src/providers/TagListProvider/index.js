@@ -1,7 +1,7 @@
 // @flow
 import useTagList from 'hooks/useTagList';
 
-import { tagsQuery, tagsForEntityQuery } from './query';
+import { tagsQuery } from './query';
 import type { TagsQueryType } from './type.js.flow';
 
 type Props = {
@@ -18,7 +18,7 @@ const TagListProvider = ({ children, tagType, entityOwnerId, queryString }: Prop
   const { tags, loading, onScroll } = useTagList({
     tagType,
     entityOwnerId,
-    query: entityOwnerId ? tagsForEntityQuery : tagsQuery,
+    query: tagsQuery,
     queryString,
   });
 

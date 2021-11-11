@@ -1,3 +1,4 @@
+/* eslint-disable */
 // @flow
 
 import * as React from 'react';
@@ -7,13 +8,14 @@ import useDebounce from 'hooks/useDebounce';
 type Props = {
   tagType: string,
   entityOwnerId?: string,
+  organizationIds?: string[],
   queryString?: string,
   query?: any,
 };
 
 const requeryThreshold = 100;
 
-const useTagList = ({ tagType, entityOwnerId, queryString, query }: Props) => {
+const useTagList = ({ tagType, entityOwnerId, organizationIds, queryString, query }: Props) => {
   const isMounted = React.useRef(true);
   const debouncedQueryString = useDebounce(queryString, 200);
 
@@ -24,32 +26,39 @@ const useTagList = ({ tagType, entityOwnerId, queryString, query }: Props) => {
 
   const [totalPages, setTotalPages] = React.useState(0);
 
-  let variables = {
+  const variables = {
     ...pageSettings,
     sortBy: {
       name: 'ASCENDING',
     },
-    query: debouncedQueryString || '',
+    filterBy: {
+      query: debouncedQueryString || '',
+      entityTypes: Array.isArray(tagType) ? tagType : [tagType],
+    },
   };
 
-  if (entityOwnerId) {
-    variables = {
-      ...variables,
-      entityOwnerId,
-      entityType: tagType,
-    };
-  } else {
-    variables = {
-      ...variables,
-      entityTypes: [tagType],
-    };
+  if (organizationIds) {
+    variables.filterBy.organizationIds = organizationIds;
   }
+
+  // if (entityOwnerId) {
+  //   variables = {
+  //     ...variables,
+  //     entityOwnerId,
+  //     entityType: tagType,
+  //   };
+  // } else {
+  //   variables = {
+  //     ...variables,
+  //     entityTypes: [tagType],
+  //   };
+  // }
 
   const [getTags, { data, loading }] = useLazyQuery(query, {
     variables,
     fetchPolicy: 'network-only',
     onCompleted: newData => {
-      const value = newData?.tagsForEntity ?? newData?.tags;
+      const value = newData?.tags;
       setTotalPages(value.totalPage);
     },
   });
@@ -62,7 +71,7 @@ const useTagList = ({ tagType, entityOwnerId, queryString, query }: Props) => {
     }
 
     setTagData(oldTagData => {
-      return [...oldTagData, ...(data?.tagsForEntity?.nodes ?? data?.tags?.nodes ?? [])];
+      return [...oldTagData, ...(data?.tags?.nodes ?? [])];
     });
   }, [data, loading]);
 

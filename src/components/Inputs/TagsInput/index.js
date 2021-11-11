@@ -9,7 +9,7 @@ import Tag from 'components/Tag';
 import Icon from 'components/Icon';
 import usePortalSlot from 'hooks/usePortalSlot';
 import useTagList from 'hooks/useTagList';
-import { tagsQuery, tagsForEntityQuery } from './query';
+import { tagsQuery } from './query';
 import { OptionStyle, OptionsWrapperStyle, SelectedStyle } from './style';
 
 type Item = {
@@ -85,6 +85,7 @@ const TagOption = ({ index, style, data }: OptionProps) => {
   );
 };
 
+//
 const TagOptions = ({
   entityType,
   entityOwnerId,
@@ -100,7 +101,7 @@ const TagOptions = ({
   const { tags: tagData, onScroll } = useTagList({
     tagType: entityType,
     entityOwnerId,
-    query: entityOwnerId ? tagsForEntityQuery : tagsQuery,
+    query: tagsQuery,
     queryString: inputValue || '',
   });
 
