@@ -35,12 +35,9 @@ const useTagList = ({ tagType, organizationIds, queryString, query }: Props) => 
     filterBy: {
       query: debouncedQueryString || '',
       entityTypes: Array.isArray(tagType) ? tagType : [tagType],
+      organizationIds: organizationIds ?? [],
     },
   };
-
-  if (organizationIds) {
-    variables.filterBy.organizationIds = organizationIds;
-  }
 
   const [getTags, { data, loading }] = useLazyQuery(query, {
     variables,
