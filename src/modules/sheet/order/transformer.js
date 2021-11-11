@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { getBatchLatestQuantity } from 'utils/batch';
 import { convertVolume } from 'utils/metric';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import type { FieldDefinition } from 'types';
 import type { CellAction, CellValue } from 'components/Sheet/SheetState/types';
 import {
@@ -224,6 +225,7 @@ export default function transformSheetOrder({
       columnKey: 'order.tags',
       type: 'order_tags',
       extra: {
+        organizationIds: getEntityRelatedOrganizations(order),
         entityOwnerId: order?.ownedBy?.id,
       },
       ...transformValueField(

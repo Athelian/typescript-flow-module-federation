@@ -17,12 +17,15 @@ const requeryThreshold = 100;
 
 const useTagList = ({ tagType, entityOwnerId, organizationIds, queryString, query }: Props) => {
   const isMounted = React.useRef(true);
-  const debouncedQueryString = useDebounce(queryString, 200);
+  const debouncedQueryString = useDebounce(queryString, 100);
 
   const [pageSettings, setPageSettings] = React.useState({
     page: 1,
     perPage: 100,
   });
+
+  const queryStringRef = React.useRef(queryString);
+  const tagDataRef = React.useRef({});
 
   const [totalPages, setTotalPages] = React.useState(0);
 
@@ -41,19 +44,6 @@ const useTagList = ({ tagType, entityOwnerId, organizationIds, queryString, quer
     variables.filterBy.organizationIds = organizationIds;
   }
 
-  // if (entityOwnerId) {
-  //   variables = {
-  //     ...variables,
-  //     entityOwnerId,
-  //     entityType: tagType,
-  //   };
-  // } else {
-  //   variables = {
-  //     ...variables,
-  //     entityTypes: [tagType],
-  //   };
-  // }
-
   const [getTags, { data, loading }] = useLazyQuery(query, {
     variables,
     fetchPolicy: 'network-only',
@@ -65,14 +55,36 @@ const useTagList = ({ tagType, entityOwnerId, organizationIds, queryString, quer
 
   const [tagData, setTagData] = React.useState([]);
 
+  // empty tag data if query string changes
+  React.useEffect(() => {
+    if (queryStringRef.current !== queryString) {
+      setTagData([]);
+      queryStringRef.current = queryString;
+      tagDataRef.current = {};
+    }
+  }, [queryString]);
+
   React.useEffect(() => {
     if (!data || loading) {
       return;
     }
 
-    setTagData(oldTagData => {
-      return [...oldTagData, ...(data?.tags?.nodes ?? [])];
-    });
+    const newTagsById = (data?.tags?.nodes ?? []).reduce((arr, tag) => {
+      if (!tag?.id) {
+        return arr;
+      }
+
+      arr[tag.id] = tag;
+
+      return arr;
+    }, {});
+
+    tagDataRef.current = {
+      ...tagDataRef.current,
+      ...newTagsById,
+    };
+
+    setTagData(Object.values(tagDataRef.current));
   }, [data, loading]);
 
   React.useEffect(() => {

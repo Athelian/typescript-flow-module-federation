@@ -21,6 +21,7 @@ import { ORDER_FORM } from 'modules/permission/constants/order';
 import { TAG_GET } from 'modules/permission/constants/tag';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import { getItemQuantityChartData } from 'utils/item';
 import { OrderProductProviderCard, OrderCard } from 'components/Cards';
 import GridColumn from 'components/GridColumn';
@@ -223,6 +224,7 @@ const ItemSection = ({ isSlideView, orderItem }: Props) => {
                           id="tags"
                           name="tags"
                           tagType="OrderItem"
+                          organizationIds={getEntityRelatedOrganizations(orderItem)}
                           entityOwnerId={orderItem?.ownedBy?.id}
                           values={values.tags}
                           onChange={value => {

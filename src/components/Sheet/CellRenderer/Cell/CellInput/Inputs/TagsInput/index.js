@@ -138,6 +138,7 @@ const TagsInput = (entityType: string) => ({
     <div className={TagsInputWrapperStyle}>
       <BaseTagsInput
         entityType={entityType}
+        organizationIds={extra?.organizationIds}
         entityOwnerId={extra?.entityOwnerId}
         value={value || []}
         disabled={readonly}

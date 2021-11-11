@@ -32,6 +32,7 @@ import { ItemCard } from 'components/Cards';
 import GridColumn from 'components/GridColumn';
 import { HIDE, NAVIGABLE, READONLY } from 'modules/batch/constants';
 import type { ItemConfigType } from 'modules/batch/type';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import {
   SectionHeader,
   FormTooltip,
@@ -62,6 +63,10 @@ type Props = {
 const BatchSection = ({ batch, itemConfig }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+
+  const relatedOrgIds = React.useMemo(() => {
+    return getEntityRelatedOrganizations(batch);
+  }, [batch]);
 
   return (
     <SectionWrapper id="batch_batchSection">
@@ -254,6 +259,7 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                           name="tags"
                           tagType="Batch"
                           values={values.tags}
+                          organizationIds={relatedOrgIds}
                           entityOwnerId={batch?.ownedBy?.id}
                           onChange={value => {
                             setFieldValue('tags', value);

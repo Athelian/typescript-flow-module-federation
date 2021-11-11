@@ -9,6 +9,7 @@ import { BooleanValue, ObjectValue } from 'react-values';
 import { encodeId } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { isForbidden } from 'utils/data';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import usePermission from 'hooks/usePermission';
 import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
 import Followers from 'components/Followers';
@@ -390,6 +391,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                               id="tags"
                               name="tags"
                               tagType="Product"
+                              organizationIds={getEntityRelatedOrganizations(product)}
                               entityOwnerId={product?.ownedBy?.id}
                               values={tags}
                               onChange={value => {

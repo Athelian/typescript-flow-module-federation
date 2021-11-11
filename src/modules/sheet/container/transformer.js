@@ -7,6 +7,7 @@ import { getLatestDate } from 'utils/shipment';
 import type { FieldDefinition } from 'types';
 import { calculatePackageQuantity, calculateVolume, getBatchLatestQuantity } from 'utils/batch';
 import { getMaxVolume } from 'utils/container';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import {
   transformComputedField,
@@ -311,6 +312,7 @@ export default function transformSheetContainer({
       columnKey: 'container.tags',
       type: 'container_tags',
       extra: {
+        organizationIds: getEntityRelatedOrganizations(container),
         entityOwnerId: container?.ownedBy?.id,
       },
       ...transformValueField(

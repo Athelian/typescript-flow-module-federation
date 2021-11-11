@@ -7,6 +7,7 @@ import { calculatePackageQuantity, calculateVolume, getBatchLatestQuantity } fro
 import { convertVolume, convertWeight } from 'utils/metric';
 import type { CellValue } from 'components/Sheet/SheetState/types';
 import { getLatestDate } from 'utils/shipment';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import { differenceInCalendarDays } from 'utils/date';
 import {
   transformComputedField,
@@ -345,6 +346,7 @@ export default function transformSheetShipment({
       columnKey: 'shipment.tags',
       type: 'shipment_tags',
       extra: {
+        organizationIds: getEntityRelatedOrganizations(shipment),
         entityOwnerId: shipment?.ownedBy?.id,
       },
       ...transformValueField(

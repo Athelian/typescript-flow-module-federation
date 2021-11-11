@@ -30,6 +30,7 @@ export type RenderInputProps = {
 
 type Props = {
   entityOwnerId?: string,
+  organizationIds?: string[],
   entityType: string,
   value: Array<Item>,
   disabled?: boolean,
@@ -44,6 +45,7 @@ type Props = {
 type OptionsProps = {
   entityType: string,
   entityOwnerId?: string,
+  organizationIds?: string[],
   selectedItems: Array<Item>,
   isOpen: boolean,
   inputValue: ?string,
@@ -85,10 +87,10 @@ const TagOption = ({ index, style, data }: OptionProps) => {
   );
 };
 
-//
 const TagOptions = ({
   entityType,
   entityOwnerId,
+  organizationIds,
   selectedItems,
   inputValue,
   highlightedIndex,
@@ -101,6 +103,7 @@ const TagOptions = ({
   const { tags: tagData, onScroll } = useTagList({
     tagType: entityType,
     entityOwnerId,
+    organizationIds,
     query: tagsQuery,
     queryString: inputValue || '',
   });
@@ -206,6 +209,7 @@ const stateReducer = (state: Object, changes: Object) => {
 const TagsInput = ({
   entityType,
   entityOwnerId,
+  organizationIds,
   value,
   disabled,
   onChange,
@@ -296,6 +300,7 @@ const TagsInput = ({
             <TagOptions
               entityType={entityType}
               entityOwnerId={entityOwnerId}
+              organizationIds={organizationIds}
               selectedItems={value}
               highlightedIndex={highlightedIndex}
               inputValue={inputValue}

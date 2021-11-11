@@ -60,6 +60,7 @@ import SelectPartners from 'components/SelectPartners';
 import { NAVIGATION_NETWORK_PARTNERS } from 'modules/permission/constants/navigation';
 import { PartnerCard, GrayCard } from 'components/Cards';
 import { TAG_GET } from 'modules/permission/constants/tag';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import renderPartners from './helpers';
 import OrderSummary from './components/OrderSummary';
 import {
@@ -344,6 +345,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                               id="tags"
                               name="tags"
                               tagType="Order"
+                              organizationIds={getEntityRelatedOrganizations(order)}
                               entityOwnerId={ownedBy?.id}
                               values={tags}
                               onChange={value => {

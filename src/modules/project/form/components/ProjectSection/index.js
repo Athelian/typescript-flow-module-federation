@@ -47,6 +47,7 @@ import { TAG_GET } from 'modules/permission/constants/tag';
 import { ProjectActivateDialog, ProjectArchiveDialog } from 'modules/project/common/Dialog';
 import messages from 'modules/project/messages';
 import Followers from 'components/Followers';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import { renderPartners } from './helpers';
 import {
   ProjectSectionWrapperStyle,
@@ -185,6 +186,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                                     id="tags"
                                     name="tags"
                                     tagType="Project"
+                                    organizationIds={getEntityRelatedOrganizations(project)}
                                     entityOwnerId={project?.ownedBy?.id}
                                     values={tags}
                                     onChange={value => {

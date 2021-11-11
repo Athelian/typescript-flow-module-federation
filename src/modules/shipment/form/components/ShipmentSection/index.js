@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
 import { isNullOrUndefined } from 'utils/fp';
 import { encodeId } from 'utils/id';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import { getUniqueExporters } from 'utils/shipment';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
@@ -502,6 +503,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             id="tags"
                             name="tags"
                             tagType="Shipment"
+                            organizationIds={getEntityRelatedOrganizations(shipment)}
                             entityOwnerId={ownedBy?.id}
                             values={tags}
                             onChange={value => {
