@@ -18154,6 +18154,10 @@ export type ContainerBatchInput = {|
   orderItemId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
+export type ContainerBulkFilterInput = {|
+  nos?: ?ValuesWithMatchModeInput,
+|};
+
 export type ContainerCreateInput = {|
   no: $ElementType<Scalars, 'String'>,
   warehouseId?: ?$ElementType<Scalars, 'ID'>,
@@ -18191,6 +18195,7 @@ export type ContainerFilterInput = {|
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
+  bulkFilter?: ?ContainerBulkFilterInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
   productId?: ?$ElementType<Scalars, 'ID'>,
@@ -19429,6 +19434,7 @@ export type FieldDefinition = {|
 export type FieldDefinitionInput = {|
   id?: ?$ElementType<Scalars, 'ID'>,
   name?: ?$ElementType<Scalars, 'String'>,
+  type?: ?FieldDefinitionType,
 |};
 
 export type FieldDefinitionPayload = FieldDefinition | BadRequest | Forbidden | NotFound;
@@ -19551,6 +19557,8 @@ export type FileFilterInput = {|
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   tagIdsWithOperator?: ?IdsWithOperatorInput,
   notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  entityId?: ?$ElementType<Scalars, 'ID'>,
+  entityType?: ?$ElementType<Scalars, 'String'>,
 |};
 
 export type FileInput = {|
@@ -20738,6 +20746,8 @@ export type Mutation = {|
   changePassword?: ?EmptyPayload,
   requestResetPassword?: ?EmptyPayload,
   resetPassword?: ?EmptyPayload,
+  refreshToken: TokenPayload,
+  verifyToken: TokenPayload,
   userUpdate: UserPayload,
   userAddRole: UserRolesPayload,
   userRemoveRole: UserRolesPayload,
@@ -21870,6 +21880,10 @@ export type Order = {|
   |}
 |};
 
+export type OrderBulkFilterInput = {|
+  poNos?: ?ValuesWithMatchModeInput,
+|};
+
 export type OrderCreateInput = {|
   importerId?: ?$ElementType<Scalars, 'ID'>,
   exporterId: $ElementType<Scalars, 'ID'>,
@@ -21898,6 +21912,7 @@ export type OrderFilterInput = {|
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
+  bulkFilter?: ?OrderBulkFilterInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   ids?: ?Array<$ElementType<Scalars, 'ID'>>,
   poNos?: ?Array<$ElementType<Scalars, 'String'>>,
@@ -22196,6 +22211,7 @@ export type Organization = {|
     types: Array<OrganizationType>,
     name: $ElementType<Scalars, 'String'>,
     name2?: ?$ElementType<Scalars, 'String'>,
+    prefix?: ?$ElementType<Scalars, 'String'>,
     tel?: ?$ElementType<Scalars, 'String'>,
     street?: ?$ElementType<Scalars, 'String'>,
     locality?: ?$ElementType<Scalars, 'String'>,
@@ -22376,6 +22392,8 @@ export type PartnerFilterInput = {|
   types?: ?Array<OrganizationType>,
   name?: ?$ElementType<Scalars, 'String'>,
   confirmed?: ?$ElementType<Scalars, 'Boolean'>,
+  leftOrganizationId?: ?$ElementType<Scalars, 'String'>,
+  rightOrganizationId?: ?$ElementType<Scalars, 'String'>,
   showRightPartners?: ?$ElementType<Scalars, 'Boolean'>,
   showLeftPartners?: ?$ElementType<Scalars, 'Boolean'>,
 |};
@@ -22572,6 +22590,11 @@ export type ProductContainersArgs = {|
   sortBy?: ?ContainerSortInput
 |};
 
+export type ProductBulkFilterInput = {|
+  names?: ?ValuesWithMatchModeInput,
+  serials?: ?ValuesWithMatchModeInput,
+|};
+
 export type ProductCreateInput = {|
   /** Deprecated */
   importerId?: ?$ElementType<Scalars, 'ID'>,
@@ -22598,6 +22621,7 @@ export type ProductFilterInput = {|
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
+  bulkFilter?: ?ProductBulkFilterInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   name?: ?$ElementType<Scalars, 'String'>,
   serial?: ?$ElementType<Scalars, 'String'>,
@@ -22999,6 +23023,7 @@ export type ProjectFilterInput = {|
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   milestones?: ?Array<ProjectMilestoneFilterInput>,
   tasks?: ?Array<ProjectTaskFilterInput>,
+  keywords?: ?ValuesWithMatchModeInput,
 |};
 
 export type ProjectMilestoneCreateInput = {|
@@ -23300,15 +23325,15 @@ export type Query = {|
   exportTemplates: Array<ExportTemplatePayload>,
   exportExtensions: Array<ExportExtensionPayload>,
   genericExport: ExportPayload,
-  role: RolePayload,
-  roles: RolePayloadPaginatedList,
-  permissions: Array<$ElementType<Scalars, 'String'>>,
   focuses: Array<FocusPayload>,
   shipmentAggregate: ShipmentAggregatePayload,
   shipmentAggregates: ShipmentAggregatePayloadPaginatedSearch,
   shipmentAggregatesByIDs: Array<ShipmentAggregatePayload>,
   shipmentPackageList: ShipmentPackageListPayload,
   shipmentPackageListsByIDs: Array<ShipmentPackageListPayload>,
+  timelineEntriesByIDs: Array<TimelineEntry>,
+  timelineEntries: TimelineEntryPaginatedSearch,
+  timelineEntry: TimelineEntry,
 |};
 
 
@@ -23986,17 +24011,6 @@ export type QueryGenericExportArgs = {|
 |};
 
 
-export type QueryRoleArgs = {|
-  id: $ElementType<Scalars, 'ID'>
-|};
-
-
-export type QueryRolesArgs = {|
-  page: $ElementType<Scalars, 'Int'>,
-  perPage: $ElementType<Scalars, 'Int'>
-|};
-
-
 export type QueryFocusesArgs = {|
   id: $ElementType<Scalars, 'ID'>,
   entities: Array<EntityInput>
@@ -24028,6 +24042,24 @@ export type QueryShipmentPackageListArgs = {|
 
 export type QueryShipmentPackageListsByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
+|};
+
+
+export type QueryTimelineEntriesByIDsArgs = {|
+  ids: Array<$ElementType<Scalars, 'ID'>>
+|};
+
+
+export type QueryTimelineEntriesArgs = {|
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  filterBy?: ?TimelineEntryFilterInput,
+  sortBy?: ?TimelineEntrySortInput
+|};
+
+
+export type QueryTimelineEntryArgs = {|
+  id: $ElementType<Scalars, 'ID'>
 |};
 
 export type Reference = {|
@@ -24110,19 +24142,6 @@ export type RoleCreateInput = {|
 |};
 
 export type RolePayload = Role | BadRequest | Forbidden | NotFound;
-
-export type RolePayloadPaginatedList = {|
-  ...Paginated,
-  ...{|
-     __typename?: 'RolePayloadPaginatedList',
-    nodes: Array<RolePayload>,
-    page: $ElementType<Scalars, 'Int'>,
-    perPage: $ElementType<Scalars, 'Int'>,
-    totalPage: $ElementType<Scalars, 'Int'>,
-    count: $ElementType<Scalars, 'Int'>,
-    totalCount: $ElementType<Scalars, 'Int'>,
-  |}
-|};
 
 export type RoleUpdateInput = {|
   name?: ?$ElementType<Scalars, 'String'>,
@@ -61438,6 +61457,10 @@ export type ShipmentBookingNumberSetEvent = {|
   |}
 |};
 
+export type ShipmentBulkFilterInput = {|
+  nos?: ?ValuesWithMatchModeInput,
+|};
+
 export type ShipmentConsigneeAppointedEvent = {|
   ...ShipmentEventInterface,
   ...EventInterface,
@@ -61569,6 +61592,8 @@ export type ShipmentFilterInput = {|
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
+  bulkFilter?: ?ShipmentBulkFilterInput,
+  keywords?: ?ValuesWithMatchModeInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   ids?: ?Array<$ElementType<Scalars, 'ID'>>,
   importerId?: ?$ElementType<Scalars, 'ID'>,
@@ -61584,6 +61609,7 @@ export type ShipmentFilterInput = {|
   firstTransitPorts?: ?Array<PortInput>,
   secondTransitPorts?: ?Array<PortInput>,
   dischargePorts?: ?Array<PortInput>,
+  firstDepartureArrivalUpdatedAt?: ?DateRangeInput,
   cargoReady?: ?DateRangeInput,
   loadPortDeparture?: ?DateRangeInput,
   firstTransitPortArrival?: ?DateRangeInput,
@@ -62229,6 +62255,10 @@ export type TagFilterInput = {|
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
+  organizationId?: ?$ElementType<Scalars, 'ID'>,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  includeAllShared?: ?$ElementType<Scalars, 'Boolean'>,
+  name?: ?$ElementType<Scalars, 'String'>,
   entityTypes?: ?Array<TagEntityType>,
 |};
 
@@ -62693,12 +62723,21 @@ export type Timeline = {|
   unreadCount: $ElementType<Scalars, 'Int'>,
   unreadMessageCount: $ElementType<Scalars, 'Int'>,
   entries: TimelineEntryPaginatedList,
+  timelineEntries: TimelineEntryPaginatedSearch,
 |};
 
 
 export type TimelineEntriesArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>
+|};
+
+
+export type TimelineTimelineEntriesArgs = {|
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  filterBy?: ?TimelineEntryFilterInput,
+  sortBy?: ?TimelineEntrySortInput
 |};
 
 export type TimelineComment = {|
@@ -62803,6 +62842,18 @@ export type TimelineDateRevisionType = $Values<typeof TimelineDateRevisionTypeVa
 
 export type TimelineEntry = TimelineEvent | TimelineComment | BadRequest | Forbidden | NotFound;
 
+export type TimelineEntryFilterInput = {|
+  query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
+  excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  createdAt?: ?DateRangeInput,
+  updatedAt?: ?DateRangeInput,
+  isComment?: ?$ElementType<Scalars, 'Boolean'>,
+  isEntityRemoved?: ?$ElementType<Scalars, 'Boolean'>,
+  entityId?: ?$ElementType<Scalars, 'ID'>,
+  entityType?: ?$ElementType<Scalars, 'String'>,
+|};
+
 export type TimelineEntryPaginatedList = {|
   ...Paginated,
   ...{|
@@ -62814,6 +62865,25 @@ export type TimelineEntryPaginatedList = {|
     count: $ElementType<Scalars, 'Int'>,
     totalCount: $ElementType<Scalars, 'Int'>,
   |}
+|};
+
+export type TimelineEntryPaginatedSearch = {|
+  ...Paginated,
+  ...{|
+     __typename?: 'TimelineEntryPaginatedSearch',
+    nodes: Array<TimelineEntry>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  |}
+|};
+
+export type TimelineEntrySortInput = {|
+  createdAt?: ?SortOrder,
+  updatedAt?: ?SortOrder,
 |};
 
 export type TimelineEvent = {|
@@ -62930,12 +63000,17 @@ export type User = {|
   |}
 |};
 
+export type UserBulkFilterInput = {|
+  emails?: ?ValuesWithMatchModeInput,
+|};
+
 export type UserFilterInput = {|
   query?: ?$ElementType<Scalars, 'String'>,
   ownerId?: ?$ElementType<Scalars, 'ID'>,
   excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
+  bulkFilter?: ?UserBulkFilterInput,
   organizationId?: ?$ElementType<Scalars, 'ID'>,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   /** Deprecated */
@@ -63011,6 +63086,21 @@ export type ValueInput = {|
 export type Values = {|
    __typename?: 'Values',
   values: Array<?Value>,
+|};
+
+export const ValuesWithMatchModeValues = Object.freeze({
+  /** Partial */
+  Partial: 'Partial', 
+  /** Exactly */
+  Exactly: 'Exactly'
+});
+
+
+export type ValuesWithMatchMode = $Values<typeof ValuesWithMatchModeValues>;
+
+export type ValuesWithMatchModeInput = {|
+  values?: ?Array<$ElementType<Scalars, 'String'>>,
+  matchMode?: ?ValuesWithMatchMode,
 |};
 
 export type Viewer = {|

@@ -60,6 +60,7 @@ import SelectPartners from 'components/SelectPartners';
 import { NAVIGATION_NETWORK_PARTNERS } from 'modules/permission/constants/navigation';
 import { PartnerCard, GrayCard } from 'components/Cards';
 import { TAG_GET } from 'modules/permission/constants/tag';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import renderPartners from './helpers';
 import OrderSummary from './components/OrderSummary';
 import {
@@ -79,7 +80,7 @@ type Props = {
 const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { archived, ownedBy } = order;
+  const { archived } = order;
 
   return (
     <MainSectionPlaceholder height={961} isLoading={isLoading}>
@@ -344,7 +345,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                               id="tags"
                               name="tags"
                               tagType="Order"
-                              entityOwnerId={ownedBy?.id}
+                              organizationIds={getEntityRelatedOrganizations(order)}
                               values={tags}
                               onChange={value => {
                                 changeTags('tags', value);

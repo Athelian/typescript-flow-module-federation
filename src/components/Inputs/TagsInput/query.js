@@ -3,8 +3,8 @@ import gql from 'graphql-tag';
 import { tagCardFragment, ownedByFragment } from 'graphql';
 
 export const tagsQuery = gql`
-  query tagsQuery($entityType: TagEntityType!, $query: String, $page: Int!, $perPage: Int!) {
-    tags(filterBy: { query: $query, entityTypes: [$entityType] }, page: $page, perPage: $perPage) {
+  query tagsQuery($filterBy: TagFilterInput, $page: Int!, $perPage: Int!) {
+    tags(filterBy: $filterBy, page: $page, perPage: $perPage) {
       nodes {
         ... on Tag {
           id
@@ -18,6 +18,9 @@ export const tagsQuery = gql`
   }
 `;
 
+/**
+ * @deprecated use tagsQuery instead
+ */
 export const tagsForEntityQuery = gql`
   query tagsForEntity(
     $entityOwnerId: ID!

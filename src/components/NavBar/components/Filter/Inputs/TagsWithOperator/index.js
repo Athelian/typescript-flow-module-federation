@@ -50,6 +50,7 @@ const TagsImpl = ({ value, readonly, onChange, tagType }: ImplProps) => {
       <TagsInput
         name="tags"
         width="200px"
+        includeAllShared
         tagType={tagType}
         disabled={readonly}
         values={data?.tagsByIDs ?? []}
