@@ -790,7 +790,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, parentEntity }: Props) => {
                       id="tags"
                       name="tags"
                       tagType="Task"
-                      entityOwnerId={task?.ownedBy?.id}
+                      organizationIds={[task?.ownedBy?.id].filter(Boolean)}
                       values={values.tags}
                       onChange={value => {
                         setFieldValue('tags', value);

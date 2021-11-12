@@ -21,7 +21,7 @@ export const tagsQuery = gql`
 `;
 
 /**
- * @deprecated
+ * @deprecated use tagsQuery instead
  */
 export const tagsForEntityQuery = gql`
   query tagsForEntity(
