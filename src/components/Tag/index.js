@@ -36,12 +36,15 @@ const Tag = ({ tag, prefix, suffix }: Props) => {
       preventOverflow: { enabled: false },
     },
   };
+  const [isVisible, setTooltipVisible] = React.useState(false);
+  const [delayHandler, setDelayHandler] = React.useState(null);
 
   return (
     <div className={TagStyle(color)}>
       <span>
         {tagIsShared && (
           <Tooltip
+            visible={isVisible}
             message={
               <>
                 <FormattedMessage id="modules.Tags.sharedBy" defaultMessage="sharedBy" />{' '}
@@ -50,7 +53,24 @@ const Tag = ({ tag, prefix, suffix }: Props) => {
             }
             popperOptions={popperOptions}
           >
-            <span className={OwnerStyle}>{ownedBy?.name.charAt(0)}</span>
+            <span
+              className={OwnerStyle}
+              onMouseEnter={() => {
+                // doing it like this because popup doesnt
+                // disappear when you scroll down
+                setDelayHandler(
+                  setTimeout(() => {
+                    setTooltipVisible(true);
+                  }, 500)
+                );
+              }}
+              onMouseLeave={() => {
+                clearTimeout(delayHandler);
+                setTooltipVisible(false);
+              }}
+            >
+              {ownedBy?.name.charAt(0)}
+            </span>
           </Tooltip>
         )}
         {prefix && <div className={PrefixStyle(color)}>{prefix}</div>}
