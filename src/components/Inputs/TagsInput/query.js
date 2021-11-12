@@ -10,12 +10,16 @@ export const tagsQuery = gql`
           id
           name
           color
+          ownedBy {
+            ...ownedByFragment
+          }
         }
       }
       page
       totalPage
     }
   }
+  ${ownedByFragment}
 `;
 
 /**
