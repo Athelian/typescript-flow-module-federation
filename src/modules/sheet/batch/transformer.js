@@ -208,7 +208,6 @@ export default function transformSheetBatch({
       type: 'batch_tags',
       extra: {
         organizationIds: getEntityRelatedOrganizations(batch),
-        entityOwnerId: batch?.ownedBy?.id,
       },
       ...transformValueField(
         basePath,

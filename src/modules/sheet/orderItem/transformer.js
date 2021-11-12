@@ -146,7 +146,6 @@ export default function transformSheetOrderItem({
       type: 'order_item_tags',
       extra: {
         organizationIds: getEntityRelatedOrganizations(orderItem),
-        entityOwnerId: orderItem?.ownedBy?.id,
       },
       ...transformValueField(
         basePath,

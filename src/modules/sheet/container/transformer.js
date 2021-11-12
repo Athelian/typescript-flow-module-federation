@@ -313,7 +313,6 @@ export default function transformSheetContainer({
       type: 'container_tags',
       extra: {
         organizationIds: getEntityRelatedOrganizations(container),
-        entityOwnerId: container?.ownedBy?.id,
       },
       ...transformValueField(
         basePath,
