@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import { ownedByFragment } from 'graphql';
 
 export const tagsQuery = gql`
   query tagsQuery($filterBy: TagFilterInput, $sortBy: TagSortInput, $page: Int!, $perPage: Int!) {
@@ -9,6 +10,9 @@ export const tagsQuery = gql`
           id
           name
           color
+          ownedBy {
+            ...ownedByFragment
+          }
         }
       }
       page
@@ -18,6 +22,8 @@ export const tagsQuery = gql`
       totalCount
     }
   }
+
+  ${ownedByFragment}
 `;
 
 /**
