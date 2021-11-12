@@ -1,5 +1,6 @@
 // @flow
 import { getBatchLatestQuantity } from 'utils/batch';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import type { FieldDefinition } from 'types';
 import type { CellAction, CellValue } from 'components/Sheet/SheetState/types';
 import {
@@ -144,7 +145,7 @@ export default function transformSheetOrderItem({
       columnKey: 'orderItem.tags',
       type: 'order_item_tags',
       extra: {
-        entityOwnerId: orderItem?.ownedBy?.id,
+        organizationIds: getEntityRelatedOrganizations(orderItem),
       },
       ...transformValueField(
         basePath,

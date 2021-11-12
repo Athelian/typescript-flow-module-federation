@@ -2,6 +2,7 @@
 import { IntlShape } from 'react-intl';
 import { MilestoneDateBindingValues, TaskDateBindingValues } from 'generated/graphql';
 import { colors } from 'styles/common';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import {
   transformComputedField,
   transformReadonlyField,
@@ -270,7 +271,7 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
       columnKey: 'project.tags',
       type: 'project_tags',
       extra: {
-        entityOwnerId: project?.ownedBy?.id,
+        organizationIds: getEntityRelatedOrganizations(project),
       },
       ...transformValueField(
         basePath,
@@ -727,7 +728,7 @@ function transformTask(
       columnKey: `milestones.${milestoneIdx}.tasks.${taskIdx}.tags`,
       type: 'task_tags',
       extra: {
-        entityOwnerId: task?.ownedBy?.id,
+        organizationids: task?.ownedBy?.id ? [task?.ownedBy?.id] : [],
       },
       ...transformValueField(
         basePath,

@@ -31,6 +31,7 @@ import {
   BATCH_SET_TASKS,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import { getLatestDate } from 'utils/shipment';
 import { calculateDateDifferenceInDays } from 'utils/date';
 
@@ -206,7 +207,7 @@ export default function transformSheetBatch({
       columnKey: 'batch.tags',
       type: 'batch_tags',
       extra: {
-        entityOwnerId: batch?.ownedBy?.id,
+        organizationIds: getEntityRelatedOrganizations(batch),
       },
       ...transformValueField(
         basePath,

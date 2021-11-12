@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
 import { isNullOrUndefined } from 'utils/fp';
 import { encodeId } from 'utils/id';
+import { getEntityRelatedOrganizations } from 'utils/entity';
 import { getUniqueExporters } from 'utils/shipment';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
@@ -103,7 +104,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
   const { isOwner } = usePartnerPermission();
   const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
-  const { id: shipmentId, archived, ownedBy } = shipment;
+  const { id: shipmentId, archived } = shipment;
   return (
     <Subscribe to={[ShipmentInfoContainer]}>
       {({
@@ -502,7 +503,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             id="tags"
                             name="tags"
                             tagType="Shipment"
-                            entityOwnerId={ownedBy?.id}
+                            organizationIds={getEntityRelatedOrganizations(shipment)}
                             values={tags}
                             onChange={value => {
                               changeTags('tags', value);

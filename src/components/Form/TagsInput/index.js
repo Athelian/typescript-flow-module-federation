@@ -21,6 +21,7 @@ import {
 
 type OptionalProps = {
   width: string,
+  includeAllShared?: boolean,
   editable: {
     set: boolean,
     remove: boolean,
@@ -28,7 +29,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  entityOwnerId?: string,
+  organizationIds?: string[],
   ownedBy?: Object,
   tagType: TagsQueryType,
   name: string,
@@ -157,7 +158,8 @@ export default class TagsInput extends React.Component<Props, State> {
 
   render() {
     const {
-      entityOwnerId,
+      organizationIds,
+      includeAllShared,
       editable,
       width,
       tagType,
@@ -295,7 +297,8 @@ export default class TagsInput extends React.Component<Props, State> {
                   <TagListProvider
                     queryString={inputValue}
                     tagType={tagType}
-                    entityOwnerId={entityOwnerId}
+                    organizationIds={organizationIds}
+                    includeAllShared={includeAllShared}
                   >
                     {({ data: tags, onScroll }) => {
                       return (

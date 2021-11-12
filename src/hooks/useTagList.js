@@ -6,64 +6,89 @@ import useDebounce from 'hooks/useDebounce';
 
 type Props = {
   tagType: string,
-  entityOwnerId?: string,
+  organizationIds?: string[],
   queryString?: string,
+  includeAllShared?: boolean,
   query?: any,
 };
 
 const requeryThreshold = 100;
 
-const useTagList = ({ tagType, entityOwnerId, queryString, query }: Props) => {
+const useTagList = ({
+  tagType,
+  organizationIds,
+  queryString,
+  includeAllShared = false,
+  query,
+}: Props) => {
   const isMounted = React.useRef(true);
-  const debouncedQueryString = useDebounce(queryString, 200);
+  const debouncedQueryString = useDebounce(queryString, 100);
 
   const [pageSettings, setPageSettings] = React.useState({
     page: 1,
     perPage: 100,
   });
 
+  const queryStringRef = React.useRef(queryString);
+  const tagDataRef = React.useRef({});
+
   const [totalPages, setTotalPages] = React.useState(0);
 
-  let variables = {
+  const variables = {
     ...pageSettings,
     sortBy: {
       name: 'ASCENDING',
     },
-    query: debouncedQueryString || '',
+    filterBy: {
+      query: debouncedQueryString || '',
+      entityTypes: Array.isArray(tagType) ? tagType : [tagType],
+      organizationIds: organizationIds ?? [],
+      includeAllShared,
+    },
   };
-
-  if (entityOwnerId) {
-    variables = {
-      ...variables,
-      entityOwnerId,
-      entityType: tagType,
-    };
-  } else {
-    variables = {
-      ...variables,
-      entityTypes: [tagType],
-    };
-  }
 
   const [getTags, { data, loading }] = useLazyQuery(query, {
     variables,
     fetchPolicy: 'network-only',
     onCompleted: newData => {
-      const value = newData?.tagsForEntity ?? newData?.tags;
+      const value = newData?.tags;
       setTotalPages(value.totalPage);
     },
   });
 
   const [tagData, setTagData] = React.useState([]);
 
+  // empty tag data if query string changes
+  React.useEffect(() => {
+    if (queryStringRef.current !== queryString) {
+      setTagData([]);
+      queryStringRef.current = queryString;
+      tagDataRef.current = {};
+    }
+  }, [queryString]);
+
   React.useEffect(() => {
     if (!data || loading) {
       return;
     }
 
-    setTagData(oldTagData => {
-      return [...oldTagData, ...(data?.tagsForEntity?.nodes ?? data?.tags?.nodes ?? [])];
-    });
+    const newTagsById = (data?.tags?.nodes ?? []).reduce((arr, tag) => {
+      if (!tag?.id) {
+        return arr;
+      }
+
+      // eslint-disable-next-line
+      arr[tag.id] = tag;
+
+      return arr;
+    }, {});
+
+    tagDataRef.current = {
+      ...tagDataRef.current,
+      ...newTagsById,
+    };
+
+    setTagData(Object.values(tagDataRef.current));
   }, [data, loading]);
 
   React.useEffect(() => {
