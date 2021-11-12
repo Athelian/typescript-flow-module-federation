@@ -21,6 +21,7 @@ import {
 
 type OptionalProps = {
   width: string,
+  includeAllShared?: boolean,
   editable: {
     set: boolean,
     remove: boolean,
@@ -158,6 +159,7 @@ export default class TagsInput extends React.Component<Props, State> {
   render() {
     const {
       organizationIds,
+      includeAllShared,
       editable,
       width,
       tagType,
@@ -296,6 +298,7 @@ export default class TagsInput extends React.Component<Props, State> {
                     queryString={inputValue}
                     tagType={tagType}
                     organizationIds={organizationIds}
+                    includeAllShared={includeAllShared}
                   >
                     {({ data: tags, onScroll }) => {
                       return (

@@ -8,13 +8,21 @@ type Props = {
   children: any,
   tagType: TagsQueryType,
   organizationIds?: string[],
+  includeAllShared?: boolean,
   queryString?: string,
 };
 
-const TagListProvider = ({ children, tagType, organizationIds, queryString }: Props) => {
+const TagListProvider = ({
+  children,
+  tagType,
+  organizationIds,
+  includeAllShared,
+  queryString,
+}: Props) => {
   const { tags, loading, onScroll } = useTagList({
     tagType,
     organizationIds,
+    includeAllShared,
     query: tagsQuery,
     queryString,
   });

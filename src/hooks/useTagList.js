@@ -8,12 +8,19 @@ type Props = {
   tagType: string,
   organizationIds?: string[],
   queryString?: string,
+  includeAllShared?: boolean,
   query?: any,
 };
 
 const requeryThreshold = 100;
 
-const useTagList = ({ tagType, organizationIds, queryString, query }: Props) => {
+const useTagList = ({
+  tagType,
+  organizationIds,
+  queryString,
+  includeAllShared = false,
+  query,
+}: Props) => {
   const isMounted = React.useRef(true);
   const debouncedQueryString = useDebounce(queryString, 100);
 
@@ -36,6 +43,7 @@ const useTagList = ({ tagType, organizationIds, queryString, query }: Props) => 
       query: debouncedQueryString || '',
       entityTypes: Array.isArray(tagType) ? tagType : [tagType],
       organizationIds: organizationIds ?? [],
+      includeAllShared,
     },
   };
 
