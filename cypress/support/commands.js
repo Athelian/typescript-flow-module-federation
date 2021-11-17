@@ -59,7 +59,7 @@ Cypress.Commands.add('logout', () => {
     headers: { 'Content-Type': 'application/json' },
     url: Cypress.env('graphql'),
     body: {
-      query: 'mutation {  logout }',
+      query: 'mutation { logout }',
     },
   };
   cy.request(options);
