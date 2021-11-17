@@ -30,6 +30,6 @@ describe('Login', () => {
     cy.findByTestId('submitButton')
       .click()
       .url()
-      .should('include', '/order');
+      .should('include', '/shipment');
   });
 });
