@@ -14,6 +14,9 @@ export const parseUrl = (notification: Notification) => {
   if (typeName === 'Milestone' && notification?.entity?.project !== undefined) {
     typeName = 'Project';
     id = notification?.entity?.project.id;
+  } else if (typeName === 'ProductProvider' && notification?.entity?.product !== undefined) {
+    typeName = 'Product';
+    id = notification?.entity?.product.id;
   } else if (typeName === 'File') {
     typeName = 'Document';
   }

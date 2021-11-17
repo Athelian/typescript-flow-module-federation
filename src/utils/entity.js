@@ -9,6 +9,7 @@ const mappingIcon = {
   OrderItem: 'ORDER_ITEM',
   orderItem: 'ORDER_ITEM',
   productProvider: 'PRODUCT_PROVIDER',
+  ProductProvider: 'PRODUCT_PROVIDER',
   File: 'DOCUMENT',
 };
 
