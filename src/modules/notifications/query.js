@@ -45,6 +45,15 @@ export const notificationListQuery = gql`
                   }
                 }
               }
+              ... on ProductProvider {
+                id
+                __typename
+                product {
+                  ... on Product {
+                    id
+                  }
+                }
+              }
             }
           }
         }
