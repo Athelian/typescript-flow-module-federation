@@ -1,12 +1,10 @@
 // @flow
 import * as React from 'react';
-import { formatToDateInput, isValidDate } from 'utils/date';
 import Icon from 'components/Icon';
 import { FormField } from 'modules/form';
 import {
   Label,
   TextInput,
-  DateInput,
   SelectInput,
   DefaultStyle,
   DefaultSelect,
@@ -51,58 +49,6 @@ const DefaultCustomFieldDefinitionStyle = ({
   deletable,
   onRemove,
 }: Props) => {
-  const inputField = React.useMemo(() => {
-    if (!editable) {
-      return <Label width="200px">{fieldName}</Label>;
-    }
-
-    if (fieldType === 'Date') {
-      const newDateValue = formatToDateInput(
-        isValidDate(fieldName) ? new Date() : formatToDateInput(new Date())
-      );
-
-      return (
-        <FormField
-          name={`${targetName}.name`}
-          initValue={newDateValue}
-          setFieldValue={setFieldValue}
-        >
-          {({ name, ...inputHandlers }) => {
-            const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
-            return (
-              <DefaultStyle
-                width="200px"
-                isFocused={isFocused}
-                hasError={isTouched && errorMessage}
-                type="label"
-              >
-                <DateInput name={name} width="200px" {...rest} />
-              </DefaultStyle>
-            );
-          }}
-        </FormField>
-      );
-    }
-
-    return (
-      <FormField name={`${targetName}.name`} initValue={fieldName} setFieldValue={setFieldValue}>
-        {({ name, ...inputHandlers }) => {
-          const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
-          return (
-            <DefaultStyle
-              width="200px"
-              isFocused={isFocused}
-              hasError={isTouched && errorMessage}
-              type="label"
-            >
-              <TextInput name={name} {...rest} align="left" />
-            </DefaultStyle>
-          );
-        }}
-      </FormField>
-    );
-  }, [editable, setFieldValue, targetName, fieldType, fieldName]);
-
   return (
     <div className={DefaultCustomFieldDefinitionWrapperStyle}>
       {editable ? (
@@ -115,7 +61,25 @@ const DefaultCustomFieldDefinitionStyle = ({
         </div>
       )}
 
-      {inputField}
+      {editable ? (
+        <FormField name={`${targetName}.name`} initValue={fieldName} setFieldValue={setFieldValue}>
+          {({ name, ...inputHandlers }) => {
+            const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
+            return (
+              <DefaultStyle
+                width="200px"
+                isFocused={isFocused}
+                hasError={isTouched && errorMessage}
+                type="label"
+              >
+                <TextInput name={name} {...rest} align="left" />
+              </DefaultStyle>
+            );
+          }}
+        </FormField>
+      ) : (
+        <Label width="200px">{fieldName}</Label>
+      )}
 
       <FormField name={`${targetName}.type`} initValue={fieldType} setFieldValue={setFieldValue}>
         {({ name, ...inputHandlers }) => {
@@ -124,10 +88,6 @@ const DefaultCustomFieldDefinitionStyle = ({
               {...inputHandlers}
               onChange={newFieldType => {
                 setFieldValue(name, newFieldType);
-                setFieldValue(
-                  `${targetName}.name`,
-                  newFieldType === 'Date' ? formatToDateInput(new Date()) : ''
-                );
               }}
               name={name}
               items={['Text', 'Date']}

@@ -57,8 +57,8 @@ const FieldDefinitionsForm = ({ fieldDefinitions, setFieldArrayValue, removeArra
                   {fieldDefinitions &&
                     fieldDefinitions.map((fieldDefinition, index) => (
                       <Draggable
-                        key={`${fieldDefinition.id}-${fieldDefinition.type}`}
-                        draggableId={`${fieldDefinition.id}-${fieldDefinition.type}`}
+                        key={`${fieldDefinition.id}-${!!fieldDefinition.isNew}`}
+                        draggableId={`${fieldDefinition.id}-${!!fieldDefinition.isNew}`}
                         index={index}
                       >
                         {provided => {
