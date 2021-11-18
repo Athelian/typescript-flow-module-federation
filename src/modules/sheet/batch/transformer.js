@@ -406,7 +406,7 @@ export default function transformSheetBatch({
     },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `batch.customField.${fieldDefinition.id}`,
-      type: 'text',
+      type: fieldDefinition.type === 'Date' ? 'date' : 'text',
       hide: root => {
         const currentBatch = getBatchFromRoot(root);
         const mask = currentBatch?.customFields?.mask ?? null;

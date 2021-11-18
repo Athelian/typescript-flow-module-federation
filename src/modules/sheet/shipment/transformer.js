@@ -1453,20 +1453,22 @@ export default function transformSheetShipment({
           hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_CUSTOM_FIELDS_MASK)
       ),
     },
-    ...fieldDefinitions.map(fieldDefinition => ({
-      columnKey: `shipment.customField.${fieldDefinition.id}`,
-      type: 'text',
-      hide: root => {
-        const currentShipment = getShipmentFromRoot(root);
-        const mask = currentShipment?.customFields?.mask ?? null;
-        return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
-      },
-      ...transformCustomField(
-        basePath,
-        shipment,
-        fieldDefinition.id,
-        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_CUSTOM_FIELDS)
-      ),
-    })),
+    ...fieldDefinitions.map(fieldDefinition => {
+      return {
+        columnKey: `shipment.customField.${fieldDefinition.id}`,
+        type: fieldDefinition.type === 'Date' ? 'date' : 'text',
+        hide: root => {
+          const currentShipment = getShipmentFromRoot(root);
+          const mask = currentShipment?.customFields?.mask ?? null;
+          return !!mask && !mask.fieldDefinitions.find(fd => fd.id === fieldDefinition.id);
+        },
+        ...transformCustomField(
+          basePath,
+          shipment,
+          fieldDefinition.id,
+          hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_CUSTOM_FIELDS)
+        ),
+      };
+    }),
   ];
 }

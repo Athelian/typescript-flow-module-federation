@@ -494,7 +494,7 @@ export default function transformSheetContainer({
     },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `container.customField.${fieldDefinition.id}`,
-      type: 'text',
+      type: fieldDefinition.type === 'Date' ? 'date' : 'text',
       hide: (root: Object) => {
         const currentContainer = getContainerFromRoot(root);
         const mask = currentContainer?.customFields?.mask ?? null;

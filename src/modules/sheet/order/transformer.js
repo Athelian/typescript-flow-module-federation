@@ -368,7 +368,7 @@ export default function transformSheetOrder({
     },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `order.customField.${fieldDefinition.id}`,
-      type: 'text',
+      type: fieldDefinition.type === 'Date' ? 'date' : 'text',
       hide: (root: Object) => {
         const currentOrder = getOrderFromRoot(root);
         const mask = currentOrder?.customFields?.mask ?? null;
