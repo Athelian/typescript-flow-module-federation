@@ -207,6 +207,7 @@ class CustomFieldsForm extends React.Component<Props> {
                                 key={fieldDefinition.id}
                                 targetName={`fieldValues.${index}`}
                                 fieldName={fieldDefinition.name}
+                                fieldType={fieldDefinition.type}
                                 value={value}
                                 setFieldValue={customFieldsContainer.setFieldValue}
                                 editable={editable.values}
