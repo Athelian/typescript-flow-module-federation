@@ -8,6 +8,7 @@ export const fieldDefinitionsQuery = gql`
         id
         name
         sort
+        type
         entityType
       }
     }

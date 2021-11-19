@@ -57,23 +57,27 @@ const FieldDefinitionsForm = ({ fieldDefinitions, setFieldArrayValue, removeArra
                   {fieldDefinitions &&
                     fieldDefinitions.map((fieldDefinition, index) => (
                       <Draggable
-                        key={fieldDefinition.id}
-                        draggableId={fieldDefinition.id}
+                        key={`${fieldDefinition.id}-${!!fieldDefinition.isNew}`}
+                        draggableId={`${fieldDefinition.id}-${!!fieldDefinition.isNew}`}
                         index={index}
                       >
-                        {provided => (
-                          <div ref={provided.innerRef} {...provided.draggableProps}>
-                            <DefaultCustomFieldDefinitionStyle
-                              dragHandleProps={provided.dragHandleProps}
-                              targetName={`fieldDefinitions.${index}`}
-                              fieldName={fieldDefinition.name}
-                              setFieldValue={setFieldArrayValue}
-                              onRemove={() => removeArrayItem(`fieldDefinitions.${index}`)}
-                              editable
-                              deletable={allowDelete}
-                            />
-                          </div>
-                        )}
+                        {provided => {
+                          return (
+                            <div ref={provided.innerRef} {...provided.draggableProps}>
+                              <DefaultCustomFieldDefinitionStyle
+                                dragHandleProps={provided.dragHandleProps}
+                                targetName={`fieldDefinitions.${index}`}
+                                fieldName={fieldDefinition.name}
+                                fieldType={fieldDefinition.type}
+                                setFieldValue={setFieldArrayValue}
+                                onRemove={() => removeArrayItem(`fieldDefinitions.${index}`)}
+                                isNew={fieldDefinition.isNew}
+                                editable
+                                deletable={allowDelete}
+                              />
+                            </div>
+                          );
+                        }}
                       </Draggable>
                     ))}
                 </GridColumn>
@@ -87,6 +91,7 @@ const FieldDefinitionsForm = ({ fieldDefinitions, setFieldArrayValue, removeArra
             fieldDefinitions.map(fieldDefinition => (
               <DefaultCustomFieldDefinitionStyle
                 fieldName={fieldDefinition.name}
+                fieldType={fieldDefinition.type}
                 editable={false}
                 deletable={allowDelete}
               />
@@ -106,7 +111,7 @@ const FieldDefinitionsForm = ({ fieldDefinitions, setFieldArrayValue, removeArra
             onClick={() => {
               setFieldArrayValue('fieldDefinitions', [
                 ...fieldDefinitions,
-                { id: uuid(), name: '', isNew: true },
+                { id: uuid(), name: '', type: 'Text', isNew: true },
               ]);
             }}
           />

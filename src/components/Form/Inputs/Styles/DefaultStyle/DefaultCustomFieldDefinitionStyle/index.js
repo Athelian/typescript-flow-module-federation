@@ -1,9 +1,15 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { FormField } from 'modules/form';
-import { Label, TextInput, DefaultStyle, Display } from 'components/Form';
+import {
+  Label,
+  TextInput,
+  SelectInput,
+  DefaultStyle,
+  DefaultSelect,
+  DefaultOptions,
+} from 'components/Form';
 import {
   DefaultCustomFieldDefinitionWrapperStyle,
   DraggingIconStyle,
@@ -14,11 +20,13 @@ import {
 type OptionalProps = {
   editable: boolean,
   deletable: boolean,
+  isNew: boolean,
   onRemove: Function,
 };
 
 type Props = OptionalProps & {
   fieldName: any,
+  fieldType: string,
   targetName: string,
   setFieldValue: Function,
   dragHandleProps?: any,
@@ -32,58 +40,81 @@ const defaultProps = {
 
 const DefaultCustomFieldDefinitionStyle = ({
   fieldName,
+  fieldType,
   dragHandleProps,
   targetName,
   setFieldValue,
+  isNew,
   editable,
   deletable,
   onRemove,
-}: Props) => (
-  <div className={DefaultCustomFieldDefinitionWrapperStyle}>
-    {editable ? (
-      <div className={DraggingIconStyle} {...dragHandleProps}>
-        <Icon icon="DRAG_HANDLE" />
-      </div>
-    ) : (
-      <div className={CustomFieldIconStyle}>
-        <Icon icon="METADATA" />
-      </div>
-    )}
+}: Props) => {
+  return (
+    <div className={DefaultCustomFieldDefinitionWrapperStyle}>
+      {editable ? (
+        <div className={DraggingIconStyle} {...dragHandleProps}>
+          <Icon icon="DRAG_HANDLE" />
+        </div>
+      ) : (
+        <div className={CustomFieldIconStyle}>
+          <Icon icon="METADATA" />
+        </div>
+      )}
 
-    {editable ? (
-      <FormField name={`${targetName}.name`} initValue={fieldName} setFieldValue={setFieldValue}>
+      {editable ? (
+        <FormField name={`${targetName}.name`} initValue={fieldName} setFieldValue={setFieldValue}>
+          {({ name, ...inputHandlers }) => {
+            const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
+            return (
+              <DefaultStyle
+                width="200px"
+                isFocused={isFocused}
+                hasError={isTouched && errorMessage}
+                type="label"
+              >
+                <TextInput name={name} {...rest} align="left" />
+              </DefaultStyle>
+            );
+          }}
+        </FormField>
+      ) : (
+        <Label width="200px">{fieldName}</Label>
+      )}
+
+      <FormField name={`${targetName}.type`} initValue={fieldType} setFieldValue={setFieldValue}>
         {({ name, ...inputHandlers }) => {
-          const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
           return (
-            <DefaultStyle
-              width="200px"
-              isFocused={isFocused}
-              hasError={isTouched && errorMessage}
+            <SelectInput
+              {...inputHandlers}
+              onChange={newFieldType => {
+                setFieldValue(name, newFieldType);
+              }}
+              name={name}
+              items={['Text', 'Date']}
+              renderSelect={({ ...rest }) => (
+                <DefaultSelect required width="200px" height="30px" {...rest} />
+              )}
+              renderOptions={({ ...rest }) => <DefaultOptions width="200px" {...rest} />}
+              itemToString={item => item || ''}
+              itemToValue={item => item}
               type="label"
-            >
-              <TextInput name={name} {...rest} align="left" />
-            </DefaultStyle>
+              align="left"
+              readOnlyWidth="200px"
+              readOnlyHeight="30px"
+              readOnly={!isNew || !editable}
+            />
           );
         }}
       </FormField>
-    ) : (
-      <Label width="200px">{fieldName}</Label>
-    )}
 
-    <Display width="200px" height="30px" color="GRAY_LIGHT" style={{ userSelect: 'none' }}>
-      <FormattedMessage
-        id="components.inputs.customFieldDefinitionPlaceholder"
-        defaultMessage="Value will be entered here"
-      />
-    </Display>
-
-    {deletable && (
-      <button className={RemoveButtonStyle} onClick={onRemove} type="button">
-        <Icon icon="REMOVE" />
-      </button>
-    )}
-  </div>
-);
+      {deletable && (
+        <button className={RemoveButtonStyle} onClick={onRemove} type="button">
+          <Icon icon="REMOVE" />
+        </button>
+      )}
+    </div>
+  );
+};
 
 DefaultCustomFieldDefinitionStyle.defaultProps = defaultProps;
 

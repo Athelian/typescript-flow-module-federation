@@ -239,6 +239,7 @@ export const fieldDefinitionFragment = gql`
     id
     name
     entityType
+    type
     sort
   }
 `;

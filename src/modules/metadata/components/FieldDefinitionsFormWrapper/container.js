@@ -64,6 +64,7 @@ export default class FieldDefinitionContainer extends Container<FormState> {
         if (fieldDefinition.isNew && !fieldDefinition.isSent) {
           return {
             ...fieldDefinition,
+            isNew: false,
             isSent: true,
           };
         }

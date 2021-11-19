@@ -14,6 +14,7 @@ export type MetricValue = {
 export type FieldDefinition = {
   id: string,
   name: string,
+  type: string,
   entityType: string,
   sort: number,
 };

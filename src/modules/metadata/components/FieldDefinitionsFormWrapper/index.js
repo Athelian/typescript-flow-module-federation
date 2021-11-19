@@ -99,8 +99,8 @@ const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
                                 entityType: formData.entityType,
                                 fieldDefinitions: formData.fieldDefinitions
                                   .filter(item => item.name !== '')
-                                  .map(({ id, name, isNew = false }) =>
-                                    isNew ? { name } : { id, name }
+                                  .map(({ id, name, type, isNew = false }) =>
+                                    isNew ? { name, type } : { id, name, type }
                                   ),
                               };
 

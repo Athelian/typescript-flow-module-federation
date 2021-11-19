@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import { FormField } from 'modules/form';
-import { Label, TextInput, DefaultStyle, Display } from 'components/Form';
+import { Label, TextInput, DateInput, DefaultStyle, Display } from 'components/Form';
 import {
   DefaultCustomFieldWrapperStyle,
   CustomFieldWrapperStyle,
@@ -16,6 +16,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   fieldName: any,
+  fieldType: string,
   targetName: string,
   setFieldValue: Function,
 };
@@ -28,6 +29,7 @@ const defaultProps = {
 const DefaultCustomFieldStyle = ({
   value,
   fieldName,
+  fieldType,
   targetName,
   setFieldValue,
   editable,
@@ -54,7 +56,11 @@ const DefaultCustomFieldStyle = ({
                 isFocused={isFocused}
                 hasError={isTouched && errorMessage}
               >
-                <TextInput name={name} {...rest} />
+                {fieldType === 'Date' ? (
+                  <DateInput name={name} width="200px" {...rest} />
+                ) : (
+                  <TextInput name={name} {...rest} />
+                )}
               </DefaultStyle>
             );
           }}
