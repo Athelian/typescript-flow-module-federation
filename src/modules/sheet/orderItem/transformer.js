@@ -293,7 +293,7 @@ export default function transformSheetOrderItem({
     },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `orderItem.customField.${fieldDefinition.id}`,
-      type: 'text',
+      type: fieldDefinition.type === 'Date' ? 'date' : 'text',
       hide: root => {
         const currentOrderItem = getOrderItemFromRoot(root);
         const mask = currentOrderItem?.customFields?.mask ?? null;

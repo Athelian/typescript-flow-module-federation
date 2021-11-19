@@ -70,7 +70,7 @@ export default function transformSheetProduct({
     },
     ...fieldDefinitions.map(fieldDefinition => ({
       columnKey: `product.customField.${fieldDefinition.id}`,
-      type: 'text',
+      type: fieldDefinition.type === 'Date' ? 'date' : 'text',
       hide: root => {
         const currentProduct = getProductFromRoot(root);
         const mask = currentProduct?.customFields?.mask ?? null;
