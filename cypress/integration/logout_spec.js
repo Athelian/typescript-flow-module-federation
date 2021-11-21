@@ -1,4 +1,8 @@
 describe('Logout', () => {
+  before(() => {
+    cy.login();
+  });
+
   it('login and logout then redirect back to login page', () => {
     cy.visit('/order')
       .findByTestId('setting-button')

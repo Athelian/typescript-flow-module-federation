@@ -20,7 +20,7 @@ describe('I18n', () => {
             },
           }) => {
             cy.visit('/order/cards').contains(
-              user.language === 'en' ? 'CARDS' : 'リレーションマップ'
+              user.language === 'en' ? 'CARDS' : 'カードリスト'
             );
           }
         );
@@ -45,7 +45,7 @@ describe('I18n', () => {
               token,
               variables: { id: user.id, input: { language: 'ja' } },
             }).then(() => {
-              cy.visit('/order/cards').contains('リレーションマップ');
+              cy.visit('/order/cards').contains('カードリスト');
               cy.task('language', {
                 token,
                 variables: { id: user.id, input: { language: 'en' } },

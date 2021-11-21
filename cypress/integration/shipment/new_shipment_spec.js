@@ -8,7 +8,7 @@ describe('Shipment', () => {
 
   it('should create a shipment without timeline', () => {
     cy.task('fixture', 'shipment').then(({ shipmentNo }) => {
-      cy.visit('/shipment')
+      cy.visit('/shipment/cards')
         .findByTestId('newButton')
         .click()
         .url()
@@ -39,7 +39,7 @@ describe('Shipment', () => {
 
   it('should create a shipment with timeline information', () => {
     cy.task('fixture', 'shipment').then(({ shipmentNo, cargoReadyDate }) => {
-      cy.visit('/shipment')
+      cy.visit('/shipment/cards')
         .findByTestId('newButton')
         .click()
         .url()
