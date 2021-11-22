@@ -1031,6 +1031,7 @@
   "modules.Products.sectionSpec": "SPECIFICATIONS",
   "modules.Products.sectionPES": "EXPORTER & SUPPLIERS",
   "modules.Products.sectionPackage": "PACKAGING",
+  "modules.Products.sectionDocuments": "DOCUMENTS",
   "modules.Products.sectionMetadata": "METADATA",
   "modules.Products.infoName": "Product name is required",
   "modules.Products.infoSerial": "Product serial is required",
