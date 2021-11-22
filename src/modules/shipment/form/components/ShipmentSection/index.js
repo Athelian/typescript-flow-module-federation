@@ -755,14 +755,22 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                           defaultMessage="Removing the Main Exporter will remove all Followers of the current Main Exporter from the Shipment. Are you sure you want to remove the Main Exporter?"
                                         />
                                       }
-                                      onSelect={({ organization, ...partner }) => {
-                                        const assembledOrg = {
-                                          ...organization,
-                                          partner: {
-                                            ...partner,
-                                          },
-                                        };
+                                      onSelect={selectedExporter => {
+                                        let assembledOrg = null;
+
+                                        if (selectedExporter) {
+                                          const { organization, ...partner } = selectedExporter;
+
+                                          assembledOrg = {
+                                            ...organization,
+                                            partner: {
+                                              ...partner,
+                                            },
+                                          };
+                                        }
+
                                         onChangePartner('exporter', assembledOrg);
+
                                         emitter.emit('CLEAN_SHIPMENTS', {
                                           action: 'CHANGE_EXPORTER',
                                           payload: {
