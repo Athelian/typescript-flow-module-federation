@@ -166,6 +166,15 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     defaultValue: {},
     hidden: true,
   },
+  // Add this for keywords bulk filter
+  {
+    entity: 'ORDER',
+    field: 'keywords',
+    type: 'keywords',
+    message: '',
+    defaultValue: {},
+    hidden: true,
+  },
   {
     entity: 'ORDER',
     field: 'archived',
@@ -688,6 +697,15 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
     entity: 'SHIPMENT',
     field: 'bulkFilter',
     type: 'bulkFilter',
+    message: '',
+    defaultValue: {},
+    hidden: true,
+  },
+  // Add this for keywords bulk filter
+  {
+    entity: 'SHIPMENT',
+    field: 'keywords',
+    type: 'keywords',
     message: '',
     defaultValue: {},
     hidden: true,
