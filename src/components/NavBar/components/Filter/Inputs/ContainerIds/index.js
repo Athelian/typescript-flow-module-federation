@@ -58,6 +58,7 @@ const ContainerSelector = ({ open, onClose, selected, setSelected }: SelectorPro
                 disabled={!dirty}
                 onClick={() => setSelected(value.map(container => container.id))}
               />
+              <span>Button</span>
             </SlideViewNavBar>
 
             <Content>

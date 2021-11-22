@@ -57,6 +57,7 @@ const ProductSelector = ({ open, onClose, selected, setSelected }: SelectorProps
                 disabled={!dirty}
                 onClick={() => setSelected(value.map(product => product.id))}
               />
+              <span>Button</span>
             </SlideViewNavBar>
 
             <Content>

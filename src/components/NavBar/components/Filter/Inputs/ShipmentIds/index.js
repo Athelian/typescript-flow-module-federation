@@ -61,6 +61,7 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
                 disabled={!dirty}
                 onClick={() => setSelected(value.map(shipment => shipment.id))}
               />
+              <span>Button</span>
             </SlideViewNavBar>
 
             <Content>

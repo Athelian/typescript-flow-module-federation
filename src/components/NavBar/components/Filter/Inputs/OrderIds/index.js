@@ -62,6 +62,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
                 disabled={!dirty}
                 onClick={() => setSelected(value.map(order => order.id))}
               />
+              <span>Button</span>
             </SlideViewNavBar>
 
             <Content id="antd-modal">
