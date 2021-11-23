@@ -371,7 +371,7 @@ export default function transformSheetBatch({
     },
     {
       columnKey: 'batch.todo',
-      type: 'batch_tasks',
+      type: 'tasks',
       computed: root => {
         const currentOrder = getOrderFromRoot(root);
         return {
@@ -386,6 +386,9 @@ export default function transformSheetBatch({
         'todo',
         hasPermission => hasPermission(BATCH_UPDATE) || hasPermission(BATCH_SET_TASKS)
       ),
+      extra: {
+        entityType: 'batch',
+      },
     },
     {
       columnKey: 'batch.logs',

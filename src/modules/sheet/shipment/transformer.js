@@ -1415,7 +1415,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.todo',
-      type: 'shipment_tasks',
+      type: 'tasks',
       computed: root => {
         const currentShipment = getShipmentFromRoot(root);
         return {
@@ -1434,6 +1434,9 @@ export default function transformSheetShipment({
         'todo',
         hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TASKS)
       ),
+      extra: {
+        entityType: 'shipment',
+      },
     },
     {
       columnKey: 'shipment.logs',

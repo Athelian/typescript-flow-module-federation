@@ -333,7 +333,7 @@ export default function transformSheetOrder({
     },
     {
       columnKey: 'order.todo',
-      type: 'order_tasks',
+      type: 'tasks',
       computed: root => {
         const currentOrder = getOrderFromRoot(root);
         return {
@@ -348,6 +348,9 @@ export default function transformSheetOrder({
         'todo',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_TASKS)
       ),
+      extra: {
+        entityType: 'order',
+      },
     },
     {
       columnKey: 'order.logs',

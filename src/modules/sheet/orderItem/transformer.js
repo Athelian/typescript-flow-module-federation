@@ -256,7 +256,7 @@ export default function transformSheetOrderItem({
     },
     {
       columnKey: 'orderItem.todo',
-      type: 'order_item_tasks',
+      type: 'tasks',
       computed: root => {
         const currentOrder = getOrderFromRoot(root);
 
@@ -272,6 +272,9 @@ export default function transformSheetOrderItem({
         'todo',
         hasPermission => hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_TASKS)
       ),
+      extra: {
+        entityType: 'order_item',
+      },
     },
     {
       columnKey: 'orderItem.logs',
