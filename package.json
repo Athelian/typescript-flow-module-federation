@@ -91,6 +91,7 @@
   },
   "scripts": {
     "start": "cross-env HTTPS=true node scripts/start.js",
+    "start-http": "cross-env HTTPS=false node scripts/start.js",
     "build": "npm run build:prod",
     "build:prod": "cross-env NODE_ENV=production node scripts/build.js",
     "build:stg": "cross-env NODE_ENV=staging node scripts/build.js",
