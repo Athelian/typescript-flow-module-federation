@@ -214,7 +214,9 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
     setFilterStates(filterStates.filter(fs => (staticFilters || []).includes(fs.field)));
   };
   // We need to filter out the bulk filter here so it doesnt cause the icon to be active.
-  const isActive = filterStates.filter(b => b.field !== 'bulkFilter').length > 0;
+  const isActive =
+    filterStates.filter(b => b.field !== 'bulkFilter').length > 0 &&
+    filterStates.filter(b => b.field !== 'keywords').length > 0;
   const hasWeakFilter = !!filterStates.find(f => !f.entity || !f.field || !f.type);
   const availableConfig = config.filter(
     (c: FilterConfig) =>
@@ -313,6 +315,9 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
             })}
             {filterStates.map((state, index) => {
               if (state.field === 'bulkFilter') {
+                return null;
+              }
+              if (state.field === 'keywords') {
                 return null;
               }
               if ((staticFilters || []).includes(state.field)) {
