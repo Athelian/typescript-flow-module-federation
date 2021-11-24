@@ -31,7 +31,7 @@ const RelationMap = () => {
                     <SortAndFilter.Provider initialState="NRMShipment">
                       <NavBar>
                         <EntityIcon icon="SHIPMENT" color="SHIPMENT" subIcon="MAP" />
-                        <AdvanceFilter />
+                        <AdvanceFilter bulkFilterType="MAP" />
                         <ExpandButton />
                       </NavBar>
                       <Content>
