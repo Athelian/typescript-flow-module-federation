@@ -821,7 +821,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                           <>
                             <div
                               onClick={() =>
-                                isImporter() &&
                                 hasPermission(NAVIGATION_NETWORK_PARTNERS) &&
                                 hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_FORWARDERS])
                                   ? forwardersSelectorToggle(true)
