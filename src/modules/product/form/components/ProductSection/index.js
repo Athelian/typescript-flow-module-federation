@@ -394,10 +394,11 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                               id="tags"
                               name="tags"
                               tagType="Product"
-                              organizationIds={getEntityRelatedOrganizations(
-                                product,
-                                userOrganization?.id
-                              )}
+                              organizationIds={getEntityRelatedOrganizations({
+                                entity: product,
+                                userOrganizationId: userOrganization?.id,
+                                formState: values,
+                              })}
                               values={tags}
                               onChange={value => {
                                 changeTags('tags', value);

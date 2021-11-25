@@ -66,10 +66,6 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
   const { hasPermission } = usePermission(isOwner);
   const { organization } = useUser();
 
-  const relatedOrgIds = React.useMemo(() => {
-    return getEntityRelatedOrganizations(batch, organization?.id);
-  }, [batch, organization]);
-
   return (
     <SectionWrapper id="batch_batchSection">
       <SectionHeader
@@ -102,6 +98,12 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
         <Subscribe to={[BatchInfoContainer]}>
           {({ originalValues, state, setFieldValue }) => {
             const values = { ...originalValues, ...state };
+
+            const relatedOrgIds = getEntityRelatedOrganizations({
+              entity: batch,
+              userOrganizationId: organization?.id,
+              formState: values,
+            });
 
             const { orderItem: rawOrderItem } = values;
             const { orderItem, productProvider, product, order } = spreadOrderItem(rawOrderItem);

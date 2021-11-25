@@ -227,10 +227,11 @@ const ItemSection = ({ isSlideView, orderItem }: Props) => {
                           id="tags"
                           name="tags"
                           tagType="OrderItem"
-                          organizationIds={getEntityRelatedOrganizations(
-                            orderItem,
-                            userOrganization?.id
-                          )}
+                          organizationIds={getEntityRelatedOrganizations({
+                            entity: orderItem,
+                            userOrganizationId: userOrganization?.id,
+                            formState: values,
+                          })}
                           values={values.tags}
                           onChange={value => {
                             setFieldValue('tags', value);

@@ -312,7 +312,7 @@ export default function transformSheetContainer({
       columnKey: 'container.tags',
       type: 'container_tags',
       extra: {
-        organizationIds: getEntityRelatedOrganizations(container),
+        organizationIds: getEntityRelatedOrganizations({ entity: container }),
       },
       ...transformValueField(
         basePath,

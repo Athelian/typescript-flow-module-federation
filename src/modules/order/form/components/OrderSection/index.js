@@ -347,10 +347,11 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                               id="tags"
                               name="tags"
                               tagType="Order"
-                              organizationIds={getEntityRelatedOrganizations(
-                                order,
-                                userOrganization?.id
-                              )}
+                              organizationIds={getEntityRelatedOrganizations({
+                                entity: order,
+                                userOrganizationId: userOrganization?.id,
+                                formState: values,
+                              })}
                               values={tags}
                               onChange={value => {
                                 changeTags('tags', value);

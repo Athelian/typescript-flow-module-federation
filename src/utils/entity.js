@@ -21,82 +21,59 @@ export const parseIcon = (entityType: string) => {
   return mappingIcon?.[entityType] ?? entityType?.toUpperCase() ?? 'ORDER';
 };
 
-/**
- * Retrieves related organizations of an entity
- */
-export const getEntityRelatedOrganizations = (entity: any, userOrganizationId?: string) => {
+const getOrgIdsFromValue = (entity: any) => {
   if (!entity) {
     return [];
   }
 
   const organizationIds = new Set();
 
-  organizationIds.add(userOrganizationId);
+  organizationIds.add(entity.ownedBy?.id);
+  organizationIds.add(entity.exporter?.id);
+  organizationIds.add(entity.importer?.id);
 
-  switch (entity.__typename) {
-    case 'Batch':
-      organizationIds.add(entity.ownedBy?.id);
-      organizationIds.add(entity.exporter?.id);
-      organizationIds.add(entity.importer?.id);
+  // eslint-disable-next-line
+  entity.forwarders?.forEach(forwarder => {
+    organizationIds.add(forwarder?.id);
+  });
 
-      // eslint-disable-next-line
-      entity.forwarders?.forEach(forwarder => {
-        organizationIds.add(forwarder?.id);
-      });
-      break;
-    case 'Order':
-      organizationIds.add(entity.ownedBy?.id);
-      organizationIds.add(entity.exporter?.id);
-      organizationIds.add(entity.importer?.id);
+  // shared partners
+  // eslint-disable-next-line
+  entity.organizations?.forEach(organization => {
+    organizationIds.add(organization?.id);
+  });
 
-      // eslint-disable-next-line
-      entity.organizations?.forEach(organization => {
-        organizationIds.add(organization?.id);
-      });
-
-      break;
-    case 'OrderItem':
-      organizationIds.add(entity.order?.ownedBy?.id);
-      organizationIds.add(entity.order?.exporter?.id);
-      organizationIds.add(entity.order?.importer?.id);
-
-      // eslint-disable-next-line
-      entity.order?.organizations?.forEach(organization => {
-        organizationIds.add(organization?.id);
-      });
-      break;
-    case 'Product':
-      organizationIds.add(entity.ownedBy?.id);
-      organizationIds.add(entity.importer?.id);
-
-      // eslint-disable-next-line
-      entity.organizations?.forEach(organization => {
-        organizationIds.add(organization?.id);
-      });
-      break;
-    case 'Shipment':
-      organizationIds.add(entity.ownedBy?.id);
-      organizationIds.add(entity.exporter?.id);
-      organizationIds.add(entity.importer?.id);
-
-      entity.forwarders.forEach(organization => {
-        organizationIds.add(organization?.id);
-      });
-
-      // eslint-disable-next-line
-      entity.organizations?.forEach(organization => {
-        organizationIds.add(organization?.id);
-      });
-      break;
-    case 'Project':
-      organizationIds.add(entity.ownedBy?.id);
-
-      entity.organizations.forEach(organization => {
-        organizationIds.add(organization?.id);
-      });
-      break;
-    default:
+  return [...organizationIds];
+};
+/**
+ * Retrieves related organizations of an entity
+ */
+export const getEntityRelatedOrganizations = ({
+  entity,
+  userOrganizationId,
+  formState,
+}: {
+  entity: any,
+  userOrganizationId?: string,
+  formState?: any,
+}) => {
+  if (!entity) {
+    return [];
   }
+
+  const entityIds = getOrgIdsFromValue(entity);
+  const formStateIds = getOrgIdsFromValue(formState);
+  const formStateOrderIds = getOrgIdsFromValue(formState?.order);
+  // in case of order item
+  const entityOrderIds = getOrgIdsFromValue(entity?.order);
+
+  const organizationIds = new Set([
+    userOrganizationId,
+    ...entityIds,
+    ...entityOrderIds,
+    ...formStateIds,
+    ...formStateOrderIds,
+  ]);
 
   return [...organizationIds].filter(Boolean);
 };
