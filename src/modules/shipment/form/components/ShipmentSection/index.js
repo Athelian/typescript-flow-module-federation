@@ -488,14 +488,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       mask: hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_CUSTOM_FIELDS_MASK]),
                     }}
                   />
-                  {console.log(
-                    'org ids are',
-                    getEntityRelatedOrganizations({
-                      entity: shipment,
-                      userOrganizationId: userOrganization?.id,
-                      formState: values,
-                    })
-                  )}
                   <Subscribe to={[ShipmentTagsContainer]}>
                     {({ state: { tags }, setFieldValue: changeTags }) => (
                       <FieldItem
