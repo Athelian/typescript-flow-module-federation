@@ -10,6 +10,7 @@ import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Di
 import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import useUser from 'hooks/useUser';
 import emitter from 'utils/emitter';
 import {
   OrderInfoContainer,
@@ -81,6 +82,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const { archived } = order;
+  const { organization: userOrganization } = useUser();
 
   return (
     <MainSectionPlaceholder height={961} isLoading={isLoading}>
@@ -345,7 +347,10 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                               id="tags"
                               name="tags"
                               tagType="Order"
-                              organizationIds={getEntityRelatedOrganizations(order)}
+                              organizationIds={getEntityRelatedOrganizations(
+                                order,
+                                userOrganization?.id
+                              )}
                               values={tags}
                               onChange={value => {
                                 changeTags('tags', value);

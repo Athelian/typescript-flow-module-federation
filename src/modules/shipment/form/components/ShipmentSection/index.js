@@ -102,7 +102,7 @@ type Props = {|
 
 const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlideView }: Props) => {
   const { isOwner } = usePartnerPermission();
-  const { isImporter, isForwarder, isExporter } = useUser();
+  const { isImporter, organization: userOrganization, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, archived } = shipment;
   return (
@@ -503,7 +503,10 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             id="tags"
                             name="tags"
                             tagType="Shipment"
-                            organizationIds={getEntityRelatedOrganizations(shipment)}
+                            organizationIds={getEntityRelatedOrganizations(
+                              shipment,
+                              userOrganization?.id
+                            )}
                             values={tags}
                             onChange={value => {
                               changeTags('tags', value);

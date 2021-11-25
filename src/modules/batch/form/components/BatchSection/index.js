@@ -25,6 +25,7 @@ import {
 } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import useUser from 'hooks/useUser';
 import { BatchInfoContainer } from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
 import { FormField } from 'modules/form';
@@ -63,10 +64,11 @@ type Props = {
 const BatchSection = ({ batch, itemConfig }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const { organization } = useUser();
 
   const relatedOrgIds = React.useMemo(() => {
-    return getEntityRelatedOrganizations(batch);
-  }, [batch]);
+    return getEntityRelatedOrganizations(batch, organization?.id);
+  }, [batch, organization]);
 
   return (
     <SectionWrapper id="batch_batchSection">

@@ -11,6 +11,7 @@ import { getByPath } from 'utils/fp';
 import { isForbidden } from 'utils/data';
 import { getEntityRelatedOrganizations } from 'utils/entity';
 import usePermission from 'hooks/usePermission';
+import useUser from 'hooks/useUser';
 import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
 import Followers from 'components/Followers';
 import ProductImage from 'components/ProductImage';
@@ -92,6 +93,8 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
 const ProductSection = ({ isNew, isOwner, product }: Props) => {
   const { hasPermission } = usePermission(isOwner);
   const archived = getByPath('archived', product);
+  const { organization: userOrganization } = useUser();
+
   return (
     <>
       <SectionHeader
@@ -391,7 +394,10 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                               id="tags"
                               name="tags"
                               tagType="Product"
-                              organizationIds={getEntityRelatedOrganizations(product)}
+                              organizationIds={getEntityRelatedOrganizations(
+                                product,
+                                userOrganization?.id
+                              )}
                               values={tags}
                               onChange={value => {
                                 changeTags('tags', value);

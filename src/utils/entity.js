@@ -24,12 +24,14 @@ export const parseIcon = (entityType: string) => {
 /**
  * Retrieves related organizations of an entity
  */
-export const getEntityRelatedOrganizations = (entity: any) => {
+export const getEntityRelatedOrganizations = (entity: any, userOrganizationId?: string) => {
   if (!entity) {
     return [];
   }
 
   const organizationIds = new Set();
+
+  organizationIds.add(userOrganizationId);
 
   switch (entity.__typename) {
     case 'Batch':
