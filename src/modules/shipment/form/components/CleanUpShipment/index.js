@@ -6,16 +6,19 @@ import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { shipmentFormTimelineAndCargoQuery } from 'modules/shipment/form/components/TimelineAndCargoSections/query';
 import useUser from 'hooks/useUser';
+import { getUpdatedTags } from './helpers';
 
 type Props = {|
   isNew: boolean,
   shipmentId: string,
   containersContainer: Object,
   batchesContainer: Object,
+  tagsContainer: Object,
+  infoContainer: Object,
 |};
 
 type ChangeData = {|
-  action: 'CHANGE_EXPORTER' | 'CHANGE_IMPORTER' | 'CHANGE_FORWARDERS',
+  action: 'CHANGE_EXPORTER' | 'CHANGE_IMPORTER' | 'CHANGE_FORWARDERS' | 'CHANGE_SHARED_PARTNERS',
   payload: {
     importer?: PartnerPayload,
     exporter?: PartnerPayload,
@@ -30,6 +33,8 @@ export default function CleanUpShipment({
   shipmentId,
   containersContainer,
   batchesContainer,
+  infoContainer,
+  tagsContainer,
 }: Props) {
   const [queryShipmentDetail, { data, called, loading }] = useLazyQuery(
     shipmentFormTimelineAndCargoQuery
@@ -86,12 +91,58 @@ export default function CleanUpShipment({
       } else {
         switch (action) {
           case 'CHANGE_EXPORTER':
-            batchesContainer.changeMainExporter(payload.exporter, payload.selectedExporter);
-            containersContainer.onChangeExporter(payload.exporter, payload.selectedExporter);
+            {
+              batchesContainer.changeMainExporter(payload.exporter, payload.selectedExporter);
+              containersContainer.onChangeExporter(payload.exporter, payload.selectedExporter);
+
+              const updatedTags = getUpdatedTags({
+                infoContainer,
+                tagsContainer,
+                newValue: payload.selectedExporter,
+                field: 'exporter',
+              });
+
+              tagsContainer.setFieldValue('tags', updatedTags);
+            }
             break;
           case 'CHANGE_IMPORTER':
-            batchesContainer.onChangeImporter(payload.importer);
-            containersContainer.onChangeImporter(payload.importer);
+            {
+              batchesContainer.onChangeImporter(payload.importer);
+              containersContainer.onChangeImporter(payload.importer);
+
+              const updatedTags = getUpdatedTags({
+                infoContainer,
+                tagsContainer,
+                newValue: payload.selectedImporter,
+                field: 'importer',
+              });
+
+              tagsContainer.setFieldValue('tags', updatedTags);
+            }
+            break;
+          case 'CHANGE_FORWARDERS':
+            {
+              const updatedTags = getUpdatedTags({
+                infoContainer,
+                tagsContainer,
+                newValue: payload.selectedForwarders,
+                field: 'forwarders',
+              });
+
+              tagsContainer.setFieldValue('tags', updatedTags);
+            }
+            break;
+          case 'CHANGE_SHARED_PARTNERS':
+            {
+              const updatedTags = getUpdatedTags({
+                infoContainer,
+                tagsContainer,
+                newValue: payload.selectedOrganizations,
+                field: 'organizations',
+              });
+
+              tagsContainer.setFieldValue('tags', updatedTags);
+            }
             break;
 
           default:
@@ -103,6 +154,14 @@ export default function CleanUpShipment({
     return () => {
       emitter.removeAllListeners('CLEAN_SHIPMENTS');
     };
-  }, [batchesContainer, containersContainer, isNew, queryShipmentDetail, shipmentId]);
+  }, [
+    batchesContainer,
+    containersContainer,
+    infoContainer,
+    tagsContainer,
+    isNew,
+    queryShipmentDetail,
+    shipmentId,
+  ]);
   return null;
 }

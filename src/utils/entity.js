@@ -53,14 +53,10 @@ export const getEntityRelatedOrganizations = ({
   userOrganizationId,
   formState,
 }: {
-  entity: any,
+  entity?: any,
   userOrganizationId?: string,
   formState?: any,
 }) => {
-  if (!entity) {
-    return [];
-  }
-
   const entityIds = getOrgIdsFromValue(entity);
   const formStateIds = getOrgIdsFromValue(formState);
   const formStateOrderIds = getOrgIdsFromValue(formState?.order);

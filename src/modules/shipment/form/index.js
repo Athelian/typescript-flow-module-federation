@@ -15,6 +15,7 @@ import {
   ShipmentTimelineContainer,
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
+  ShipmentTagsContainer,
 } from './containers';
 import {
   ShipmentSection,
@@ -176,13 +177,22 @@ const ShipmentForm = ({
         )}
       </Subscribe>
 
-      <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
-        {(batchesContainer, containersContainer) => (
+      <Subscribe
+        to={[
+          ShipmentBatchesContainer,
+          ShipmentContainersContainer,
+          ShipmentTagsContainer,
+          ShipmentInfoContainer,
+        ]}
+      >
+        {(batchesContainer, containersContainer, tagsContainer, infoContainer) => (
           <CleanUpShipment
             isNew={isNew || !!isClone}
             shipmentId={shipment?.id}
             containersContainer={containersContainer}
             batchesContainer={batchesContainer}
+            tagsContainer={tagsContainer}
+            infoContainer={infoContainer}
           />
         )}
       </Subscribe>

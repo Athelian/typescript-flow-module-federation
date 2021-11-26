@@ -652,6 +652,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                     action: 'CHANGE_IMPORTER',
                                                     payload: {
                                                       importer,
+                                                      selectedImporter,
                                                     },
                                                   });
                                                   importerDialogToggle(false);
@@ -778,7 +779,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                           action: 'CHANGE_EXPORTER',
                                           payload: {
                                             exporter,
-                                            assembledOrg,
+                                            selectedExporter: assembledOrg,
                                           },
                                         });
                                         exporterSelectorToggle(false);
@@ -984,6 +985,13 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                     );
 
                                     onChangePartners(assembledOrgs, forwarders, exporter, importer);
+
+                                    emitter.emit('CLEAN_SHIPMENTS', {
+                                      action: 'CHANGE_SHARED_PARTNERS',
+                                      payload: {
+                                        selectedOrganizations: assembledOrgs,
+                                      },
+                                    });
                                     partnerSelectorToggle(false);
                                   }}
                                 />
