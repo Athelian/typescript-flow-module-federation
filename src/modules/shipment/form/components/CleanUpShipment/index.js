@@ -22,9 +22,11 @@ type ChangeData = {|
   payload: {
     importer?: PartnerPayload,
     exporter?: PartnerPayload,
-    selectedExporter?: PartnerPayload,
     forwarders?: Array<PartnerPayload>,
+    selectedImporter?: PartnerPayload,
+    selectedExporter?: PartnerPayload,
     selectedForwarders?: Array<PartnerPayload>,
+    selectedOrganizations?: Array<PartnerPayload>,
   },
 |};
 
