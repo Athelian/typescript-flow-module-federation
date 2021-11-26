@@ -11,7 +11,7 @@ export const getUpdatedTags = ({
 }: {
   infoContainer: Object,
   tagsContainer: Object,
-  oldValue: any,
+  newValue: any,
   field: string,
 }) => {
   const newState = {
