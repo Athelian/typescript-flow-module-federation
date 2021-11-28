@@ -30233,6 +30233,8 @@ input NotificationFilterInput {
   archived: Boolean
   organizationIds: [ID!]
   userIds: [ID!]
+  types: [NotificationType!]
+  createdAt: DateRangeInput
 }
 
 union NotificationPayload = Notification | BadRequest | Forbidden | NotFound
@@ -30343,6 +30345,15 @@ enum NotificationType {
   """order_update_item_quantity"""
   order_update_item_quantity
 
+  """order_update_item_price"""
+  order_update_item_price
+
+  """order_update_item_delivery_date"""
+  order_update_item_delivery_date
+
+  """order_update_tag"""
+  order_update_tag
+
   """batch_create"""
   batch_create
 
@@ -30351,6 +30362,48 @@ enum NotificationType {
 
   """batch_update_quantity_in_shipment"""
   batch_update_quantity_in_shipment
+
+  """batch_update_produced_quantity"""
+  batch_update_produced_quantity
+
+  """batch_update_produced_quantity_in_shipment"""
+  batch_update_produced_quantity_in_shipment
+
+  """batch_update_preshipped_quantity"""
+  batch_update_preshipped_quantity
+
+  """batch_update_preshipped_quantity_in_shipment"""
+  batch_update_preshipped_quantity_in_shipment
+
+  """batch_update_shipped_quantity"""
+  batch_update_shipped_quantity
+
+  """batch_update_shipped_quantity_in_shipment"""
+  batch_update_shipped_quantity_in_shipment
+
+  """batch_update_postshipped_quantity"""
+  batch_update_postshipped_quantity
+
+  """batch_update_postshipped_quantity_in_shipment"""
+  batch_update_postshipped_quantity_in_shipment
+
+  """batch_update_delivered_quantity"""
+  batch_update_delivered_quantity
+
+  """batch_update_delivered_quantity_in_shipment"""
+  batch_update_delivered_quantity_in_shipment
+
+  """batch_update_delivery_date"""
+  batch_update_delivery_date
+
+  """batch_update_delivery_date_in_shipment"""
+  batch_update_delivery_date_in_shipment
+
+  """batch_update_desired_date"""
+  batch_update_desired_date
+
+  """batch_update_desired_date_in_shipment"""
+  batch_update_desired_date_in_shipment
 
   """warehouse_create"""
   warehouse_create
@@ -30491,6 +30544,7 @@ input OrderFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   bulkFilter: OrderBulkFilterInput
+  keywords: ValuesWithMatchModeInput
   archived: Boolean
   ids: [ID!]
   poNos: [String!]
