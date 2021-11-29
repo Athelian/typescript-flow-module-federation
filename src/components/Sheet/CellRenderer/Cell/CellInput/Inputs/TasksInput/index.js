@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
+import { useLazyQuery } from '@apollo/react-hooks';
 import { FormattedMessage } from 'react-intl';
+import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import type { TaskPayload, TaskTemplatePayload } from 'generated/graphql';
@@ -10,6 +12,7 @@ import {
   DisplayContentStyle,
 } from 'components/Sheet/CellRenderer/Cell/CellDisplay/Common/style';
 import TasksInputDialog from './TasksInputDialog';
+import { getTaskQuery, getTasksFromQueryData } from './helpers';
 import {
   TasksInputWrapperStyle,
   TasksCountWrapperStyle,
@@ -42,19 +45,35 @@ const TasksInput = ({
   extra,
 }: InputProps<Todo, Context>) => {
   const { entityType } = extra;
-  const tasks = value?.tasks ?? [];
-  const taskTemplate = value?.taskTemplate ?? null;
+  const summaryTasks = value?.tasks ?? [];
+
   const entityId = context?.entityId ?? '';
   const ownerId = context?.ownerId ?? '';
   const groupIds = context?.groupIds ?? [];
+  const [tasks, setTasks] = React.useState(null);
+  const [taskTemplate, setTaskTemplate] = React.useState(null);
+  const [isOpen, setOpen] = React.useState(false);
 
-  const numCompletedOrSkipped = tasks.reduce(
+  const [getTasks, { loading }] = useLazyQuery(getTaskQuery(entityType), {
+    onCompleted: newData => {
+      const { tasks: newTasks, tasktemplate: newTaskTemplate } = getTasksFromQueryData(
+        entityType,
+        newData
+      );
+      setTasks(newTasks);
+      setTaskTemplate(newTaskTemplate);
+      setOpen(true);
+    },
+  });
+
+  const numCompletedOrSkipped = summaryTasks.reduce(
     (num, task) =>
       num +
       Number((!!task.completedAt && !!task.completedBy) || (!!task.skippedAt && !!task.skippedBy)),
     0
   );
-  const completedOrSkippedPercentage = tasks.length > 0 ? numCompletedOrSkipped / tasks.length : 0;
+  const completedOrSkippedPercentage =
+    summaryTasks.length > 0 ? numCompletedOrSkipped / summaryTasks.length : 0;
 
   const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
     if (focus) {
@@ -62,6 +81,20 @@ const TasksInput = ({
       e.preventDefault();
     }
   };
+
+  React.useEffect(() => {
+    if (focus) {
+      getTasks({
+        variables: {
+          ids: [entityId],
+        },
+      });
+    } else {
+      setOpen(false);
+      forceBlur();
+    }
+    // forceBlur is already memoized high up in the parent tree
+  }, [focus, entityId, getTasks, forceBlur]);
 
   return (
     <div onBlur={handleBlur}>
@@ -72,23 +105,24 @@ const TasksInput = ({
         className={TasksInputWrapperStyle}
       >
         <div className={TaskIconStyle}>
-          <Icon icon="TASK" />
+          {loading && <LoadingIcon size={10} />}
+          {!loading && <Icon icon="TASK" />}
         </div>
 
         <div className={TasksCountWrapperStyle}>
           <div className={CellDisplayWrapperStyle}>
             <span className={DisplayContentStyle}>
-              {tasks.length === 1 ? (
+              {summaryTasks.length === 1 ? (
                 <FormattedMessage
                   id="modules.sheet.task"
                   defaultMessage="{numOfTasks} Task"
-                  values={{ numOfTasks: <FormattedNumber value={tasks.length} /> }}
+                  values={{ numOfTasks: <FormattedNumber value={summaryTasks.length} /> }}
                 />
               ) : (
                 <FormattedMessage
                   id="modules.sheet.tasks"
                   defaultMessage="{numOfTasks} Tasks"
-                  values={{ numOfTasks: <FormattedNumber value={tasks.length} /> }}
+                  values={{ numOfTasks: <FormattedNumber value={summaryTasks.length} /> }}
                 />
               )}
             </span>
@@ -109,16 +143,19 @@ const TasksInput = ({
         </div>
       </button>
 
-      {/* TODO: should query task template on task input dialog click */}
       <TasksInputDialog
         tasks={tasks}
         taskTemplate={taskTemplate}
-        onChange={onChange}
-        onClose={() => {
-          onChange({ tasks, taskTemplate }, true);
-          forceBlur();
+        onChange={({ taskTemplate: newTaskTemplate, tasks: newTasks }) => {
+          setTasks(newTasks);
+          setTaskTemplate(newTaskTemplate ?? null);
         }}
-        open={focus}
+        onClose={() => {
+          forceBlur();
+          setOpen(false);
+          onChange({ tasks, taskTemplate }, true);
+        }}
+        open={isOpen}
         entityType={entityType}
         entityId={entityId}
         ownerId={ownerId}
