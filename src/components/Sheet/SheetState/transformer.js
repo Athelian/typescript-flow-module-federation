@@ -16,6 +16,8 @@ export const transformField = (
     };
   }
 
+  console.log('entity is ', entity);
+
   switch (entity.__typename) {
     case 'Forbidden':
     case 'NotFound':
@@ -35,7 +37,7 @@ export const transformField = (
           path,
           field,
           permissions,
-          ownedBy: entity.ownedBy.id,
+          ownedBy: entity.ownedBy?.id,
         },
         forbidden: false,
       };
