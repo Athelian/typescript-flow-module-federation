@@ -454,7 +454,11 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                             cleanUpFollowers(values.exporter);
                                             emitter.emit('CLEAN_ORDERS', {
                                               action: 'CHANGE_EXPORTER',
+                                              payload: {
+                                                selectedExporter: assembledOrg,
+                                              },
                                             });
+
                                             slideToggle(false);
                                           }}
                                           warningMessage={
@@ -539,6 +543,12 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                       );
                                       onChangePartners(assembledOrgs, values?.exporter);
                                       partnerSelectorToggle(false);
+                                      emitter.emit('CLEAN_ORDERS', {
+                                        action: 'CHANGE_SHARED_PARTNERS',
+                                        payload: {
+                                          selectedOrganizations: assembledOrgs,
+                                        },
+                                      });
                                     }}
                                   />
                                 </>
