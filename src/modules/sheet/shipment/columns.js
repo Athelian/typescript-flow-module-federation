@@ -771,6 +771,7 @@ const exportKeys = {
   'shipment.totalPackages': ['shipment.totalPackageQuantity'],
   'shipment.totalWeight': ['shipment.totalWeight.value', 'shipment.totalWeight.metric'],
   'shipment.totalVolume': ['shipment.totalVolume.value', 'shipment.totalVolume.metric'],
+  'shipment.totalPrice': ['shipment.totalPrice.amount', 'shipment.totalPrice.currency'],
 };
 
 export default function shipmentColumns({
