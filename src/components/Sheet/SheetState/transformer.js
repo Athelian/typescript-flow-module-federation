@@ -16,8 +16,6 @@ export const transformField = (
     };
   }
 
-  console.log('entity is ', entity);
-
   switch (entity.__typename) {
     case 'Forbidden':
     case 'NotFound':
