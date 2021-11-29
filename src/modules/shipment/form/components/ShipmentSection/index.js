@@ -102,7 +102,7 @@ type Props = {|
 
 const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlideView }: Props) => {
   const { isOwner } = usePartnerPermission();
-  const { isImporter, isForwarder, isExporter } = useUser();
+  const { isImporter, organization: userOrganization, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, archived } = shipment;
   return (
@@ -488,7 +488,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       mask: hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_CUSTOM_FIELDS_MASK]),
                     }}
                   />
-
                   <Subscribe to={[ShipmentTagsContainer]}>
                     {({ state: { tags }, setFieldValue: changeTags }) => (
                       <FieldItem
@@ -503,7 +502,11 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                             id="tags"
                             name="tags"
                             tagType="Shipment"
-                            organizationIds={getEntityRelatedOrganizations(shipment)}
+                            organizationIds={getEntityRelatedOrganizations({
+                              entity: shipment,
+                              userOrganizationId: userOrganization?.id,
+                              formState: values,
+                            })}
                             values={tags}
                             onChange={value => {
                               changeTags('tags', value);
@@ -649,6 +652,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                     action: 'CHANGE_IMPORTER',
                                                     payload: {
                                                       importer,
+                                                      selectedImporter,
                                                     },
                                                   });
                                                   importerDialogToggle(false);
@@ -775,7 +779,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                           action: 'CHANGE_EXPORTER',
                                           payload: {
                                             exporter,
-                                            assembledOrg,
+                                            selectedExporter: assembledOrg,
                                           },
                                         });
                                         exporterSelectorToggle(false);
@@ -980,6 +984,13 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                     );
 
                                     onChangePartners(assembledOrgs, forwarders, exporter, importer);
+
+                                    emitter.emit('CLEAN_SHIPMENTS', {
+                                      action: 'CHANGE_SHARED_PARTNERS',
+                                      payload: {
+                                        selectedOrganizations: assembledOrgs,
+                                      },
+                                    });
                                     partnerSelectorToggle(false);
                                   }}
                                 />

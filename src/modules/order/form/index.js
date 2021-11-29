@@ -16,7 +16,12 @@ import ShipmentsSection from './components/ShipmentsSection';
 import ContainersSection from './components/ContainersSection';
 import OrderTasksSection from './components/OrderTasksSection';
 import CleanUpOrder from './components/CleanUpOrder';
-import { OrderInfoContainer, OrderTasksContainer, OrderItemsContainer } from './containers';
+import {
+  OrderInfoContainer,
+  OrderTagsContainer,
+  OrderTasksContainer,
+  OrderItemsContainer,
+} from './containers';
 import { OrderFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -151,12 +156,14 @@ const OrderForm = ({
           <AutoDateBinding type="Order" values={state} tasks={tasks} setTaskValue={setFieldValue} />
         )}
       </Subscribe>
-      <Subscribe to={[OrderItemsContainer]}>
-        {orderItemsContainer => (
+      <Subscribe to={[OrderItemsContainer, OrderInfoContainer, OrderTagsContainer]}>
+        {(orderItemsContainer, orderInfoContainer, orderTagsContainer) => (
           <CleanUpOrder
             orderId={order?.id}
             isNew={isClone || isNew}
             orderItemsContainer={orderItemsContainer}
+            orderInfoContainer={orderInfoContainer}
+            orderTagsContainer={orderTagsContainer}
           />
         )}
       </Subscribe>
