@@ -10,6 +10,7 @@ import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Di
 import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import useUser from 'hooks/useUser';
 import emitter from 'utils/emitter';
 import {
   OrderInfoContainer,
@@ -81,6 +82,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const { archived } = order;
+  const { organization: userOrganization } = useUser();
 
   return (
     <MainSectionPlaceholder height={961} isLoading={isLoading}>
@@ -345,7 +347,11 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                               id="tags"
                               name="tags"
                               tagType="Order"
-                              organizationIds={getEntityRelatedOrganizations(order)}
+                              organizationIds={getEntityRelatedOrganizations({
+                                entity: order,
+                                userOrganizationId: userOrganization?.id,
+                                formState: values,
+                              })}
                               values={tags}
                               onChange={value => {
                                 changeTags('tags', value);
@@ -448,7 +454,11 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                             cleanUpFollowers(values.exporter);
                                             emitter.emit('CLEAN_ORDERS', {
                                               action: 'CHANGE_EXPORTER',
+                                              payload: {
+                                                selectedExporter: assembledOrg,
+                                              },
                                             });
+
                                             slideToggle(false);
                                           }}
                                           warningMessage={
@@ -533,6 +543,12 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                       );
                                       onChangePartners(assembledOrgs, values?.exporter);
                                       partnerSelectorToggle(false);
+                                      emitter.emit('CLEAN_ORDERS', {
+                                        action: 'CHANGE_SHARED_PARTNERS',
+                                        payload: {
+                                          selectedOrganizations: assembledOrgs,
+                                        },
+                                      });
                                     }}
                                   />
                                 </>

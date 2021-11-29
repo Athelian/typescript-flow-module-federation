@@ -271,7 +271,7 @@ function transformProject(basePath: string, project: Object): Array<CellValue> {
       columnKey: 'project.tags',
       type: 'project_tags',
       extra: {
-        organizationIds: getEntityRelatedOrganizations(project),
+        organizationIds: getEntityRelatedOrganizations({ entity: project }),
       },
       ...transformValueField(
         basePath,

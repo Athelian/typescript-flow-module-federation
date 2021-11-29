@@ -6,6 +6,7 @@ import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import useUser from 'hooks/useUser';
 import {
   ORDER_ITEMS_UPDATE,
   ORDER_ITEMS_SET_NO,
@@ -61,6 +62,8 @@ type Props = {|
 const ItemSection = ({ isSlideView, orderItem }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const { organization: userOrganization } = useUser();
+
   return (
     <>
       <SectionHeader
@@ -224,7 +227,11 @@ const ItemSection = ({ isSlideView, orderItem }: Props) => {
                           id="tags"
                           name="tags"
                           tagType="OrderItem"
-                          organizationIds={getEntityRelatedOrganizations(orderItem)}
+                          organizationIds={getEntityRelatedOrganizations({
+                            entity: orderItem,
+                            userOrganizationId: userOrganization?.id,
+                            formState: values,
+                          })}
                           values={values.tags}
                           onChange={value => {
                             setFieldValue('tags', value);

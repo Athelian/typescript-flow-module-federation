@@ -1,22 +1,36 @@
 // @flow
 import * as React from 'react';
+import type { PartnerPayload } from 'generated/graphql';
 import { useLazyQuery } from '@apollo/react-hooks';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { orderFormItemsQuery } from 'modules/order/form/components/ItemsSection/query';
 import useUser from 'hooks/useUser';
+import { getUpdatedTags } from 'modules/shipment/form/components/CleanUpShipment/helpers';
 
 type Props = {|
   isNew: boolean,
   orderId: string,
   orderItemsContainer: Object,
+  orderInfoContainer: Object,
+  orderTagsContainer: Object,
 |};
 
 type ChangeData = {|
-  action: 'CHANGE_EXPORTER',
+  action: 'CHANGE_EXPORTER' | 'CHANGE_SHARED_PARTNERS',
+  payload: {
+    selectedExporter?: PartnerPayload,
+    selectedOrganizations?: Array<PartnerPayload>,
+  },
 |};
 
-export default function CleanUpOrder({ isNew, orderId, orderItemsContainer }: Props) {
+export default function CleanUpOrder({
+  isNew,
+  orderId,
+  orderInfoContainer,
+  orderTagsContainer,
+  orderItemsContainer,
+}: Props) {
   const [queryOrderDetail, { data, called, loading }] = useLazyQuery(orderFormItemsQuery);
   const { user } = useUser();
 
@@ -45,7 +59,7 @@ export default function CleanUpOrder({ isNew, orderId, orderItemsContainer }: Pr
 
   React.useEffect(() => {
     emitter.addListener('CLEAN_ORDERS', changeData => {
-      const { action }: ChangeData = (changeData: any);
+      const { action, payload }: ChangeData = (changeData: any);
       if (!isNew && !orderItemsContainer.state.hasCalledItemsApiYet) {
         changeDataRef.current = (changeData: any);
         queryOrderDetail({
@@ -56,7 +70,30 @@ export default function CleanUpOrder({ isNew, orderId, orderItemsContainer }: Pr
       } else {
         switch (action) {
           case 'CHANGE_EXPORTER':
-            orderItemsContainer.changeExporter();
+            {
+              orderItemsContainer.changeExporter();
+
+              const updatedTags = getUpdatedTags({
+                infoContainer: orderInfoContainer,
+                tagsContainer: orderTagsContainer,
+                newValue: payload.selectedExporter,
+                field: 'exporter',
+              });
+
+              orderTagsContainer.setFieldValue('tags', updatedTags);
+            }
+            break;
+          case 'CHANGE_SHARED_PARTNERS':
+            {
+              const updatedTags = getUpdatedTags({
+                infoContainer: orderInfoContainer,
+                tagsContainer: orderTagsContainer,
+                newValue: payload.selectedOrganizations,
+                field: 'organizations',
+              });
+
+              orderTagsContainer.setFieldValue('tags', updatedTags);
+            }
             break;
           default:
             logger.warn('not support yet', action);
@@ -67,6 +104,13 @@ export default function CleanUpOrder({ isNew, orderId, orderItemsContainer }: Pr
     return () => {
       emitter.removeAllListeners('CLEAN_ORDERS');
     };
-  }, [orderItemsContainer, isNew, queryOrderDetail, orderId]);
+  }, [
+    orderItemsContainer,
+    orderInfoContainer,
+    orderTagsContainer,
+    isNew,
+    queryOrderDetail,
+    orderId,
+  ]);
   return null;
 }

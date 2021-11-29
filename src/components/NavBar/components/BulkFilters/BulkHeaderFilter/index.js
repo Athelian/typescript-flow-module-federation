@@ -11,12 +11,12 @@ import { ActiveStyle, StyledButton } from './styles';
 type Props = {
   filterBy: FilterBy,
   setFilterBy: FilterBy => void,
-  type: 'SHIPMENT' | 'ORDER' | 'PRODUCT' | 'CONTAINER',
+  type?: 'SHIPMENT' | 'ORDER' | 'PRODUCT' | 'CONTAINER' | 'MAP',
 };
 
 const HeaderFilter = ({ filterBy, setFilterBy, type }: Props) => {
   const [open, setOpen] = useState(false);
-  const isActive = filterBy?.bulkFilter;
+  const isActive = filterBy?.bulkFilter || filterBy.keywords;
   const intl = useIntl();
 
   const handleModal = () => {

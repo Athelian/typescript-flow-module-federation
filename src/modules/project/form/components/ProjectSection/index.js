@@ -186,7 +186,11 @@ const ProjectSection = ({ isNew, project }: Props) => {
                                     id="tags"
                                     name="tags"
                                     tagType="Project"
-                                    organizationIds={getEntityRelatedOrganizations(project)}
+                                    organizationIds={getEntityRelatedOrganizations({
+                                      entity: project,
+                                      userOrganizationId: userOrganization?.id,
+                                      formState: values,
+                                    })}
                                     values={tags}
                                     onChange={value => {
                                       changeTags('tags', value);

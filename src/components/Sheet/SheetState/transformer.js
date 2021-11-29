@@ -35,7 +35,7 @@ export const transformField = (
           path,
           field,
           permissions,
-          ownedBy: entity.ownedBy.id,
+          ownedBy: entity.ownedBy?.id,
         },
         forbidden: false,
       };

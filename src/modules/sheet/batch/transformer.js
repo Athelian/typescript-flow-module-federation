@@ -207,7 +207,7 @@ export default function transformSheetBatch({
       columnKey: 'batch.tags',
       type: 'batch_tags',
       extra: {
-        organizationIds: getEntityRelatedOrganizations(batch),
+        organizationIds: getEntityRelatedOrganizations({ entity: batch }),
       },
       ...transformValueField(
         basePath,
