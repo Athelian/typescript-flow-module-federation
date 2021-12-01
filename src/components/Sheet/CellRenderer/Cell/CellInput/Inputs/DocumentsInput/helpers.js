@@ -6,7 +6,7 @@ import {
   milestoneDocumentsQuery,
   shipmentDocumentsQuery,
 } from './query';
-import { DocumentInputEntityTypes } from '.';
+import type { DocumentInputEntityTypes } from '.';
 
 export const getDocumentQuery = (entityType: DocumentInputEntityTypes) => {
   switch (entityType) {

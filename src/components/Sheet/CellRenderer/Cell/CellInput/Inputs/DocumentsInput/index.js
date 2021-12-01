@@ -25,16 +25,16 @@ export type DocumentInputEntityTypes =
   | 'ProductProvider'
   | 'Milestone';
 
-type Props = {
-  ...InputProps<Array<FilePayload>>,
-  entityType: DocumentInputEntityTypes,
-};
-
 type Context = {|
   ownerId: string,
   entityId: string,
   groupIds: Array<string>,
 |};
+
+type Props = {
+  ...InputProps<Array<FilePayload>, Context>,
+  entityType: DocumentInputEntityTypes,
+};
 
 const DocumentsInputImpl = ({
   value,
@@ -45,7 +45,7 @@ const DocumentsInputImpl = ({
   forceBlur,
   entityType,
   context,
-}: Props<Context>) => {
+}: Props) => {
   const [filesValue, setFilesValue] = React.useState(value);
 
   const [open, setOpen] = React.useState(false);
@@ -110,6 +110,7 @@ const DocumentsInputImpl = ({
       ProductOriginCert: intl.formatMessage(productProviderMessages.productOriginCert),
       Document: intl.formatMessage(orderMessages.fileTypeDocument),
     },
+    Milestone: {},
   };
 
   const renderDocuments = (documents: Array<any>) => {

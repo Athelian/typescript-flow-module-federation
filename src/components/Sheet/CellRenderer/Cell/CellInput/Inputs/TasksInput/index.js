@@ -34,6 +34,10 @@ type Context = {|
   groupIds: Array<string>,
 |};
 
+type Extra = {|
+  entityType: string,
+|};
+
 const TasksInput = ({
   value,
   context,
@@ -43,20 +47,20 @@ const TasksInput = ({
   forceFocus,
   forceBlur,
   extra,
-}: InputProps<Todo, Context>) => {
-  const { entityType } = extra;
+}: InputProps<Todo, Context, Extra>) => {
+  const { entityType }: Object = extra;
   const summaryTasks = value?.tasks ?? [];
 
   const entityId = context?.entityId ?? '';
   const ownerId = context?.ownerId ?? '';
   const groupIds = context?.groupIds ?? [];
-  const [tasks, setTasks] = React.useState(null);
+  const [tasks, setTasks] = React.useState<Array<TaskPayload>>([]);
   const [taskTemplate, setTaskTemplate] = React.useState(null);
   const [isOpen, setOpen] = React.useState(false);
 
   const [getTasks, { loading }] = useLazyQuery(getTaskQuery(entityType), {
     onCompleted: newData => {
-      const { tasks: newTasks, tasktemplate: newTaskTemplate } = getTasksFromQueryData(
+      const { tasks: newTasks, taskTemplate: newTaskTemplate } = getTasksFromQueryData(
         entityType,
         newData
       );
