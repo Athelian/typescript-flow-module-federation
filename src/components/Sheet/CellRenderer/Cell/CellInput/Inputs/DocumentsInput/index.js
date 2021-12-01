@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useLazyQuery } from '@apollo/react-hooks';
+import LoadingIcon from 'components/LoadingIcon';
 import type { FilePayload } from 'generated/graphql';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
@@ -13,12 +15,26 @@ import orderMessages from 'modules/order/messages';
 import shipmentMessages from 'modules/shipment/messages';
 import productProviderMessages from 'modules/productProvider/messages';
 import DocumentsInputDialog from './DocumentsInputDialog';
+import { getDocumentQuery, getDocumentsFromQueryData } from './helpers';
 import { DocumentsInputWrapperStyle, DocumentIconStyle } from './style';
+
+export type DocumentInputEntityTypes =
+  | 'Order'
+  | 'OrderItem'
+  | 'Shipment'
+  | 'ProductProvider'
+  | 'Milestone';
 
 type Props = {
   ...InputProps<Array<FilePayload>>,
-  entityType: string,
+  entityType: DocumentInputEntityTypes,
 };
+
+type Context = {|
+  ownerId: string,
+  entityId: string,
+  groupIds: Array<string>,
+|};
 
 const DocumentsInputImpl = ({
   value,
@@ -28,11 +44,37 @@ const DocumentsInputImpl = ({
   forceFocus,
   forceBlur,
   entityType,
-}: Props) => {
+  context,
+}: Props<Context>) => {
   const [filesValue, setFilesValue] = React.useState(value);
+
+  const [open, setOpen] = React.useState(false);
   const intl = useIntl();
+  const entityId = context?.entityId ?? '';
 
   React.useEffect(() => setFilesValue(value), [value]);
+
+  const [getDocuments, { loading }] = useLazyQuery(getDocumentQuery(entityType), {
+    onCompleted: newData => {
+      const { files } = getDocumentsFromQueryData(entityType, newData);
+      setFilesValue(files);
+      setOpen(true);
+    },
+  });
+
+  React.useEffect(() => {
+    if (focus) {
+      getDocuments({
+        variables: {
+          ids: [entityId],
+        },
+      });
+    } else {
+      setOpen(false);
+      forceBlur();
+    }
+    // forceBlur is already memoized high up in the parent tree
+  }, [focus, entityId, getDocuments, forceBlur]);
 
   const handleBlur = (e: SyntheticFocusEvent<HTMLElement>) => {
     if (focus) {
@@ -104,7 +146,8 @@ const DocumentsInputImpl = ({
         className={DocumentsInputWrapperStyle}
       >
         <div className={DocumentIconStyle('DOCUMENT')}>
-          <Icon icon="DOCUMENT" />
+          {loading && <LoadingIcon size={10} />}
+          {!loading && <Icon icon="DOCUMENT" />}
         </div>
 
         <div className={CellDisplayWrapperStyle}>
@@ -140,16 +183,16 @@ const DocumentsInputImpl = ({
           onChange(filesValue, true);
           forceBlur();
         }}
-        open={focus}
+        open={open}
         entityType={entityType}
       />
     </div>
   );
 };
 
-const DocumentsInput = (entityType: string) => (props: InputProps<Array<FilePayload>>) => (
-  <DocumentsInputImpl {...props} entityType={entityType} />
-);
+const DocumentsInput = (entityType: DocumentInputEntityTypes) => (
+  props: InputProps<Array<FilePayload>>
+) => <DocumentsInputImpl {...props} entityType={entityType} />;
 
 export default {
   Order: DocumentsInput('Order'),

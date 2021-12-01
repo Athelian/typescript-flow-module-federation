@@ -246,6 +246,15 @@ export default function transformSheetOrderItem({
     {
       columnKey: 'orderItem.files',
       type: 'order_item_documents',
+      computed: root => {
+        const currentOrder = getOrderFromRoot(root);
+
+        return {
+          entityId: orderItem?.id,
+          ownerId: orderItem?.ownedBy?.id,
+          groupIds: [currentOrder?.importer?.id, currentOrder?.exporter?.id].filter(Boolean),
+        };
+      },
       ...transformValueField(
         basePath,
         orderItem,
