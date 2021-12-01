@@ -58,6 +58,7 @@ export default function useSheet({
             perPage: 10,
             filterBy: { query, ...filterBy },
             sortBy,
+            isSummary: true,
           },
           fetchPolicy: 'no-cache',
         })
@@ -80,7 +81,13 @@ export default function useSheet({
     const watchedQuery = client
       .watchQuery({
         query: itemsQuery,
-        variables: { page: 1, perPage: 10, filterBy: { query, ...filterBy }, sortBy },
+        variables: {
+          page: 1,
+          perPage: 10,
+          filterBy: { query, ...filterBy },
+          sortBy,
+          isSummary: true,
+        },
         fetchPolicy: 'no-cache',
       })
       .subscribe(({ data }: { data: Object }) => {

@@ -1,3 +1,4 @@
+/* eslint-disable graphql/template-strings */
 // @flow
 import gql from 'graphql-tag';
 import {
@@ -5,6 +6,7 @@ import {
   forbiddenFragment,
   userAvatarFragment,
   documentFragment,
+  documentSummaryFragment,
   tagFragment,
   ownedByFragment,
   partnerCardFragment,
@@ -74,8 +76,15 @@ const milestoneSheetFragment = gql`
     completedBy {
       ...userAvatarFragment
     }
-    files {
+    files @include(if: $isSummary) {
+      ...documentSummaryFragment
+      ...forbiddenFragment
+      __typename
+    }
+    files @skip(if: $isSummary) {
       ...documentFragment
+      ...forbiddenFragment
+      __typename
     }
     createdAt
     updatedAt
@@ -251,6 +260,7 @@ export const projectsQuery = gql`
     $perPage: Int!
     $filterBy: ProjectFilterInput
     $sortBy: ProjectSortInput
+    $isSummary: Boolean = false
   ) {
     projects(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
@@ -277,6 +287,7 @@ export const projectsQuery = gql`
   ${taskSheetFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${documentSummaryFragment}
   ${tagFragment}
   ${ownedByFragment}
   ${partnerCardFragment}

@@ -69,4 +69,14 @@ export const documentFormFragment = gql`
   }
 `;
 
-export default documentFormFragment;
+export const documentSummaryFragment = gql`
+  fragment documentSummaryFragment on File {
+    id
+    name
+    type
+    size
+    memo
+    createdAt
+    __typename
+  }
+`;

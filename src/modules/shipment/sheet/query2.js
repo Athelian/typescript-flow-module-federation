@@ -1,5 +1,35 @@
+/* eslint-disable */
 // @flow
 import gql from 'graphql-tag';
+
+const taskInfoSummaryFragment = gql`
+  fragment taskInfoSummaryFragment on Task {
+    id
+    skippedAt
+    skippedBy {
+      ...userAvatarFragment
+      __typename
+    }
+    completedAt
+    completedBy {
+      ...userAvatarFragment
+      __typename
+    }
+    __typename
+  }
+`;
+
+const documentSummaryFragment = gql`
+  fragment documentSummaryFragment on File {
+    id
+    name
+    type
+    size
+    memo
+    createdAt
+    __typename
+  }
+`;
 
 const sheetOrderFragment = gql`
   fragment sheetOrderFragment on Order {
@@ -29,19 +59,27 @@ const sheetOrderFragment = gql`
       ...partnerNameFragment
       __typename
     }
-    files {
+    files @include(if: $isSummary) {
+      ...documentSummaryFragment
+      ...forbiddenFragment
+      __typename
+    }
+    files @skip(if: $isSummary) {
       ...documentFragment
       ...forbiddenFragment
       __typename
     }
     todo {
-      tasks {
+      tasks @skip(if: $isSummary) {
         ...taskWithoutParentInfoFragment
         __typename
       }
-      taskTemplate {
+      taskTemplate @skip(if: $isSummary) {
         ...taskTemplateCardFragment
         __typename
+      }
+      tasks @include(if: $isSummary) {
+        ...taskInfoSummaryFragment
       }
       __typename
     }
@@ -65,19 +103,27 @@ const sheetOrderItemFragment = gql`
       ...forbiddenFragment
       __typename
     }
-    files {
+    files @include(if: $isSummary) {
+      ...documentSummaryFragment
+      ...forbiddenFragment
+      __typename
+    }
+    files @skip(if: $isSummary) {
       ...documentFragment
       ...forbiddenFragment
       __typename
     }
     todo {
-      tasks {
+      tasks @skip(if: $isSummary) {
         ...taskWithoutParentInfoFragment
         __typename
       }
-      taskTemplate {
+      taskTemplate @skip(if: $isSummary) {
         ...taskTemplateCardFragment
         __typename
+      }
+      tasks @include(if: $isSummary) {
+        ...taskInfoSummaryFragment
       }
       __typename
     }
@@ -139,13 +185,16 @@ const sheetBatchFragment = gql`
       __typename
     }
     todo {
-      tasks {
+      tasks @skip(if: $isSummary) {
         ...taskWithoutParentInfoFragment
         __typename
       }
-      taskTemplate {
+      taskTemplate @skip(if: $isSummary) {
         ...taskTemplateCardFragment
         __typename
+      }
+      tasks @include(if: $isSummary) {
+        ...taskInfoSummaryFragment
       }
       __typename
     }
@@ -179,7 +228,12 @@ const sheetProductProviderFragment = gql`
       metric: currency
       __typename
     }
-    files {
+    files @include(if: $isSummary) {
+      ...documentSummaryFragment
+      ...forbiddenFragment
+      __typename
+    }
+    files @skip(if: $isSummary) {
       ...documentFragment
       ...forbiddenFragment
       __typename
@@ -314,19 +368,27 @@ const sheetShipmentFragment = gql`
       }
       __typename
     }
-    files {
+    files @skip(if: $isSummary) {
       ...documentFragment
       ...forbiddenFragment
       __typename
     }
+    files @include(if: $isSummary) {
+      ...documentSummaryFragment
+      ...forbiddenFragment
+      __typename
+    }
     todo {
-      tasks {
+      tasks @skip(if: $isSummary) {
         ...taskWithoutParentInfoFragment
         __typename
       }
-      taskTemplate {
+      taskTemplate @skip(if: $isSummary) {
         ...taskTemplateCardFragment
         __typename
+      }
+      tasks @include(if: $isSummary) {
+        ...taskInfoSummaryFragment
       }
       __typename
     }
@@ -908,6 +970,7 @@ export const shipmentsQuery = gql`
     $perPage: Int!
     $filterBy: ShipmentFilterInput
     $sortBy: ShipmentSortInput
+    $isSummary: Boolean = false
   ) {
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
@@ -1043,6 +1106,8 @@ export const shipmentsQuery = gql`
   ${partnerNameFragment}
   ${documentFragment}
   ${tagFragment}
+  ${documentSummaryFragment}
+  ${taskInfoSummaryFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${milestoneCardFragment}

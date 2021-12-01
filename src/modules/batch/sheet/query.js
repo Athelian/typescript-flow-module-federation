@@ -1,3 +1,4 @@
+/* eslint-disable graphql/template-strings */
 // @flow
 import gql from 'graphql-tag';
 import {
@@ -44,6 +45,7 @@ export const batchesQuery = gql`
     $perPage: Int!
     $filterBy: BatchFilterInput
     $sortBy: BatchSortInput
+    $isSummary: Boolean = false
   ) {
     batches(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
