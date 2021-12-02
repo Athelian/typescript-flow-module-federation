@@ -331,3 +331,20 @@ export const taskCountFragment = gql`
     delayed
   }
 `;
+
+export const taskInfoSummaryFragment = gql`
+  fragment taskInfoSummaryFragment on Task {
+    id
+    skippedAt
+    skippedBy {
+      ...userAvatarFragment
+      __typename
+    }
+    completedAt
+    completedBy {
+      ...userAvatarFragment
+      __typename
+    }
+    __typename
+  }
+`;

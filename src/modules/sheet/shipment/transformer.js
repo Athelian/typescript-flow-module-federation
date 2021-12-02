@@ -1396,6 +1396,18 @@ export default function transformSheetShipment({
     {
       columnKey: 'shipment.files',
       type: 'shipment_documents',
+      computed: root => {
+        const currentShipment = getShipmentFromRoot(root);
+        return {
+          entityId: shipment?.id ?? null,
+          ownerId: shipment?.ownedBy?.id,
+          groupIds: [
+            currentShipment?.importer?.id,
+            currentShipment?.exporter?.id,
+            ...(currentShipment?.forwarders ?? []).map(f => f.id),
+          ].filter(Boolean),
+        };
+      },
       ...transformValueField(
         basePath,
         shipment,
@@ -1415,7 +1427,7 @@ export default function transformSheetShipment({
     },
     {
       columnKey: 'shipment.todo',
-      type: 'shipment_tasks',
+      type: 'tasks',
       computed: root => {
         const currentShipment = getShipmentFromRoot(root);
         return {
@@ -1434,6 +1446,9 @@ export default function transformSheetShipment({
         'todo',
         hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TASKS)
       ),
+      extra: {
+        entityType: 'shipment',
+      },
     },
     {
       columnKey: 'shipment.logs',

@@ -12,9 +12,15 @@ export const sheetProductProviderFragment = gql`
       value: amount
       metric: currency
     }
-    files {
+    files @include(if: $isSummary) {
+      ...documentSummaryFragment
+      ...forbiddenFragment
+      __typename
+    }
+    files @skip(if: $isSummary) {
       ...documentFragment
       ...forbiddenFragment
+      __typename
     }
   }
 `;

@@ -24,7 +24,7 @@ import {
   containerCardFragment,
   containerCardWithOwnedFragment,
 } from './container/fragment';
-import { documentFormFragment } from './document/fragment';
+import { documentFormFragment, documentSummaryFragment } from './document/fragment';
 import {
   productProviderFormFragment,
   productProviderPackagingFragment,
@@ -52,6 +52,7 @@ import {
   taskFormInProjectFragment,
   taskFormInTemplateFragment,
   taskCountFragment,
+  taskInfoSummaryFragment,
 } from './task/fragment';
 import { tableTemplateFragment } from './tableTemplate/fragment';
 import { badRequestFragment, notFoundFragment, forbiddenFragment } from './errors/fragment';
@@ -82,6 +83,7 @@ export {
   containerCardFragment,
   containerCardWithOwnedFragment,
   documentFormFragment,
+  documentSummaryFragment,
   itemFormFragment,
   itemCardFragment,
   itemCardWithOwnedFragment,
@@ -140,4 +142,5 @@ export {
   milestoneCardFragment,
   taskTemplateCardFragment,
   taskCountFragment,
+  taskInfoSummaryFragment,
 };

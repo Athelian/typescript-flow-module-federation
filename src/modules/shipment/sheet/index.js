@@ -28,6 +28,7 @@ import sorter from './sorter';
 import mutate from './mutate';
 import decorate from './decorator';
 import { shipmentsQuery } from './query';
+// import { shipmentsQuery } from './query2';
 
 type Props = {
   shipmentIds?: Array<string>,

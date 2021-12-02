@@ -1,13 +1,16 @@
+/* eslint-disable graphql/template-strings */
 // @flow
 import gql from 'graphql-tag';
 import {
   forbiddenFragment,
   userAvatarFragment,
   documentFragment,
+  documentSummaryFragment,
   tagFragment,
   partnerNameFragment,
   taskWithoutParentInfoFragment,
   taskTemplateCardFragment,
+  taskInfoSummaryFragment,
   milestoneCardFragment,
   projectCardFragment,
   taskFormInTemplateFragment,
@@ -34,6 +37,7 @@ export const shipmentsQuery = gql`
     $perPage: Int!
     $filterBy: ShipmentFilterInput
     $sortBy: ShipmentSortInput
+    $isSummary: Boolean = false
   ) {
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
@@ -147,7 +151,9 @@ export const shipmentsQuery = gql`
   ${userAvatarFragment}
   ${partnerNameFragment}
   ${documentFragment}
+  ${documentSummaryFragment}
   ${tagFragment}
+  ${taskInfoSummaryFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${milestoneCardFragment}

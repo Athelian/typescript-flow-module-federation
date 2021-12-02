@@ -53,6 +53,11 @@ export default function transformSheetProductProvider({
     {
       columnKey: 'productProvider.files',
       type: 'product_provider_documents',
+      computed: () => {
+        return {
+          entityId: productProvider?.id ?? null,
+        };
+      },
       ...transformValueField(
         basePath,
         productProvider,
