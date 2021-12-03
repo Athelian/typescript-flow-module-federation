@@ -2,6 +2,23 @@
 import { css } from 'react-emotion';
 import { presets, layout, colors, fontSizes } from 'styles/common';
 
+export const ContainerTrackingWrapperStyle: string = css`
+  border: 1px solid #cfcfcf;
+  padding: 16px;
+`;
+
+export const ContainerAutoTrackingContainerStyle: string = css`
+  width: 49%;
+`;
+
+export const ContainerTypeWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 100px 80px;
+  grid-gap: 5px;
+  width: 100%;
+  padding: 0 5px;
+`;
+
 export const ShipmentSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;

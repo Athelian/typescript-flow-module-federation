@@ -7,8 +7,10 @@ import { initDatetimeToContainer } from 'utils/date';
 
 type ShipmentInfoType = {
   followers: Array<{ id: string, firstName: string, lastName: string }>,
+  autoTracking: boolean,
   no: ?string,
   blNo: ?string,
+  masterBlNo: ?string,
   blDate: ?Date,
   bookingNo: ?string,
   booked: boolean,
@@ -35,7 +37,9 @@ const initValues = {
   followers: [],
   organizations: [],
   no: null,
+  autoTracking: false,
   blNo: null,
+  masterBlNo: null,
   blDate: null,
   bookingNo: null,
   booked: false,
