@@ -231,6 +231,8 @@ export const containerByIDQuery = gql`
   ${userAvatarFragment}
   ${partnerNameFragment}
   ${documentFragment}
+  ${documentSummaryFragment}
+  ${taskInfoSummaryFragment}
   ${tagFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
@@ -300,6 +302,8 @@ export const batchByIDQuery = gql`
   ${userAvatarFragment}
   ${partnerNameFragment}
   ${documentFragment}
+  ${documentSummaryFragment}
+  ${taskInfoSummaryFragment}
   ${tagFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
@@ -350,6 +354,8 @@ export const orderItemByIDQuery = gql`
   ${userAvatarFragment}
   ${partnerNameFragment}
   ${documentFragment}
+  ${documentSummaryFragment}
+  ${taskInfoSummaryFragment}
   ${tagFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
@@ -379,6 +385,8 @@ export const orderByIDQuery = gql`
   ${userAvatarFragment}
   ${partnerNameFragment}
   ${documentFragment}
+  ${documentSummaryFragment}
+  ${taskInfoSummaryFragment}
   ${tagFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
