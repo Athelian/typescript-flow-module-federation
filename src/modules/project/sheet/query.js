@@ -315,6 +315,7 @@ export const milestoneByIDQuery = gql`
   ${taskSheetFragment}
   ${userAvatarFragment}
   ${documentFragment}
+  ${documentSummaryFragment}
   ${ownedByFragment}
   ${tagFragment}
   ${forbiddenFragment}
