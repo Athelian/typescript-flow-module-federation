@@ -295,7 +295,7 @@ export const projectsQuery = gql`
 `;
 
 export const milestoneByIDQuery = gql`
-  query milestoneByIDQuery($id: ID!) {
+  query milestoneByIDQuery($id: ID!, $isSummary: Boolean = false) {
     milestone(id: $id) {
       ...milestoneSheetFragment
       ... on Milestone {

@@ -134,7 +134,7 @@ export const ordersQuery = gql`
 `;
 
 export const orderItemByIDQuery = gql`
-  query orderItemByIDQuery($id: ID!) {
+  query orderItemByIDQuery($id: ID!, $isSummary: Boolean = false) {
     orderItem(id: $id) {
       ...sheetOrderItemFragment
       ...sheetModelFragment
@@ -215,7 +215,7 @@ export const orderItemByIDQuery = gql`
 `;
 
 export const batchByIDQuery = gql`
-  query batchByIDQuery($id: ID!) {
+  query batchByIDQuery($id: ID!, $isSummary: Boolean = false) {
     batch(id: $id) {
       ...sheetBatchFragment
       ...sheetModelFragment
@@ -296,7 +296,7 @@ export const containerByIDQuery = gql`
 `;
 
 export const shipmentByIDQuery = gql`
-  query shipmentByIDQuery($id: ID!) {
+  query shipmentByIDQuery($id: ID!, $isSummary: Boolean = false) {
     shipment(id: $id) {
       ...sheetShipmentFragment
       ...sheetShipmentCountFragment
