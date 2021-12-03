@@ -46,12 +46,18 @@ export const sheetBatchFragment = gql`
       ...forbiddenFragment
     }
     todo {
-      tasks {
+      tasks @skip(if: $isSummary) {
         ...taskWithoutParentInfoFragment
+        __typename
       }
-      taskTemplate {
+      taskTemplate @skip(if: $isSummary) {
         ...taskTemplateCardFragment
+        __typename
       }
+      tasks @include(if: $isSummary) {
+        ...taskInfoSummaryFragment
+      }
+      __typename
     }
     sort
     containerSort
