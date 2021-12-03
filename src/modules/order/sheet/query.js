@@ -5,7 +5,9 @@ import {
   forbiddenFragment,
   userAvatarFragment,
   documentFragment,
+  documentSummaryFragment,
   tagFragment,
+  taskInfoSummaryFragment,
   partnerNameFragment,
   taskWithoutParentInfoFragment,
   taskTemplateCardFragment,
@@ -119,7 +121,9 @@ export const ordersQuery = gql`
   ${userAvatarFragment}
   ${partnerNameFragment}
   ${documentFragment}
+  ${documentSummaryFragment}
   ${tagFragment}
+  ${taskInfoSummaryFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${milestoneCardFragment}
@@ -198,7 +202,9 @@ export const orderItemByIDQuery = gql`
   ${userAvatarFragment}
   ${partnerNameFragment}
   ${documentFragment}
+  ${documentSummaryFragment}
   ${tagFragment}
+  ${taskInfoSummaryFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${milestoneCardFragment}
@@ -257,6 +263,8 @@ export const batchByIDQuery = gql`
   ${userAvatarFragment}
   ${partnerNameFragment}
   ${documentFragment}
+  ${documentSummaryFragment}
+  ${taskInfoSummaryFragment}
   ${tagFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
@@ -310,6 +318,8 @@ export const shipmentByIDQuery = gql`
   ${userAvatarFragment}
   ${partnerNameFragment}
   ${documentFragment}
+  ${documentSummaryFragment}
+  ${taskInfoSummaryFragment}
   ${tagFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
