@@ -447,6 +447,11 @@ function transformMilestone(
     {
       columnKey: `milestones.${milestoneIdx}.files`,
       type: 'milestone_documents',
+      computed: () => {
+        return {
+          entityId: milestone?.id ?? null,
+        };
+      },
       ...transformValueField(
         basePath,
         milestone,

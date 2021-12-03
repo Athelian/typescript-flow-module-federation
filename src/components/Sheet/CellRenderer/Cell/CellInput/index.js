@@ -133,10 +133,7 @@ const inputs = {
   project_logs: LogsInput.Project,
   // Tasks
   task_logs: LogsInput.Task,
-  order_tasks: TasksInput.Order,
-  order_item_tasks: TasksInput.OrderItem,
-  batch_tasks: TasksInput.Batch,
-  shipment_tasks: TasksInput.Shipment,
+  tasks: TasksInput,
   // Other
   approval: ApprovalInput,
   approval_tz: ApprovalInputTZ,

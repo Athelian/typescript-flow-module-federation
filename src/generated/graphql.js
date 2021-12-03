@@ -21677,6 +21677,8 @@ export type NotificationFilterInput = {|
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   userIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  types?: ?Array<NotificationType>,
+  createdAt?: ?DateRangeInput,
 |};
 
 export type NotificationPayload = Notification | BadRequest | Forbidden | NotFound;
@@ -21769,12 +21771,46 @@ export const NotificationTypeValues = Object.freeze({
   OrderCreateItem: 'order_create_item', 
   /** order_update_item_quantity */
   OrderUpdateItemQuantity: 'order_update_item_quantity', 
+  /** order_update_item_price */
+  OrderUpdateItemPrice: 'order_update_item_price', 
+  /** order_update_item_delivery_date */
+  OrderUpdateItemDeliveryDate: 'order_update_item_delivery_date', 
+  /** order_update_tag */
+  OrderUpdateTag: 'order_update_tag', 
   /** batch_create */
   BatchCreate: 'batch_create', 
   /** batch_update_quantity */
   BatchUpdateQuantity: 'batch_update_quantity', 
   /** batch_update_quantity_in_shipment */
   BatchUpdateQuantityInShipment: 'batch_update_quantity_in_shipment', 
+  /** batch_update_produced_quantity */
+  BatchUpdateProducedQuantity: 'batch_update_produced_quantity', 
+  /** batch_update_produced_quantity_in_shipment */
+  BatchUpdateProducedQuantityInShipment: 'batch_update_produced_quantity_in_shipment', 
+  /** batch_update_preshipped_quantity */
+  BatchUpdatePreshippedQuantity: 'batch_update_preshipped_quantity', 
+  /** batch_update_preshipped_quantity_in_shipment */
+  BatchUpdatePreshippedQuantityInShipment: 'batch_update_preshipped_quantity_in_shipment', 
+  /** batch_update_shipped_quantity */
+  BatchUpdateShippedQuantity: 'batch_update_shipped_quantity', 
+  /** batch_update_shipped_quantity_in_shipment */
+  BatchUpdateShippedQuantityInShipment: 'batch_update_shipped_quantity_in_shipment', 
+  /** batch_update_postshipped_quantity */
+  BatchUpdatePostshippedQuantity: 'batch_update_postshipped_quantity', 
+  /** batch_update_postshipped_quantity_in_shipment */
+  BatchUpdatePostshippedQuantityInShipment: 'batch_update_postshipped_quantity_in_shipment', 
+  /** batch_update_delivered_quantity */
+  BatchUpdateDeliveredQuantity: 'batch_update_delivered_quantity', 
+  /** batch_update_delivered_quantity_in_shipment */
+  BatchUpdateDeliveredQuantityInShipment: 'batch_update_delivered_quantity_in_shipment', 
+  /** batch_update_delivery_date */
+  BatchUpdateDeliveryDate: 'batch_update_delivery_date', 
+  /** batch_update_delivery_date_in_shipment */
+  BatchUpdateDeliveryDateInShipment: 'batch_update_delivery_date_in_shipment', 
+  /** batch_update_desired_date */
+  BatchUpdateDesiredDate: 'batch_update_desired_date', 
+  /** batch_update_desired_date_in_shipment */
+  BatchUpdateDesiredDateInShipment: 'batch_update_desired_date_in_shipment', 
   /** warehouse_create */
   WarehouseCreate: 'warehouse_create', 
   /** warehouse_update */
@@ -21913,6 +21949,7 @@ export type OrderFilterInput = {|
   createdAt?: ?DateRangeInput,
   updatedAt?: ?DateRangeInput,
   bulkFilter?: ?OrderBulkFilterInput,
+  keywords?: ?ValuesWithMatchModeInput,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   ids?: ?Array<$ElementType<Scalars, 'ID'>>,
   poNos?: ?Array<$ElementType<Scalars, 'String'>>,

@@ -102,17 +102,29 @@ export const sheetShipmentFragment = gql`
         }
       }
     }
-    files {
+    files @include(if: $isSummary) {
+      ...documentSummaryFragment
+      ...forbiddenFragment
+      __typename
+    }
+    files @skip(if: $isSummary) {
       ...documentFragment
       ...forbiddenFragment
+      __typename
     }
     todo {
-      tasks {
+      tasks @skip(if: $isSummary) {
         ...taskWithoutParentInfoFragment
+        __typename
       }
-      taskTemplate {
+      taskTemplate @skip(if: $isSummary) {
         ...taskTemplateCardFragment
+        __typename
       }
+      tasks @include(if: $isSummary) {
+        ...taskInfoSummaryFragment
+      }
+      __typename
     }
   }
 `;

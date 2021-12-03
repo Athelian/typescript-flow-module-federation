@@ -325,7 +325,12 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
               preferences={preferencesByType({
                 preferences,
                 entity: 'order',
-                ignoreKeys: ['order_create_item', 'order_update_item_quantity'],
+                ignoreKeys: [
+                  'order_create_item',
+                  'order_update_item_quantity',
+                  'order_update_item_price',
+                  'order_update_item_delivery_date',
+                ],
               })}
               onChange={togglePreference}
             />
@@ -340,6 +345,14 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
                 ...preferencesByType({
                   preferences,
                   entity: 'order_update_item_quantity',
+                }),
+                ...preferencesByType({
+                  preferences,
+                  entity: 'order_update_item_price',
+                }),
+                ...preferencesByType({
+                  preferences,
+                  entity: 'order_update_item_delivery_date',
                 }),
               ]}
               onChange={togglePreference}
@@ -369,6 +382,17 @@ function NotificationPreferences({ isOpen, onClose }: Props) {
               preferences={preferencesByType({
                 preferences,
                 entity: 'batch',
+                // These can be removed once backend is updated
+                ignoreKeys: [
+                  'batch_update_quantity_in_shipment',
+                  'batch_update_produced_quantity_in_shipment',
+                  'batch_update_preshipped_quantity_in_shipment',
+                  'batch_update_shipped_quantity_in_shipment',
+                  'batch_update_postshipped_quantity_in_shipment',
+                  'batch_update_delivered_quantity_in_shipment',
+                  'batch_update_delivery_date_in_shipment',
+                  'batch_update_desired_date_in_shipment',
+                ],
               })}
               onChange={togglePreference}
             />

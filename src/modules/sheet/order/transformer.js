@@ -324,6 +324,14 @@ export default function transformSheetOrder({
     {
       columnKey: 'order.files',
       type: 'order_documents',
+      computed: root => {
+        const currentOrder = getOrderFromRoot(root);
+        return {
+          entityId: currentOrder?.id,
+          ownerId: currentOrder?.ownedBy?.id,
+          groupIds: [currentOrder?.importer?.id, currentOrder?.exporter?.id].filter(Boolean),
+        };
+      },
       ...transformValueField(
         basePath,
         order,
@@ -333,7 +341,7 @@ export default function transformSheetOrder({
     },
     {
       columnKey: 'order.todo',
-      type: 'order_tasks',
+      type: 'tasks',
       computed: root => {
         const currentOrder = getOrderFromRoot(root);
         return {
@@ -348,6 +356,9 @@ export default function transformSheetOrder({
         'todo',
         hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_TASKS)
       ),
+      extra: {
+        entityType: 'order',
+      },
     },
     {
       columnKey: 'order.logs',
