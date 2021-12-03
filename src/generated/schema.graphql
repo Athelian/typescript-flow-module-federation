@@ -26660,6 +26660,17 @@ type Authenticated {
   mfaType: String
 }
 
+enum AutoTrackingByType {
+  """houseBlNo"""
+  HouseBlNo
+
+  """masterBlNo"""
+  MasterBlNo
+
+  """bookingNo"""
+  BookingNo
+}
+
 type BadRequest {
   violations: [Violation!]!
 }
@@ -28892,6 +28903,7 @@ type Hit {
 
 input IdsWithOperatorInput {
   ids: [ID!]
+  integratedIds: [ID!]
   operator: String
 }
 
@@ -30360,50 +30372,26 @@ enum NotificationType {
   """batch_update_quantity"""
   batch_update_quantity
 
-  """batch_update_quantity_in_shipment"""
-  batch_update_quantity_in_shipment
-
   """batch_update_produced_quantity"""
   batch_update_produced_quantity
-
-  """batch_update_produced_quantity_in_shipment"""
-  batch_update_produced_quantity_in_shipment
 
   """batch_update_preshipped_quantity"""
   batch_update_preshipped_quantity
 
-  """batch_update_preshipped_quantity_in_shipment"""
-  batch_update_preshipped_quantity_in_shipment
-
   """batch_update_shipped_quantity"""
   batch_update_shipped_quantity
-
-  """batch_update_shipped_quantity_in_shipment"""
-  batch_update_shipped_quantity_in_shipment
 
   """batch_update_postshipped_quantity"""
   batch_update_postshipped_quantity
 
-  """batch_update_postshipped_quantity_in_shipment"""
-  batch_update_postshipped_quantity_in_shipment
-
   """batch_update_delivered_quantity"""
   batch_update_delivered_quantity
-
-  """batch_update_delivered_quantity_in_shipment"""
-  batch_update_delivered_quantity_in_shipment
 
   """batch_update_delivery_date"""
   batch_update_delivery_date
 
-  """batch_update_delivery_date_in_shipment"""
-  batch_update_delivery_date_in_shipment
-
   """batch_update_desired_date"""
   batch_update_desired_date
-
-  """batch_update_desired_date_in_shipment"""
-  batch_update_desired_date_in_shipment
 
   """warehouse_create"""
   warehouse_create
@@ -30561,7 +30549,10 @@ input OrderFilterInput {
   completelyBatched: Boolean
   completelyShipped: Boolean
   orderItemPrice: PriceRangeInput
+
+  """Deprecated"""
   batchTagIds: [ID!]
+  batchTagIdsWithOperator: IdsWithOperatorInput
   batchDeliveredAt: DateRangeInput
   batchDesiredAt: DateRangeInput
   batchExpiredAt: DateRangeInput
@@ -30569,12 +30560,18 @@ input OrderFilterInput {
   batchTotalVolume: MetricRangeInput
   productId: ID
   productIds: [ID!]
+
+  """Deprecated"""
   productTagIds: [ID!]
+  productTagIdsWithOperator: IdsWithOperatorInput
   productProviderIds: [ID!]
   productProviderSupplierIds: [ID!]
   shipmentForwarderIds: [ID!]
   shipmentFollowerIds: [ID!]
+
+  """Deprecated"""
   shipmentTagIds: [ID!]
+  shipmentTagIdsWithOperator: IdsWithOperatorInput
   shipmentLoadPorts: [PortInput!]
   shipmentFirstTransitPorts: [PortInput!]
   shipmentSecondTransitPorts: [PortInput!]
@@ -30596,7 +30593,10 @@ input OrderFilterInput {
   containerContainerType: String
   containerContainerOption: ContainerOption
   containerWarehouseIds: [ID!]
+
+  """Deprecated"""
   containerTagIds: [ID!]
+  containerTagIdsWithOperator: IdsWithOperatorInput
   containerCreatedAt: DateRangeInput
   containerUpdatedAt: DateRangeInput
   containerWarehouseArrivalAgreedDate: DateRangeInput
@@ -30984,6 +30984,7 @@ input PartnerFilterInput {
   confirmed: Boolean
   leftOrganizationId: String
   rightOrganizationId: String
+  ownerOrganizationId: String
   showRightPartners: Boolean
   showLeftPartners: Boolean
 }
@@ -87547,6 +87548,7 @@ type Shipment implements Model & Owned & Tagged & Followed & Supervised & Docume
   no: String!
   blNo: String
   blDate: DateTime
+  masterBlNo: String
   booked: Boolean
   bookingNo: String
   bookingDate: DateTime
@@ -87555,6 +87557,8 @@ type Shipment implements Model & Owned & Tagged & Followed & Supervised & Docume
   incoterm: Incoterm
   loadType: LoadType
   transportType: TransportType
+  autoTracking: Boolean
+  autoTrackingBy: AutoTrackingByType
   carrier: String
   cargoReady: TimelineDatePayload!
   voyages: [VoyagePayload!]!
@@ -87785,6 +87789,7 @@ input ShipmentCreateInput {
   no: String!
   blNo: String
   blDate: DateTime
+  masterBlNo: String
   booked: Boolean
   bookingNo: String
   bookingDate: DateTime
@@ -87793,6 +87798,8 @@ input ShipmentCreateInput {
   loadType: LoadType
   transportType: TransportType
   incoterm: Incoterm
+  autoTracking: Boolean
+  autoTrackingBy: AutoTrackingByType
   carrier: String
   cargoReady: TimelineDateNestedInput
 
@@ -87837,6 +87844,7 @@ input ShipmentFilterInput {
   updatedAt: DateRangeInput
   bulkFilter: ShipmentBulkFilterInput
   keywords: ValuesWithMatchModeInput
+  autoTracking: Boolean
   archived: Boolean
   ids: [ID!]
   importerId: ID
@@ -88217,6 +88225,7 @@ input ShipmentUpdateInput {
   no: String
   blNo: String
   blDate: DateTime
+  masterBlNo: String
   booked: Boolean
   bookingNo: String
   bookingDate: DateTime
@@ -88225,6 +88234,8 @@ input ShipmentUpdateInput {
   loadType: LoadType
   transportType: TransportType
   incoterm: Incoterm
+  autoTracking: Boolean
+  autoTrackingBy: AutoTrackingByType
   carrier: String
   cargoReady: TimelineDateNestedInput
 
