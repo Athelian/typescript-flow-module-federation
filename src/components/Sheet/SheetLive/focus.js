@@ -169,9 +169,11 @@ export const useSheetLiveFocus = () => {
           variables: {
             id,
             input: {
-              entities: toSubscribe.map(({ id: entityId, type: entityType }) =>
-                convertEntityToInput(entityId, entityType)
-              ),
+              entities: toSubscribe
+                .filter(({ id: entityId }) => !!entityId)
+                .map(({ id: entityId, type: entityType }) =>
+                  convertEntityToInput(entityId, entityType)
+                ),
             },
           },
         })
@@ -195,9 +197,11 @@ export const useSheetLiveFocus = () => {
         variables: {
           id,
           input: {
-            entities: toUnsubscribe.map(({ id: entityId, type: entityType }) =>
-              convertEntityToInput(entityId, entityType)
-            ),
+            entities: toUnsubscribe
+              .filter(({ id: entityId }) => !!entityId)
+              .map(({ id: entityId, type: entityType }) =>
+                convertEntityToInput(entityId, entityType)
+              ),
           },
         },
       });
