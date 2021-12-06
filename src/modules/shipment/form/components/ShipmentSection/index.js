@@ -90,6 +90,8 @@ import {
   DividerStyle,
   BookedInputWrapperStyle,
   BookedStyle,
+  ContainerTrackingWrapperStyle,
+  ContainerAutoTrackingContainerStyle,
 } from './style';
 
 type Props = {|
@@ -174,6 +176,136 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
             <div className={ShipmentSectionWrapperStyle}>
               <div className={MainFieldsWrapperStyle}>
                 <GridColumn>
+                  <div className={ContainerTrackingWrapperStyle}>
+                    <GridColumn>
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage
+                              id="modules.Shipments.autoTracking"
+                              defaultMessage="AUTO TRACKING"
+                            />
+                          </Label>
+                        }
+                        input={
+                          <div className={ContainerAutoTrackingContainerStyle}>
+                            <ToggleInput
+                              name="autoTracking"
+                              align="right"
+                              toggled={values.autoTracking}
+                              onToggle={() => {
+                                const newBoolean = !values.autoTracking;
+                                setFieldValue('autoTracking', newBoolean);
+                                setFieldValue('autoTrackingBy', newBoolean ? 'BookingNo' : null);
+                              }}
+                              editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BOOKED])}
+                            >
+                              <Label>
+                                {values.autoTracking ? (
+                                  <FormattedMessage
+                                    id="modules.Shipments.autoTrackingEnabled"
+                                    defaultMessage="Enabled"
+                                  />
+                                ) : (
+                                  <FormattedMessage
+                                    id="modules.Shipments.autoTrackingDisabled"
+                                    defaultMessage="Disabled"
+                                  />
+                                )}
+                              </Label>
+                            </ToggleInput>
+                          </div>
+                        }
+                      />
+
+                      {/* <FormField
+                        name='trackBy'
+                        initValue="houseBlNo"
+                        values={values}
+                        saveOnChange
+                        // setFieldValue={(name: string, value: any) => {
+                        //   // update({ ...container, containerType: value });
+                        // }}
+                      >
+                        {({ name: fieldName, ...inputHandlers }) => (
+                          <SelectInputFactory
+                            name={fieldName}
+                            inputWidth="100px"
+                            inputHeight="20px"
+                            inputAlign="left"
+                            editable
+                            items={[
+                              { value: 'HouseBlNo', label: `House B/L no.` },
+                              { value: 'MasterBlNo', label: `Master B/L no.` },
+                              { value: 'BookingNo', label: `Booking no.` },
+                            ]}
+                            placeholder='Please select a value'
+                            label={
+                              <FormattedMessage
+                                id="modules.Shipments.trackBy"
+                                defaultMessage="TRACK BY"
+                              />
+                            }
+                            hideTooltip
+                            hideDropdownArrow
+                            {...inputHandlers}
+                          />
+                        )}
+                      </FormField>} */}
+                      {/* {values.autoTracking && <Subscribe to={[ShipmentTransportTypeContainer, ShipmentTimelineContainer]}>
+                        {(
+                          {
+                            originalValues: initialTransportTypeValues,
+                            state: transportTypeState,
+                            setFieldValue: transportTypeSetFieldValue,
+                          },
+                          { cleanDataAfterChangeTransport }
+                        ) => {
+                          const transportTypeValues = {
+                            ...initialTransportTypeValues,
+                            ...transportTypeState,
+                          };
+
+                          return (
+                            <FormField
+                              name="transportType"
+                              initValue={transportTypeValues.transportType}
+                              setFieldValue={(field, newValue) => {
+                                transportTypeSetFieldValue(field, newValue);
+                                if (transportTypeValues.transportType !== newValue)
+                                  cleanDataAfterChangeTransport();
+                              }}
+                              values={transportTypeValues}
+                              validator={validator}
+                              saveOnChange
+                            >
+                              {({ name, ...inputHandlers }) => (
+                                <EnumSelectInputFactory
+                                  {...inputHandlers}
+                                  editable={
+                                    hasPermission(SHIPMENT_EDIT) ||
+                                    (hasPermission(SHIPMENT_SET_TRANSPORT_TYPE) &&
+                                      hasPermission(SHIPMENT_SET_PORT))
+                                  }
+                                  enumType="TransportType"
+                                  name={name}
+                                  isNew={isNew}
+                                  originalValue={initialTransportTypeValues[name]}
+                                  label={
+                                    <FormattedMessage
+                                      id="modules.Shipments.transportation"
+                                      defaultMessage="TRANSPORTATION"
+                                    />
+                                  }
+                                />
+                              )}
+                            </FormField>
+                          );
+                        }}
+                      </Subscribe>
+                    } */}
+                    </GridColumn>
+                  </div>
                   <FormField
                     name="no"
                     initValue={values.no}
@@ -190,6 +322,24 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         required
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.shipmentId} />}
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="masterBlNo"
+                    initValue={values.masterBlNo}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        {...inputHandlers}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BL_NO])}
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.masterBlNo} />}
                       />
                     )}
                   </FormField>
@@ -360,6 +510,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       />
                     )}
                   </FormField>
+                  {/* {!values.autoTracking && */}
                   <Subscribe to={[ShipmentTransportTypeContainer, ShipmentTimelineContainer]}>
                     {(
                       {
@@ -411,6 +562,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       );
                     }}
                   </Subscribe>
+                  {/* // } */}
                   <FormField
                     name="loadType"
                     initValue={values.loadType}

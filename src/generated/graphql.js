@@ -17810,6 +17810,18 @@ export type Authenticated = {|
   mfaType?: ?$ElementType<Scalars, 'String'>,
 |};
 
+export const AutoTrackingByTypeValues = Object.freeze({
+  /** houseBlNo */
+  HouseBlNo: 'HouseBlNo', 
+  /** masterBlNo */
+  MasterBlNo: 'MasterBlNo', 
+  /** bookingNo */
+  BookingNo: 'BookingNo'
+});
+
+
+export type AutoTrackingByType = $Values<typeof AutoTrackingByTypeValues>;
+
 export type BadRequest = {|
    __typename?: 'BadRequest',
   violations: Array<Violation>,
@@ -19692,6 +19704,7 @@ export type Hit = {|
 
 export type IdsWithOperatorInput = {|
   ids?: ?Array<$ElementType<Scalars, 'ID'>>,
+  integratedIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   operator?: ?$ElementType<Scalars, 'String'>,
 |};
 
@@ -21781,36 +21794,20 @@ export const NotificationTypeValues = Object.freeze({
   BatchCreate: 'batch_create', 
   /** batch_update_quantity */
   BatchUpdateQuantity: 'batch_update_quantity', 
-  /** batch_update_quantity_in_shipment */
-  BatchUpdateQuantityInShipment: 'batch_update_quantity_in_shipment', 
   /** batch_update_produced_quantity */
   BatchUpdateProducedQuantity: 'batch_update_produced_quantity', 
-  /** batch_update_produced_quantity_in_shipment */
-  BatchUpdateProducedQuantityInShipment: 'batch_update_produced_quantity_in_shipment', 
   /** batch_update_preshipped_quantity */
   BatchUpdatePreshippedQuantity: 'batch_update_preshipped_quantity', 
-  /** batch_update_preshipped_quantity_in_shipment */
-  BatchUpdatePreshippedQuantityInShipment: 'batch_update_preshipped_quantity_in_shipment', 
   /** batch_update_shipped_quantity */
   BatchUpdateShippedQuantity: 'batch_update_shipped_quantity', 
-  /** batch_update_shipped_quantity_in_shipment */
-  BatchUpdateShippedQuantityInShipment: 'batch_update_shipped_quantity_in_shipment', 
   /** batch_update_postshipped_quantity */
   BatchUpdatePostshippedQuantity: 'batch_update_postshipped_quantity', 
-  /** batch_update_postshipped_quantity_in_shipment */
-  BatchUpdatePostshippedQuantityInShipment: 'batch_update_postshipped_quantity_in_shipment', 
   /** batch_update_delivered_quantity */
   BatchUpdateDeliveredQuantity: 'batch_update_delivered_quantity', 
-  /** batch_update_delivered_quantity_in_shipment */
-  BatchUpdateDeliveredQuantityInShipment: 'batch_update_delivered_quantity_in_shipment', 
   /** batch_update_delivery_date */
   BatchUpdateDeliveryDate: 'batch_update_delivery_date', 
-  /** batch_update_delivery_date_in_shipment */
-  BatchUpdateDeliveryDateInShipment: 'batch_update_delivery_date_in_shipment', 
   /** batch_update_desired_date */
   BatchUpdateDesiredDate: 'batch_update_desired_date', 
-  /** batch_update_desired_date_in_shipment */
-  BatchUpdateDesiredDateInShipment: 'batch_update_desired_date_in_shipment', 
   /** warehouse_create */
   WarehouseCreate: 'warehouse_create', 
   /** warehouse_update */
@@ -21964,7 +21961,9 @@ export type OrderFilterInput = {|
   completelyBatched?: ?$ElementType<Scalars, 'Boolean'>,
   completelyShipped?: ?$ElementType<Scalars, 'Boolean'>,
   orderItemPrice?: ?PriceRangeInput,
+  /** Deprecated */
   batchTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  batchTagIdsWithOperator?: ?IdsWithOperatorInput,
   batchDeliveredAt?: ?DateRangeInput,
   batchDesiredAt?: ?DateRangeInput,
   batchExpiredAt?: ?DateRangeInput,
@@ -21972,12 +21971,16 @@ export type OrderFilterInput = {|
   batchTotalVolume?: ?MetricRangeInput,
   productId?: ?$ElementType<Scalars, 'ID'>,
   productIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  /** Deprecated */
   productTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  productTagIdsWithOperator?: ?IdsWithOperatorInput,
   productProviderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   productProviderSupplierIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   shipmentForwarderIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   shipmentFollowerIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  /** Deprecated */
   shipmentTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  shipmentTagIdsWithOperator?: ?IdsWithOperatorInput,
   shipmentLoadPorts?: ?Array<PortInput>,
   shipmentFirstTransitPorts?: ?Array<PortInput>,
   shipmentSecondTransitPorts?: ?Array<PortInput>,
@@ -21999,7 +22002,9 @@ export type OrderFilterInput = {|
   containerContainerType?: ?$ElementType<Scalars, 'String'>,
   containerContainerOption?: ?ContainerOption,
   containerWarehouseIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  /** Deprecated */
   containerTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  containerTagIdsWithOperator?: ?IdsWithOperatorInput,
   containerCreatedAt?: ?DateRangeInput,
   containerUpdatedAt?: ?DateRangeInput,
   containerWarehouseArrivalAgreedDate?: ?DateRangeInput,
@@ -22431,6 +22436,7 @@ export type PartnerFilterInput = {|
   confirmed?: ?$ElementType<Scalars, 'Boolean'>,
   leftOrganizationId?: ?$ElementType<Scalars, 'String'>,
   rightOrganizationId?: ?$ElementType<Scalars, 'String'>,
+  ownerOrganizationId?: ?$ElementType<Scalars, 'String'>,
   showRightPartners?: ?$ElementType<Scalars, 'Boolean'>,
   showLeftPartners?: ?$ElementType<Scalars, 'Boolean'>,
 |};
@@ -61324,6 +61330,7 @@ export type Shipment = {|
     no: $ElementType<Scalars, 'String'>,
     blNo?: ?$ElementType<Scalars, 'String'>,
     blDate?: ?$ElementType<Scalars, 'DateTime'>,
+    masterBlNo?: ?$ElementType<Scalars, 'String'>,
     booked?: ?$ElementType<Scalars, 'Boolean'>,
     bookingNo?: ?$ElementType<Scalars, 'String'>,
     bookingDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -61332,6 +61339,8 @@ export type Shipment = {|
     incoterm?: ?Incoterm,
     loadType?: ?LoadType,
     transportType?: ?TransportType,
+    autoTracking?: ?$ElementType<Scalars, 'Boolean'>,
+    autoTrackingBy?: ?AutoTrackingByType,
     carrier?: ?$ElementType<Scalars, 'String'>,
     cargoReady: TimelineDatePayload,
     voyages: Array<VoyagePayload>,
@@ -61580,6 +61589,7 @@ export type ShipmentCreateInput = {|
   no: $ElementType<Scalars, 'String'>,
   blNo?: ?$ElementType<Scalars, 'String'>,
   blDate?: ?$ElementType<Scalars, 'DateTime'>,
+  masterBlNo?: ?$ElementType<Scalars, 'String'>,
   booked?: ?$ElementType<Scalars, 'Boolean'>,
   bookingNo?: ?$ElementType<Scalars, 'String'>,
   bookingDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -61588,6 +61598,8 @@ export type ShipmentCreateInput = {|
   loadType?: ?LoadType,
   transportType?: ?TransportType,
   incoterm?: ?Incoterm,
+  autoTracking?: ?$ElementType<Scalars, 'Boolean'>,
+  autoTrackingBy?: ?AutoTrackingByType,
   carrier?: ?$ElementType<Scalars, 'String'>,
   cargoReady?: ?TimelineDateNestedInput,
   /** Deprecated */
@@ -61631,6 +61643,7 @@ export type ShipmentFilterInput = {|
   updatedAt?: ?DateRangeInput,
   bulkFilter?: ?ShipmentBulkFilterInput,
   keywords?: ?ValuesWithMatchModeInput,
+  autoTracking?: ?$ElementType<Scalars, 'Boolean'>,
   archived?: ?$ElementType<Scalars, 'Boolean'>,
   ids?: ?Array<$ElementType<Scalars, 'ID'>>,
   importerId?: ?$ElementType<Scalars, 'ID'>,
@@ -62114,6 +62127,7 @@ export type ShipmentUpdateInput = {|
   no?: ?$ElementType<Scalars, 'String'>,
   blNo?: ?$ElementType<Scalars, 'String'>,
   blDate?: ?$ElementType<Scalars, 'DateTime'>,
+  masterBlNo?: ?$ElementType<Scalars, 'String'>,
   booked?: ?$ElementType<Scalars, 'Boolean'>,
   bookingNo?: ?$ElementType<Scalars, 'String'>,
   bookingDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -62122,6 +62136,8 @@ export type ShipmentUpdateInput = {|
   loadType?: ?LoadType,
   transportType?: ?TransportType,
   incoterm?: ?Incoterm,
+  autoTracking?: ?$ElementType<Scalars, 'Boolean'>,
+  autoTrackingBy?: ?AutoTrackingByType,
   carrier?: ?$ElementType<Scalars, 'String'>,
   cargoReady?: ?TimelineDateNestedInput,
   /** Deprecated */

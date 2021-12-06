@@ -28,7 +28,11 @@ export default defineMessages({
   },
   blNo: {
     id: 'modules.Shipments.blNo',
-    defaultMessage: 'B/L NO.',
+    defaultMessage: 'HOUSE B/L NO.',
+  },
+  masterBlNo: {
+    id: 'modules.Shipments.masterBlNo',
+    defaultMessage: 'MASTER B/L NO.',
   },
   blDate: {
     id: 'modules.Shipments.blDate',

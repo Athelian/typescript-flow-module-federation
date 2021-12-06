@@ -252,11 +252,26 @@ export const prepareParsedShipmentInput = ({
       originalValues?.organizations ?? [],
       newValues.organizations
     ),
+    ...parseGenericField(
+      'autoTracking',
+      getByPathWithDefault(null, 'autoTracking', originalValues),
+      newValues.autoTracking
+    ),
+    ...parseGenericField(
+      'autoTrackingBy',
+      getByPathWithDefault(null, 'autoTrackingBy', originalValues),
+      newValues.autoTrackingBy
+    ),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
     ...parseGenericField(
       'blNo',
       getByPathWithDefault(null, 'blNo', originalValues),
       newValues.blNo
+    ),
+    ...parseGenericField(
+      'masterBlNo',
+      getByPathWithDefault(null, 'masterBlNo', originalValues),
+      newValues.masterBlNo
     ),
     ...parseDatetimeField('blDate', originalValues?.blDate ?? null, newValues.blDate),
     ...parseGenericField(
