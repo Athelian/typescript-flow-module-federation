@@ -38,7 +38,7 @@ export const shipmentFormQueryFragment = gql`
     invoiceNo
     contractNo
     autoTracking
-    # autoTrackingBy
+    autoTrackingBy
     masterBlNo
     incoterm
     loadType
@@ -138,7 +138,7 @@ export const shipmentFormFragment = gql`
     invoiceNo
     contractNo
     autoTracking
-    # autoTrackingBy
+    autoTrackingBy
     incoterm
     loadType
     transportType

@@ -1,5 +1,6 @@
 // @flow
 import { Container } from 'unstated';
+import type { AutoTrackingByType } from 'generated/graphql';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 import { defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
@@ -8,6 +9,7 @@ import { initDatetimeToContainer } from 'utils/date';
 type ShipmentInfoType = {
   followers: Array<{ id: string, firstName: string, lastName: string }>,
   autoTracking: boolean,
+  autoTrackingBy: AutoTrackingByType,
   no: ?string,
   blNo: ?string,
   masterBlNo: ?string,
@@ -38,6 +40,7 @@ const initValues = {
   organizations: [],
   no: null,
   autoTracking: false,
+  autoTrackingBy: null,
   blNo: null,
   masterBlNo: null,
   blDate: null,

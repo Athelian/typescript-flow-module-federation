@@ -194,7 +194,9 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                               align="right"
                               toggled={values.autoTracking}
                               onToggle={() => {
-                                setFieldValue('autoTracking', !values.autoTracking);
+                                const newBoolean = !values.autoTracking;
+                                setFieldValue('autoTracking', newBoolean);
+                                setFieldValue('autoTrackingBy', newBoolean ? 'BookingNo' : null);
                               }}
                               editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BOOKED])}
                             >

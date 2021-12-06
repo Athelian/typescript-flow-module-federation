@@ -257,6 +257,11 @@ export const prepareParsedShipmentInput = ({
       getByPathWithDefault(null, 'autoTracking', originalValues),
       newValues.autoTracking
     ),
+    ...parseGenericField(
+      'autoTrackingBy',
+      getByPathWithDefault(null, 'autoTrackingBy', originalValues),
+      newValues.autoTrackingBy
+    ),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
     ...parseGenericField(
       'blNo',
