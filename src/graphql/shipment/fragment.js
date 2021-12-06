@@ -12,6 +12,9 @@ export const shipmentFormQueryFragment = gql`
     followers {
       ...userAvatarFragment
     }
+    # inCharges {
+    #   ...userAvatarFragment
+    # }
     organizations {
       ... on Organization {
         id
@@ -34,6 +37,9 @@ export const shipmentFormQueryFragment = gql`
     bookingDate
     invoiceNo
     contractNo
+    autoTracking
+    autoTrackingBy
+    masterBlNo
     incoterm
     loadType
     transportType
@@ -105,6 +111,9 @@ export const shipmentFormFragment = gql`
     followers {
       ...userAvatarFragment
     }
+    # inCharges {
+    #   ...userAvatarFragment
+    # }
     organizations {
       ... on Organization {
         id
@@ -121,12 +130,15 @@ export const shipmentFormFragment = gql`
     memo
     no
     blNo
+    masterBlNo
     blDate
     booked
     bookingNo
     bookingDate
     invoiceNo
     contractNo
+    autoTracking
+    autoTrackingBy
     incoterm
     loadType
     transportType
