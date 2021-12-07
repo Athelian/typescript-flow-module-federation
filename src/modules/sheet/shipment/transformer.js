@@ -21,7 +21,7 @@ import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_ARCHIVE,
   SHIPMENT_SET_BL_DATE,
-  SHIPMENT_SET_BL_NO,
+  SHIPMENT_SET_HOUSE_BL_NO,
   SHIPMENT_SET_BOOKED,
   SHIPMENT_SET_BOOKING_DATE,
   SHIPMENT_SET_BOOKING_NO,
@@ -239,7 +239,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'blNo',
-        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_BL_NO)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_HOUSE_BL_NO)
       ),
     },
     {

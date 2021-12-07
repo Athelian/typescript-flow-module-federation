@@ -23,7 +23,8 @@ import {
   SHIPMENT_SET_CUSTOM_FIELDS_MASK,
   SHIPMENT_SET_FORWARDERS,
   SHIPMENT_SET_NO,
-  SHIPMENT_SET_BL_NO,
+  SHIPMENT_SET_HOUSE_BL_NO,
+  SHIPMENT_SET_MASTER_BL_NO,
   SHIPMENT_SET_BL_DATE,
   SHIPMENT_SET_BOOKING_NO,
   SHIPMENT_SET_BOOKED,
@@ -335,7 +336,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BL_NO])}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_MASTER_BL_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -353,7 +354,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BL_NO])}
+                        editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_HOUSE_BL_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
