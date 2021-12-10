@@ -187,6 +187,7 @@
   "components.NavBar.Filter.booked": "Booked",
   "components.NavBar.Filter.notBooked": "Not booked",
   "components.NavBar.Filter.tags": "标签",
+  "components.NavBar.Filter.tags.tooltip": "共有 {totalTags} 个标签来自 {totalOwners} 个所有者",
   "components.NavBar.Filter.organizations": "组织",
   "components.NavBar.Filter.importers": "进口商",
   "components.NavBar.Filter.exporters": "出口商",

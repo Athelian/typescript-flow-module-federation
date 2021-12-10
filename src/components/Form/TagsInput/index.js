@@ -22,6 +22,7 @@ import {
 type OptionalProps = {
   width: string,
   includeAllShared?: boolean,
+  hasIntegratedTags?: boolean,
   editable: {
     set: boolean,
     remove: boolean,
@@ -160,6 +161,7 @@ export default class TagsInput extends React.Component<Props, State> {
     const {
       organizationIds,
       includeAllShared,
+      hasIntegratedTags,
       editable,
       width,
       tagType,
@@ -299,15 +301,13 @@ export default class TagsInput extends React.Component<Props, State> {
                     tagType={tagType}
                     organizationIds={organizationIds}
                     includeAllShared={includeAllShared}
+                    hasIntegratedTags={hasIntegratedTags}
                   >
                     {({ data: tags, onScroll }) => {
                       return (
                         <TagSelectOptions
                           getItemProps={getItemProps}
-                          items={this.computeFilteredTags(
-                            (tags ?? []).filter(tag => !isForbidden(tag) && !isNotFound(tag)),
-                            inputValue
-                          )}
+                          items={this.computeFilteredTags(tags ?? [], inputValue)}
                           onScroll={(scrollTop, event) => {
                             onScroll({ event });
                           }}
