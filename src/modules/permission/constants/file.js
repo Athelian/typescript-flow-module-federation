@@ -1,13 +1,8 @@
 // @flow
 
-export const DOCUMENT_SET = 'file.files.set';
-export const DOCUMENT_GET = 'file.files.get';
-export const DOCUMENT_FORM = 'file.files.form';
-export const DOCUMENT_CREATE = 'file.files.create';
-export const DOCUMENT_UPDATE = 'file.files.update';
-export const DOCUMENT_DELETE = 'file.files.delete';
-export const DOCUMENT_SET_NAME = 'file.files.setName';
-export const DOCUMENT_SET_TAGS = 'file.files.setTags';
-export const DOCUMENT_SET_TYPE = 'file.files.setType';
-export const DOCUMENT_SET_ENTITY = 'file.files.setEntity';
-export const DOCUMENT_SET_MEMO = 'file.files.setMemo';
+export const PARENTLESS_DOCUMENT_UPLOAD = 'file.parentless.upload';
+export const PARENTLESS_DOCUMENT_GET = 'file.parentless.get';
+export const PARENTLESS_DOCUMENT_FORM = 'file.parentless.form';
+export const PARENTLESS_DOCUMENT_EDIT = 'file.parentless.edit';
+export const PARENTLESS_DOCUMENT_DOWNLOAD = 'file.parentless.download';
+export const PARENTLESS_DOCUMENT_DELETE = 'file.parentless.delete';

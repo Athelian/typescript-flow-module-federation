@@ -11,10 +11,13 @@ export const SHIPMENT_ARCHIVE = 'shipment.shipments.archive';
 export const SHIPMENT_EXPORT = 'shipment.shipments.export';
 
 export const SHIPMENT_ORDER_LIST = 'shipment.orders.list';
+
 export const SHIPMENT_DOCUMENT_GET = 'shipment.files.get';
+export const SHIPMENT_DOCUMENT_FORM = 'shipment.files.form';
+export const SHIPMENT_DOCUMENT_EDIT = 'shipment.files.edit';
 export const SHIPMENT_DOCUMENT_DOWNLOAD = 'shipment.files.download';
-export const SHIPMENT_DOCUMENT_UPDATE = 'shipment.files.update';
 export const SHIPMENT_DOCUMENT_DELETE = 'shipment.files.delete';
+
 export const SHIPMENT_DOCUMENT_GET_TYPE_BL = 'shipment.files.getByTypeBL';
 export const SHIPMENT_DOCUMENT_GET_TYPE_INVOICE = 'shipment.files.getByTypeInvoice';
 export const SHIPMENT_DOCUMENT_GET_TYPE_PACKING_LIST = 'shipment.files.getByTypePackingList';
@@ -27,15 +30,7 @@ export const SHIPMENT_DOCUMENT_GET_TYPE_WAREHOUSE_ARRIVAL_REPORT =
 export const SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT =
   'shipment.files.getByTypeWarehouseInspectionReport';
 export const SHIPMENT_DOCUMENT_GET_TYPE_MISCELLANEOUS = 'shipment.files.getByTypeMiscellaneous';
-export const SHIPMENT_DOCUMENT_CREATE = 'shipment.files.create';
-export const SHIPMENT_DOCUMENT_FORM = 'shipment.files.form';
-export const SHIPMENT_DOCUMENT_SET_NAME = 'shipment.files.setName';
-export const SHIPMENT_DOCUMENT_SET_TAGS = 'shipment.files.setTags';
-export const SHIPMENT_DOCUMENT_SET_TYPE = 'shipment.files.setType';
-export const SHIPMENT_DOCUMENT_SET_ENTITY = 'shipment.files.setEntity';
-export const SHIPMENT_DOCUMENT_SET_MEMO = 'shipment.files.setMemo';
 
-export const SHIPMENT_DOCUMENT_SET = 'shipment.files.set';
 export const SHIPMENT_DOCUMENT_SET_BL = 'shipment.files.setByTypeBL';
 export const SHIPMENT_DOCUMENT_SET_INVOICE = 'shipment.files.setByTypeInvoice';
 export const SHIPMENT_DOCUMENT_SET_PACKING_LIST = 'shipment.files.setByTypePackingList';
