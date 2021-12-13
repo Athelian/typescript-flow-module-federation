@@ -7,42 +7,23 @@ import { ProductProviderInfoContainer } from 'modules/productProvider/form/conta
 import usePermission from 'hooks/usePermission';
 import {
   PRODUCT_PROVIDER_UPDATE,
-  PRODUCT_PROVIDER_SET_DOCUMENTS,
-  PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS,
+  PRODUCT_PROVIDER_DOCUMENT_EDIT,
+  PRODUCT_PROVIDER_DOCUMENT_DOWNLOAD,
   PRODUCT_PROVIDER_DOCUMENT_DELETE,
-  PRODUCT_PROVIDER_DOCUMENT_CREATE,
-  PRODUCT_PROVIDER_DOCUMENT_SET_TYPE,
   PRODUCT_PROVIDER_DOCUMENT_FORM,
 } from 'modules/permission/constants/product';
-import {
-  DOCUMENT_CREATE,
-  DOCUMENT_DELETE,
-  DOCUMENT_SET_TYPE,
-  DOCUMENT_UPDATE,
-} from 'modules/permission/constants/file';
+import { PARENTLESS_DOCUMENT_UPLOAD } from 'modules/permission/constants/file';
 
 export default function EndProductDocumentsSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const canUpload = hasPermission([
-    PRODUCT_PROVIDER_SET_DOCUMENTS,
-    PRODUCT_PROVIDER_DOCUMENT_CREATE,
-    DOCUMENT_CREATE,
-  ]);
-  const canAddOrphan = hasPermission([PRODUCT_PROVIDER_SET_DOCUMENTS, PRODUCT_PROVIDER_UPDATE]);
+
+  const canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD);
+  const canAddOrphan = hasPermission([PRODUCT_PROVIDER_DOCUMENT_EDIT, PRODUCT_PROVIDER_UPDATE]);
+  const canChangeType = hasPermission([PRODUCT_PROVIDER_DOCUMENT_EDIT, PRODUCT_PROVIDER_UPDATE]);
   const canViewForm = hasPermission(PRODUCT_PROVIDER_DOCUMENT_FORM);
-  const canDownload = hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS);
-  const canChangeType = hasPermission([
-    PRODUCT_PROVIDER_SET_DOCUMENTS,
-    DOCUMENT_SET_TYPE,
-    PRODUCT_PROVIDER_DOCUMENT_SET_TYPE,
-    DOCUMENT_UPDATE,
-  ]);
-  const canDelete = hasPermission([
-    PRODUCT_PROVIDER_SET_DOCUMENTS,
-    PRODUCT_PROVIDER_DOCUMENT_DELETE,
-    DOCUMENT_DELETE,
-  ]);
+  const canDownload = hasPermission(PRODUCT_PROVIDER_DOCUMENT_DOWNLOAD);
+  const canDelete = hasPermission(PRODUCT_PROVIDER_DOCUMENT_DELETE);
 
   return (
     <Subscribe to={[ProductProviderInfoContainer]}>

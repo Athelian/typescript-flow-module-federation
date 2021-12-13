@@ -15,13 +15,13 @@ import {
   ORDER_ITEMS_SET_CUSTOM_FIELDS,
   ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK,
   ORDER_ITEMS_SET_DELIVERY_DATE,
-  ORDER_ITEMS_SET_DOCUMENTS,
   ORDER_ITEMS_SET_MEMO,
   ORDER_ITEMS_SET_NO,
   ORDER_ITEMS_SET_PRICE,
   ORDER_ITEMS_SET_QUANTITY,
   ORDER_ITEMS_SET_TAGS,
   ORDER_ITEMS_SET_TASKS,
+  ORDER_ITEMS_DOCUMENT_EDIT,
   ORDER_ITEMS_UPDATE,
 } from 'modules/permission/constants/orderItem';
 
@@ -255,12 +255,8 @@ export default function transformSheetOrderItem({
           groupIds: [currentOrder?.importer?.id, currentOrder?.exporter?.id].filter(Boolean),
         };
       },
-      ...transformValueField(
-        basePath,
-        orderItem,
-        'files',
-        hasPermission =>
-          hasPermission(ORDER_ITEMS_UPDATE) || hasPermission(ORDER_ITEMS_SET_DOCUMENTS)
+      ...transformValueField(basePath, orderItem, 'files', hasPermission =>
+        hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_DOCUMENT_EDIT])
       ),
     },
     {

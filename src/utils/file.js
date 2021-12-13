@@ -3,19 +3,17 @@ import type { FileType, File } from 'generated/graphql';
 import logger from 'utils/logger';
 import {
   ORDER_DOCUMENT_GET,
+  ORDER_DOCUMENT_EDIT,
+  ORDER_DOCUMENT_FORM,
   ORDER_DOCUMENT_GET_TYPE_PO,
   ORDER_DOCUMENT_GET_TYPE_PI,
-  ORDER_DOCUMENT_CREATE,
-  ORDER_DOCUMENT_DELETE,
-  ORDER_SET_DOCUMENTS,
-  ORDER_DOWNLOAD_DOCUMENTS,
+  ORDER_DOCUMENT_DOWNLOAD,
   ORDER_UPDATE,
 } from 'modules/permission/constants/order';
 import {
-  ORDER_ITEMS_DOCUMENT_CREATE,
-  ORDER_ITEMS_DOCUMENT_DELETE,
-  ORDER_ITEMS_SET_DOCUMENTS,
-  ORDER_ITEMS_DOWNLOAD_DOCUMENTS,
+  ORDER_ITEMS_DOCUMENT_FORM,
+  ORDER_ITEMS_DOCUMENT_EDIT,
+  ORDER_ITEMS_DOCUMENT_DOWNLOAD,
   ORDER_ITEMS_UPDATE,
 } from 'modules/permission/constants/orderItem';
 import {
@@ -29,146 +27,121 @@ import {
   SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT,
   SHIPMENT_DOCUMENT_GET_TYPE_MISCELLANEOUS,
   SHIPMENT_DOCUMENT_SET_MISCELLANEOUS,
-  SHIPMENT_DOCUMENT_CREATE,
-  SHIPMENT_DOCUMENT_DELETE,
-  SHIPMENT_DOCUMENT_SET,
+  SHIPMENT_DOCUMENT_EDIT,
+  SHIPMENT_DOCUMENT_FORM,
   SHIPMENT_DOCUMENT_DOWNLOAD,
   SHIPMENT_EDIT,
 } from 'modules/permission/constants/shipment';
 import {
   MILESTONE_UPDATE,
-  MILESTONE_DOCUMENT_CREATE,
-  MILESTONE_DOCUMENT_DELETE,
-  MILESTONE_SET_DOCUMENTS,
-  MILESTONE_DOWNLOAD_DOCUMENTS,
+  MILESTONE_DOCUMENT_EDIT,
+  MILESTONE_DOCUMENT_FORM,
+  MILESTONE_DOCUMENT_DOWNLOAD,
 } from 'modules/permission/constants/milestone';
 import {
-  PRODUCT_DOCUMENT_GET,
-  PRODUCT_DOCUMENT_GET_TYPE_SPECIFICATION,
-  PRODUCT_DOCUMENT_GET_TYPE_ANALYSIS_CERTIFICATE,
-  PRODUCT_DOCUMENT_GET_TYPE_ORIGIN_CERTIFICATE,
-  PRODUCT_SET_DOCUMENTS,
-  PRODUCT_DOWNLOAD_DOCUMENTS,
-  PRODUCT_DOCUMENT_CREATE,
-  PRODUCT_DOCUMENT_DELETE,
   PRODUCT_PROVIDER_UPDATE,
-  PRODUCT_PROVIDER_DOCUMENT_CREATE,
-  PRODUCT_PROVIDER_DOCUMENT_DELETE,
-  PRODUCT_PROVIDER_SET_DOCUMENTS,
-  PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS,
+  PRODUCT_PROVIDER_DOCUMENT_EDIT,
+  PRODUCT_PROVIDER_DOCUMENT_FORM,
+  PRODUCT_PROVIDER_DOCUMENT_DOWNLOAD,
 } from 'modules/permission/constants/product';
-
 import {
-  DOCUMENT_SET,
-  DOCUMENT_DOWNLOAD,
-  DOCUMENT_GET,
-  DOCUMENT_UPDATE,
+  PARENTLESS_DOCUMENT_EDIT,
+  PARENTLESS_DOCUMENT_FORM,
+  PARENTLESS_DOCUMENT_DOWNLOAD,
 } from 'modules/permission/constants/file';
+
 import JsZip from 'jszip';
 import FileSaver from 'file-saver';
 
 export function canDownloadFile(hasPermissions: Function, entityType?: string) {
-  switch (entityType) {
+  if (entityType === undefined) return hasPermissions(PARENTLESS_DOCUMENT_DOWNLOAD);
+
+  switch (entityType.charAt(0).toLowerCase() + entityType.slice(1)) {
     case 'order':
-      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, ORDER_DOWNLOAD_DOCUMENTS]);
+      return hasPermissions(ORDER_DOCUMENT_DOWNLOAD);
     case 'orderItem':
-      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, ORDER_ITEMS_DOWNLOAD_DOCUMENTS]);
+      return hasPermissions(ORDER_ITEMS_DOCUMENT_DOWNLOAD);
     case 'shipment':
-      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, SHIPMENT_DOCUMENT_DOWNLOAD]);
-    case 'product':
-      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, PRODUCT_DOWNLOAD_DOCUMENTS]);
+      return hasPermissions(SHIPMENT_DOCUMENT_DOWNLOAD);
     case 'productProvider':
-      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS]);
+      return hasPermissions(PRODUCT_PROVIDER_DOCUMENT_DOWNLOAD);
     case 'project':
-      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD, MILESTONE_DOWNLOAD_DOCUMENTS]);
+      return hasPermissions(MILESTONE_DOCUMENT_DOWNLOAD);
     default:
-      return hasPermissions([DOCUMENT_SET, DOCUMENT_DOWNLOAD]);
+      return false;
   }
 }
-export function canViewFile(hasPermissions: Function, type: FileType, entityType?: string) {
-  switch (type) {
+export function canViewFile(hasPermissions: Function, fileType: FileType, entityType?: string) {
+  switch (fileType) {
     case 'OrderPo':
-      return hasPermissions([DOCUMENT_GET, ORDER_DOCUMENT_GET, ORDER_DOCUMENT_GET_TYPE_PO]);
+      return hasPermissions([ORDER_DOCUMENT_GET, ORDER_DOCUMENT_GET_TYPE_PO]);
     case 'OrderPi':
-      return hasPermissions([DOCUMENT_GET, ORDER_DOCUMENT_GET, ORDER_DOCUMENT_GET_TYPE_PI]);
+      return hasPermissions([ORDER_DOCUMENT_GET, ORDER_DOCUMENT_GET_TYPE_PI]);
     case 'ShipmentBl':
-      return hasPermissions([
-        DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_GET_TYPE_BL,
-        SHIPMENT_DOCUMENT_SET,
-      ]);
+      return hasPermissions([SHIPMENT_DOCUMENT_GET, SHIPMENT_DOCUMENT_GET_TYPE_BL]);
     case 'ShipmentInvoice':
-      return hasPermissions([
-        DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_SET,
-        SHIPMENT_DOCUMENT_GET_TYPE_INVOICE,
-      ]);
+      return hasPermissions([SHIPMENT_DOCUMENT_GET, SHIPMENT_DOCUMENT_GET_TYPE_INVOICE]);
     case 'ShipmentPackingList':
-      return hasPermissions([
-        DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_SET,
-        SHIPMENT_DOCUMENT_GET_TYPE_PACKING_LIST,
-      ]);
+      return hasPermissions([SHIPMENT_DOCUMENT_GET, SHIPMENT_DOCUMENT_GET_TYPE_PACKING_LIST]);
     case 'ShipmentImportDeclaration':
-      return hasPermissions([
-        DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_SET,
-        SHIPMENT_DOCUMENT_GET_TYPE_IMPORT_DECLARATION,
-      ]);
+      return hasPermissions([SHIPMENT_DOCUMENT_GET, SHIPMENT_DOCUMENT_GET_TYPE_IMPORT_DECLARATION]);
     case 'ShipmentInspectionApplication':
       return hasPermissions([
-        DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_SET,
         SHIPMENT_DOCUMENT_GET,
         SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_APPLICATION,
       ]);
     case 'ShipmentWarehouseArrivalReport':
       return hasPermissions([
-        DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_SET,
         SHIPMENT_DOCUMENT_GET,
         SHIPMENT_DOCUMENT_GET_TYPE_WAREHOUSE_ARRIVAL_REPORT,
       ]);
     case 'ShipmentWarehouseInspectionReport':
-      return hasPermissions([
-        DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_GET,
-        SHIPMENT_DOCUMENT_SET,
-        SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT,
-      ]);
-    case 'ProductSpec':
-      return hasPermissions([
-        DOCUMENT_GET,
-        PRODUCT_DOCUMENT_GET,
-        PRODUCT_DOCUMENT_GET_TYPE_SPECIFICATION,
-      ]);
-    case 'ProductAnalysisCert':
-      return hasPermissions([
-        DOCUMENT_GET,
-        PRODUCT_DOCUMENT_GET,
-        PRODUCT_DOCUMENT_GET_TYPE_ANALYSIS_CERTIFICATE,
-      ]);
-    case 'ProductOriginCert':
-      return hasPermissions([
-        DOCUMENT_GET,
-        PRODUCT_DOCUMENT_GET,
-        PRODUCT_DOCUMENT_GET_TYPE_ORIGIN_CERTIFICATE,
-      ]);
-
+      return hasPermissions([SHIPMENT_DOCUMENT_GET, SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT]);
     default:
       if (entityType === 'Shipment') {
         return hasPermissions([
-          DOCUMENT_GET,
-          SHIPMENT_DOCUMENT_SET,
           SHIPMENT_DOCUMENT_GET_TYPE_MISCELLANEOUS,
           SHIPMENT_DOCUMENT_SET_MISCELLANEOUS,
         ]);
       }
-      return hasPermissions(DOCUMENT_GET);
+      return false;
+  }
+}
+export function canViewFileForm(hasPermissions: Function, entityType?: string) {
+  if (entityType === undefined) return hasPermissions(PARENTLESS_DOCUMENT_FORM);
+
+  switch (entityType.charAt(0).toLowerCase() + entityType.slice(1)) {
+    case 'order':
+      return hasPermissions([ORDER_UPDATE, ORDER_DOCUMENT_FORM]);
+    case 'orderItem':
+      return hasPermissions([ORDER_ITEMS_UPDATE, ORDER_ITEMS_DOCUMENT_FORM]);
+    case 'shipment':
+      return hasPermissions([SHIPMENT_EDIT, SHIPMENT_DOCUMENT_FORM]);
+    case 'productProvider':
+      return hasPermissions([PRODUCT_PROVIDER_DOCUMENT_EDIT, PRODUCT_PROVIDER_DOCUMENT_FORM]);
+    case 'project':
+      return hasPermissions([MILESTONE_DOCUMENT_EDIT, MILESTONE_DOCUMENT_FORM]);
+    default:
+      return false;
+  }
+}
+
+export function canUpdateFile(hasPermissions: Function, entityType?: string) {
+  if (entityType === undefined) return hasPermissions(PARENTLESS_DOCUMENT_EDIT);
+
+  switch (entityType.charAt(0).toLowerCase() + entityType.slice(1)) {
+    case 'order':
+      return hasPermissions([ORDER_UPDATE, ORDER_DOCUMENT_EDIT]);
+    case 'orderItem':
+      return hasPermissions([ORDER_ITEMS_UPDATE, ORDER_ITEMS_DOCUMENT_EDIT]);
+    case 'shipment':
+      return hasPermissions([SHIPMENT_EDIT, SHIPMENT_DOCUMENT_EDIT]);
+    case 'productProvider':
+      return hasPermissions([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_DOCUMENT_EDIT]);
+    case 'project':
+      return hasPermissions([MILESTONE_UPDATE, MILESTONE_DOCUMENT_EDIT]);
+    default:
+      return false;
   }
 }
 
@@ -180,38 +153,17 @@ export function canViewFile(hasPermissions: Function, type: FileType, entityType
 export function canChangeFileParent(hasPermissions: Function, file: File) {
   switch (file?.entity?.__typename) {
     case 'Order':
-      return (
-        hasPermissions([ORDER_UPDATE, ORDER_SET_DOCUMENTS]) ||
-        (hasPermissions(ORDER_DOCUMENT_CREATE) && hasPermissions(ORDER_DOCUMENT_DELETE))
-      );
+      return hasPermissions([ORDER_UPDATE, ORDER_DOCUMENT_EDIT]);
     case 'OrderItem':
-      return (
-        hasPermissions([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_DOCUMENTS]) ||
-        (hasPermissions(ORDER_ITEMS_DOCUMENT_CREATE) && hasPermissions(ORDER_ITEMS_DOCUMENT_DELETE))
-      );
+      return hasPermissions([ORDER_ITEMS_UPDATE, ORDER_ITEMS_DOCUMENT_EDIT]);
     case 'Shipment':
-      return (
-        hasPermissions([SHIPMENT_EDIT, SHIPMENT_DOCUMENT_SET]) ||
-        (hasPermissions(SHIPMENT_DOCUMENT_CREATE) && hasPermissions(SHIPMENT_DOCUMENT_DELETE))
-      );
+      return hasPermissions([SHIPMENT_EDIT, SHIPMENT_DOCUMENT_EDIT]);
     case 'Milestone':
-      return (
-        hasPermissions([MILESTONE_UPDATE, MILESTONE_SET_DOCUMENTS]) ||
-        (hasPermissions(MILESTONE_DOCUMENT_CREATE) && hasPermissions(MILESTONE_DOCUMENT_DELETE))
-      );
-    case 'ProductProvider': {
-      const canSetProduct =
-        hasPermissions(PRODUCT_SET_DOCUMENTS) ||
-        hasPermissions(PRODUCT_DOCUMENT_CREATE) ||
-        hasPermissions(PRODUCT_DOCUMENT_DELETE);
-      const canSetProductProvider =
-        hasPermissions([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_DOCUMENTS]) ||
-        (hasPermissions(PRODUCT_PROVIDER_DOCUMENT_CREATE) &&
-          hasPermissions(PRODUCT_PROVIDER_DOCUMENT_DELETE));
-      return canSetProduct && canSetProductProvider;
-    }
+      return hasPermissions([MILESTONE_UPDATE, MILESTONE_DOCUMENT_EDIT]);
+    case 'ProductProvider':
+      return hasPermissions([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_DOCUMENT_EDIT]);
     default:
-      return hasPermissions(DOCUMENT_UPDATE);
+      return false;
   }
 }
 

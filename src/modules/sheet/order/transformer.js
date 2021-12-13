@@ -22,7 +22,6 @@ import {
   ORDER_SET_CUSTOM_FIELDS_MASK,
   ORDER_SET_DELIVERY_DATE,
   ORDER_SET_DELIVERY_PLACE,
-  ORDER_SET_DOCUMENTS,
   ORDER_SET_EXPORTER,
   ORDER_SET_INCOTERM,
   ORDER_SET_ISSUE_AT,
@@ -32,6 +31,7 @@ import {
   ORDER_SET_TAGS,
   ORDER_SET_TASKS,
   ORDER_SET_FOLLOWERS,
+  ORDER_DOCUMENT_EDIT,
   ORDER_UPDATE,
 } from 'modules/permission/constants/order';
 
@@ -332,11 +332,8 @@ export default function transformSheetOrder({
           groupIds: [currentOrder?.importer?.id, currentOrder?.exporter?.id].filter(Boolean),
         };
       },
-      ...transformValueField(
-        basePath,
-        order,
-        'files',
-        hasPermission => hasPermission(ORDER_UPDATE) || hasPermission(ORDER_SET_DOCUMENTS)
+      ...transformValueField(basePath, order, 'files', hasPermission =>
+        hasPermission([ORDER_UPDATE, ORDER_DOCUMENT_EDIT])
       ),
     },
     {

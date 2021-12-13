@@ -2,16 +2,10 @@
 import * as React from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
 import { useEntityHasPermissions } from 'contexts/Permissions';
-import {
-  DOCUMENT_UPDATE,
-  DOCUMENT_SET_TYPE,
-  DOCUMENT_SET_TAGS,
-  DOCUMENT_SET_MEMO,
-} from 'modules/permission/constants/file';
 import { TAG_GET } from 'modules/permission/constants/tag';
 import validator from 'modules/tableTemplate/form/validator';
 import { FormField } from 'modules/form';
-import { canDownloadFile } from 'utils/file';
+import { canDownloadFile, canUpdateFile } from 'utils/file';
 import {
   SelectInputFactory,
   TagsInput,
@@ -42,7 +36,7 @@ const DocumentSection = () => {
   const intl = useIntl();
 
   const hasPermissions = useEntityHasPermissions(state);
-  const canUpdate = hasPermissions(DOCUMENT_UPDATE);
+  const canUpdate = canUpdateFile(hasPermissions, state.entity?.__typename);
   const canDownload = canDownloadFile(hasPermissions, state.entity?.__typename);
 
   const getFormFieldProps = (name: string) => {
@@ -86,7 +80,7 @@ const DocumentSection = () => {
                 value={fileTypeOptions ? value : null}
                 {...inputHandlers}
                 label={<FormattedMessage id="modules.Documents.type" defaultMessage="Type" />}
-                editable={canUpdate || hasPermissions(DOCUMENT_SET_TYPE)}
+                editable={canUpdate}
                 originalValue={originalState.type}
                 required
                 items={fileTypeOptions ?? []}
@@ -116,8 +110,8 @@ const DocumentSection = () => {
                   );
                 }}
                 editable={{
-                  set: hasPermissions(TAG_GET) && (canUpdate || hasPermissions(DOCUMENT_SET_TAGS)),
-                  remove: canUpdate || hasPermissions(DOCUMENT_SET_TAGS),
+                  set: hasPermissions(TAG_GET) && canUpdate,
+                  remove: canUpdate,
                 }}
               />
             }
@@ -133,7 +127,7 @@ const DocumentSection = () => {
                     defaultMessage="Description"
                   />
                 }
-                editable={canUpdate || hasPermissions(DOCUMENT_SET_MEMO)}
+                editable={canUpdate}
                 originalValue={originalState.memo}
                 inputWidth="400px"
               />

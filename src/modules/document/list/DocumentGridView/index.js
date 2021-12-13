@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { navigate } from '@reach/router';
 import { intersection } from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import { canViewFile, canDownloadFile } from 'utils/file';
+import { canViewFile, canViewFileForm, canDownloadFile } from 'utils/file';
 import { encodeId } from 'utils/id';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import UploadPlaceholder from 'components/UploadPlaceholder';
@@ -27,7 +27,6 @@ import {
 import { SHIPMENT_GET, SHIPMENT_DOCUMENT_DELETE } from 'modules/permission/constants/shipment';
 import { PROJECT_GET } from 'modules/permission/constants/project';
 import { MILESTONE_DOCUMENT_DELETE } from 'modules/permission/constants/milestone';
-import { DOCUMENT_FORM, DOCUMENT_DELETE } from 'modules/permission/constants/file';
 import { getParentInfo } from 'utils/task';
 
 import { deleteFileMutation } from './mutation';
@@ -82,13 +81,12 @@ const defaultRenderItem = ({
           project: hasPermission(PROJECT_GET),
         };
         const deletePermissions = {
-          order: hasPermission(ORDER_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
-          orderItem: hasPermission(ORDER_ITEMS_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
-          shipment: hasPermission(SHIPMENT_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
-          product: hasPermission(PRODUCT_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
-          productProvider:
-            hasPermission(PRODUCT_PROVIDER_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
-          project: hasPermission(MILESTONE_DOCUMENT_DELETE) || hasPermission(DOCUMENT_DELETE),
+          order: hasPermission(ORDER_DOCUMENT_DELETE),
+          orderItem: hasPermission(ORDER_ITEMS_DOCUMENT_DELETE),
+          shipment: hasPermission(SHIPMENT_DOCUMENT_DELETE),
+          product: hasPermission(PRODUCT_DOCUMENT_DELETE),
+          productProvider: hasPermission(PRODUCT_PROVIDER_DOCUMENT_DELETE),
+          project: hasPermission(MILESTONE_DOCUMENT_DELETE),
         };
         const onCancel = () => setIsOpen(false);
         const [deleteFile, { loading: isProcessing }] = useMutation(deleteFileMutation);
@@ -157,7 +155,7 @@ const defaultRenderItem = ({
                 !onSelect
                   ? evt => {
                       evt.stopPropagation();
-                      if (hasPermission(DOCUMENT_FORM) || !parentType) {
+                      if (canViewFileForm(hasPermission, parentType)) {
                         navigate(`/document/${encodeId(file.id)}`);
                       }
                     }

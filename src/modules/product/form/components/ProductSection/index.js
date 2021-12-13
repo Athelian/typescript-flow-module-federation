@@ -30,7 +30,6 @@ import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
 import { NAVIGATION_NETWORK_PARTNERS } from 'modules/permission/constants/navigation';
 import { TAG_GET } from 'modules/permission/constants/tag';
-import { DOCUMENT_CREATE, DOCUMENT_DELETE } from 'modules/permission/constants/file';
 import {
   PRODUCT_CREATE,
   PRODUCT_UPDATE,
@@ -44,9 +43,8 @@ import {
   PRODUCT_SET_CUSTOM_FIELDS_MASK,
   PRODUCT_SET_TAGS,
   PRODUCT_SET_MEMO,
-  PRODUCT_SET_DOCUMENTS,
   PRODUCT_SET_FOLLOWERS,
-  PRODUCT_DOCUMENT_CREATE,
+  PRODUCT_DOCUMENT_EDIT,
   PRODUCT_DOCUMENT_DELETE,
 } from 'modules/permission/constants/product';
 import {
@@ -190,11 +188,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                                     onRequestClose={() => dialogToggle(false)}
                                     image={selectedImage}
                                   />
-                                  {hasPermission([
-                                    PRODUCT_DOCUMENT_DELETE,
-                                    DOCUMENT_DELETE,
-                                    PRODUCT_SET_DOCUMENTS,
-                                  ]) && (
+                                  {hasPermission(PRODUCT_DOCUMENT_DELETE) && (
                                     <>
                                       {!isForbidden(file) && (
                                         <button
@@ -238,11 +232,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                                   )}
                                 </div>
                               ))}
-                              {hasPermission([
-                                PRODUCT_DOCUMENT_CREATE,
-                                DOCUMENT_CREATE,
-                                PRODUCT_SET_DOCUMENTS,
-                              ]) && (
+                              {hasPermission([PRODUCT_UPDATE, PRODUCT_DOCUMENT_EDIT]) && (
                                 <ImagesUploadInput
                                   files={files}
                                   onSave={updateFiles => changeFiles('files', updateFiles)}
