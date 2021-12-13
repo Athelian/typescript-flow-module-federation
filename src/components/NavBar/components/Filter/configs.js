@@ -52,7 +52,7 @@ export const ProductFilterConfig: Array<FilterConfig> = [
     field: 'tagIdsWithOperator',
     type: 'product_tags_with_operator',
     message: productMessages.tags,
-    defaultValue: { operator: 'AND', ids: [] },
+    defaultValue: { operator: 'AND', ids: [], integratedIds: [] },
   },
   {
     entity: 'PRODUCT',
@@ -90,7 +90,7 @@ export const ProductProviderFilterConfig: Array<FilterConfig> = [
     field: 'tagIdsWithOperator',
     type: 'product_tags_with_operator',
     message: productMessages.tags,
-    defaultValue: { operator: 'AND', ids: [] },
+    defaultValue: { operator: 'AND', ids: [], integratedIds: [] },
   },
   {
     entity: 'END PRODUCT',
@@ -215,7 +215,7 @@ export const OrderFilterConfig: Array<FilterConfig> = [
     field: 'tagIdsWithOperator',
     type: 'order_tags_with_operator',
     message: orderMessages.tags,
-    defaultValue: { operator: 'AND', ids: [] },
+    defaultValue: { operator: 'AND', ids: [], integratedIds: [] },
   },
   {
     entity: 'ORDER',
@@ -589,7 +589,7 @@ export const BatchFilterConfig: Array<FilterConfig> = [
     field: 'tagIdsWithOperator',
     type: 'batch_tags_with_operator',
     message: batchMessages.tags,
-    defaultValue: { operator: 'AND', ids: [] },
+    defaultValue: { operator: 'AND', ids: [], integratedIds: [] },
   },
   {
     entity: 'BATCH',
@@ -869,7 +869,7 @@ export const ShipmentFilterConfig: Array<FilterConfig> = [
     field: 'tagIdsWithOperator',
     type: 'shipment_tags_with_operator',
     message: shipmentMessages.tags,
-    defaultValue: { operator: 'AND', ids: [] },
+    defaultValue: { operator: 'AND', ids: [], integratedIds: [] },
   },
   {
     entity: 'SHIPMENT',
@@ -1247,7 +1247,7 @@ export const FileFilterConfig: Array<FilterConfig> = [
     field: 'tagIdsWithOperator',
     type: 'file_tags_with_operator',
     message: fileMessages.tags,
-    defaultValue: { operator: 'AND', ids: [] },
+    defaultValue: { operator: 'AND', ids: [], integratedIds: [] },
   },
   {
     entity: 'FILE',
@@ -1299,7 +1299,7 @@ export const ProjectFilterConfig: Array<FilterConfig> = [
     field: 'tagIdsWithOperator',
     type: 'project_tags_with_operator',
     message: projectMessages.tags,
-    defaultValue: { operator: 'AND', ids: [] },
+    defaultValue: { operator: 'AND', ids: [], integratedIds: [] },
   },
   {
     entity: 'PROJECT',

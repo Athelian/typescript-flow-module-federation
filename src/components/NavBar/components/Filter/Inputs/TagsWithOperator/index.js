@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { Label, RadioInput, TagsInput } from 'components/Form';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import { TAG_GET } from 'modules/permission/constants/tag';
+import { reduceTagsByName } from 'utils/tags';
 import messages from '../../messages';
 import type { FilterInputProps } from '../../types';
 import { tagsByIDsQuery } from './query';
@@ -14,6 +15,7 @@ type ImplProps = {
   ...FilterInputProps<{
     operator: string,
     ids: Array<string>,
+    integratedIds: Array<Array<string>>,
   }>,
   tagType: string,
 };
@@ -21,9 +23,14 @@ type ImplProps = {
 const TagsImpl = ({ value, readonly, onChange, tagType }: ImplProps) => {
   const hasPermissions = useViewerHasPermissions();
   const { data } = useQuery(tagsByIDsQuery, {
-    variables: { ids: value.ids },
+    variables: { ids: [...new Set([...value.ids, ...(value?.integratedIds?.flat() ?? [])])] },
     fetchPolicy: 'cache-and-network',
   });
+
+  // console.log('data is', data);
+  const tags = React.useMemo(() => {
+    return Object.values(reduceTagsByName(data?.tagsByIDs ?? []));
+  }, [data]);
 
   return (
     <>
@@ -53,12 +60,43 @@ const TagsImpl = ({ value, readonly, onChange, tagType }: ImplProps) => {
         includeAllShared
         tagType={tagType}
         disabled={readonly}
-        values={data?.tagsByIDs ?? []}
+        values={tags}
+        hasIntegratedTags
         onChange={newTags => {
-          onChange({ ...value, ids: newTags.map(t => t.id) });
+          const { newIds, newIntegratedIds } = newTags.reduce(
+            (arr, newTag) => {
+              if (newTag.integratedTags && Object.keys(newTag.integratedTags).length > 1) {
+                arr.newIntegratedIds.push(Object.keys(newTag.integratedTags));
+              } else {
+                arr.newIds.push(newTag.id);
+              }
+
+              return arr;
+            },
+            {
+              newIds: [],
+              newIntegratedIds: [],
+            }
+          );
+          onChange({ ...value, ids: newIds, integratedIds: newIntegratedIds });
         }}
         onClickRemove={removedTag => {
-          onChange({ ...value, ids: value.ids.filter(id => id !== removedTag.id) });
+          const removedTagIntegratedIds = Object.keys(removedTag.integratedTags);
+          const isIntegratedId = removedTagIntegratedIds.length > 1;
+
+          let newIds = [...value.ids];
+          let newIntegratedIds = [...value.integratedIds];
+
+          if (isIntegratedId) {
+            // only to search for one id
+            const [removedId] = removedTagIntegratedIds;
+            newIntegratedIds = newIntegratedIds.filter((integratedIds: string[]) => {
+              return !integratedIds.includes(removedId);
+            });
+          } else {
+            newIds = newIds.filter(id => id !== removedTag.id);
+          }
+          onChange({ ...value, ids: newIds, integratedIds: newIntegratedIds });
         }}
         editable={{
           set: hasPermissions(TAG_GET),
@@ -76,6 +114,7 @@ const TagsWithOperator = (tagType: string) => ({
 }: FilterInputProps<{
   operator: string,
   ids: Array<string>,
+  integratedIds: Array<Array<string>>,
 }>) => <TagsImpl value={value} readonly={readonly} onChange={onChange} tagType={tagType} />;
 
 export const ProductTagsWithOperator = TagsWithOperator('Product');

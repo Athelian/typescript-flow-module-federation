@@ -3,12 +3,14 @@
 import * as React from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import useDebounce from 'hooks/useDebounce';
+import { reduceTagsByName } from 'utils/tags';
 
 type Props = {
   tagType: string,
   organizationIds?: string[],
   queryString?: string,
   includeAllShared?: boolean,
+  hasIntegratedTags?: boolean,
   query?: any,
 };
 
@@ -18,6 +20,7 @@ const useTagList = ({
   tagType,
   organizationIds,
   queryString,
+  hasIntegratedTags = false,
   includeAllShared = false,
   query,
 }: Props) => {
@@ -72,24 +75,33 @@ const useTagList = ({
       return;
     }
 
-    const newTagsById = (data?.tags?.nodes ?? []).reduce((arr, tag) => {
-      if (!tag?.id) {
+    if (hasIntegratedTags) {
+      const newTagsByName = reduceTagsByName(data?.tags?.nodes ?? []);
+
+      tagDataRef.current = {
+        ...tagDataRef.current,
+        ...newTagsByName,
+      };
+    } else {
+      const newTagsById = (data?.tags?.nodes ?? []).reduce((arr, tag) => {
+        if (!tag?.id) {
+          return arr;
+        }
+
+        // eslint-disable-next-line
+        arr[tag.id] = tag;
+
         return arr;
-      }
+      }, {});
 
-      // eslint-disable-next-line
-      arr[tag.id] = tag;
-
-      return arr;
-    }, {});
-
-    tagDataRef.current = {
-      ...tagDataRef.current,
-      ...newTagsById,
-    };
+      tagDataRef.current = {
+        ...tagDataRef.current,
+        ...newTagsById,
+      };
+    }
 
     setTagData(Object.values(tagDataRef.current));
-  }, [data, loading]);
+  }, [data, loading, hasIntegratedTags]);
 
   React.useEffect(() => {
     if (

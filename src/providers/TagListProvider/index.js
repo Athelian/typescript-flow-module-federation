@@ -9,6 +9,7 @@ type Props = {
   tagType: TagsQueryType,
   organizationIds?: string[],
   includeAllShared?: boolean,
+  hasIntegratedTags?: boolean,
   queryString?: string,
 };
 
@@ -17,12 +18,14 @@ const TagListProvider = ({
   tagType,
   organizationIds,
   includeAllShared,
+  hasIntegratedTags,
   queryString,
 }: Props) => {
   const { tags, loading, onScroll } = useTagList({
     tagType,
     organizationIds,
     includeAllShared,
+    hasIntegratedTags,
     query: tagsQuery,
     queryString,
   });

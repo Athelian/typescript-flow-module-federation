@@ -3,6 +3,7 @@ import React from 'react';
 import VirtualList from 'react-tiny-virtual-list';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import IntegratedTagTooltip from '../IntegratedTagTooltip';
 import { OptionWrapperStyle, OptionStyle, SelectedWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -81,6 +82,9 @@ function TagSelectOptions({
               >
                 <div className={SelectedWrapperStyle}>{isSelected && <Icon icon="CONFIRM" />}</div>
                 <Tag tag={item} />
+                {Object.keys(item?.integratedTags ?? {}).length > 1 && (
+                  <IntegratedTagTooltip integratedTags={item?.integratedTags ?? {}} />
+                )}
               </div>
             );
           }}
