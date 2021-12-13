@@ -46,7 +46,7 @@ export const ActionsStyle = css`
   ${borderRadiuses.MAIN};
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  z-index: 1;
+  z-index: 2;
 `;
 
 export const ResetActionStyle = css`
