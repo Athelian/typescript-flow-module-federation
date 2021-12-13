@@ -15,6 +15,7 @@ type ImplProps = {
   ...FilterInputProps<{
     operator: string,
     ids: Array<string>,
+    integratedIds: Array<Array<string>>,
   }>,
   tagType: string,
 };
@@ -22,7 +23,7 @@ type ImplProps = {
 const TagsImpl = ({ value, readonly, onChange, tagType }: ImplProps) => {
   const hasPermissions = useViewerHasPermissions();
   const { data } = useQuery(tagsByIDsQuery, {
-    variables: { ids: [...new Set([...value.ids, ...(value.integratedIds?.flat() ?? [])])] },
+    variables: { ids: [...new Set([...value.ids, ...(value?.integratedIds?.flat() ?? [])])] },
     fetchPolicy: 'cache-and-network',
   });
 
@@ -113,6 +114,7 @@ const TagsWithOperator = (tagType: string) => ({
 }: FilterInputProps<{
   operator: string,
   ids: Array<string>,
+  integratedIds: Array<Array<string>>,
 }>) => <TagsImpl value={value} readonly={readonly} onChange={onChange} tagType={tagType} />;
 
 export const ProductTagsWithOperator = TagsWithOperator('Product');
