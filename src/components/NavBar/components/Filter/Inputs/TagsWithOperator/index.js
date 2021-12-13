@@ -27,7 +27,6 @@ const TagsImpl = ({ value, readonly, onChange, tagType }: ImplProps) => {
     fetchPolicy: 'cache-and-network',
   });
 
-  // console.log('data is', data);
   const tags = React.useMemo(() => {
     return Object.values(reduceTagsByName(data?.tagsByIDs ?? []));
   }, [data]);
