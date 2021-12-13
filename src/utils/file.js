@@ -147,8 +147,6 @@ export function canUpdateFile(hasPermissions: Function, entityType?: string) {
 
 /**
  * Checks if a user can change the parent of a file.
- * Basically just checks if the user can update / remove files from
- * the file's parent
  */
 export function canChangeFileParent(hasPermissions: Function, file: File) {
   switch (file?.entity?.__typename) {
@@ -163,7 +161,7 @@ export function canChangeFileParent(hasPermissions: Function, file: File) {
     case 'ProductProvider':
       return hasPermissions([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_DOCUMENT_EDIT]);
     default:
-      return false;
+      return hasPermissions(PARENTLESS_DOCUMENT_EDIT);
   }
 }
 
