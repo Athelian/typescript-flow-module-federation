@@ -23,6 +23,8 @@ type RenderProps<T> = {|
 
 type RenderWithIncrementProps<T> = {|
   ...RenderProps<T>,
+  isAllSelected: boolean,
+  onSelectAll: Function,
   getIncrementProps: (item: Object) => IncrementProps,
 |};
 
@@ -34,7 +36,7 @@ type SingleProps = {|
 
 type ManyProps = {|
   selected: Array<Object>,
-  items: Array<Object>, // queried items
+  items?: Array<Object>, // queried items
   max?: number,
   onSelect?: Object => void,
   valueToSelected?: Object => boolean,
@@ -108,6 +110,7 @@ const SelectorMany = ({
             selected.map(i => i.id),
             value.map(i => i.id)
           ),
+          isAllSelected: !!value.length && isAllSelected(items, value),
           onSelectAll: () => {
             if (value.length && isAllSelected(items, value)) {
               filter(i => !itemsById[i.id]);
@@ -115,7 +118,6 @@ const SelectorMany = ({
               push(...items);
             }
           },
-          isAllSelected: !!value.length && isAllSelected(items, value),
           getItemProps: (item, selectable = true) => {
             const isSelected = valueToSelected
               ? valueToSelected({ value, item })

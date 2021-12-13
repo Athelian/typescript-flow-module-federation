@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 
-export const SelectAllStyle: string = (right: number) => css`
+export const SelectAllStyle = (right?: number): string => css`
   ${right
     ? `
     position: absolute;
