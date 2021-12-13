@@ -10,7 +10,7 @@ import {
   ContainerFilterConfig,
   BulkHeaderFilter,
 } from 'components/NavBar';
-import { CancelButton, SaveButton } from 'components/Buttons';
+import { CancelButton, SaveButton, SelectAllButton } from 'components/Buttons';
 import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
 import { ContainerCard } from 'components/Cards';
@@ -44,8 +44,8 @@ const ContainerSelector = ({ open, onClose, selected, setSelected }: SelectorPro
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <Selector.Many selected={selected.map(id => ({ id }))}>
-        {({ value, dirty, getItemProps }) => (
+      <Selector.Many items={nodes} selected={selected.map(id => ({ id }))}>
+        {({ value, dirty, getItemProps, isAllSelected, onSelectAll }) => (
           <SlideViewLayout>
             <SlideViewNavBar>
               <EntityIcon icon="CONTAINER" color="CONTAINER" />
@@ -56,7 +56,18 @@ const ContainerSelector = ({ open, onClose, selected, setSelected }: SelectorPro
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={!dirty}
-                onClick={() => setSelected(value.map(container => container.id))}
+                onClick={() => {
+                  const newSelected = value.map(container => container.id);
+                  setSelected([...new Set(newSelected)]);
+                }}
+              />
+              <SelectAllButton
+                right={15}
+                disabled={loading}
+                isAllSelected={isAllSelected}
+                onClick={() => {
+                  onSelectAll(nodes);
+                }}
               />
             </SlideViewNavBar>
 

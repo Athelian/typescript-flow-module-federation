@@ -20,6 +20,7 @@ import SyncButton from './SyncButton';
 import YesButton from './YesButton';
 import SelectTemplateButton from './SelectTemplateButton';
 import ClearAllButton from './ClearAllButton';
+import SelectAllButton from './SelectAllButton';
 
 export {
   Button,
@@ -44,4 +45,5 @@ export {
   YesButton,
   SelectTemplateButton,
   ClearAllButton,
+  SelectAllButton,
 };

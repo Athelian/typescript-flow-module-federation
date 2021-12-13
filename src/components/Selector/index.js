@@ -23,6 +23,8 @@ type RenderProps<T> = {|
 
 type RenderWithIncrementProps<T> = {|
   ...RenderProps<T>,
+  isAllSelected: boolean,
+  onSelectAll: Function,
   getIncrementProps: (item: Object) => IncrementProps,
 |};
 
@@ -34,6 +36,7 @@ type SingleProps = {|
 
 type ManyProps = {|
   selected: Array<Object>,
+  items?: Array<Object>, // queried items
   max?: number,
   onSelect?: Object => void,
   valueToSelected?: Object => boolean,
@@ -67,50 +70,90 @@ const SelectorSingle = ({ selected, required, children }: SingleProps) => (
   </ObjectValue>
 );
 
-const SelectorMany = ({ selected, max, onSelect, valueToSelected, children }: ManyProps) => (
-  <ArrayValue defaultValue={selected}>
-    {({ value, push, filter, splice }) =>
-      children({
-        value,
-        dirty: !equals(
-          selected.map(i => i.id),
-          value.map(i => i.id)
-        ),
-        getItemProps: (item, selectable = true) => {
-          const isSelected = valueToSelected
-            ? valueToSelected({ value, item })
-            : value.some(i => i.id === item.id);
-          return {
-            selectable,
-            selected: isSelected,
-            onSelect: () => {
-              if (onSelect) {
-                onSelect({ isSelected, filter, item, max, value, push });
-              } else if (isSelected) {
-                filter(i => i.id !== item.id);
-              } else if (!max || value.length < max) {
-                push(item);
-              }
-            },
-          };
-        },
-        getIncrementProps: item => {
-          const index = value.map(i => i.id).indexOf(item.id);
+/**
+ * Checks if all items in arr1 are in arr2
+ */
+const isAllSelected = (arr1: Object[], arr2: Object[]) => {
+  const arr2ById = arr2.reduce((arr, item) => {
+    // eslint-disable-next-line
+    arr[item.id] = item;
+    return arr;
+  }, {});
 
-          return {
-            value: countSelected(value, item),
-            onMinus: () => {
-              if (index > -1) {
-                splice(index, 1);
-              }
-            },
-            onPlus: () => push(item),
-          };
-        },
-      })
-    }
-  </ArrayValue>
-);
+  return !arr1.some(item => !arr2ById[item.id]);
+};
+
+const defaultArr = [];
+
+const SelectorMany = ({
+  selected,
+  max,
+  onSelect,
+  items = defaultArr,
+  valueToSelected,
+  children,
+}: ManyProps) => {
+  const itemsById = React.useMemo(() => {
+    return items.reduce((arr, item) => {
+      // eslint-disable-next-line
+      arr[item.id] = item;
+      return arr;
+    }, {});
+  }, [items]);
+
+  return (
+    <ArrayValue defaultValue={selected}>
+      {({ value, push, filter, splice }) => {
+        return children({
+          value,
+          dirty: !equals(
+            selected.map(i => i.id),
+            value.map(i => i.id)
+          ),
+          isAllSelected: !!value.length && isAllSelected(items, value),
+          onSelectAll: () => {
+            if (value.length && isAllSelected(items, value)) {
+              filter(i => !itemsById[i.id]);
+            } else {
+              push(...items);
+            }
+          },
+          getItemProps: (item, selectable = true) => {
+            const isSelected = valueToSelected
+              ? valueToSelected({ value, item })
+              : value.some(i => i.id === item.id);
+            return {
+              selectable,
+              selected: isSelected,
+              onSelect: () => {
+                if (onSelect) {
+                  onSelect({ isSelected, filter, item, max, value, push });
+                } else if (isSelected) {
+                  filter(i => i.id !== item.id);
+                } else if (!max || value.length < max) {
+                  push(item);
+                }
+              },
+            };
+          },
+          getIncrementProps: item => {
+            const index = value.map(i => i.id).indexOf(item.id);
+
+            return {
+              value: countSelected(value, item),
+              onMinus: () => {
+                if (index > -1) {
+                  splice(index, 1);
+                }
+              },
+              onPlus: () => push(item),
+            };
+          },
+        });
+      }}
+    </ArrayValue>
+  );
+};
 
 export default {
   Single: SelectorSingle,

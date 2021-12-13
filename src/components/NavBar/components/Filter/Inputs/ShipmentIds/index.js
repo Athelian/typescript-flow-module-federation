@@ -10,7 +10,7 @@ import {
   ShipmentFilterConfig,
   BulkHeaderFilter,
 } from 'components/NavBar';
-import { CancelButton, SaveButton } from 'components/Buttons';
+import { CancelButton, SaveButton, SelectAllButton } from 'components/Buttons';
 import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
 import { ShipmentCard } from 'components/Cards';
@@ -43,8 +43,8 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <Selector.Many selected={selected.map(id => ({ id }))}>
-        {({ value, dirty, getItemProps }) => (
+      <Selector.Many items={nodes} selected={selected.map(id => ({ id }))}>
+        {({ value, dirty, getItemProps, isAllSelected, onSelectAll }) => (
           <SlideViewLayout>
             <SlideViewNavBar>
               <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
@@ -59,7 +59,17 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={!dirty}
-                onClick={() => setSelected(value.map(shipment => shipment.id))}
+                onClick={() => {
+                  const newSelected = value.map(shipment => shipment.id);
+                  setSelected([...new Set(newSelected)]);
+                }}
+              />
+              <SelectAllButton
+                right={15}
+                isAllSelected={isAllSelected}
+                onClick={() => {
+                  onSelectAll(nodes);
+                }}
               />
             </SlideViewNavBar>
 
