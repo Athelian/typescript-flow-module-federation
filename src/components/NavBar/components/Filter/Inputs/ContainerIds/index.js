@@ -56,7 +56,10 @@ const ContainerSelector = ({ open, onClose, selected, setSelected }: SelectorPro
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={!dirty}
-                onClick={() => setSelected(value.map(container => container.id))}
+                onClick={() => {
+                  const newSelected = value.map(container => container.id);
+                  setSelected([...new Set(newSelected)]);
+                }}
               />
               <SelectAllButton
                 right={15}

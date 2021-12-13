@@ -55,7 +55,10 @@ const ProductSelector = ({ open, onClose, selected, setSelected }: SelectorProps
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={!dirty}
-                onClick={() => setSelected(value.map(product => product.id))}
+                onClick={() => {
+                  const newSelected = value.map(product => product.id);
+                  setSelected([...new Set(newSelected)]);
+                }}
               />
               <SelectAllButton
                 right={15}

@@ -61,7 +61,7 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
                 disabled={!dirty}
                 onClick={() => {
                   const newSelected = value.map(shipment => shipment.id);
-                  setSelected(...new Set(newSelected));
+                  setSelected([...new Set(newSelected)]);
                 }}
               />
               <SelectAllButton

@@ -60,7 +60,10 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
               <CancelButton onClick={onClose} />
               <SaveButton
                 disabled={!dirty}
-                onClick={() => setSelected(value.map(order => order.id))}
+                onClick={() => {
+                  const newSelected = value.map(order => order.id);
+                  setSelected([...new Set(newSelected)]);
+                }}
               />
               <SelectAllButton
                 right={15}
