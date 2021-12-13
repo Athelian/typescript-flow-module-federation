@@ -7,16 +7,11 @@ import {
   DOCUMENT_SET_TYPE,
   DOCUMENT_SET_TAGS,
   DOCUMENT_SET_MEMO,
-  DOCUMENT_DOWNLOAD,
 } from 'modules/permission/constants/file';
-import { ORDER_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/order';
-import { ORDER_ITEMS_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/orderItem';
-import { SHIPMENT_DOCUMENT_DOWNLOAD } from 'modules/permission/constants/shipment';
-import { PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/product';
-import { MILESTONE_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/milestone';
 import { TAG_GET } from 'modules/permission/constants/tag';
 import validator from 'modules/tableTemplate/form/validator';
 import { FormField } from 'modules/form';
+import { canDownloadFile } from 'utils/file';
 import {
   SelectInputFactory,
   TagsInput,
@@ -48,14 +43,7 @@ const DocumentSection = () => {
 
   const hasPermissions = useEntityHasPermissions(state);
   const canUpdate = hasPermissions(DOCUMENT_UPDATE);
-  const canDownload =
-    hasPermissions(DOCUMENT_DOWNLOAD) ||
-    (state.entity?.__typename === 'Order' && hasPermissions(ORDER_DOWNLOAD_DOCUMENTS)) ||
-    (state.entity?.__typename === 'OrderItem' && hasPermissions(ORDER_ITEMS_DOWNLOAD_DOCUMENTS)) ||
-    (state.entity?.__typename === 'Shipment' && hasPermissions(SHIPMENT_DOCUMENT_DOWNLOAD)) ||
-    (state.entity?.__typename === 'ProductProvider' &&
-      hasPermissions(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS)) ||
-    (state.entity?.__typename === 'Milestone' && hasPermissions(MILESTONE_DOWNLOAD_DOCUMENTS));
+  const canDownload = canDownloadFile(hasPermissions, state.entity?.__typename);
 
   const getFormFieldProps = (name: string) => {
     return {
