@@ -44,7 +44,7 @@ const ContainerSelector = ({ open, onClose, selected, setSelected }: SelectorPro
 
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
-      <Selector.Many selected={selected.map(id => ({ id }))}>
+      <Selector.Many items={nodes} selected={selected.map(id => ({ id }))}>
         {({ value, dirty, getItemProps, isAllSelected, onSelectAll }) => (
           <SlideViewLayout>
             <SlideViewNavBar>
