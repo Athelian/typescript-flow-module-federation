@@ -10,7 +10,7 @@ import {
   ProductFilterConfig,
   BulkHeaderFilter,
 } from 'components/NavBar';
-import { CancelButton, SaveButton } from 'components/Buttons';
+import { CancelButton, SaveButton, SelectAllButton } from 'components/Buttons';
 import { Content, SlideViewNavBar, SlideViewLayout } from 'components/Layout';
 import BaseCard from 'components/Cards/BaseCard';
 import { ProductCard } from 'components/Cards';
@@ -44,7 +44,7 @@ const ProductSelector = ({ open, onClose, selected, setSelected }: SelectorProps
   return (
     <SlideView isOpen={open} onRequestClose={onClose}>
       <Selector.Many selected={selected.map(id => ({ id }))}>
-        {({ value, dirty, getItemProps }) => (
+        {({ value, dirty, getItemProps, isAllSelected, onSelectAll }) => (
           <SlideViewLayout>
             <SlideViewNavBar>
               <EntityIcon icon="PRODUCT" color="PRODUCT" />
@@ -57,7 +57,14 @@ const ProductSelector = ({ open, onClose, selected, setSelected }: SelectorProps
                 disabled={!dirty}
                 onClick={() => setSelected(value.map(product => product.id))}
               />
-              <span>Button</span>
+              <SelectAllButton
+                right={15}
+                disabled={loading}
+                isAllSelected={isAllSelected}
+                onClick={() => {
+                  onSelectAll(nodes);
+                }}
+              />
             </SlideViewNavBar>
 
             <Content>

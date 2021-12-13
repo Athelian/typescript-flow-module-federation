@@ -160,7 +160,9 @@ const ShipmentCard = ({ shipment, navigable, actions, onClick, onSelect, ...rest
           <div className={ShipmentRightWrapperStyle}>
             <div className={ShipmentHeaderWrapperStyle}>
               <div className={ShipmentTagsWrapperStyle}>
-                {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+                {tags &&
+                  tags.length > 0 &&
+                  tags.map((tag, index) => <Tag key={tag.id || index} tag={tag} />)}
               </div>
 
               <FullValueTooltip message={importer && importer.name}>
