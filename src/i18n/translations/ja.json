@@ -187,6 +187,7 @@
   "components.NavBar.Filter.booked": "ブッキング済",
   "components.NavBar.Filter.notBooked": "ブッキングなし",
   "components.NavBar.Filter.tags": "分類タグ",
+  "components.NavBar.Filter.tags.tooltip": "{totalOwners}人の所有者からの合計{totalTags}つのタグ",
   "components.NavBar.Filter.organizations": "組織",
   "components.NavBar.Filter.importers": "輸入者",
   "components.NavBar.Filter.exporters": "輸出者",

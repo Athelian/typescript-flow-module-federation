@@ -358,16 +358,16 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
               };
 
               const onValueChange = value => {
-                setFilterStates(
-                  filterStates.map((fs, i) =>
-                    i === index
-                      ? {
-                          ...fs,
-                          value,
-                        }
-                      : fs
-                  )
-                );
+                const newFilterStates = filterStates.map((fs, filterIndex) => {
+                  return filterIndex === index
+                    ? {
+                        ...fs,
+                        value,
+                      }
+                    : fs;
+                });
+
+                setFilterStates(newFilterStates);
               };
 
               const onDelete = () => {

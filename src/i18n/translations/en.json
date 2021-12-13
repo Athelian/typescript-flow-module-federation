@@ -188,6 +188,7 @@
   "components.NavBar.Filter.booked": "Booked",
   "components.NavBar.Filter.notBooked": "Not booked",
   "components.NavBar.Filter.tags": "Tags",
+  "components.NavBar.Filter.tags.tooltip": "Total {totalTags} tags from {totalOwners} owners",
   "components.NavBar.Filter.organizations": "Organizations",
   "components.NavBar.Filter.importers": "Importers",
   "components.NavBar.Filter.exporters": "Exporters",
