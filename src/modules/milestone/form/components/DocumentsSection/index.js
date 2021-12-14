@@ -18,9 +18,9 @@ export default function MilestoneDocumentsSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
-  const canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD);
   const canAddOrphan = hasPermission([MILESTONE_DOCUMENT_EDIT, MILESTONE_UPDATE]);
   const canChangeType = hasPermission([MILESTONE_DOCUMENT_EDIT, MILESTONE_UPDATE]);
+  const canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD) && canChangeType;
   const canViewForm = hasPermission(MILESTONE_DOCUMENT_FORM);
   const canDownload = hasPermission(MILESTONE_DOCUMENT_DOWNLOAD);
   const canDelete = hasPermission(MILESTONE_DOCUMENT_DELETE);

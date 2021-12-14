@@ -18,9 +18,9 @@ function ItemDocumentsSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
-  const canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD);
   const canAddOrphan = hasPermission([ORDER_ITEMS_DOCUMENT_EDIT, ORDER_ITEMS_UPDATE]);
   const canChangeType = hasPermission([ORDER_ITEMS_DOCUMENT_EDIT, ORDER_ITEMS_UPDATE]);
+  const canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD) && canChangeType;
   const canViewForm = hasPermission(ORDER_ITEMS_DOCUMENT_FORM);
   const canDownload = hasPermission(ORDER_ITEMS_DOCUMENT_DOWNLOAD);
   const canDelete = hasPermission(ORDER_ITEMS_DOCUMENT_DELETE);

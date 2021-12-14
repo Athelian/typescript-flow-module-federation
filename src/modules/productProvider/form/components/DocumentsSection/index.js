@@ -18,9 +18,9 @@ export default function EndProductDocumentsSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
-  const canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD);
   const canAddOrphan = hasPermission([PRODUCT_PROVIDER_DOCUMENT_EDIT, PRODUCT_PROVIDER_UPDATE]);
   const canChangeType = hasPermission([PRODUCT_PROVIDER_DOCUMENT_EDIT, PRODUCT_PROVIDER_UPDATE]);
+  const canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD) && canChangeType;
   const canViewForm = hasPermission(PRODUCT_PROVIDER_DOCUMENT_FORM);
   const canDownload = hasPermission(PRODUCT_PROVIDER_DOCUMENT_DOWNLOAD);
   const canDelete = hasPermission(PRODUCT_PROVIDER_DOCUMENT_DELETE);

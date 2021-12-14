@@ -26,9 +26,9 @@ function DocumentsSection({ entityId, isLoading }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
-  const canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD);
   const canAddOrphan = hasPermission([SHIPMENT_DOCUMENT_EDIT, SHIPMENT_EDIT]);
   const canChangeType = hasPermission([SHIPMENT_DOCUMENT_EDIT, SHIPMENT_EDIT]);
+  const canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD) && canChangeType;
   const canViewForm = hasPermission(SHIPMENT_DOCUMENT_FORM);
   const canDownload = hasPermission(SHIPMENT_DOCUMENT_DOWNLOAD);
   const canDelete = hasPermission(SHIPMENT_DOCUMENT_DELETE);

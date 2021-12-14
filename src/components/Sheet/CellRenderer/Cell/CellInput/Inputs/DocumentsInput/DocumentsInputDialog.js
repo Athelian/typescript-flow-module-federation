@@ -42,7 +42,7 @@ type Props = {
 };
 
 function checkDocumentActions(type: string, hasPermission: Function) {
-  const canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD);
+  let canUpload = true;
   let canDelete = true;
   let canAddOrphan = true;
   let canChangeType = true;
@@ -53,6 +53,7 @@ function checkDocumentActions(type: string, hasPermission: Function) {
     case 'Order': {
       canAddOrphan = hasPermission([ORDER_DOCUMENT_EDIT, ORDER_UPDATE]);
       canChangeType = hasPermission([ORDER_DOCUMENT_EDIT, ORDER_UPDATE]);
+      canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD) && canChangeType;
       canViewForm = hasPermission(ORDER_DOCUMENT_FORM);
       canDownload = hasPermission(ORDER_DOCUMENT_DOWNLOAD);
       canDelete = hasPermission(ORDER_DOCUMENT_DELETE);
@@ -62,6 +63,7 @@ function checkDocumentActions(type: string, hasPermission: Function) {
     case 'OrderItem': {
       canAddOrphan = hasPermission([ORDER_ITEMS_DOCUMENT_EDIT, ORDER_ITEMS_UPDATE]);
       canChangeType = hasPermission([ORDER_ITEMS_DOCUMENT_EDIT, ORDER_ITEMS_UPDATE]);
+      canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD) && canChangeType;
       canViewForm = hasPermission(ORDER_ITEMS_DOCUMENT_FORM);
       canDownload = hasPermission(ORDER_ITEMS_DOCUMENT_DOWNLOAD);
       canDelete = hasPermission(ORDER_ITEMS_DOCUMENT_DELETE);
@@ -71,6 +73,7 @@ function checkDocumentActions(type: string, hasPermission: Function) {
     case 'Shipment': {
       canAddOrphan = hasPermission([SHIPMENT_DOCUMENT_EDIT, SHIPMENT_EDIT]);
       canChangeType = hasPermission([SHIPMENT_DOCUMENT_EDIT, SHIPMENT_EDIT]);
+      canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD) && canChangeType;
       canViewForm = hasPermission(SHIPMENT_DOCUMENT_FORM);
       canDownload = hasPermission(SHIPMENT_DOCUMENT_DOWNLOAD);
       canDelete = hasPermission(SHIPMENT_DOCUMENT_DELETE);
