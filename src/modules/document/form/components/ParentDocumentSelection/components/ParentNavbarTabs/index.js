@@ -9,33 +9,22 @@ import {
   NAVIGATION_SHIPMENTS_LIST,
   NAVIGATION_PROJECTS_LIST,
 } from 'modules/permission/constants/navigation';
+import { ORDER_UPDATE, ORDER_DOCUMENT_EDIT } from 'modules/permission/constants/order';
 import {
-  ORDER_DOCUMENT_CREATE,
-  ORDER_SET_DOCUMENTS,
-  ORDER_UPDATE,
-} from 'modules/permission/constants/order';
-import {
-  ORDER_ITEMS_DOCUMENT_CREATE,
-  ORDER_ITEMS_SET_DOCUMENTS,
+  ORDER_ITEMS_DOCUMENT_EDIT,
   ORDER_ITEMS_UPDATE,
 } from 'modules/permission/constants/orderItem';
-import {
-  SHIPMENT_DOCUMENT_CREATE,
-  SHIPMENT_DOCUMENT_SET,
-  SHIPMENT_EDIT,
-} from 'modules/permission/constants/shipment';
+import { SHIPMENT_EDIT, SHIPMENT_DOCUMENT_EDIT } from 'modules/permission/constants/shipment';
 import { PROJECT_UPDATE } from 'modules/permission/constants/project';
 import {
   MILESTONE_LIST,
   MILESTONE_UPDATE,
-  MILESTONE_DOCUMENT_CREATE,
-  MILESTONE_SET_DOCUMENTS,
+  MILESTONE_DOCUMENT_EDIT,
 } from 'modules/permission/constants/milestone';
 import {
   PRODUCT_PROVIDER_LIST,
   PRODUCT_PROVIDER_UPDATE,
-  PRODUCT_PROVIDER_DOCUMENT_CREATE,
-  PRODUCT_PROVIDER_SET_DOCUMENTS,
+  PRODUCT_PROVIDER_DOCUMENT_EDIT,
 } from 'modules/permission/constants/product';
 
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
@@ -52,26 +41,21 @@ const ParentNavbarTabs = ({ filterAndSort, onChangeFilter, activeType }: Props) 
 
   const canViewList = {
     orders:
-      hasPermission(NAVIGATION_ORDERS_LIST) &&
-      (hasPermission(ORDER_UPDATE) || hasPermission([ORDER_DOCUMENT_CREATE, ORDER_SET_DOCUMENTS])),
+      hasPermission(NAVIGATION_ORDERS_LIST) && hasPermission([ORDER_UPDATE, ORDER_DOCUMENT_EDIT]),
     orderItems:
       hasPermission(NAVIGATION_ORDER_ITEMS_LIST) &&
-      (hasPermission(ORDER_ITEMS_UPDATE) ||
-        hasPermission([ORDER_ITEMS_DOCUMENT_CREATE, ORDER_ITEMS_SET_DOCUMENTS])),
+      hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_DOCUMENT_EDIT]),
     shipments:
       hasPermission(NAVIGATION_SHIPMENTS_LIST) &&
-      (hasPermission(SHIPMENT_EDIT) ||
-        hasPermission([SHIPMENT_DOCUMENT_CREATE, SHIPMENT_DOCUMENT_SET])),
+      hasPermission([SHIPMENT_EDIT, SHIPMENT_DOCUMENT_EDIT]),
     projects:
       hasPermission(NAVIGATION_PROJECTS_LIST) &&
       hasPermission(MILESTONE_LIST) &&
       hasPermission(PROJECT_UPDATE) &&
-      (hasPermission(MILESTONE_UPDATE) ||
-        hasPermission([MILESTONE_DOCUMENT_CREATE, MILESTONE_SET_DOCUMENTS])),
+      (hasPermission(MILESTONE_UPDATE) || hasPermission(MILESTONE_DOCUMENT_EDIT)),
     productProviders:
       hasPermission(PRODUCT_PROVIDER_LIST) &&
-      (hasPermission(PRODUCT_PROVIDER_UPDATE) ||
-        hasPermission([PRODUCT_PROVIDER_DOCUMENT_CREATE, PRODUCT_PROVIDER_SET_DOCUMENTS])),
+      (hasPermission(PRODUCT_PROVIDER_UPDATE) || hasPermission(PRODUCT_PROVIDER_DOCUMENT_EDIT)),
   };
 
   return (

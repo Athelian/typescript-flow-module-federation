@@ -6,7 +6,7 @@ export const transformField = (
   path: string,
   field: string,
   value: any,
-  permissions: ((string) => boolean) => boolean = () => true
+  permissions: ((string | Array<string>) => boolean) => boolean = () => true
 ) => {
   if (entity === null || entity === undefined) {
     return {
@@ -46,14 +46,14 @@ export const transformValueField = (
   basePath: string,
   entity: Object | null,
   field: string,
-  permissions: ((string) => boolean) => boolean
+  permissions: ((string | Array<string>) => boolean) => boolean
 ) => transformField(entity, `${basePath}.${field}`, field, entity?.[field], permissions);
 
 export const transformCustomField = (
   basePath: string,
   entity: Object | null,
   fieldDefinitionId: string,
-  permissions: ((string) => boolean) => boolean
+  permissions: ((string | Array<string>) => boolean) => boolean
 ) =>
   transformField(
     entity,

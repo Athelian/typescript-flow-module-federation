@@ -22,12 +22,12 @@ import {
 import {
   MILESTONE_SET_COMPLETED,
   MILESTONE_SET_DESCRIPTION,
-  MILESTONE_SET_DOCUMENTS,
   MILESTONE_SET_DUE_DATE,
   MILESTONE_SET_DUE_DATE_BINDING,
   MILESTONE_SET_ESTIMATED_COMPLETION_DATE,
   MILESTONE_SET_ESTIMATED_COMPLETION_DATE_BINDING,
   MILESTONE_SET_NAME,
+  MILESTONE_DOCUMENT_EDIT,
   MILESTONE_UPDATE,
 } from 'modules/permission/constants/milestone';
 import {
@@ -452,11 +452,8 @@ function transformMilestone(
           entityId: milestone?.id ?? null,
         };
       },
-      ...transformValueField(
-        basePath,
-        milestone,
-        'files',
-        hasPermission => hasPermission(MILESTONE_UPDATE) || hasPermission(MILESTONE_SET_DOCUMENTS)
+      ...transformValueField(basePath, milestone, 'files', hasPermission =>
+        hasPermission([MILESTONE_UPDATE, MILESTONE_DOCUMENT_EDIT])
       ),
     },
   ].map(c => ({
