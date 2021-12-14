@@ -8,12 +8,14 @@ import {
   ORDER_DOCUMENT_GET_TYPE_PO,
   ORDER_DOCUMENT_GET_TYPE_PI,
   ORDER_DOCUMENT_DOWNLOAD,
+  ORDER_DOCUMENT_DELETE,
   ORDER_UPDATE,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_DOCUMENT_FORM,
   ORDER_ITEMS_DOCUMENT_EDIT,
   ORDER_ITEMS_DOCUMENT_DOWNLOAD,
+  ORDER_ITEMS_DOCUMENT_DELETE,
   ORDER_ITEMS_UPDATE,
 } from 'modules/permission/constants/orderItem';
 import {
@@ -30,6 +32,7 @@ import {
   SHIPMENT_DOCUMENT_EDIT,
   SHIPMENT_DOCUMENT_FORM,
   SHIPMENT_DOCUMENT_DOWNLOAD,
+  SHIPMENT_DOCUMENT_DELETE,
   SHIPMENT_EDIT,
 } from 'modules/permission/constants/shipment';
 import {
@@ -37,24 +40,28 @@ import {
   MILESTONE_DOCUMENT_EDIT,
   MILESTONE_DOCUMENT_FORM,
   MILESTONE_DOCUMENT_DOWNLOAD,
+  MILESTONE_DOCUMENT_DELETE,
 } from 'modules/permission/constants/milestone';
 import {
   PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_DOCUMENT_EDIT,
   PRODUCT_PROVIDER_DOCUMENT_FORM,
   PRODUCT_PROVIDER_DOCUMENT_DOWNLOAD,
+  PRODUCT_PROVIDER_DOCUMENT_DELETE,
 } from 'modules/permission/constants/product';
 import {
+  PARENTLESS_DOCUMENT_GET,
   PARENTLESS_DOCUMENT_EDIT,
   PARENTLESS_DOCUMENT_FORM,
   PARENTLESS_DOCUMENT_DOWNLOAD,
+  PARENTLESS_DOCUMENT_DELETE,
 } from 'modules/permission/constants/file';
 
 import JsZip from 'jszip';
 import FileSaver from 'file-saver';
 
-export function canDownloadFile(hasPermissions: Function, entityType?: string) {
-  if (entityType === undefined) return hasPermissions(PARENTLESS_DOCUMENT_DOWNLOAD);
+export function canDownloadFile(hasPermissions: Function, entityType: string) {
+  if (!entityType) return hasPermissions(PARENTLESS_DOCUMENT_DOWNLOAD);
 
   switch (entityType.charAt(0).toLowerCase() + entityType.slice(1)) {
     case 'order':
@@ -71,7 +78,25 @@ export function canDownloadFile(hasPermissions: Function, entityType?: string) {
       return false;
   }
 }
-export function canViewFile(hasPermissions: Function, fileType: FileType, entityType?: string) {
+export function canDeleteFile(hasPermissions: Function, entityType: string) {
+  if (!entityType) return hasPermissions(PARENTLESS_DOCUMENT_DELETE);
+
+  switch (entityType.charAt(0).toLowerCase() + entityType.slice(1)) {
+    case 'order':
+      return hasPermissions(ORDER_DOCUMENT_DELETE);
+    case 'orderItem':
+      return hasPermissions(ORDER_ITEMS_DOCUMENT_DELETE);
+    case 'shipment':
+      return hasPermissions(SHIPMENT_DOCUMENT_DELETE);
+    case 'productProvider':
+      return hasPermissions(PRODUCT_PROVIDER_DOCUMENT_DELETE);
+    case 'project':
+      return hasPermissions(MILESTONE_DOCUMENT_DELETE);
+    default:
+      return false;
+  }
+}
+export function canViewFile(hasPermissions: Function, fileType: FileType, entityType: string) {
   switch (fileType) {
     case 'OrderPo':
       return hasPermissions([ORDER_DOCUMENT_GET, ORDER_DOCUMENT_GET_TYPE_PO]);
@@ -98,17 +123,20 @@ export function canViewFile(hasPermissions: Function, fileType: FileType, entity
     case 'ShipmentWarehouseInspectionReport':
       return hasPermissions([SHIPMENT_DOCUMENT_GET, SHIPMENT_DOCUMENT_GET_TYPE_INSPECTION_REPORT]);
     default:
+      if (!entityType) {
+        return hasPermissions(PARENTLESS_DOCUMENT_GET);
+      }
       if (entityType === 'Shipment') {
         return hasPermissions([
           SHIPMENT_DOCUMENT_GET_TYPE_MISCELLANEOUS,
           SHIPMENT_DOCUMENT_SET_MISCELLANEOUS,
         ]);
       }
-      return false;
+      return true;
   }
 }
-export function canViewFileForm(hasPermissions: Function, entityType?: string) {
-  if (entityType === undefined) return hasPermissions(PARENTLESS_DOCUMENT_FORM);
+export function canViewFileForm(hasPermissions: Function, entityType: string) {
+  if (!entityType) return hasPermissions(PARENTLESS_DOCUMENT_FORM);
 
   switch (entityType.charAt(0).toLowerCase() + entityType.slice(1)) {
     case 'order':
@@ -126,8 +154,8 @@ export function canViewFileForm(hasPermissions: Function, entityType?: string) {
   }
 }
 
-export function canUpdateFile(hasPermissions: Function, entityType?: string) {
-  if (entityType === undefined) return hasPermissions(PARENTLESS_DOCUMENT_EDIT);
+export function canUpdateFile(hasPermissions: Function, entityType: string) {
+  if (!entityType) return hasPermissions(PARENTLESS_DOCUMENT_EDIT);
 
   switch (entityType.charAt(0).toLowerCase() + entityType.slice(1)) {
     case 'order':
