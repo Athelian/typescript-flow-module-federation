@@ -84,7 +84,7 @@ const TagsImpl = ({ value, readonly, onChange, tagType }: ImplProps) => {
           const isIntegratedId = removedTagIntegratedIds.length > 1;
 
           let newIds = [...value.ids];
-          let newIntegratedIds = [...value.integratedIds];
+          let newIntegratedIds = [...(value?.integratedIds ?? [])];
 
           if (isIntegratedId) {
             // only to search for one id
