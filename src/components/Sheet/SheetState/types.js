@@ -65,7 +65,7 @@ export type CellValue = {|
     value: any,
     path: string,
     field: string,
-    permissions: ((string) => boolean) => boolean,
+    permissions: ((string | Array<string>) => boolean) => boolean,
     ownedBy: string,
   } | null,
   type: string,

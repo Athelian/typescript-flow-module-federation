@@ -40,7 +40,7 @@ function filterItems(items: Array<Entry>, hasPermissions: Function): Array<Entry
           ['order', 'orderItem', 'shipment', 'productProvider', 'project'].includes(
             entry?.parentEntityType
           ) &&
-          canViewFile(hasPermissions, entry?.entity?.type)) ||
+          canViewFile(hasPermissions, entry?.entity?.type, entry?.parentEntityType)) ||
         (entry?.parentEntityType === 'orderItem' &&
           entry?.parameters?.field?.string === 'price' &&
           hasPermissions(ORDER_ITEMS_GET_PRICE)) ||
