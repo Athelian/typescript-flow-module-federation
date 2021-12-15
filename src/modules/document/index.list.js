@@ -19,7 +19,10 @@ import {
   Sort,
 } from 'components/NavBar';
 import useFilterSort from 'hooks/useFilterSort';
-import { DOCUMENT_CREATE, DOCUMENT_UPDATE } from 'modules/permission/constants/file';
+import {
+  PARENTLESS_DOCUMENT_UPLOAD,
+  PARENTLESS_DOCUMENT_EDIT,
+} from 'modules/permission/constants/file';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
 import { downloadFile } from 'utils/file';
@@ -64,8 +67,8 @@ const DocumentModule = () => {
   }, [filterBy, lastFilter, query, sortBy]);
 
   const hasPermissions = useViewerHasPermissions();
-  const canUpload = hasPermissions(DOCUMENT_CREATE);
-  const canUpdate = hasPermissions(DOCUMENT_UPDATE);
+  const canUpload = hasPermissions(PARENTLESS_DOCUMENT_UPLOAD);
+  const canUpdate = hasPermissions(PARENTLESS_DOCUMENT_EDIT);
 
   const [selectedFiles, setSelectedFiles] = React.useState({});
   const [isMultiSelect, setMultiSelect] = React.useState(false);

@@ -16,13 +16,9 @@ export const MILESTONE_SET_ESTIMATED_COMPLETION_DATE = 'task.milestones.setEstim
 export const MILESTONE_SET_ESTIMATED_COMPLETION_DATE_BINDING =
   'task.milestones.setEstimatedCompletionDateBinding';
 export const MILESTONE_SET_TASKS = 'task.milestones.setTasks';
-export const MILESTONE_SET_DOCUMENTS = 'task.milestones.setDocuments';
-export const MILESTONE_DOWNLOAD_DOCUMENTS = 'task.milestones.downloadDocuments';
-export const MILESTONE_DOCUMENT_DELETE = 'task.milestoneFiles.delete';
-export const MILESTONE_DOCUMENT_CREATE = 'task.milestoneFiles.create';
+
+export const MILESTONE_DOCUMENT_GET = 'task.milestoneFiles.get';
 export const MILESTONE_DOCUMENT_FORM = 'task.milestoneFiles.form';
-export const MILESTONE_DOCUMENT_SET_NAME = 'task.milestoneFiles.setName';
-export const MILESTONE_DOCUMENT_SET_TAGS = 'task.milestoneFiles.setTags';
-export const MILESTONE_DOCUMENT_SET_TYPE = 'task.milestoneFiles.setType';
-export const MILESTONE_DOCUMENT_SET_ENTITY = 'task.milestoneFiles.setEntity';
-export const MILESTONE_DOCUMENT_SET_MEMO = 'task.milestoneFiles.setMemo';
+export const MILESTONE_DOCUMENT_EDIT = 'task.milestoneFiles.edit';
+export const MILESTONE_DOCUMENT_DOWNLOAD = 'task.milestoneFiles.download';
+export const MILESTONE_DOCUMENT_DELETE = 'task.milestoneFiles.delete';

@@ -7,42 +7,23 @@ import usePermission from 'hooks/usePermission';
 import { MilestoneFilesContainer } from 'modules/milestone/form/containers';
 import {
   MILESTONE_UPDATE,
-  MILESTONE_SET_DOCUMENTS,
+  MILESTONE_DOCUMENT_EDIT,
+  MILESTONE_DOCUMENT_DOWNLOAD,
   MILESTONE_DOCUMENT_DELETE,
-  MILESTONE_DOCUMENT_CREATE,
-  MILESTONE_DOCUMENT_SET_TYPE,
-  MILESTONE_DOWNLOAD_DOCUMENTS,
   MILESTONE_DOCUMENT_FORM,
 } from 'modules/permission/constants/milestone';
-import {
-  DOCUMENT_CREATE,
-  DOCUMENT_DELETE,
-  DOCUMENT_SET_TYPE,
-  DOCUMENT_UPDATE,
-} from 'modules/permission/constants/file';
+import { PARENTLESS_DOCUMENT_UPLOAD } from 'modules/permission/constants/file';
 
 export default function MilestoneDocumentsSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const canUpload = hasPermission([
-    MILESTONE_SET_DOCUMENTS,
-    MILESTONE_DOCUMENT_CREATE,
-    DOCUMENT_CREATE,
-  ]);
-  const canAddOrphan = hasPermission([MILESTONE_SET_DOCUMENTS, MILESTONE_UPDATE]);
+
+  const canAddOrphan = hasPermission([MILESTONE_DOCUMENT_EDIT, MILESTONE_UPDATE]);
+  const canChangeType = hasPermission([MILESTONE_DOCUMENT_EDIT, MILESTONE_UPDATE]);
+  const canUpload = hasPermission(PARENTLESS_DOCUMENT_UPLOAD) && canChangeType;
   const canViewForm = hasPermission(MILESTONE_DOCUMENT_FORM);
-  const canDownload = hasPermission(MILESTONE_DOWNLOAD_DOCUMENTS);
-  const canChangeType = hasPermission([
-    MILESTONE_SET_DOCUMENTS,
-    DOCUMENT_SET_TYPE,
-    MILESTONE_DOCUMENT_SET_TYPE,
-    DOCUMENT_UPDATE,
-  ]);
-  const canDelete = hasPermission([
-    MILESTONE_SET_DOCUMENTS,
-    MILESTONE_DOCUMENT_DELETE,
-    DOCUMENT_DELETE,
-  ]);
+  const canDownload = hasPermission(MILESTONE_DOCUMENT_DOWNLOAD);
+  const canDelete = hasPermission(MILESTONE_DOCUMENT_DELETE);
 
   return (
     <Subscribe to={[MilestoneFilesContainer]}>

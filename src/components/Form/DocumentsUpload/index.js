@@ -249,8 +249,8 @@ const DocumentsUpload = ({
               onUpload={evt => handleUpload(evt, type.value)}
               canUpload={canUpload || canSetType}
               canAddOrphan={canAddOrphan || canSetType}
-              canViewForm={canViewForm || canSetType}
-              canDownload={canDownload || canSetType}
+              canViewForm={canViewForm}
+              canDownload={canDownload}
               canChangeType={canChangeType || canSetType}
               canDelete={canDelete || canSetType}
               isMultiSelect={isMultiSelect}
@@ -281,7 +281,7 @@ const DocumentsUpload = ({
                 />
               </>
             )}
-            {filesState.length > 0 && (
+            {canDownload && filesState.length > 0 && (
               <>
                 <BaseButton
                   icon="CHECKED"

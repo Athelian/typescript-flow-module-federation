@@ -9,6 +9,8 @@ export const PRODUCT_TASK_FORM = 'product.tasks.form';
 export const PRODUCT_TASK_CREATE = 'product.tasks.create';
 export const PRODUCT_TASK_UPDATE = 'product.tasks.update';
 export const PRODUCT_TASK_DELETE = 'product.tasks.delete';
+export const PRODUCT_DOCUMENT_EDIT = 'product.files.edit';
+export const PRODUCT_DOCUMENT_DELETE = 'product.files.delete';
 export const PRODUCT_SET_TASKS = 'product.products.setTasks';
 export const PRODUCT_SET_ARCHIVED = 'product.products.setArchived';
 export const PRODUCT_SET_NAME = 'product.products.setName';
@@ -18,16 +20,6 @@ export const PRODUCT_SET_HS_CODE = 'product.products.setHsCode';
 export const PRODUCT_SET_MATERIAL = 'product.products.setMaterial';
 export const PRODUCT_SET_TASK_TEMPLATE = 'product.products.setTaskTemplate';
 export const PRODUCT_SET_MILESTONE = 'product.products.setMilestone';
-export const PRODUCT_SET_DOCUMENTS = 'product.products.setDocuments';
-export const PRODUCT_DOWNLOAD_DOCUMENTS = 'product.products.downloadDocuments';
-export const PRODUCT_DOCUMENT_GET = 'product.files.get';
-export const PRODUCT_DOCUMENT_GET_TYPE_SPECIFICATION = 'product.files.getByTypeSpecification';
-export const PRODUCT_DOCUMENT_GET_TYPE_ANALYSIS_CERTIFICATE =
-  'product.files.getByTypeAnalysisCertificate';
-export const PRODUCT_DOCUMENT_GET_TYPE_ORIGIN_CERTIFICATE =
-  'product.files.getByTypeOriginCertificate';
-export const PRODUCT_DOCUMENT_CREATE = 'product.files.create';
-export const PRODUCT_DOCUMENT_DELETE = 'product.files.delete';
 export const PRODUCT_SET_CUSTOM_FIELDS = 'product.products.setCustomFields';
 export const PRODUCT_SET_CUSTOM_FIELDS_MASK = 'product.products.setCustomFieldsMask';
 export const PRODUCT_SET_TAGS = 'product.products.setTags';
@@ -48,16 +40,13 @@ export const PRODUCT_PROVIDER_TASK_DELETE = 'product.productProviderTasks.delete
 export const PRODUCT_PROVIDER_SET_TASKS = 'product.productProviders.setTasks';
 export const PRODUCT_PROVIDER_SET_TASK_TEMPLATE = 'product.productProviders.setTaskTemplate';
 export const PRODUCT_PROVIDER_SET_MILESTONE = 'product.productProviders.setMilestone';
-export const PRODUCT_PROVIDER_SET_DOCUMENTS = 'product.productProviders.setDocuments';
-export const PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS = 'product.productProviders.downloadDocuments';
-export const PRODUCT_PROVIDER_DOCUMENT_DELETE = 'product.productProviderFiles.delete';
-export const PRODUCT_PROVIDER_DOCUMENT_CREATE = 'product.productProviderFiles.create';
+
+export const PRODUCT_PROVIDER_DOCUMENT_GET = 'product.productProviderFiles.get';
 export const PRODUCT_PROVIDER_DOCUMENT_FORM = 'product.productProviderFiles.form';
-export const PRODUCT_PROVIDER_DOCUMENT_SET_NAME = 'product.productProviderFiles.setName';
-export const PRODUCT_PROVIDER_DOCUMENT_SET_TAGS = 'product.productProviderFiles.setTags';
-export const PRODUCT_PROVIDER_DOCUMENT_SET_TYPE = 'product.productProviderFiles.setType';
-export const PRODUCT_PROVIDER_DOCUMENT_SET_ENTITY = 'product.productProviderFiles.setEntity';
-export const PRODUCT_PROVIDER_DOCUMENT_SET_MEMO = 'product.productProviderFiles.setMemo';
+export const PRODUCT_PROVIDER_DOCUMENT_EDIT = 'product.productProviderFiles.edit';
+export const PRODUCT_PROVIDER_DOCUMENT_DOWNLOAD = 'product.productProviderFiles.download';
+export const PRODUCT_PROVIDER_DOCUMENT_DELETE = 'product.productProviderFiles.delete';
+
 export const PRODUCT_PROVIDER_SET_CUSTOM_FIELDS = 'product.productProviders.setCustomFields';
 export const PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK =
   'product.productProviders.setCustomFieldsMask';

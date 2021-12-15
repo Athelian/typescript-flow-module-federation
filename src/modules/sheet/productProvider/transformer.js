@@ -5,7 +5,7 @@ import {
   PRODUCT_PROVIDER_SET_NAME,
   PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_SET_UNIT_PRICE,
-  PRODUCT_PROVIDER_SET_DOCUMENTS,
+  PRODUCT_PROVIDER_DOCUMENT_EDIT,
 } from 'modules/permission/constants/product';
 
 type Props = {|
@@ -58,12 +58,8 @@ export default function transformSheetProductProvider({
           entityId: productProvider?.id ?? null,
         };
       },
-      ...transformValueField(
-        basePath,
-        productProvider,
-        'files',
-        hasPermission =>
-          hasPermission(PRODUCT_PROVIDER_UPDATE) || hasPermission(PRODUCT_PROVIDER_SET_DOCUMENTS)
+      ...transformValueField(basePath, productProvider, 'files', hasPermission =>
+        hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_DOCUMENT_EDIT])
       ),
     },
   ];

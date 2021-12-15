@@ -21,7 +21,7 @@ import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_ARCHIVE,
   SHIPMENT_SET_BL_DATE,
-  SHIPMENT_SET_BL_NO,
+  SHIPMENT_SET_HOUSE_BL_NO,
   SHIPMENT_SET_BOOKED,
   SHIPMENT_SET_BOOKING_DATE,
   SHIPMENT_SET_BOOKING_NO,
@@ -29,7 +29,6 @@ import {
   SHIPMENT_SET_CONTRACT_NO,
   SHIPMENT_SET_CUSTOM_FIELDS,
   SHIPMENT_SET_CUSTOM_FIELDS_MASK,
-  SHIPMENT_DOCUMENT_SET,
   SHIPMENT_SET_EXPORTER,
   SHIPMENT_SET_FORWARDERS,
   SHIPMENT_SET_INCOTERM,
@@ -52,6 +51,7 @@ import {
   SHIPMENT_SET_WAREHOUSE,
   SHIPMENT_SET_FOLLOWERS,
   SHIPMENT_EDIT,
+  SHIPMENT_DOCUMENT_EDIT,
   SHIPMENT_DOCUMENT_GET_TYPE_BL,
   SHIPMENT_DOCUMENT_GET_TYPE_INVOICE,
   SHIPMENT_DOCUMENT_GET_TYPE_PACKING_LIST,
@@ -239,7 +239,7 @@ export default function transformSheetShipment({
         basePath,
         shipment,
         'blNo',
-        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_BL_NO)
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_HOUSE_BL_NO)
       ),
     },
     {
@@ -1413,7 +1413,7 @@ export default function transformSheetShipment({
         shipment,
         'files',
         hasPermission =>
-          hasPermission(SHIPMENT_DOCUMENT_SET) ||
+          hasPermission(SHIPMENT_DOCUMENT_EDIT) ||
           hasPermission(SHIPMENT_EDIT) ||
           hasPermission(SHIPMENT_DOCUMENT_GET_TYPE_BL) ||
           hasPermission(SHIPMENT_DOCUMENT_GET_TYPE_INVOICE) ||

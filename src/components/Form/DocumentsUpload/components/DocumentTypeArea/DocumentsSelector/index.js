@@ -5,6 +5,7 @@ import useFilterSort from 'hooks/useFilterSort';
 import useQueryList from 'hooks/useQueryList';
 import Selector from 'components/Selector';
 import { isForbidden } from 'utils/data';
+import { getParentInfo } from 'utils/task';
 import { canViewFile, canDownloadFile } from 'utils/file';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import { Content, SlideViewLayout, SlideViewNavBar } from 'components/Layout';
@@ -28,9 +29,10 @@ type Props = {
 };
 
 const RenderItem = ({ file, selectItemProps }: {| file: FilePayload, selectItemProps: any |}) => {
+  const { parentType } = getParentInfo(file?.entity ?? {});
   const hasPermissions = useViewerHasPermissions();
-  const canView = canViewFile(hasPermissions, file.type);
-  const canDownload = canDownloadFile(hasPermissions);
+  const canView = canViewFile(hasPermissions, file.type, parentType);
+  const canDownload = canDownloadFile(hasPermissions, parentType);
 
   if (!canView) return null;
 
