@@ -128,6 +128,7 @@ export function canViewFile(hasPermissions: Function, fileType: FileType, entity
       }
       if (entityType === 'Shipment') {
         return hasPermissions([
+          SHIPMENT_DOCUMENT_GET,
           SHIPMENT_DOCUMENT_GET_TYPE_MISCELLANEOUS,
           SHIPMENT_DOCUMENT_SET_MISCELLANEOUS,
         ]);
