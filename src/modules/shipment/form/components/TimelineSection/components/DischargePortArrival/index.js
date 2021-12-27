@@ -14,6 +14,7 @@ import GridColumn from 'components/GridColumn';
 import { injectUid } from 'utils/id';
 import { Tooltip } from 'components/Tooltip';
 import { NewButton } from 'components/Buttons';
+import Divider from 'components/Divider';
 import { FormField } from 'modules/form';
 import { newDateTZ, addTimezone } from 'utils/date';
 import {
@@ -34,6 +35,7 @@ type OptionalProps = {
       lastName: string,
     },
     date: ?Date,
+    resultDate: ?Date,
   },
   renderBelowHeader: React.Node,
 };
@@ -57,6 +59,7 @@ const defaultProps = {
     approvedAt: null,
     approvedBy: null,
     date: null,
+    resultDate: null,
   },
 };
 
@@ -78,7 +81,8 @@ const DischargePortArrival = (props: Props) => {
   const { user } = useUser();
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { timelineDateRevisions = [] } = timelineDate;
+  const { timelineDateRevisions = [], resultDate = null } = timelineDate;
+
   return (
     <div className={TimelineInfoSectionWrapperStyle} {...rest}>
       <GridColumn gap="10px">
@@ -99,6 +103,29 @@ const DischargePortArrival = (props: Props) => {
           handleTimezone
         />
         <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
+          <FormField
+            name={`${sourceName}.resultDate`}
+            initValue={resultDate}
+            setFieldValue={setFieldDeepValue}
+          >
+            {({ name, ...inputHandlers }) => (
+              <DateInputFactory
+                {...inputHandlers}
+                name={name}
+                isNew={isNew}
+                editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_TIMELINE_DATE])}
+                label={
+                  <FormattedMessage
+                    id="modules.Shipments.resultDate"
+                    defaultMessage="RESULT DATE"
+                  />
+                }
+                hideTooltip
+                handleTimezone
+              />
+            )}
+          </FormField>
+          <Divider color="GRAY_SUPER_LIGHT" margin="6px" />
           <div className={AddDateButtonWrapperStyle}>
             {hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_REVISE_TIMELINE_DATE]) && (
               <>

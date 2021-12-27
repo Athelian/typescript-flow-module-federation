@@ -1509,6 +1509,7 @@
   "modules.Shipments.newDate": "日付追加",
   "modules.shipment.max5": "日付の修正は5回まで記録可能です",
   "modules.Shipments.initialDate": "当初予定日",
+  "modules.Shipments.resultDate": "結果の日付",
   "modules.Shipments.agreedDateLabel": "予定",
   "modules.Shipments.actualDateLabel": "実際",
   "components.Shipments.warehouseArrival": "倉庫到着",

@@ -155,6 +155,11 @@ const parseTimelineDateField = (
       originalTimelineDate?.date ?? null,
       newTimelineDate?.date ?? null
     ),
+    ...parseDatetimeField(
+      'resultDate',
+      originalTimelineDate?.resultDate ?? null,
+      newTimelineDate?.resultDate ?? null
+    ),
     ...parseApprovalField(
       'approvedById',
       {

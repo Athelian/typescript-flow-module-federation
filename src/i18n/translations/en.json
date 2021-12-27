@@ -1517,6 +1517,7 @@
   "modules.Shipments.newDate": "NEW DATE",
   "modules.shipment.max5": "Only a maximum of 5 date revisions is allowed",
   "modules.Shipments.initialDate": "INITIAL DATE",
+  "modules.Shipments.resultDate": "RESULT DATE",
   "modules.Shipments.agreedDateLabel": "AGREED",
   "modules.Shipments.actualDateLabel": "ACTUAL",
   "components.Shipments.warehouseArrival": "WAREHOUSE ARRIVAL",
