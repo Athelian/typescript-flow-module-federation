@@ -19308,6 +19308,7 @@ export type EntityInput = {|
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   taskId?: ?$ElementType<Scalars, 'ID'>,
   fileId?: ?$ElementType<Scalars, 'ID'>,
+  folderId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | ShipmentAggregate | BadRequest | Forbidden | NotFound;
@@ -19571,6 +19572,9 @@ export type FileFilterInput = {|
   notTagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   entityId?: ?$ElementType<Scalars, 'ID'>,
   entityType?: ?$ElementType<Scalars, 'String'>,
+  entityArchived?: ?$ElementType<Scalars, 'Boolean'>,
+  createdByOrganizationId?: ?$ElementType<Scalars, 'ID'>,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 |};
 
 export type FileInput = {|
@@ -19680,6 +19684,52 @@ export type FocusingInput = {|
 
 export type FocusPayload = Focus | BadRequest | Forbidden | NotFound;
 
+export type Folder = {|
+  ...Documented,
+  ...{|
+     __typename?: 'Folder',
+    name: $ElementType<Scalars, 'String'>,
+    entityType: $ElementType<Scalars, 'String'>,
+    folderType: $ElementType<Scalars, 'String'>,
+    unreadCount: $ElementType<Scalars, 'Int'>,
+    unreadMessageCount: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+    filesUnreadCount: $ElementType<Scalars, 'Int'>,
+    files: Array<FilePayload>,
+  |}
+|};
+
+export type FolderFilterInput = {|
+  query?: ?$ElementType<Scalars, 'String'>,
+  ownerId?: ?$ElementType<Scalars, 'ID'>,
+  excludeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  createdAt?: ?DateRangeInput,
+  updatedAt?: ?DateRangeInput,
+  organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  entityType?: ?$ElementType<Scalars, 'String'>,
+|};
+
+export type FolderPayload = Folder | BadRequest | Forbidden | NotFound;
+
+export type FolderPayloadPaginatedSearch = {|
+  ...Paginated,
+  ...{|
+     __typename?: 'FolderPayloadPaginatedSearch',
+    nodes: Array<FolderPayload>,
+    hits: Array<Hit>,
+    page: $ElementType<Scalars, 'Int'>,
+    perPage: $ElementType<Scalars, 'Int'>,
+    totalPage: $ElementType<Scalars, 'Int'>,
+    count: $ElementType<Scalars, 'Int'>,
+    totalCount: $ElementType<Scalars, 'Int'>,
+  |}
+|};
+
+export type FolderSortInput = {|
+  createdAt?: ?SortOrder,
+  updatedAt?: ?SortOrder,
+|};
+
 export type Followed = {|
   followers: Array<UserPayload>,
   notificationUnseenCount: $ElementType<Scalars, 'Int'>,
@@ -19689,6 +19739,12 @@ export type Forbidden = {|
    __typename?: 'Forbidden',
   reference?: ?Reference,
   reason?: ?$ElementType<Scalars, 'String'>,
+|};
+
+export type GenericFileCount = {|
+   __typename?: 'GenericFileCount',
+  count: $ElementType<Scalars, 'Int'>,
+  miscellaneous: $ElementType<Scalars, 'Int'>,
 |};
 
 export type GenericSortInput = {|
@@ -19704,7 +19760,7 @@ export type Hit = {|
 
 export type IdsWithOperatorInput = {|
   ids?: ?Array<$ElementType<Scalars, 'ID'>>,
-  integratedIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+  integratedIds?: ?Array<Array<$ElementType<Scalars, 'ID'>>>,
   operator?: ?$ElementType<Scalars, 'String'>,
 |};
 
@@ -20614,6 +20670,7 @@ export type Milestone = {|
     estimatedCompletionDate?: ?$ElementType<Scalars, 'DateTime'>,
     estimatedCompletionDateInterval?: ?Interval,
     estimatedCompletionDateBinding?: ?MilestoneDateBinding,
+    fileCount: GenericFileCount,
     taskCount: TaskCount,
     tasks: Array<TaskPayload>,
     id: $ElementType<Scalars, 'ID'>,
@@ -20833,6 +20890,7 @@ export type Mutation = {|
   maskEditUpdate: MaskEditPayload,
   maskEditDelete?: ?EmptyPayload,
   maskEditByUser: MaskEditPayload,
+  viewState: ViewStatePayload,
   commentCreate: TimelineCommentPayload,
   commentUpdate: TimelineCommentPayload,
   commentDelete?: ?EmptyPayload,
@@ -21323,6 +21381,11 @@ export type MutationMaskEditDeleteArgs = {|
 
 export type MutationMaskEditByUserArgs = {|
   input: MaskEditByUserInput
+|};
+
+
+export type MutationViewStateArgs = {|
+  input: ViewStateUpdateInput
 |};
 
 
@@ -21879,6 +21942,7 @@ export type Order = {|
     deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
     timeline: Timeline,
     todo: Todo,
+    fileCount: OrderFileCount,
     totalPrice: Price,
     totalVolume: MetricValue,
     totalOrdered: $ElementType<Scalars, 'Float'>,
@@ -21937,6 +22001,14 @@ export type OrderCreateInput = {|
   customFields?: ?CustomFieldsInput,
   todo?: ?TodoInput,
   organizationIds?: ?Array<$ElementType<Scalars, 'ID'>>,
+|};
+
+export type OrderFileCount = {|
+   __typename?: 'OrderFileCount',
+  count: $ElementType<Scalars, 'Int'>,
+  po: $ElementType<Scalars, 'Int'>,
+  pi: $ElementType<Scalars, 'Int'>,
+  miscellaneous: $ElementType<Scalars, 'Int'>,
 |};
 
 export type OrderFilterInput = {|
@@ -22040,6 +22112,7 @@ export type OrderItem = {|
     shipments: Array<ShipmentPayload>,
     timeline: Timeline,
     todo: Todo,
+    fileCount: GenericFileCount,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
     updatedAt: $ElementType<Scalars, 'DateTime'>,
@@ -23358,6 +23431,7 @@ export type Query = {|
   maskEditByUser: MaskEditPayload,
   maskEdits: MaskEditPayloadPaginatedSearch,
   maskEditsByIDs: Array<MaskEditPayload>,
+  viewState: ViewStatePayload,
   integration: IntegrationPayload,
   integrations: IntegrationPayloadPaginatedSearch,
   integrationConfiguration: IntegrationConfigurationPayload,
@@ -23365,6 +23439,7 @@ export type Query = {|
   file: FilePayload,
   files: FilePayloadPaginatedSearch,
   filesByIDs: Array<FilePayload>,
+  folders: FolderPayloadPaginatedSearch,
   exportTemplates: Array<ExportTemplatePayload>,
   exportExtensions: Array<ExportExtensionPayload>,
   genericExport: ExportPayload,
@@ -23998,6 +24073,11 @@ export type QueryMaskEditsByIDsArgs = {|
 |};
 
 
+export type QueryViewStateArgs = {|
+  type: ViewStateType
+|};
+
+
 export type QueryIntegrationArgs = {|
   id: $ElementType<Scalars, 'ID'>
 |};
@@ -24039,6 +24119,14 @@ export type QueryFilesArgs = {|
 
 export type QueryFilesByIDsArgs = {|
   ids: Array<$ElementType<Scalars, 'ID'>>
+|};
+
+
+export type QueryFoldersArgs = {|
+  page: $ElementType<Scalars, 'Int'>,
+  perPage: $ElementType<Scalars, 'Int'>,
+  filterBy?: ?FolderFilterInput,
+  sortBy?: ?FolderSortInput
 |};
 
 
@@ -61371,6 +61459,7 @@ export type Shipment = {|
     containers: Array<ContainerPayload>,
     timeline: Timeline,
     todo: Todo,
+    fileCount: ShipmentFileCount,
     organizations: Array<OrganizationPayload>,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
@@ -61633,6 +61722,19 @@ export type ShipmentEventInterface = {|
   time: $ElementType<Scalars, 'DateTime'>,
   organization: OrganizationPayload,
   user?: ?UserPayload,
+|};
+
+export type ShipmentFileCount = {|
+   __typename?: 'ShipmentFileCount',
+  count: $ElementType<Scalars, 'Int'>,
+  bl: $ElementType<Scalars, 'Int'>,
+  invoice: $ElementType<Scalars, 'Int'>,
+  packingList: $ElementType<Scalars, 'Int'>,
+  importDeclaration: $ElementType<Scalars, 'Int'>,
+  inspectionApplication: $ElementType<Scalars, 'Int'>,
+  warehouseArrivalReport: $ElementType<Scalars, 'Int'>,
+  warehouseInspectionReport: $ElementType<Scalars, 'Int'>,
+  miscellaneous: $ElementType<Scalars, 'Int'>,
 |};
 
 export type ShipmentFilterInput = {|
@@ -62826,6 +62928,7 @@ export type TimelineDate = {|
     assignedTo: Array<UserPayload>,
     approvedBy?: ?UserPayload,
     approvedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    resultDate?: ?$ElementType<Scalars, 'DateTime'>,
     timelineDateRevisions: Array<TimelineDateRevisionPayload>,
     id: $ElementType<Scalars, 'ID'>,
     createdAt: $ElementType<Scalars, 'DateTime'>,
@@ -62843,6 +62946,7 @@ export type TimelineDateNestedInput = {|
   date?: ?$ElementType<Scalars, 'DateTime'>,
   assignedToIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   approvedById?: ?$ElementType<Scalars, 'ID'>,
+  resultDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   timelineDateRevisions?: ?Array<TimelineDateRevisionInput>,
 |};
@@ -63178,6 +63282,62 @@ export type ViewerNotificationsArgs = {|
   page: $ElementType<Scalars, 'Int'>,
   perPage: $ElementType<Scalars, 'Int'>,
   filterBy?: ?NotificationFilterInput
+|};
+
+export type ViewState = {|
+  ...Model,
+  ...Owned,
+  ...{|
+     __typename?: 'ViewState',
+    type: ViewStateType,
+    filterSort?: ?$ElementType<Scalars, 'String'>,
+    id: $ElementType<Scalars, 'ID'>,
+    createdAt: $ElementType<Scalars, 'DateTime'>,
+    updatedAt: $ElementType<Scalars, 'DateTime'>,
+    deletedAt?: ?$ElementType<Scalars, 'DateTime'>,
+    createdBy?: ?UserPayload,
+    updatedBy?: ?UserPayload,
+    deletedBy?: ?UserPayload,
+    ownedBy: OrganizationPayload,
+  |}
+|};
+
+export type ViewStatePayload = ViewState | BadRequest | Forbidden | NotFound;
+
+export const ViewStateTypeValues = Object.freeze({
+  /** OrderMap */
+  OrderMap: 'OrderMap', 
+  /** ShipmentMap */
+  ShipmentMap: 'ShipmentMap', 
+  /** OrderCard */
+  OrderCard: 'OrderCard', 
+  /** OrderItemCard */
+  OrderItemCard: 'OrderItemCard', 
+  /** ShipmentCard */
+  ShipmentCard: 'ShipmentCard', 
+  /** BatchCard */
+  BatchCard: 'BatchCard', 
+  /** ContainerCard */
+  ContainerCard: 'ContainerCard', 
+  /** ProductCard */
+  ProductCard: 'ProductCard', 
+  /** ProjectCard */
+  ProjectCard: 'ProjectCard', 
+  /** TaskCard */
+  TaskCard: 'TaskCard', 
+  /** DocumentCard */
+  DocumentCard: 'DocumentCard', 
+  /** DocumentFolderCard */
+  DocumentFolderCard: 'DocumentFolderCard'
+});
+
+
+export type ViewStateType = $Values<typeof ViewStateTypeValues>;
+
+export type ViewStateUpdateInput = {|
+  name?: ?$ElementType<Scalars, 'String'>,
+  type?: ?ViewStateType,
+  filterSort?: ?$ElementType<Scalars, 'String'>,
 |};
 
 export type Violation = {|

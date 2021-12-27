@@ -153,6 +153,7 @@ export const timelineDateFullFragment = gql`
       ...userAvatarFragment
     }
     approvedAt
+    resultDate
     timelineDateRevisions {
       ... on TimelineDateRevision {
         id
