@@ -77,21 +77,25 @@ const fullGroupedColumnsList = [
 const groupColumns = ({
   columns,
   index,
-  groupedColumnsLength,
+  groupedColumns,
 }: {
   columns: Array<ColumnConfig>,
   index: number,
-  groupedColumnsLength: number,
+  groupedColumns: Array<string>,
 }): Array<ColumnConfig> => {
-  const groupedColumns = [];
-  for (let i = 0; i < groupedColumnsLength; i += 1) {
-    groupedColumns.push({
-      ...columns[index + i],
-      hidden: !!columns[index + i].hidden,
-      isNew: !!columns[index + i].isNew,
-    });
+  const newGroupedColumns = [];
+
+  for (let i = 0; i < groupedColumns.length; i += 1) {
+    if (groupedColumns.includes(columns[index + i]?.key)) {
+      newGroupedColumns.push({
+        ...columns[index + i],
+        hidden: !!columns[index + i].hidden,
+        isNew: !!columns[index + i].isNew,
+      });
+    }
   }
-  return groupedColumns;
+
+  return newGroupedColumns;
 };
 
 export const convertMappingColumns = (
@@ -100,27 +104,21 @@ export const convertMappingColumns = (
   const mappingColumns: Array<ColumnConfig | Array<ColumnConfig>> = [];
 
   columns.forEach((column, index) => {
-    let isGrouped = false;
-
-    fullGroupedColumnsList.forEach(groupedColumns => {
-      if (groupedColumns.includes(column.key)) {
-        isGrouped = true;
-        if (groupedColumns[0] === column.key) {
-          mappingColumns.push(
-            groupColumns({ columns, index, groupedColumnsLength: groupedColumns.length })
-          );
-        }
-      }
+    const groupedColumns = fullGroupedColumnsList.find(groupedColumnList => {
+      return groupedColumnList.includes(column.key) && groupedColumnList[0] === column.key;
     });
 
-    if (!isGrouped) {
-      mappingColumns.push({
-        ...column,
-        hidden: !!column.hidden,
-        isNew: !!column.isNew,
-      });
-    }
+    mappingColumns.push(
+      groupedColumns
+        ? groupColumns({ columns, index, groupedColumns })
+        : {
+            ...column,
+            hidden: !!column.hidden,
+            isNew: !!column.isNew,
+          }
+    );
   });
+
   return mappingColumns;
 };
 
