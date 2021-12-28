@@ -35,6 +35,7 @@ type OptionalProps = {
     },
     timelineDateRevisions: Array<Object>,
     date: Date,
+    resultDate: Date,
   },
   renderBelowHeader: React.Node,
 };
