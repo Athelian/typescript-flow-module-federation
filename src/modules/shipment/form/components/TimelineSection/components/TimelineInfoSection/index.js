@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { getByPathWithDefault } from 'utils/fp';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -15,6 +14,7 @@ import GridColumn from 'components/GridColumn';
 import { injectUid } from 'utils/id';
 import { Tooltip } from 'components/Tooltip';
 import { NewButton } from 'components/Buttons';
+import Divider from 'components/Divider';
 import { FormField } from 'modules/form';
 import { newDateTZ } from 'utils/date';
 import {
@@ -35,6 +35,7 @@ type OptionalProps = {
     },
     timelineDateRevisions: Array<Object>,
     date: Date,
+    resultDate: Date,
   },
   renderBelowHeader: React.Node,
 };
@@ -70,10 +71,11 @@ const TimelineInfoSection = (props: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
-  const approvedAt = getByPathWithDefault(null, 'approvedAt', timelineDate);
-  const approvedBy = getByPathWithDefault(null, 'approvedBy', timelineDate);
-  const timelineDateRevisions = getByPathWithDefault([], 'timelineDateRevisions', timelineDate);
-  const date = getByPathWithDefault(null, 'date', timelineDate);
+  const approvedAt = timelineDate?.approvedAt ?? null;
+  const approvedBy = timelineDate?.approvedBy ?? null;
+  const timelineDateRevisions = timelineDate?.timelineDateRevisions ?? [];
+  const date = timelineDate?.date ?? null;
+  const resultDate = timelineDate?.resultDate ?? null;
 
   return (
     <div className={TimelineInfoSectionWrapperStyle} {...rest}>
@@ -95,6 +97,29 @@ const TimelineInfoSection = (props: Props) => {
           handleTimezone
         />
         <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
+          <FormField
+            name={`${sourceName}.resultDate`}
+            initValue={resultDate}
+            setFieldValue={setFieldDeepValue}
+          >
+            {({ name, ...inputHandlers }) => (
+              <DateInputFactory
+                {...inputHandlers}
+                name={name}
+                isNew={isNew}
+                editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_TIMELINE_DATE])}
+                label={
+                  <FormattedMessage
+                    id="modules.Shipments.resultDate"
+                    defaultMessage="RESULT DATE"
+                  />
+                }
+                hideTooltip
+                handleTimezone
+              />
+            )}
+          </FormField>
+          <Divider color="GRAY_SUPER_LIGHT" margin="6px" />
           <div className={AddDateButtonWrapperStyle}>
             {hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_REVISE_TIMELINE_DATE]) && (
               <>

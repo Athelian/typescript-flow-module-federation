@@ -1509,6 +1509,7 @@
   "modules.Shipments.newDate": "新日期",
   "modules.shipment.max5": "最多允许5个日期修订",
   "modules.Shipments.initialDate": "最初的日期",
+  "modules.Shipments.resultDate": "结果日期",
   "modules.Shipments.agreedDateLabel": "约定",
   "modules.Shipments.actualDateLabel": "实际",
   "components.Shipments.warehouseArrival": "仓库到达",
