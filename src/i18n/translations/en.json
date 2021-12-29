@@ -1743,7 +1743,6 @@
   "modules.Shipments.sectionLogs": "LOGS & MESSAGE BOARD",
   "modules.Shipments.sort.dischargePortArrivalCurrentDate": "DISCHARGE PORT ARRIVAL CURRENT DATE",
   "modules.Shipments.sort.dischargePortArrivalDifferenceDate": "DISCHARGE PORT ARRIVAL DATE DIFFERENCE",
-  "modules.Shipments.sort.dischargePortArrivalResultDate": "DISCHARGE PORT ARRIVAL RESULT DATE",
   "modules.Shipments.dischargePortArrivalRevisions": "DISCHARGE PORT ARRIVAL REVISIONS",
   "modules.Shipments.firstTransitPortArrivalCurrentDate": "FIRST TRANSIT ARRIVAL CURRENT DATE",
   "modules.Shipments.firstTransitPortArrivalDifferenceDate": "FIRST TRANSIT ARRIVAL DATE DIFFERENCE",
