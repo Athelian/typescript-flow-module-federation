@@ -173,6 +173,10 @@ export function normalizeSheetTimelineDateInput(
         return {
           date: value || null,
         };
+      case 'resultDate':
+        return {
+          resultDate: value || null,
+        };
       case 'approved':
         return { approvedById: value?.user?.id ?? null };
       case 'timelineDateRevisions':
@@ -188,6 +192,8 @@ export function normalizeSheetTimelineDateInput(
         };
     }
   })();
+
+  console.log('input is ', input);
 
   if (timelineDateId === shipment.cargoReady.id) {
     return {
