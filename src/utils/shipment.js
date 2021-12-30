@@ -77,6 +77,7 @@ export const initDatetimeToContainerForShipmentTimeline = (
         [timelinePointName]: {
           ...timelinePoint,
           ...initDatetimeToContainer(timelinePoint?.date ?? null, 'date', timezone),
+          ...initDatetimeToContainer(timelinePoint?.resultDate ?? null, 'resultDate', timezone),
           timelineDateRevisions: (timelinePoint?.timelineDateRevisions ?? []).map(revision => ({
             ...revision,
             ...initDatetimeToContainer(revision?.date ?? null, 'date', timezone),

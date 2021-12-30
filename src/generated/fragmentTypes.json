@@ -123,6 +123,9 @@
             "name": "OrganizationGroup"
           },
           {
+            "name": "ViewState"
+          },
+          {
             "name": "Integration"
           },
           {
@@ -283,6 +286,9 @@
           },
           {
             "name": "OrganizationGroup"
+          },
+          {
+            "name": "ViewState"
           },
           {
             "name": "Integration"
@@ -526,6 +532,9 @@
           },
           {
             "name": "Shipment"
+          },
+          {
+            "name": "Folder"
           }
         ]
       },
@@ -835,6 +844,9 @@
           },
           {
             "name": "FilePayloadPaginatedSearch"
+          },
+          {
+            "name": "FolderPayloadPaginatedSearch"
           },
           {
             "name": "ShipmentAggregatePayloadPaginatedSearch"
@@ -1338,6 +1350,24 @@
       },
       {
         "kind": "UNION",
+        "name": "ViewStatePayload",
+        "possibleTypes": [
+          {
+            "name": "ViewState"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
         "name": "IntegrationPayload",
         "possibleTypes": [
           {
@@ -1360,6 +1390,24 @@
         "possibleTypes": [
           {
             "name": "IntegrationConfiguration"
+          },
+          {
+            "name": "BadRequest"
+          },
+          {
+            "name": "Forbidden"
+          },
+          {
+            "name": "NotFound"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "FolderPayload",
+        "possibleTypes": [
+          {
+            "name": "Folder"
           },
           {
             "name": "BadRequest"

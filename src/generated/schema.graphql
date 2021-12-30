@@ -28523,6 +28523,7 @@ input EntityInput {
   milestoneId: ID
   taskId: ID
   fileId: ID
+  folderId: ID
 }
 
 union EntityPayload = Product | ProductProvider | ProductProviderPackage | Order | OrderItem | Batch | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Organization | Partnership | Role | File | Task | TaskTemplate | Project | ProjectTemplate | Milestone | MilestoneTemplate | Mask | MaskEdit | FieldDefinition | FieldValue | ShipmentAggregate | BadRequest | Forbidden | NotFound
@@ -28767,6 +28768,9 @@ input FileFilterInput {
   notTagIds: [ID!]
   entityId: ID
   entityType: String
+  entityArchived: Boolean
+  createdByOrganizationId: ID
+  organizationIds: [ID!]
 }
 
 input FileInput {
@@ -28881,6 +28885,44 @@ input FocusingInput {
 
 union FocusPayload = Focus | BadRequest | Forbidden | NotFound
 
+type Folder implements Documented {
+  name: String!
+  entityType: String!
+  folderType: String!
+  unreadCount: Int!
+  unreadMessageCount: Int!
+  totalCount: Int!
+  filesUnreadCount: Int!
+  files: [FilePayload!]!
+}
+
+input FolderFilterInput {
+  query: String
+  ownerId: ID
+  excludeIds: [ID!]
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  organizationIds: [ID!]
+  entityType: String
+}
+
+union FolderPayload = Folder | BadRequest | Forbidden | NotFound
+
+type FolderPayloadPaginatedSearch implements Paginated {
+  nodes: [FolderPayload!]!
+  hits: [Hit!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input FolderSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
 interface Followed {
   followers: [UserPayload!]!
   notificationUnseenCount: Int!
@@ -28889,6 +28931,11 @@ interface Followed {
 type Forbidden {
   reference: Reference
   reason: String
+}
+
+type GenericFileCount {
+  count: Int!
+  miscellaneous: Int!
 }
 
 input GenericSortInput {
@@ -28903,7 +28950,7 @@ type Hit {
 
 input IdsWithOperatorInput {
   ids: [ID!]
-  integratedIds: [ID!]
+  integratedIds: [[ID!]!]
   operator: String
 }
 
@@ -29948,6 +29995,7 @@ type Milestone implements Model & Owned & Documented & Sortable {
   estimatedCompletionDate: DateTime
   estimatedCompletionDateInterval: Interval
   estimatedCompletionDateBinding: MilestoneDateBinding
+  fileCount: GenericFileCount!
   taskCount: TaskCount!
   tasks: [TaskPayload!]!
   id: ID!
@@ -30155,6 +30203,7 @@ type Mutation {
   maskEditUpdate(id: ID!, input: MaskEditUpdateInput!): MaskEditPayload!
   maskEditDelete(id: ID!): EmptyPayload
   maskEditByUser(input: MaskEditByUserInput!): MaskEditPayload!
+  viewState(input: ViewStateUpdateInput!): ViewStatePayload!
   commentCreate(input: CommentCreateInput!): TimelineCommentPayload!
   commentUpdate(id: ID!, input: CommentUpdateInput!): TimelineCommentPayload!
   commentDelete(id: ID!): EmptyPayload
@@ -30465,6 +30514,7 @@ type Order implements Model & Owned & Tagged & Followed & Supervised & Documente
   deliveryDate: DateTime
   timeline: Timeline!
   todo: Todo!
+  fileCount: OrderFileCount!
   totalPrice: Price!
   totalVolume: MetricValue!
   totalOrdered: Float!
@@ -30523,6 +30573,13 @@ input OrderCreateInput {
   customFields: CustomFieldsInput
   todo: TodoInput
   organizationIds: [ID!]
+}
+
+type OrderFileCount {
+  count: Int!
+  po: Int!
+  pi: Int!
+  miscellaneous: Int!
 }
 
 input OrderFilterInput {
@@ -30623,6 +30680,7 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Custo
   shipments: [ShipmentPayload!]!
   timeline: Timeline!
   todo: Todo!
+  fileCount: GenericFileCount!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -31813,6 +31871,7 @@ type Query {
   maskEditByUser(type: String!): MaskEditPayload!
   maskEdits(page: Int! = 1, perPage: Int! = 10, filterBy: MaskEditFilterInput, sortBy: MaskEditSortInput): MaskEditPayloadPaginatedSearch!
   maskEditsByIDs(ids: [ID!]!): [MaskEditPayload!]!
+  viewState(type: ViewStateType!): ViewStatePayload!
   integration(id: ID!): IntegrationPayload!
   integrations(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationFilterInput, sortBy: IntegrationSortInput): IntegrationPayloadPaginatedSearch!
   integrationConfiguration(id: ID!): IntegrationConfigurationPayload!
@@ -31820,6 +31879,7 @@ type Query {
   file(id: ID!): FilePayload!
   files(page: Int! = 1, perPage: Int! = 10, filterBy: FileFilterInput, sortBy: FileSortInput): FilePayloadPaginatedSearch!
   filesByIDs(ids: [ID!]!): [FilePayload!]!
+  folders(page: Int! = 1, perPage: Int! = 10, filterBy: FolderFilterInput, sortBy: FolderSortInput): FolderPayloadPaginatedSearch!
   exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplatePayload!]!
   exportExtensions: [ExportExtensionPayload!]!
   genericExport(extension: String!, columns: [String!]!, rows: [[String]!]!): ExportPayload!
@@ -87589,6 +87649,7 @@ type Shipment implements Model & Owned & Tagged & Followed & Supervised & Docume
   containers: [ContainerPayload!]!
   timeline: Timeline!
   todo: Todo!
+  fileCount: ShipmentFileCount!
   organizations: [OrganizationPayload!]!
   id: ID!
   createdAt: DateTime!
@@ -87834,6 +87895,18 @@ interface ShipmentEventInterface {
   time: DateTime!
   organization: OrganizationPayload!
   user: UserPayload
+}
+
+type ShipmentFileCount {
+  count: Int!
+  bl: Int!
+  invoice: Int!
+  packingList: Int!
+  importDeclaration: Int!
+  inspectionApplication: Int!
+  warehouseArrivalReport: Int!
+  warehouseInspectionReport: Int!
+  miscellaneous: Int!
 }
 
 input ShipmentFilterInput {
@@ -88844,6 +88917,7 @@ type TimelineDate implements Model & Owned & Memorizable {
   assignedTo: [UserPayload!]!
   approvedBy: UserPayload
   approvedAt: DateTime
+  resultDate: DateTime
   timelineDateRevisions: [TimelineDateRevisionPayload!]!
   id: ID!
   createdAt: DateTime!
@@ -88860,6 +88934,7 @@ input TimelineDateNestedInput {
   date: DateTime
   assignedToIds: [ID!]
   approvedById: ID
+  resultDate: DateTime
   memo: String
   timelineDateRevisions: [TimelineDateRevisionInput!]
 }
@@ -89151,6 +89226,65 @@ type Viewer {
   notificationUnseenCount: Int!
   notificationPreferences: NotificationPreferences!
   messagePreferences: MessagePreferences!
+}
+
+type ViewState implements Model & Owned {
+  type: ViewStateType!
+  filterSort: String
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: OrganizationPayload!
+}
+
+union ViewStatePayload = ViewState | BadRequest | Forbidden | NotFound
+
+enum ViewStateType {
+  """OrderMap"""
+  OrderMap
+
+  """ShipmentMap"""
+  ShipmentMap
+
+  """OrderCard"""
+  OrderCard
+
+  """OrderItemCard"""
+  OrderItemCard
+
+  """ShipmentCard"""
+  ShipmentCard
+
+  """BatchCard"""
+  BatchCard
+
+  """ContainerCard"""
+  ContainerCard
+
+  """ProductCard"""
+  ProductCard
+
+  """ProjectCard"""
+  ProjectCard
+
+  """TaskCard"""
+  TaskCard
+
+  """DocumentCard"""
+  DocumentCard
+
+  """DocumentFolderCard"""
+  DocumentFolderCard
+}
+
+input ViewStateUpdateInput {
+  name: String
+  type: ViewStateType
+  filterSort: String
 }
 
 type Violation {

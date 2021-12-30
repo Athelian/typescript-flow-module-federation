@@ -414,6 +414,10 @@ export default defineMessages({
     id: 'modules.Shipments.cargoReadyDifferenceDate',
     defaultMessage: 'CARGO READY DATE DIFFERENCE',
   },
+  cargoReadyResultDate: {
+    id: 'modules.Shipments.cargoReadyResultDate',
+    defaultMessage: 'CARGO READY RESULT DATE',
+  },
   cargoReadyRevisions: {
     id: 'modules.Shipments.cargoReadyRevisions',
     defaultMessage: 'CARGO READY REVISIONS',
@@ -450,6 +454,10 @@ export default defineMessages({
     id: 'modules.Shipments.customClearanceDifferenceDate',
     defaultMessage: 'CUSTOMS CLEARANCE DATE DIFFERENCE',
   },
+  customClearanceResultDate: {
+    id: 'modules.Shipments.customClearanceResultDate',
+    defaultMessage: 'CUSTOMS CLEARANCE RESULT DATE',
+  },
   customClearanceRevisions: {
     id: 'modules.Shipments.customClearanceRevisions',
     defaultMessage: 'CUSTOMS CLEARANCE REVISIONS',
@@ -470,6 +478,10 @@ export default defineMessages({
     id: 'modules.Shipments.warehouseArrivalDifferenceDate',
     defaultMessage: 'WAREHOUSE ARRIVAL DIFFERENT DATE',
   },
+  warehouseArrivalResultDate: {
+    id: 'modules.Shipments.warehouseArrivalResultDate',
+    defaultMessage: 'WAREHOUSE ARRIVAL RESULT DATE',
+  },
   warehouseArrivalRevisions: {
     id: 'modules.Shipments.warehouseArrivalRevisions',
     defaultMessage: 'WAREHOUSE ARRIVAL REVISIONS',
@@ -489,6 +501,10 @@ export default defineMessages({
   deliveryReadyDifferenceDate: {
     id: 'modules.Shipments.deliveryReadyDifferenceDate',
     defaultMessage: 'DELIVERY READY DATE DIFFERENCE',
+  },
+  deliveryReadyResultDate: {
+    id: 'modules.Shipments.deliveryReadyResultDate',
+    defaultMessage: 'DELIVERY READY RESULT DATE',
   },
   deliveryReadyRevisions: {
     id: 'modules.Shipments.deliveryReadyRevisions',
@@ -766,6 +782,10 @@ export default defineMessages({
     id: 'modules.Shipments.sort.dischargePortArrivalDifferenceDate',
     defaultMessage: 'DISCHARGE PORT ARRIVAL DATE DIFFERENCE',
   },
+  dischargePortArrivalResultDate: {
+    id: 'modules.Shipments.sort.dischargePortArrivalResultDate',
+    defaultMessage: 'DISCHARGE PORT ARRIVAL RESULT DATE',
+  },
   dischargePortArrivalRevisions: {
     id: 'modules.Shipments.dischargePortArrivalRevisions',
     defaultMessage: 'DISCHARGE PORT ARRIVAL REVISIONS',
@@ -782,6 +802,10 @@ export default defineMessages({
     id: 'modules.Shipments.firstTransitPortArrivalDifferenceDate',
     defaultMessage: 'FIRST TRANSIT ARRIVAL DATE DIFFERENCE',
   },
+  firstTransitPortArrivalResultDate: {
+    id: 'modules.Shipments.firstTransitPortArrivalResultDate',
+    defaultMessage: 'FIRST TRANSIT ARRIVAL RESULT DATE',
+  },
   firstTransitPortArrivalRevisions: {
     id: 'modules.Shipments.firstTransitPortArrivalRevisions',
     defaultMessage: 'FIRST TRANSIT ARRIVAL REVISIONS',
@@ -793,6 +817,10 @@ export default defineMessages({
   firstTransitPortDepartureDifferenceDate: {
     id: 'modules.Shipments.firstTransitPortDepartureDifferenceDate',
     defaultMessage: 'FIRST TRANSIT DEPARTURE DATE DIFFERENCE',
+  },
+  firstTransitPortDepartureResultDate: {
+    id: 'modules.Shipments.firstTransitPortDepartureResultDate',
+    defaultMessage: 'FIRST TRANSIT DEPARTURE RESULT DATE',
   },
   firstTransitPortDeparture: {
     id: 'modules.Shipments.firstTransitPortDeparture',
@@ -814,6 +842,10 @@ export default defineMessages({
     id: 'modules.Shipments.secondTransitPortArrivalDifferenceDate',
     defaultMessage: 'SECOND TRANSIT ARRIVAL DATE DIFFERENCE',
   },
+  secondTransitPortArrivalResultDate: {
+    id: 'modules.Shipments.secondTransitPortArrivalResultDate',
+    defaultMessage: 'SECOND TRANSIT ARRIVAL RESULT DATE',
+  },
   secondTransitPortArrivalRevisions: {
     id: 'modules.Shipments.secondTransitPortArrivalRevisions',
     defaultMessage: 'SECOND TRANSIT ARRIVAL REVISIONS',
@@ -830,6 +862,10 @@ export default defineMessages({
     id: 'modules.Shipments.secondTransitPortDepartureDifferenceDate',
     defaultMessage: 'SECOND TRANSIT DEPARTURE DATE DIFFERENCE',
   },
+  secondTransitPortDepartureResultDate: {
+    id: 'modules.Shipments.secondTransitPortDepartureResultDate',
+    defaultMessage: 'SECOND TRANSIT DEPARTURE RESULT DATE',
+  },
   secondTransitPortDepartureRevisions: {
     id: 'modules.Shipments.secondTransitPortDepartureRevisions',
     defaultMessage: 'SECOND TRANSIT DEPARTURE REVISIONS',
@@ -845,6 +881,10 @@ export default defineMessages({
   loadPortDepartureDifferenceDate: {
     id: 'modules.Shipments.loadPortDepartureDifferenceDate',
     defaultMessage: 'LOAD PORT DEPARTURE DATE DIFFERENCE',
+  },
+  loadPortDepartureResultDate: {
+    id: 'modules.Shipments.loadPortDepartureResultDate',
+    defaultMessage: 'LOAD PORT DEPARTURE RESULT DATE',
   },
   loadPortDepartureRevisions: {
     id: 'modules.Shipments.loadPortDepartureRevisions',

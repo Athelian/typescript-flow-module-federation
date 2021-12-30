@@ -133,6 +133,7 @@ export const sheetTimelineDateFragment = gql`
   fragment sheetTimelineDateFragment on TimelineDate {
     id
     date
+    resultDate
     approvedBy {
       ...userAvatarFragment
     }
