@@ -249,6 +249,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Date,
   },
   {
+    key: 'shipment.cargoReady.cargoReadyResultDate',
+    title: <FormattedMessage {...shipmentMessages.cargoReadyResultDate} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Date,
+  },
+  {
     key: 'shipment.cargoReady.date',
     title: <FormattedMessage {...shipmentMessages.cargoReady} />,
     icon: 'SHIPMENT',
@@ -293,6 +300,13 @@ const columns: Array<ColumnConfig> = [
   {
     key: 'shipment.voyage.0.departure.date',
     title: <FormattedMessage {...shipmentMessages.loadPortDeparture} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Date,
+  },
+  {
+    key: 'shipment.voyage.0.departure.resultDate',
+    title: <FormattedMessage {...shipmentMessages.loadPortDepartureResultDate} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: ColumnWidths.Date,
@@ -361,6 +375,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Date,
   },
   {
+    key: 'shipment.voyage.0.firstTransitArrival.resultDate',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPortArrivalResultDate} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Date,
+  },
+  {
     key: 'shipment.voyage.0.firstTransitArrival.timelineDateRevisions',
     title: <FormattedMessage {...shipmentMessages.firstTransitPortArrivalRevisions} />,
     icon: 'SHIPMENT',
@@ -391,6 +412,13 @@ const columns: Array<ColumnConfig> = [
   {
     key: 'shipment.voyage.1.firstTransitDeparture.date',
     title: <FormattedMessage {...shipmentMessages.firstTransitPortDeparture} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Date,
+  },
+  {
+    key: 'shipment.voyage.1.firstTransitDeparture.resultDate',
+    title: <FormattedMessage {...shipmentMessages.firstTransitPortDepartureResultDate} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: ColumnWidths.Date,
@@ -459,6 +487,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Date,
   },
   {
+    key: 'shipment.voyage.1.secondTransitArrival.resultDate',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPortArrivalResultDate} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Date,
+  },
+  {
     key: 'shipment.voyage.1.secondTransitArrival.timelineDateRevisions',
     title: <FormattedMessage {...shipmentMessages.secondTransitPortArrivalRevisions} />,
     icon: 'SHIPMENT',
@@ -489,6 +524,13 @@ const columns: Array<ColumnConfig> = [
   {
     key: 'shipment.voyage.2.secondTransitDeparture.date',
     title: <FormattedMessage {...shipmentMessages.secondTransitPortDeparture} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Date,
+  },
+  {
+    key: 'shipment.voyage.2.secondTransitDeparture.resultDate',
+    title: <FormattedMessage {...shipmentMessages.secondTransitPortDepartureResultDate} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: ColumnWidths.Date,
@@ -557,6 +599,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Date,
   },
   {
+    key: 'shipment.voyage.2.arrival.resultDate',
+    title: <FormattedMessage {...shipmentMessages.dischargePortArrivalResultDate} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Date,
+  },
+  {
     key: 'shipment.voyage.2.arrival.timelineDateRevisions',
     title: <FormattedMessage {...shipmentMessages.dischargePortArrivalRevisions} />,
     icon: 'SHIPMENT',
@@ -587,6 +636,13 @@ const columns: Array<ColumnConfig> = [
   {
     key: 'shipment.containerGroup.customClearance.date',
     title: <FormattedMessage {...shipmentMessages.customClearance} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Date,
+  },
+  {
+    key: 'shipment.containerGroup.customClearance.resultDate',
+    title: <FormattedMessage {...shipmentMessages.customClearanceResultDate} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: ColumnWidths.Date,
@@ -634,6 +690,13 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Date,
   },
   {
+    key: 'shipment.containerGroup.warehouseArrival.resultDate',
+    title: <FormattedMessage {...shipmentMessages.warehouseArrivalResultDate} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Date,
+  },
+  {
     key: 'shipment.containerGroup.warehouseArrival.timelineDateRevisions',
     title: <FormattedMessage {...shipmentMessages.warehouseArrivalRevisions} />,
     icon: 'SHIPMENT',
@@ -664,6 +727,13 @@ const columns: Array<ColumnConfig> = [
   {
     key: 'shipment.containerGroup.deliveryReady.date',
     title: <FormattedMessage {...shipmentMessages.deliveryReady} />,
+    icon: 'SHIPMENT',
+    color: colors.SHIPMENT,
+    width: ColumnWidths.Date,
+  },
+  {
+    key: 'shipment.containerGroup.deliveryReady.resultDate',
+    title: <FormattedMessage {...shipmentMessages.deliveryReadyResultDate} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,
     width: ColumnWidths.Date,

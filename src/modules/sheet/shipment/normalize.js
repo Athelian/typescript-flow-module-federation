@@ -173,6 +173,10 @@ export function normalizeSheetTimelineDateInput(
         return {
           date: value || null,
         };
+      case 'resultDate':
+        return {
+          resultDate: value || null,
+        };
       case 'approved':
         return { approvedById: value?.user?.id ?? null };
       case 'timelineDateRevisions':

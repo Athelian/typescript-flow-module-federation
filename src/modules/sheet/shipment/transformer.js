@@ -584,6 +584,16 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.cargoReady.cargoReadyResultDate',
+      type: 'date_tz',
+      ...transformValueField(
+        `${basePath}.cargoReady`,
+        shipment?.cargoReady ?? null,
+        'resultDate',
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
       columnKey: 'shipment.cargoReady.timelineDateRevisions',
       type: 'date_revisions_tz',
       ...transformValueField(
@@ -656,6 +666,16 @@ export default function transformSheetShipment({
         `${basePath}.voyages.0.departure`,
         shipment?.voyages?.[0]?.departure ?? null,
         'date',
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.0.departure.resultDate',
+      type: 'date_tz',
+      ...transformValueField(
+        `${basePath}.voyages.0.departure`,
+        shipment?.voyages?.[0]?.departure ?? null,
+        'resultDate',
         hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
@@ -766,6 +786,16 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.voyage.0.firstTransitArrival.resultDate',
+      type: 'date_tz',
+      ...transformValueField(
+        `${basePath}.voyages.0.arrival`,
+        nbOfVoyages > 1 ? shipment?.voyages?.[0]?.arrival ?? null : null,
+        'resultDate',
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
       columnKey: 'shipment.voyage.0.firstTransitArrival.timelineDateRevisions',
       type: 'date_revisions_tz',
       ...transformValueField(
@@ -824,6 +854,16 @@ export default function transformSheetShipment({
         `${basePath}.voyages.1.departure`,
         nbOfVoyages > 1 ? shipment?.voyages?.[1]?.departure ?? null : null,
         'date',
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.1.firstTransitDeparture.resultDate',
+      type: 'date_tz',
+      ...transformValueField(
+        `${basePath}.voyages.1.departure`,
+        nbOfVoyages > 1 ? shipment?.voyages?.[1]?.departure ?? null : null,
+        'resultDate',
         hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
@@ -934,6 +974,16 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.voyage.1.secondTransitArrival.resultDate',
+      type: 'date_tz',
+      ...transformValueField(
+        `${basePath}.voyages.1.arrival`,
+        nbOfVoyages > 2 ? shipment?.voyages?.[1]?.arrival ?? null : null,
+        'resultDate',
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
       columnKey: 'shipment.voyage.1.secondTransitArrival.timelineDateRevisions',
       type: 'date_revisions_tz',
       ...transformValueField(
@@ -992,6 +1042,16 @@ export default function transformSheetShipment({
         `${basePath}.voyages.2.departure`,
         nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
         'date',
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.voyage.2.secondTransitDeparture.resultDate',
+      type: 'date_tz',
+      ...transformValueField(
+        `${basePath}.voyages.2.departure`,
+        nbOfVoyages > 2 ? shipment?.voyages?.[2]?.departure ?? null : null,
+        'resultDate',
         hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
@@ -1107,6 +1167,16 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.voyage.2.arrival.resultDate',
+      type: 'date_tz',
+      ...transformValueField(
+        `${basePath}.voyages.${(shipment?.voyages?.length ?? 0) - 1}.arrival`,
+        shipment?.voyages?.[(shipment?.voyages?.length ?? 0) - 1]?.arrival ?? null,
+        'resultDate',
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
       columnKey: 'shipment.voyage.2.arrival.timelineDateRevisions',
       type: 'date_revisions_tz',
       ...transformValueField(
@@ -1166,6 +1236,16 @@ export default function transformSheetShipment({
         `${basePath}.containerGroups.0.customClearance`,
         shipment?.containerGroups?.[0]?.customClearance ?? null,
         'date',
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.customClearance.resultDate',
+      type: 'date_tz',
+      ...transformValueField(
+        `${basePath}.containerGroups.0.customClearance`,
+        shipment?.containerGroups?.[0]?.customClearance ?? null,
+        'resultDate',
         hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
@@ -1277,6 +1357,24 @@ export default function transformSheetShipment({
       ),
     },
     {
+      columnKey: 'shipment.containerGroup.warehouseArrival.resultDate',
+      type: 'date_tz',
+      hide: root => {
+        const currentShipment = getShipmentFromRoot(root);
+        if (currentShipment?.containers) {
+          return (currentShipment?.containers ?? []).length > 0;
+        }
+
+        return (currentShipment?.containerCount ?? 0) > 0;
+      },
+      ...transformValueField(
+        `${basePath}.containerGroups.0.warehouseArrival`,
+        shipment?.containerGroups?.[0]?.warehouseArrival ?? null,
+        'resultDate',
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
       columnKey: 'shipment.containerGroup.warehouseArrival.timelineDateRevisions',
       type: 'date_revisions_tz',
       hide: root => {
@@ -1368,6 +1466,16 @@ export default function transformSheetShipment({
         `${basePath}.containerGroups.0.deliveryReady`,
         shipment?.containerGroups?.[0]?.deliveryReady ?? null,
         'date',
+        hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
+      ),
+    },
+    {
+      columnKey: 'shipment.containerGroup.deliveryReady.resultDate',
+      type: 'date_tz',
+      ...transformValueField(
+        `${basePath}.containerGroups.0.deliveryReady`,
+        shipment?.containerGroups?.[0]?.deliveryReady ?? null,
+        'resultDate',
         hasPermission => hasPermission(SHIPMENT_EDIT) || hasPermission(SHIPMENT_SET_TIMELINE_DATE)
       ),
     },
