@@ -193,8 +193,6 @@ export function normalizeSheetTimelineDateInput(
     }
   })();
 
-  console.log('input is ', input);
-
   if (timelineDateId === shipment.cargoReady.id) {
     return {
       cargoReady: input,
