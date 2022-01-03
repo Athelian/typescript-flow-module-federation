@@ -584,7 +584,7 @@ export default function transformSheetShipment({
       ),
     },
     {
-      columnKey: 'shipment.cargoReady.cargoReadyResultDate',
+      columnKey: 'shipment.cargoReady.resultDate',
       type: 'date_tz',
       ...transformValueField(
         `${basePath}.cargoReady`,
