@@ -32,8 +32,9 @@ const FieldItem = ({
   subLabel,
   tooltipTop,
   input,
+  ...rest
 }: Props) => (
-  <div className={FieldItemWrapperStyle(vertical, verticalGap)}>
+  <div className={FieldItemWrapperStyle(vertical, verticalGap)} {...rest}>
     {tooltip && label ? (
       <div className={LabelTooltipWrapperStyle}>
         <div className={TooltipAbsoluteWrapperStyle(tooltipTop)}>{tooltip}</div>
