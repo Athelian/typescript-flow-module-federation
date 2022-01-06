@@ -25,6 +25,7 @@ const TwoFactorEmailVerification = ({ email, onCancel, onLoginSuccess }: Props) 
   const [requestPassword] = useMutation(requestOneTimePasswordMutation);
   const [verifyOneTimePassword] = useMutation(verifyOneTimePasswordMutation, {
     onCompleted: data => {
+      // eslint-disable-next-line
       console.log('data is ', data);
       onLoginSuccess();
     },
@@ -33,7 +34,7 @@ const TwoFactorEmailVerification = ({ email, onCancel, onLoginSuccess }: Props) 
   const [code, setCode] = React.useState('');
 
   const handleResend = () => {
-    console.log('resend clicked');
+    // console.log('resend clicked');
     requestPassword({
       variables: {
         type: 'Email',
@@ -47,7 +48,7 @@ const TwoFactorEmailVerification = ({ email, onCancel, onLoginSuccess }: Props) 
         code,
       },
     });
-    console.log('continue clicked');
+    // console.log('continue clicked');
     // onLoginSuccess();
   };
 
