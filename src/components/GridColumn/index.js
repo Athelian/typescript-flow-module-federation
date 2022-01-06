@@ -1,9 +1,11 @@
 // @flow
 import * as React from 'react';
-import { GridColumnWrapperStyle } from './style';
+import { cx } from 'react-emotion';
+import { GridColumnWrapperStyle, GridCenteredStyle } from './style';
 
 type OptionalProps = {
   gap: string,
+  centered?: boolean,
   maxWidth?: string,
 };
 
@@ -15,9 +17,12 @@ const defaultProps = {
   gap: '20px',
 };
 
-function GridColumn({ children, gap, maxWidth, ...rest }: Props) {
+function GridColumn({ children, gap, maxWidth, centered, ...rest }: Props) {
   return (
-    <div className={GridColumnWrapperStyle(gap, maxWidth)} {...rest}>
+    <div
+      className={cx(GridColumnWrapperStyle(gap, maxWidth), { [GridCenteredStyle]: centered })}
+      {...rest}
+    >
       {children}
     </div>
   );

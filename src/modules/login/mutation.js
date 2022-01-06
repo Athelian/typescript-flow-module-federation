@@ -12,4 +12,23 @@ export const loginMutation = gql`
   ${badRequestFragment}
 `;
 
+export const requestOneTimePasswordMutation = gql`
+  mutation requestOneTimePassword($type: OneTimePasswordType!) {
+    requestOneTimePassword(type: $type) {
+      ...badRequestFragment
+    }
+  }
+
+  ${badRequestFragment}
+`;
+
+export const verifyOneTimePasswordMutation = gql`
+  mutation verifyOneTimePassword($code: String!) {
+    verifyOneTimePassword(code: $code) {
+      ...badRequestFragment
+    }
+  }
+
+  ${badRequestFragment}
+`;
 export default loginMutation;
