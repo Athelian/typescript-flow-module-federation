@@ -5,7 +5,12 @@ import GridColumn from 'components/GridColumn';
 import loginIcon from 'media/zenport-logo-blue.png';
 import { useMutation } from '@apollo/react-hooks';
 import { LoginResendStyle, ButtonStyle } from 'modules/login/components/TwoFactorForm/style';
-import { LoginBoxStyle, LoginLogoStyle } from 'modules/login/style';
+import {
+  LoginBoxStyle,
+  LoginLogoStyle,
+  LoginErrorStyle,
+  LoginSuccessStyle,
+} from 'modules/login/style';
 import {
   requestOneTimePasswordMutation,
   verifyOneTimePasswordMutation,
@@ -19,22 +24,63 @@ type Props = {
   onCancel: () => void,
 };
 
+type MessageTypes = 'none' | 'verifySuccess' | 'verifyError' | 'resendSuccess' | 'resendError';
+
 // https://www.figma.com/file/h8u12fy3ThKySrsdEs5ZVb/SSO-and-2FA?node-id=66%3A668
 const TwoFactorEmailVerification = ({ email, onCancel, onLoginSuccess }: Props) => {
   const intl = useIntl();
-  const [requestPassword] = useMutation(requestOneTimePasswordMutation);
+
+  const [message, setMessage] = React.useState<MessageTypes>('none');
+  const [hasRequestedResend, setRequestResend] = React.useState(false);
+
+  const [requestPassword, { loading: resendLoading }] = useMutation(
+    requestOneTimePasswordMutation,
+    {
+      onCompleted: data => {
+        if (!hasRequestedResend) {
+          return;
+        }
+
+        if (data?.requestOneTimePassword?.violations) {
+          setMessage('resendError');
+        } else {
+          setMessage('resendSuccess');
+        }
+      },
+      onError: () => {
+        if (!hasRequestedResend) {
+          return;
+        }
+
+        setMessage('resendError');
+      },
+    }
+  );
+
   const [verifyOneTimePassword] = useMutation(verifyOneTimePasswordMutation, {
     onCompleted: data => {
-      // eslint-disable-next-line
       console.log('data is ', data);
-      onLoginSuccess();
+      if (data?.verifyOneTimePassword?.violations) {
+        setMessage('verifyError');
+      } else {
+        onLoginSuccess();
+      }
+    },
+    onError: () => {
+      setMessage('verifyError');
     },
   });
 
   const [code, setCode] = React.useState('');
 
   const handleResend = () => {
-    // console.log('resend clicked');
+    if (resendLoading) {
+      return;
+    }
+
+    setMessage('none');
+    setRequestResend(true);
+
     requestPassword({
       variables: {
         type: 'Email',
@@ -43,13 +89,13 @@ const TwoFactorEmailVerification = ({ email, onCancel, onLoginSuccess }: Props) 
   };
 
   const handleContinue = () => {
+    setMessage('none');
+
     verifyOneTimePassword({
       variables: {
-        code,
+        code: code.toString(),
       },
     });
-    // console.log('continue clicked');
-    // onLoginSuccess();
   };
 
   React.useEffect(() => {
@@ -139,7 +185,7 @@ const TwoFactorEmailVerification = ({ email, onCancel, onLoginSuccess }: Props) 
           />
         </GridColumn>
 
-        <div>
+        <span>
           <FormattedMessage
             id="modules.Login.2fa.notReceiveCode"
             defaultMessage="Didn't receive a code?"
@@ -153,7 +199,28 @@ const TwoFactorEmailVerification = ({ email, onCancel, onLoginSuccess }: Props) 
           >
             <FormattedMessage id="modules.Login.2fa.resend" defaultMessage="Resend" />
           </span>
-        </div>
+        </span>
+        {message === 'resendSuccess' && (
+          <div className={LoginSuccessStyle}>
+            <FormattedMessage id="modules.Login.2fa.resent" defaultMessage="Code has been resent" />
+          </div>
+        )}
+        {message === 'resendError' && (
+          <div className={LoginErrorStyle}>
+            <FormattedMessage
+              id="modules.Login.2fa.resentError"
+              defaultMessage="An error occurred while sending the code"
+            />
+          </div>
+        )}
+        {message === 'verifyError' && (
+          <div className={LoginErrorStyle}>
+            <FormattedMessage
+              id="modules.Login.2fa.incorrectCode"
+              defaultMessage="Code is incorrect"
+            />
+          </div>
+        )}
       </GridColumn>
     </div>
   );

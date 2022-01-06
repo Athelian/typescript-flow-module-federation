@@ -68,6 +68,20 @@ export const LoginErrorStyle: string = css`
   text-align: center;
 `;
 
+export const LoginSuccessStyle: string = css`
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  ${fontSizes.MAIN};
+  color: ${colors.WHITE};
+  background-color: ${colors.TEAL_DARK};
+  ${borderRadiuses.MAIN};
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+`;
+
 export const LoginCopyrightStyle: string = css`
   color: #fff;
   min-height: 60px;

@@ -40,6 +40,9 @@ type Props = {
 const LoginForm = ({ onLoginSuccess }: Props) => {
   const [loading, setLoading] = React.useState(false);
   const [showEmailVerification, setShowEmailVerification] = React.useState(false);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
   const [getViewer] = useLazyQuery(authenticationQuery, {
     onCompleted: data => {
       const { authenticatedWithMFA } = data;
@@ -66,9 +69,6 @@ const LoginForm = ({ onLoginSuccess }: Props) => {
       setLoading(false);
     },
   });
-
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
 
   if (loading) {
     return <LoadingIcon />;
@@ -189,7 +189,7 @@ const LoginForm = ({ onLoginSuccess }: Props) => {
             <FormattedMessage id="modules.login.resetPassword" defaultMessage="Reset password" />
           </Link>
         </div>
-        {(error || (data && data.login && data.login.violations)) && (
+        {(error || data?.login?.violations) && (
           <div id="errorMsg" className={LoginErrorStyle}>
             <FormattedMessage {...messages.error} />{' '}
           </div>
