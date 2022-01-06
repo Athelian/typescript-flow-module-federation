@@ -89,9 +89,12 @@ const ViewerProvider = ({ children }: Props) => {
         fetchPolicy: 'network-only',
       })
       .then(({ data }) => {
-        setAuthenticated(data?.authenticated ?? false);
-        setLoadingViewer(data?.authenticated ?? false);
+        const { authenticated: isLoggedIn, authenticatedWithMFA } = data;
+        const { authenticated: isMfaLoggedIn, authenticatedMfa, mfaType } = authenticatedWithMFA;
+        setLoadingViewer(false);
         setLoadingAuth(false);
+
+        setAuthenticated(mfaType === 'email' ? isMfaLoggedIn && authenticatedMfa : isLoggedIn);
       });
   }, [client, setAuthenticated, setLoadingAuth]);
 

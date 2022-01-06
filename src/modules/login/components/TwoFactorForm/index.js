@@ -4,7 +4,7 @@ import { TwoFactorAuthentication, TwoFactorEmailVerification } from './component
 
 const TwoFactorForm = () => {
   const isRequired = false;
-  const [methodSelected, setMethodSelected] = React.useState(null);
+  const [methodSelected, setMethodSelected] = React.useState('email');
 
   if (methodSelected) {
     switch (methodSelected) {
