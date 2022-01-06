@@ -59,7 +59,6 @@ const TwoFactorEmailVerification = ({ email, onCancel, onLoginSuccess }: Props) 
 
   const [verifyOneTimePassword] = useMutation(verifyOneTimePasswordMutation, {
     onCompleted: data => {
-      console.log('data is ', data);
       if (data?.verifyOneTimePassword?.violations) {
         setMessage('verifyError');
       } else {
