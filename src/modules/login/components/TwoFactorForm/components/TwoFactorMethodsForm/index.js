@@ -41,7 +41,7 @@ const choices = [
 export type TwoFactorTypes = 'twoFactorAuthenticationApp' | 'textMessage' | 'email';
 
 type Props = {
-  onSaveClick: (value: TwoFactorTypes) => void,
+  onSaveClick: (value: TwoFactorTypes | null) => void,
   onCancelClick: () => void,
 };
 

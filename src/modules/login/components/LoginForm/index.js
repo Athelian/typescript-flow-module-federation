@@ -78,6 +78,7 @@ const LoginForm = ({ onLoginSuccess }: Props) => {
     return (
       <TwoFactorEmailVerification
         email={email}
+        onLoginSuccess={onLoginSuccess}
         onCancel={() => {
           setShowEmailVerification(false);
         }}

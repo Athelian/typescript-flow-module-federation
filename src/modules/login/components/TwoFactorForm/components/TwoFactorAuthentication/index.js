@@ -8,7 +8,7 @@ import TwoFactorConfirmationForm from '../TwoFactorConfirmationForm';
 
 type Props = {
   isRequired: boolean,
-  onMethodSelected: (methodType: TwoFactorTypes) => void,
+  onMethodSelected: (methodType: TwoFactorTypes | null) => void,
   onOptionalCancel: () => void,
 };
 
@@ -34,7 +34,7 @@ const TwoFactorAuthentication = ({ isRequired, onMethodSelected, onOptionalCance
 
       {hasConfirmed && (
         <TwoFactorMethodsForm
-          onSaveClick={(value: TwoFactorTypes) => {
+          onSaveClick={(value: TwoFactorTypes | null) => {
             onMethodSelected(value);
           }}
           onCancelClick={onOptionalCancel}

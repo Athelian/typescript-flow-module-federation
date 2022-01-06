@@ -21,19 +21,16 @@ type Props = {
 
 // https://www.figma.com/file/h8u12fy3ThKySrsdEs5ZVb/SSO-and-2FA?node-id=66%3A668
 const TwoFactorEmailVerification = ({ email, onCancel, onLoginSuccess }: Props) => {
-  // const { user } = useUser();
   const intl = useIntl();
   const [requestPassword] = useMutation(requestOneTimePasswordMutation);
   const [verifyOneTimePassword] = useMutation(verifyOneTimePasswordMutation, {
     onCompleted: data => {
-      console.log('verifyOneTimePassword', data);
-      if (false) {
-        onLoginSuccess();
-      }
+      console.log('data is ', data);
+      onLoginSuccess();
     },
   });
 
-  const [code, setCode] = React.useState(null);
+  const [code, setCode] = React.useState('');
 
   const handleResend = () => {
     console.log('resend clicked');
