@@ -57,18 +57,21 @@ const TwoFactorEmailVerification = ({ email, onCancel, onLoginSuccess }: Props) 
     }
   );
 
-  const [verifyOneTimePassword] = useMutation(verifyOneTimePasswordMutation, {
-    onCompleted: data => {
-      if (data?.verifyOneTimePassword?.violations) {
+  const [verifyOneTimePassword, { loading: verifyLoading }] = useMutation(
+    verifyOneTimePasswordMutation,
+    {
+      onCompleted: data => {
+        if (data?.verifyOneTimePassword?.violations) {
+          setMessage('verifyError');
+        } else {
+          onLoginSuccess();
+        }
+      },
+      onError: () => {
         setMessage('verifyError');
-      } else {
-        onLoginSuccess();
-      }
-    },
-    onError: () => {
-      setMessage('verifyError');
-    },
-  });
+      },
+    }
+  );
 
   const [code, setCode] = React.useState('');
 
@@ -175,6 +178,7 @@ const TwoFactorEmailVerification = ({ email, onCancel, onLoginSuccess }: Props) 
               />
             }
             textColor="GRAY_DARK"
+            disabled={verifyLoading}
             backgroundColor="WHITE"
             hoverBackgroundColor="GRAY_DARK"
             hoverTextColor="WHITE"
