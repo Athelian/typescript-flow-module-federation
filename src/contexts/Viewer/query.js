@@ -12,6 +12,7 @@ export const viewerQuery = gql`
           lastName
           language
           timezone
+          mfaType
           organization {
             ... on Organization {
               id
@@ -29,5 +30,12 @@ export const viewerQuery = gql`
 export const authenticationQuery = gql`
   query authenticationQuery {
     authenticated
+    authenticatedWithMFA {
+      ... on Authenticated {
+        authenticated
+        authenticatedMfa
+        mfaType
+      }
+    }
   }
 `;

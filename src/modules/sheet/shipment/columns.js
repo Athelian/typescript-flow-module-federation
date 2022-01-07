@@ -249,7 +249,7 @@ const columns: Array<ColumnConfig> = [
     width: ColumnWidths.Date,
   },
   {
-    key: 'shipment.cargoReady.cargoReadyResultDate',
+    key: 'shipment.cargoReady.resultDate',
     title: <FormattedMessage {...shipmentMessages.cargoReadyResultDate} />,
     icon: 'SHIPMENT',
     color: colors.SHIPMENT,

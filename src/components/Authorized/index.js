@@ -1,14 +1,14 @@
 // @flow
 import * as React from 'react';
 import { Location, Redirect } from '@reach/router';
-import { useAuthenticated } from 'contexts/Viewer';
+import { useViewer } from 'contexts/Viewer';
 
 type Props = {
   children: React.Node,
 };
 
 const Authorized = ({ children }: Props) => {
-  const { authenticated } = useAuthenticated();
+  const { authenticated } = useViewer();
 
   return authenticated ? (
     children

@@ -46,6 +46,46 @@ export default function Security() {
           </GridColumn>
         </div>
       </SectionWrapper>
+      {/* Uncomment this when we support this. remember to add the translations */}
+      {/* <SectionWrapper id="settings_section">
+        <SectionHeader
+          icon="SETTINGS"
+          title={<FormattedMessage id="modules.profile.settings" defaultMessage="SETTINGS" />}
+        />
+        <div className={SectionWrapperStyle}>
+          <GridColumn>
+            <FieldItem
+              label={
+                <Label width="350px">
+                  <FormattedMessage id="modules.profile.twoFactorAuthentication" defaultMessage="ENABLE TWO-FACTOR AUTHENTICATION" />
+                </Label>
+              }
+              input={
+                <div style={{ flexGrow: 1 }}>
+                  <GridColumn>
+                    <Display>{user?.email}</Display>
+                    <BaseButton
+                      label={
+                        <FormattedMessage
+                          id="modules.profile.disable"
+                          defaultMessage="DISABLE"
+                        />
+                      }
+                      // isLoading={loading}
+                      backgroundColor="RED"
+                      hoverBackgroundColor="RED_DARK"
+
+                      // backgroundColor="TEAL"
+                      // hoverBackgroundColor="TEAL_DARK"
+                      // onClick={() => requestResetPassword()}
+                    />
+                  </GridColumn>
+                </div>
+              }
+            />
+          </GridColumn>
+        </div>
+      </SectionWrapper> */}
       <SectionWrapper id="reset_password_section">
         <SectionHeader
           icon="PASSWORD"

@@ -8,4 +8,10 @@ export const GridColumnWrapperStyle = (gap: string, maxWidth: ?string): string =
   ${maxWidth && `max-width: ${maxWidth}`};
 `;
 
+export const GridCenteredStyle: string = css`
+  > * {
+    margin: auto;
+  }
+`;
+
 export default GridColumnWrapperStyle;
