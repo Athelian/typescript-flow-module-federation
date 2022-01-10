@@ -46,13 +46,15 @@ const LoginForm = ({ onLoginSuccess }: Props) => {
   const [getViewer] = useLazyQuery(authenticationQuery, {
     onCompleted: data => {
       const { authenticatedWithMFA } = data;
-      const { authenticatedMfa, mfaType } = authenticatedWithMFA;
+      const { authenticated, authenticatedMfa } = authenticatedWithMFA;
       setLoading(false);
 
-      if (mfaType === 'email' && !authenticatedMfa) {
-        setShowEmailVerification(true);
-      } else {
-        onLoginSuccess();
+      if (authenticated) {
+        if (!authenticatedMfa) {
+          setShowEmailVerification(true);
+        } else {
+          onLoginSuccess();
+        }
       }
     },
   });
