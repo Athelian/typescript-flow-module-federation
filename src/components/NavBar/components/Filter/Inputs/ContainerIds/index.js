@@ -68,6 +68,7 @@ const ContainerSelector = ({ open, onClose, selected, setSelected }: SelectorPro
                 onClick={() => {
                   onSelectAll(nodes);
                 }}
+                labelSuffix={` ${nodes.length}`}
               />
             </SlideViewNavBar>
 

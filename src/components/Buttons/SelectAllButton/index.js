@@ -9,6 +9,7 @@ type OptionalProps = {
   isAllSelected?: boolean,
   right?: number,
   onClick: Function,
+  labelSuffix: string,
 };
 
 type Props = OptionalProps;
@@ -17,13 +18,27 @@ const defaultProps = {
   right: 0,
   disabled: false,
   onClick: () => {},
+  labelSuffix: '',
 };
 
-const SelectAllButton = ({ isAllSelected, disabled, onClick, right }: Props): React.Node => (
+const SelectAllButton = ({
+  isAllSelected,
+  disabled,
+  onClick,
+  right,
+  labelSuffix,
+}: Props): React.Node => (
   <BaseButton
     className={SelectAllStyle(right)}
     icon="CHECKED"
-    label={<FormattedMessage id="components.Documents.selectAll" defaultMessage="SELECT ALL" />}
+    label={
+      <FormattedMessage
+        // eslint-disable-next-line prefer-template
+        id={'components.Documents.selectAll' + labelSuffix}
+        // eslint-disable-next-line prefer-template
+        defaultMessage={'SELECT ALL' + labelSuffix}
+      />
+    }
     disabled={disabled}
     onClick={onClick}
     backgroundColor={isAllSelected ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
