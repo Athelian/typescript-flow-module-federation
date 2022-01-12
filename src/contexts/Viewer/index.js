@@ -80,7 +80,7 @@ const ViewerProvider = ({ children }: Props) => {
   const [loadingAuth, setLoadingAuth] = React.useState(true);
   const [loadingAuthChanges, setLoadingAuthChanges] = React.useState(0);
   const [loadingViewer, setLoadingViewer] = React.useState(false);
-  const [authenticated, setAuthenticated] = React.useState(null);
+  const [authenticated, setAuthenticated] = React.useState(false);
   const [viewer, setViewer] = React.useState(initialState);
   const isFirstRender = React.useRef(true);
 
