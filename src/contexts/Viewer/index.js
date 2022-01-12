@@ -79,8 +79,9 @@ const ViewerProvider = ({ children }: Props) => {
   const client = useApolloClient();
   const [loadingAuth, setLoadingAuth] = React.useState(true);
   const [loadingViewer, setLoadingViewer] = React.useState(false);
-  const [authenticated, setAuthenticated] = React.useState(false);
+  const [authenticated, setAuthenticated] = React.useState(null);
   const [viewer, setViewer] = React.useState(initialState);
+  const isFirstRender = React.useRef(true);
 
   React.useEffect(() => {
     client
@@ -93,11 +94,18 @@ const ViewerProvider = ({ children }: Props) => {
         const { authenticated: isMfaLoggedIn, authenticatedMfa } = authenticatedWithMFA;
 
         setLoadingViewer(false);
-        setLoadingAuth(false);
 
         setAuthenticated(isMfaLoggedIn && authenticatedMfa);
       });
   }, [client, setAuthenticated, setLoadingAuth]);
+
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false; // toggle flag after first render/mounting
+      return;
+    }
+    setLoadingAuth(false);
+  }, [authenticated]);
 
   React.useEffect(() => {
     if (!authenticated) {
