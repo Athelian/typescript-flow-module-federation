@@ -78,6 +78,7 @@ type Props = {
 const ViewerProvider = ({ children }: Props) => {
   const client = useApolloClient();
   const [loadingAuth, setLoadingAuth] = React.useState(true);
+  const [loadingAuthChanges, setLoadingAuthChanges] = React.useState(0);
   const [loadingViewer, setLoadingViewer] = React.useState(false);
   const [authenticated, setAuthenticated] = React.useState(null);
   const [viewer, setViewer] = React.useState(initialState);
@@ -96,6 +97,7 @@ const ViewerProvider = ({ children }: Props) => {
         setLoadingViewer(false);
 
         setAuthenticated(isMfaLoggedIn && authenticatedMfa);
+        setLoadingAuthChanges(prev => prev + 1);
       });
   }, [client, setAuthenticated, setLoadingAuth]);
 
@@ -105,7 +107,7 @@ const ViewerProvider = ({ children }: Props) => {
       return;
     }
     setLoadingAuth(false);
-  }, [authenticated]);
+  }, [loadingAuthChanges]);
 
   React.useEffect(() => {
     if (!authenticated) {
