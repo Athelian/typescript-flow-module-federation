@@ -72,7 +72,7 @@ const OrderSelector = ({ open, onClose, selected, setSelected }: SelectorProps) 
                 onClick={() => {
                   onSelectAll(nodes);
                 }}
-                isAllSelectedSuffix={nodes.length.toString()}
+                labelSuffix={value.length ? ` (${value.length.toString()})` : ''}
               />
             </SlideViewNavBar>
 

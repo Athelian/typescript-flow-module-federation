@@ -70,7 +70,7 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
                 onClick={() => {
                   onSelectAll(nodes);
                 }}
-                isAllSelectedSuffix={nodes.length.toString()}
+                labelSuffix={value.length ? ` (${value.length.toString()})` : ''}
               />
             </SlideViewNavBar>
 

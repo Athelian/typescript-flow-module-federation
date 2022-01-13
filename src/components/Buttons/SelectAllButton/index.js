@@ -6,9 +6,9 @@ import { SelectAllStyle } from './style';
 
 type OptionalProps = {
   disabled?: boolean,
+  labelSuffix?: string,
   isAllSelected?: boolean,
   right?: number,
-  isAllSelectedSuffix?: string,
   onClick: Function,
 };
 
@@ -17,12 +17,13 @@ type Props = OptionalProps;
 const defaultProps = {
   right: 0,
   disabled: false,
+  labelSuffix: '',
   onClick: () => {},
 };
 
 const SelectAllButton = ({
   isAllSelected,
-  isAllSelectedSuffix,
+  labelSuffix,
   disabled,
   onClick,
   right,
@@ -33,7 +34,7 @@ const SelectAllButton = ({
     label={
       <>
         <FormattedMessage id="components.Documents.selectAll" defaultMessage="SELECT ALL" />
-        {isAllSelected && isAllSelectedSuffix && ` (${isAllSelectedSuffix})`}
+        {labelSuffix}
       </>
     }
     disabled={disabled}
