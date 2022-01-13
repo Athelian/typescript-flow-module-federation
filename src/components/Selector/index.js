@@ -103,7 +103,7 @@ const SelectorMany = ({
 
   return (
     <ArrayValue defaultValue={selected}>
-      {({ value, push, filter, splice }) => {
+      {({ value, push, filter, set, splice }) => {
         return children({
           value,
           dirty: !equals(
@@ -115,7 +115,7 @@ const SelectorMany = ({
             if (value.length && isAllSelected(items, value)) {
               filter(i => !itemsById[i.id]);
             } else {
-              push(...items);
+              set(items);
             }
           },
           getItemProps: (item, selectable = true) => {
