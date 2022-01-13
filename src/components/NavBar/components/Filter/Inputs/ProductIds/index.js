@@ -67,7 +67,7 @@ const ProductSelector = ({ open, onClose, selected, setSelected }: SelectorProps
                 onClick={() => {
                   onSelectAll(nodes);
                 }}
-                labelSuffix={` ${nodes.length}`}
+                isAllSelectedSuffix={nodes.length.toString()}
               />
             </SlideViewNavBar>
 
