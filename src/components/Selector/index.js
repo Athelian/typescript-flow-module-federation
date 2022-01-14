@@ -115,7 +115,7 @@ const SelectorMany = ({
             if (value.length && isAllSelected(items, value)) {
               filter(i => !itemsById[i.id]);
             } else {
-              set(items);
+              set([...new Set(items.concat(value))]);
             }
           },
           getItemProps: (item, selectable = true) => {
