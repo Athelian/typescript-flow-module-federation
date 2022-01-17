@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { useState } from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue, ArrayValue } from 'react-values';
 import { navigate } from '@reach/router';
@@ -109,78 +110,72 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
   const { isImporter, organization: userOrganization, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, archived } = shipment;
+  // Remember what the user selected before autoTracking override, should they wish to revert to it
+  const [nonAutoTrackingTransportType, setNonAutoTrackingTransportType] = useState('');
   return (
-    <Subscribe to={[ShipmentInfoContainer]}>
-      {({
-        originalValues: initialValues,
-        state,
-        setFieldValue,
-        onChangePartner,
-        onChangePartners,
-        onChangeForwarders,
-      }) => {
+    <Subscribe
+      to={[ShipmentInfoContainer, ShipmentTransportTypeContainer, ShipmentTimelineContainer]}
+    >
+      {(
+        {
+          originalValues: initialValues,
+          state,
+          setFieldValue,
+          onChangePartner,
+          onChangePartners,
+          onChangeForwarders,
+        },
+        {
+          originalValues: initialTransportTypeValues,
+          state: transportTypeState,
+          setFieldValue: transportTypeSetFieldValue,
+        },
+        { cleanDataAfterChangeTransport }
+      ) => {
         const values: Object = { ...initialValues, ...state };
-
+        const transportTypeValues = {
+          ...initialTransportTypeValues,
+          ...transportTypeState,
+        };
         const { forwarders = [], importer, exporter, organizations } = values;
 
         const autoTrackingConcernees = [
           <React.Fragment key="transportType">
-            <Subscribe to={[ShipmentTransportTypeContainer, ShipmentTimelineContainer]}>
-              {(
-                {
-                  originalValues: initialTransportTypeValues,
-                  state: transportTypeState,
-                  setFieldValue: transportTypeSetFieldValue,
-                },
-                { cleanDataAfterChangeTransport }
-              ) => {
-                const transportTypeValues = {
-                  ...initialTransportTypeValues,
-                  ...transportTypeState,
-                };
-
-                console.log(transportTypeValues);
-
-                return (
-                  <FormField
-                    name="transportType"
-                    initValue={transportTypeValues.transportType}
-                    setFieldValue={(field, newValue) => {
-                      transportTypeSetFieldValue(field, newValue);
-                      if (transportTypeValues.transportType !== newValue)
-                        cleanDataAfterChangeTransport();
-                    }}
-                    values={transportTypeValues}
-                    validator={validator}
-                    saveOnChange
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <EnumSelectInputFactory
-                        {...inputHandlers}
-                        allowedValues={values.autoTracking ? ['Sea'] : undefined} // To remove later, see ZEN-1691 (only allow "Sea" 'for now')
-                        clearable={!values.autoTracking}
-                        editable={
-                          hasPermission(SHIPMENT_EDIT) ||
-                          (hasPermission(SHIPMENT_SET_TRANSPORT_TYPE) &&
-                            hasPermission(SHIPMENT_SET_PORT))
-                        }
-                        enumType="TransportType"
-                        name={name}
-                        isNew={isNew}
-                        originalValue={initialTransportTypeValues[name]}
-                        label={
-                          <FormattedMessage
-                            id="modules.Shipments.transportation"
-                            defaultMessage="TRANSPORTATION"
-                          />
-                        }
-                        labelWidth={values.autoTracking ? '135px' : ''}
-                      />
-                    )}
-                  </FormField>
-                );
+            <FormField
+              name="transportType"
+              initValue={transportTypeValues.transportType}
+              setFieldValue={(field, newValue) => {
+                transportTypeSetFieldValue(field, newValue);
+                setNonAutoTrackingTransportType(newValue);
+                if (transportTypeValues.transportType !== newValue) cleanDataAfterChangeTransport();
               }}
-            </Subscribe>
+              values={transportTypeValues}
+              validator={validator}
+              saveOnChange
+            >
+              {({ name, ...inputHandlers }) => (
+                <EnumSelectInputFactory
+                  {...inputHandlers}
+                  allowedValues={values.autoTracking ? ['Sea'] : undefined} // To remove later, see ZEN-1691 (only allow "Sea" 'for now')
+                  clearable={!values.autoTracking}
+                  editable={
+                    hasPermission(SHIPMENT_EDIT) ||
+                    (hasPermission(SHIPMENT_SET_TRANSPORT_TYPE) && hasPermission(SHIPMENT_SET_PORT))
+                  }
+                  enumType="TransportType"
+                  name={name}
+                  isNew={isNew}
+                  originalValue={initialTransportTypeValues[name]}
+                  label={
+                    <FormattedMessage
+                      id="modules.Shipments.transportation"
+                      defaultMessage="TRANSPORTATION"
+                    />
+                  }
+                  labelWidth={values.autoTracking ? '135px' : ''}
+                />
+              )}
+            </FormField>
           </React.Fragment>,
           <React.Fragment key="carrierType">
             <FormField
@@ -298,6 +293,25 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                 const newBoolean = !values.autoTracking;
                                 setFieldValue('autoTracking', newBoolean);
                                 setFieldValue('autoTrackingBy', newBoolean ? 'BookingNo' : null);
+                                if (newBoolean) {
+                                  if (transportTypeValues.transportType !== 'Sea') {
+                                    transportTypeSetFieldValue('transportType', 'Sea');
+                                    cleanDataAfterChangeTransport();
+                                  }
+                                } else {
+                                  const prevTransportTypeValue =
+                                    nonAutoTrackingTransportType ||
+                                    initialTransportTypeValues.transportType;
+                                  if (
+                                    transportTypeValues.transportType !== prevTransportTypeValue
+                                  ) {
+                                    transportTypeSetFieldValue(
+                                      'transportType',
+                                      prevTransportTypeValue
+                                    );
+                                    cleanDataAfterChangeTransport();
+                                  }
+                                }
                               }}
                               editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BOOKED])}
                             >
