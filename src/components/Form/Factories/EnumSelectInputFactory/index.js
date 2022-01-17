@@ -52,6 +52,8 @@ const defaultProps = {
 };
 
 const EnumSelectInputFactory = ({
+  allowedValues, // To remove, see ZEN-1691 (only allow "Sea" 'for now')
+  clearable,
   vertical,
   isTouched,
   label,
@@ -93,6 +95,15 @@ const EnumSelectInputFactory = ({
         const selectedItem = data.find(item => item.name === value);
 
         const itemToValue = item => (item ? item.name : '');
+
+        const dataCopy = [...data];
+        if (clearable === false && !loading && data.length && !value && onChange) {
+          onChange(
+            convertValueToFormFieldFormat(
+              itemToValue(data.find(el => el.name === 'Air') || data[0])
+            )
+          );
+        }
 
         const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
@@ -164,7 +175,16 @@ const EnumSelectInputFactory = ({
         let renderedInput = <Blackout {...blackoutConfig} />;
 
         if (!blackout) {
-          renderedInput = <SelectInput items={loading ? [] : data} {...selectConfig} />;
+          renderedInput = (
+            <SelectInput
+              items={
+                (loading && []) ||
+                (!allowedValues && data) ||
+                dataCopy.filter(el => allowedValues.some(val => el.name === val))
+              }
+              {...selectConfig}
+            />
+          );
         }
 
         return (
