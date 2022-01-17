@@ -47,7 +47,7 @@ function usePersistFilter(
     },
     onCompleted: ({ viewState }) => {
       if (viewState.filterSort) {
-        changeFilterAndSort(decryptValue(viewState.filterSort));
+        changeFilterAndSort(decryptValue(viewState.filterSort) ?? {});
       }
 
       setLoading(false);
