@@ -121,83 +121,102 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
       }) => {
         const values: Object = { ...initialValues, ...state };
 
-        const carrierTypeSelect = (
-          <FormField
-            name="carrier"
-            initValue={values.carrier}
-            setFieldValue={setFieldValue}
-            values={values}
-            validator={validator}
-          >
-            {({ name, ...inputHandlers }) => (
-              <TextInputFactory
-                {...inputHandlers}
-                name={name}
-                editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_CARRIER])}
-                isNew={isNew}
-                originalValue={initialValues[name]}
-                label={<FormattedMessage {...messages.carrier} />}
-              />
-            )}
-          </FormField>
-        );
-
-        const transportationTypeSelect = (
-          <Subscribe to={[ShipmentTransportTypeContainer, ShipmentTimelineContainer]}>
-            {(
-              {
-                originalValues: initialTransportTypeValues,
-                state: transportTypeState,
-                setFieldValue: transportTypeSetFieldValue,
-              },
-              { cleanDataAfterChangeTransport }
-            ) => {
-              const transportTypeValues = {
-                ...initialTransportTypeValues,
-                ...transportTypeState,
-              };
-
-              return (
-                <FormField
-                  name="transportType"
-                  initValue={transportTypeValues.transportType}
-                  setFieldValue={(field, newValue) => {
-                    transportTypeSetFieldValue(field, newValue);
-                    if (transportTypeValues.transportType !== newValue)
-                      cleanDataAfterChangeTransport();
-                  }}
-                  values={transportTypeValues}
-                  validator={validator}
-                  saveOnChange
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <EnumSelectInputFactory
-                      {...inputHandlers}
-                      editable={
-                        hasPermission(SHIPMENT_EDIT) ||
-                        (hasPermission(SHIPMENT_SET_TRANSPORT_TYPE) &&
-                          hasPermission(SHIPMENT_SET_PORT))
-                      }
-                      enumType="TransportType"
-                      name={name}
-                      isNew={isNew}
-                      originalValue={initialTransportTypeValues[name]}
-                      hideTooltip={values.autoTracking} // The tooltip tends to overflow
-                      label={
-                        <FormattedMessage
-                          id="modules.Shipments.transportation"
-                          defaultMessage="TRANSPORTATION"
-                        />
-                      }
-                    />
-                  )}
-                </FormField>
-              );
-            }}
-          </Subscribe>
-        );
-
         const { forwarders = [], importer, exporter, organizations } = values;
+
+        const autoTrackingConcernees = [
+          <React.Fragment key="transportType">
+            <Subscribe to={[ShipmentTransportTypeContainer, ShipmentTimelineContainer]}>
+              {(
+                {
+                  originalValues: initialTransportTypeValues,
+                  state: transportTypeState,
+                  setFieldValue: transportTypeSetFieldValue,
+                },
+                { cleanDataAfterChangeTransport }
+              ) => {
+                const transportTypeValues = {
+                  ...initialTransportTypeValues,
+                  ...transportTypeState,
+                };
+
+                return (
+                  <FormField
+                    name="transportType"
+                    initValue={transportTypeValues.transportType}
+                    setFieldValue={(field, newValue) => {
+                      transportTypeSetFieldValue(field, newValue);
+                      if (transportTypeValues.transportType !== newValue)
+                        cleanDataAfterChangeTransport();
+                    }}
+                    values={transportTypeValues}
+                    validator={validator}
+                    saveOnChange
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <EnumSelectInputFactory
+                        {...inputHandlers}
+                        editable={
+                          hasPermission(SHIPMENT_EDIT) ||
+                          (hasPermission(SHIPMENT_SET_TRANSPORT_TYPE) &&
+                            hasPermission(SHIPMENT_SET_PORT))
+                        }
+                        enumType="TransportType"
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialTransportTypeValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="modules.Shipments.transportation"
+                            defaultMessage="TRANSPORTATION"
+                          />
+                        }
+                        labelWidth={values.autoTracking ? '135px' : ''}
+                      />
+                    )}
+                  </FormField>
+                );
+              }}
+            </Subscribe>
+          </React.Fragment>,
+          <React.Fragment key="carrierType">
+            <FormField
+              name="carrier"
+              initValue={values.carrier}
+              setFieldValue={setFieldValue}
+              values={values}
+              validator={validator}
+            >
+              {({ name, ...inputHandlers }) =>
+                values.autoTracking ? (
+                  <EnumSelectInputFactory
+                    {...inputHandlers}
+                    editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_CARRIER])}
+                    enumType="carrier"
+                    name={name}
+                    isNew={isNew}
+                    originalValue={initialValues[name]}
+                    label={
+                      <FormattedMessage
+                        id="modules.Shipments.carrier"
+                        defaultMessage="TRANSPORTATION"
+                      />
+                    }
+                    labelWidth="135px"
+                  />
+                ) : (
+                  <TextInputFactory
+                    {...inputHandlers}
+                    name={name}
+                    editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_CARRIER])}
+                    isNew={isNew}
+                    originalValue={initialValues[name]}
+                    label={<FormattedMessage {...messages.carrier} />}
+                  />
+                )
+              }
+            </FormField>
+          </React.Fragment>,
+        ];
 
         return (
           <MainSectionPlaceholder height={1766} isLoading={isLoading}>
@@ -258,7 +277,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     <GridColumn>
                       <FieldItem
                         label={
-                          <Label>
+                          <Label width="135px">
                             <FormattedMessage
                               id="modules.Shipments.autoTracking"
                               defaultMessage="AUTO TRACKING"
@@ -323,13 +342,12 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                     defaultMessage="TRACK BY"
                                   />
                                 }
-                                hideTooltip
+                                labelWidth="135px"
                                 {...inputHandlers}
                               />
                             )}
                           </FormField>
-                          {transportationTypeSelect}
-                          {carrierTypeSelect}
+                          {autoTrackingConcernees}
                         </>
                       )}
                     </GridColumn>
@@ -502,6 +520,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       </FormField>
                     )}
                   </Subscribe>
+                  {!values.autoTracking && autoTrackingConcernees}
                   <FormField
                     name="invoiceNo"
                     initValue={values.invoiceNo}
@@ -538,7 +557,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       />
                     )}
                   </FormField>
-                  {!values.autoTracking && transportationTypeSelect}
                   <FormField
                     name="loadType"
                     initValue={values.loadType}
@@ -588,7 +606,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       />
                     )}
                   </FormField>
-                  {!values.autoTracking && carrierTypeSelect}
                   <CustomFieldsFactory
                     entityType="Shipment"
                     customFields={values.customFields}
