@@ -110,8 +110,11 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
   const { isImporter, organization: userOrganization, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, archived } = shipment;
-  // Remember what the user selected before autoTracking override, should they wish to revert to it
-  const [nonAutoTrackingTransportType, setNonAutoTrackingTransportType] = useState('');
+  // Remember what the user selected before enabling autoTracking, should they wish to revert to it
+  const [transportTypeTempState, setTransportTypeTempState] = useState('');
+  const [carrierTempState, setCarrierTempState] = useState('');
+  const [autoTrackingByTempState, setAutoTrackingByTempState] = useState('');
+
   return (
     <Subscribe
       to={[ShipmentInfoContainer, ShipmentTransportTypeContainer, ShipmentTimelineContainer]}
@@ -146,7 +149,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
               initValue={transportTypeValues.transportType}
               setFieldValue={(field, newValue) => {
                 transportTypeSetFieldValue(field, newValue);
-                setNonAutoTrackingTransportType(newValue);
                 if (transportTypeValues.transportType !== newValue) cleanDataAfterChangeTransport();
               }}
               values={transportTypeValues}
@@ -172,7 +174,8 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       defaultMessage="TRANSPORTATION"
                     />
                   }
-                  labelWidth={values.autoTracking ? '135px' : ''}
+                  labelWidth={values.autoTracking ? '145px' : ''}
+                  required={values.autoTracking}
                 />
               )}
             </FormField>
@@ -187,12 +190,13 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
             >
               {({ name, ...inputHandlers }) =>
                 values.autoTracking ? (
-                  <EnumSelectInputFactory
+                  <SelectInputFactory
                     {...inputHandlers}
                     editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_CARRIER])}
                     enumType="carrier"
                     name={name}
                     isNew={isNew}
+                    items={['ONE']}
                     originalValue={initialValues[name]}
                     label={
                       <FormattedMessage
@@ -200,7 +204,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         defaultMessage="TRANSPORTATION"
                       />
                     }
-                    labelWidth="135px"
+                    labelWidth="145px"
                   />
                 ) : (
                   <TextInputFactory
@@ -276,7 +280,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     <GridColumn>
                       <FieldItem
                         label={
-                          <Label width="135px">
+                          <Label width="145px">
                             <FormattedMessage
                               id="modules.Shipments.autoTracking"
                               defaultMessage="AUTO TRACKING"
@@ -290,27 +294,33 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                               align="right"
                               toggled={values.autoTracking}
                               onToggle={() => {
-                                const newBoolean = !values.autoTracking;
-                                setFieldValue('autoTracking', newBoolean);
-                                setFieldValue('autoTrackingBy', newBoolean ? 'BookingNo' : null);
-                                if (newBoolean) {
-                                  if (transportTypeValues.transportType !== 'Sea') {
-                                    transportTypeSetFieldValue('transportType', 'Sea');
-                                    cleanDataAfterChangeTransport();
-                                  }
+                                const shouldAutoTrack = !values.autoTracking;
+                                setFieldValue('autoTracking', shouldAutoTrack);
+
+                                if (shouldAutoTrack) {
+                                  setTransportTypeTempState(transportTypeValues.transportType);
+                                  setCarrierTempState(values.carrier);
+                                  transportTypeSetFieldValue('transportType', 'Sea');
+                                  cleanDataAfterChangeTransport();
+                                  setFieldValue(
+                                    'autoTrackingBy',
+                                    autoTrackingByTempState ||
+                                      initialValues.autoTrackingBy ||
+                                      'BookingNo'
+                                  );
                                 } else {
-                                  const prevTransportTypeValue =
-                                    nonAutoTrackingTransportType ||
-                                    initialTransportTypeValues.transportType;
-                                  if (
-                                    transportTypeValues.transportType !== prevTransportTypeValue
-                                  ) {
-                                    transportTypeSetFieldValue(
-                                      'transportType',
-                                      prevTransportTypeValue
-                                    );
-                                    cleanDataAfterChangeTransport();
-                                  }
+                                  setAutoTrackingByTempState(values.autoTrackingBy);
+                                  transportTypeSetFieldValue(
+                                    'transportType',
+                                    transportTypeTempState ||
+                                      initialTransportTypeValues.transportType
+                                  );
+                                  cleanDataAfterChangeTransport();
+                                  setFieldValue('autoTrackingBy', null);
+                                  setFieldValue(
+                                    'carrier',
+                                    carrierTempState || initialValues.carrier
+                                  );
                                 }
                               }}
                               editable={hasPermission([SHIPMENT_EDIT, SHIPMENT_SET_BOOKED])}
@@ -336,15 +346,16 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         <>
                           <FormField
                             name="autoTrackingBy"
-                            initValue="houseBlNo"
+                            initValue={values.autoTrackingBy}
+                            setFieldValue={setFieldValue}
                             values={values}
                             saveOnChange
-                            setFieldValue={setFieldValue}
-                            onClearValue
                           >
-                            {({ name: fieldName, ...inputHandlers }) => (
+                            {({ name, ...inputHandlers }) => (
                               <SelectInputFactory
-                                name={fieldName}
+                                name={name}
+                                {...inputHandlers}
+                                originalValue={initialValues.autoTrackingBy}
                                 inputWidth="200px"
                                 inputHeight="30px"
                                 inputAlign="left"
@@ -360,8 +371,8 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                     defaultMessage="TRACK BY"
                                   />
                                 }
-                                labelWidth="135px"
-                                {...inputHandlers}
+                                labelWidth="145px"
+                                required
                               />
                             )}
                           </FormField>
@@ -404,6 +415,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.masterBlNo} />}
+                        required={values.autoTrackingBy === 'MasterBlNo'}
                       />
                     )}
                   </FormField>
@@ -422,6 +434,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.blNo} />}
+                        required={values.autoTrackingBy === 'HouseBlNo'}
                       />
                     )}
                   </FormField>
@@ -482,6 +495,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.bookingNo} />}
+                        required={values.autoTrackingBy === 'BookingNo'}
                       />
                     )}
                   </FormField>
@@ -508,6 +522,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       )}
                     </ToggleInput>
                   </div>
+                  {!values.autoTracking && autoTrackingConcernees}
                   <Subscribe to={[ShipmentTasksContainer]}>
                     {taskContainer => (
                       <FormField
@@ -538,7 +553,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       </FormField>
                     )}
                   </Subscribe>
-                  {!values.autoTracking && autoTrackingConcernees}
                   <FormField
                     name="invoiceNo"
                     initValue={values.invoiceNo}
