@@ -56,3 +56,19 @@ export const shipmentsExportQuery = gql`
     }
   }
 `;
+
+/**
+ * retrieves the filters of a specific view
+ * initial value for filterSort for first time users is ""
+ */
+export const getShipmentViewStateQuery = gql`
+  query viewState($type: ViewStateType!) {
+    viewState(type: $type) {
+      ... on ViewState {
+        id
+        type
+        filterSort
+      }
+    }
+  }
+`;

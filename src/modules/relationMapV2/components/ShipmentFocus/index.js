@@ -101,7 +101,7 @@ export default function ShipmentFocus() {
     onSetCloneRelated,
     onSetSplitBatchRelated,
   } = Entities.useContainer();
-  const { queryVariables } = SortAndFilter.useContainer();
+  const { queryVariables, loading: sortStateLoading } = SortAndFilter.useContainer();
   const lastQueryVariables = usePrevious(queryVariables);
   React.useEffect(() => {
     if (!isEquals(lastQueryVariables, queryVariables)) {
@@ -191,6 +191,15 @@ export default function ShipmentFocus() {
 
     queryShipmentsDetail(shipmentIds);
   }, [loadStatuses, mapping, expandAll, queryShipmentsDetail]);
+
+  if (sortStateLoading) {
+    return (
+      <div className={WrapperStyle}>
+        <Header />
+        <InitLoadingPlaceholder />
+      </div>
+    );
+  }
 
   return (
     <>
