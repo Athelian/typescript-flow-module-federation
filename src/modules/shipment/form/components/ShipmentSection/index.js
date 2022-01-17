@@ -159,7 +159,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                 <EnumSelectInputFactory
                   {...inputHandlers}
                   allowedValues={values.autoTracking ? ['Sea'] : undefined} // To remove later, see ZEN-1691 (only allow "Sea" 'for now')
-                  clearable={!values.autoTracking}
                   editable={
                     hasPermission(SHIPMENT_EDIT) ||
                     (hasPermission(SHIPMENT_SET_TRANSPORT_TYPE) && hasPermission(SHIPMENT_SET_PORT))
