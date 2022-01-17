@@ -70,6 +70,7 @@ const ShipmentSelector = ({ open, onClose, selected, setSelected }: SelectorProp
                 onClick={() => {
                   onSelectAll(nodes);
                 }}
+                labelSuffix={value.length ? ` (${value.length.toString()})` : ''}
               />
             </SlideViewNavBar>
 

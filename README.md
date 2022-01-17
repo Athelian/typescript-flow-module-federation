@@ -46,6 +46,12 @@ What things you need to install the software and how to install them
 
     prefer using [pushstate-server](https://github.com/scottcorgan/pushstate-server), which supports HTML5 pushstate.
 
+  - WSL2 (optional)
+
+    There are cases of the Flow language server crashing when initialized in certain environments, this is expecially well documented in Windows environments. If you are using a Windows installation, it is recommended that you either install an up-to-date Linux distribution, or install a [WSL2](https://docs.microsoft.com/en-us/windows/wsl/setup/environment) virtual environment on your machine. WSL2 is well supported by vscode as of 2022 and should not hinder your development if installed correctly. WSL(1) is not advised.
+
+    Recommended vscode extensions for this environment are outlined below.
+
 - **Browser Extensions**
   Install necessary browser extensions for development. Below listed extensions are for chrome, find alternates if you are not using chrome.
 
@@ -266,6 +272,12 @@ This section describes various build and development tools used in this project 
   code --install-extension msjsdiag.debugger-for-chrome &&
   code --install-extension wix.vscode-import-cost
   ```
+
+  WSL2 recommended extensions (optional)
+
+  If you have chosen to develop with WSL2 (see [Prerequisites](#rerequisites)) the following extensions may aid with development:
+
+  code --install-extension ms-vscode-remote.remote-wsl
 
 ### Graphql
 

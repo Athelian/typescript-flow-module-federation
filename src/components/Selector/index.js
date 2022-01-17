@@ -115,7 +115,7 @@ const SelectorMany = ({
             if (value.length && isAllSelected(items, value)) {
               filter(i => !itemsById[i.id]);
             } else {
-              push(...items);
+              push(...items.filter(item => !value.some(val => item.id === val.id)));
             }
           },
           getItemProps: (item, selectable = true) => {

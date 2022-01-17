@@ -6,6 +6,7 @@ import { SelectAllStyle } from './style';
 
 type OptionalProps = {
   disabled?: boolean,
+  labelSuffix?: string,
   isAllSelected?: boolean,
   right?: number,
   onClick: Function,
@@ -16,14 +17,26 @@ type Props = OptionalProps;
 const defaultProps = {
   right: 0,
   disabled: false,
+  labelSuffix: '',
   onClick: () => {},
 };
 
-const SelectAllButton = ({ isAllSelected, disabled, onClick, right }: Props): React.Node => (
+const SelectAllButton = ({
+  isAllSelected,
+  labelSuffix,
+  disabled,
+  onClick,
+  right,
+}: Props): React.Node => (
   <BaseButton
     className={SelectAllStyle(right)}
     icon="CHECKED"
-    label={<FormattedMessage id="components.Documents.selectAll" defaultMessage="SELECT ALL" />}
+    label={
+      <>
+        <FormattedMessage id="components.Documents.selectAll" defaultMessage="SELECT ALL" />
+        {labelSuffix}
+      </>
+    }
     disabled={disabled}
     onClick={onClick}
     backgroundColor={isAllSelected ? 'TEAL' : 'GRAY_SUPER_LIGHT'}
