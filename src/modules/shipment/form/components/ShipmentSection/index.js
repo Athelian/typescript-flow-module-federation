@@ -53,7 +53,6 @@ import {
 } from 'modules/shipment/form/containers';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import SelectExporter from 'modules/order/common/SelectExporter';
-import validator from 'modules/shipment/form/validator';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
@@ -84,6 +83,7 @@ import SelectPartners from 'components/SelectPartners';
 import SelectPartner from 'components/SelectPartner';
 import Followers from 'components/Followers';
 import ShipmentSummary from '../ShipmentSummary';
+import { getValidationByAutoTracking } from '../../validator';
 import { renderExporters, renderForwarders, renderPartners } from './helpers';
 import {
   ShipmentSectionWrapperStyle,
@@ -141,6 +141,8 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
           ...transportTypeState,
         };
         const { forwarders = [], importer, exporter, organizations } = values;
+        const { autoTrackingBy } = values;
+        const validation = getValidationByAutoTracking({ autoTrackingBy });
 
         const autoTrackingConcernees = [
           <React.Fragment key="transportType">
@@ -152,7 +154,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                 if (transportTypeValues.transportType !== newValue) cleanDataAfterChangeTransport();
               }}
               values={transportTypeValues}
-              validator={validator}
+              validator={validation}
               saveOnChange
             >
               {({ name, ...inputHandlers }) => (
@@ -185,7 +187,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
               initValue={values.carrier}
               setFieldValue={setFieldValue}
               values={values}
-              validator={validator}
+              validator={validation}
             >
               {({ name, ...inputHandlers }) =>
                 values.autoTracking ? (
@@ -387,7 +389,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     initValue={values.no}
                     setFieldValue={setFieldValue}
                     values={values}
-                    validator={validator}
+                    validator={validation}
                   >
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
@@ -406,7 +408,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     initValue={values.masterBlNo}
                     setFieldValue={setFieldValue}
                     values={values}
-                    validator={validator}
+                    validator={validation}
                   >
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
@@ -422,10 +424,11 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                   </FormField>
                   <FormField
                     name="blNo"
+                    namey="houseNo"
                     initValue={values.blNo}
                     setFieldValue={setFieldValue}
                     values={values}
-                    validator={validator}
+                    validator={validation}
                   >
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
@@ -446,7 +449,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         initValue={values.blDate}
                         setFieldValue={setFieldValue}
                         values={values}
-                        validator={validator}
+                        validator={validation}
                       >
                         {({ name, ...inputHandlers }) => (
                           <DateInputFactory
@@ -474,7 +477,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     initValue={values.bookingNo}
                     setFieldValue={setFieldValue}
                     values={values}
-                    validator={validator}
+                    validator={validation}
                   >
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
@@ -531,7 +534,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                         initValue={values.bookingDate}
                         setFieldValue={setFieldValue}
                         values={values}
-                        validator={validator}
+                        validator={validation}
                       >
                         {({ name, ...inputHandlers }) => (
                           <DateInputFactory
@@ -559,7 +562,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     initValue={values.invoiceNo}
                     setFieldValue={setFieldValue}
                     values={values}
-                    validator={validator}
+                    validator={validation}
                   >
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
@@ -577,7 +580,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     initValue={values.contractNo}
                     setFieldValue={setFieldValue}
                     values={values}
-                    validator={validator}
+                    validator={validation}
                   >
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
@@ -595,7 +598,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     initValue={values.loadType}
                     setFieldValue={setFieldValue}
                     values={values}
-                    validator={validator}
+                    validator={validation}
                     saveOnChange
                   >
                     {({ name, ...inputHandlers }) => (
@@ -620,7 +623,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     initValue={values.incoterm}
                     setFieldValue={setFieldValue}
                     values={values}
-                    validator={validator}
+                    validator={validation}
                   >
                     {({ name, ...inputHandlers }) => (
                       <EnumSearchSelectInputFactory
@@ -693,7 +696,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     name="memo"
                     initValue={values.memo}
                     values={values}
-                    validator={validator}
+                    validator={validation}
                     setFieldValue={setFieldValue}
                   >
                     {({ name, ...inputHandlers }) => (
