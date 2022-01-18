@@ -35,17 +35,17 @@ const ShipmentListModule = () => {
   useQuery(getShipmentViewStateQuery, {
     variables: { type: 'ShipmentCard' },
     onCompleted: ({ viewState }) => {
+      setLoading(false);
       if (viewState.filterSort) {
         const decrypted = decryptValue(viewState.filterSort);
 
         setFilterBy({
-          ...decrypted.filterBy,
-          query: decrypted.query,
+          ...(decrypted?.filterBy ?? {}),
+          query: decrypted?.query ?? '',
         });
-        setSortBy(decrypted.sortBy);
-      }
 
-      setLoading(false);
+        setSortBy(decrypted?.sortBy ?? {});
+      }
     },
   });
 
