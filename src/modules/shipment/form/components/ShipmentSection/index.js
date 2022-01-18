@@ -204,6 +204,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                       />
                     }
                     labelWidth="145px"
+                    required
                   />
                 ) : (
                   <TextInputFactory
@@ -307,6 +308,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                       initialValues.autoTrackingBy ||
                                       'BookingNo'
                                   );
+                                  setFieldValue('carrier', 'ONE');
                                 } else {
                                   setAutoTrackingByTempState(values.autoTrackingBy);
                                   transportTypeSetFieldValue(
