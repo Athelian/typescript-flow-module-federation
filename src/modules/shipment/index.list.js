@@ -12,20 +12,63 @@ import {
   Search,
   Sort,
 } from 'components/NavBar';
+import { useQuery, useApolloClient } from '@apollo/react-hooks';
 import { NewButton, ExportButton } from 'components/Buttons';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import useFilterSort from 'hooks/useFilterSort';
+import { encryptValue, decryptValue } from 'utils/cache';
 import ShipmentList from './list';
-import { shipmentsExportQuery } from './query';
+import { shipmentsExportQuery, getShipmentViewStateQuery } from './query';
+import { updateShipmentViewStateMutation } from './mutation';
 
 const ShipmentListModule = () => {
+  const [loading, setLoading] = React.useState(true);
+
+  const client = useApolloClient();
+
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', archived: false },
     { updatedAt: 'DESCENDING' },
     'shipment_cards'
   );
 
+  useQuery(getShipmentViewStateQuery, {
+    variables: { type: 'ShipmentCard' },
+    onCompleted: ({ viewState }) => {
+      if (viewState.filterSort) {
+        const decrypted = decryptValue(viewState.filterSort);
+
+        setFilterBy({
+          ...decrypted.filterBy,
+          query: decrypted.query,
+        });
+        setSortBy(decrypted.sortBy);
+      }
+
+      setLoading(false);
+    },
+  });
+
+  React.useEffect(() => {
+    if (!loading) {
+      client.mutate({
+        mutation: updateShipmentViewStateMutation,
+        variables: {
+          input: {
+            name: 'zenport card view',
+            type: 'ShipmentCard',
+            filterSort: encryptValue({ query, filterBy, sortBy }),
+          },
+        },
+      });
+    }
+  }, [loading, query, filterBy, sortBy, client]);
+
   const hasPermissions = useViewerHasPermissions();
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <Content>
