@@ -4,6 +4,7 @@ import { Link } from '@reach/router';
 import { Content } from 'components/Layout';
 import { NewButton, ExportButton } from 'components/Buttons';
 import {
+  BulkHeaderFilter,
   NavBar,
   EntityIcon,
   Filter,
@@ -12,6 +13,7 @@ import {
   OrderFilterConfig,
   OrderSortConfig,
 } from 'components/NavBar';
+import { isEquals } from 'utils/fp';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import useFilterSort from 'hooks/useFilterSort';
@@ -34,6 +36,17 @@ const OrderModule = () => {
 
         <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
+        <BulkHeaderFilter
+          filterBy={filterBy}
+          setFilterBy={filter => {
+            if (!isEquals(filter, filterBy)) {
+              setFilterBy({
+                ...filter,
+              });
+            }
+          }}
+          type="ORDER"
+        />
         <Sort config={OrderSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         {hasPermissions(ORDER_CREATE) && (
