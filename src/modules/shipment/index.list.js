@@ -1,5 +1,4 @@
 // @flow
-/* eslint-disable no-unused-vars, no-redeclare */
 import * as React from 'react';
 import { Link } from '@reach/router';
 import { SHIPMENT_CREATE, SHIPMENT_EXPORT } from 'modules/permission/constants/shipment';
@@ -77,6 +76,7 @@ const ShipmentListModule = () => {
     <Content>
       <NavBar>
         <EntityIcon icon="SHIPMENT" color="SHIPMENT" subIcon="CARDS" />
+
         <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <BulkHeaderFilter
@@ -91,12 +91,14 @@ const ShipmentListModule = () => {
           type="SHIPMENT"
         />
         <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
+
         {hasPermissions(SHIPMENT_CREATE) && (
           // $FlowFixMe Flow typed is not updated yet
           <Link to="/shipment/new">
             <NewButton />
           </Link>
         )}
+
         {hasPermissions(SHIPMENT_EXPORT) && (
           <ExportButton
             type="Shipments"
