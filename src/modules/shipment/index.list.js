@@ -29,11 +29,13 @@ const ShipmentListModule = () => {
 
   const client = useApolloClient();
 
-  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+  const { query, filterBy, getFilterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', archived: false },
     { updatedAt: 'DESCENDING' },
     'shipment_cards'
   );
+
+  console.log('mate', getFilterBy);
 
   useQuery(getShipmentViewStateQuery, {
     variables: { type: 'ShipmentCard' },
@@ -99,21 +101,25 @@ const ShipmentListModule = () => {
           config={ShipmentFilterConfig}
           filterBy={filterBy}
           // onChange={setFilterBy}
-          onChange={filter => {
-            // if (!isEquals(filter, filterBy)) {}
-            // onChangeFilter({
-            //   ...filterAndSort,
-            //   filter: {
-            //     ...filter,
-            //     query,
-            //   },
-            // });
-          }}
+          // onChange={filter => {
+          //   if (!isEquals(filter, filterBy)) {}
+          //   onChangeFilter({
+          //     ...filterAndSort,
+          //     filter: {
+          //       ...filter,
+          //       query,
+          //     },
+          //   });
+          // }}
         />
         <Search query={query} onChange={setQuery} />
         <BulkHeaderFilter
           filterBy={filterBy}
           setFilterBy={filter => {
+            // setFilterBy({
+            //   ...getFilterBy(),
+            // });
+            setQuery(filter.bulkFilter.nos.values[0]);
             // if (!isEquals(filter, filterBy))
             //   onChangeFilter({
             //     ...filterAndSort,

@@ -125,6 +125,7 @@ export default function useFilterSort(
   return {
     query,
     filterBy: filterByWithoutQuery,
+    getFilterBy,
     sortBy: getSortBy(),
     setQuery,
     setFilterBy: setFilterByWithQuery,
