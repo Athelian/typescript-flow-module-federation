@@ -112,11 +112,11 @@ export default function useFilterSort(
     },
     [filterBy, setFilterBy]
   );
-  const setFilterByWithoutQuery = React.useCallback(
+  const setFilterByWithQuery = React.useCallback(
     (value: FilterBy) => {
       setFilterBy({
         ...value,
-        query,
+        query: value?.query ?? query,
       });
     },
     [query]
@@ -127,7 +127,7 @@ export default function useFilterSort(
     filterBy: filterByWithoutQuery,
     sortBy: getSortBy(),
     setQuery,
-    setFilterBy: setFilterByWithoutQuery,
+    setFilterBy: setFilterByWithQuery,
     setSortBy,
   };
 }

@@ -17,12 +17,16 @@ type Props = {
 
 export default function AdvanceFilter({ bulkFilterType }: Props) {
   const { selectors } = FocusedView.useContainer();
-  const { filterAndSort, onChangeFilter } = SortAndFilter.useContainer();
+  const { filterAndSort, onChangeFilter, loading } = SortAndFilter.useContainer();
   const {
     filter: { query, ...filters },
   } = filterAndSort;
   const hasFilter = query !== '' || Object.keys(filterAndSort.filter).length > 1;
   const hasBulkFilter = bulkFilterType !== '';
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <div className={FilterWrapperStyle(hasFilter)}>
