@@ -100,7 +100,7 @@ const ShipmentListModule = () => {
         <Filter
           config={ShipmentFilterConfig}
           filterBy={filterBy}
-          // onChange={setFilterBy}
+          onChange={setFilterBy}
           // onChange={filter => {
           //   if (!isEquals(filter, filterBy)) {}
           //   onChangeFilter({
@@ -116,10 +116,17 @@ const ShipmentListModule = () => {
         <BulkHeaderFilter
           filterBy={filterBy}
           setFilterBy={filter => {
+            console.log(filter);
             // setFilterBy({
-            //   ...getFilterBy(),
+            // ...getFilterBy(),
+            // ...getFilterBy()
             // });
-            setQuery(filter.bulkFilter.nos.values[0]);
+            // first filter is the same
+            setFilterBy({
+              ...filter,
+            });
+
+            // setQuery(filter.bulkFilter.nos.values[0]);
             // if (!isEquals(filter, filterBy))
             //   onChangeFilter({
             //     ...filterAndSort,
@@ -129,7 +136,8 @@ const ShipmentListModule = () => {
             //     },
             //   });
           }}
-          type="SHIPMENT"
+          type="MAP" // changing this to "SHIPMENT" causes a weird json object to come through
+          // the first time, it is in the notes
         />
         <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
         {hasPermissions(SHIPMENT_CREATE) && (
