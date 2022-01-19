@@ -45,11 +45,11 @@ function usePersistFilter(
     variables: {
       type: 'ShipmentMap',
     },
-    onCompleted: ({ viewState }) => {
-      if (viewState.filterSort) {
+    onCompleted: data => {
+      if (data?.viewState) {
+        const { viewState } = data;
         changeFilterAndSort(decryptValue(viewState.filterSort) ?? {});
       }
-
       setLoading(false);
     },
   });
