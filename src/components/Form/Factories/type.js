@@ -27,6 +27,7 @@ export type InputProps = {|
   value?: any,
   name?: string,
   placeholder?: React$Node,
+  allowedValues?: Array<string>,
   onChange?: ?Function,
   onBlur?: ?Function,
   onFocus?: ?Function,
