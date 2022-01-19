@@ -46,7 +46,7 @@ function usePersistFilter(
       type: 'ShipmentMap',
     },
     onCompleted: data => {
-      if (data?.viewState) {
+      if (data?.viewState?.filterSort) {
         const { viewState } = data;
         changeFilterAndSort(decryptValue(viewState.filterSort) ?? {});
       }
