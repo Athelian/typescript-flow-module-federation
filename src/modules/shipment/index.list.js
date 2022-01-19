@@ -81,11 +81,13 @@ const ShipmentListModule = () => {
         <Search query={query} onChange={setQuery} />
         <BulkHeaderFilter
           filterBy={filterBy}
-          setFilterBy={filter =>
-            setFilterBy({
-              ...filter,
-            })
-          }
+          setFilterBy={filter => {
+            if (!isEquals(filter, filterBy)) {
+              setFilterBy({
+                ...filter,
+              });
+            }
+          }}
           type="SHIPMENT"
         />
         <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
