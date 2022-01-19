@@ -29,13 +29,11 @@ const ShipmentListModule = () => {
 
   const client = useApolloClient();
 
-  const { query, filterBy, getFilterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
+  const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '', archived: false },
     { updatedAt: 'DESCENDING' },
     'shipment_cards'
   );
-
-  console.log('mate', getFilterBy);
 
   useQuery(getShipmentViewStateQuery, {
     variables: { type: 'ShipmentCard' },
@@ -75,69 +73,20 @@ const ShipmentListModule = () => {
     return null;
   }
 
-  const onChangeFilter = ({
-    type,
-    newFilter,
-    mapping,
-  }: {
-    type: string,
-    newFilter: Object,
-    mapping: { orders?: Array<Shipment>, shipments?: Array<Shipment> },
-  }) => {
-    // changeFilterAndSort(prevState => {
-    //   const nextState = produce(prevState, draft => {
-    //     draft[type] = newFilter;
-    //   });
-    //   onLocalSort(mapping, { type, filters: nextState });
-    //   return nextState;
-  };
-  // [onLocalSort]
-
   return (
     <Content>
       <NavBar>
         <EntityIcon icon="SHIPMENT" color="SHIPMENT" subIcon="CARDS" />
-        <Filter
-          config={ShipmentFilterConfig}
-          filterBy={filterBy}
-          onChange={setFilterBy}
-          // onChange={filter => {
-          //   if (!isEquals(filter, filterBy)) {}
-          //   onChangeFilter({
-          //     ...filterAndSort,
-          //     filter: {
-          //       ...filter,
-          //       query,
-          //     },
-          //   });
-          // }}
-        />
+        <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
         <BulkHeaderFilter
           filterBy={filterBy}
-          setFilterBy={filter => {
-            console.log(filter);
-            // setFilterBy({
-            // ...getFilterBy(),
-            // ...getFilterBy()
-            // });
-            // first filter is the same
+          setFilterBy={filter =>
             setFilterBy({
               ...filter,
-            });
-
-            // setQuery(filter.bulkFilter.nos.values[0]);
-            // if (!isEquals(filter, filterBy))
-            //   onChangeFilter({
-            //     ...filterAndSort,
-            //     filter: {
-            //       ...filter,
-            //       query,
-            //     },
-            //   });
-          }}
-          type="MAP" // changing this to "SHIPMENT" causes a weird json object to come through
-          // the first time, it is in the notes
+            })
+          }
+          type="SHIPMENT"
         />
         <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
         {hasPermissions(SHIPMENT_CREATE) && (
