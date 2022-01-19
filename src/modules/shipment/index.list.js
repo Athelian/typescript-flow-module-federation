@@ -1,9 +1,11 @@
 // @flow
+/* eslint-disable no-unused-vars, no-redeclare */
 import * as React from 'react';
 import { Link } from '@reach/router';
 import { SHIPMENT_CREATE, SHIPMENT_EXPORT } from 'modules/permission/constants/shipment';
 import { Content } from 'components/Layout';
 import {
+  BulkHeaderFilter,
   EntityIcon,
   Filter,
   NavBar,
@@ -17,6 +19,7 @@ import { NewButton, ExportButton } from 'components/Buttons';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import useFilterSort from 'hooks/useFilterSort';
 import { encryptValue, decryptValue } from 'utils/cache';
+import { isEquals } from 'utils/fp';
 import ShipmentList from './list';
 import { shipmentsExportQuery, getShipmentViewStateQuery } from './query';
 import { updateShipmentViewStateMutation } from './mutation';
@@ -70,22 +73,65 @@ const ShipmentListModule = () => {
     return null;
   }
 
+  const onChangeFilter = ({
+    type,
+    newFilter,
+    mapping,
+  }: {
+    type: string,
+    newFilter: Object,
+    mapping: { orders?: Array<Shipment>, shipments?: Array<Shipment> },
+  }) => {
+    // changeFilterAndSort(prevState => {
+    //   const nextState = produce(prevState, draft => {
+    //     draft[type] = newFilter;
+    //   });
+    //   onLocalSort(mapping, { type, filters: nextState });
+    //   return nextState;
+  };
+  // [onLocalSort]
+
   return (
     <Content>
       <NavBar>
         <EntityIcon icon="SHIPMENT" color="SHIPMENT" subIcon="CARDS" />
-
-        <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
+        <Filter
+          config={ShipmentFilterConfig}
+          filterBy={filterBy}
+          // onChange={setFilterBy}
+          onChange={filter => {
+            // if (!isEquals(filter, filterBy)) {}
+            // onChangeFilter({
+            //   ...filterAndSort,
+            //   filter: {
+            //     ...filter,
+            //     query,
+            //   },
+            // });
+          }}
+        />
         <Search query={query} onChange={setQuery} />
+        <BulkHeaderFilter
+          filterBy={filterBy}
+          setFilterBy={filter => {
+            // if (!isEquals(filter, filterBy))
+            //   onChangeFilter({
+            //     ...filterAndSort,
+            //     filter: {
+            //       ...filter,
+            //       query,
+            //     },
+            //   });
+          }}
+          type="SHIPMENT"
+        />
         <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
-
         {hasPermissions(SHIPMENT_CREATE) && (
           // $FlowFixMe Flow typed is not updated yet
           <Link to="/shipment/new">
             <NewButton />
           </Link>
         )}
-
         {hasPermissions(SHIPMENT_EXPORT) && (
           <ExportButton
             type="Shipments"
