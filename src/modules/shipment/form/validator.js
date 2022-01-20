@@ -42,11 +42,13 @@ const getValidationByAutoTracking = ({ autoTrackingBy }: { autoTrackingBy: strin
       validationFieldName = 'bookingNo';
       break;
     default:
-      validationFieldName = '';
+      validationFieldName = undefined;
   }
-  return validator.shape({
-    [(validationFieldName: string)]: Yup.string().required(),
-  });
+  return validationFieldName
+    ? validator.shape({
+        [(validationFieldName: string)]: Yup.string().required(),
+      })
+    : validator;
 };
 
 export default validator;
