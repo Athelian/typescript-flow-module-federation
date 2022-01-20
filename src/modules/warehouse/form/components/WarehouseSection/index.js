@@ -336,6 +336,7 @@ const WarehouseSection = ({ isNew, isClone, isLoading, warehouse }: Props) => {
                                         ...org,
                                         partner: {
                                           ...partner,
+                                          organization,
                                         },
                                       })
                                     );
