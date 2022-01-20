@@ -18,7 +18,6 @@ import { NewButton, ExportButton } from 'components/Buttons';
 import { useViewerHasPermissions } from 'contexts/Permissions';
 import useFilterSort from 'hooks/useFilterSort';
 import { encryptValue, decryptValue } from 'utils/cache';
-import { isEquals } from 'utils/fp';
 import ShipmentList from './list';
 import { shipmentsExportQuery, getShipmentViewStateQuery } from './query';
 import { updateShipmentViewStateMutation } from './mutation';
@@ -79,17 +78,7 @@ const ShipmentListModule = () => {
 
         <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <BulkHeaderFilter
-          filterBy={filterBy}
-          setFilterBy={filter => {
-            if (!isEquals(filter, filterBy)) {
-              setFilterBy({
-                ...filter,
-              });
-            }
-          }}
-          type="SHIPMENT"
-        />
+        <BulkHeaderFilter filterBy={filterBy} setFilterBy={setFilterBy} type="SHIPMENT" />
         <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         {hasPermissions(SHIPMENT_CREATE) && (
