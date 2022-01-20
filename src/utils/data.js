@@ -229,7 +229,7 @@ export const parseArrayOfChildrenField = (
 ) => {
   if (!forceSendIds && isEquals(originalChildren, newChildren)) return {};
 
-  const parsedNewChildren = newChildren.map((newChild: Object): Array<Object> => {
+  const parsedNewChildren = newChildren.flatMap((newChild: Object): Array<Object> => {
     const oldChild =
       (originalChildren || []).find(
         (originalChild: Object): Object => originalChild.id === newChild.id
@@ -318,13 +318,22 @@ export const parseFilesField = ({
       originalFiles,
       newFiles,
       (oldFile: ?Object, newFile: Object) => {
-        return {
-          id: newFile.id,
-          ...parseGenericField('name', getByPathWithDefault(null, 'name', oldFile), newFile.name),
-          ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
-          ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
-          ...parseTagsField('tags', oldFile?.tags ?? [], newFile.tags),
-        };
+        return !oldFile ||
+          Object.keys(oldFile).some(
+            oldFileKey => !isEquals(oldFile[oldFileKey], newFile[oldFileKey])
+          )
+          ? {
+              id: newFile.id,
+              ...parseGenericField(
+                'name',
+                getByPathWithDefault(null, 'name', oldFile),
+                newFile.name
+              ),
+              ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
+              ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
+              ...parseTagsField('tags', oldFile?.tags ?? [], newFile.tags),
+            }
+          : [];
       }
     ),
   };
