@@ -428,6 +428,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                               ...organization,
                                               partner: {
                                                 ...partner,
+                                                organization,
                                               },
                                             })
                                           );
@@ -505,6 +506,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                         ...organization,
                                         partner: {
                                           ...partner,
+                                          organization,
                                         },
                                       })
                                     );

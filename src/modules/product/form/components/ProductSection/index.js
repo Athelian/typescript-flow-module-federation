@@ -499,6 +499,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                                         ...organization,
                                         partner: {
                                           ...partner,
+                                          organization,
                                         },
                                       })
                                     );

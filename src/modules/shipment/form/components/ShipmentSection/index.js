@@ -1026,6 +1026,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                 ...organization,
                                                 partner: {
                                                   ...partner,
+                                                  organization,
                                                 },
                                               })
                                             );
@@ -1061,6 +1062,10 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                             forwardersDialogToggle(false);
                                           }}
                                           onConfirm={() => {
+                                            console.log(
+                                              'selectedForwarders on confirm ',
+                                              selectedForwarders
+                                            );
                                             onChangeForwarders(selectedForwarders);
                                             emitter.emit('CLEAN_SHIPMENTS', {
                                               action: 'CHANGE_FORWARDERS',
@@ -1142,6 +1147,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                         ...organization,
                                         partner: {
                                           ...partner,
+                                          organization,
                                         },
                                       })
                                     );
