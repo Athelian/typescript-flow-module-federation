@@ -12,7 +12,6 @@ import {
   Search,
   Sort,
 } from 'components/NavBar';
-import { isEquals } from 'utils/fp';
 import { NewButton, ExportButton } from 'components/Buttons';
 import { PRODUCT_CREATE, PRODUCT_EXPORT } from 'modules/permission/constants/product';
 import { useViewerHasPermissions } from 'contexts/Permissions';
@@ -36,17 +35,7 @@ const ProductListModule = () => {
 
         <Filter config={ProductFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <BulkHeaderFilter
-          filterBy={filterBy}
-          setFilterBy={filter => {
-            if (!isEquals(filter, filterBy)) {
-              setFilterBy({
-                ...filter,
-              });
-            }
-          }}
-          type="PRODUCT"
-        />
+        <BulkHeaderFilter filterBy={filterBy} setFilterBy={setFilterBy} type="PRODUCT" />
         <Sort config={ProductSortConfig} sortBy={sortBy} onChange={setSortBy} />
         {hasPermissions(PRODUCT_CREATE) && (
           // $FlowFixMe Flow typed is not updated yet
