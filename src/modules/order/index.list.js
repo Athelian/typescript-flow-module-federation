@@ -35,7 +35,7 @@ const OrderModule = () => {
 
         <Filter config={OrderFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
-        <BulkHeaderFilter filterBy={filterBy} setFilterBy={filterBy} type="ORDER" />
+        <BulkHeaderFilter filterBy={filterBy} setFilterBy={setFilterBy} type="ORDER" />
         <Sort config={OrderSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         {hasPermissions(ORDER_CREATE) && (
