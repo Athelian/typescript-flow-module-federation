@@ -4,6 +4,7 @@ import { Link } from '@reach/router';
 import { SHIPMENT_CREATE, SHIPMENT_EXPORT } from 'modules/permission/constants/shipment';
 import { Content } from 'components/Layout';
 import {
+  BulkHeaderFilter,
   EntityIcon,
   Filter,
   NavBar,
@@ -77,6 +78,7 @@ const ShipmentListModule = () => {
 
         <Filter config={ShipmentFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
+        <BulkHeaderFilter filterBy={filterBy} setFilterBy={setFilterBy} type="SHIPMENT" />
         <Sort config={ShipmentSortConfig} sortBy={sortBy} onChange={setSortBy} />
 
         {hasPermissions(SHIPMENT_CREATE) && (
