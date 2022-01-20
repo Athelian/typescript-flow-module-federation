@@ -538,6 +538,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                           ...organization,
                                           partner: {
                                             ...partner,
+                                            organization,
                                           },
                                         })
                                       );
