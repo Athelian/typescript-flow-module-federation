@@ -1026,6 +1026,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                 ...organization,
                                                 partner: {
                                                   ...partner,
+                                                  organization,
                                                 },
                                               })
                                             );
@@ -1142,6 +1143,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                         ...organization,
                                         partner: {
                                           ...partner,
+                                          organization,
                                         },
                                       })
                                     );
