@@ -9,7 +9,7 @@ import { initDatetimeToContainer, MIN_DATE_VALUE } from './date';
 export const getLatestDate = (timelineDate: ?Object) => {
   if (!timelineDate) return null;
 
-  const { date, timelineDateRevisions } = timelineDate;
+  const { date, timelineDateRevisions = [] } = timelineDate;
 
   return timelineDateRevisions.length
     ? timelineDateRevisions
