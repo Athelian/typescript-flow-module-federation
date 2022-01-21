@@ -11,9 +11,11 @@ export const getLatestDate = (timelineDate: ?Object) => {
 
   const { date, timelineDateRevisions } = timelineDate;
 
-  const hasDateRevisions = timelineDateRevisions && timelineDateRevisions.length > 0;
-
-  return hasDateRevisions ? timelineDateRevisions[timelineDateRevisions.length - 1].date : date;
+  return timelineDateRevisions
+    ? timelineDateRevisions.concat({ date: timelineDate.date }).reduce((max, current) => {
+        return max.date > current.date ? max : current;
+      }).date
+    : date;
 };
 
 export const getPortName = (
