@@ -4,17 +4,17 @@ import { uniqBy } from 'lodash';
 import EnumProvider from 'providers/enum';
 import type { TimelineDatePayload } from 'generated/graphql';
 import { getByPathWithDefault } from './fp';
-import { initDatetimeToContainer } from './date';
+import { initDatetimeToContainer, MIN_DATE_VALUE } from './date';
 
 export const getLatestDate = (timelineDate: ?Object) => {
   if (!timelineDate) return null;
 
   const { date, timelineDateRevisions } = timelineDate;
 
-  return timelineDateRevisions
-    ? timelineDateRevisions.concat({ date: timelineDate.date }).reduce((max, current) => {
-        return max.date > current.date ? max : current;
-      }).date
+  return timelineDateRevisions.length
+    ? timelineDateRevisions
+        .concat({ date: date || new Date(MIN_DATE_VALUE).toISOString() })
+        .reduce((max, current) => (max.date > current.date ? max : current)).date
     : date;
 };
 
