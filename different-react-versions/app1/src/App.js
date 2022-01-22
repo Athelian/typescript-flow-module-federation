@@ -5,7 +5,7 @@ const RemoteButton = React.lazy(() => import('app2/Button'));
 
 // const ModernComponent = React.lazy(() => import("app2/ModernComponent"));
 // Hooks not suppoorted, uncomment to verify this is a pre-hooks react version being used.
-// import HookComponent from './ComponentWithHook'
+import HookComponent from './ComponentWithHook'
 
 class App extends React.Component {
   constructor(props) {
