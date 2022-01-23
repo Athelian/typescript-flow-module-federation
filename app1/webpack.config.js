@@ -33,34 +33,34 @@ module.exports = {
       },
     ],
   },
-  // plugins: [
-  //   new ModuleFederationPlugin({
-  //     name: 'app1',
-  //     library: { type: 'var', name: 'app1' },
-  //     remotes: {
-  //       app2: 'app2',
-  //     },
-  //     shared: {
-  //       ...deps,
-  //       'react-dom': {
-  //         import: 'react-dom', // the "react" package will be used a provided and fallback module
-  //         shareKey: 'react-dom', // under this name the shared module will be placed in the share scope
-  //         shareScope: 'legacy', // share scope with this name will be used
-  //         singleton: true, // only a single version of the shared module is allowed
-  //       },
-  //       // oldReact: {
-  //       //   import: "react", // the "react" package will be used a provided and fallback module
-  //       //   shareKey: "oldReact", // under this name the shared module will be placed in the share scope
-  //       //   shareScope: "legacy", // share scope with this name will be used
-  //       //   singleton: true, // only a single version of the shared module is allowed
-  //       // }
-  //     },
-  //   }),
-  //   new HtmlWebpackPlugin({
-  //     template: './public/index.html',
-  //     app2RemoteEntry: getRemoteEntryUrl(3002),
-  //   }),
-  // ],
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'app1',
+      library: { type: 'var', name: 'app1' },
+      remotes: {
+        app2: 'app2',
+      },
+      shared: {
+        ...deps,
+        'react-dom': {
+          import: 'react-dom', // the "react" package will be used a provided and fallback module
+          shareKey: 'react-dom', // under this name the shared module will be placed in the share scope
+          shareScope: 'legacy', // share scope with this name will be used
+          singleton: true, // only a single version of the shared module is allowed
+        },
+        // oldReact: {
+        //   import: "react", // the "react" package will be used a provided and fallback module
+        //   shareKey: "oldReact", // under this name the shared module will be placed in the share scope
+        //   shareScope: "legacy", // share scope with this name will be used
+        //   singleton: true, // only a single version of the shared module is allowed
+        // }
+      },
+    }),
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+      app2RemoteEntry: getRemoteEntryUrl(3002),
+    }),
+  ],
 };
 
 function getRemoteEntryUrl(port) {
