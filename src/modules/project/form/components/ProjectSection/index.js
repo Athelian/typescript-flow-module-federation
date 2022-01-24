@@ -343,6 +343,7 @@ const ProjectSection = ({ isNew, project }: Props) => {
                                                 ...org,
                                                 partner: {
                                                   ...partner,
+                                                  organization: org,
                                                 },
                                               })
                                             );

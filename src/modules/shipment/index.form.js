@@ -35,7 +35,7 @@ import {
   ShipmentTasksContainer,
 } from './form/containers';
 import ShipmentForm from './form';
-import validator from './form/validator';
+import { getValidationByAutoTracking } from './form/validator';
 import { shipmentFormQuery } from './form/query';
 import {
   createShipmentMutation,
@@ -504,6 +504,12 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                 shipmentContainersContainer.isDirty() ||
                                 shipmentFilesContainer.isDirty() ||
                                 shipmentTasksContainer.isDirty();
+
+                              const {
+                                state: { autoTrackingBy },
+                              } = shipmentInfoContainer;
+                              const validation = getValidationByAutoTracking({ autoTrackingBy });
+
                               return (
                                 <>
                                   <BooleanValue>
@@ -600,7 +606,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                             ...shipmentTransportTypeContainer.state,
                                             ...shipmentTasksContainer.state,
                                           },
-                                          validator
+                                          validation
                                         )
                                       }
                                       isLoading={isLoading}

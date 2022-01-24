@@ -4,11 +4,11 @@ import { presets, layout, colors, fontSizes } from 'styles/common';
 
 export const ContainerTrackingWrapperStyle: string = css`
   border: 1px solid #cfcfcf;
-  padding: 16px;
+  padding: 25px;
 `;
 
 export const ContainerAutoTrackingContainerStyle: string = css`
-  width: 49%;
+  width: 200px;
 `;
 
 export const ContainerTypeWrapperStyle: string = css`

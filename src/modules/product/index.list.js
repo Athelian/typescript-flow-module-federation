@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link } from '@reach/router';
 import { Content } from 'components/Layout';
 import {
+  BulkHeaderFilter,
   EntityIcon,
   Filter,
   NavBar,
@@ -34,8 +35,8 @@ const ProductListModule = () => {
 
         <Filter config={ProductFilterConfig} filterBy={filterBy} onChange={setFilterBy} />
         <Search query={query} onChange={setQuery} />
+        <BulkHeaderFilter filterBy={filterBy} setFilterBy={setFilterBy} type="PRODUCT" />
         <Sort config={ProductSortConfig} sortBy={sortBy} onChange={setSortBy} />
-
         {hasPermissions(PRODUCT_CREATE) && (
           // $FlowFixMe Flow typed is not updated yet
           <Link to="/product/new">

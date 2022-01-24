@@ -77,6 +77,7 @@ const PartnersSelectorInput = ({
               ...organization,
               partner: {
                 ...partner,
+                organization,
               },
             }));
             onChange(assembledOrgs, true);

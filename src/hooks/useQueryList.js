@@ -19,6 +19,8 @@ export default function useQueryList<TNode, TData, TVariable>(
   options: QueryHookOptions<TData, TVariable>,
   resultPath: string
 ): ListResult<TNode> {
+  const [fetching, setFetching] = React.useState(false);
+
   const intl = useIntl();
 
   const { data, loading, fetchMore } = useQuery<TData, TVariable>(query, {
@@ -48,6 +50,8 @@ export default function useQueryList<TNode, TData, TVariable>(
   ]);
 
   const loadMore = React.useCallback(() => {
+    if (fetching) return;
+    setFetching(true);
     fetchMore<any>({
       variables: {
         ...options.variables,
@@ -55,7 +59,6 @@ export default function useQueryList<TNode, TData, TVariable>(
       },
       updateQuery: (prevResult, { fetchMoreResult }) => {
         const paginated = getByPath(resultPath, fetchMoreResult);
-
         return setIn(
           resultPath,
           {
@@ -70,10 +73,14 @@ export default function useQueryList<TNode, TData, TVariable>(
           prevResult
         );
       },
-    }).catch(err => {
-      trackingError(err);
-    });
-  }, [fetchMore, options, resultPath, page]);
+    })
+      .then(() => {
+        setFetching(false);
+      })
+      .catch(err => {
+        trackingError(err);
+      });
+  }, [fetchMore, options, resultPath, page, setFetching, fetching]);
 
   return { nodes, loading, hasMore: page < totalPage, loadMore };
 }

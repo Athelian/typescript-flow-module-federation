@@ -1,5 +1,9 @@
 // @flow
 import { useState, useCallback, useEffect } from 'react';
+import { useQuery, useApolloClient } from '@apollo/react-hooks';
+import { getShipmentViewStateQuery } from 'modules/shipment/query';
+import { updateShipmentViewStateMutation } from 'modules/shipment/mutation';
+import { encryptValue, decryptValue } from 'utils/cache';
 
 type State = {
   filter: Object,
@@ -11,6 +15,7 @@ type State = {
   },
 };
 
+// only used at map view at the moment
 function usePersistFilter(
   state: State = {
     filter: {},
@@ -21,8 +26,9 @@ function usePersistFilter(
     perPage: 10,
     page: 1,
   },
-  cacheKey: string
+  cacheKey: 'NRMOrder' | 'NRMShipment'
 ) {
+  const client = useApolloClient();
   const localFilter = window.localStorage.getItem(cacheKey);
   const initialFilter = localFilter
     ? {
@@ -32,13 +38,48 @@ function usePersistFilter(
     : state;
 
   const [filterAndSort, changeFilterAndSort] = useState(initialFilter);
+  const [loading, setLoading] = useState(cacheKey === 'NRMShipment');
 
-  const onChangeFilter = useCallback((newFilter: Object) => {
-    changeFilterAndSort(prevState => ({
-      ...prevState,
-      ...newFilter,
-    }));
-  }, []);
+  useQuery(getShipmentViewStateQuery, {
+    skip: cacheKey !== 'NRMShipment',
+    variables: {
+      type: 'ShipmentMap',
+    },
+    onCompleted: data => {
+      if (data?.viewState?.filterSort) {
+        const { viewState } = data;
+        changeFilterAndSort(decryptValue(viewState.filterSort) ?? {});
+      }
+      setLoading(false);
+    },
+  });
+
+  const onChangeFilter = useCallback(
+    (newFilter: Object) => {
+      changeFilterAndSort(prevState => {
+        const updatedFilter = {
+          ...prevState,
+          ...newFilter,
+        };
+
+        if (cacheKey === 'NRMShipment') {
+          client.mutate({
+            mutation: updateShipmentViewStateMutation,
+            variables: {
+              input: {
+                name: 'zenport map view',
+                type: 'ShipmentMap',
+                filterSort: encryptValue(updatedFilter),
+              },
+            },
+          });
+        }
+
+        return updatedFilter;
+      });
+    },
+    [cacheKey, client]
+  );
 
   useEffect(() => {
     if (window.localStorage) {
@@ -48,6 +89,7 @@ function usePersistFilter(
   }, [cacheKey, filterAndSort]);
 
   return {
+    loading,
     filterAndSort,
     queryVariables: {
       page: filterAndSort?.page ?? 1,

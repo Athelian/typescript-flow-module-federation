@@ -368,3 +368,7 @@ export const calculateBindingDate = (
   }
   return null;
 };
+
+// MIN and MAX possible date values respresentable in JavaScript
+export const MIN_DATE_VALUE = -8640000000000000;
+export const MAX_DATE_VALUE = 8640000000000000;
