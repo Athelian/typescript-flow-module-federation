@@ -21,6 +21,7 @@ type OptionalProps = {
   prefixIcon: string,
   timelineDate: {
     date: ?string | Date,
+    resultDate?: ?string,
     timelineDateRevisions?: Array<{
       date: ?string | Date,
     }>,
@@ -39,6 +40,7 @@ const defaultProps = {
   prefixIcon: '',
   timelineDate: {
     date: null,
+    resultDate: null,
     timelineDateRevisions: [],
     approvedAt: null,
   },
@@ -53,7 +55,7 @@ const TimelineDate = ({ timelineDate, prefixIcon, mode, vertical, color, user }:
   const timelineDateRevisions = compact(rawRevisions);
   const hasMultipleDates = timelineDateRevisions && timelineDateRevisions.length > 0;
 
-  const shownDate = getLatestDate(timelineDate);
+  const shownDate = timelineDate.resultDate || getLatestDate(timelineDate);
 
   let delayAmount = 0;
   if (date && shownDate && hasMultipleDates) {

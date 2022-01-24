@@ -177,6 +177,7 @@ export const timelineDateMinimalFragment = gql`
     approvedBy {
       ...userAvatarFragment
     }
+    resultDate
     timelineDateRevisions {
       ... on TimelineDateRevision {
         id
