@@ -1,7 +1,13 @@
 // @flow
 
+// https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
+// https://stackoverflow.com/questions/23223718/failed-to-execute-btoa-on-window-the-string-to-be-encoded-contains-characte
 export const encryptValue = (value: Object): any => {
-  return btoa(JSON.stringify(value));
+  try {
+    return btoa(JSON.stringify(value));
+  } catch (e) {
+    return '';
+  }
 };
 
 export const decryptValue = (encryptedValue: string) => {
