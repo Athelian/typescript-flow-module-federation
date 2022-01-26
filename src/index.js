@@ -37,7 +37,7 @@ NP.enableBoundaryChecking(isAppInProduction);
 const container = document.querySelector('#root');
 
 if (!container) {
-  throw new Error(`couldn't find element with id root`);
+  throw new Error(`couldn't find element with id root!`);
 }
 
 const AppHooks = () => {
