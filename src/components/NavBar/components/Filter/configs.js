@@ -198,6 +198,13 @@ export const OrderFilterConfig: Array<FilterConfig> = [
   },
   {
     entity: 'ORDER',
+    field: 'deliveryDate',
+    type: 'date_range',
+    message: orderMessages.deliveryDate,
+    defaultValue: { after: null, before: null },
+  },
+  {
+    entity: 'ORDER',
     field: 'exporterIds',
     type: 'exporter_ids',
     message: orderMessages.exporter,

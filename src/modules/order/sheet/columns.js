@@ -66,6 +66,10 @@ export default function({
           name: 'piNo',
           group: 'order',
         },
+        'order.deliveryDate': {
+          name: 'deliveryDate',
+          group: 'order',
+        },
         'order.currency': {
           name: 'currency',
           group: 'order',
