@@ -30,6 +30,16 @@
           ]
         },
         {
+          "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|js|css|eot|otf|ttf|ttc|woff|woff2|font.css)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=604800"
+            }
+          ],
+          "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+        },
+        {
           "source": "/service-worker.js",
           "headers": [
             {
@@ -214,6 +224,16 @@
               "value": "vibrate 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; payment 'none' https://my.zenport.io"
             }
           ]
+        },
+        {
+          "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|js|css|eot|otf|ttf|ttc|woff|woff2|font.css)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=604800"
+            }
+          ],
+          "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
         },
         {
           "source": "/service-worker.js",
