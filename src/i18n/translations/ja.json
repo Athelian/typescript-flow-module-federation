@@ -85,7 +85,6 @@
   "modules.Tasks.unapproved": "承認待ち",
   "validation.task.nameRequired": "タスク名を入力してください",
   "components.form.confirmBeforeLeavePageMessage": "本当にこの画面を閉じますか？画面を閉じると変更は保存されません。",
-  "components.deployNotifier.newVersionMessage": "製品の更新があります。他のタブでZenportを開いていればそれらを閉じ、ここをクリックしてください。",
   "modules.RelationMap.label.batches": "バッチ",
   "modules.RelationMap.label.batch": "バッチ",
   "modules.RelationMap.label.container": "コンテナ",

@@ -1,16 +1,14 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, type IntlShape } from 'react-intl';
 import firebase from 'firebase';
 import * as serviceWorker from 'serviceWorker';
 
 type Props = {
   revision: string,
-  intl: IntlShape,
   revisionKey: string,
 };
 
-const DeployNotifier = ({ revision, revisionKey, intl }: Props) => {
+const DeployHandler = ({ revision, revisionKey }: Props) => {
   React.useEffect(() => {
     const docRef = firebase.database().ref(`/${revisionKey}`);
 
@@ -24,9 +22,9 @@ const DeployNotifier = ({ revision, revisionKey, intl }: Props) => {
         serviceWorker.unregister();
       }
     });
-  }, [intl, intl.locale, revision, revisionKey]);
+  }, [revision, revisionKey]);
 
   return null;
 };
 
-export default injectIntl(DeployNotifier);
+export default DeployHandler;

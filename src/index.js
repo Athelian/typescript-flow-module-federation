@@ -13,12 +13,12 @@ import PermissionsProvider from './contexts/Permissions';
 import LanguageProvider from './contexts/Language';
 import ViewerProvider from './contexts/Viewer';
 import UIProvider from './contexts/UI';
+import DeployHandler from './components/DeployHandler';
 import { isEnableStrictMode, isAppInProduction } from './utils/env';
 import { useFilterSortInvalidator } from './hooks/useFilterSort';
 import { useLocalSortInvalidator } from './components/Sheet/useLocalSort';
 import { useColumnsInvalidator } from './components/Sheet/useColumns';
 import { useResizedColumnsInvalidator } from './components/Sheet/useResizedColumns';
-import DeployNotifier from './components/DeployNotifier';
 import apolloClient from './apollo';
 import Routes from './routes';
 import loadFonts from './fonts';
@@ -63,7 +63,7 @@ const renderApp = (Component, renderFn) => {
                       <AppHooks />
 
                       {isAppInProduction && (
-                        <DeployNotifier
+                        <DeployHandler
                           revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
                           revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
                         />

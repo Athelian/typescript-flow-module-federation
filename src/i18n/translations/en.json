@@ -85,7 +85,6 @@
   "modules.Tasks.unapproved": "UNAPPROVED",
   "validation.task.nameRequired": "Task Name is a required field",
   "components.form.confirmBeforeLeavePageMessage": "Are you sure you want to leave this page? Your changes will not be saved.",
-  "components.deployNotifier.newVersionMessage": "An update is available. Please close all other Zenport tabs and click here.",
   "components.float.selected": "SELECTED",
   "modules.RelationMap.label.batches": "Batches",
   "modules.RelationMap.label.batch": "Batch",
