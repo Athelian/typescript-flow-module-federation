@@ -85,7 +85,6 @@
   "modules.Tasks.unapproved": "未经批准",
   "validation.task.nameRequired": "任务名称是必填项",
   "components.form.confirmBeforeLeavePageMessage": "Are you sure you want to leave this page? Your changes will not be saved.",
-  "components.deployNotifier.newVersionMessage": "有可用的更新。请关闭全部其他Zenport选项卡，然后单击此处。",
   "modules.RelationMap.label.batches": "批次",
   "modules.RelationMap.label.batch": "批次",
   "modules.RelationMap.label.container": "集装箱",

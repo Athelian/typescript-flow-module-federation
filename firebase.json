@@ -8,6 +8,10 @@
           "source": "**",
           "headers": [
             {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
               "key": "X-Frame-Options",
               "value": "SAMEORIGIN"
             },
@@ -28,6 +32,16 @@
               "value": "vibrate 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; payment 'none' https://staging.zenport.io"
             }
           ]
+        },
+        {
+          "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|js|css|eot|otf|ttf|ttc|woff|woff2|font.css)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=604800"
+            }
+          ],
+          "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
         },
         {
           "source": "/service-worker.js",
@@ -98,6 +112,10 @@
           "source": "**",
           "headers": [
             {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
               "key": "X-Frame-Options",
               "value": "SAMEORIGIN"
             },
@@ -114,6 +132,16 @@
               "value": "vibrate 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; payment 'none' https://staging-hot.zenport.io"
             }
           ]
+        },
+        {
+          "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|js|css|eot|otf|ttf|ttc|woff|woff2|font.css)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=604800"
+            }
+          ],
+          "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
         },
         {
           "source": "/service-worker.js",
@@ -184,6 +212,10 @@
           "source": "**",
           "headers": [
             {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
               "key": "X-Frame-Options",
               "value": "SAMEORIGIN"
             },
@@ -200,6 +232,16 @@
               "value": "vibrate 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; payment 'none' https://my.zenport.io"
             }
           ]
+        },
+        {
+          "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|js|css|eot|otf|ttf|ttc|woff|woff2|font.css)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=604800"
+            }
+          ],
+          "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
         },
         {
           "source": "/service-worker.js",
