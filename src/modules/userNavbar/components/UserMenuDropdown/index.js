@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars, no-redeclare */
 // @flow
+
 import * as React from 'react';
 import apolloClient from 'apollo';
 import { navigate } from '@reach/router';
@@ -51,6 +53,27 @@ const UserMenuDropdown = ({ isOpen, toggleUserMenu }: Props) => {
               </div>
               <div className={UserMenuItemIconStyle}>
                 <Icon icon="PROFILE" />
+              </div>
+            </button>
+
+            <button
+              className={UserMenuItemWrapperStyle}
+              onClick={evt => {
+                if (!evt.ctrlKey && !evt.shiftKey) {
+                  evt.preventDefault();
+                  emitter.emit('NAVIGATE_TO', '/reminders');
+                } else {
+                  navigate('/reminders');
+                }
+                toggleUserMenu();
+              }}
+              type="button"
+            >
+              <div className={UserMenuItemStyle}>
+                <FormattedMessage {...messages.reminders} />
+              </div>
+              <div className={UserMenuItemIconStyle}>
+                <Icon icon="LOGOUT" />
               </div>
             </button>
 

@@ -26,6 +26,7 @@ const AsyncShipment = lazy(() => import('./modules/shipment'));
 const AsyncContainer = lazy(() => import('./modules/container'));
 const AsyncProduct = lazy(() => import('./modules/product'));
 const AsyncBatch = lazy(() => import('./modules/batch'));
+const AsyncReminders = lazy(() => import('./modules/reminders'));
 const AsyncNotifications = lazy(() => import('./modules/notifications'));
 const AsyncMetadata = lazy(() => import('./modules/metadata'));
 const AsyncTableTemplate = lazy(() => import('./modules/tableTemplate'));
@@ -66,6 +67,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => {
               <Page Component={AsyncDocument} path="document/*" />
               <AsyncStaff path="staff/*" />
               <AsyncProfile path="profile/*" />
+              <AsyncReminders path="reminders/*" />
               <AsyncNotifications path="notifications/*" />
             </Layout>
           </Authorized>

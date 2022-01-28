@@ -28,6 +28,7 @@ export const colors = {
   YELLOW_DARK: '#e9c200',
   ORANGE: '#ffa637',
   ORANGE_DARK: '#fc9719',
+  ORANGE_DARKER: '#e19500',
   PURPLE: '#a34fff',
   PURPLE_DARK: '#802fd9',
 
@@ -83,6 +84,7 @@ export const fontSizes = {
   MAIN: 'font-size: 14px',
   HUGE: 'font-size: 20px',
   GIANT: 'font-size: 24px',
+  ENORMOUS: 'font-size: 40px',
   LARGE: 'font-size: 16px',
   SMALL: 'font-size: 12px',
   MEDIUM: 'font-size: 13px',

@@ -22,6 +22,10 @@ export default defineMessages({
     id: 'components.Header.profile.profile',
     defaultMessage: 'PROFILE',
   },
+  reminders: {
+    id: 'components.Header.profile.reminders',
+    defaultMessage: 'REMINDERS',
+  },
   import: {
     id: 'components.Header.import',
     defaultMessage: 'IMPORT',
