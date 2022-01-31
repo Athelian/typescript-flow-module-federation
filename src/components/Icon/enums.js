@@ -59,6 +59,7 @@ import {
   faSearch as SEARCH,
   faTimes as CLEAR,
   faTimesCircle as CANCEL,
+  faTrash as REMOVE,
   faTrashAlt as REMOVE_ALT,
   faClone as CLONE,
   faCheckCircle as CHECKED,
@@ -156,6 +157,7 @@ import {
   faFileAlt as DOCUMENT_REGULAR,
   faCheckCircle as CHECKED_REGULAR,
   faStar as STAR_REGULAR,
+  faClone as CLONE_REGULAR,
 } from '@fortawesome/pro-regular-svg-icons';
 
 import {
@@ -241,6 +243,7 @@ export default {
   SEARCH,
   CLEAR,
   CANCEL,
+  REMOVE,
   REMOVE_ALT,
   CLONE,
   CHECKED,
@@ -320,6 +323,7 @@ export default {
   MAGIC_REGULAR,
   DOCUMENT_REGULAR,
   CHECKED_REGULAR,
+  CLONE_REGULAR,
   BATCH_LIGHT,
   SHIPMENT_LIGHT,
   ARCHIVE_LIGHT,
