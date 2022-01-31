@@ -20,9 +20,11 @@ import GridColumn from 'components/GridColumn';
 import { BaseButton } from 'components/Buttons';
 import SaveFormButton from 'components/SaveFormButton';
 import useUser from 'hooks/useUser';
+import Reminder from '../components/Reminder';
 import {
   FormWrapperStyle,
   SectionWrapperStyle,
+  SubTitleWrapperStyle,
   ButtonWrapperStyle,
   IconStyle,
   LinkStyle,
@@ -36,18 +38,21 @@ type Props = {
 const NotificationList = ({ filterBy }: Props) => {
   return (
     <div className={FormWrapperStyle}>
-      <SectionWrapper id="add_reminder_section">
-        <SectionHeader
-          icon="CLOCK"
-          title={<FormattedMessage id="modules.profile.reminders" defaultMessage="REMINDERS" />}
-        />
-        <div className={`${SectionWrapperStyle}`}>
+      {/* <SectionWrapper id="add_reminder_section"> */}
+      <SectionHeader
+        icon="CLOCK"
+        title={<FormattedMessage id="modules.profile.reminders" defaultMessage="REMINDERS" />}
+      />
+      <div className={`${SubTitleWrapperStyle}`}>
+        <FormattedMessage id="modules.reminders.subtitle" />
+      </div>
+      {/* <div className={`${SectionWrapperStyle}`}>
           <div className={`${IconStyle}`}>
             <Icon icon="CLOCK" />
           </div>
           <div style={{ display: 'inline' }}>
             <FormattedMessage
-              id="modules.profile.noReminders"
+              id="modules.reminders.noReminders"
               defaultMessage="No reminders found. <a>Create New Reminder</a>"
               values={{
                 a: chunks => (
@@ -64,8 +69,9 @@ const NotificationList = ({ filterBy }: Props) => {
               }}
             />
           </div>
-        </div>
-      </SectionWrapper>
+        </div> */}
+      <Reminder name="1092812" />
+      {/* </SectionWrapper> */}
     </div>
   );
 };

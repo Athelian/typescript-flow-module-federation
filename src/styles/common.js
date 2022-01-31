@@ -14,6 +14,7 @@ export const colors = {
   TEAL_QUITE_LIGHT: '#12B791',
 
   GRAY: '#bbb',
+  GRAY_MID: '#bfbfbf',
   GRAY_DARK: '#aaa',
   GRAY_DARK_1: '#555555',
   GRAY_LIGHT: '#ccc',
@@ -84,7 +85,7 @@ export const fontSizes = {
   MAIN: 'font-size: 14px',
   HUGE: 'font-size: 20px',
   GIANT: 'font-size: 24px',
-  ENORMOUS: 'font-size: 40px',
+  ENORMOUS: 'font-size: 48px',
   LARGE: 'font-size: 16px',
   SMALL: 'font-size: 12px',
   MEDIUM: 'font-size: 13px',
