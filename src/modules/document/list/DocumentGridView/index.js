@@ -122,7 +122,7 @@ const defaultRenderItem = ({
                       defaultMessage="DELETE"
                     />
                   }
-                  icon="REMOVE"
+                  icon="REMOVE_ALT"
                   onClick={onConfirm}
                   backgroundColor="RED"
                   hoverBackgroundColor="RED_DARK"
@@ -151,7 +151,7 @@ const defaultRenderItem = ({
                 ...(!onSelect && canDeleteFile(hasPermission, parentType)
                   ? [
                       <CardAction
-                        icon="REMOVE"
+                        icon="REMOVE_ALT"
                         hoverColor="RED"
                         onClick={evt => {
                           evt.stopPropagation();

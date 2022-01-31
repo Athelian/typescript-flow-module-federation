@@ -203,7 +203,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                                             )
                                           }
                                         >
-                                          <Icon icon="REMOVE" />
+                                          <Icon icon="REMOVE_ALT" />
                                         </button>
                                       )}
                                       {index !== 0 && (

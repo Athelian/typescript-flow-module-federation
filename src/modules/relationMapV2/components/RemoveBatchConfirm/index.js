@@ -106,7 +106,7 @@ export default function RemoveBatchConfirm({ onSuccess }: Props) {
       buttons={
         <BaseButton
           label={<FormattedMessage id="modules.RelationMap.label.remove" defaultMessage="REMOVE" />}
-          icon="REMOVE"
+          icon="REMOVE_ALT"
           onClick={onConfirm}
           textColor="RED"
           hoverTextColor="WHITE"

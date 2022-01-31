@@ -135,7 +135,7 @@ const OrderBatchCard = ({
               }
             />
             <CardAction
-              icon="REMOVE"
+              icon="REMOVE_ALT"
               hoverColor="RED"
               onClick={() => {
                 if (batch.shipment) {

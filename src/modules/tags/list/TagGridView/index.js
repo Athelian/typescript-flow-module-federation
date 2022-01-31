@@ -79,7 +79,7 @@ const defaultRenderItem = (item: Object) => (
                       ),
                       canDelete && (
                         <CardAction
-                          icon="REMOVE"
+                          icon="REMOVE_ALT"
                           hoverColor="RED"
                           onClick={() => toggleDialog(true)}
                         />

@@ -75,7 +75,7 @@ const TableTemplateList = ({
               <TemplateCard
                 actions={[
                   <CardAction
-                    icon="REMOVE"
+                    icon="REMOVE_ALT"
                     hoverColor="RED"
                     onClick={() => setSelectedItem(tableTemplate)}
                   />,

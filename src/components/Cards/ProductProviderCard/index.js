@@ -86,14 +86,19 @@ const ProductProviderCard = ({
                 }}
               />
 
-              <CardAction icon="REMOVE" hoverColor="RED" onClick={() => dialogToggle(true)} />
+              <CardAction icon="REMOVE_ALT" hoverColor="RED" onClick={() => dialogToggle(true)} />
             </>
           )}
         </BooleanValue>
       );
     } else {
       actions.push(
-        <CardAction key="btn-remove" icon="REMOVE" hoverColor="RED" onClick={() => onRemove()} />
+        <CardAction
+          key="btn-remove"
+          icon="REMOVE_ALT"
+          hoverColor="RED"
+          onClick={() => onRemove()}
+        />
       );
     }
   }

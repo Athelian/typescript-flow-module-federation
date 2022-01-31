@@ -255,7 +255,7 @@ function ItemsArea({
                       if (step === 0 && batches.length > 0) {
                         return (
                           <CardAction
-                            icon="REMOVE"
+                            icon="REMOVE_ALT"
                             hoverColor="RED"
                             onClick={() => {
                               setStep(1);
@@ -267,7 +267,7 @@ function ItemsArea({
                       if (step === 0 && files.length > 0) {
                         return (
                           <CardAction
-                            icon="REMOVE"
+                            icon="REMOVE_ALT"
                             hoverColor="RED"
                             onClick={() => {
                               setStep(2);
@@ -322,7 +322,7 @@ function ItemsArea({
                               }
                             />
                             <CardAction
-                              icon="REMOVE"
+                              icon="REMOVE_ALT"
                               hoverColor="RED"
                               onClick={() => {
                                 setStep(2);
@@ -353,7 +353,7 @@ function ItemsArea({
                             />
 
                             <CardAction
-                              icon="REMOVE"
+                              icon="REMOVE_ALT"
                               hoverColor="RED"
                               onClick={() => {
                                 setStep(2);
@@ -363,7 +363,7 @@ function ItemsArea({
                         );
                       }
 
-                      return <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />;
+                      return <CardAction icon="REMOVE_ALT" hoverColor="RED" onClick={onRemove} />;
                     }}
                   </NumberValue>
                 ),

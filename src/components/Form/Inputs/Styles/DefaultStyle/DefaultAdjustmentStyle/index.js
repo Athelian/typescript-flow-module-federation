@@ -118,7 +118,7 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
               }}
               type="button"
             >
-              <Icon icon="REMOVE" />
+              <Icon icon="REMOVE_ALT" />
             </button>
           )}
         </div>

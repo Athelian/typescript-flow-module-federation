@@ -18,7 +18,7 @@ export default function DeleteButton({ isHovered, onClick }: Props) {
         onClick();
       }}
     >
-      <Icon icon="REMOVE" />
+      <Icon icon="REMOVE_ALT" />
     </button>
   );
 }

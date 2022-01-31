@@ -210,7 +210,7 @@ const DocumentTypeArea = ({
                                 actions={[
                                   canDelete && (
                                     <CardAction
-                                      icon="REMOVE"
+                                      icon="REMOVE_ALT"
                                       hoverColor="RED"
                                       onClick={evt => {
                                         evt.stopPropagation();

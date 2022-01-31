@@ -205,7 +205,7 @@ export default function DeleteBatchesConfirm({ onSuccess }: Props) {
             label={
               <FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />
             }
-            icon="REMOVE"
+            icon="REMOVE_ALT"
             disabled={!allowToDeleteBatches}
             onClick={() => onConfirm('delete')}
             backgroundColor="RED"

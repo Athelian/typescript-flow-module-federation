@@ -255,7 +255,7 @@ const Comment = ({ comment, query, queryField, variables, users }: Props) => {
                       });
                     }}
                   >
-                    <Icon icon="REMOVE" />
+                    <Icon icon="REMOVE_ALT" />
                   </button>
                 )}
               </Mutation>

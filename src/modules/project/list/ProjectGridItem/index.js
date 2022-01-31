@@ -62,7 +62,7 @@ const ProjectGridItem = ({ item, onDeleteItemSuccess, allowDelete, allowChangeSt
           ),
           allowDelete && (
             <CardAction
-              icon="REMOVE"
+              icon="REMOVE_ALT"
               hoverColor="RED"
               onClick={evt => {
                 evt.stopPropagation();

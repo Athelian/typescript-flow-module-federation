@@ -40,7 +40,7 @@ const Ports = ({
                 className={RemoveButtonStyle}
                 onClick={() => onChange(value.filter((v, i) => i !== index))}
               >
-                <Icon icon="REMOVE" />
+                <Icon icon="REMOVE_ALT" />
               </button>
             </div>
           );

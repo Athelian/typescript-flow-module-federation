@@ -111,7 +111,7 @@ const BatchDeleteRemoveActionImpl = ({
         <>
           <BaseButton
             label={<FormattedMessage {...messages.batchDeleteButton} />}
-            icon="REMOVE"
+            icon="REMOVE_ALT"
             onClick={onDelete}
             backgroundColor="RED"
             hoverBackgroundColor="RED_DARK"

@@ -74,7 +74,7 @@ const ProjectDeleteDialog = ({ onSuccess, onCancel, entity, isOpen }: Props) => 
       buttons={
         <BaseButton
           label={<FormattedMessage id="modules.Project.label.delete" defaultMessage="Delete" />}
-          icon="REMOVE"
+          icon="REMOVE_ALT"
           onClick={onConfirm}
           backgroundColor="RED"
           hoverBackgroundColor="RED_DARK"

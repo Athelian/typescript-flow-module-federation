@@ -107,7 +107,7 @@ export default function MilestoneColumnHeaderCard({ milestoneIndex, isDragging, 
                           );
                         }}
                       >
-                        <Icon icon="REMOVE" />
+                        <Icon icon="REMOVE_ALT" />
                       </button>
                     )}
 

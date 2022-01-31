@@ -128,7 +128,7 @@ const ProductGridView = (props: Props) => {
                             item.productProviders.filter(p => p.referenced).length === 0
                               ? [
                                   <CardAction
-                                    icon="REMOVE"
+                                    icon="REMOVE_ALT"
                                     onClick={() => deleteDialogToggle(true)}
                                   />,
                                 ]

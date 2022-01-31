@@ -105,7 +105,7 @@ const DateRevisionsInput = ({
           </div>
           {!readonly && (
             <button type="button" className={RemoveButtonStyle} onClick={handleRemove(index)}>
-              <Icon icon="REMOVE" />
+              <Icon icon="REMOVE_ALT" />
             </button>
           )}
         </div>

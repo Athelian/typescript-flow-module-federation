@@ -109,7 +109,7 @@ const DefaultCustomFieldDefinitionStyle = ({
 
       {deletable && (
         <button className={RemoveButtonStyle} onClick={onRemove} type="button">
-          <Icon icon="REMOVE" />
+          <Icon icon="REMOVE_ALT" />
         </button>
       )}
     </div>

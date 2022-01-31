@@ -237,7 +237,7 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
         <div className={WrapperStyle}>
           <div className={ActionsStyle}>
             <BaseButton
-              icon="REMOVE"
+              icon="REMOVE_ALT"
               label={<FormattedMessage {...messages.clearAll} />}
               textColor="GRAY_DARK"
               hoverTextColor="WHITE"
@@ -470,7 +470,7 @@ const Filter = ({ config, filterBy, staticFilters, onChange }: Props) => {
                   </div>
 
                   <button type="button" className={DeleteButtonStyle} onClick={onDelete}>
-                    <Icon icon="REMOVE" />
+                    <Icon icon="REMOVE_ALT" />
                   </button>
                 </div>
               );

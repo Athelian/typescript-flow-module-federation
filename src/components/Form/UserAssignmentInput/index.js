@@ -56,10 +56,15 @@ const UserAssignmentInput = ({
         {editable && (
           <button
             className={RemoveAssignmentButtonStyle(size)}
-            onClick={() => onChange(name, users.filter(({ id: userId }) => id !== userId))}
+            onClick={() =>
+              onChange(
+                name,
+                users.filter(({ id: userId }) => id !== userId)
+              )
+            }
             type="button"
           >
-            <Icon icon="REMOVE" />
+            <Icon icon="REMOVE_ALT" />
           </button>
         )}
       </div>

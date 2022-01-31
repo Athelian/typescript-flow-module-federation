@@ -63,7 +63,7 @@ export default function DeleteTableTemplateConfirm({ onSuccess, onCancel, entity
           label={
             <FormattedMessage id="modules.TableTemplates.label.delete" defaultMessage="DELETE" />
           }
-          icon="REMOVE"
+          icon="REMOVE_ALT"
           onClick={onConfirm}
           backgroundColor="RED"
           hoverBackgroundColor="RED_DARK"

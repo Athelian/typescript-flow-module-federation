@@ -92,7 +92,7 @@ export default function DeleteContainerConfirm({ onSuccess }: Props) {
       buttons={
         <BaseButton
           label={<FormattedMessage id="modules.RelationMap.label.delete" defaultMessage="DELETE" />}
-          icon="REMOVE"
+          icon="REMOVE_ALT"
           onClick={onConfirm}
           backgroundColor="RED"
           hoverBackgroundColor="RED_DARK"

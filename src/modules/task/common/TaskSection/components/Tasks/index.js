@@ -89,7 +89,7 @@ const Tasks = ({
                   />
                 ),
                 removable && (
-                  <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(task)} />
+                  <CardAction icon="REMOVE_ALT" hoverColor="RED" onClick={() => onRemove(task)} />
                 ),
               ].filter(Boolean)}
             />

@@ -63,7 +63,7 @@ function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
                     // Hidden on UI until we have create new task for project form
                     permissions.includes(TASK_DELETE) && false && (
                       <CardAction
-                        icon="REMOVE"
+                        icon="REMOVE_ALT"
                         hoverColor="RED"
                         onClick={() => onRemove(task.id, true)}
                       />

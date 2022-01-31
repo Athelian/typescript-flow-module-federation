@@ -323,7 +323,7 @@ function Actions({ targets, onActionClick }: Props) {
                       });
                     }}
                   >
-                    <Icon icon="REMOVE" />
+                    <Icon icon="REMOVE_ALT" />
                     <ActionLabel>
                       <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
                     </ActionLabel>
@@ -392,7 +392,7 @@ function Actions({ targets, onActionClick }: Props) {
                       });
                     }}
                   >
-                    <Icon icon="REMOVE" /> / <Icon icon="CLEAR" />
+                    <Icon icon="REMOVE_ALT" /> / <Icon icon="CLEAR" />
                     <ActionLabel>
                       <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
                       /
@@ -500,7 +500,7 @@ function Actions({ targets, onActionClick }: Props) {
                       });
                     }}
                   >
-                    <Icon icon="REMOVE" />
+                    <Icon icon="REMOVE_ALT" />
                     <ActionLabel>
                       <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
                     </ActionLabel>
@@ -719,7 +719,7 @@ function Actions({ targets, onActionClick }: Props) {
                       });
                     }}
                   >
-                    <Icon icon="REMOVE" />
+                    <Icon icon="REMOVE_ALT" />
                     <ActionLabel>
                       <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
                     </ActionLabel>
@@ -818,7 +818,7 @@ function Actions({ targets, onActionClick }: Props) {
                       });
                     }}
                   >
-                    <Icon icon="REMOVE" /> / <Icon icon="CLEAR" />
+                    <Icon icon="REMOVE_ALT" /> / <Icon icon="CLEAR" />
                     <ActionLabel>
                       <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
                       /
@@ -916,7 +916,7 @@ function Actions({ targets, onActionClick }: Props) {
                       });
                     }}
                   >
-                    <Icon icon="REMOVE" />
+                    <Icon icon="REMOVE_ALT" />
                     <ActionLabel>
                       <FormattedMessage id="components.button.delete" defaultMessage="DELETE" />
                     </ActionLabel>

@@ -120,7 +120,7 @@ const OrderItemDeleteActionImpl = ({ entity, item, onDone, getOrderItemFiles }: 
       buttons={
         <BaseButton
           label={<FormattedMessage {...messages.orderItemDeleteButton} />}
-          icon="REMOVE"
+          icon="REMOVE_ALT"
           onClick={onDeleteConfirm}
           backgroundColor="RED"
           hoverBackgroundColor="RED_DARK"

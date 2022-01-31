@@ -80,7 +80,7 @@ export default function PackageName({
 
       {removable && (
         <button className={DeleteButtonStyle} onClick={onDelete} type="button">
-          <Icon icon="REMOVE" />
+          <Icon icon="REMOVE_ALT" />
         </button>
       )}
     </div>
