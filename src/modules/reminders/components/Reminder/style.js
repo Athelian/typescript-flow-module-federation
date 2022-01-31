@@ -6,6 +6,10 @@ import { colors, presets, layout, fontSizes } from 'styles/common';
 export const ActionsWrapperStyle: string = css`
   display: flex;
   gap: 40px;
+  > button:last-child {
+    font-size: 20px;
+    cursor: pointer;
+  }
 `;
 
 export const ButtonStyle: string = css`
@@ -22,6 +26,7 @@ export const SectionWrapperStyle: string = css`
   display: flex;
   column-gap: 40px;
   justify-content: space-between;
+  margin-top: 30px;
 `;
 
 export const ReminderLeftSection: string = css`

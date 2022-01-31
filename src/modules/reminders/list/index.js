@@ -46,30 +46,30 @@ const NotificationList = ({ filterBy }: Props) => {
       <div className={`${SubTitleWrapperStyle}`}>
         <FormattedMessage id="modules.reminders.subtitle" />
       </div>
-      {/* <div className={`${SectionWrapperStyle}`}>
-          <div className={`${IconStyle}`}>
-            <Icon icon="CLOCK" />
-          </div>
-          <div style={{ display: 'inline' }}>
-            <FormattedMessage
-              id="modules.reminders.noReminders"
-              defaultMessage="No reminders found. <a>Create New Reminder</a>"
-              values={{
-                a: chunks => (
-                  <a
-                    className={`${LinkStyle}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://localhost:3002"
-                  >
-                    {chunks}
-                  </a>
-                ),
-                link: '',
-              }}
-            />
-          </div>
-        </div> */}
+      <div className={`${SectionWrapperStyle}`}>
+        <div className={`${IconStyle}`}>
+          <Icon icon="CLOCK" />
+        </div>
+        <div style={{ display: 'inline' }}>
+          <FormattedMessage
+            id="modules.reminders.noReminders"
+            defaultMessage="No reminders found. <a>Create New Reminder</a>"
+            values={{
+              a: chunks => (
+                <a
+                  className={`${LinkStyle}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://localhost:3002"
+                >
+                  {chunks}
+                </a>
+              ),
+              link: '',
+            }}
+          />
+        </div>
+      </div>
       <Reminder name="1092812" />
       {/* </SectionWrapper> */}
     </div>

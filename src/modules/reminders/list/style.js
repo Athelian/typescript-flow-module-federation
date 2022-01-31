@@ -26,18 +26,14 @@ export const FormWrapperStyle: string = css`
 
 export const SectionWrapperStyle: string = css`
   ${presets.BOX};
+  ${fontSizes.MAIN};
+  padding: 80px 100px;
+  width: 100%;
+  ${layout.GRID_VERTICAL};
+  grid-gap: 20px;
+  color: ${colors.GRAY_DARK};
+  text-align: center;
 `;
-
-// export const SectionWrapperStyle: string = css`
-//   ${presets.BOX};
-//   ${fontSizes.MAIN};
-//   padding: 80px 100px;
-//   width: 100%;
-//   ${layout.GRID_VERTICAL};
-//   grid-gap: 20px;
-//   color: ${colors.GRAY_DARK};
-//   text-align: center;
-// `;
 
 export const SubTitleWrapperStyle: string = css`
   color: ${colors.GRAY_DARK};
