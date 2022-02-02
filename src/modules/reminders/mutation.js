@@ -1,10 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const archiveAllMutation = gql`
-  mutation notificationArchiveAll {
-    notificationArchiveAll
-  }
-`;
+export const Mutation = gql``;
 
-export default archiveAllMutation;
+export default Mutation;

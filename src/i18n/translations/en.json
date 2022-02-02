@@ -1374,7 +1374,7 @@
   "modules.RelationMap.label.activateArchive": "ACTIVATE/ARCHIVE",
   "modules.RelationMap.activateArchive.disabledActivate": "Entire selection already has Active statuses",
   "modules.RelationMap.activateArchive.disabledArchive": "Entire selection already has Archived statuses",
-  "modules.reminders.noReminders": "No reminders found. <a>Create New Reminder</a>",
+  "modules.reminders.noReminders": "No reminders found. <span>Create New Reminder</span>",
   "modules.reminders.subtitle": "Automate partner reminders for when certain Supply Chain Events occur",
   "modules.resetPassword.passwordChanged": "Password successfully reset",
   "modules.resetPassword.requestInvalid": "Reset request is invalid or expired.",

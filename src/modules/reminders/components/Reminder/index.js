@@ -1,46 +1,39 @@
 /* eslint-disable no-unused-vars, no-redeclare */
 // @flow
-import * as React from 'react';
-import Icon from 'components/Icon';
-import { Query, Mutation } from 'react-apollo';
-import loadMore from 'utils/loadMore';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { toast } from 'react-toastify';
-import { Subscribe } from 'unstated';
-import {
-  FieldItem,
-  Label,
-  Display,
-  SectionWrapper,
-  SectionHeader,
-  ToggleInput,
-  PasswordInputFactory,
-} from 'components/Form';
-import FormattedDate from 'components/FormattedDate';
-import UserAvatar from 'components/UserAvatar';
-import useUser from 'hooks/useUser';
+import { Display, Label, ToggleInput } from 'components/Form';
+import { FormContainer, FormField } from 'modules/form';
+import { Mutation, Query } from 'react-apollo';
+import React, { useState } from 'react';
+
 import CloneButton from 'components/Buttons/CloneButton';
-import { FormField, FormContainer } from 'modules/form';
-import GridColumn from 'components/GridColumn';
-import SaveFormButton from 'components/SaveFormButton';
+import FormattedDate from 'components/FormattedDate';
+import { FormattedMessage } from 'react-intl';
+import Icon from 'components/Icon';
+import UserAvatar from 'components/UserAvatar';
+import loadMore from 'utils/loadMore';
+import useUser from 'hooks/useUser';
+
 import {
-  ReminderLeftSection,
   ActionsWrapperStyle,
   ButtonStyle,
   LastModifiedWrapperStyle,
+  MetadataWrapperStyle,
+  NameWrapperStyle,
   SectionWrapperStyle,
-  ReminderHeaderStyle,
 } from './style';
 
 type Props = {
   name: string,
+  open: Function,
 };
 
-const Reminder = ({ name }: Props) => {
+const Reminder = ({ name, open }: Props) => {
+  const [isOn, setIsOn] = useState(false);
+
   return (
     <div className={`${SectionWrapperStyle}`}>
-      <div className={`${ReminderLeftSection}`}>
-        <div className={`${ReminderHeaderStyle}`}>
+      <div className={`${MetadataWrapperStyle}`}>
+        <div className={`${NameWrapperStyle}`}>
           <Icon icon="CLOCK" />
           <div>{`${name}`}</div>
         </div>
@@ -57,24 +50,14 @@ const Reminder = ({ name }: Props) => {
         </div>
       </div>
       <div className={`${ActionsWrapperStyle}`}>
-        <ToggleInput
-          toggled
-          // onToggle={() => set('editable', !editable)}
-        />
+        <ToggleInput toggled={isOn} onToggle={() => setIsOn(prev => !prev)} />
         <button className={ButtonStyle} type="button" onClick={() => undefined}>
-          {/* {isActive && <span className={ActiveStyle} />} */}
           <Icon icon="CLONE_REGULAR" />
         </button>
         <button className={ButtonStyle} type="button" onClick={() => undefined}>
-          {/* {isActive && <span className={ActiveStyle} />} */}
           <Icon icon="REMOVE" />
         </button>
-        <button
-          className={ButtonStyle}
-          type="button"
-          onClick={() => undefined}
-          style={{ fontSize: '20px' }}
-        >
+        <button className={ButtonStyle} type="button" onClick={() => undefined}>
           <Icon icon="CHEVRON_RIGHT" />
         </button>
       </div>

@@ -1,79 +1,61 @@
 /* eslint-disable no-unused-vars, no-redeclare */
 // @flow
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { useMutation } from '@apollo/react-hooks';
-import { navigate } from '@reach/router';
-import { NavBar, EntityIcon, Filter, NotificationFilterConfig, Search } from 'components/NavBar';
-import { Content } from 'components/Layout';
+
+import { EntityIcon, Filter, NavBar, Search } from 'components/NavBar';
+import React, { useState } from 'react';
+
 import { BaseButton } from 'components/Buttons';
-import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
+import { Content } from 'components/Layout';
+import { FormattedMessage } from 'react-intl';
+import SlideView from 'components/SlideView';
 import useFilterSort from 'hooks/useFilterSort';
-import NotificationList from './list';
-import { archiveAllMutation } from './mutation';
-// import NotificationPreferences from './components/NotificationPreferences';
 
-type Props = {
-  activeTab?: string,
-};
+// import ReminderForm from './form';
+import ReminderList from './list';
 
-const NotificationListModule = ({ activeTab = 'active' }: Props) => {
-  const [isOpenSetting, setIsOpenSetting] = React.useState(false);
-  const [archiveAll] = useMutation(archiveAllMutation);
+type Props = {};
+
+const ReminderListModule = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const close = () => setIsOpen(false);
+  const open = () => setIsOpen(true);
 
   const { query, filterBy, sortBy, setQuery, setFilterBy, setSortBy } = useFilterSort(
     { query: '' },
     { updatedAt: 'DESCENDING' }
   );
 
-  // const { nodes, loading, hasMore, loadMore } = useQueryList(
-  //   usersQuery,
-  //   {
-  //     variables: { filterBy: { query, ...filterBy }, sortBy, page: 1, perPage: 10 },
-  //     fetchPolicy: 'network-only',
-  //   },
-  //   'users'
-  // );
-
-  const isActive = activeTab === 'active';
-  const archived = !isActive;
   return (
     <Content>
+      <SlideView isOpen={isOpen} onRequestClose={close}>
+        {/* <ReminderForm /> */}
+        form
+      </SlideView>
       <NavBar>
         <EntityIcon icon="CLOCK" color="ORANGE_DARKER" />
         <Search query={query} onChange={setQuery} />
-
-        {isActive && (
-          <BaseButton
-            icon="ARCHIVE"
-            label={
-              <FormattedMessage
-                id="components.button.addNewReminder"
-                defaultMessage="ADD NEW REMINDER"
-              />
-            }
-            backgroundColor="TEAL"
-            hoverBackgroundColor="TEAL_DARK"
-            onClick={() => {
-              archiveAll();
-              if (window.location.href.includes('/notifications/active')) {
-                navigate('/notifications');
-              } else {
-                navigate('/notifications/active');
-              }
-            }}
-          />
-        )}
+        <BaseButton
+          icon="ADD"
+          label={
+            <FormattedMessage
+              id="components.button.addNewReminder"
+              defaultMessage="ADD NEW REMINDER"
+            />
+          }
+          backgroundColor="TEAL"
+          hoverBackgroundColor="TEAL_DARK"
+          onClick={open}
+        />
       </NavBar>
-      <NotificationList
-        key={activeTab}
+      <ReminderList
+        close={close}
+        open={open}
         filterBy={{
           ...filterBy,
-          archived,
         }}
       />
     </Content>
   );
 };
 
-export default NotificationListModule;
+export default ReminderListModule;

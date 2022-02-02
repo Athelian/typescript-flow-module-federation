@@ -2,13 +2,12 @@
 import * as React from 'react';
 import { Router } from '@reach/router';
 
-import NotificationListModule from './index.list';
+import ReminderListModule from './index.list';
 
-const NotificationModule = () => (
+const ReminderModule = () => (
   <Router>
-    <NotificationListModule path="/:activeTab" />
-    <NotificationListModule path="/" default />
+    <ReminderListModule path="/" default />
   </Router>
 );
 
-export default NotificationModule;
+export default ReminderModule;
