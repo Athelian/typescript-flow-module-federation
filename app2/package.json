@@ -21,7 +21,8 @@
     "start": "webpack-cli serve",
     "build": "webpack --mode production",
     "serve": "serve dist -p 3002",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "deploy": "yarn build && firebase deploy"
   },
   "dependencies": {
     "react": "^17.0.1",

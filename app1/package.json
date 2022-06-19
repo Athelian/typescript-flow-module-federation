@@ -19,7 +19,8 @@
     "start": "webpack-cli serve",
     "build": "webpack --mode production",
     "serve": "serve dist -p 3001",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "deploy": "yarn build && firebase deploy"
   },
   "dependencies": {
     "firebase": "^9.8.3",
