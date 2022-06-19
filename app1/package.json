@@ -22,7 +22,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "firebase": "^9.6.4",
+    "firebase": "^9.8.3",
     "react": "^16.12.0",
     "react-dom": "16.14.0"
   }

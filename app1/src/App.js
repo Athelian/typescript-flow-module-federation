@@ -1,50 +1,19 @@
 // @flow
-import React from 'react';
-import Adapter from './adapter';
-import buttony from 'app2/src/Button';
+import * as React from "react";
+import { lazy, Suspense } from "react";
 
-const RemoteButton = React.lazy(() => import('app2/src/Button'));
+const RemoteButton = lazy(() => import("app2/Button"));
 
-// const ModernComponent = React.lazy(() => import("app2/ModernComponent"));
-// Hooks not suppoorted, uncomment to verify this is a pre-hooks react version being used.
-// import HookComponent from './ComponentWithHook'
-
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { input: '' };
-    this.setValue = this.setValue.bind(this);
-  }
-
-  setValue(e) {
-    this.setState({ input: e.target.value });
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>Basic Host-Remote</h1>
-        <h2>App 1, Uses react version not compatible with hooks</h2>
-        <input onChange={this.setValue} placeholder="Type something into this input" />
-        <Adapter
-          // any other props, passed to ModernComponent
-          {...this.state}
-          importer={() => import('app2/ModernComponent')}
-        >
-          <h3>And these are children passed into it from the legacy app</h3>
-        </Adapter>
-        {/*This will Fail*/}
-        {/*<HookComponent/>*/}
-        <React.Suspense fallback="Loading Button">
-          <RemoteButton />
-        </React.Suspense>
-        {/*This will fail without Adapter*/}
-        <React.Suspense fallback="Loading Button">
-         {/* <ModernComponent /> */}
-        </React.Suspense>
-      </div>
-    );
-  }
-}
+const App = () => {
+  return (
+    <div>
+      <h1>Basic Host-Remote</h1>
+      <h2>App 1, uses Flow React</h2>
+      <Suspense fallback="Loading Button">
+        <RemoteButton text="Hi this text was sent from Flow" />
+      </Suspense>
+    </div>
+  );
+};
 
 export default App;

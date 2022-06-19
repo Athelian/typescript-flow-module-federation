@@ -40,7 +40,6 @@ module.exports = {
       filename: 'remoteEntry.js',
       exposes: {
         './Button': './src/Button',
-        './ModernComponent': './src/ModernReactComponent',
         './newReact': require.resolve('react'),
         './newReactDOM': require.resolve('react-dom'),
       },

@@ -1,3 +1,3 @@
-declare module 'app2/src/Button' {
+declare module 'app2/Button' {
   declare module.exports: any;
 }
