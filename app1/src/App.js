@@ -1,7 +1,9 @@
+// @flow
 import React from 'react';
 import Adapter from './adapter';
+import buttony from 'app2/src/Button';
 
-const RemoteButton = React.lazy(() => import('app2/Button'));
+const RemoteButton = React.lazy(() => import('app2/src/Button'));
 
 // const ModernComponent = React.lazy(() => import("app2/ModernComponent"));
 // Hooks not suppoorted, uncomment to verify this is a pre-hooks react version being used.
@@ -19,7 +21,6 @@ class App extends React.Component {
   }
 
   render() {
-    // console.log(RemoteButton)
     return (
       <div>
         <h1>Basic Host-Remote</h1>
